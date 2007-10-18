@@ -270,12 +270,12 @@ public class CreateFloodRiskProjectJob extends Job
       final Gismapview gismapview = mapTemplateOF.createGismapview();
       final Layers layers = mapTemplateOF.createGismapviewLayers();
       final ExtentType extent = typeOF.createExtentType();
-      // m_layerList = layers.getLayer();
+       m_layerList = layers.getLayer();
 
       // copy landuseData as shape
       copyLanduseShape();
 
-      createDummyLanduseTheme();
+//      createDummyLanduseTheme();
       if( m_boundingBox == null )
         m_boundingBox = GeometryFactory.createGM_Envelope( 0.0, 0.0, 1.0, 1.0 );
 
@@ -294,15 +294,15 @@ public class CreateFloodRiskProjectJob extends Job
 
       // generate landuseData as gml
       monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.2" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
-      createLanduseDataGML();
+//      createLanduseDataGML();
 
       // create landuseCollection in contextModel and riskContextModel (if user checked this option in wizard)
-      if( m_autogenerateLanduseCollection )
-      {
-        monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.4" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
-        autogenerateLanduseCollection();
-        createLanduseStyle( m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/landuse.sld" ); //$NON-NLS-1$
-      }
+//      if( m_autogenerateLanduseCollection )
+//      {
+//        monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.4" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
+//        autogenerateLanduseCollection();
+//        createLanduseStyle( m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/landuse.sld" ); //$NON-NLS-1$
+//      }
       // create waterlevelGrids and defaultStyles
       monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.6" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -313,10 +313,10 @@ public class CreateFloodRiskProjectJob extends Job
         return Status.CANCEL_STATUS;
       }
 
-      final StyledLayerType landuseLayer = createLanduseLayer( m_landuseDataFile );
-      JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( landuseLayer );
-      m_layerList.add( layerElement );
-      layers.setActive( landuseLayer );
+//      final StyledLayerType landuseLayer = createLanduseLayer( m_landuseDataFile );
+//      JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( landuseLayer );
+//      m_layerList.add( layerElement );
+//      layers.setActive( landuseLayer );
 
       monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.8" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
       createWaterlevelData( targetFiles );

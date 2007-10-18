@@ -199,6 +199,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         }
       }
     };
+    cMap.put( ITerrainModel.class, cTor );
     cMap.put( IModel.class, cTor );
 
     // IFE1D2DNode

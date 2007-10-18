@@ -96,25 +96,25 @@ public class SelectWaterlevelWizardPage extends WizardPage
 
   protected File waterlevelFile;
 
-  private String[] coordinateSystems = ( new ConvenienceCSFactoryFull() ).getKnownCS();
+  private String[] coordinateSystems = (new ConvenienceCSFactoryFull()).getKnownCS();
 
   CS_CoordinateSystem selectedCoordinateSystem;
 
   String selectedCoordinateSystemName;
 
-  public SelectWaterlevelWizardPage()
+  public SelectWaterlevelWizardPage( )
   {
-    super( "page_type:waterlevel", WizardMessages.getString("SelectWaterlevelWizardPage.LoadWaterlevelData"), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
-    setDescription( WizardMessages.getString("SelectWaterlevelWizardPage.WaterlevelWizardPage") ); //$NON-NLS-1$
+    super( "page_type:waterlevel", WizardMessages.getString( "SelectWaterlevelWizardPage.LoadWaterlevelData" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
+    setDescription( WizardMessages.getString( "SelectWaterlevelWizardPage.WaterlevelWizardPage" ) ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
-  public Vector getWaterlevelGrids()
+  public Vector getWaterlevelGrids( )
   {
     return waterlevelGrids;
   }
 
-  public CS_CoordinateSystem getSelectedCoordinateSystem()
+  public CS_CoordinateSystem getSelectedCoordinateSystem( )
   {
     return selectedCoordinateSystem;
   }
@@ -152,7 +152,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     group.setLayoutData( groupData );
     group.setLayout( gridLayout );
     group.layout();
-    group.setText( WizardMessages.getString("SelectWaterlevelWizardPage.FloodedArea") ); //$NON-NLS-1$
+    group.setText( WizardMessages.getString( "SelectWaterlevelWizardPage.FloodedArea" ) ); //$NON-NLS-1$
 
     Composite tableComposite = new Composite( group, SWT.NULL );
     GridData gridData = new GridData( GridData.FILL_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH );
@@ -161,7 +161,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     layout.marginWidth = 4;
     tableComposite.setLayout( layout );
 
-    //  Create the table
+    // Create the table
     createTable( tableComposite );
 
     // Create Buttons
@@ -181,7 +181,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     waterlevelTable.setLayoutData( gridData );
 
     TableColumn fileColumn = new TableColumn( waterlevelTable, SWT.LEFT );
-    fileColumn.setText( WizardMessages.getString("SelectWaterlevelWizardPage.Data") ); //$NON-NLS-1$
+    fileColumn.setText( WizardMessages.getString( "SelectWaterlevelWizardPage.Data" ) ); //$NON-NLS-1$
     fileColumn.setWidth( 400 );
     /*
      * TableColumn hqColumn = new TableColumn( waterlevelTable, SWT.CENTER ); hqColumn.setText( "HQ" );
@@ -222,17 +222,15 @@ public class SelectWaterlevelWizardPage extends WizardPage
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        //System.out.println( "Add..." );
-        String filePath = chooseFile( waterlevelFile, new String[]
-        { "*.asc" } ); //$NON-NLS-1$
+        // System.out.println( "Add..." );
+        String filePath = chooseFile( waterlevelFile, new String[] { "*.asc" } ); //$NON-NLS-1$
         if( filePath != null )
         {
           waterlevelFile = new File( filePath );
           if( waterlevelFile.exists() )
           {
             TableItem item = new TableItem( waterlevelTable, 0 );
-            item.setText( new String[]
-            { waterlevelFile.getAbsolutePath() } );
+            item.setText( new String[] { waterlevelFile.getAbsolutePath() } );
             waterlevelTable.redraw();
             waterlevelGrids.add( waterlevelFile );
           }
@@ -241,7 +239,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
       }
     } );
 
-    //  Create and configure the "Delete" button
+    // Create and configure the "Delete" button
     Button delete = new Button( buttonComp, SWT.PUSH | SWT.CENTER );
     delete.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     gridData = new GridData( GridData.HORIZONTAL_ALIGN_END );
@@ -251,11 +249,11 @@ public class SelectWaterlevelWizardPage extends WizardPage
     delete.addSelectionListener( new SelectionAdapter()
     {
 
-      //  Remove the selection and refresh the table
+      // Remove the selection and refresh the table
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        //System.out.println( "Delete..." );
+        // System.out.println( "Delete..." );
         if( selectedIndex != null )
         {
           waterlevelGrids.remove( selectedIndex.intValue() );
@@ -274,7 +272,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
   private void createCombo( Composite parent )
   {
     Label csLabel = new Label( parent, SWT.NONE );
-    csLabel.setText( WizardMessages.getString("SelectWaterlevelWizardPage.CoordinateSystem")+": " ); //$NON-NLS-1$ //$NON-NLS-2$
+    csLabel.setText( WizardMessages.getString( "SelectWaterlevelWizardPage.CoordinateSystem" ) + ": " ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Combo csCombo = new Combo( parent, SWT.NONE );
     csCombo.setItems( coordinateSystems );
@@ -314,7 +312,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     {
       public void handleEvent( Event e )
       {
-        selectedCoordinateSystemName = ( (Combo)e.widget ).getText();
+        selectedCoordinateSystemName = ((Combo) e.widget).getText();
         validate();
       }
     } );
@@ -327,7 +325,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
    * @param selectedFile
    * @param filterExtensions
    * @return selected filePath
-   *  
+   * 
    */
   String chooseFile( File selectedFile, String[] filterExtensions )
   {
@@ -352,16 +350,16 @@ public class SelectWaterlevelWizardPage extends WizardPage
   /**
    * validates the page
    */
-  void validate()
+  void validate( )
   {
     setErrorMessage( null );
     setMessage( null );
     setPageComplete( true );
     StringBuffer error = new StringBuffer();
 
-    if( !( waterlevelGrids.size() > 0 ) )
+    if( !(waterlevelGrids.size() > 0) )
     {
-      error.append( WizardMessages.getString("SelectWaterlevelWizardPage.NoDataSelected")+"\n\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      error.append( WizardMessages.getString( "SelectWaterlevelWizardPage.NoDataSelected" ) + "\n\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       setPageComplete( false );
     }
 
@@ -370,7 +368,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
       selectedCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( selectedCoordinateSystemName );
       if( selectedCoordinateSystem == null )
       {
-        error.append( WizardMessages.getString("SelectWaterlevelWizardPage.CoordinateSystemNotExists")+"\n\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        error.append( WizardMessages.getString( "SelectWaterlevelWizardPage.CoordinateSystemNotExists" ) + "\n\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         setPageComplete( false );
       }
     }
@@ -378,7 +376,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     if( error.length() > 0 )
       setMessage( error.toString() );
     else
-      setMessage( WizardMessages.getString("SelectWaterlevelWizardPage.SelectionOK") ); //$NON-NLS-1$
+      setMessage( WizardMessages.getString( "SelectWaterlevelWizardPage.SelectionOK" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -409,7 +407,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     @Override
     protected Control createDialogArea( Composite parent )
     {
-      parent.getShell().setText( WizardMessages.getString("SelectWaterlevelWizardPage.AddFloodedArea")+"..." ); //$NON-NLS-1$ //$NON-NLS-2$
+      parent.getShell().setText( WizardMessages.getString( "SelectWaterlevelWizardPage.AddFloodedArea" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
 
       Composite topLevel = new Composite( parent, SWT.NONE );
 
@@ -431,7 +429,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
     private void createFileMenu( Composite parent )
     {
       Label label = new Label( parent, SWT.NONE );
-      label.setText( WizardMessages.getString("SelectWaterlevelWizardPage.Data")+": " ); //$NON-NLS-1$
+      label.setText( WizardMessages.getString( "SelectWaterlevelWizardPage.Data" ) + ": " ); //$NON-NLS-1$
 
       final Text textFileSource = new Text( parent, SWT.BORDER );
       textFileSource.setText( DEFAUL_FILE_LABEL );
@@ -443,7 +441,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
       textFileSource.setLayoutData( data );
 
       Button button = new Button( parent, SWT.PUSH );
-      button.setText( WizardMessages.getString("SelectWaterlevelWizardPage.Browse")+"..." ); //$NON-NLS-1$ //$NON-NLS-2$
+      button.setText( WizardMessages.getString( "SelectWaterlevelWizardPage.Browse" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
       GridData data2 = new GridData();
       data2.horizontalAlignment = GridData.END;
       button.setLayoutData( data2 );
@@ -453,8 +451,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
         @Override
         public void widgetSelected( SelectionEvent e )
         {
-          String filePath = chooseFile( m_file, new String[]
-          { "*.asc" } ); //$NON-NLS-1$
+          String filePath = chooseFile( m_file, new String[] { "*.asc" } ); //$NON-NLS-1$
           if( filePath != null )
           {
             m_file = new File( filePath );
@@ -501,7 +498,7 @@ public class SelectWaterlevelWizardPage extends WizardPage
       {
         public void modifyText( ModifyEvent e )
         {
-          m_hq = new Integer( ( (Text)e.getSource() ).getText() );
+          m_hq = new Integer( ((Text) e.getSource()).getText() );
         }
       } );
       textHQ.addVerifyListener( new VerifyListener()
@@ -515,12 +512,12 @@ public class SelectWaterlevelWizardPage extends WizardPage
       } );
     }
 
-    public Integer getHQ()
+    public Integer getHQ( )
     {
       return m_hq;
     }
 
-    public File getFile()
+    public File getFile( )
     {
       File returnFile = null;
 

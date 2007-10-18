@@ -12,11 +12,11 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * @author Patrice Congo
@@ -43,30 +43,11 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
     super( parentFeature, propQName, KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER, IRoughnessCls.class );
   }
 
+  @Override
   public String getName()
   {
-    Feature wrappedFeature = getWrappedFeature();
-    return Util.getFirstName( wrappedFeature );
+    return NamedFeatureHelper.getName( getWrappedFeature() );
   }
-
-  // public IRoughnessCls getRoughnessByURI(String uri) throws IllegalArgumentException
-  // {
-  // Assert.throwIAEOnNullOrEmpty(uri);
-  // String curUri;
-  // for(IRoughnessCls rc:this)
-  // {
-  // curUri=rc.getURI();
-  // if(uri!=null)
-  // {
-  // if(uri.equals(curUri))
-  // {
-  // return rc;
-  // }
-  // }
-  // }
-  //		
-  // return null;
-  // }
 
   public List<IRoughnessCls> selectRoughnessByName( String nameRegExp )
   {

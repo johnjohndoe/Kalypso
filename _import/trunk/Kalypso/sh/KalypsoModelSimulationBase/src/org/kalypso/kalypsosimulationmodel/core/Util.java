@@ -63,7 +63,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypsodeegree.model.feature.Feature;
@@ -422,35 +421,6 @@ public class Util
     // featureQName,
     // ex);
     // }
-  }
-
-  /**
-   * @deprecated Use {@link org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper} instead.
-   */
-  @SuppressWarnings("unchecked")
-  @Deprecated
-  public static final String getFirstName( final Feature feature )
-  {
-    final Object obj = feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME );
-    if( obj instanceof String )
-    {
-      return (String) obj;
-    }
-    else if( obj instanceof List )
-    {
-      if( ((List) obj).size() > 0 )
-      {
-        return (String) ((List) obj).get( 0 );
-      }
-      else
-      {
-        return null;
-      }
-    }
-    else
-    {
-      return null;
-    }
   }
 
   /**

@@ -1,8 +1,6 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
-import org.eclipse.swt.graphics.RGB;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper;
 
 /**
  * Interface for klasses representing the roughness feature of the type wbr:Roughness
@@ -10,7 +8,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * @author Patrice Congo
  * 
  */
-public interface IRoughnessCls extends IFeatureWrapper2
+public interface IRoughnessCls extends IColorStyledFeatureWrapper
 {
   public static enum RoughnessConfigConsistency
   {
@@ -123,8 +121,6 @@ public interface IRoughnessCls extends IFeatureWrapper2
    * @return a {@link RoughnessConfigConsistency} hint the the actual roughness configuration
    */
   public RoughnessConfigConsistency validate( );
-
-  public RGB getColorStyle( );
 
   // /**
   // * Use the method to get the name of this roughness
