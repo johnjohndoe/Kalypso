@@ -58,8 +58,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -72,13 +70,13 @@ import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.TeschkeRelationConverter;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
@@ -155,7 +153,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     m_calculation = calculation;
     m_resultMinMaxCatcher = resultMinMaxCatcher;
     m_lengthSectionObs = lengthSectionObs;
-    m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
+    m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( INodeResultCollection.QNAME_PROP_NODERESULT_MEMBER );
 
     m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
   }
@@ -167,7 +165,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     /* extrapolate the water level into dry areas */
     extrapolateWaterLevel( 0 ); // create the triangles for each element
-    for( ElementResult element : m_elemIndex.values() )
+    for( final ElementResult element : m_elemIndex.values() )
     {
       element.createCenterNode(); // split the element
       splitElement( element );
@@ -183,7 +181,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( count > WSP_EXTRAPOLATION_RANGE )
       return;
     int assigned = 0;
-    for( ElementResult element : m_elemIndex.values() )
+    for( final ElementResult element : m_elemIndex.values() )
     {
       if( element.checkWaterlevels() == true )
         assigned = assigned + 1;
@@ -450,11 +448,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     // TODO: for some reason there are flow relations that are from type BoundaryCondition
     // go through the found array and get the first found teschke flow relation
-    for( int i = 0; i < flowRelationships.length; i++ )
+    for( final IFlowRelationship element : flowRelationships )
     {
-      if( flowRelationships[i] instanceof ITeschkeFlowRelation )
+      if( element instanceof ITeschkeFlowRelation )
       {
-        return (ITeschkeFlowRelation) flowRelationships[i];
+        return (ITeschkeFlowRelation) element;
       }
     }
     return null;
@@ -467,7 +465,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    *            1d-node
    * 
    */
-  private GM_Curve getProfileCurveFor1dNode( final INodeResult nodeResult, WspmProfile profile ) throws Exception
+  private GM_Curve getProfileCurveFor1dNode( final INodeResult nodeResult, final WspmProfile profile ) throws Exception
   {
     final IProfil profil = profile.getProfil();
 
@@ -497,7 +495,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * collects the necessary data for the length section and stores it in an observation.
    */
-  private void handleLengthSectionData( GMLNodeResult nodeResult, ITeschkeFlowRelation teschkeRelation )
+  private void handleLengthSectionData( final GMLNodeResult nodeResult, final ITeschkeFlowRelation teschkeRelation )
   {
     final WspmProfile profile = teschkeRelation.getProfile();
     final IProfil profil = profile.getProfil();
@@ -506,23 +504,23 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final BigDecimal station = WspmProfile.stationToBigDecimal( profil.getStation() );
 
     // thalweg
-    BigDecimal thalweg = new BigDecimal( nodeResult.getPoint().getZ() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal thalweg = new BigDecimal( nodeResult.getPoint().getZ() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
     // slope
-    BigDecimal slope = new BigDecimal( teschkeRelation.getSlope() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal slope = new BigDecimal( teschkeRelation.getSlope() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
     // type
-    String type = profil.getType();
+    final String type = profil.getType();
 
     /* calculated data */
     // wsp
-    BigDecimal waterlevel = new BigDecimal( nodeResult.getWaterlevel() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal waterlevel = new BigDecimal( nodeResult.getWaterlevel() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
     // velocity
-    BigDecimal velocity = new BigDecimal( nodeResult.getAbsoluteVelocity() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal velocity = new BigDecimal( nodeResult.getAbsoluteVelocity() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
     // depth
-    BigDecimal depth = new BigDecimal( nodeResult.getDepth() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal depth = new BigDecimal( nodeResult.getDepth() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
     // discharge
     // Q = v x A
@@ -565,7 +563,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     tuples.add( newRecord );
   }
 
-  private BigDecimal getCrossSectionArea( ITeschkeFlowRelation teschkeRelation, BigDecimal depth )
+  private BigDecimal getCrossSectionArea( final ITeschkeFlowRelation teschkeRelation, final BigDecimal depth )
   {
     final IPolynomial1D[] polynomials = teschkeRelation.getPolynomials();
     final TeschkeRelationConverter teschkeConv = new TeschkeRelationConverter( polynomials );
@@ -588,7 +586,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final GMLNodeResult[] nodes = new GMLNodeResult[2];
     nodes[0] = nodeDown;
     nodes[1] = nodeUp;
-    GM_Curve[] curves = new GM_Curve[2];
+    final GM_Curve[] curves = new GM_Curve[2];
 
     for( int i = 0; i < nodes.length; i++ )
     {
@@ -1948,7 +1946,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int,
    *      double, double, double, double)
    */
-  public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 )
+  public void handleNodeInformation( final String line, final int id, final int dry, final double value1, final double value2, final double value3, final double value4 )
   {
     final INodeResult result = m_nodeIndex.get( id );
     if( result == null )

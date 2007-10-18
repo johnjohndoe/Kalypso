@@ -89,6 +89,11 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   private boolean m_nodeAssigned;
 
+  public GMLNodeResult( final Feature featureToBind )
+  {
+    super( featureToBind, QNAME );
+  }
+
   public List<ArcResult> getArcs( )
   {
     return m_arcs;
@@ -97,11 +102,6 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   public void setArc( final ArcResult arc )
   {
     m_arcs.add( arc );
-  }
-
-  public GMLNodeResult( final Feature featureToBind )
-  {
-    super( featureToBind, QNAME );
   }
 
   public void setCalcId( final int id )
@@ -171,7 +171,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   public double getDepth( )
   {
-    Object property = getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
+    final Object property = getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
     final double waterlevel;// = (Double) property;
     if( property != null && property instanceof Double )
       waterlevel = ((Double) property).doubleValue();
@@ -264,7 +264,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     if( m_lambdas.size() > 0 )
     {
       double sum = 0;
-      for( double lambda : m_lambdas )
+      for( final double lambda : m_lambdas )
       {
         sum += lambda;
       }
@@ -277,7 +277,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtualDepth(double)
    */
-  public void setVirtualDepth( double virtualDepth )
+  public void setVirtualDepth( final double virtualDepth )
   {
     getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDepth ) );
 

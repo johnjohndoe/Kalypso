@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.core.runtime.IPath;
@@ -59,22 +58,15 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMeta
 {
-  public CalcUnitResultMeta( Feature featureToBind )
+  public CalcUnitResultMeta( final Feature featureToBind )
   {
     super( featureToBind, ICalcUnitResultMeta.QNAME );
   }
 
   public void setCalcStartTime( final Date startTime )
   {
-    try
-    {
-      final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( startTime );
-      getFeature().setProperty( QNAME_PROP_CALC_START_TIME, gregorianCalendar );
-    }
-    catch( DatatypeConfigurationException e )
-    {
-      e.printStackTrace();
-    }
+    final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( startTime );
+    getFeature().setProperty( QNAME_PROP_CALC_START_TIME, gregorianCalendar );
   }
 
   public Date getCalcStartTime( )
@@ -84,15 +76,8 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
 
   public void setCalcEndTime( final Date endTime )
   {
-    try
-    {
-      final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( endTime );
-      getFeature().setProperty( QNAME_PROP_CALC_END_TIME, gregorianCalendar );
-    }
-    catch( DatatypeConfigurationException e )
-    {
-      e.printStackTrace();
-    }
+    final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( endTime );
+    getFeature().setProperty( QNAME_PROP_CALC_END_TIME, gregorianCalendar );
   }
 
   public Date getCalcEndTime( )
@@ -105,7 +90,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
     return (String) getFeature().getProperty( QNAME_PROP_CALC_UNIT_ID );
   }
 
-  public void setCalcUnit( String calcUnitID )
+  public void setCalcUnit( final String calcUnitID )
   {
     getFeature().setProperty( QNAME_PROP_CALC_UNIT_ID, calcUnitID );
   }
@@ -123,7 +108,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
    *      java.lang.String, org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE,
    *      org.eclipse.core.runtime.IPath, org.eclipse.core.runtime.IStatus, java.math.BigDecimal, java.math.BigDecimal)
    */
-  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status, BigDecimal minValue, BigDecimal maxValue )
+  public IDocumentResultMeta addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue )
   {
     final IDocumentResultMeta document = getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
     document.setName( name );
@@ -135,5 +120,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
       document.setMinValue( minValue );
     if( maxValue != null )
       document.setMaxValue( maxValue );
+
+    return document;
   }
 }

@@ -77,10 +77,14 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.Hydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.HydrographCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.NodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -828,12 +832,51 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         }
         else
         {
-          warnUnableToAdapt( feature, featureQName, IBoundaryCondition.class );
+          warnUnableToAdapt( feature, featureQName, cls );
           return null;
         }
       }
     };
-    cMap.put( IHydrographCollection.class, cTor );
+    cMap.put( IHydrograph.class, cTor );
+
+    // Node Results
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( INodeResult.QNAME ) )
+        {
+          return new GMLNodeResult( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, cls );
+          return null;
+        }
+      }
+    };
+    cMap.put( INodeResult.class, cTor );
+
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( INodeResultCollection.QNAME ) )
+        {
+          return new NodeResultCollection( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, cls );
+          return null;
+        }
+      }
+    };
+    cMap.put( INodeResultCollection.class, cTor );
 
     return Collections.unmodifiableMap( cMap );
   }

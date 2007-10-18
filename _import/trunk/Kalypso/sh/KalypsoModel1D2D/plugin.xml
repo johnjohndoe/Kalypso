@@ -9,13 +9,6 @@
               typeID="KalypsoModel1D2D"/>
      </extension>
      <extension
-           point="org.kalypso.simulation.core.simulation">
-        <simulation
-              catalogClass="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
-              simulationClass="org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob"
-              typeID="CalculationUnitKalypsoModel1D2D"/>
-     </extension>
-     <extension
            point="org.kalypso.contribs.java.urlCatalog">
         <catalog
               class="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
@@ -110,6 +103,12 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo">
+         </adapter>
+         <adapter
+               type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult">
+         </adapter>
+         <adapter
+               type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection">
          </adapter>
       </factory>
    </extension>

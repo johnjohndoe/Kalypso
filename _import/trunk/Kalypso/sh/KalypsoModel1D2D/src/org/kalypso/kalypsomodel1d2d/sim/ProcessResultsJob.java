@@ -72,6 +72,7 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -178,7 +179,7 @@ public class ProcessResultsJob extends Job
       is = new FileInputStream( result2dFile );
 
       /* GMLWorkspace für Ergebnisse anlegen */
-      final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), gmlResultFile.toURL(), null );
+      final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlResultFile.toURL(), null );
       final URL lsObsUrl = ProcessResultsJob.class.getResource( "resource/template/lengthSectionTemplate.gml" );
       final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
       final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
@@ -320,18 +321,18 @@ public class ProcessResultsJob extends Job
         {
           case TERRAIN:
 
-            ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) stepResultMeta.getParent();
+            final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) stepResultMeta.getParent();
 
-            IFeatureWrapperCollection<IResultMeta> children = calcUnitResult.getChildren();
+            final IFeatureWrapperCollection<IResultMeta> children = calcUnitResult.getChildren();
 
             /* check if there exists already an entry for terrainTin */
             boolean terrainExists = false;
 
-            for( IResultMeta resultMeta : children )
+            for( final IResultMeta resultMeta : children )
             {
               if( resultMeta instanceof IDocumentResultMeta )
               {
-                IDocumentResultMeta document = (IDocumentResultMeta) resultMeta;
+                final IDocumentResultMeta document = (IDocumentResultMeta) resultMeta;
                 if( document.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.tinTerrain )
                   terrainExists = true;
               }

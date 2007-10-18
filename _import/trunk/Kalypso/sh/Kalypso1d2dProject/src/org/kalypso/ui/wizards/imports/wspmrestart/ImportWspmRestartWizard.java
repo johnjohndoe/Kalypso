@@ -38,29 +38,39 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.result;
+package org.kalypso.ui.wizards.imports.wspmrestart;
 
-import java.math.BigDecimal;
-
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.wizard.Wizard;
 
 /**
- * @author Thomas Jung
+ * @author Gernot Belger
  */
-public interface IScenarioResultMeta extends IResultMeta
+public class ImportWspmRestartWizard extends Wizard
 {
-  // TODO: Document interface methods!
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "ScenarioResultMeta" );
+  private ImportWspmRestartPage m_importWspmRestartPage;
 
-  public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID );
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
+  @Override
+  public void addPages( )
+  {
+    m_importWspmRestartPage = new ImportWspmRestartPage( "importWspmPage" );
+    addPage( m_importWspmRestartPage );
+  }
 
-  public void updateResultMeta( final ICalcUnitResultMeta newCalcunitResultMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception;
+  public IFile getLengthSection( )
+  {
+    return m_importWspmRestartPage.getLengthSection();
+  }
 
-  public void addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue );
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
+  @Override
+  public boolean performFinish( )
+  {
+    return true;
+  }
 }

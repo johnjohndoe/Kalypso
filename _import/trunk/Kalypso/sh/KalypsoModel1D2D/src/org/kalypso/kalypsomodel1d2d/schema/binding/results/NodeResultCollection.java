@@ -38,29 +38,19 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.result;
+package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
-import java.math.BigDecimal;
-
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
- * @author Thomas Jung
+ * @author Gernot Belger
  */
-public interface IScenarioResultMeta extends IResultMeta
+public class NodeResultCollection extends FeatureWrapperCollection<INodeResult> implements INodeResultCollection
 {
-  // TODO: Document interface methods!
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "ScenarioResultMeta" );
+  public NodeResultCollection( final Feature featureCol )
+  {
+    super( featureCol, INodeResult.class, QNAME_PROP_NODERESULT_MEMBER );
+  }
 
-  public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID );
-
-  public void updateResultMeta( final ICalcUnitResultMeta newCalcunitResultMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception;
-
-  public void addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue );
 }

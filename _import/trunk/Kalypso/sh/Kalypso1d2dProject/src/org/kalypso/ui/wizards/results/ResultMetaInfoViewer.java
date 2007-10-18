@@ -42,6 +42,7 @@ package org.kalypso.ui.wizards.results;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -84,7 +85,7 @@ public class ResultMetaInfoViewer extends Viewer
 
   private final IThemeConstructionFactory m_factory;
 
-  public ResultMetaInfoViewer( final Composite parent, final int style, IThemeConstructionFactory factory )
+  public ResultMetaInfoViewer( final Composite parent, final int style, final IThemeConstructionFactory factory )
   {
     m_panel = new Group( parent, style );
     m_panel.setLayout( new GridLayout() );
@@ -128,7 +129,7 @@ public class ResultMetaInfoViewer extends Viewer
   {
     /* Empty old stuff */
     final Control[] children = m_panel.getChildren();
-    for( Control control : children )
+    for( final Control control : children )
       control.dispose();
 
     m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
@@ -145,13 +146,13 @@ public class ResultMetaInfoViewer extends Viewer
       // special result data
       if( m_factory != null )
       {
-        IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
+        final IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
         final Composite buttonControl = createThemeCreator.createControl( m_panel );
         if( buttonControl != null )
           buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
       }
 
-      String infoText = getInformationText( result );
+      final String infoText = getInformationText( result );
       m_textPanel.setText( infoText, true, false );
     }
     m_panel.layout( true );
@@ -162,17 +163,11 @@ public class ResultMetaInfoViewer extends Viewer
     if( result == null )
       return "kein Ergebnis selektiert";
 
-    IScenarioResultMeta scenarioResult = null;
-    ICalcUnitResultMeta calcUnitResult = null;
-    IStepResultMeta stepResult = null;
-    IDocumentResultMeta docResult = null;
-
-    StringBuffer buf = new StringBuffer();
+    final StringBuffer buf = new StringBuffer();
 
     /* possible entries */
-    String scenarioName = null;
-    String scenarioDescription = null;
-
+    final String scenarioName;
+    final String scenarioDescription;
     String calcUnitName = null;
     String calcUnitDescription = null;
     String calcStart = null;
@@ -190,87 +185,45 @@ public class ResultMetaInfoViewer extends Viewer
     String docMin = null;
     String docMax = null;
 
-    if( result instanceof ICalcUnitResultMeta )
+    // TODO: uäargh! Lots of copy/paste code....!
+    final IScenarioResultMeta scenarioResult = getScenarioResultMeta( result );
+    if( scenarioResult != null )
     {
-      // get info of the parent
-      scenarioResult = getScenarioResultMeta( result );
-      if( scenarioResult != null )
-      {
-        scenarioName = scenarioResult.getName();
-        scenarioDescription = scenarioResult.getDescription();
-      }
+      scenarioName = scenarioResult.getName();
+      scenarioDescription = scenarioResult.getDescription();
+    }
+    else
+    {
+      scenarioName = null;
+      scenarioDescription = null;
+    }
 
-      // get selection
-      calcUnitResult = (ICalcUnitResultMeta) result;
-
-      // get infos about the selected calc unit
+    final ICalcUnitResultMeta calcUnitResult = getCalcUnitResultMeta( result );
+    if( calcUnitResult != null )
+    {
       calcUnitName = calcUnitResult.getName();
       calcUnitDescription = calcUnitResult.getDescription();
-      calcStart = INFO_DF.format( calcUnitResult.getCalcStartTime() );
-      calcEnd = INFO_DF.format( calcUnitResult.getCalcEndTime() );
 
+      final Date calcStartTime = calcUnitResult.getCalcStartTime();
+      final Date calcEndTime = calcUnitResult.getCalcEndTime();
+      calcStart = calcStartTime == null ? "-" : INFO_DF.format( calcStartTime );
+      calcEnd = calcEndTime == null ? "-" : INFO_DF.format( calcEndTime );
     }
-    else if( result instanceof IStepResultMeta )
+
+    final IStepResultMeta stepResult = getStepResultMeta( result );
+    if( stepResult != null )
     {
-      // get parents
-      scenarioResult = getScenarioResultMeta( result );
-
-      if( scenarioResult != null )
-      {
-        scenarioName = scenarioResult.getName();
-        scenarioDescription = scenarioResult.getDescription();
-      }
-
-      calcUnitResult = getCalcUnitResultMeta( result );
-      if( calcUnitResult != null )
-      {
-        calcUnitName = calcUnitResult.getName();
-        calcUnitDescription = calcUnitResult.getDescription();
-        calcStart = INFO_DF.format( calcUnitResult.getCalcStartTime() );
-        calcEnd = INFO_DF.format( calcUnitResult.getCalcEndTime() );
-      }
-
-      // get selection
-      stepResult = (IStepResultMeta) result;
-
-      // get infos of the selected time step
       stepName = stepResult.getName();
       stepDescription = stepResult.getDescription();
       stepType = stepResult.getStepType().toString();
-      stepTime = INFO_DF.format( stepResult.getStepTime() );
+      final Date stepResultTime = stepResult.getStepTime();
+      stepTime = stepResultTime == null ? "-" : INFO_DF.format( stepResultTime );
       stepNumber = ((Integer) stepResult.getStepNumber()).toString();
-      // TODO: create a link to status
     }
-    else if( result instanceof IDocumentResultMeta )
+
+    IDocumentResultMeta docResult = null;
+    if( result instanceof IDocumentResultMeta )
     {
-      // get info of the parents
-      scenarioResult = getScenarioResultMeta( result );
-      if( scenarioResult != null )
-      {
-        scenarioName = scenarioResult.getName();
-        scenarioDescription = scenarioResult.getDescription();
-      }
-
-      calcUnitResult = getCalcUnitResultMeta( result );
-      if( calcUnitResult != null )
-      {
-        calcUnitName = calcUnitResult.getName();
-        calcUnitDescription = calcUnitResult.getDescription();
-        calcStart = INFO_DF.format( calcUnitResult.getCalcStartTime() );
-        calcEnd = INFO_DF.format( calcUnitResult.getCalcEndTime() );
-      }
-
-      stepResult = getStepResultMeta( result );
-      if( stepResult != null )
-      {
-        stepName = stepResult.getName();
-        stepDescription = stepResult.getDescription();
-        stepType = stepResult.getStepType().toString();
-        stepTime = INFO_DF.format( stepResult.getStepTime() );
-        stepNumber = ((Integer) stepResult.getStepNumber()).toString();
-      }
-
-      // get selection
       docResult = (IDocumentResultMeta) result;
 
       // get infos of the selected document
@@ -329,11 +282,11 @@ public class ResultMetaInfoViewer extends Viewer
       buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + stepType + "\"></li>" );
 
       buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"zum Zeitpunkt:\">" + stepTime + "</li>" );
-      
-      // Just to avoid to write -1 as steady "timestep" 
+
+      // Just to avoid to write -1 as steady "timestep"
       if( !stepResult.getStepType().equals( IStepResultMeta.STEPTYPE.steady ) )
         buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Schrittnummer:\">" + stepNumber + "</li>" );
-      
+
       buf.append( "<br/>" );
     }
 
@@ -365,13 +318,13 @@ public class ResultMetaInfoViewer extends Viewer
   /**
    * gets the ScenarioResultMeta as the papa of all results
    */
-  private IScenarioResultMeta getScenarioResultMeta( IResultMeta result )
+  private IScenarioResultMeta getScenarioResultMeta( final IResultMeta result )
   {
     if( result instanceof IScenarioResultMeta )
       return (IScenarioResultMeta) result;
     else
     {
-      IResultMeta parent = result.getParent();
+      final IResultMeta parent = result.getParent();
       if( parent != null )
       {
         return getScenarioResultMeta( parent );
@@ -383,13 +336,13 @@ public class ResultMetaInfoViewer extends Viewer
   /**
    * gets the CalcUnitResultMeta as the papa of all steps
    */
-  private ICalcUnitResultMeta getCalcUnitResultMeta( IResultMeta result )
+  private ICalcUnitResultMeta getCalcUnitResultMeta( final IResultMeta result )
   {
     if( result instanceof ICalcUnitResultMeta )
       return (ICalcUnitResultMeta) result;
     else
     {
-      IResultMeta parent = result.getParent();
+      final IResultMeta parent = result.getParent();
       if( parent != null )
       {
         return getCalcUnitResultMeta( parent );
@@ -401,13 +354,13 @@ public class ResultMetaInfoViewer extends Viewer
   /**
    * gets the StepResultMeta as the papa of all documents (except tin_terrain)
    */
-  private IStepResultMeta getStepResultMeta( IResultMeta result )
+  private IStepResultMeta getStepResultMeta( final IResultMeta result )
   {
     if( result instanceof IStepResultMeta )
       return (IStepResultMeta) result;
     else
     {
-      IResultMeta parent = result.getParent();
+      final IResultMeta parent = result.getParent();
       if( parent != null )
       {
         return getStepResultMeta( parent );
@@ -420,7 +373,7 @@ public class ResultMetaInfoViewer extends Viewer
    * @see org.eclipse.jface.viewers.Viewer#setInput(java.lang.Object)
    */
   @Override
-  public void setInput( Object input )
+  public void setInput( final Object input )
   {
     m_input = input;
 
@@ -431,7 +384,7 @@ public class ResultMetaInfoViewer extends Viewer
    * @see org.eclipse.jface.viewers.Viewer#setSelection(org.eclipse.jface.viewers.ISelection, boolean)
    */
   @Override
-  public void setSelection( ISelection selection, boolean reveal )
+  public void setSelection( final ISelection selection, final boolean reveal )
   {
     throw new UnsupportedOperationException();
   }

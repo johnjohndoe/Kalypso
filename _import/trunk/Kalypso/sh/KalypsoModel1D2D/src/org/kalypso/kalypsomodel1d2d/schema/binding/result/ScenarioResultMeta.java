@@ -63,7 +63,7 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
 
   private static final String RESULTS = "results";
 
-  public ScenarioResultMeta( Feature featureToBind )
+  public ScenarioResultMeta( final Feature featureToBind )
   {
     super( featureToBind, IScenarioResultMeta.QNAME );
 
@@ -78,7 +78,7 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#findCalcUnitMetaResult(java.lang.String)
    */
-  public ICalcUnitResultMeta findCalcUnitMetaResult( String calcUnitGmlID )
+  public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID )
   {
     final IFeatureWrapperCollection<IResultMeta> children = getChildren();
     for( final IResultMeta resultMeta : children )
@@ -113,7 +113,7 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
         final IFeatureWrapperCollection<IResultMeta> newChildren = newCalcUnitMeta.getChildren();
         final List<IResultMeta> oldChildrenToRemove = new ArrayList<IResultMeta>();
         final List<IResultMeta> newChildrenToRemove = new ArrayList<IResultMeta>();
-        
+
         // Delete every step-result which is after the restart step
         for( final IResultMeta resultMeta : oldChildren )
         {
@@ -126,7 +126,7 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
               oldChildrenToRemove.add( resultMeta );
           }
         }
-        
+
         // Filter out any toplevel doc-nodes: necessairy, because there is this 'Model-DTM' toplevel
         // Maybe TODO later: maybe its better to replace the old one by the new one....
         for( final IResultMeta resultMeta : newChildren )
@@ -152,10 +152,10 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
       else
       {
         // no restart
-        
+
         // TODO: ask Thomas how to delete all attached resources as well (there is a helper function)
         getChildren().remove( oldCalcUnitMeta );
-        
+
         getChildren().cloneInto( newCalcUnitMeta );
       }
     }
@@ -164,11 +164,14 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
   }
 
   /**
+   * TODO. that interface methods does not belong here; (its also in every other ResultMeta implementation and is also
+   * the same): so put it into common helper class
+   * 
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#addDocument(java.lang.String,
    *      java.lang.String, org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE,
    *      java.lang.String)
    */
-  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status, BigDecimal minValue, BigDecimal maxValue )
+  public void addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue )
   {
     final IDocumentResultMeta document = getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
     document.setName( name );

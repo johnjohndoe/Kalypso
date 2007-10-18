@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
@@ -267,20 +266,12 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     final Feature triangleFeature = m_workspace.getRootFeature();
     if( triangleFeature != null )
     {
-      try
-      {
-        final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
-        triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), gregorianCalendar );
-      }
-      catch( final DatatypeConfigurationException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
+      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), gregorianCalendar );
     }
   }
 
-  public void add( List<GM_Point> nodeList )
+  public void add( final List<GM_Point> nodeList )
   {
     final CS_CoordinateSystem crs = nodeList.get( 0 ).getCoordinateSystem();
 

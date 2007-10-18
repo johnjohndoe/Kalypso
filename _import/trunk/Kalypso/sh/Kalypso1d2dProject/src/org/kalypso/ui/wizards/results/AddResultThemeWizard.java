@@ -130,7 +130,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
   @SuppressWarnings("unchecked")
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
@@ -143,7 +143,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
       m_resultModel = modelProvider.getModel( IScenarioResultMeta.class );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
       ErrorDialog.openError( shell, "1D2D-Ergebnisse", "Ergebnis-Metadaten nicht vorhanden.", e.getStatus() );
@@ -178,6 +178,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
 
       return status.isOK();
     }
+    System.out.println( "No map modell available" );
     return false;
 
   }
@@ -186,7 +187,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
    * TODO: maybe move into helper class
    */
   @SuppressWarnings("deprecation")
-  protected IStatus addThemes( GisTemplateMapModell modell, IResultMeta[] results, IThemeConstructionFactory factory, IProgressMonitor monitor )
+  protected IStatus addThemes( final GisTemplateMapModell modell, final IResultMeta[] results, final IThemeConstructionFactory factory, final IProgressMonitor monitor )
   {
     monitor.beginTask( "Themen hinzufügen", results.length );
 
@@ -196,7 +197,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
       final ResultAddLayerCommandData[] datas = themeCreator.getThemeCommandData();
       if( datas != null )
       {
-        for( ResultAddLayerCommandData data : datas )
+        for( final ResultAddLayerCommandData data : datas )
         {
           if( modell != null )
           {

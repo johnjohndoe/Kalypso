@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.core.runtime.IPath;
@@ -60,7 +59,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class StepResultMeta extends ResultMeta implements IStepResultMeta
 {
 
-  public StepResultMeta( Feature featureToBind )
+  public StepResultMeta( final Feature featureToBind )
   {
     super( featureToBind, IStepResultMeta.QNAME );
   }
@@ -103,7 +102,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setRestart(boolean)
    */
-  public void setRestart( boolean setRestart )
+  public void setRestart( final boolean setRestart )
   {
     getFeature().setProperty( QNAME_PROP_STEP_IS_RESTART, setRestart );
   }
@@ -111,7 +110,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setStepNumber(int)
    */
-  public void setStepNumber( int stepNumber )
+  public void setStepNumber( final int stepNumber )
   {
     getFeature().setProperty( QNAME_PROP_STEP_NUMBER, stepNumber );
   }
@@ -119,23 +118,16 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setStepTime(java.util.Date)
    */
-  public void setStepTime( Date stepTime )
+  public void setStepTime( final Date stepTime )
   {
-    try
-    {
-      final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( stepTime );
-      getFeature().setProperty( QNAME_PROP_STEP_TIME, gregorianCalendar );
-    }
-    catch( DatatypeConfigurationException e )
-    {
-      e.printStackTrace();
-    }
+    final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( stepTime );
+    getFeature().setProperty( QNAME_PROP_STEP_TIME, gregorianCalendar );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setStepType(org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.STEPTYPE)
    */
-  public void setStepType( STEPTYPE stepType )
+  public void setStepType( final STEPTYPE stepType )
   {
     getFeature().setProperty( QNAME_PROP_STEP_TYPE, stepType.name() );
   }
@@ -145,7 +137,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
    *      java.lang.String, org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE,
    *      java.lang.String)
    */
-  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status, BigDecimal minValue, BigDecimal maxValue )
+  public IDocumentResultMeta addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue )
   {
     final IDocumentResultMeta document = getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
     document.setName( name );
@@ -157,5 +149,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
       document.setMinValue( minValue );
     if( maxValue != null )
       document.setMaxValue( maxValue );
+
+    return document;
   }
 }

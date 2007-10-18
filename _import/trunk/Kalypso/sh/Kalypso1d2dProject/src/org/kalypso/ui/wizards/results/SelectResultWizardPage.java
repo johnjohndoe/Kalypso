@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -70,21 +71,23 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public class SelectResultWizardPage extends WizardPage implements IWizardPage
 {
-  private IResultMeta m_resultRoot;
-
-  protected CheckboxTreeViewer m_treeViewer;
-
   private final IThemeConstructionFactory m_factory;
 
   private final ViewerFilter m_filter;
+
+  private IResultMeta m_resultRoot;
+
+  private CheckboxTreeViewer m_treeViewer;
+
+  private Object[] m_checkedElements = null;
 
   public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final IThemeConstructionFactory factory )
   {
     super( pageName, title, titleImage );
 
     m_factory = factory;
-
     m_filter = filter;
+
     setDescription( "Wählen Sie auf dieser Seite die Ergebnisse aus." );
   }
 
@@ -94,6 +97,11 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
     if( m_treeViewer != null )
       m_treeViewer.setInput( resultRoot );
+  }
+
+  public IResultMeta getResultRoot( )
+  {
+    return m_resultRoot;
   }
 
   /**
@@ -139,18 +147,32 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     m_treeViewer.addCheckStateListener( new ICheckStateListener()
     {
       @SuppressWarnings("synthetic-access")
-      public void checkStateChanged( CheckStateChangedEvent event )
+      public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final IResultMeta resultMeta = (IResultMeta) event.getElement();
         final boolean isChecked = event.getChecked();
         handleCheckStateChanged( resultMeta, isChecked );
       }
     } );
+
+    /* Check elements if any defined */
+    if( m_checkedElements != null )
+    {
+      final ITreeContentProvider contentProvider = (ITreeContentProvider) m_treeViewer.getContentProvider();
+      for( final Object elementToCheck : m_checkedElements )
+      {
+        final Object parentToExpand = contentProvider.getParent( elementToCheck );
+        if( parentToExpand != null )
+          m_treeViewer.expandToLevel( parentToExpand, 1 );
+      }
+      m_treeViewer.setCheckedElements( m_checkedElements );
+    }
+
     setControl( panel );
   }
 
   @SuppressWarnings("unchecked")
-  protected void handleSelectionChanged( final IStructuredSelection selection, ResultMetaInfoViewer resultViewer )
+  protected void handleSelectionChanged( final IStructuredSelection selection, final ResultMetaInfoViewer resultViewer )
   {
     resultViewer.setInput( selection.getFirstElement() );
   }
@@ -175,4 +197,19 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     return m_factory;
   }
 
+  /**
+   * The elements which should initally be checked.
+   * <p>
+   * This method must be called before createControl is invoked.
+   * </p>
+   */
+  public void setInitialCheckedElements( final Object[] checkedElements )
+  {
+    m_checkedElements = checkedElements;
+  }
+
+  protected CheckboxTreeViewer getTreeViewer( )
+  {
+    return m_treeViewer;
+  }
 }

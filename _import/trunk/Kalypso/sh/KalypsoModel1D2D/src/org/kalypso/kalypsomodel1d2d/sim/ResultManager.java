@@ -89,8 +89,6 @@ public class ResultManager implements Runnable
 
   private static final FilenameFilter FILTER_2D = new PrefixSuffixFilter( "", ".2d" );
 
-  private static final FilenameFilter FILTER_GMT = new PrefixSuffixFilter( "", ".gmt" );
-
   /**
    * Time step id for non-unsteady calculation
    */

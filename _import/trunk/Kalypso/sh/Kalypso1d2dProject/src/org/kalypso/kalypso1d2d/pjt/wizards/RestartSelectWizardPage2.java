@@ -36,7 +36,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
 
   private ListViewer m_listViewer;
 
-  private Vector<IStepResultMeta> m_sortedResults = new Vector<IStepResultMeta>();
+  private final Vector<IStepResultMeta> m_sortedResults = new Vector<IStepResultMeta>();
 
   private Button m_btnUp;
 
@@ -88,7 +88,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       {
       }
 
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
         m_btnUp.setEnabled( m_selectedInput != null );
@@ -112,7 +112,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
     } );
     m_listViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ISelection selection = event.getSelection();
@@ -142,7 +142,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       {
       }
 
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       public void widgetSelected( final SelectionEvent e )
       {
         final int position = m_sortedResults.indexOf( m_selectedInput );
@@ -164,7 +164,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       {
       }
 
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       public void widgetSelected( final SelectionEvent e )
       {
         final int position = m_sortedResults.indexOf( m_selectedInput );
@@ -183,9 +183,11 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
   public void initializeResults( final IResultMeta[] resultMetas )
   {
     m_sortedResults.clear();
-    for( int i = 0; i < resultMetas.length; i++ )
-      if( resultMetas[i] instanceof IStepResultMeta )
-        m_sortedResults.add( (IStepResultMeta) resultMetas[i] );
+    for( final IResultMeta element : resultMetas )
+    {
+      if( element instanceof IStepResultMeta )
+        m_sortedResults.add( (IStepResultMeta) element );
+    }
     m_listViewer.setInput( m_sortedResults );
   }
 

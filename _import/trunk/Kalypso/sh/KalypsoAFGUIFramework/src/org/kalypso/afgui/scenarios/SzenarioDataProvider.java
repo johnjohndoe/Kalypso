@@ -60,9 +60,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
     private final List<IScenarioDataListener> m_controller;
 
-    private final Class m_modelClass;
+    private final Class< ? > m_modelClass;
 
-    public KeyPoolListener( final IPoolableObjectType key, final List<IScenarioDataListener> controller, final Class modelClass )
+    public KeyPoolListener( final IPoolableObjectType key, final List<IScenarioDataListener> controller, final Class< ? > modelClass )
     {
       m_key = key;
       m_controller = controller;
@@ -79,8 +79,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
      */
     public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
     {
-      // TODO Auto-generated method stub
-
     }
 
     /**
@@ -88,7 +86,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
      */
     public boolean isDisposed( )
     {
-      // TODO Auto-generated method stub
       return false;
     }
 
@@ -98,8 +95,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
      */
     public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
     {
-      // TODO Auto-generated method stub
-
     }
 
     /**
@@ -111,7 +106,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       if( newValue instanceof GMLWorkspace )
       {
         final GMLWorkspace workspace = (GMLWorkspace) newValue;
-        
+
         // Adapting directly to IModel is dangerous because the mapping is not unique
         // (for example, 1d2d adapter factory as well as risk adapter factory are registered to adapt Feature to IModel)
         // TODO remove mappings to IModel from the factories
@@ -185,6 +180,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
           th.printStackTrace();
         }
 
+        // TODO: this causes an exception no startup!
         final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( m_dataSetScope );
         if( locationMap != null )
         {
@@ -204,7 +200,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     job.schedule();
   }
 
-  private void fireScenarioDataFolderChanged( IContainer szenarioFolder )
+  private void fireScenarioDataFolderChanged( final IContainer szenarioFolder )
   {
     for( final IScenarioDataListener listener : m_controller )
     {
@@ -382,6 +378,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       monitor.beginTask( Messages.getString( "SzenarioDataProvider.14" ) + modelClass.getSimpleName() + Messages.getString( "SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
+      if( keyPoolListener == null )
+        throw new IllegalArgumentException( "Unknown model: " + modelClass.getName() );
+
       final IPoolableObjectType key = keyPoolListener.getKey();
       if( key != null )
       {
