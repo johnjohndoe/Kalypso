@@ -121,9 +121,11 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
    */
   public void clear( )
   {
-    m_map.clear();
-
-    fireSelectionChanged();
+    if( !m_map.isEmpty() )
+    {
+      m_map.clear();
+      fireSelectionChanged();
+    }
   }
 
   /**
