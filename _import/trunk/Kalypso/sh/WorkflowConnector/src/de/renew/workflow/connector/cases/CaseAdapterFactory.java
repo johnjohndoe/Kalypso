@@ -12,7 +12,7 @@ public class CaseAdapterFactory implements IAdapterFactory
 
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
-    if( adapterType == IWorkbenchAdapter.class )
+    if( adapterType == IWorkbenchAdapter.class || adapterType == IWorkbenchAdapter2.class)
     {
       return m_caseTreeContentAdapter;
     }

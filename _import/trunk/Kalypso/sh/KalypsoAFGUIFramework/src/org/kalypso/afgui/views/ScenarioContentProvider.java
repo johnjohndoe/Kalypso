@@ -11,21 +11,31 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.ScenarioList;
 
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.ICaseManager;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
+import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.context.IActiveContextChangeListener;
 
 /**
  * @author Stefan Kurzbach
  * 
  */
-public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener<Scenario>
+public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener<Scenario>, IActiveContextChangeListener<Scenario>
 {
   private Viewer m_viewer;
+
+  public ScenarioContentProvider( )
+  {
+    final ActiveWorkContext<Scenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    activeWorkContext.addActiveContextChangeListener( this );
+  }
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
@@ -157,28 +167,54 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     refreshViewer( caze );
   }
 
+  /**
+   * @see de.renew.workflow.connector.context.IActiveContextChangeListener#activeContextChanged(de.renew.workflow.connector.cases.CaseHandlingProjectNature,
+   *      de.renew.workflow.cases.Case)
+   */
+  public void activeContextChanged( final CaseHandlingProjectNature newProject, final Scenario caze )
+  {
+    refreshViewer( null );
+  }
+
   private void refreshViewer( final Scenario caze )
   {
     if( m_viewer instanceof StructuredViewer )
     {
-      final String projectName = ScenarioHelper.getProjectName( caze );
-      final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
-      final StructuredViewer viewer = (StructuredViewer) m_viewer;
-      final Scenario parentScenario = caze.getParentScenario();
-      if( parentScenario != null )
+      if( caze == null )
       {
-        viewer.refresh( parentScenario );
+        m_viewer.refresh();
       }
       else
       {
-        if( project != null )
+        final String projectName = ScenarioHelper.getProjectName( caze );
+        final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
+        final StructuredViewer viewer = (StructuredViewer) m_viewer;
+        final Scenario parentScenario = caze.getParentScenario();
+        if( parentScenario != null )
         {
-          viewer.refresh( project );
+          viewer.refresh( parentScenario );
         }
+        else
+        {
+          if( project != null )
+          {
+            viewer.refresh( project );
+          }
+        }
+        final IFolder folder = ScenarioHelper.getFolder( caze );
+        viewer.refresh( folder.getParent() );
       }
-      final IFolder folder = ScenarioHelper.getFolder( caze );
-      viewer.refresh( folder.getParent() );
     }
   }
 
+  /**
+   * @see org.eclipse.ui.model.WorkbenchContentProvider#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    final ActiveWorkContext<Scenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    activeWorkContext.removeActiveContextChangeListener( this );
+    super.dispose();
+  }
 }

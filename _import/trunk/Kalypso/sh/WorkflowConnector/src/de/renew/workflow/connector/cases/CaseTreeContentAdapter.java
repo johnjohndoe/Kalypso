@@ -40,12 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.cases;
 
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.model.WorkbenchAdapter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Stefan Kurzbach
@@ -55,9 +63,15 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
 {
   private final ImageDescriptor m_caseImage;
 
+  private final FontData m_activeFont;
+
   public CaseTreeContentAdapter( )
   {
     m_caseImage = AbstractUIPlugin.imageDescriptorFromPlugin( WorkflowConnectorPlugin.PLUGIN_ID, "icons/blue.png" );
+    final FontData[] fontData = JFaceResources.getFontRegistry().getFontData( JFaceResources.DIALOG_FONT );
+    final String dialogFontName = fontData[0].getName();
+    final int dialogFontHeight = fontData[0].getHeight();
+    m_activeFont = new FontData( dialogFontName, dialogFontHeight, SWT.BOLD );
   }
 
   /**
@@ -87,6 +101,28 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
     if( o instanceof Case )
     {
       return ((Case) o).getName();
+    }
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.ui.model.WorkbenchAdapter#getFont(java.lang.Object)
+   */
+  @Override
+  public FontData getFont( final Object o )
+  {
+    if( o instanceof Case )
+    {
+      final Case caze = (Case) o;
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      if( !workbench.isClosing() )
+      {
+        final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+        final IEvaluationContext currentState = handlerService.getCurrentState();
+        final String activeCaseURI = (String) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_URI_NAME );
+        if( caze.getURI().equals( activeCaseURI ) )
+          return m_activeFont;
+      }
     }
     return null;
   }
