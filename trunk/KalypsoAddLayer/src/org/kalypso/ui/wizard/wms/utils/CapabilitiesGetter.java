@@ -8,7 +8,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.gml.wms.WMSCapabilitiesHelper;
+import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
+import org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader;
 
 /**
  * Small runnable, which loads the capabilities from a WMS.
@@ -41,9 +42,10 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
    *            A progress monitor.
    * @return A status containing the result.
    */
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( IProgressMonitor monitor ) throws CoreException
   {
-    WMSCapabilities capabilities = WMSCapabilitiesHelper.loadCapabilities( m_service, monitor );
+    // TODO Decide in the wizard, which capabilities loader should be used (use the combo box there for).
+    WMSCapabilities capabilities = DeegreeWMSUtilities.loadCapabilities( new WMSCapabilitiesLoader( m_service, 10000 ), monitor );
 
     m_capabilities = capabilities;
 

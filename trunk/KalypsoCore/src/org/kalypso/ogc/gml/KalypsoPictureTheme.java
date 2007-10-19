@@ -42,7 +42,7 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.kalypsodeegree_impl.tools.WMSHelper;
+import org.kalypsodeegree_impl.tools.TransformationUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -109,7 +109,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
       final GM_Envelope envelope = m_domain.getGM_Envelope( m_domain.getCoordinateSystem() );
       final CS_CoordinateSystem crs = m_domain.getCoordinateSystem();
       // transform from crs to crs? optimisation possible?
-      WMSHelper.transformImage( m_image, envelope, crs, crs, p, g );
+      TransformationUtilities.transformImage( m_image, envelope, crs, crs, p, g );
     }
     catch( final Exception e )
     {

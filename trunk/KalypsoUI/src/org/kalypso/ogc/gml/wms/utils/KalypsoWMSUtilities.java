@@ -38,8 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.themes.utils;
+package org.kalypso.ogc.gml.wms.utils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
@@ -47,8 +49,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.util.PropertiesHelper;
-import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
+import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.wms.provider.KalypsoWMSImageProvider;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -141,5 +143,22 @@ public class KalypsoWMSUtilities
     provider.init( themeName, source, localSRS );
 
     return provider;
+  }
+
+  /**
+   * This function creates an URL for a get capabilities request from the given base URL.
+   * 
+   * @param baseURL
+   *            The base URL.
+   * @return The get capabilities request URL.
+   */
+  public static URL createCapabilitiesRequest( URL baseURL ) throws MalformedURLException
+  {
+    String query = baseURL.getQuery();
+    String getCapabilitiesQuery = "SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities";
+    String queryToken = (query == null || query.length() == 0) ? "?" : "&";
+    String urlGetCapabilitiesString = baseURL.toString() + queryToken + getCapabilitiesQuery;
+
+    return new URL( urlGetCapabilitiesString );
   }
 }

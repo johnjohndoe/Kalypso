@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.wms;
+package org.kalypso.ogc.gml.wms.deegree.document;
 
 import java.io.IOException;
 import java.io.PushbackReader;

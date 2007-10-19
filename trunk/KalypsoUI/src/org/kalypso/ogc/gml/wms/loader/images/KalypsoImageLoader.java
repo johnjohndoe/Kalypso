@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.themes.loader;
+package org.kalypso.ogc.gml.wms.loader.images;
 
 import java.awt.Image;
 
@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
