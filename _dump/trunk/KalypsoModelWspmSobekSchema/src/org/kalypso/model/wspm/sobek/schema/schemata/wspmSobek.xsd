@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek"
-	xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmprofile="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspm.sobek" elementFormDefault="qualified"
-	version="0.1">
+	xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:obslink="obslink.zml.kalypso.org" xmlns:wspmprofile="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspm.sobek"
+	elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -12,6 +12,7 @@
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
 	<import namespace="org.kalypso.model.wspmprofile" schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/profile.xsd"/>
+	<import namespace="obslink.zml.kalypso.org"/>
 	<!-- schema for WSPM = 'water surface profile model' -->
 	<!-- TODO: KALYPSO-Header einfügen -->
 	<!-- 
@@ -629,15 +630,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Lastfall Definition</name>
-				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
-				<tooltip>Lastfall Definition - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
-				<description>Lastfall Definition - ${property:org.kalypso.model.wspm.sobek#name}</description>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+				<tooltip>Lastfall Definition - ${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</tooltip>
+				<description>Lastfall Definition - ${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Loading Case Definition</name>
-				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
-				<tooltip>Loading Case Definition - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
-				<description>Loading Case Definition - ${property:org.kalypso.model.wspm.sobek#name}</description>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+				<tooltip>Loading Case Definition - ${listProperty:http://www.opengis.net/gml#name;0;-no name-}</tooltip>
+				<description>Loading Case Definition - ${listProperty:http://www.opengis.net/gml#name;0;-no name-}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -652,6 +653,7 @@
 				<sequence>
 					<element name="linkedLastfall" type="wspmSobek:LastfallLinkPropertyType"/>
 					<element name="data" type="om:ObservationType"/>
+					<element name="sourceRepositoryObservation" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="observationBegin" type="date" nillable="true"/>
 					<element name="observationEnd" type="date" nillable="true"/>
 				</sequence>
