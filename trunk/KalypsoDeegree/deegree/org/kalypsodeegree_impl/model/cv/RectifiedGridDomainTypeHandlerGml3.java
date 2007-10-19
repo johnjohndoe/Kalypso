@@ -20,22 +20,24 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
 /**
  * Modified Nadja Peiler's RectifiedGridDomainTypeHandler for the GML3 Namespace.
  * <p>
- * We are using this true handler instead of using java-binding, because the java binding classes are not correct.
- * The binding classes do not support getting/setting of the grid-domain.
+ * We are using this true handler instead of using java-binding, because the java binding classes are not correct. The
+ * binding classes do not support getting/setting of the grid-domain.
  * </p>
  * TypeHandler for GridDomain of RectifiedGridCoverage
  * 
+ * @author Nadja Peiler
  * @author Dejan Antanaskovic
  */
 public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
   public static final QName TYPENAME = new QName( NS.GML3, "RectifiedGridDomainType" );
-  
-  public RectifiedGridDomainTypeHandlerGml3(){}
+
+  public RectifiedGridDomainTypeHandlerGml3( )
+  {
+  }
 
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
@@ -57,33 +59,34 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
    *      java.net.URL)
    */
+  @Deprecated
   @Override
   public void marshall( Object object, Node node, URL context ) throws TypeRegistryException
   {
     final RectifiedGridDomain gridDomain = (RectifiedGridDomain) object;
-    Document ownerDocument = node.getOwnerDocument();
+    final Document ownerDocument = node.getOwnerDocument();
 
-    Element e_rectifiedGrid = ownerDocument.createElementNS( NS.GML3, "gml:RectifiedGrid" );
+    final Element e_rectifiedGrid = ownerDocument.createElementNS( NS.GML3, "gml:RectifiedGrid" );
     e_rectifiedGrid.setAttribute( "dimension", "2" );
 
-    Element e_limits = ownerDocument.createElementNS( NS.GML3, "gml:limits" );
-    Element e_gridEnvelope = ownerDocument.createElementNS( NS.GML3, "gml:GridEnvelope" );
-    GridRange gridRange = gridDomain.getGridRange();
-    double[] lows = gridRange.getLow();
-    String stringLows = new String( (new Double( lows[0] )).intValue() + " " + (new Double( lows[1] )).intValue() );
-    double[] highs = gridRange.getHigh();
-    String stringHighs = new String( (new Double( highs[0] )).intValue() + " " + (new Double( highs[1] )).intValue() );
-    Element e_low = ownerDocument.createElementNS( NS.GML3, "gml:low" );
+    final Element e_limits = ownerDocument.createElementNS( NS.GML3, "gml:limits" );
+    final Element e_gridEnvelope = ownerDocument.createElementNS( NS.GML3, "gml:GridEnvelope" );
+    final GridRange gridRange = gridDomain.getGridRange();
+    final double[] lows = gridRange.getLow();
+    final String stringLows = new String( (new Double( lows[0] )).intValue() + " " + (new Double( lows[1] )).intValue() );
+    final double[] highs = gridRange.getHigh();
+    final String stringHighs = new String( (new Double( highs[0] )).intValue() + " " + (new Double( highs[1] )).intValue() );
+    final Element e_low = ownerDocument.createElementNS( NS.GML3, "gml:low" );
+    final Element e_high = ownerDocument.createElementNS( NS.GML3, "gml:high" );
     e_low.appendChild( ownerDocument.createTextNode( stringLows ) );
-    Element e_high = ownerDocument.createElementNS( NS.GML3, "gml:high" );
     e_high.appendChild( ownerDocument.createTextNode( stringHighs ) );
     e_gridEnvelope.appendChild( e_low );
     e_gridEnvelope.appendChild( e_high );
     e_limits.appendChild( e_gridEnvelope );
     e_rectifiedGrid.appendChild( e_limits );
 
-    Element e_origin = ownerDocument.createElementNS( NS.GML3, "gml:origin" );
-    GM_Point origin;
+    final Element e_origin = ownerDocument.createElementNS( NS.GML3, "gml:origin" );
+    final GM_Point origin;
     try
     {
       origin = gridDomain.getOrigin( null );
@@ -92,20 +95,20 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     {
       throw new TypeRegistryException( "origin error", e1 );
     }
-    Element e_point = ownerDocument.createElementNS( NS.GML3, "gml:Point" );
+    final Element e_point = ownerDocument.createElementNS( NS.GML3, "gml:Point" );
     try
     {
       e_point.setAttribute( "srsName", origin.getCoordinateSystem().getName() );
     }
     catch( Exception e )
     {
-      System.out.println( e );
+      e.printStackTrace();
     }
-    Element e_coordinates = ownerDocument.createElementNS( NS.GML3, "gml:pos" );
-    //e_coordinates.setAttribute( "cs", "," );
-    //e_coordinates.setAttribute( "decimal", "." );
-    //e_coordinates.setAttribute( "ts", " " );
-    String stringOrigin = new String( origin.getX() + " " + origin.getY() );
+    final Element e_coordinates = ownerDocument.createElementNS( NS.GML3, "gml:pos" );
+    // e_coordinates.setAttribute( "cs", "," );
+    // e_coordinates.setAttribute( "decimal", "." );
+    // e_coordinates.setAttribute( "ts", " " );
+    final String stringOrigin = new String( origin.getX() + " " + origin.getY() );
     e_coordinates.appendChild( ownerDocument.createTextNode( stringOrigin ) );
     e_point.appendChild( e_coordinates );
     e_origin.appendChild( e_point );
@@ -113,7 +116,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
 
     final OffsetVector offsetX = gridDomain.getOffsetX();
     final OffsetVector offsetY = gridDomain.getOffsetY();
-    
+
     final Element e_offsetVector1 = ownerDocument.createElementNS( NS.GML3, "rgc:offsetVector" );
     final String offsetVector1 = new String( offsetX.getGeoX() + " " + offsetX.getGeoY() );
     e_offsetVector1.appendChild( ownerDocument.createTextNode( offsetVector1 ) );
@@ -129,41 +132,33 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
+  @Deprecated
   @Override
   public Object unmarshall( Node node, URL context, IUrlResolver urlResolver )
   {
-    Node node_rg = ((Element) node).getElementsByTagNameNS( NS.GML3, "RectifiedGrid" ).item( 0 );
-
-    Node node_limits = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "limits" ).item( 0 );
-    Node node_gridEnv = ((Element) node_limits).getElementsByTagNameNS( NS.GML3, "GridEnvelope" ).item( 0 );
-    Node n_low = ((Element) node_gridEnv).getElementsByTagNameNS( NS.GML3, "low" ).item( 0 );
-    String[] lows = n_low.getFirstChild().getNodeValue().trim().split( " " );
-    double[] low = new double[lows.length];
+    final Node node_rg = ((Element) node).getElementsByTagNameNS( NS.GML3, "RectifiedGrid" ).item( 0 );
+    final Node node_limits = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "limits" ).item( 0 );
+    final Node node_gridEnv = ((Element) node_limits).getElementsByTagNameNS( NS.GML3, "GridEnvelope" ).item( 0 );
+    final Node n_low = ((Element) node_gridEnv).getElementsByTagNameNS( NS.GML3, "low" ).item( 0 );
+    final String[] lows = n_low.getFirstChild().getNodeValue().trim().split( " " );
+    final double[] low = new double[lows.length];
     for( int i = 0; i < low.length; i++ )
       low[i] = Double.parseDouble( lows[i] );
 
-    System.out.println( low[0] + " " + low[1] );
-
-    Node n_high = ((Element) node_gridEnv).getElementsByTagNameNS( NS.GML3, "high" ).item( 0 );
-    String[] highs = n_high.getFirstChild().getNodeValue().trim().split( " " );
-    double[] high = new double[highs.length];
+    final Node n_high = ((Element) node_gridEnv).getElementsByTagNameNS( NS.GML3, "high" ).item( 0 );
+    final String[] highs = n_high.getFirstChild().getNodeValue().trim().split( " " );
+    final double[] high = new double[highs.length];
     for( int i = 0; i < high.length; i++ )
       high[i] = Double.parseDouble( highs[i] );
 
-    System.out.println( high[0] + " " + high[1] );
+    final GridRange gridRange = new GridRange_Impl( low, high );
 
-    GridRange gridRange = new GridRange_Impl( low, high );
-
-    Node n_origin = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "origin" ).item( 0 );
-    Node n_point = ((Element) n_origin).getElementsByTagNameNS( NS.GML3, "Point" ).item( 0 );
+    final Node n_origin = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "origin" ).item( 0 );
+    final Node n_point = ((Element) n_origin).getElementsByTagNameNS( NS.GML3, "Point" ).item( 0 );
     try
     {
-      AdapterBindingToValue adapter = new AdapterBindingToValue_GML31();
-      GM_Point origin = (GM_Point) adapter.wrapFromNode( n_point );
-      // GMLGeometry gmlGeom = GMLFactory.createGMLGeometry( (Element) n_point );
-      // GM_Point origin = (GM_Point) GMLAdapter.wrap( gmlGeom );
-      System.out.println( "OriginX: " + origin.getX() + ", OriginY: " + origin.getY() );
-      System.out.println( "CoordinateSystem: " + origin.getCoordinateSystem().getName() );
+      final AdapterBindingToValue adapter = new AdapterBindingToValue_GML31();
+      final GM_Point origin = (GM_Point) adapter.wrapFromNode( n_point );
 
       final NodeList nl_offSetVector = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "offsetVector" );
       final List<RectifiedGridDomain.OffsetVector> offSetVectors = new ArrayList<OffsetVector>();
@@ -183,9 +178,6 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
       {
         final RectifiedGridDomain.OffsetVector offsetX = offSetVectors.get( 0 );
         final RectifiedGridDomain.OffsetVector offsetY = offSetVectors.get( 1 );
-        System.out.println( "OffSetX: " + offsetX.toString() );
-        System.out.println( "OffSetY: " + offsetY.toString() );
-
         return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
       }
       else
@@ -193,7 +185,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     }
     catch( final Throwable e )
     {
-      System.out.println( e );
+      e.printStackTrace();
       return null;
     }
   }
@@ -212,7 +204,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
    */
   public Object cloneObject( Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
-    throw new CloneNotSupportedException( "Clone is not supported!" );
+    throw new CloneNotSupportedException( "Cloning is not supported." );
   }
 
   /**
@@ -228,7 +220,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
    */
   public boolean isGeometry( )
   {
-    // TODO check this
+    // Not a geometry itself (RectifiedGridDomain is not a GM_Object)
     return false;
   }
 
