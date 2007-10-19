@@ -91,6 +91,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Imports the results of a wspm waterlevel calculation as stationary result into the result database of 1d2d.
@@ -152,6 +153,8 @@ public class Restart1DImporter
     }
     catch( final Throwable e )
     {
+      e.printStackTrace();
+
       /* If anything happens, do not proceed */
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Ergebnis-GML konnte nicht geschrieben werden" ) );
     }
@@ -323,29 +326,51 @@ public class Restart1DImporter
       final GM_Point currentPoint = profilesByStation.get( currentStation );
       final GM_Point nextPoint = nextStation == null ? null : profilesByStation.get( nextStation );
 
-      final BigDecimal waterlevel = (BigDecimal) currentRecord.getValue( waterlevelComp );
-      final BigDecimal velocity = (BigDecimal) currentRecord.getValue( velocityComp );
+      final BigDecimal prevWaterlevel = prevRecord == null ? null : (BigDecimal) prevRecord.getValue( waterlevelComp );
+      final BigDecimal currentWaterlevel = (BigDecimal) currentRecord.getValue( waterlevelComp );
+      final BigDecimal prevVelocity = prevRecord == null ? null : (BigDecimal) prevRecord.getValue( velocityComp );
+      final BigDecimal currentVelocity = (BigDecimal) currentRecord.getValue( velocityComp );
+
+      /* Calculate midside node if possible */
+      if( prevRecord != null )
+      {
+        final double midVelocity = (prevVelocity.doubleValue() + currentVelocity.doubleValue()) / 2d;
+        final Vector2d midsideVector2d = vectorFrom2Points( prevPoint, currentPoint );
+        midsideVector2d.normalize();
+        midsideVector2d.scale( midVelocity );
+
+        final GM_Point midPoint = GeometryUtilities.createGM_PositionAtCenter( prevPoint, currentPoint );
+        final BigDecimal midWaterlevel = prevWaterlevel.add( currentWaterlevel ).divide( new BigDecimal( "2" ), BigDecimal.ROUND_HALF_UP );
+
+        createNodeResult( nodeResults, "Station km " + prevStation + " - " + currentStation, "Virtueller Mitseitenknoten", midPoint, midWaterlevel, midsideVector2d, true );
+      }
 
       /* Calculate the direction */
       final Vector2d vector2d = vectorFrom3Points( prevPoint, currentPoint, nextPoint );
-      vector2d.scale( velocity.doubleValue() );
+      vector2d.scale( currentVelocity.doubleValue() );
 
-      final INodeResult nodeResult = nodeResults.addNew( INodeResult.QNAME, INodeResult.class );
-      nodeResult.setName( currentStation.toString() );
-      // nodeResult.setCalcId( -1 );
-      nodeResult.setDescription( "Station km " + currentStation );
-      nodeResult.setMidSide( false );
-      // // nodeResult.setDepth( Double.NaN );
-      // nodeResult.setDry( -1 );
-      nodeResult.setLocation( currentPoint.getX(), currentPoint.getY(), currentPoint.getZ(), currentPoint.getCoordinateSystem() );
-      nodeResult.setResultValues( vector2d.x, vector2d.y, Double.NaN, waterlevel.doubleValue() );
+      createNodeResult( nodeResults, "Station km " + currentStation, "", currentPoint, currentWaterlevel, vector2d, false );
 
-      min = min.min( velocity );
-      max = max.max( velocity );
+      min = min.min( currentVelocity );
+      max = max.max( currentVelocity );
     }
 
     vectorDocument.setMinValue( min );
     vectorDocument.setMaxValue( max );
+  }
+
+  private void createNodeResult( final INodeResultCollection nodeResults, final String name, final String desc, final GM_Point location, final BigDecimal waterlevel, final Vector2d vector, final boolean isMidside )
+  {
+    final INodeResult nodeResult = nodeResults.addNew( INodeResult.QNAME, INodeResult.class );
+    nodeResult.setName( name );
+    nodeResult.setDescription( desc );
+    // nodeResult.setCalcId( -1 );
+    nodeResult.setMidSide( isMidside );
+    nodeResult.setDepth( Double.NaN );
+    // nodeResult.setDry( -1 );
+    nodeResult.setLocation( location.getX(), location.getY(), location.getZ(), location.getCoordinateSystem() );
+    nodeResult.setResultValues( vector.x, vector.y, Double.NaN, waterlevel.doubleValue() );
+    nodeResult.setVirtualDepth( nodeResult.getDepth() );
   }
 
   private Vector2d vectorFrom3Points( final GM_Point prevPoint, final GM_Point currentPoint, final GM_Point nextPoint )
