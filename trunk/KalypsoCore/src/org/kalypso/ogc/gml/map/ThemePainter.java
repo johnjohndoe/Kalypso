@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -58,20 +59,14 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class ThemePainter
 {
-  private final GeoTransform m_projection;
 
-  private final double m_scale;
+  private final MapPanel m_mapPanel;
 
-  private final GM_Envelope m_boundingBox;
+  private static final IKalypsoTheme[] NO_THEMES = new IKalypsoTheme[0];
 
-  private final IKalypsoTheme[] m_themes;
-
-  public ThemePainter( final IMapModell model, final GeoTransform projection, final GM_Envelope boundingBox, final double scale )
+  public ThemePainter( final MapPanel mapPanel )
   {
-    m_projection = projection;
-    m_boundingBox = boundingBox;
-    m_scale = scale;
-    m_themes = getVisibleThemes( model );
+    m_mapPanel = mapPanel;
   }
 
   /**
@@ -79,20 +74,29 @@ public class ThemePainter
    */
   public void paintThemes( final Graphics2D gr, final boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
+    final IMapModell mapModell = m_mapPanel.getMapModell();
+    final IKalypsoTheme[] m_themes = getVisibleThemes( mapModell );
     final SubMonitor progress = SubMonitor.convert( monitor, "zeichne Themen", m_themes.length );
 
+    final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
+    final GeoTransform projection = m_mapPanel.getProjection();
+    final double scale = MapModellHelper.calcScale( mapModell, boundingBox, m_mapPanel.getWidth(), m_mapPanel.getHeight() );
     for( int i = m_themes.length - 1; i >= 0; i-- )
     {
       final IKalypsoTheme theme = m_themes[i];
 
       final SubMonitor childProgress = progress.newChild( 1 );
-      theme.paint( gr, m_projection, m_scale, m_boundingBox, selected, childProgress );
+      theme.paint( gr, projection, scale, boundingBox, selected, childProgress );
       childProgress.done();
     }
   }
 
   private IKalypsoTheme[] getVisibleThemes( final IMapModell model )
   {
+    if( model == null )
+    {
+      return NO_THEMES;
+    }
     final List<IKalypsoTheme> visibleThemes = new ArrayList<IKalypsoTheme>();
     final IKalypsoThemeVisitor visitor = new IKalypsoThemeVisitor()
     {

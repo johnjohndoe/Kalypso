@@ -54,6 +54,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.awt.ComponentRepaintJob;
 import org.kalypso.contribs.java.awt.HighlightGraphics;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
  * Paints a {@link org.kalypso.ogc.gml.mapmodel.IMapModell}.
@@ -76,10 +77,6 @@ public class MapModellPainter extends Job implements IPainter
 
   private final MapPanel m_mapPanel;
 
-  private final int m_width;
-
-  private final int m_height;
-
   private Image m_mapImage = null;
 
   private final ThemePainter m_themePainter;
@@ -88,15 +85,12 @@ public class MapModellPainter extends Job implements IPainter
    * Creates this painter. Call {@link #schedule()} immediately after creation in order to create the buffered image.
    * </p>
    */
-  public MapModellPainter( final MapPanel mapPanel, final ThemePainter themePainter, final int width, final int height )
+  public MapModellPainter( final MapPanel mapPanel )
   {
-    super( "Karte zeichnen: " + mapPanel.getMapModell().getName() );
-
+    super( "" );
     m_mapPanel = mapPanel;
-    m_themePainter = themePainter;
 
-    m_width = width;
-    m_height = height;
+    m_themePainter = new ThemePainter( m_mapPanel );
   }
 
   /**
@@ -114,8 +108,8 @@ public class MapModellPainter extends Job implements IPainter
    */
   public void dispose( )
   {
-    /* Cancel this job, it should terminate as soon as possible */
-    cancel();
+    if( m_mapImage != null )
+      m_mapImage.flush();
   }
 
   /**
@@ -124,6 +118,11 @@ public class MapModellPainter extends Job implements IPainter
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
+    final IMapModell mapModell = m_mapPanel.getMapModell();
+    if( mapModell != null )
+    {
+      setName( "Karte zeichnen: " + mapModell.getName() );
+    }
     Graphics2D gr = null;
     Job repaintJob = null;
     try
@@ -137,9 +136,11 @@ public class MapModellPainter extends Job implements IPainter
 
       ProgressUtilities.worked( progress, 0 );
 
-      if( (m_width > 0) && (m_height > 0) )
+      final int width = m_mapPanel.getWidth();
+      final int height = m_mapPanel.getHeight();
+      if( (width > 0) && (height > 0) )
       {
-        gr = createImage( progress.newChild( 10 ) );
+        gr = createImage( progress.newChild( 10 ), width, height );
         // if image is null, wokbench is probably shutting down,
         // just return without comment
         if( gr == null )
@@ -185,11 +186,11 @@ public class MapModellPainter extends Job implements IPainter
    * The caller is responsible for disposing the graphics.
    * </p>
    */
-  private Graphics2D createImage( final SubMonitor monitor ) throws CoreException
+  private Graphics2D createImage( final SubMonitor monitor, int width, int height ) throws CoreException
   {
     monitor.beginTask( "initalisiere Buffer", 100 );
 
-    m_mapImage = m_mapPanel.createImage( m_width, m_height );
+    m_mapImage = m_mapPanel.createImage( width, height );
     if( m_mapImage == null )
       return null;
 

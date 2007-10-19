@@ -248,12 +248,15 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
   /** One mutex-rule per panel, so painting jobs for one panel run one after another. */
   private final ISchedulingRule m_painterMutex = new MutexRule();
 
+  private final MapModellPainter m_mapModellPainter;
+
   private IPainter m_modellPainter = null;
 
   public MapPanel( final ICommandTarget viewCommandTarget, final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
     m_selectionManager.addSelectionListener( m_globalSelectionListener );
+    m_mapModellPainter = new MapModellPainter( this );
 
     // set empty Modell:
     setMapModell( null );
@@ -424,6 +427,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     m_paintListeners.clear();
 
     m_modellPainter.dispose();
+    m_mapModellPainter.dispose();
   }
 
   protected void fireExtentChanged( final GM_Envelope oldExtent, final GM_Envelope newExtent )
@@ -637,14 +641,14 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final int y = 0;
     final int w = getWidth();
     final int h = getHeight();
-
+    
     synchronized( this )
     {
       m_shouldPaint = false;
 
       /* Cancel old job if still running. */
-      if( m_modellPainter != null )
-        m_modellPainter.dispose();
+      if( m_mapModellPainter != null && m_modellPainter == m_mapModellPainter )
+        m_mapModellPainter.cancel();
 
       // do not set to null, else we may get NPE in the unsynchronized 'paint'-call
 
@@ -663,14 +667,10 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         // Why -2 ?
         m_projection.setDestRect( x - 2, y - 2, w + x, h + y );
 
-        final double scale = MapModellHelper.calcScale( m_model, getBoundingBox(), w, h );
-
-        final ThemePainter themePainter = new ThemePainter( m_model, getProjection(), getBoundingBox(), scale );
-        final MapModellPainter modellPainter = new MapModellPainter( this, themePainter, w, h );
-        modellPainter.setRule( m_painterMutex );
+        m_modellPainter = m_mapModellPainter;
+        m_mapModellPainter.setRule( m_painterMutex );
         // delay the Schedule, so if another invalidate comes within that timespan, no repaint happens
-        modellPainter.schedule( 250 );
-        m_modellPainter = modellPainter;
+        m_mapModellPainter.schedule( 250 );
       }
 
       m_shouldPaint = true;
