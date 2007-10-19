@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.swt;
 
+import java.text.DateFormat;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -73,6 +76,8 @@ public class WizardFeatureTextBox
 
   protected Text m_textBox;
 
+  private Object m_property;
+
   public WizardFeatureTextBox( final Feature feature, final QName qn )
   {
     m_feature = feature;
@@ -91,12 +96,25 @@ public class WizardFeatureTextBox
 
     if( m_feature != null )
     {
-      final Object property = m_feature.getProperty( m_qn );
-      if( property != null )
-      {
-        m_textBox.setText( property.toString() );
-        m_text = property.toString();
-      }
+      m_property = m_feature.getProperty( m_qn );
+      if( m_property != null )
+        if( m_property instanceof XMLGregorianCalendar )
+        {
+          final XMLGregorianCalendar cal = (XMLGregorianCalendar) m_property;
+          final GregorianCalendar calendar = cal.toGregorianCalendar();
+
+          final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
+          final String date = df.format( calendar.getTime() );
+
+          m_textBox.setText( date );
+          m_text = date;
+
+        }
+        else
+        {
+          m_textBox.setText( m_property.toString() );
+          m_text = m_property.toString();
+        }
 
     }
 
@@ -139,5 +157,10 @@ public class WizardFeatureTextBox
     }.schedule();
 
     processListener();
+  }
+
+  public Object getLastRenderedProperty( )
+  {
+    return m_property;
   }
 }
