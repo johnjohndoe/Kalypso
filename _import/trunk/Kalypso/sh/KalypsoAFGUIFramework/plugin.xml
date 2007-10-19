@@ -2,32 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension-point id="scenarioData" name="Scenario data" schema="schema/scenarioData.exsd"/>   	
-	<extension
-         id="AFGUIApplication"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.kalypso.afgui.AFGUIApplication">
-         </run>
-      </application>
-   </extension>
    
-   <extension
-         id="org.kalypso.afgui.AFGUIApplication"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.kalypso.afgui.AFGUIApplication">
-         </run>
-      </application>
-   </extension>
-   <extension
-         id="KalypsoAFGUIFramework_product"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="org.kalypso.afgui.AFGUIApplication"
-            name="GUI Framework Test"/>
-   </extension>
    <extension
          id="org.kalypso.afgui.ScenarioHandlingProjectNature"
          name="ScenarioHandlingProjectNature"
@@ -61,15 +36,13 @@
             viewerId="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
          <includes>
             <contentExtension
-                  isRoot="true"
-                  pattern="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioContent">
+                  pattern="org.kalypso.afgui.content.*">
             </contentExtension>
             <contentExtension
-                  isRoot="false"
                   pattern="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioResultContent">
             </contentExtension>
             <contentExtension
-                  pattern="de.renew.workflow.connector.filters.kalypso.*">
+                  pattern="org.kalypso.afgui.filters.*">
             </contentExtension>
          </includes>
       </viewerContentBinding>
@@ -80,7 +53,7 @@
             activeByDefault="true"
             contentProvider="org.kalypso.afgui.views.ScenarioContentProvider"
             icon="icons/nuvola_select/ledblue.png"
-            id="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioContent"
+            id="org.kalypso.afgui.content.scenarios"
             labelProvider="org.eclipse.ui.model.WorkbenchLabelProvider"
             name="Szenario"
             priority="highest"
@@ -98,7 +71,7 @@
       </navigatorContent>
       <commonFilter
             activeByDefault="true"
-            id="de.renew.workflow.connector.filters.kalypso.noresources"
+            id="org.kalypso.afgui.filters.noresources"
             name="Ressourcen ausblenden">
          <filterExpression>
             <not>
@@ -111,6 +84,25 @@
                   </instanceof>
                </or>
             </not>
+         </filterExpression>
+      </commonFilter>
+      <commonFilter
+            activeByDefault="true"
+            description="Nur Projekte mit Szenarien anzeigen"
+            id="org.kalypso.afgui.filters.scenarioprojects"
+            name="Nur Projekte mit Szenarien anzeigen">
+         <filterExpression>
+            <and>
+               <instanceof
+                     value="org.eclipse.core.resources.IProject">
+               </instanceof>
+               <not>
+                  <test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature">
+                  </test>
+               </not>
+            </and>
          </filterExpression>
       </commonFilter>
    </extension>
