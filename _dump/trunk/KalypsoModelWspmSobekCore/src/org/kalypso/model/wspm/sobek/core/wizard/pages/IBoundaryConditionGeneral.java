@@ -38,33 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.interfaces;
-
-import java.io.IOException;
-import java.net.URL;
-
-import org.kalypso.repository.container.IRepositoryContainer;
+package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 /**
  * @author kuch
+ *
  */
-public interface ISobekModelMember extends IModelMember
+public interface IBoundaryConditionGeneral
 {
 
-  public enum TARGET
-  {
-    eLocations
-    // PI locations (nodes)
-  }
-
-  /**
-   * @param targetDir
-   *            directory into which result is written
-   * @param target
-   *            part of a Sobek model that shall be written into an XML file (with fixed filename)
-   */
-
-  public void writePi( final URL targetDir, final TARGET target ) throws IOException;
-
-  public IRepositoryContainer getRepositoryContainer( );
 }

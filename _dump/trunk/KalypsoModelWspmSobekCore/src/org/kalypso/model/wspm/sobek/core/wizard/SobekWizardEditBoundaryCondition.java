@@ -47,7 +47,9 @@ import org.eclipse.ui.IWorkbench;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionGeneral;
+import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
 
 /**
  * @author kuch
@@ -90,6 +92,9 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
   {
     final PageEditBoundaryConditionGeneral pGeneral = new PageEditBoundaryConditionGeneral( m_condition );
     addPage( pGeneral );
+
+    final PageEditBoundaryConditionTimeSeries pTimeSeries = new PageEditBoundaryConditionTimeSeries( (ISobekModelMember) m_lastfall.getModel(), pGeneral );
+    addPage( pTimeSeries );
   }
 
   @Override

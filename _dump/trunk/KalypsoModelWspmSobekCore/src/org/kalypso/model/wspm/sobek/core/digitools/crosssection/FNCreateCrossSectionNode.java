@@ -96,7 +96,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
 
-        m_snapPainter = new FNSnapPainterCreateProfileNode( SobekModelMember.getModel( null ) );
+        m_snapPainter = new FNSnapPainterCreateProfileNode( SobekModelMember.getModel() );
         return Status.OK_STATUS;
       }
     }.schedule();
@@ -200,7 +200,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget
   @Override
   public void leftReleased( final Point p )
   {
-    if( (m_snappedBranchPoint != null) && (m_selector != null) )
+    if( m_snappedBranchPoint != null && m_selector != null )
     {
       /* Set the end point. */
       m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
@@ -259,7 +259,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget
 
       getMapPanel().setMessage( "" );
 
-      ISobekModelMember model = SobekModelMember.getModel( null );
+      final ISobekModelMember model = SobekModelMember.getModel();
 
       FNGmlUtils.createProfileNode( model, m_snapPainter.getLastSnappedBranch(), m_snappedBranchPoint, profile );
     }

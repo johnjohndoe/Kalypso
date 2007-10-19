@@ -38,52 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core;
+package org.kalypso.model.wspm.sobek.core.ui.lastfall;
 
-import java.io.File;
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember.TARGET;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 
 /**
- * @author thuel2
+ * @author kuch
  */
-public class MonisSpielwiese extends TestCase
+public class LastfallTreeLabelProvider extends LabelProvider
 {
-  public void testMain( )
+  /**
+   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+   */
+  @Override
+  public String getText( final Object element )
   {
-    final File fleTarget = new File( "C:\\temp\\Spielwiese\\PI" );
-
-    final URL urlGml = MonisSpielwiese.class.getResource( "resources/test/hydraulModel.gml" );
-
-    try
+    if( element instanceof ILastfall )
     {
-      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( urlGml, null );
+      final ILastfall lastfall = (ILastfall) element;
 
-      final IFeatureType modelFT = modelWorkspace.getGMLSchema().getFeatureType( ISobekConstants.QN_SOBEK_MODEL_MEMBER );
-      final Feature[] sobekModelFeat = modelWorkspace.getFeatures( modelFT );
+      return "Loading Case: " + lastfall.getName();
+    }
+    else if( element instanceof INode )
+    {
+      final INode node = (INode) element;
 
-      final ISobekModelMember sobekModel = SobekModelMember.getModel( sobekModelFeat[0], null );
-
-      final URL targetDir = fleTarget.toURL();
-      sobekModel.writePi( targetDir, TARGET.eLocations );
+      return "Condition: " + node.getName();
     }
 
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-    }
+    return super.getText( element );
   }
-
 }

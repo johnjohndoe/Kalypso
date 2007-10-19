@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
-import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,6 +47,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -79,6 +79,7 @@ import org.kalypso.model.wspm.sobek.core.model.NodeUtils;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.model.wspm.sobek.core.utils.PiSobekModelUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.xml.sax.SAXException;
 
@@ -91,8 +92,11 @@ public final class SobekModelMember implements ISobekModelMember
 
   private static ISobekModelMember m_model = null;
 
-  private SobekModelMember( final Feature modelMember )
+  private final IRepositoryContainer m_reposContainer;
+
+  private SobekModelMember( final Feature modelMember, final IRepositoryContainer reposContainer )
   {
+    m_reposContainer = reposContainer;
     if( modelMember == null )
       throw new IllegalStateException( "modelMember is null" );
 
@@ -104,14 +108,18 @@ public final class SobekModelMember implements ISobekModelMember
       m_modelMember = modelMember;
       SobekModelMember.m_model = this;
     }
-
   }
 
-  public static ISobekModelMember getModel( final Feature feature )
+  public static ISobekModelMember getModel( )
+  {
+    return SobekModelMember.getModel( null, null );
+  }
+
+  public static ISobekModelMember getModel( final Feature feature, final IRepositoryContainer reposContainer )
   {
     if( SobekModelMember.m_model == null && feature != null )
     {
-      SobekModelMember.m_model = new SobekModelMember( feature );
+      SobekModelMember.m_model = new SobekModelMember( feature, reposContainer );
       return SobekModelMember.m_model;
     }
 
@@ -265,7 +273,7 @@ public final class SobekModelMember implements ISobekModelMember
       final Marshaller m = jc.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
-      final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( W3C_XML_SCHEMA_NS_URI );
+      final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
       final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/fileformats.xsd" );
       final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
       m.setSchema( schema );
@@ -276,12 +284,12 @@ public final class SobekModelMember implements ISobekModelMember
       os.close();
 
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( SAXException e )
+    catch( final SAXException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -298,5 +306,13 @@ public final class SobekModelMember implements ISobekModelMember
   public INodeUtils getNodeUtils( )
   {
     return new NodeUtils( this );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#getRepositoryContainer()
+   */
+  public IRepositoryContainer getRepositoryContainer( )
+  {
+    return m_reposContainer;
   }
 }

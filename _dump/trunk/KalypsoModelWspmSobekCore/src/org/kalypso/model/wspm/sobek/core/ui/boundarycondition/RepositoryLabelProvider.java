@@ -38,16 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.ui.lastfall;
+package org.kalypso.model.wspm.sobek.core.ui.boundarycondition;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
-import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
+import org.kalypso.repository.file.FileItem;
 
 /**
  * @author kuch
  */
-public class FNLastfallTreeLabelProvider extends LabelProvider
+public class RepositoryLabelProvider extends LabelProvider
 {
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -55,17 +55,16 @@ public class FNLastfallTreeLabelProvider extends LabelProvider
   @Override
   public String getText( final Object element )
   {
-    if( element instanceof ILastfall )
+    if( element instanceof ZmlObservationRepository )
     {
-      final ILastfall lastfall = (ILastfall) element;
+      final ZmlObservationRepository r = (ZmlObservationRepository) element;
 
-      return "Loading Case: " + lastfall.getName();
+      return r.getName();
     }
-    else if( element instanceof INode )
+    if( element instanceof FileItem )
     {
-      final INode node = (INode) element;
-
-      return "Condition: " + node.getName();
+      final FileItem i = (FileItem) element;
+      return i.getFile().getName();
     }
 
     return super.getText( element );

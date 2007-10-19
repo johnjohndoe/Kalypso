@@ -38,52 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core;
-
-import java.io.File;
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember.TARGET;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+package org.kalypso.model.wspm.sobek.core.ui.boundarycondition;
 
 /**
- * @author thuel2
+ * @author kuch
  */
-public class MonisSpielwiese extends TestCase
+public class RepositoryTreeContentProvider extends org.kalypso.ui.repository.view.RepositoryTreeContentProvider
 {
-  public void testMain( )
+  /**
+   * @see org.kalypso.ui.repository.view.RepositoryTreeContentProvider#getChildren(java.lang.Object)
+   */
+  @Override
+  public Object[] getChildren( final Object parentElement )
   {
-    final File fleTarget = new File( "C:\\temp\\Spielwiese\\PI" );
+    final Object[] children = super.getChildren( parentElement );
 
-    final URL urlGml = MonisSpielwiese.class.getResource( "resources/test/hydraulModel.gml" );
-
-    try
-    {
-      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( urlGml, null );
-
-      final IFeatureType modelFT = modelWorkspace.getGMLSchema().getFeatureType( ISobekConstants.QN_SOBEK_MODEL_MEMBER );
-      final Feature[] sobekModelFeat = modelWorkspace.getFeatures( modelFT );
-
-      final ISobekModelMember sobekModel = SobekModelMember.getModel( sobekModelFeat[0], null );
-
-      final URL targetDir = fleTarget.toURL();
-      sobekModel.writePi( targetDir, TARGET.eLocations );
-    }
-
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-    }
+    return children;
   }
-
 }

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.wizard.pages;
+package org.kalypso.model.wspm.sobek.core.ui.boundarycondition;
 
 import java.text.DateFormat;
 import java.util.GregorianCalendar;

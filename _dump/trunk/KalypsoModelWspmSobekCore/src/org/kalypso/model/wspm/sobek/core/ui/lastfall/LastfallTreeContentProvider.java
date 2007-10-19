@@ -53,7 +53,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 /**
  * @author kuch
  */
-public class FNLastfallTreeContentProvider implements ITreeContentProvider
+public class LastfallTreeContentProvider implements ITreeContentProvider
 {
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)

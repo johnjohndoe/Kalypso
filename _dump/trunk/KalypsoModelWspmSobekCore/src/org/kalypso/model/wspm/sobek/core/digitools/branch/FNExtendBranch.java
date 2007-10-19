@@ -84,7 +84,7 @@ public class FNExtendBranch extends AbstractWidget
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
 
-        m_snapPainter = new FNSnapPainterExtendBranches( SobekModelMember.getModel( null ) );
+        m_snapPainter = new FNSnapPainterExtendBranches( SobekModelMember.getModel() );
         return Status.OK_STATUS;
       }
     }.schedule();
@@ -124,7 +124,7 @@ public class FNExtendBranch extends AbstractWidget
     if( !check() )
       return;
 
-    ISobekModelMember model = SobekModelMember.getModel( null );
+    final ISobekModelMember model = SobekModelMember.getModel();
 
     if( model == null )
       throw new IllegalStateException( "Flow Network Model can't be null" );

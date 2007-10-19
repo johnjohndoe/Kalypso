@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.LastfallDateChooser;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 
 /**

@@ -77,13 +77,13 @@ import org.kalypso.ogc.gml.FeatureUtils;
 /**
  * @author kuch
  */
-public class FNLastFallExplorer
+public class LastFallExplorer
 {
   static private final Font fTextBold = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD );
 
   protected final ISobekModelMember m_modelBuilder;
 
-  public FNLastFallExplorer( final ISobekModelMember modelBuilder )
+  public LastFallExplorer( final ISobekModelMember modelBuilder )
   {
 
     m_modelBuilder = modelBuilder;
@@ -104,8 +104,8 @@ public class FNLastFallExplorer
 
     /* tree */
     viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    viewer.setLabelProvider( new FNLastfallTreeLabelProvider() );
-    viewer.setContentProvider( new FNLastfallTreeContentProvider() );
+    viewer.setLabelProvider( new LastfallTreeLabelProvider() );
+    viewer.setContentProvider( new LastfallTreeContentProvider() );
 
     final ILastfall[] lastfalls = m_modelBuilder.getLastfallMembers();
     viewer.setInput( lastfalls );
@@ -155,7 +155,7 @@ public class FNLastFallExplorer
 
     /* label */
     final Label lLastfalls = toolkit.createLabel( header, "Loading Cases:" );
-    lLastfalls.setFont( FNLastFallExplorer.fTextBold );
+    lLastfalls.setFont( LastFallExplorer.fTextBold );
 
     final ToolBar toolBar = new ToolBar( header, SWT.FLAT );
     toolBar.setLayoutData( new GridData( GridData.END, GridData.FILL, true, false ) );
