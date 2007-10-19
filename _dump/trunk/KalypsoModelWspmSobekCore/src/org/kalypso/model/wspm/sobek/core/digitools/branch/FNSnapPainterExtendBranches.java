@@ -72,7 +72,7 @@ public class FNSnapPainterExtendBranches implements ISnapPainter
   private void discoverBranchGeometries( final IModelMember modelMember )
   {
 
-    IBranch[] branches = modelMember.getBranchMembers();
+    final IBranch[] branches = modelMember.getBranchMembers();
     for( final IBranch branch : branches )
     {
       final GM_Curve curve = branch.getGeometryProperty();

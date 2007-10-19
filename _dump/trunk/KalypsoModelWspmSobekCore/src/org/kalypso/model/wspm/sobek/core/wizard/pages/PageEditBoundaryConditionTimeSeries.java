@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -78,7 +78,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     setPageComplete( false );
 
     final Composite container = new Composite( parent, SWT.NULL );
-    container.setLayout( new GridLayout( 2, false ) );
+    container.setLayout( new GridLayout( 2, true ) );
     setControl( container );
 
     final Composite cBrowser = new Composite( container, SWT.NULL );
@@ -100,13 +100,15 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
   private void getTSBrowser( final Composite body )
   {
-    final CheckboxTreeViewer viewer = new CheckboxTreeViewer( body );
+    final TreeViewer viewer = new TreeViewer( body );
     viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    viewer.addFilter( new RepositoryViewerFilter() );
-    viewer.setContentProvider( new RepositoryTreeContentProvider() );
+
+    viewer.setContentProvider( new RepositoryTreeContentProvider( m_settings ) );
     viewer.setLabelProvider( new RepositoryLabelProvider() );
 
     viewer.setInput( m_model.getRepositoryContainer() );
+
+    viewer.addFilter( new RepositoryViewerFilter() );
 
     viewer.expandAll();
   }

@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
+
 /**
  * @author kuch
- *
  */
 public interface IBoundaryConditionGeneral
 {
+
+  IBoundaryNode.BOUNDARY_TYPE getBoundaryNodeType( );
 
 }

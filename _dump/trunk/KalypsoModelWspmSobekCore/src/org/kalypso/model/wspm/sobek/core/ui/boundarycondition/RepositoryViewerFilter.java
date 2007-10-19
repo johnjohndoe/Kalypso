@@ -62,7 +62,6 @@ public class RepositoryViewerFilter extends ViewerFilter
   public Object[] filter( final Viewer viewer, final Object parent, final Object[] elements )
   {
     /* directories should listed first, sort - zmlobservationitems und fileitems! */
-
     final List<Object> objects = new ArrayList<Object>();
     final List<FileItem> items = new ArrayList<FileItem>();
 
@@ -99,5 +98,4 @@ public class RepositoryViewerFilter extends ViewerFilter
 
     return true;
   }
-
 }

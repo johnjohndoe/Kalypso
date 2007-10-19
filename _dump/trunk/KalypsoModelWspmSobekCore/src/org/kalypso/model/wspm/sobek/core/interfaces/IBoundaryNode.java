@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 
 /**
@@ -85,6 +86,21 @@ public interface IBoundaryNode extends IAbstractConnectionNode
 
         default:
           throw new IllegalStateException();
+      }
+    }
+
+    public String toZmlString( )
+    {
+      final BOUNDARY_TYPE type = BOUNDARY_TYPE.valueOf( name() );
+      switch( type )
+      {
+        case eW:
+          return "W";
+        case eQ:
+          return "Q";
+
+        default:
+          throw new NotImplementedException();
       }
     }
   }

@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.LastfallDateChooser;
 import org.kalypso.util.swt.FCVFeatureDelegate;
 import org.kalypso.util.swt.WizardFeatureTextBox;
@@ -89,6 +90,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     iGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
     iGroup.setLayout( new GridLayout( 2, false ) );
     iGroup.setText( "Info" );
+    iGroup.setEnabled( false );
 
     /* lastfall */
     new Label( iGroup, SWT.NONE ).setText( "Loading case" );
@@ -179,6 +181,14 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     setMessage( null );
     setErrorMessage( null );
     setPageComplete( true );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral#getBoundaryNodeType()
+   */
+  public BOUNDARY_TYPE getBoundaryNodeType( )
+  {
+    return m_condition.getBoundaryNode().getBoundaryType();
   }
 
 }
