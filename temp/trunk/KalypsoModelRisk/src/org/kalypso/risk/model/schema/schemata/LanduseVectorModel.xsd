@@ -78,7 +78,6 @@
 	</xs:element>
 
 	<xs:complexType name="PolygonType">
-	<!-- 
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
@@ -86,16 +85,12 @@
 					kapp:property="krvdm:sldStyle" />
 			</xs:appinfo>
 		</xs:annotation>
-		 -->
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element name="polygonGeometry"
 						type="gml:PolygonPropertyType" />
-					<!-- 
-						<xs:element name="landuseClass"
-						type="krvdm:LanduseClassPropertyType" />
-					-->
+					<xs:element ref="krrcm:landuseClassMember" />
 					<xs:element name="sldStyle" type="xs:string" />
 				</xs:sequence>
 			</xs:extension>

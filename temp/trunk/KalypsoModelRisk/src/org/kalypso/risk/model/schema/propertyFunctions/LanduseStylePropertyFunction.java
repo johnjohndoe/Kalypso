@@ -52,11 +52,11 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  */
 public class LanduseStylePropertyFunction extends FeaturePropertyFunction
 {
-  private final static QName m_clsMember = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "roughnessClassMember" );
+  private final static QName m_clsMember = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
 
   private final static QName m_name = new QName( NS.GML3, "name" );
 
@@ -73,7 +73,7 @@ public class LanduseStylePropertyFunction extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @SuppressWarnings("unchecked")
-  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     try
     {

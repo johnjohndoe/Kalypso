@@ -1,14 +1,20 @@
 package org.kalypso.risk.plugin;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.risk.project.SzenarioController;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.connector.worklist.TaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -22,6 +28,8 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   private TaskExecutionListener m_taskExecutionListener;
 
   private PluginImageProvider m_imageProvider;
+
+  private SzenarioController m_szenarioController;
 
   public KalypsoRiskPlugin( )
   {
@@ -47,6 +55,13 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     // delete tmp images both on startup and shutdown
     m_imageProvider = new PluginImageProvider( this );
     m_imageProvider.resetTmpFiles();
+
+    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext currentState = service.getCurrentState();
+    final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_szenarioController = new SzenarioController();
+    caseDataProvider.addScenarioDataListener( m_szenarioController );
+    m_szenarioController.scenarioChanged( (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME ) );
   }
 
   /**
@@ -55,20 +70,18 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    if( !workbench.isClosing() )
-    {
-      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-      if( commandService != null )
-      {
-        commandService.removeExecutionListener( m_taskExecutionListener );
-      }
-    }
-
     // delete tmp images both on startup and shutdown
     m_imageProvider.resetTmpFiles();
     m_imageProvider = null;
 
+    if( PlatformUI.isWorkbenchRunning() )
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
+      final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      caseDataProvider.removeScenarioDataListener( m_szenarioController );
+    }
     m_plugin = null;
     super.stop( context );
   }

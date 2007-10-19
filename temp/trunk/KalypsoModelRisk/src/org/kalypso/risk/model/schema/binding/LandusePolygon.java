@@ -14,12 +14,23 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   public void setGeometry( GM_Surface< ? > surface )
   {
-    getFeature().setProperty( ILandusePolygon.QNAME_PROPERTY_GEOMETRY, surface );
+    getFeature().setProperty( ILandusePolygon.PROPERTY_GEOMETRY, surface );
   }
 
   public void setStyleType( String styleType )
   {
-    getFeature().setProperty( ILandusePolygon.QNAME_PROPERTY_SLDSTYLE, styleType );
+    getFeature().setProperty( ILandusePolygon.PROPERTY_SLDSTYLE, styleType );
+  }
+
+  public String getStyleType( )
+  {
+    final Object value = getFeature().getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
+    return (value != null && value != "") ? value.toString() : "_DEFAULT_STYLE_";
+  }
+
+  public void setLanduseClass( final Feature landuseClassFeature )
+  {
+    getFeature().setProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS, landuseClassFeature );
   }
 
 }

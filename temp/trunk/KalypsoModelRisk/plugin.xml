@@ -115,5 +115,10 @@
           id="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
           name="VirtualRasterGeometryProperty">
     </function>
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
+          id="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
+          name="LanduseStylePropertyFunction">
+    </function>
  </extension>
 </plugin>
