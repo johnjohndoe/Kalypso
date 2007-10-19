@@ -94,7 +94,7 @@ public class SzenarioController implements IScenarioDataListener
       m_terrainModel.getWrappedFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
     }
 
-    if( model instanceof IRoughnessClsCollection )
+    if( model instanceof IRoughnessClsCollection && m_scenarioDataPath != null)
     {
       final IFile roughnessDbFile = m_scenarioDataPath.getProject().getFile( RoughnessStyleUpdateListener.ROUGHNESS_DATABASE_PATH );
       m_roughnessStyleUpdateListener.startStyleUpdateJob( roughnessDbFile );
