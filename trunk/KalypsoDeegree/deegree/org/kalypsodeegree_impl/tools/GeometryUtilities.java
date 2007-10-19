@@ -167,7 +167,14 @@ public class GeometryUtilities
 
   public static GM_Position createGM_PositionAtCenter( final GM_Position p1, final GM_Position p2 )
   {
-    return GeometryFactory.createGM_Position( (p1.getX() + p2.getX()) / 2d, (p1.getY() + p2.getY()) / 2d, (p1.getZ() + p2.getZ()) / 2d );
+    final double[] asArray1 = p1.getAsArray();
+    final double[] asArray2 = p2.getAsArray();
+    final int length = Math.min( asArray1.length, asArray2.length );
+    final double[] newArray = new double[length];
+    for( int i = 0; i < length; i++ )
+      newArray[i] = (asArray1[i] + asArray2[i]) / 2d;
+
+    return GeometryFactory.createGM_Position( newArray );
   }
 
   /**
@@ -175,7 +182,8 @@ public class GeometryUtilities
    */
   public static GM_Point createGM_PositionAtCenter( final GM_Point p1, final GM_Point p2 )
   {
-    return GeometryFactory.createGM_Point( (p1.getX() + p2.getX()) / 2d, (p1.getY() + p2.getY()) / 2d, p1.getCoordinateSystem() );
+    final GM_Position newPos = createGM_PositionAtCenter( p1.getPosition(), p2.getPosition() );
+    return GeometryFactory.createGM_Point( newPos, p1.getCoordinateSystem() );
   }
 
   @SuppressWarnings("unchecked")
