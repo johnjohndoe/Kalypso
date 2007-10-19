@@ -121,7 +121,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       // Probably not necessary
       final AbstractMapPart abstractMapPart = (AbstractMapPart) activePart;
       job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
-      job.setUser( true );
       job.schedule();
     }
     return null;
