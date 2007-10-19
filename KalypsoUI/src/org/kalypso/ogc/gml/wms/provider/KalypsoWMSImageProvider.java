@@ -38,21 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.themes.provider;
+package org.kalypso.ogc.gml.wms.provider;
 
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
-import java.util.HashMap;
+import java.rmi.RemoteException;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
 import org.deegree.ogcwebservices.OGCWebServiceException;
 import org.deegree.ogcwebservices.OGCWebServiceRequest;
+import org.deegree.ogcwebservices.wms.RemoteWMService;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.LegendURL;
 import org.deegree.ogcwebservices.wms.capabilities.Style;
@@ -66,8 +66,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.gml.map.themes.KalypsoRemoteWMService;
+import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
+import org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -100,13 +103,37 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
   /**
    * This variable stores the WMS service or is null.
    */
-  private KalypsoRemoteWMService m_wms;
+  private RemoteWMService m_wms;
+
+  /**
+   * The negotiated coordinate system.
+   */
+  private CS_CoordinateSystem m_negotiatedSRS;
+
+  /**
+   * The LAYERS property of the source.
+   */
+  private String m_layers;
+
+  /**
+   * The STYLES property of the source.
+   */
+  private String m_styles;
 
   /**
    * The constructor.
    */
   public KalypsoWMSImageProvider( )
   {
+    m_themeName = null;
+    m_source = null;
+    m_localSRS = null;
+    
+    m_wms = null;
+    m_negotiatedSRS = null;
+
+    m_layers = null;
+    m_styles = null;
   }
 
   /**
@@ -120,6 +147,10 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
     m_localSRS = localSRS;
 
     m_wms = null;
+    m_negotiatedSRS = null;
+
+    m_layers = null;
+    m_styles = null;
   }
 
   /**
@@ -162,15 +193,22 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
     {
       /* Parse the source into properties. */
       Properties sourceProps = PropertiesHelper.parseFromString( m_source, '#' );
-      String layers = sourceProps.getProperty( KEY_LAYERS, null );
-      String styles = sourceProps.getProperty( KEY_STYLES, null );
+      m_layers = sourceProps.getProperty( KEY_LAYERS, null );
+      m_styles = sourceProps.getProperty( KEY_STYLES, null );
       String service = sourceProps.getProperty( KEY_URL, null );
+      // String provider = sourceProps.getProperty( KEY_PROVIDER, null );
 
       /* Create the service URL. */
       URL serviceURL = parseServiceUrl( service );
 
+      /* Create the capabilities. */
+      WMSCapabilities wmsCaps = DeegreeWMSUtilities.loadCapabilities( new WMSCapabilitiesLoader( serviceURL, 10000 ), new NullProgressMonitor() );
+
+      /* Ask for the srs. */
+      m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers.split( "," ) );
+
       /* Initialize the WMS. */
-      m_wms = KalypsoRemoteWMService.initializeService( serviceURL, m_localSRS, layers, styles, new NullProgressMonitor() );
+      m_wms = new RemoteWMService( wmsCaps );
     }
   }
 
@@ -191,6 +229,42 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e, String.format( "Service URL fehlerhaft: %s (%s)", service, e.getLocalizedMessage() ) ) );
     }
+  }
+
+  /**
+   * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
+   * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
+   * client must choose one to transform it to the local coordinate system
+   * 
+   * @param localCRS
+   *            The local spatial reference system.
+   * @param capabilities
+   *            The capabilites document of the web map service.
+   * @param layerNames
+   *            The layers that have to be matched to the local srs.
+   * @return An array of possible coordiante systems.
+   */
+  private CS_CoordinateSystem negotiateCRS( CS_CoordinateSystem localSRS, WMSCapabilities wmsCapabilities, String[] layers ) throws CoreException
+  {
+    /* Match the local with the remote coordinate system. */
+    try
+    {
+      CS_CoordinateSystem[] crs = DeegreeWMSUtilities.negotiateCRS( localSRS, wmsCapabilities, layers );
+      if( crs.length > 0 )
+        return crs[0];
+    }
+    catch( RemoteException e )
+    {
+      /* Create the error status. */
+      IStatus errorStatus = StatusUtilities.createErrorStatus( "Failed to negotiate CRS." );
+
+      /* Log the error. */
+      KalypsoGisPlugin.getDefault().getLog().log( errorStatus );
+
+      throw new CoreException( errorStatus );
+    }
+
+    return localSRS;
   }
 
   /**
@@ -216,20 +290,14 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
       return null;
 
     /* Work locally against a copy of the reference, because it may change any time... */
-    KalypsoRemoteWMService remoteWMS = m_wms;
+    RemoteWMService remoteWMS = m_wms;
     if( remoteWMS == null )
       return null;
-
-    /* Create the parameters for the request. */
-    HashMap<String, String> parameterMap = remoteWMS.createGetMapRequestParameter( width, height, bbox, m_localSRS );
-
-    /* Add the ID parameter to them. */
-    parameterMap.put( "ID", "KalypsoWMSRequest" + m_themeName + new Date().getTime() );
 
     try
     {
       /* Create the GetMap request. */
-      GetMap request = GetMap.create( parameterMap );
+      GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities) remoteWMS.getCapabilities(), m_negotiatedSRS, m_themeName, m_layers, m_styles, width, height, bbox, m_localSRS );
 
       /* Do the request and wait, until the result is there. */
       Object result = remoteWMS.doService( request );
@@ -283,7 +351,7 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
       return null;
 
     /* Check, if there is a legend graphic available. */
-    WMSCapabilities capabilities = m_wms.getWMSCapabilities();
+    WMSCapabilities capabilities = (WMSCapabilities) m_wms.getCapabilities();
 
     /* All layers of the theme. */
     Layer[] layers = capabilities.getLayer().getLayer();
@@ -368,20 +436,21 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
    */
   public GM_Envelope getFullExtent( )
   {
-    GM_Envelope maxExtent = null;
-
     try
     {
       /* Initialize the remote WMS, if it is not already done. */
       initializeRemoteWMS();
 
-      maxExtent = m_wms.getMaxExtend( m_localSRS );
+      GM_Envelope maxEnvRemoteSRS = DeegreeWMSUtilities.getMaxExtent( m_layers.split( "," ), (WMSCapabilities) m_wms.getCapabilities(), m_negotiatedSRS );
+      GeoTransformer gt = new GeoTransformer( m_localSRS );
+
+      return gt.transformEnvelope( maxEnvRemoteSRS, m_negotiatedSRS );
     }
-    catch( CoreException e )
+    catch( Exception ex )
     {
-      // do nothing
+      KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex, "Failed to determine extent." ) );
     }
 
-    return maxExtent;
+    return null;
   }
 }

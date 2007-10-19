@@ -95,7 +95,7 @@ import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.WMSHelper;
+import org.kalypsodeegree_impl.tools.TransformationUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -175,7 +175,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
         if( defaultGeometryProperty != null )
           surface = (GM_Surface) defaultGeometryProperty;
         else
-          throw new Exception("No suitable geometry.");
+          throw new Exception( "No suitable geometry." );
       }
       final CS_CoordinateSystem cs = surface.getCoordinateSystem();
       final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
@@ -199,7 +199,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   {
     final GM_Envelope envelope = gridDomain.getGM_Envelope( targetCS );
     final CS_CoordinateSystem crs = gridDomain.getCoordinateSystem();
-    WMSHelper.transformImage( rasterImage, envelope, targetCS, crs, projection, g2 );
+    TransformationUtilities.transformImage( rasterImage, envelope, targetCS, crs, projection, g2 );
   }
 
   /**

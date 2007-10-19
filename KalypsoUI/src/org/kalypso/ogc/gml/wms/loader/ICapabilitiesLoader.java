@@ -38,23 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.themes.provider;
+package org.kalypso.ogc.gml.wms.loader;
 
-import org.kalypsodeegree.model.geometry.GM_Point;
+import java.io.InputStream;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * This interface provides functions for raster provider. TODO Only a placeholder at the moment.
+ * This interface provides functions, which loaders for the capabilities must implement.
  * 
  * @author Holger Albert
  */
-public interface IKalypsoRasterProvider
+public interface ICapabilitiesLoader
 {
   /**
-   * This function returns the value for the given point.
+   * This function loads the capabilities and returns the Stream of them.
    * 
-   * @param point
-   *            The point.
-   * @return The value.
+   * @param monitor
+   *            A progress monitor.
+   * @return The input stream of the capabilities.
    */
-  public double getValue( GM_Point point );
+  public InputStream getCapabilitiesStream( IProgressMonitor monitor ) throws CoreException;
 }

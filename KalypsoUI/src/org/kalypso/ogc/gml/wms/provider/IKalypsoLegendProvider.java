@@ -38,52 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.wms;
+package org.kalypso.ogc.gml.wms.provider;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
+import java.awt.Font;
+import java.awt.Image;
 
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
+import org.eclipse.core.runtime.CoreException;
 
 /**
- * A class for resolving some entities.
+ * This interface provides functions for providers that should return legends.
  * 
  * @author Holger Albert
  */
-public class KalypsoWMSEntityResolver implements EntityResolver
+public interface IKalypsoLegendProvider
 {
   /**
-   * Map containing all local available resources.
+   * This function returns an image, containing the legend of the theme, íf one is available. Otherwise it will return
+   * null.
+   * 
+   * @param font
+   *            This font will be used for the self created text of the legend.
+   * @param layerName
+   *            The name of the layer, for which the legend should be loaded.
+   * @return An legend graphic or null.
    */
-  private HashMap<String, String> m_entities;
-
-  /**
-   * The constructor.
-   */
-  public KalypsoWMSEntityResolver( )
-  {
-    m_entities = new HashMap<String, String>();
-    m_entities.put( "http://schemas.opengis.net/wms/1.1.0/capabilities_1_1_0.dtd", "resources/capabilities_1_1_0.dtd" );
-    m_entities.put( "http://schemas.opengis.net/wms/1.1.1/WMS_MS_Capabilities.dtd", "resources/WMS_MS_Capabilities.dtd" );
-  }
-
-  /**
-   * @see org.xml.sax.EntityResolver#resolveEntity(java.lang.String, java.lang.String)
-   */
-  public InputSource resolveEntity( String publicId, String systemId ) throws IOException
-  {
-    String path = m_entities.get( systemId );
-    if( path != null )
-    {
-      System.out.println( "Requesting: " + systemId );
-      URL resource = getClass().getResource( path );
-
-      if( resource != null )
-        return new InputSource( resource.openStream() );
-    }
-
-    return null;
-  }
+  public Image getLegendGraphic( Font font, String layerName ) throws CoreException;
 }

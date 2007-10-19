@@ -57,10 +57,10 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
-import org.kalypso.ogc.gml.map.themes.loader.KalypsoImageLoader;
-import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.map.themes.provider.IKalypsoLegendProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
+import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -95,7 +95,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * This variable stores the image provider.
    */
-  private IKalypsoImageProvider m_provider;
+  protected IKalypsoImageProvider m_provider;
 
   /**
    * This variable stores the loader for loading the images.
@@ -140,7 +140,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
         /* Set the newly loaded image. */
         setImage( m_loader.getBuffer() );
 
-        /* Need the fulle extent of the image. */
+        /* Need the full extent of the image. */
         m_maxEnvLocalSRS = m_loader.getFullExtent();
 
         /* Finished loading. */
@@ -152,7 +152,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
         setImage( null );
 
         /* Reset the max extent. */
-        m_maxEnvLocalSRS = null;
+        m_maxEnvLocalSRS = m_provider.getFullExtent();
 
         /* Deactivate the theme. */
         setVisible( false );
@@ -182,7 +182,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param mapModel
    *            The map modell.
    */
-  public KalypsoWMSTheme( final String linktype, final String themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
+  public KalypsoWMSTheme( String linktype, String themeName, IKalypsoImageProvider imageProvider, IMapModell mapModel )
   {
     super( themeName, linktype.toUpperCase(), mapModel );
 
@@ -190,7 +190,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     m_buffer = null;
     m_legend = null;
-    m_maxEnvLocalSRS = null;
+    m_maxEnvLocalSRS = m_provider.getFullExtent();
     m_loader = null;
     m_isFinished = false;
   }
@@ -280,7 +280,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     /* Reset the full extent. */
     if( m_maxEnvLocalSRS != null )
-      m_maxEnvLocalSRS = null;
+      m_maxEnvLocalSRS = m_provider.getFullExtent();
 
     /* Create a new loader. */
     if( width > 0 && height > 0 && extent != null && extent.getWidth() > 0 && extent.getHeight() > 0 )
