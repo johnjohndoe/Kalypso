@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.sobek.core.ui.lastfall;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
@@ -65,9 +66,11 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.model.LastfallUtils;
+import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditBoundaryCondition;
 import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditLastfall;
 import org.kalypso.ogc.gml.FeatureUtils;
 
@@ -177,11 +180,46 @@ public class FNLastFallExplorer
 
         if( element instanceof ILastfall )
         {
+          final ILastfall lastfall = (ILastfall) element;
 
+          final IWorkbenchWizard wizard = new SobekWizardEditLastfall( lastfall );
+          wizard.init( PlatformUI.getWorkbench(), null );
+
+          final WizardDialog dialog = new WizardDialog( null, wizard );
+          dialog.open();
         }
         else if( element instanceof IBoundaryNode )
         {
+          final TreePath[] path = selection.getPathsFor( element );
+          if( path.length != 1 )
+            throw new IllegalStateException();
 
+          if( path[0].getSegmentCount() != 2 )
+            throw new IllegalStateException();
+
+          final ILastfall lastfall = (ILastfall) path[0].getFirstSegment();
+          final IBoundaryNode node = (IBoundaryNode) element;
+
+          final SobekWizardEditBoundaryCondition wizard = new SobekWizardEditBoundaryCondition( lastfall, node );
+          wizard.init( PlatformUI.getWorkbench(), null );
+
+          final WizardDialog dialog = new WizardDialog( null, wizard );
+          dialog.open();
+
+          final int returnCode = dialog.getReturnCode();
+          if( returnCode != Window.OK )
+          {
+            final IBoundaryNodeLastfallCondition condition = wizard.getBoundaryNodeLastfallCondition();
+            if( condition.wasNewlyCreated() )
+              try
+              {
+                FeatureUtils.deleteFeature( condition.getFeature() );
+              }
+              catch( final Exception e1 )
+              {
+                e1.printStackTrace();
+              }
+          }
         }
       }
     } );

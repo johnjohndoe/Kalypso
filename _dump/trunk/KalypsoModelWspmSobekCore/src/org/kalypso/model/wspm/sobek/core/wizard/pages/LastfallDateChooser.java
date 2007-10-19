@@ -45,6 +45,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.window.Window;
@@ -88,6 +89,13 @@ public class LastfallDateChooser
 
     final WizardFeatureTextBox tb = new WizardFeatureTextBox( m_feature, m_qname );
     tb.draw( composite, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
+
+    final Object property = tb.getLastRenderedProperty();
+    if( property instanceof XMLGregorianCalendar )
+    {
+      final XMLGregorianCalendar calendar = (XMLGregorianCalendar) property;
+      m_dateTime = calendar.toGregorianCalendar();
+    }
 
     final Button button = new Button( composite, SWT.NONE );
     button.setText( "..." );

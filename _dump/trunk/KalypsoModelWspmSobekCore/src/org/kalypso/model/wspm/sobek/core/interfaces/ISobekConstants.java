@@ -199,4 +199,20 @@ public class ISobekConstants
 
   public static final QName QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER );
 
+  public static final String F_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER = "lastfallDefinitionMember";
+
+  public static final QName QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
+
+  public static final String P_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL = "linkedLastfall";
+
+  public static final QName QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL );
+
+  public static final String P_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS = "observationBegin";
+
+  public static final QName QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS );
+
+  public static final String P_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS = "observationEnd";
+
+  public static final QName QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS );
+
 }

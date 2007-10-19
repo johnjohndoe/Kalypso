@@ -58,7 +58,6 @@ import org.kalypso.util.swt.WizardFeatureTextBox;
  */
 public class PageEditLastfall extends WizardPage
 {
-
   private WizardFeatureTextBox m_name;
 
   private WizardFeatureTextBox m_description;

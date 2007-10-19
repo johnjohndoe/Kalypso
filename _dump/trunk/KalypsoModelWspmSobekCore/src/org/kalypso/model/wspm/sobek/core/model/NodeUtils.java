@@ -54,17 +54,24 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
+import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
 import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditBoundaryNode;
 import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -194,4 +201,17 @@ public class NodeUtils implements INodeUtils
       branch.setLowerNode( node );
   }
 
+  public static Feature createBoundaryNodeLastfallCondition( final ILastfall lastfall, final IBoundaryNode boundaryNode ) throws Exception
+  {
+
+    final IRelationType prop = (IRelationType) boundaryNode.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
+    final IFeatureType targetType = prop.getTargetFeatureType();
+    final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+
+    final CommandableWorkspace workspace = FeatureUtils.getWorkspace( boundaryNode.getFeature() );
+    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, targetType, boundaryNode.getFeature(), prop, -1, null, selectionManager );
+    workspace.postCommand( command );
+
+    return command.getNewFeature();
+  }
 }
