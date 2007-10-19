@@ -372,6 +372,9 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
 
     try
     {
+      /* Initialize the remote WMS, if it is not already done. */
+      initializeRemoteWMS();
+
       maxExtent = m_wms.getMaxExtend( m_localSRS );
     }
     catch( CoreException e )
