@@ -128,9 +128,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IFeatureType featureType = f.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
-    {
       throw new IllegalArgumentException( "Feature ist not an Observation: " + f );
-    }
 
     final String name = (String) FeatureHelper.getFirstProperty( f, ObservationFeatureFactory.GML_NAME );
     final String desc = (String) FeatureHelper.getFirstProperty( f, ObservationFeatureFactory.GML_DESCRIPTION );
@@ -148,9 +146,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
       phenomenon = new Phenomenon( phenId, phenName, phenDesc );
     }
     else
-    {
       phenomenon = null;
-    }
 
     final TupleResult tupleResult = ObservationFeatureFactory.buildTupleResult( f );
 
@@ -199,27 +195,20 @@ public class ObservationFeatureFactory implements IAdapterFactory
       {
         Object value = null;
         if( "null".equals( token ) )
-        {
           value = null;
+        else // FIXME implement other type handlers over an fabrication method
+        if( handler instanceof XsdBaseTypeHandlerString )
+        {
+          final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
+          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) );
+        }
+        else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
+        {
+          final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
+          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) );
         }
         else
-        {
-          // FIXME implement other type handlers over an fabrication method
-          if( handler instanceof XsdBaseTypeHandlerString )
-          {
-            final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-            value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) );
-          }
-          else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
-          {
-            final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
-            value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) );
-          }
-          else
-          {
-            value = handler.convertToJavaValue( token );
-          }
-        }
+          value = handler.convertToJavaValue( token );
 
         record.setValue( component, value );
       }
@@ -247,10 +236,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
    */
   private static IComponent[] buildSortComponents( final Feature recordDefinition )
   {
-    if( (recordDefinition == null) || !GMLSchemaUtilities.substitutes( recordDefinition.getFeatureType(), ObservationFeatureFactory.QNAME_F_SORTED_RECORD_DEFINITION ) )
-    {
+    if( recordDefinition == null || !GMLSchemaUtilities.substitutes( recordDefinition.getFeatureType(), ObservationFeatureFactory.QNAME_F_SORTED_RECORD_DEFINITION ) )
       return new IComponent[0];
-    }
 
     final List<IComponent> components = new ArrayList<IComponent>();
 
@@ -270,9 +257,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final XsdBaseTypeHandler< ? >[] typeHandlers = new XsdBaseTypeHandler[components.length];
 
     for( int i = 0; i < components.length; i++ )
-    {
       typeHandlers[i] = ObservationFeatureFactory.typeHanderForComponent( components[i] );
-    }
 
     return typeHandlers;
   }
@@ -287,16 +272,12 @@ public class ObservationFeatureFactory implements IAdapterFactory
      */
     final IComponentHandler compHandler = KalypsoCoreExtensions.findComponentHandler( component.getId() );
     if( compHandler != null )
-    {
       return compHandler.getTypeHandler();
-    }
 
     final QName valueTypeName = component.getValueTypeName();
     final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( valueTypeName );
     if( handler instanceof XsdBaseTypeHandler )
-    {
       return (XsdBaseTypeHandler< ? >) handler;
-    }
 
     return null;
   }
@@ -306,9 +287,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IFeatureType featureType = f.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
-    {
       throw new IllegalArgumentException( "Feature ist not an Observation: " + f );
-    }
 
     final Feature recordDefinition = ObservationFeatureFactory.getOrCreateRecordDefinition( f );
     return ObservationFeatureFactory.buildComponents( recordDefinition );
@@ -322,9 +301,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   protected static IComponent[] buildComponents( final Feature recordDefinition )
   {
     if( recordDefinition == null )
-    {
       return new IComponent[0];
-    }
 
     final List<IComponent> components = new ArrayList<IComponent>();
 
@@ -347,9 +324,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     final FeatureChange[] changes = ObservationFeatureFactory.toFeatureAsChanges( source, targetObsFeature );
     for( final FeatureChange change : changes )
-    {
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
-    }
   }
 
   public static FeatureChange[] toFeatureAsChanges( final IObservation<TupleResult> source, final Feature targetObsFeature )
@@ -357,9 +332,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IFeatureType featureType = targetObsFeature.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
-    {
       throw new IllegalArgumentException( "Feature ist not an Observation: " + targetObsFeature );
-    }
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -374,13 +347,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IPhenomenon phenomenon = source.getPhenomenon();
     final Object phenomenonRef;
     if( phenomenon == null )
-    {
       phenomenonRef = null;
-    }
     else
-    {
       phenomenonRef = FeatureHelper.createLinkToID( phenomenon.getID(), targetObsFeature, phenPt, phenPt.getTargetFeatureType() );
-    }
 
     changes.add( new FeatureChange( targetObsFeature, phenPt, phenomenonRef ) );
 
@@ -411,13 +380,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IFeatureType recordDefinitionFT;
     if( sortComponents == null )
-    {
       recordDefinitionFT = schema.getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE );
-    }
     else
-    {
       recordDefinitionFT = schema.getFeatureType( ObservationFeatureFactory.QNAME_F_SORTED_RECORD_DEFINITION );
-    }
 
     // set resultDefinition property, create RecordDefinition feature
     final Feature featureRD = targetObsFeature.getWorkspace().createFeature( targetObsFeature, targetObsFeatureRelation, recordDefinitionFT );
@@ -478,9 +443,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   public static RepresentationType createRepresentationType( final IComponent component )
   {
     if( component == null )
-    {
       throw new IllegalArgumentException( "component is null" );
-    }
 
     final QName valueTypeName = component.getValueTypeName();
 
@@ -499,19 +462,13 @@ public class ObservationFeatureFactory implements IAdapterFactory
   private static KIND toKind( final QName valueTypeName )
   {
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
-    {
       return KIND.Boolean;
-    }
 
     if( XmlTypes.isNumber( valueTypeName ) )
-    {
       return KIND.Number;
-    }
 
     if( XmlTypes.isDate( valueTypeName ) )
-    {
       return KIND.SimpleType;
-    }
 
     return KIND.Word;
   }
@@ -532,12 +489,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
         final IComponent comp = components[i];
 
         if( comp != components[0] )
-        {
           buffer.append( " " );
-        }
 
         final Object value = record.getValue( comp );
-        final String bufferValue = recordValueToString( value, handler );
+        final String bufferValue = ObservationFeatureFactory.recordValueToString( value, handler );
         buffer.append( bufferValue );
       }
 
@@ -589,10 +544,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
    */
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
-    if( (adapterType == IObservation.class) && (adaptableObject instanceof Feature) )
-    {
+    if( adapterType == IObservation.class && adaptableObject instanceof Feature )
       return ObservationFeatureFactory.toObservation( (Feature) adaptableObject );
-    }
 
     return null;
   }
@@ -606,7 +559,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return classes;
   }
 
-  public static IComponent createDictionaryComponent( final Feature obsFeature, final String dictUrn )
+  public static FeatureComponent createDictionaryComponent( final Feature obsFeature, final String dictUrn )
   {
     final Feature recordDefinition = ObservationFeatureFactory.getOrCreateRecordDefinition( obsFeature );
 
@@ -616,6 +569,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IRelationType componentRelation = (IRelationType) recordDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_COMPONENT );
 
     final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, componentRelation, featureType, dictUrn, null, null, null, null, null );
+
+    final List componentList = (List) recordDefinition.getProperty( componentRelation );
+    componentList.add( itemDef );
+
     return new FeatureComponent( itemDef );
   }
 

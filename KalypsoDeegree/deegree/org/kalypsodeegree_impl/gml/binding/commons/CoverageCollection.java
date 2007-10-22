@@ -66,20 +66,20 @@ public class CoverageCollection extends FeatureWrapperCollection<ICoverage> impl
   /** Creates a new workspace with this collection as root feature. */
   public CoverageCollection( final URL context, final IFeatureProviderFactory providerFactory ) throws InvocationTargetException
   {
-    this( FeatureFactory.createGMLWorkspace( QNAME, context, providerFactory ).getRootFeature() );
+    this( FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, context, providerFactory ).getRootFeature() );
   }
 
   public CoverageCollection( final Feature featureCol )
   {
-    super( featureCol, ICoverage.class, QNAME_PROP_COVERAGE_MEMBER );
+    super( featureCol, ICoverage.class, CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
   }
 
-  public static ICoverage addCoverage( final ICoverageCollection coverages, final RectifiedGridDomain domain, final URL externalResource, final String mimeType )
+  public static ICoverage addCoverage( final ICoverageCollection coverages, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
   {
     final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
 
     // file name relative to the gml
-    rangeSetFile.setFileName( externalResource.toExternalForm() );
+    rangeSetFile.setFileName( externalResource );
     rangeSetFile.setMimeType( mimeType );
     rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
 
