@@ -56,6 +56,7 @@ import java.util.List;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -244,9 +245,6 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     }
 
   };
-
-  /** One mutex-rule per panel, so painting jobs for one panel run one after another. */
-  private final ISchedulingRule m_painterMutex = new MutexRule();
 
   private final MapModellPainter m_mapModellPainter;
 
@@ -667,8 +665,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         // Why -2 ?
         m_projection.setDestRect( x - 2, y - 2, w + x, h + y );
 
-        m_modellPainter = m_mapModellPainter;
-        m_mapModellPainter.setRule( m_painterMutex );
+        m_modellPainter = m_mapModellPainter;        
+        
         // delay the Schedule, so if another invalidate comes within that timespan, no repaint happens
         m_mapModellPainter.schedule( 250 );
       }
