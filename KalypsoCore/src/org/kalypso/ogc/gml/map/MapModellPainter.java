@@ -49,8 +49,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.awt.ComponentRepaintJob;
 import org.kalypso.contribs.java.awt.HighlightGraphics;
@@ -81,6 +83,9 @@ public class MapModellPainter extends Job implements IPainter
 
   private final ThemePainter m_themePainter;
 
+  /** One mutex-rule per panel, so painting jobs for one panel run one after another. */
+  private final ISchedulingRule m_painterMutex = new MutexRule();
+
   /**
    * Creates this painter. Call {@link #schedule()} immediately after creation in order to create the buffered image.
    * </p>
@@ -89,6 +94,7 @@ public class MapModellPainter extends Job implements IPainter
   {
     super( "" );
     m_mapPanel = mapPanel;
+    setRule( m_painterMutex );
 
     m_themePainter = new ThemePainter( m_mapPanel );
   }
