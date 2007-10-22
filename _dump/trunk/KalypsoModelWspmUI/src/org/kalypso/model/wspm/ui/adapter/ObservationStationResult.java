@@ -50,7 +50,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 
 /**
  * @author Gernot Belger
