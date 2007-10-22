@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.ui.boundarycondition;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -61,6 +62,8 @@ public class DateTimeDialog extends TitleAreaDialog
 {
 
   private GregorianCalendar m_gregorianCalendar;
+
+  private GregorianCalendar m_preSettedDateTime;
 
   public DateTimeDialog( final Shell parent )
   {
@@ -99,6 +102,8 @@ public class DateTimeDialog extends TitleAreaDialog
     /* day */
     final DateTime calendar = new DateTime( composite, SWT.CALENDAR );
     calendar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
+    if( m_preSettedDateTime != null )
+      preSetDateTime( m_preSettedDateTime, calendar );
 
     /* time of day */
     final Label lTime = new Label( composite, SWT.NONE );
@@ -106,6 +111,8 @@ public class DateTimeDialog extends TitleAreaDialog
 
     final DateTime time = new DateTime( composite, SWT.TIME );
     time.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    if( m_preSettedDateTime != null )
+      preSetDateTime( m_preSettedDateTime, time );
 
     /* listeners */
     calendar.addSelectionListener( new SelectionAdapter()
@@ -137,6 +144,16 @@ public class DateTimeDialog extends TitleAreaDialog
     return composite;
   }
 
+  private void preSetDateTime( final GregorianCalendar calendar, final DateTime dateTime )
+  {
+    dateTime.setDay( calendar.get( Calendar.DAY_OF_MONTH ) );
+    dateTime.setMonth( calendar.get( Calendar.MONTH ) );
+    dateTime.setYear( calendar.get( Calendar.YEAR ) );
+    dateTime.setHours( calendar.get( Calendar.HOUR ) );
+    dateTime.setMinutes( calendar.get( Calendar.MINUTE ) );
+    dateTime.setSeconds( calendar.get( Calendar.SECOND ) );
+  }
+
   protected void setDateTime( final DateTime calendar, final DateTime time )
   {
     final int day = calendar.getDay();
@@ -153,5 +170,10 @@ public class DateTimeDialog extends TitleAreaDialog
   public GregorianCalendar getDateTime( )
   {
     return m_gregorianCalendar;
+  }
+
+  public void setDateTime( final GregorianCalendar dateTime )
+  {
+    m_preSettedDateTime = dateTime;
   }
 }

@@ -111,6 +111,9 @@ public class LastfallDateChooser
       {
 
         final DateTimeDialog dialog = new DateTimeDialog( button.getShell() );
+        if( m_dateTime != null )
+          dialog.setDateTime( m_dateTime );
+
         final int returnCode = dialog.open();
 
         if( returnCode == Window.OK )

@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
+import java.text.DateFormat;
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -54,6 +59,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.LastfallDateChooser;
 import org.kalypso.util.swt.FCVFeatureDelegate;
 import org.kalypso.util.swt.WizardFeatureTextBox;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuch
@@ -178,6 +184,34 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
       return;
     }
 
+    /* check lastfall start and ending dates */
+    final Feature lastfall = m_condition.getLastfall().getFeature();
+    final XMLGregorianCalendar lastfallStart = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
+    final XMLGregorianCalendar lastfallEnd = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_END );
+
+    final GregorianCalendar lastfallGregorianStart = lastfallStart.toGregorianCalendar();
+    final GregorianCalendar lastfallGregorianEnd = lastfallEnd.toGregorianCalendar();
+
+    final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
+
+    if( m_tsBegins.getDateTime().before( lastfallGregorianStart ) )
+    {
+      setMessage( null );
+      setErrorMessage( "Starting date is before lastfall starting date! (" + df.format( lastfallGregorianStart.getTime() ) + ")" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_tsEnds.getDateTime().after( lastfallGregorianEnd ) )
+    {
+      setMessage( null );
+      setErrorMessage( "Ending date is after lastfall ending date! (" + df.format( lastfallGregorianEnd.getTime() ) + ")" );
+      setPageComplete( false );
+
+      return;
+    }
+
     setMessage( null );
     setErrorMessage( null );
     setPageComplete( true );
@@ -189,6 +223,22 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
   public BOUNDARY_TYPE getBoundaryNodeType( )
   {
     return m_condition.getBoundaryNode().getBoundaryType();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral#getStartDate()
+   */
+  public GregorianCalendar getStartDate( )
+  {
+    return m_tsBegins.getDateTime();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral#getEndDate()
+   */
+  public GregorianCalendar getEndDate( )
+  {
+    return m_tsEnds.getDateTime();
   }
 
 }

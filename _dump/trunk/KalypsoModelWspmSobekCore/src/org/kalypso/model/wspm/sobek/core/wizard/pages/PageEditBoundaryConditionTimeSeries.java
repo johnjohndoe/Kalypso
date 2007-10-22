@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import java.awt.Frame;
-import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -59,10 +59,7 @@ import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryLabelPro
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryTreeContentProvider;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryViewerFilter;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
@@ -81,7 +78,7 @@ import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
  */
 public class PageEditBoundaryConditionTimeSeries extends WizardPage
 {
-  private final IBoundaryConditionGeneral m_settings;
+  protected final IBoundaryConditionGeneral m_settings;
 
   private final ISobekModelMember m_model;
 
@@ -167,47 +164,33 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       {
         public void selectionChanged( final SelectionChangedEvent event )
         {
-          try
-          {
-            // always remove items first (we don't know which selection we get)
-            diagView.removeAllItems();
-            tableView.removeAllItems();
+          // always remove items first (we don't know which selection we get)
+          diagView.removeAllItems();
+          tableView.removeAllItems();
 
-            final TreeSelection selection = (TreeSelection) reposTree.getSelection();
-            final Object element = selection.getFirstElement();
-            if( !(element instanceof ZmlObservationItem) )
-              return;
+          final TreeSelection selection = (TreeSelection) reposTree.getSelection();
+          final Object element = selection.getFirstElement();
+          if( !(element instanceof ZmlObservationItem) )
+            return;
 
-            final ZmlObservationItem item = (ZmlObservationItem) element;
+          final ZmlObservationItem item = (ZmlObservationItem) element;
 
-            final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
+          final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
 
-            // TODO
-            DateRange dateRange = null;
+          DateRange dateRange = null;
 
-            final ITuppleModel values = observation.getValues( null );
-            final IAxis[] axisList = values.getAxisList();
-            final IAxis axis = ObservationUtilities.findAxisByType( axisList, "date" );
-            final Date dFrom = (Date) values.getElement( 0, axis );
-            final Date dTo = (Date) values.getElement( values.getCount() - 1, axis );
-            dateRange = new DateRange( dFrom, dTo );
+          final GregorianCalendar startDate = m_settings.getStartDate();
+          final GregorianCalendar endDate = m_settings.getEndDate();
+          dateRange = new DateRange( startDate.getTime(), endDate.getTime() );
 
-            final PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dateRange ) );
-            diagView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
-            tableView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
-          }
-          catch( final SensorException e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
+          final PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dateRange ) );
+          diagView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+          tableView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
         }
       } );
-
     }
     catch( final SensorException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -221,7 +204,6 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     viewer.setLabelProvider( new RepositoryLabelProvider() );
 
     viewer.setInput( m_model.getRepositoryContainer() );
-
     viewer.addFilter( new RepositoryViewerFilter() );
 
     viewer.expandAll();

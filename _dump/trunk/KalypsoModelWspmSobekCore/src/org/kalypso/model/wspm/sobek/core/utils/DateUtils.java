@@ -38,22 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.wizard.pages;
-
-import java.util.GregorianCalendar;
-
-import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
+package org.kalypso.model.wspm.sobek.core.utils;
 
 /**
  * @author kuch
  */
-public interface IBoundaryConditionGeneral
+public class DateUtils
 {
-
-  IBoundaryNode.BOUNDARY_TYPE getBoundaryNodeType( );
-
-  GregorianCalendar getStartDate( );
-
-  GregorianCalendar getEndDate( );
 
 }
