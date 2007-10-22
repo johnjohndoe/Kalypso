@@ -146,6 +146,13 @@
           properties="featureType"
           type="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
     </propertyTester>
+    <propertyTester
+          class="org.kalypso.ogc.gml.expressions.QNamePropertyTester"
+          id="org.kalypso.ogc.gml.expressions.featureQNameTester"
+          namespace="org.kalypso.core"
+          properties="qname"
+          type="org.kalypsodeegree.model.feature.Feature">
+    </propertyTester>
  </extension>
 
 </plugin>

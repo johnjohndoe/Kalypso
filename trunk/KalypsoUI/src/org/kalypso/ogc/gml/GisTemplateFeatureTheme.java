@@ -206,9 +206,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     final IPaintDelegate paintDelegate = new IPaintDelegate()
     {
-      public void paint( DisplayElement displayElement )
+      public void paint( DisplayElement displayElement, final IProgressMonitor paintMonitor ) throws CoreException
       {
-        displayElement.paint( g, p );
+        displayElement.paint( g, p, paintMonitor );
       }
     };
 

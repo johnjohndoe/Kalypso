@@ -204,8 +204,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
           final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
           if( !isEqual )
           {
-            for( int i = 0; i < globalFeatures.length; i++ )
-              contentProvider.expandElement( contentProvider.getParent( globalFeatures[i] ) );
+            for( final Feature element : globalFeatures )
+              contentProvider.expandElement( contentProvider.getParent( element ) );
             treeViewer.setSelection( selection, true );
           }
         }
@@ -263,9 +263,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   {
     final Object[] selectedTreeItems = ((IStructuredSelection) selection).toArray();
     final List<Feature> selectedFeatures = new ArrayList<Feature>();
-    for( int i = 0; i < selectedTreeItems.length; i++ )
+    for( final Object treeElement : selectedTreeItems )
     {
-      final Object treeElement = selectedTreeItems[i];
       Feature feature = null;
       if( treeElement instanceof LinkedFeatureElement2 )
         feature = ((LinkedFeatureElement2) treeElement).getDecoratedFeature();
@@ -325,10 +324,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
             if( parentFeature == null )
               treeViewer.refresh();
             else
-              for( int i = 0; i < parentFeature.length; i++ )
+              for( final Feature feature : parentFeature )
               {
-                final Feature feature = parentFeature[i];
-// treeViewer.refresh( feature ); childs are not updated!
+                // treeViewer.refresh( feature ); childs are not updated!
                 treeViewer.refresh();
               }
 
@@ -578,9 +576,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     final ISelectionChangedListener[] listenersArray = m_selectionListeners.toArray( new ISelectionChangedListener[m_selectionListeners.size()] );
 
     final SelectionChangedEvent e = new SelectionChangedEvent( this, getSelection() );
-    for( int i = 0; i < listenersArray.length; i++ )
+    for( final ISelectionChangedListener l : listenersArray )
     {
-      final ISelectionChangedListener l = listenersArray[i];
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
         public void run( )
@@ -720,15 +717,17 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_contentProvider.setRootPath( rootPath );
 
     final Image waitImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.WAIT_LOADING_OBJ );
+    if( !m_treeViewer.getControl().isDisposed() )
+    {
+      if( showContextWhileLoading )
+        m_treeViewer.setLabelProvider( new ConstantLabelProvider( "Loading " + context + "...", waitImg ) );
+      else
+        m_treeViewer.setLabelProvider( new ConstantLabelProvider( " ", waitImg ) );
 
-    if( showContextWhileLoading )
-      m_treeViewer.setLabelProvider( new ConstantLabelProvider( "Loading " + context + "...", waitImg ) );
-    else
-      m_treeViewer.setLabelProvider( new ConstantLabelProvider( " ", waitImg ) );
-
-    m_treeViewer.setContentProvider( new ArrayTreeContentProvider() );
-    m_treeViewer.getTree().setLinesVisible( false );
-    m_treeViewer.setInput( new Object[] { "" } );
+      m_treeViewer.setContentProvider( new ArrayTreeContentProvider() );
+      m_treeViewer.getTree().setLinesVisible( false );
+      m_treeViewer.setInput( new Object[] { "" } );
+    }
 
     final String href = input.getHref();
     final String linktype = input.getLinktype();

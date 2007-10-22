@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.google.earth.export.convert.ConvertFacade;
 import org.kalypso.google.earth.export.convert.IFeatureGeometryFilter;
 import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
@@ -95,7 +96,7 @@ public class GoogleExportDelegate implements IPaintInternalDelegate
    * 
    * @see org.kalypso.ogc.gml.IPaintDelegate#paint(org.kalypsodeegree.graphics.displayelements.DisplayElement)
    */
-  public void paint( final DisplayElement displayElement )
+  public void paint( final DisplayElement displayElement, final IProgressMonitor monitor )
   {
     try
     {

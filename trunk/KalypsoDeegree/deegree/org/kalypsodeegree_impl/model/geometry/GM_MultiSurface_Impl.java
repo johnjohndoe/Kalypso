@@ -222,12 +222,12 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     {
       final List<GM_SurfacePatch> patchList = new LinkedList<GM_SurfacePatch>();
 
-      GM_Surface< ? >[] surfaces = getAllSurfaces();
+      final GM_Surface< ? >[] surfaces = getAllSurfaces();
 
-      for( GM_Surface< ? > surface : surfaces )
+      for( final GM_Surface< ? > surface : surfaces )
       {
         final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) surface.getAdapter( GM_SurfacePatch[].class );
-        for( GM_SurfacePatch surfacePatch : surfacePatches )
+        for( final GM_SurfacePatch surfacePatch : surfacePatches )
         {
           patchList.add( surfacePatch );
         }
@@ -239,12 +239,12 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     {
       final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
 
-      GM_Surface< ? >[] surfaces = getAllSurfaces();
+      final GM_Surface< ? >[] surfaces = getAllSurfaces();
 
-      for( GM_Surface< ? > surface : surfaces )
+      for( final GM_Surface< ? > surface : surfaces )
       {
         final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) surface.getAdapter( GM_SurfacePatch[].class );
-        for( GM_SurfacePatch surfacePatch : surfacePatches )
+        for( final GM_SurfacePatch surfacePatch : surfacePatches )
         {
           final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
           try
@@ -312,9 +312,11 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    */
   private void calculateCentroidArea( )
   {
-
     area = 0;
-    final int cnt = getCoordinateDimension();
+    // REMARK: we reduce to dimension 2 here, because everyone else (GM_Surface, GM_Curve)
+    // always only produce 2-dim centroids, causing an ArrayOutOfBoundsException here...
+    // Maybe it would be nice to always have a 3-dim centroid if possible
+    final int cnt = Math.min( 2, getCoordinateDimension() );
     try
     {
       final double[] cen = new double[cnt];

@@ -116,4 +116,5 @@ public interface NS
 
   public static final String COMMON_MATHRANGES = "org.kalypso.gml.common.math.ranges";
 
+  public static final String COMMON_COVERAGE = "org.kalypso.gml.common.coverage";
 }

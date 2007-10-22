@@ -80,9 +80,9 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * @author schlienger

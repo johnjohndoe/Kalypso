@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.legend;
 
@@ -68,6 +68,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.legend.LegendElement;
@@ -131,8 +132,8 @@ public class LegendElement_Impl implements LegendElement
   }
 
   /**
-   * 
-   *  
+   *
+   *
    */
   LegendElement_Impl( final BufferedImage legendImage )
   {
@@ -499,7 +500,7 @@ public class LegendElement_Impl implements LegendElement
     final GM_Envelope envelope = GeometryFactory.createGM_Envelope( p1, p3 );
 
     final WorldToScreenTransform wtst = new WorldToScreenTransform( envelope, envelope );
-    ((PolygonDisplayElement_Impl) pde).paint( g, wtst );
+    ((PolygonDisplayElement_Impl) pde).paint( g, wtst, new NullProgressMonitor() );
     Debug.debugMethodEnd();
   }
 
@@ -777,13 +778,13 @@ public class LegendElement_Impl implements LegendElement
 /***********************************************************************************************************************
  * **************************************************************************** Changes to this class. What the people
  * have been up to: $Log$
- * have been up to: Revision 1.14  2007/07/04 21:17:20  devgernot
- * have been up to: Result map generation.
- * have been up to:
- * have been up to: Bugfix: default style not working any more due to handling of gml:location.
- * have been up to: have been up to: Revision 1.13 2007/05/03 07:07:47 devgernot have
- * been up to: SLD supports now SE 1.1.0 ish uom attribute for Symbolzers. have been up to: have been up to: Revision
- * 1.12 2005/06/29 10:41:17 belger have been up to: *** empty log message *** have been up to: have been up to: Revision
- * 1.11 2005/06/20 14:07:49 belger have been up to: Formatierung have been up to: Revision 1.12 2004/07/09 07:17:19 poth
- * no message Revision 1.11 2004/06/01 15:55:05 poth no message Revision 1.10 2004/04/07 10:58:46 axel_schaefer bugfix
+ * have been up to: Revision 1.15  2007/10/22 09:22:56  devgernot
+ * have been up to: Kalypso-Grid support refactored and improved.
+ * have been up to: have been up to: Revision 1.14 2007/07/04 21:17:20 devgernot have
+ * been up to: Result map generation. have been up to: have been up to: Bugfix: default style not working any more due
+ * to handling of gml:location. have been up to: have been up to: Revision 1.13 2007/05/03 07:07:47 devgernot have been
+ * up to: SLD supports now SE 1.1.0 ish uom attribute for Symbolzers. have been up to: have been up to: Revision 1.12
+ * 2005/06/29 10:41:17 belger have been up to: *** empty log message *** have been up to: have been up to: Revision 1.11
+ * 2005/06/20 14:07:49 belger have been up to: Formatierung have been up to: Revision 1.12 2004/07/09 07:17:19 poth no
+ * message Revision 1.11 2004/06/01 15:55:05 poth no message Revision 1.10 2004/04/07 10:58:46 axel_schaefer bugfix
  **********************************************************************************************************************/

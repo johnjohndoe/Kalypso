@@ -47,15 +47,15 @@ import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.grid.IGridMetaReader;
+import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.raster.IRasterMetaReader;
-import org.kalypso.raster.RasterDataFileVerifier;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -83,11 +83,11 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 
     final URL imageUrl = UrlResolverSingleton.resolveUrl( context, arrFileName[0] );
 
-    final RasterDataFileVerifier verifier = new RasterDataFileVerifier();
+    final GridFileVerifier verifier = new GridFileVerifier();
 
     if( verifier.verify( imageUrl ) )
     {
-      final IRasterMetaReader reader = verifier.getRasterMetaReader( imageUrl, system );
+      final IGridMetaReader reader = verifier.getRasterMetaReader( imageUrl, system );
 
       final RenderedOp image = JAI.create( "url", imageUrl );
       m_image = new TiledImage( image, true );

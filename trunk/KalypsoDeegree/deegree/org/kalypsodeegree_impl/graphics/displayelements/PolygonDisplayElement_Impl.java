@@ -64,6 +64,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.Serializable;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
@@ -116,7 +117,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * renders the DisplayElement to the submitted graphic context
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
   {
     final Graphics2D g2 = (Graphics2D) g;
 

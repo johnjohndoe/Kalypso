@@ -596,7 +596,7 @@ public class GeometryUtilities
     return GM_Curve.class;
   }
 
-  public static Class< ? extends Object> getMultiLineStringClass( )
+  public static Class< ? extends GM_Object> getMultiLineStringClass( )
   {
     return GM_MultiCurve.class;
   }

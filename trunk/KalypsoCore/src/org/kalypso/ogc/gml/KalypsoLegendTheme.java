@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
@@ -48,7 +48,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -140,7 +142,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( selected )
       return;
@@ -164,7 +166,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     invalidate( getFullExtent() );
   }
 
-  private void updateLegend( int widthPerLegend, final int hMax )
+  private void updateLegend( int widthPerLegend, final int hMax ) throws CoreException
   {
     final List<Image> stylesCol = new ArrayList<Image>();
     final IMapModell mapModell = getMapModell();
@@ -256,7 +258,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     m_image = tmpImage;
   }
 
-  private Image getLegend( final IFeatureType ft, final UserStyle style, final int width, final int height )
+  private Image getLegend( final IFeatureType ft, final UserStyle style, final int width, final int height ) throws CoreException
   {
     final double yborder = m_font.getSize() + 3;
     final double xborder = width / 3;
@@ -276,7 +278,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     final DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, style );
     for( final DisplayElement de : des )
     {
-      de.paint( g, transform );
+      de.paint( g, transform, new NullProgressMonitor() );
     }
     return image;
   }

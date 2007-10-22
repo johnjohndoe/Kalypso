@@ -49,8 +49,8 @@ import org.kalypso.observation.phenomenon.FeaturePhenomenon;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.AbstractComponent;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * A component wich was previously read from a feature.
