@@ -43,6 +43,11 @@ package org.kalypso.grid;
 import java.io.IOException;
 import java.net.URL;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -170,6 +175,41 @@ public class GeoGridUtilities
     final double y2 = y1 + offsetY.y * grid.getSizeY();
 
     return new Envelope( x1, x2, y1, y2 );
+  }
+
+  /**
+   * Converts a gml-coverage to a {@link IGeoGrid}.
+   */
+  public static IGeoGrid toGrid( final ICoverage coverage ) throws Exception
+  {
+    // REMARK: at the moment, only RectifiedGridCoverages are supported
+    return new RectifiedGridCoverageGeoGrid( coverage.getWrappedFeature() );
+  }
+
+  /**
+   * Applies a {@link IGeoGridWalker} to all members of a {@link ICoverageCollection}.<br>
+   * Calls {@link IGeoGridWalker#start(IGeoGrid)} for every visited grid. <br>
+   * ATTENTION: this does not work for every walker implementation!
+   */
+  public static void walkCoverages( final ICoverageCollection coverages, final IGeoGridWalker walker, final IProgressMonitor monitor ) throws Exception
+  {
+    monitor.beginTask( "Visiting coverages", coverages.size() );
+
+    try
+    {
+      for( final ICoverage coverage : coverages )
+      {
+        final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+
+        grid.walk( walker, monitor );
+
+        ProgressUtilities.worked( monitor, 1 );
+      }
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
 }
