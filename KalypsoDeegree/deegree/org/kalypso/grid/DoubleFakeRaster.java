@@ -1,0 +1,45 @@
+package org.kalypso.grid;
+
+import com.vividsolutions.jts.geom.Coordinate;
+
+/**
+ * A {@link IGeoGrid} implementation based on an arbitrary {@link IGeoValueProvider}.
+ * <p>
+ * The size of the grid is given, the value are taken from the provider.
+ * </p>
+ * 
+ * @author Gernot Belger
+ */
+public class DoubleFakeRaster extends AbstractGeoGrid implements IGeoGrid
+{
+  private final IGeoValueProvider m_doubleProvider;
+
+  private final int m_sizeX;
+
+  private final int m_sizeY;
+
+  public DoubleFakeRaster( final int sizeX, final int sizeY, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final IGeoValueProvider dp )
+  {
+    super( origin, offsetX, offsetY );
+
+    m_sizeX = sizeX;
+    m_sizeY = sizeY;
+    m_doubleProvider = dp;
+  }
+
+  public final double getValue( final int x, final int y ) throws GeoGridException
+  {
+    final Coordinate c = GeoGridUtilities.toCoordinate( this, x, y, null );
+    return m_doubleProvider.getValue( c );
+  }
+
+  public int getSizeX( )
+  {
+    return m_sizeX;
+  }
+
+  public int getSizeY( )
+  {
+    return m_sizeY;
+  }
+}

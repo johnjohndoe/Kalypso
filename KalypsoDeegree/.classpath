@@ -5,7 +5,11 @@
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/geotiff-jai/geotiff-jai.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar" sourcepath="lib/jai/jai-1_1-mr-doc.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/KalypsoDeegree/lib/jai/jai-1_1-mr-doc.zip!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java3d/vecmath.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.8.jar" sourcepath="lib/jts/jts-1.8_src.zip"/>

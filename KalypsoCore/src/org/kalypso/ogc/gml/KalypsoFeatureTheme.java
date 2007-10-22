@@ -166,9 +166,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     final IPaintDelegate paintDelegate = new IPaintDelegate()
     {
-      public void paint( final DisplayElement displayElement )
+      public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor ) throws CoreException
       {
-        displayElement.paint( graphics, projection );
+        displayElement.paint( graphics, projection, paintMonitor );
       }
     };
 
@@ -313,7 +313,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     final IPaintDelegate paintDelegate = new IPaintDelegate()
     {
-      public void paint( final DisplayElement displayElement )
+      public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor )
       {
         final Feature feature = displayElement.getFeature();
         GM_Envelope envelope = feature.getEnvelope();

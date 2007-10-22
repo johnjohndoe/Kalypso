@@ -101,11 +101,11 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.XMLParsingException;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
-import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypsodeegree_impl.gml.binding;
 
@@ -8,8 +8,13 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatus;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.Status;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial2D;
@@ -73,7 +78,7 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
     // polynomial 1d
     cMap.put( IPolynomial1D.class, new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         return new Polynomial1D( feature );
       }
@@ -82,9 +87,8 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
     // Polynomial 2d
     cMap.put( IPolynomial2D.class, new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
-
         return new Polynomial2D( feature );
       }
     } );
@@ -92,13 +96,36 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
     // Status
     cMap.put( IStatus.class, new AdapterConstructor()
     {
-      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
-
         return new Status( feature );
+      }
+    } );
+
+    // Coverages
+    cMap.put( ICoverageCollection.class, new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), ICoverageCollection.QNAME ) )
+          return new CoverageCollection( feature );
+
+        return null;
+      }
+    } );
+
+    cMap.put( ICoverage.class, new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), ICoverage.QNAME ) )
+          return new RectifiedGridCoverage( feature );
+
+        return null;
       }
     } );
 
     return Collections.unmodifiableMap( cMap );
   }
+
 }

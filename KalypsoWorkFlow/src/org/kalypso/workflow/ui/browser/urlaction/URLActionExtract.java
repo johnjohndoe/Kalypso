@@ -92,7 +92,7 @@ public class URLActionExtract extends AbstractURLAction
       // * note:
       // * next line can not find IFile for a url that points to a project and not to a resource inside a project
       // * IFile iFile ResourceUtilities.findFileFromURL(url);
-      final File targetFile = ResourceUtilities.findFileFromURL2( targetURL );
+      final File targetFile = ResourceUtilities.findJavaFileFromURL( targetURL );
       resourceAsStream = sourceURL.openStream();
       ZipUtilities.unzip( resourceAsStream, targetFile );
       // refresh on the whole project, cause we cannot refresh from IPath

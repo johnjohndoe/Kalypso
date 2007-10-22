@@ -1,7 +1,6 @@
 package org.kalypso.ui.wizard.raster;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
@@ -66,14 +65,11 @@ import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
-
   private ICommandTarget m_outlineviewer;
 
   private ImportRasterSourceWizardPage m_page;
 
   private IProject m_project;
-
-  private URL m_mapContextURL;
 
   private IMapModell m_mapModel;
 
@@ -89,7 +85,6 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   {
     m_mapModel = modell;
     m_project = m_mapModel.getProject();
-    m_mapContextURL = ((GisTemplateMapModell) modell).getContext();
   }
 
   @Override
@@ -115,6 +110,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
     final String stylePath = useDefaultStyle ? null : getRelativeProjectPath( m_page.getStylePath() );
     final String styleName = useDefaultStyle ? null : m_page.getStyleName();
 
+    final ICommandTarget outlineviewer = m_outlineviewer;
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       public IStatus execute( IProgressMonitor monitor ) throws InvocationTargetException
@@ -132,7 +128,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
           final String type = "gml";
           final String featurePath = "";
           final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, type, featurePath, source, "sld", styleName, stylePath, "simple" );
-          m_outlineviewer.postCommand( command, null );
+          outlineviewer.postCommand( command, null );
         }
         catch( final Throwable t )
         {

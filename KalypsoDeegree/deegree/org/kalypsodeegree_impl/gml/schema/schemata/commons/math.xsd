@@ -16,7 +16,7 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 
 	<!-- =================================================================
-		polynom property 
+		polynom property
 		================================================================== -->
 	<element name="polynomial" type="math:Polynomial1DPropertyType" />
 
@@ -34,7 +34,7 @@
 		_Polynom element
 		======================================================================= -->
 	<!-- TODO: substitute _Feature -->
-	<element name="_Polynomial" type="math:AbstractPolynomialType">
+	<element name="_Polynomial" type="math:AbstractPolynomialType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation>Substitutions head for all polynom</documentation>
 		</annotation>
@@ -125,7 +125,7 @@
 	</complexType>
 
 	<!-- =================================================================
-		polynom2D property 
+		polynom2D property
 		================================================================== -->
 	<element name="polynomial2D" type="math:Polynomial1DPropertyType" />
 

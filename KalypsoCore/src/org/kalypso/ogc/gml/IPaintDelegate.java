@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 
 /**
@@ -47,5 +49,5 @@ import org.kalypsodeegree.graphics.displayelements.DisplayElement;
  */
 public interface IPaintDelegate
 {
-  public void paint( final DisplayElement displayElement );
+  public void paint( final DisplayElement displayElement, final IProgressMonitor monitor ) throws CoreException;
 }

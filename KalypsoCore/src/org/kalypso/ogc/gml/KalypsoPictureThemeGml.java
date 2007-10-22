@@ -55,7 +55,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * @author kuch
@@ -71,7 +71,7 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( UrlResolverSingleton.resolveUrl( context, layerType.getHref() ), null );
     final Feature fRoot = workspace.getRootFeature();
 
-    final RectifiedGridCoverage2 coverage2 = new RectifiedGridCoverage2( fRoot );
+    final RectifiedGridCoverage coverage2 = new RectifiedGridCoverage( fRoot );
 
     /* imgFile */
     final RangeSetType rangeSet = coverage2.getRangeSet();

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
@@ -67,6 +67,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.PointDisplayElement;
 import org.kalypsodeegree.graphics.sld.Graphic;
@@ -129,7 +130,7 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
    * Renders the DisplayElement to the submitted graphic context.
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
   {
     try
     {
@@ -175,7 +176,7 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
     g.translate( x, y );
     g.rotate( Math.toRadians( rotation ) );
     g.translate( -halfSize, -halfSize );
-    
+
     if( graphic == null )
       g.drawImage( defaultImg, x_, y_, null );
     else

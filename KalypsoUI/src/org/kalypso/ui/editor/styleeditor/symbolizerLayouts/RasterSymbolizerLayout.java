@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
@@ -86,13 +86,13 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 
     // ***** ComboBox Mode Panel
 
-    final ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, "Mode:", rasterSymbolizer.getMode() );
+    final ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, "Mode:", 0 );
     modeComboPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( final PanelEvent event )
       {
         final int mode = ((ModeSelectionComboPanel) event.getSource()).getSelection();
-        rasterSymbolizer.setMode( mode );
+// rasterSymbolizer.setMode( mode );
         userStyle.fireStyleChanged();
       }
     } );

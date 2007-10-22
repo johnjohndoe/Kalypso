@@ -46,6 +46,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -128,36 +129,43 @@ public class UserStylePainter
     for( final Object o : visibleFeatures )
     {
       final SubMonitor childProgress = loopProgress.newChild( 1 );
-      paintFeature( workspace, scale, bbox, selected, rule, filter, o, childProgress, delegate );
+      paintFeature( workspace, scale, selected, rule, filter, o, childProgress, delegate );
       ProgressUtilities.done( childProgress );
     }
   }
 
-  private void paintFeature( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final Boolean selected, final Rule rule, final Filter filter, final Object featureOrLink, final IProgressMonitor monitor, final IPaintDelegate delegate )
+  private void paintFeature( final GMLWorkspace workspace, final Double scale, final Boolean selected, final Rule rule, final Filter filter, final Object featureOrLink, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
+    final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Feature", 100 );
+
     /* resolve any links */
     final Feature feature = FeatureHelper.getFeature( workspace, featureOrLink );
 
     try
     {
       /* Only paint really visible features */
-      if( filterFeature( feature, selected, bbox, filter ) )
+      if( filterFeature( feature, selected, filter ) )
       {
         final Symbolizer[] symbolizers = rule.getSymbolizers();
         for( final Symbolizer symbolizer : symbolizers )
         {
           final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
           if( displayElement != null )
+          {
             /* does scale apply? */
             if( (scale == null) || displayElement.doesScaleConstraintApply( scale ) )
-              delegate.paint( displayElement );
+              delegate.paint( displayElement, progress.newChild( 100 ) );
+          }
         }
       }
     }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
     catch( final Exception e )
     {
-      // TODO: handle exception
-      e.printStackTrace();
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 
@@ -167,7 +175,7 @@ public class UserStylePainter
    * @param selected
    *            Wether to filter selected or non-selected features. If <code>null</code>, selection is not tested.
    */
-  private boolean filterFeature( final Feature feature, final Boolean selected, final GM_Envelope bbox, final Filter filter ) throws FilterEvaluationException
+  private boolean filterFeature( final Feature feature, final Boolean selected, final Filter filter ) throws FilterEvaluationException
   {
     /* Is selected/unselected ? */
     final boolean featureIsSelected = m_selectionManager.isSelected( feature );

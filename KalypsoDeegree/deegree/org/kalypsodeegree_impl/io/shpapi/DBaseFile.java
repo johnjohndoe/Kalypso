@@ -64,13 +64,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -407,13 +407,13 @@ public class DBaseFile
 
     // remove everything before "\" or "/"
     final QName qNameFT = new QName( DBaseFile.NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
-    final Class geoClass = getGeometryType();
+    final Class< ? extends GM_Object> geoClass = getGeometryType();
     final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
     ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( DBaseFile.NS_SHAPEFILE, "GEOM" ), geoTH.getTypeName(), geoTH, 1, 1, false );
     return GMLSchemaFactory.createFeatureType( qNameFT, ftp );
   }
 
-  private Class getGeometryType( )
+  private Class< ? extends GM_Object> getGeometryType( )
   {
     switch( m_defaultFileShapeType )
     {
@@ -535,7 +535,7 @@ public class DBaseFile
         bytes[i] = dataArray[kk];
       }
 
-      final String charsetname = CharsetUtilities.getDefaultCharset();
+      final String charsetname = Charset.defaultCharset().name();
       return new String( bytes, charsetname ).trim();
     }
     catch( final Exception e )

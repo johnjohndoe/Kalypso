@@ -1644,6 +1644,53 @@
               visible="true">
         </separator>
      </menuContribution>
+     <menuContribution
+           locationURI="popup:org.kalypso.ui.editor.GmlEditor">
+        <menu
+              id="imports"
+              label="Import">
+           <command
+                 commandId="org.kalypso.gml.ui.importGridCommand">
+              <visibleWhen
+                    checkEnabled="false">
+                 <with
+                       variable="selection">
+                    <iterate
+                          ifEmpty="false"
+                          operator="and">
+                       <test
+                             forcePluginActivation="false"
+                             property="org.kalypso.core.qname"
+                             value="{org.kalypso.gml.common.coverage}CoverageCollection">
+                       </test>
+                    </iterate>
+                 </with>
+              </visibleWhen>
+           </command>
+        </menu>
+        <menu
+              id="exports"
+              label="Export">
+           <command
+                 commandId="org.kalypso.gml.ui.exportGridCommand">
+              <visibleWhen
+                    checkEnabled="false">
+                 <with
+                       variable="selection">
+                    <iterate
+                          ifEmpty="false"
+                          operator="and">
+                       <test
+                             forcePluginActivation="false"
+                             property="org.kalypso.core.qname"
+                             value="{http://www.opengis.net/gml}_Coverage">
+                       </test>
+                    </iterate>
+                 </with>
+              </visibleWhen>
+           </command>
+        </menu>
+     </menuContribution>
 
  </extension>
 

@@ -61,11 +61,13 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
-import org.kalypsodeegree.graphics.sld.Interval;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.xml.Marshallable;
 
@@ -79,58 +81,54 @@ import org.kalypsodeegree.xml.Marshallable;
  */
 public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer, Marshallable
 {
-  private TreeMap m_colorMap = null;
+  private TreeMap<Double, ColorMapEntry> m_colorMap = null;
 
-  private final int mode_intervalColorMapping = 0;
+  private transient double[] m_values;
 
-  private int m_mode = mode_intervalColorMapping;
+  private Color[] m_colors;
 
-  public RasterSymbolizer_Impl( final TreeMap colorMap )
+  private double m_min;
+
+  private double m_max;
+
+  public RasterSymbolizer_Impl( final TreeMap<Double, ColorMapEntry> colorMap )
   {
     setColorMap( colorMap );
   }
 
-  public TreeMap getColorMap( )
+  public TreeMap<Double, ColorMapEntry> getColorMap( )
   {
     return m_colorMap;
   }
 
-  public void setColorMap( final TreeMap colorMap )
+  @SuppressWarnings("unchecked")
+  public void setColorMap( final TreeMap<Double, ColorMapEntry> colorMap )
   {
     m_colorMap = colorMap;
-  }
 
-  public int getMode( )
-  {
-    return m_mode;
-  }
-
-  public void setMode( final int mode )
-  {
-    this.m_mode = mode;
-  }
-
-  public TreeMap getIntervalMap( )
-  {
-    final TreeMap intervalMap = new TreeMap();
-    final Object[] colorMapKeys = m_colorMap.keySet().toArray();
-    int startIndex = 0;
-    final double nullValue = -9999;
-    if( ((Double) colorMapKeys[0]).doubleValue() == nullValue )
+    // PERFORMANCE: create doubles and colors as arrays for quick access
+    final Entry<Double, ColorMapEntry>[] entries = colorMap.entrySet().toArray( new Map.Entry[colorMap.size()] );
+    m_values = new double[entries.length];
+    m_colors = new Color[entries.length];
+    for( int i = 0; i < entries.length; i++ )
     {
-      startIndex = 1;
+      final Entry<Double, ColorMapEntry> entry = entries[i];
+      m_values[i] = entry.getKey();
+      final Color color = entry.getValue().getColor();
+      final double opacity = entry.getValue().getOpacity();
+      m_colors[i] = ColorUtilities.createTransparent( color, opacity );
     }
-    for( int i = startIndex; i < colorMapKeys.length - 1; i++ )
+
+    if( m_values.length == 0 )
     {
-      final ColorMapEntry colorMapEntry_i = (ColorMapEntry) m_colorMap.get( colorMapKeys[i] );
-      final ColorMapEntry colorMapEntry_i1 = (ColorMapEntry) m_colorMap.get( colorMapKeys[i + 1] );
-      final Interval interval = new Interval_Impl( colorMapEntry_i.getQuantity(), colorMapEntry_i1.getQuantity() );
-      final Color color = colorMapEntry_i.getColor();
-      // TODO Opacity allways 0, check this
-      final Color colorWithOpacity = new Color( color.getRed(), color.getGreen(), color.getBlue(), (int) Math.round( colorMapEntry_i.getOpacity() * 255 ) );
-      intervalMap.put( interval, colorWithOpacity );
+      m_min = Double.MAX_VALUE;
+      m_max = Double.MIN_VALUE;
     }
-    return intervalMap;
+    else
+    {
+      m_min = m_values[0];
+      m_max = m_values[m_values.length - 1];
+    }
   }
 
   public String exportAsXML( )
@@ -150,10 +148,9 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 
     if( m_colorMap != null )
     {
-      final Iterator it = m_colorMap.keySet().iterator();
-      while( it.hasNext() )
+      for( final Map.Entry<Double, ColorMapEntry> entry : m_colorMap.entrySet() )
       {
-        final ColorMapEntry colorMapEntry = (ColorMapEntry) m_colorMap.get( it.next() );
+        final ColorMapEntry colorMapEntry = entry.getValue();
         sb.append( colorMapEntry.exportAsXML() );
       }
     }
@@ -164,4 +161,21 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     return sb.toString();
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.RasterSymbolizer#getColor(double)
+   */
+  public Color getColor( final double value )
+  {
+    if( value < m_min )
+      return null;
+
+    if( value > m_max )
+      return null;
+
+    final int index = Math.abs( Arrays.binarySearch( m_values, value ) );
+    if( index >= 0 && index < m_colors.length )
+      return m_colors[index];
+
+    return null;
+  }
 }
