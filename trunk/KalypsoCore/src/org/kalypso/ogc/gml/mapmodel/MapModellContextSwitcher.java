@@ -84,7 +84,7 @@ public class MapModellContextSwitcher
     {
       if( m_oldContext != null )
       {
-        logger.info( "Deactivating context: " + m_oldContext.getContextId() );
+        logger.finest( "Deactivating context: " + m_oldContext.getContextId() );
         m_contextService.deactivateContext( m_oldContext );
       }
       if( m_theme == null )
@@ -99,9 +99,9 @@ public class MapModellContextSwitcher
         {
           context.define( contextId, contextId, "org.kalypso.ogc.gml.map.context" );
         }
-        logger.info( "Activating context: " + contextId );
+        logger.finest( "Activating context: " + contextId );
         m_oldContext = m_contextService.activateContext( contextId );
-        logger.info( "Active contexts: " + Arrays.deepToString( m_contextService.getActiveContextIds().toArray() ) );
+        logger.finest( "Active contexts: " + Arrays.deepToString( m_contextService.getActiveContextIds().toArray() ) );
       }
     }
 
