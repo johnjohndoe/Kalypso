@@ -1093,61 +1093,47 @@
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler"
             description="Zoom in (statisch)"
             id="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
             name="Zoom In (statisch)"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveDownHandler"
             description="Move down"
             id="org.kalypso.ogc.gml.map.MoveDownCommand"
             name="Move down"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveUpHandler"
             description="Move up"
             id="org.kalypso.ogc.gml.map.MoveUpCommand"
             name="Move up"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveRightHandler"
             description="Move right"
             id="org.kalypso.ogc.gml.map.MoveRightCommand"
             name="Move right">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveLeftHandler"
             description="Move left"
             id="org.kalypso.ogc.gml.map.MoveLeftCommand"
             name="Move left"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler"
             description="Zoom to active layer"
             id="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
             name="Zoom to active layer"/>
-      <context
-            id="org.kalypso.ogc.gml.map.context"
-            name="Map View"
-            parent="org.eclipse.ui.contexts.window"
-            parentId="org.eclipse.ui.contexts.window"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures"
             description="Zoom to selected features"
             id="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"
             name="Zoom to selected features"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer"
             description="Zoom to selected features of a layer"
             id="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"
             name="Zoom to selected features of a layer"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.PanToSelectedFeature"
             description="Pan to selected feature"
             id="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand"
             name="Pan to selected feature">
@@ -1742,29 +1728,6 @@
     </image>
  </extension>
  <extension
-       point="org.eclipse.ui.handlers">
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.ZoomOutHandler"
-          commandId="org.kalypso.ogc.gml.map.ZoomOutCommand">
-       <activeWhen>
-          <with
-                variable="activePart">
-             <adapt
-                   type="org.kalypso.ogc.gml.map.MapPanel">
-             </adapt>
-          </with>
-       </activeWhen>
-       <enabledWhen>
-          <with
-                variable="activePart">
-             <adapt
-                   type="org.kalypso.ogc.gml.map.MapPanel">
-             </adapt>
-          </with>
-       </enabledWhen>
-    </handler>
- </extension>
- <extension
        id="org.kalypso.ui.repositoryContainerCommands"
        name="Repository Container Commands"
        point="org.eclipse.ui.commands">
@@ -1875,112 +1838,153 @@
           class="org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler"
           commandId="org.kalypso.ui.command.repositoryConfigure">
        <enabledWhen>
-          <with
-                variable="selection">
-             <iterate
-                   ifEmpty="false"
-                   operator="and">
-                <instanceof
-                      value="org.kalypso.repository.IRepository">
-                </instanceof>
-             </iterate>
-          </with>
+          <reference
+                definitionId="repositorySelection">
+          </reference>
        </enabledWhen>
     </handler>
     <handler
           class="org.kalypso.ogc.sensor.view.actions.RemoveRepositoryHandler"
           commandId="org.kalypso.ui.command.repositoryRemove">
        <enabledWhen>
-          <with
-                variable="selection">
-             <iterate
-                   ifEmpty="false"
-                   operator="and">
-                <instanceof
-                      value="org.kalypso.repository.IRepository">
-                </instanceof>
-             </iterate>
-          </with>
+          <reference
+                definitionId="repositorySelection">
+          </reference>
        </enabledWhen>
     </handler>
     <handler
           class="org.kalypso.ogc.sensor.view.actions.DumpStructureHandler"
           commandId="org.kalypso.ui.command.repositoryDumpStructure">
        <enabledWhen>
-          <with
-                variable="selection">
-             <iterate
-                   ifEmpty="false"
-                   operator="and">
-                <instanceof
-                      value="org.kalypso.repository.IRepository">
-                </instanceof>
-             </iterate>
-          </with>
+          <reference
+                definitionId="repositorySelection">
+          </reference>
        </enabledWhen>
     </handler>
     <handler
           class="org.kalypso.ogc.sensor.view.actions.ExportAsFileHandler"
           commandId="org.kalypso.ui.command.repositoryExportAsFile">
        <enabledWhen>
-          <with
-                variable="selection">
-             <iterate
-                   ifEmpty="false"
-                   operator="and">
-                <instanceof
-                      value="org.kalypso.repository.IRepositoryItem">
-                </instanceof>
-             </iterate>
-          </with>
+          <reference
+                definitionId="repositoryItemSelection">
+          </reference>
        </enabledWhen>
     </handler>
     <handler
           class="org.kalypso.ogc.sensor.view.actions.ReloadHandler"
           commandId="org.kalypso.ui.command.repositoryReload">
        <enabledWhen>
-          <with
-                variable="selection">
-             <iterate
-                   ifEmpty="false"
-                   operator="and">
-                <instanceof
-                      value="org.kalypso.repository.IRepository">
-                </instanceof>
-             </iterate>
-          </with>
+          <reference
+                definitionId="repositorySelection">
+          </reference>
        </enabledWhen>
     </handler>
     <handler
           class="org.kalypso.ogc.sensor.view.actions.CopyLinkHandler"
           commandId="org.kalypso.ui.command.repositoryCopyLink">
        <enabledWhen>
-          <with
-                variable="selection">
-             <iterate
-                   ifEmpty="false"
-                   operator="and">
-                <instanceof
-                      value="org.kalypso.repository.IRepositoryItem">
-                </instanceof>
-             </iterate>
-          </with>
+          <reference
+                definitionId="repositoryItemSelection">
+          </reference>
        </enabledWhen>
     </handler>
     <handler
           class="org.kalypso.ogc.sensor.view.actions.ViewWQRelationHandler"
           commandId="org.kalypso.ui.command.repositoryShowWQ">
        <enabledWhen>
-          <with
-                variable="selection">
-             <iterate
-                   ifEmpty="false"
-                   operator="and">
-                <instanceof
-                      value="org.kalypso.repository.IRepositoryItem">
-                </instanceof>
-             </iterate>
-          </with>
+          <reference
+                definitionId="repositoryItemSelection">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.ZoomOutHandler"
+          commandId="org.kalypso.ogc.gml.map.ZoomOutCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler"
+          commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.MoveDownHandler"
+          commandId="org.kalypso.ogc.gml.map.MoveDownCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.MoveUpHandler"
+          commandId="org.kalypso.ogc.gml.map.MoveUpCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.MoveLeftHandler"
+          commandId="org.kalypso.ogc.gml.map.MoveLeftCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.MoveRightHandler"
+          commandId="org.kalypso.ogc.gml.map.MoveRightCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler"
+          commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures"
+          commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer"
+          commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.PanToSelectedFeature"
+          commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand">
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
        </enabledWhen>
     </handler>
  </extension>
@@ -1994,5 +1998,55 @@
           class="org.kalypso.ogc.gml.featureview.control.comparators.FeatureViewerComparator"
           id="org.kalypso.ui.featureview.comparators.featureComparator">
     </comparator>
+ </extension>
+ <extension
+       point="org.eclipse.core.expressions.definitions">
+    <definition
+          id="mapContext">
+       <with
+             variable="activeContexts">
+          <iterate
+                ifEmpty="false"
+                operator="or">
+             <equals
+                   value="org.kalypso.ogc.gml.map.context">
+             </equals>
+          </iterate>
+       </with>
+    </definition>
+    <definition
+          id="repositorySelection">
+       <with
+             variable="selection">
+          <iterate
+                ifEmpty="false"
+                operator="and">
+             <instanceof
+                   value="org.kalypso.repository.IRepository">
+             </instanceof>
+          </iterate>
+       </with>
+    </definition>
+    <definition
+          id="repositoryItemSelection">
+       <with
+             variable="selection">
+          <iterate
+                ifEmpty="false"
+                operator="and">
+             <instanceof
+                   value="org.kalypso.repository.IRepositoryItem">
+             </instanceof>
+          </iterate>
+       </with>
+    </definition>
+ </extension>
+ <extension
+       point="org.eclipse.ui.contexts">
+    <context
+          id="org.kalypso.ogc.gml.map.context"
+          name="Map View"
+          parentId="org.eclipse.ui.contexts.window">
+    </context>
  </extension>
 </plugin>
