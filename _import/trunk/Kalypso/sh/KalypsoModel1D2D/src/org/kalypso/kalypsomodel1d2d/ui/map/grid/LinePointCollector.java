@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -152,7 +153,7 @@ public class LinePointCollector
     }
     else
     {
-      System.out.println( Messages.getString("LinePointCollector.0") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "LinePointCollector.0" ) ); //$NON-NLS-1$
       return null;
     }
 
@@ -632,38 +633,36 @@ public class LinePointCollector
       positions[i] = m_points.get( i ).getPosition();
     }
 
-    GM_Curve curve = null;
     try
     {
-      curve = GeometryFactory.createGM_Curve( positions, m_crs );
+      final GM_Curve curve = GeometryFactory.createGM_Curve( positions, m_crs );
+      if( curve == null )
+        return;
+
+      final LineSymbolizer symb = new LineSymbolizer_Impl();
+      final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+
+      Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+      defaultstroke = symb.getStroke();
+      // float[] dArray = new float[3];
+      // dArray[0] = 6;
+      // dArray[1] = 3;
+      stroke.setWidth( width );
+      stroke.setStroke( color );
+      // stroke.setDashArray( dArray );
+      symb.setStroke( stroke );
+
+      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+      de.paint( g, projection, new NullProgressMonitor() );
+
+      // Set the Stroke back to default
+      symb.setStroke( defaultstroke );
     }
-    catch( final GM_Exception e1 )
+    catch( final Exception e1 )
     {
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
-
-    if( curve == null )
-      return;
-
-    final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
-
-    Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
-    defaultstroke = symb.getStroke();
-    // float[] dArray = new float[3];
-    // dArray[0] = 6;
-    // dArray[1] = 3;
-    stroke.setWidth( width );
-    stroke.setStroke( color );
-    // stroke.setDashArray( dArray );
-    symb.setStroke( stroke );
-
-    final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-    de.paint( g, projection );
-
-    // Set the Stroke back to default
-    symb.setStroke( defaultstroke );
   }
 
 }

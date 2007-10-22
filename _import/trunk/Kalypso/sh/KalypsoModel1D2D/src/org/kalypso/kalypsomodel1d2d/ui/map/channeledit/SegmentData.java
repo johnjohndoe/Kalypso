@@ -49,6 +49,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
@@ -1016,7 +1018,7 @@ public class SegmentData
     }
   }
 
-  public void paintSegment( final Graphics g, final MapPanel mapPanel ) throws GM_Exception
+  public void paintSegment( final Graphics g, final MapPanel mapPanel ) throws Exception
   {
     // g.dispose();
 
@@ -1436,7 +1438,7 @@ public class SegmentData
       {
         paintLineString( getBankLeftInters(), g, panel, color );
       }
-      catch( final GM_Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -1447,7 +1449,7 @@ public class SegmentData
       {
         paintLineString( getBankRightInters(), g, panel, color );
       }
-      catch( final GM_Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -1466,7 +1468,7 @@ public class SegmentData
   }
 
   @SuppressWarnings("unchecked")
-  private void paintLineString( final LineString line, final Graphics g, final MapPanel mapPanel, final Color color ) throws GM_Exception
+  private void paintLineString( final LineString line, final Graphics g, final MapPanel mapPanel, final Color color ) throws GM_Exception, CoreException
   {
     if( line == null )
       return;
@@ -1486,7 +1488,7 @@ public class SegmentData
     symb.setStroke( stroke );
 
     final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, Curve, symb );
-    de.paint( g, mapPanel.getProjection() );
+    de.paint( g, mapPanel.getProjection(), new NullProgressMonitor() );
 
     // Set the Stroke back to default
     symb.setStroke( defaultstroke );
@@ -1527,7 +1529,7 @@ public class SegmentData
     {
       paintLineString( line, g, panel, color );
     }
-    catch( final GM_Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }

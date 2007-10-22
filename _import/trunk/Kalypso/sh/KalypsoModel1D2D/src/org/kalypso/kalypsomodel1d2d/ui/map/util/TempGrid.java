@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.util;
 
@@ -47,6 +47,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -58,7 +60,6 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -121,7 +122,7 @@ public class TempGrid
    *            </ul>
    * @see AddNodeCommand
    */
-  public TempGrid( boolean ignoreZCoordinate )
+  public TempGrid( final boolean ignoreZCoordinate )
   {
     this.ignoreZCoordinate = ignoreZCoordinate;
   }
@@ -153,18 +154,11 @@ public class TempGrid
    */
   public void paint( final Graphics g, final GeoTransform projection, final int pointRectSize )
   {
-
     // IMPORTANT: we remember GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
     if( gridPoints.length != 0 )
     {
-
-      // draw a line
-      final int[][] points = getPointArrays( projection );
-      final int[] arrayX = points[0];
-      final int[] arrayY = points[1];
-
       /* Paint a linestring. */
       // g.drawPolyline( arrayX, arrayY, arrayX.length );
       // drawHandles( g, arrayX, arrayY, pointRectSize);
@@ -174,12 +168,7 @@ public class TempGrid
       {
         paintEdges( g, projection );
       }
-      catch( GM_Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( IncompatibleGeometryTypeException e )
+      catch( final Exception e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -201,9 +190,9 @@ public class TempGrid
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
 
-    for( GM_Point points[] : gridPoints )
+    for( final GM_Point points[] : gridPoints )
     {
-      for( GM_Point point : points )
+      for( final GM_Point point : points )
       {
         if( point != null )
         {
@@ -230,7 +219,7 @@ public class TempGrid
     final Color oldColor = g.getColor();
     g.setColor( oldColor.darker() );
     // int sizeOuter = 4;
-    int halfRectWidth = pointRectWidth / 2;
+    final int halfRectWidth = pointRectWidth / 2;
 
     for( int i = 0; i < y.length; i++ )
     {
@@ -246,43 +235,41 @@ public class TempGrid
 
   }
 
-  private void paintEdges( final Graphics g, GeoTransform projection ) throws GM_Exception, IncompatibleGeometryTypeException
+  private void paintEdges( final Graphics g, final GeoTransform projection ) throws GM_Exception, CoreException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
-    Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
-    defaultstroke = symb.getStroke();
-    Color grey = new Color( 100, 100, 100 );
+    final Color grey = new Color( 100, 100, 100 );
 
     stroke.setWidth( 1 );
     stroke.setStroke( grey );
     symb.setStroke( stroke );
     DisplayElement de;
 
-    GM_Position[] pos = new GM_Position[2];
+    final GM_Position[] pos = new GM_Position[2];
 
-    for( int i = 0; i < gridPoints.length; i++ )
+    for( final GM_Point[] element : gridPoints )
     {
-      org.kalypsodeegree_impl.model.geometry.GeometryFactory factory = new org.kalypsodeegree_impl.model.geometry.GeometryFactory();
-      for( int j = 0; j < gridPoints[i].length - 1; j++ )
+      final org.kalypsodeegree_impl.model.geometry.GeometryFactory factory = new org.kalypsodeegree_impl.model.geometry.GeometryFactory();
+      for( int j = 0; j < element.length - 1; j++ )
       {
-        pos[0] = gridPoints[i][j].getPosition();
-        pos[1] = gridPoints[i][j + 1].getPosition();
+        pos[0] = element[j].getPosition();
+        pos[1] = element[j + 1].getPosition();
         final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( pos, m_crs );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-        de.paint( g, projection );
+        de.paint( g, projection, new NullProgressMonitor() );
       }
     }
     for( int j = 0; j < gridPoints[0].length; j++ )
     {
-      GeometryFactory factory = new GeometryFactory();
+      final GeometryFactory factory = new GeometryFactory();
       for( int i = 0; i < gridPoints.length - 1; i++ )
       {
         pos[0] = gridPoints[i][j].getPosition();
         pos[1] = gridPoints[i + 1][j].getPosition();
         final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( pos, m_crs );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-        de.paint( g, projection );
+        de.paint( g, projection, new NullProgressMonitor() );
       }
     }
   }
@@ -296,7 +283,7 @@ public class TempGrid
    * @throws IllegalArgumentException
    *             if crs is null
    */
-  public void resetTempGrid( CS_CoordinateSystem crs ) throws IllegalArgumentException
+  public void resetTempGrid( final CS_CoordinateSystem crs ) throws IllegalArgumentException
   {
     gridPoints = new GM_Point[0][0];
     m_crs = crs;
@@ -316,7 +303,7 @@ public class TempGrid
    * @throws IllegalArgumentException
    *             if one the the side point collector is null
    */
-  public void setTempGrid( LinePointCollector topSidePoints, LinePointCollector bottomSidePoints, LinePointCollector leftSidePoints, LinePointCollector rightSidePoints ) throws GM_Exception
+  public void setTempGrid( final LinePointCollector topSidePoints, final LinePointCollector bottomSidePoints, final LinePointCollector leftSidePoints, final LinePointCollector rightSidePoints ) throws GM_Exception
   {
     Assert.throwIAEOnNullParam( topSidePoints, "topSidePoints" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( bottomSidePoints, "bottomSidePoints" ); //$NON-NLS-1$
@@ -329,7 +316,7 @@ public class TempGrid
   /**
    * in case that the data comes allready as mesh
    */
-  public void importMesh( GM_Point[][] importedGridPoints )
+  public void importMesh( final GM_Point[][] importedGridPoints )
   {
     this.gridPoints = importedGridPoints;
   }
@@ -337,7 +324,7 @@ public class TempGrid
   /**
    * Computes the grid points from its side points
    */
-  private final GM_Point[][] computeMesh( LinePointCollector topSidePoints, LinePointCollector bottomSidePoints, LinePointCollector leftSidePoints, LinePointCollector rightSidePoints ) throws GM_Exception
+  private final GM_Point[][] computeMesh( final LinePointCollector topSidePoints, final LinePointCollector bottomSidePoints, final LinePointCollector leftSidePoints, final LinePointCollector rightSidePoints ) throws GM_Exception
   {
     // GeometryFactory geometryFactory= new GeometryFactory();
     final LineString topLine = pointToLineString( topSidePoints );
@@ -346,18 +333,18 @@ public class TempGrid
     final LineString rightLine = pointToLineString( rightSidePoints );
 
     // compute mesh points
-    JTSQuadMesher mesher = new JTSQuadMesher( topLine, bottomLine, leftLine, rightLine );
-    Coordinate[][] coordinates = mesher.calculateMesh();
-    GeometryFactory geometryFactory = new GeometryFactory();
-    GM_Point points2D[][] = new GM_Point[coordinates.length][];
+    final JTSQuadMesher mesher = new JTSQuadMesher( topLine, bottomLine, leftLine, rightLine );
+    final Coordinate[][] coordinates = mesher.calculateMesh();
+    final GeometryFactory geometryFactory = new GeometryFactory();
+    final GM_Point points2D[][] = new GM_Point[coordinates.length][];
     for( int i = 0; i < coordinates.length; i++ )
     {
-      Coordinate[] line = coordinates[i];
-      GM_Point[] points1D = new GM_Point[line.length];
+      final Coordinate[] line = coordinates[i];
+      final GM_Point[] points1D = new GM_Point[line.length];
       points2D[i] = points1D;
       for( int j = 0; j < line.length; j++ )
       {
-        Coordinate coord = line[j];
+        final Coordinate coord = line[j];
         points1D[j] = (GM_Point) JTSAdapter.wrap( geometryFactory.createPoint( coord ) );
       }
     }
@@ -367,13 +354,13 @@ public class TempGrid
   /**
    * To get an {@link ICommand} that can be use to hat the temp grid to the model
    */
-  public ICommand getAddToModelCommand( MapPanel mapPanel, IFEDiscretisationModel1d2d model, CommandableWorkspace commandableWorkspace, double searchRectWidth ) throws GM_Exception
+  public ICommand getAddToModelCommand( final MapPanel mapPanel, final IFEDiscretisationModel1d2d model, final CommandableWorkspace commandableWorkspace, final double searchRectWidth ) throws GM_Exception
   {
-    ChangeDiscretiationModelCommand compositeCommand = new ChangeDiscretiationModelCommand( commandableWorkspace, model );// new
-                                                                                                                          // CompositeCommand("Grid
-                                                                                                                          // Command");
+    final ChangeDiscretiationModelCommand compositeCommand = new ChangeDiscretiationModelCommand( commandableWorkspace, model );// new
+    // CompositeCommand("Grid
+    // Command");
     // compute Points
-    GM_Point[][] points2D = gridPoints;// computeMesh();
+    final GM_Point[][] points2D = gridPoints;// computeMesh();
     final int DIM_X = points2D.length;
     if( DIM_X == 0 )
     {
@@ -383,7 +370,7 @@ public class TempGrid
 
     final int DIM_Y = points2D[0].length;
     // add nodes
-    AddNodeCommand[][] newNodesArray2D = new AddNodeCommand[DIM_X][DIM_Y];
+    final AddNodeCommand[][] newNodesArray2D = new AddNodeCommand[DIM_X][DIM_Y];
     addNodesFromPoints( model, newNodesArray2D, compositeCommand, points2D, searchRectWidth );
 
     addElementsFromNodes( model, newNodesArray2D, compositeCommand );
@@ -393,18 +380,18 @@ public class TempGrid
   /**
    * Make the add node command
    */
-  private final void addNodesFromPoints( IFEDiscretisationModel1d2d model, AddNodeCommand[][] newNodesArray2D, ChangeDiscretiationModelCommand compositeCommand, GM_Point[][] points2D, double searchRectWidth )
+  private final void addNodesFromPoints( final IFEDiscretisationModel1d2d model, final AddNodeCommand[][] newNodesArray2D, final ChangeDiscretiationModelCommand compositeCommand, final GM_Point[][] points2D, final double searchRectWidth )
   {
     for( int i = 0; i < points2D.length; i++ )
     {
-      GM_Point[] points1D = points2D[i];
+      final GM_Point[] points1D = points2D[i];
       // AddNodeCommand[] newNodesArray1D=
       // new AddNodeCommand[points1D.length];
       // newNodesArray2D[i]=newNodesArray1D;
       for( int j = 0; j < points1D.length; j++ )
       {
         // TODO check node for existance
-        AddNodeCommand nodeCommand = new AddNodeCommand( model, points1D[j], searchRectWidth, this.ignoreZCoordinate );
+        final AddNodeCommand nodeCommand = new AddNodeCommand( model, points1D[j], searchRectWidth, this.ignoreZCoordinate );
         newNodesArray2D[i][j] = nodeCommand;// newNodesArray1D[j]=nodeCommand;
         compositeCommand.addCommand( nodeCommand );
       }
@@ -414,7 +401,7 @@ public class TempGrid
   /**
    * make the add element command. element are added based on their nodes
    */
-  private final void addElementsFromNodes( IFEDiscretisationModel1d2d model, AddNodeCommand[][] newNodesArray2D, ChangeDiscretiationModelCommand compositeCommand )
+  private final void addElementsFromNodes( final IFEDiscretisationModel1d2d model, final AddNodeCommand[][] newNodesArray2D, final ChangeDiscretiationModelCommand compositeCommand )
   {
     final int LAST_INDEX_I = newNodesArray2D.length - 2;
     for( int i = 0; i <= LAST_INDEX_I/* i<addEdgeH2D.length-1 */; i++ )
@@ -422,13 +409,13 @@ public class TempGrid
       final int LAST_INDEX_J = newNodesArray2D[0].length - 2;
       for( int j = 0; j <= LAST_INDEX_J; j++ )
       {
-        AddNodeCommand node0 = newNodesArray2D[i][j];
-        AddNodeCommand node1 = newNodesArray2D[i][j + 1];
-        AddNodeCommand node2 = newNodesArray2D[i + 1][j + 1];
-        AddNodeCommand node3 = newNodesArray2D[i + 1][j];
-        AddNodeCommand node4 = newNodesArray2D[i][j];
+        final AddNodeCommand node0 = newNodesArray2D[i][j];
+        final AddNodeCommand node1 = newNodesArray2D[i][j + 1];
+        final AddNodeCommand node2 = newNodesArray2D[i + 1][j + 1];
+        final AddNodeCommand node3 = newNodesArray2D[i + 1][j];
+        final AddNodeCommand node4 = newNodesArray2D[i][j];
 
-        AddElementCmdFromNodeCmd addElementCommand = new AddElementCmdFromNodeCmd( model, new AddNodeCommand[] { node0, node1, node2, node3, node4 } );
+        final AddElementCmdFromNodeCmd addElementCommand = new AddElementCmdFromNodeCmd( model, new AddNodeCommand[] { node0, node1, node2, node3, node4 } );
         compositeCommand.addCommand( addElementCommand );
       }
     }
@@ -437,18 +424,18 @@ public class TempGrid
   /**
    * get the {@link LinePointCollector} points as {@link LineString}
    */
-  private LineString pointToLineString( LinePointCollector lineGeometryBuilder )
+  private LineString pointToLineString( final LinePointCollector lineGeometryBuilder )
   {
     final int SIZE = lineGeometryBuilder.getCurrentPointCnt();
-    Coordinate coordinates[] = new Coordinate[SIZE];
+    final Coordinate coordinates[] = new Coordinate[SIZE];
     for( int i = 0; i < SIZE; i++ )
     {
       coordinates[i] = JTSAdapter.export( lineGeometryBuilder.getPointAt( i ).getPosition() );
     }
     // CoordinateSequence
     // JTSAdapter
-    GeometryFactory geometryFactory = new GeometryFactory();
-    LineString lineString = geometryFactory.createLineString( coordinates );
+    final GeometryFactory geometryFactory = new GeometryFactory();
+    final LineString lineString = geometryFactory.createLineString( coordinates );
     return lineString;
   }
 }

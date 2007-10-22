@@ -64,7 +64,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -87,7 +87,7 @@ public class StatisticAnalysis
    * @return Hashtable key=landuseTypeKey, value=Vector {sum,min,max}
    * @throws Exception
    */
-  public static Hashtable getStatistics( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid ) throws Exception
+  public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid ) throws Exception
   {
 //    Hashtable<Integer, Vector<Double>> statistics = null;
 //    // control Geometries
@@ -170,7 +170,7 @@ public class StatisticAnalysis
    * @return Hashtable key=landuseTypeKey, value=Vector {sum,min,max}
    * @throws Exception
    */
-  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid, RectifiedGridCoverage2 templateGrid ) throws Exception
+  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage templateGrid ) throws Exception
   {
 //    Hashtable<Integer, Vector<Double>> statistics = null;
 //    // control Geometries
@@ -341,7 +341,7 @@ public class StatisticAnalysis
    * @return Hashtable key=administrationUnitKey, value=Hashtable (key=landuseTypeKey, value=Vector {sum,min,max})
    * @throws Exception
    */
-  public static Hashtable getStatistics( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid, RectifiedGridCoverage2 administrationUnitGrid ) throws Exception
+  public static Hashtable getStatistics( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage administrationUnitGrid ) throws Exception
   {
 //    Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
 //    // control Geometries
@@ -441,7 +441,7 @@ public class StatisticAnalysis
    * @return Hashtable key=administrationUnitKey, value=Hashtable (key=landuseTypeKey, value=Vector {sum,min,max})
    * @throws Exception
    */
-  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage2 damageGrid, RectifiedGridCoverage2 landuseGrid, RectifiedGridCoverage2 administrationUnitGrid, RectifiedGridCoverage2 templateGrid ) throws Exception
+  public static Hashtable getStatisticsWithTemplate( RectifiedGridCoverage damageGrid, RectifiedGridCoverage landuseGrid, RectifiedGridCoverage administrationUnitGrid, RectifiedGridCoverage templateGrid ) throws Exception
   {
 //    Hashtable<Integer, Hashtable<Integer, Vector<Double>>> statistics = null;
 //    // control Geometries

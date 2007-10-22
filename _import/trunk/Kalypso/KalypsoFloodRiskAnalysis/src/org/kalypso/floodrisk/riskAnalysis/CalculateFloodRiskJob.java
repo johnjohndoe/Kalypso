@@ -75,11 +75,11 @@ import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -120,11 +120,11 @@ public class CalculateFloodRiskJob implements ISimulation
       // annualDamageRaster
       monitor.setMessage( Messages.getString("riskAnalysis.CalculateFloodRiskJob.LoadingInputData") ); //$NON-NLS-1$
       URL annualDamageRasterGML = (URL) inputProvider.getInputForID( AnnualDamageRasterDataID );
-      RectifiedGridCoverage2 annualDamageRaster = rasterDataModel.getRectifiedGridCoverage( annualDamageRasterGML );
+      RectifiedGridCoverage annualDamageRaster = rasterDataModel.getRectifiedGridCoverage( annualDamageRasterGML );
 
       // landuseRaster
       URL landuseRasterGML = (URL) inputProvider.getInputForID( LanduseRasterDataID );
-      RectifiedGridCoverage2 landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
+      RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
       // contextModel
       URL riskContextModelGML = (URL) inputProvider.getInputForID( RiskContextModelID );
@@ -134,7 +134,7 @@ public class CalculateFloodRiskJob implements ISimulation
 
       // start riskAnalysis
       monitor.setMessage( Messages.getString("riskAnalysis.CalculateFloodRiskJob.Calcucalting") ); //$NON-NLS-1$
-      RectifiedGridCoverage2 floodRiskRaster = FloodRiskAnalysis.defineRisk( annualDamageRaster, landuseRaster, riskContextModel.getRiskClassLists() );
+      RectifiedGridCoverage floodRiskRaster = FloodRiskAnalysis.defineRisk( annualDamageRaster, landuseRaster, riskContextModel.getRiskClassLists() );
 
       monitor.setProgress( 20 );
 

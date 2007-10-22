@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +25,6 @@ import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.io.CharsetUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.lhwsachsenanhalt.saale.batch.HWVORBatch;
@@ -68,12 +68,12 @@ public class SaaleCalcJob implements ISimulation
 
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
 
-  private Map m_metadataMap = new HashMap();
+  private final Map m_metadataMap = new HashMap();
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     return getClass().getResource( SaaleConst.CALCJOB_SPEC );
   }
@@ -84,8 +84,7 @@ public class SaaleCalcJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater,
-      final ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     final File loggerFile = new File( tmpdir, "saale.log" );
     resultEater.addResult( "LOG", loggerFile );
@@ -149,18 +148,15 @@ public class SaaleCalcJob implements ISimulation
 
   private void checkHWVORLog( final File hwqvorFile ) throws IOException, SimulationException
   {
-    final String defaultCharset = CharsetUtilities.getDefaultCharset();
+    final String defaultCharset = Charset.defaultCharset().name();
     final String string = FileUtils.readFileToString( hwqvorFile, defaultCharset );
     if( string.trim().endsWith( "ENDE QVOR" ) )
       return;
 
-    throw new SimulationException(
-        "Berechnung wurde nicht erfolgreich abgeschlossen.\nBitte sehen Sie die Log-Datei unter Ergebnisse/HWQVOR.TXT ein.",
-        null );
+    throw new SimulationException( "Berechnung wurde nicht erfolgreich abgeschlossen.\nBitte sehen Sie die Log-Datei unter Ergebnisse/HWQVOR.TXT ein.", null );
   }
 
-  private void runCalculation( final File exeFile, final ISimulationMonitor monitor ) throws IOException,
-      ProcessTimeoutException
+  private void runCalculation( final File exeFile, final ISimulationMonitor monitor ) throws IOException, ProcessTimeoutException
   {
     final StringWriter logStream = new StringWriter();
     final StringWriter errStream = new StringWriter();
@@ -180,8 +176,7 @@ public class SaaleCalcJob implements ISimulation
     }
   }
 
-  private SaaleInputBean createInputFiles( final File tmpdir, final ISimulationDataProvider inputProvider )
-      throws SimulationException, Exception
+  private SaaleInputBean createInputFiles( final File tmpdir, final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
   {
     // VERZEICHNISSE erstellen //
     final File hwvordir = new File( tmpdir, "HWVOR00" );
@@ -221,7 +216,7 @@ public class SaaleCalcJob implements ISimulation
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( controlURL, null );
     final FindPropertyByNameVisitor visitor = new FindPropertyByNameVisitor( "startforecast" );
     workspace.accept( visitor, "", FeatureVisitor.DEPTH_INFINITE );
-    return (Date)visitor.getResult();
+    return (Date) visitor.getResult();
   }
 
   private File copyExeToDir( final File hwvordir ) throws IOException
@@ -241,7 +236,7 @@ public class SaaleCalcJob implements ISimulation
       writer = new PrintWriter( new BufferedWriter( new FileWriter( hwzugrstv ) ) );
       writer.println( HWDIR_DATEN + "\\" );
       writer.println( HWDIR_STAMMDAT + "\\" );
-      //      writer.println( HWDIR_WQ +"\\" );
+      // writer.println( HWDIR_WQ +"\\" );
       writer.println(); // empty path, so no popups regarding missing WQ-files
       writer.println( HWDIR_AUSGABE + "\\" );
       writer.println( HWDIR_ARCHIV + "\\" );
@@ -255,8 +250,7 @@ public class SaaleCalcJob implements ISimulation
     }
   }
 
-  private void writeStammdaten( final File stammdatdir, final GMLWorkspace modellWorkspace ) throws IOException,
-      JAXBException, GmlConvertException
+  private void writeStammdaten( final File stammdatdir, final GMLWorkspace modellWorkspace ) throws IOException, JAXBException, GmlConvertException
   {
     final Map<String, GMLWorkspace> externData = new HashMap<String, GMLWorkspace>( 1 );
     externData.put( SaaleConst.REGISTERED_ID, modellWorkspace );
@@ -268,23 +262,20 @@ public class SaaleCalcJob implements ISimulation
     convertGml( externData, stammdatURL, "Stammdat/tssteu.hwp", "tssteu_hwp.gmc" );
     convertGml( externData, stammdatURL, "Stammdat/ts.std", "ts_std.gmc" );
     convertGml( externData, stammdatURL, "Stammdat/wlmpar.hwp", "wlmpar_hwp.gmc" );
-    //convertGml( externData, stammdatURL, "Stammdat/hwsteu.stv", "hwsteu_stv.gmc" );
+    // convertGml( externData, stammdatURL, "Stammdat/hwsteu.stv", "hwsteu_stv.gmc" );
 
     // hwsteu.stv is no more in the model, just copy it out of the resources
     final URL resource = getClass().getResource( "resources/HW_STEU.STV" );
     FileUtils.copyURLToFile( resource, new File( stammdatdir, "HW_STEU.STV" ) );
   }
 
-  private void convertGml( final Map externData, final URL stammdatURL, final String filenameForLog,
-      final String gmcFile ) throws IOException, JAXBException, GmlConvertException
+  private void convertGml( final Map externData, final URL stammdatURL, final String filenameForLog, final String gmcFile ) throws IOException, JAXBException, GmlConvertException
   {
     m_logger.info( "Schreibe: " + filenameForLog );
-    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/" + gmcFile ), new UrlUtilities(),
-        stammdatURL, externData );
+    GmlConvertFactory.convertXml( getClass().getResource( "resources/gml2hwvor/" + gmcFile ), new UrlUtilities(), stammdatURL, externData );
   }
 
-  private void writeDaten( final File datendir, final GMLWorkspace modellWorkspace, final URL context,
-      final Date currentTime ) throws IOException, JAXBException, GmlConvertException
+  private void writeDaten( final File datendir, final GMLWorkspace modellWorkspace, final URL context, final Date currentTime ) throws IOException, JAXBException, GmlConvertException
   {
     final IUrlResolver resolver = new UrlUtilities();
 
@@ -293,23 +284,16 @@ public class SaaleCalcJob implements ISimulation
     externData.put( SaaleConst.REGISTERED_ID, modellWorkspace );
     convertGml( externData, datenURL, "Daten/hwablauf.vor", "hwablauf_vor.gmc" );
 
-    featurezml2vor( modellWorkspace, "Durchfluss", "PegelCollectionAssociation/PegelMember", new File( datendir,
-        "Q_dat.vor" ), TimeserieConstants.TYPE_RUNOFF, resolver, context, currentTime );
-    featurezml2vor( modellWorkspace, "Niederschlag", "PegelCollectionAssociation/PegelMember[Gebiet]", new File(
-        datendir, "P_dat.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context, currentTime );
-    featurezml2vor( modellWorkspace, "Schnee", "PegelCollectionAssociation/PegelMember[Gebiet]", new File( datendir,
-        "SNDAT.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context, currentTime );
-    featurezml2vor( modellWorkspace, "Inhalt", "SpeicherCollectionAssociation/SpeicherMember", new File( datendir,
-        "Tsdat.vor" ), TimeserieConstants.TYPE_VOLUME, resolver, context, currentTime );
+    featurezml2vor( modellWorkspace, "Durchfluss", "PegelCollectionAssociation/PegelMember", new File( datendir, "Q_dat.vor" ), TimeserieConstants.TYPE_RUNOFF, resolver, context, currentTime );
+    featurezml2vor( modellWorkspace, "Niederschlag", "PegelCollectionAssociation/PegelMember[Gebiet]", new File( datendir, "P_dat.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context, currentTime );
+    featurezml2vor( modellWorkspace, "Schnee", "PegelCollectionAssociation/PegelMember[Gebiet]", new File( datendir, "SNDAT.vor" ), TimeserieConstants.TYPE_RAINFALL, resolver, context, currentTime );
+    featurezml2vor( modellWorkspace, "Inhalt", "SpeicherCollectionAssociation/SpeicherMember", new File( datendir, "Tsdat.vor" ), TimeserieConstants.TYPE_VOLUME, resolver, context, currentTime );
   }
 
-  private void featurezml2vor( final GMLWorkspace workspace, final String linkProperty, final String featurePath,
-      final File file, final String axisType, final IUrlResolver resolver, final URL context, final Date currentTime )
-      throws IOException
+  private void featurezml2vor( final GMLWorkspace workspace, final String linkProperty, final String featurePath, final File file, final String axisType, final IUrlResolver resolver, final URL context, final Date currentTime ) throws IOException
   {
     m_logger.info( "Schreibe Zeitreihen: " + linkProperty );
-    final HWVorZMLWriterVisitor visitor = new HWVorZMLWriterVisitor( linkProperty, axisType, resolver, context,
-        currentTime );
+    final HWVorZMLWriterVisitor visitor = new HWVorZMLWriterVisitor( linkProperty, axisType, resolver, context, currentTime );
     workspace.accept( visitor, featurePath, FeatureVisitor.DEPTH_ZERO );
     m_metadataMap.putAll( visitor.getMetadataMap() );
     final boolean bSuccess = visitor.writeObservations( file );
@@ -324,15 +308,13 @@ public class SaaleCalcJob implements ISimulation
     final File resultdir = new File( tmpdir, "out" );
     try
     {
-      convertVor2Zml( new File( datendir, "Q_dat.vor" ), new File( resultdir, "Durchfluss" ),
-          TimeserieConstants.TYPE_RUNOFF );
-      convertVor2Zml( new File( datendir, "Tsdat.vor" ), new File( resultdir, "Speicherinhalt" ),
-          TimeserieConstants.TYPE_VOLUME );
+      convertVor2Zml( new File( datendir, "Q_dat.vor" ), new File( resultdir, "Durchfluss" ), TimeserieConstants.TYPE_RUNOFF );
+      convertVor2Zml( new File( datendir, "Tsdat.vor" ), new File( resultdir, "Speicherinhalt" ), TimeserieConstants.TYPE_VOLUME );
 
       m_logger.info( "Ergebnisdaten wurden konvertiert." );
       m_logger.info( "" );
     }
-    catch( Throwable e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
 
@@ -341,21 +323,19 @@ public class SaaleCalcJob implements ISimulation
     return resultdir;
   }
 
-  private void convertVor2Zml( final File vorFile, final File outDir, final String type ) throws ParseException,
-      WQException, SensorException, JAXBException, FactoryException, IOException
+  private void convertVor2Zml( final File vorFile, final File outDir, final String type ) throws ParseException, WQException, SensorException, JAXBException, FactoryException, IOException
   {
     final HWVORBatch converter = new HWVORBatch();
 
     final IObservation[] obs = converter.readObservations( vorFile, type, null );
 
     // change metadata: add FILE_NAME and copy all metadata from corresponding input zml
-    for( int i = 0; i < obs.length; i++ )
+    for( final IObservation observation : obs )
     {
-      final IObservation observation = obs[i];
       final MetadataList obsMeta = observation.getMetadataList();
 
       final String identifier = observation.getName();
-      final MetadataList oldMeta = (MetadataList)m_metadataMap.get( type + "#" + identifier );
+      final MetadataList oldMeta = (MetadataList) m_metadataMap.get( type + "#" + identifier );
       if( oldMeta != null )
         obsMeta.putAll( oldMeta );
 

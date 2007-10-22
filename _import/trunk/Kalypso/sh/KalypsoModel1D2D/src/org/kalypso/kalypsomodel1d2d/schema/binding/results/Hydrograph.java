@@ -41,7 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Gernot Belger

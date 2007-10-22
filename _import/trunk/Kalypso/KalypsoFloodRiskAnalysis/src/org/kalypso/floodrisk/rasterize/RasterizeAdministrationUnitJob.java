@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.floodrisk.rasterize;
 
@@ -58,7 +58,7 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
@@ -94,14 +94,14 @@ public class RasterizeAdministrationUnitJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
       monitor.setMessage( Messages.getString( "rasterize.RasterizeAdministrationUnitJob.LoadingInputData" ) ); //$NON-NLS-1$
 
       // administrationUnitVectorData: featureList
-      URL administrationUnitVectorDataGML = (URL) inputProvider.getInputForID( AdministrationUnitDataID );
+      final URL administrationUnitVectorDataGML = (URL) inputProvider.getInputForID( AdministrationUnitDataID );
       final GMLWorkspace administrationUnitVectorData = GmlSerializer.createGMLWorkspace( administrationUnitVectorDataGML, null );
       final FeaturePath featureMember = new FeaturePath( "FeatureMember" ); //$NON-NLS-1$
       final List<Feature> featureList = (List) featureMember.getFeature( administrationUnitVectorData );
@@ -114,10 +114,13 @@ public class RasterizeAdministrationUnitJob implements ISimulation
       // baseRaster
       final URL baseRasterGML = (URL) inputProvider.getInputForID( BaseRasterID );
       final RasterDataModel rasterDataModel = new RasterDataModel();
-      final RectifiedGridCoverage2 baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
+      final RectifiedGridCoverage baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 
       monitor.setMessage( Messages.getString( "rasterize.RasterizeAdministrationUnitJob.Calculating" ) ); //$NON-NLS-1$
-      final RectifiedGridCoverage2 resultGrid = VectorToGridConverter.createCoverage( featureList, administrationUnitTypeList, baseRaster, (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( AdministrationUnitRasterFilePath ), monitor );
+      final RectifiedGridCoverage resultGrid = null;// VectorToGridConverter.createCoverage( featureList,
+                                                    // administrationUnitTypeList, baseRaster, (SimulationDataPath)
+                                                    // ((IProcessResultEater) resultEater).getOutputMap().get(
+                                                    // AdministrationUnitRasterFilePath ), monitor );
 
       final SimulationDataPath outputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( AdministrationUnitGmlFilePath );
       final File resultFile = new File( outputBean.getPath() );
@@ -127,7 +130,7 @@ public class RasterizeAdministrationUnitJob implements ISimulation
       rasterDataModel.exportToGML( resultFile, resultGrid );
       resultEater.addResult( outputBean.getId(), null );
     }
-    catch( Exception e1 )
+    catch( final Exception e1 )
     {
       throw new SimulationException( e1.getMessage(), e1 );
     }

@@ -48,6 +48,7 @@ import java.awt.Stroke;
 import java.awt.geom.Area;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -184,7 +185,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
   @SuppressWarnings("unchecked")
-  public void paint( final Graphics g, final GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
   {
     if( m_calculationUnit == null )
       return;

@@ -51,8 +51,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -82,7 +84,6 @@ import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.visitor.LineThemePredicater;
 import org.kalypso.ui.editor.actions.FeatureComparator;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
@@ -810,11 +811,7 @@ public class CreateChannelData
       {
         paintEdges( m_meshCoords, g, mapPanel );
       }
-      catch( final GM_Exception e )
-      {
-        e.printStackTrace();
-      }
-      catch( final IncompatibleGeometryTypeException e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -853,7 +850,7 @@ public class CreateChannelData
     return globNumBankIntersections;
   }
 
-  private void paintEdges( final Coordinate[][] coords, final Graphics g, final MapPanel mapPanel ) throws GM_Exception, IncompatibleGeometryTypeException
+  private void paintEdges( final Coordinate[][] coords, final Graphics g, final MapPanel mapPanel ) throws GM_Exception, CoreException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
@@ -882,7 +879,7 @@ public class CreateChannelData
         else
           curve = (GM_Curve) JTSAdapter.wrap( line );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-        de.paint( g, mapPanel.getProjection() );
+        de.paint( g, mapPanel.getProjection(), new NullProgressMonitor() );
       }
     }
     for( int j = 0; j < coords[0].length; j++ )
@@ -895,7 +892,7 @@ public class CreateChannelData
         final LineString line = factory.createLineString( lineCoords );
         final GM_Curve curve = (GM_Curve) JTSAdapter.wrap( line );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-        de.paint( g, mapPanel.getProjection() );
+        de.paint( g, mapPanel.getProjection(), new NullProgressMonitor() );
       }
     }
   }

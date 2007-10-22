@@ -52,7 +52,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * GenerateTemplateRasterJob
@@ -87,15 +87,15 @@ public class GenerateTemplateRasterJob implements ISimulation
       // Generate input
       // Raster1
       URL raster1GML = (URL) inputProvider.getInputForID( Raster1ID );
-      RectifiedGridCoverage2 raster1 = rasterDataModel.getRectifiedGridCoverage( raster1GML );
+      RectifiedGridCoverage raster1 = rasterDataModel.getRectifiedGridCoverage( raster1GML );
 
       // Raster2
       URL raster2GML = (URL) inputProvider.getInputForID( Raster2ID );
-      RectifiedGridCoverage2 raster2 = rasterDataModel.getRectifiedGridCoverage( raster2GML );
+      RectifiedGridCoverage raster2 = rasterDataModel.getRectifiedGridCoverage( raster2GML );
 
       // Calculation
       // substract Grids
-      RectifiedGridCoverage2 templateRaster = RasterTools.substractGrids( raster1, raster2 );
+      RectifiedGridCoverage templateRaster = RasterTools.substractGrids( raster1, raster2 );
 
       // Generate output
       // template raster

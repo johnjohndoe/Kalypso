@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 
 package org.kalypso.floodrisk.action;
@@ -88,9 +88,9 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cv.RangeSet;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector;
+import org.kalypsodeegree_impl.gml.binding.commons.RangeSet;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 
 /**
  * TODO: not used any more. This action is too special for the generel outline. Code should be moved into a popup-menu
@@ -321,11 +321,11 @@ public class ExportThemeAction extends MapModellViewActionDelegate
   {
     final int mode_intervalColorMapping = 0;
     final int mode_valueColorMapping = 1;
-    final int mode = rasterSym.getMode();
-    TreeMap intervalMap = null;
-    if( mode == mode_intervalColorMapping )
+    // final int mode = rasterSym.getMode();
+    final TreeMap intervalMap = null;
+    // if( mode == mode_intervalColorMapping )
     {
-      intervalMap = rasterSym.getIntervalMap();
+      // intervalMap = rasterSym.getIntervalMap();
     }
 
     final int nCols = gridDomain.getNumColumns();
@@ -343,7 +343,7 @@ public class ExportThemeAction extends MapModellViewActionDelegate
         if( rangeSetDataRow.get( j ) != null )
         {
           final double actualValue = ((Double) rangeSetDataRow.get( j )).doubleValue();
-          switch( mode )
+          switch( 0/* mode */)
           {
             case mode_intervalColorMapping:
             {

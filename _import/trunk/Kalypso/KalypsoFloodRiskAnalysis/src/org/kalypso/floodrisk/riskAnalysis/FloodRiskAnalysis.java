@@ -47,9 +47,9 @@ import java.util.Vector;
 import org.kalypso.floodrisk.internationalize.Messages;
 import org.kalypso.floodrisk.tools.GridGeometryHelper;
 import org.kalypso.floodrisk.tools.Interval;
-import org.kalypsodeegree_impl.model.cv.RangeSet;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.gml.binding.commons.RangeSet;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
  * Class holds methods for creating FloodRiskMaps
@@ -72,10 +72,10 @@ public class FloodRiskAnalysis
    * @return floodRiskGrid(RectifiedGridCoverage)
    * @throws Exception
    */
-  public static RectifiedGridCoverage2 defineRisk( RectifiedGridCoverage2 annualDamageGrid, RectifiedGridCoverage2 landuseGrid, Hashtable riskClassTable ) throws Exception
+  public static RectifiedGridCoverage defineRisk( RectifiedGridCoverage annualDamageGrid, RectifiedGridCoverage landuseGrid, Hashtable riskClassTable ) throws Exception
   {
     System.out.println( Messages.getString( "riskAnalysis.FloodRiskAnalysis.CalculatingFloodRiskGrid" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
-    RectifiedGridCoverage2 floodRiskGrid = null;
+    RectifiedGridCoverage floodRiskGrid = null;
     GridGeometryHelper.controlGridGeometries( annualDamageGrid.getGridDomain(), landuseGrid.getGridDomain() );
     RectifiedGridDomain floodRisk_gridDomain = new RectifiedGridDomain( annualDamageGrid.getGridDomain().getOrigin( null ), annualDamageGrid.getGridDomain().getOffsetX(), annualDamageGrid.getGridDomain().getOffsetY(), annualDamageGrid.getGridDomain().getGridRange() );
     Vector annualDamage_rangeSetData = null;// annualDamageGrid.getRangeSet().getRangeSetData();

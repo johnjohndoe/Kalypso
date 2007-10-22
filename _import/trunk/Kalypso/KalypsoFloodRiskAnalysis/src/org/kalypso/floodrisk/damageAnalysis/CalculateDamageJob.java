@@ -85,6 +85,7 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
 import org.kalypsodeegree_impl.graphics.sld.RasterSymbolizer_Impl;
@@ -92,7 +93,6 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.w3c.dom.Document;
 
 /**
@@ -139,10 +139,10 @@ public class CalculateDamageJob implements ISimulation
       // landuseRaster
       monitor.setMessage( Messages.getString( "damageAnalysis.CalculateDamageJob.LoadingInputData" ) ); //$NON-NLS-1$
       URL landuseRasterGML = (URL) inputProvider.getInputForID( LanduseRasterDataID );
-      RectifiedGridCoverage2 landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
+      RectifiedGridCoverage landuseRaster = rasterDataModel.getRectifiedGridCoverage( landuseRasterGML );
 
       // administrationUnitRaster
-      RectifiedGridCoverage2 administrationUnitRaster = null;
+      RectifiedGridCoverage administrationUnitRaster = null;
       if( inputProvider.getInputForID( AdministrationUnitRasterDataID ) != null )
       {
         URL administrationUnitRasterGML = (URL) inputProvider.getInputForID( AdministrationUnitRasterDataID );
@@ -167,7 +167,7 @@ public class CalculateDamageJob implements ISimulation
 
       // calculate annualDamage
       Vector tempGrids = DamageAnalysis.calculateTempGridsAnnualDamage( damageGrids );
-      RectifiedGridCoverage2 annualDamageGrid = DamageAnalysis.calculateAnnualDamage( tempGrids );
+      RectifiedGridCoverage annualDamageGrid = DamageAnalysis.calculateAnnualDamage( tempGrids );
 
       monitor.setProgress( 20 );
 
@@ -230,7 +230,7 @@ public class CalculateDamageJob implements ISimulation
     String annualityPropertyName = "Annuality"; //$NON-NLS-1$
     String waterlevelDataURLPropertyName = "WaterlevelRasterData"; //$NON-NLS-1$
 
-    TreeMap<Double, RectifiedGridCoverage2> waterlevelGrids = new TreeMap<Double, RectifiedGridCoverage2>();
+    TreeMap<Double, RectifiedGridCoverage> waterlevelGrids = new TreeMap<Double, RectifiedGridCoverage>();
     GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( waterlevelDataGML, null );
     Feature waterlevelDataFeature = workspace.getRootFeature();
 
@@ -242,7 +242,7 @@ public class CalculateDamageJob implements ISimulation
       double annuality = ((Double) waterlevelFeature.getProperty( annualityPropertyName )).doubleValue();
       IFile resourceFile = (IFile) waterlevelFeature.getProperty( waterlevelDataURLPropertyName );
       System.out.println( ResourceUtilities.createURL( resourceFile ) );
-      RectifiedGridCoverage2 grid = rasterDataModel.getRectifiedGridCoverage( ResourceUtilities.createURL( resourceFile ) );
+      RectifiedGridCoverage grid = rasterDataModel.getRectifiedGridCoverage( ResourceUtilities.createURL( resourceFile ) );
       double p = 1 / annuality;
       waterlevelGrids.put( new Double( p ), grid );
     }
@@ -268,7 +268,7 @@ public class CalculateDamageJob implements ISimulation
       Double key = (Double) keys[i];
       double annuality = 1 / key.doubleValue();
       File damageFile = new File( damageResultDir, "damage_HQ" + (int) annuality + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-      RectifiedGridCoverage2 damageGrid = (RectifiedGridCoverage2) damageGrids.get( key );
+      RectifiedGridCoverage damageGrid = (RectifiedGridCoverage) damageGrids.get( key );
       rasterDataModel.exportToGML( damageFile, damageGrid );
       // style
       File damageStyleFile = new File( FileUtilities.nameWithoutExtension( damageFile.toString() ) + ".sld" ); //$NON-NLS-1$
@@ -281,7 +281,7 @@ public class CalculateDamageJob implements ISimulation
       {
         Double nextKey = (Double) keys[i + 1];
         double deltaP = nextKey.doubleValue() - key.doubleValue();
-        RectifiedGridCoverage2 tempGrid = (RectifiedGridCoverage2) tempGrids.get( i );
+        RectifiedGridCoverage tempGrid = (RectifiedGridCoverage) tempGrids.get( i );
         File tempGridFile = new File( damageResultDir, "tempGrid_deltaP" //$NON-NLS-1$
             + Number.round( deltaP, 4, BigDecimal.ROUND_HALF_EVEN ) + ".gml" ); //$NON-NLS-1$
         rasterDataModel.exportToGML( tempGridFile, tempGrid );
@@ -302,7 +302,7 @@ public class CalculateDamageJob implements ISimulation
    * @throws Exception
    * 
    */
-  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage2 grid, Color color, int numOfCategories ) throws Exception
+  private void createRasterStyle( File resultFile, String styleName, RectifiedGridCoverage grid, Color color, int numOfCategories ) throws Exception
   {
     TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, Messages.getString( "damageAnalysis.CalculateDamageJob.NoData" ) ); //$NON-NLS-1$

@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" })//$NON-NLS-1$ //$NON-NLS-2$
+@SuppressWarnings( { "unchecked", "hiding" })
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
   private CalUnitDisplayElement calUnitDisplayElement;
@@ -114,7 +114,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     }
     if( calUnitDisplayElement != null )
     {
-      calUnitDisplayElement.paint( g, p );
+      calUnitDisplayElement.paint( g, p, monitor );
     }
     markAppliedBoundaryConditions( g, p );
   }

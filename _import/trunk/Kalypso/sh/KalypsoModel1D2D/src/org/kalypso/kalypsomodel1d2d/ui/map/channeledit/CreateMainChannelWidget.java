@@ -46,6 +46,8 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -130,45 +132,53 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     if( m_composite == null || m_composite.isDisposed() )
       return;
 
-    final Feature[] selectedProfiles = m_data.getSelectedProfiles();
-
-    for( final Feature feature : selectedProfiles )
+    try
     {
-      final WspmProfile profile = new WspmProfile( feature );
-      final GM_Curve line = profile.getLine();
+      final Feature[] selectedProfiles = m_data.getSelectedProfiles();
 
-      final LineSymbolizer symb = getProfilLineSymbolizer( new Color( 255, 255, 0 ) );
-      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
-      de.paint( g, getMapPanel().getProjection() );
+      for( final Feature feature : selectedProfiles )
+      {
+        final WspmProfile profile = new WspmProfile( feature );
+        final GM_Curve line = profile.getLine();
+
+        final LineSymbolizer symb = getProfilLineSymbolizer( new Color( 255, 255, 0 ) );
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( feature, line, symb );
+        de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
+      }
+
+      paintBanks( g, CreateChannelData.SIDE.RIGHT, new Color( 255, 0, 0 ) );
+      paintBanks( g, CreateChannelData.SIDE.LEFT, new Color( 0, 255, 0 ) );
+
+      final MapPanel mapPanel = getMapPanel();
+
+      /* draw intersected profile */
+      drawIntersProfiles( g, new Color( 0, 153, 255 ) );
+      /* draw cropped profile */
+      // drawCroppedProfiles( g, new Color( 100, 153, 255 ) );
+      /* draw intersection points */
+      drawIntersPoints( g, new Color( 255, 153, 0 ) );
+
+      /* draw mesh */
+      if( m_data.getMeshStatus() == true )
+        m_data.paintAllSegments( g, mapPanel );
+
+      /* draw editable bankline */
+      if( m_composite.m_bankEdit1 == true && m_data.getMeshStatus() == true )
+      {
+        m_data.drawBankLine( m_composite.m_currentSegmentNum, 1, g );
+      }
+      if( m_composite.m_bankEdit2 == true && m_data.getMeshStatus() == true )
+      {
+        m_data.drawBankLine( m_composite.m_currentSegmentNum, 2, g );
+      }
+      if( m_delegateWidget != null )
+        m_delegateWidget.paint( g );
     }
-
-    paintBanks( g, CreateChannelData.SIDE.RIGHT, new Color( 255, 0, 0 ) );
-    paintBanks( g, CreateChannelData.SIDE.LEFT, new Color( 0, 255, 0 ) );
-
-    final MapPanel mapPanel = getMapPanel();
-
-    /* draw intersected profile */
-    drawIntersProfiles( g, new Color( 0, 153, 255 ) );
-    /* draw cropped profile */
-    // drawCroppedProfiles( g, new Color( 100, 153, 255 ) );
-    /* draw intersection points */
-    drawIntersPoints( g, new Color( 255, 153, 0 ) );
-
-    /* draw mesh */
-    if( m_data.getMeshStatus() == true )
-      m_data.paintAllSegments( g, mapPanel );
-
-    /* draw editable bankline */
-    if( m_composite.m_bankEdit1 == true && m_data.getMeshStatus() == true )
+    catch( final CoreException e )
     {
-      m_data.drawBankLine( m_composite.m_currentSegmentNum, 1, g );
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
-    if( m_composite.m_bankEdit2 == true && m_data.getMeshStatus() == true )
-    {
-      m_data.drawBankLine( m_composite.m_currentSegmentNum, 2, g );
-    }
-    if( m_delegateWidget != null )
-      m_delegateWidget.paint( g );
 
   }
 
@@ -194,7 +204,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     }
   }
 
-  private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color )
+  private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color ) throws CoreException
   {
     final Feature[] selectedBanks = m_data.getSelectedBanks( side );
     for( final Feature feature : selectedBanks )
@@ -216,7 +226,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       symb.setStroke( stroke );
 
       final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, line, symb );
-      de.paint( g, getMapPanel().getProjection() );
+      de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
 
       symb.setStroke( defaultstroke );
     }
