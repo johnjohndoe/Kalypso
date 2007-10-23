@@ -47,7 +47,7 @@
 			<swe:property xlink:href="Phenomenon_DATE" />
 			<swe:representation>
 				<swe:SimpleType>
-					<st:restriction base="dateTime" />
+					<xst:restriction base="dateTime" />
 					<gml:unitOfMeasure uom="" />
 				</swe:SimpleType>
 			</swe:representation>

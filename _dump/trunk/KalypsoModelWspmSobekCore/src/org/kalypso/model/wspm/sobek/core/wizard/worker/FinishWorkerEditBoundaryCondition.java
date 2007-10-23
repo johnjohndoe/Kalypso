@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.wizard.worker;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,15 +51,22 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -70,6 +78,12 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgress
 {
+  public static final String OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE";
+
+  public static final String OBS_W = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#W";
+
+  public static final String OBS_Q = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#Q";
+
   private final ILastfall m_lastfall;
 
   private final IBoundaryNode m_node;
@@ -128,65 +142,38 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
 
   private void generateTimeSeriesObs( final IBoundaryNodeLastfallCondition condition )
   {
-    final Feature feature = condition.getFeature();
-    final IPropertyType[] properties = feature.getFeatureType().getProperties();
+    try
+    {
+      final Feature feature = condition.getFeature();
+      final CommandableWorkspace workspace = FeatureUtils.getWorkspace( feature );
 
-    final int dasfdasf = 0;
-    final int asdfasdf = 0;
+      final IPropertyType property = feature.getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_OBSERVATION );
+      final IRelationType relation = (IRelationType) property;
 
-// final IPropertyType property = m_conflict.getFeatureType().getProperty(
-// GmlConstants.QN_GEODATA_CONFLICT_OBSERVATION_TABLE );
-// final IRelationType relation = (IRelationType) property;
-//
-// final Feature fObs = workspace.createFeature( m_conflict, relation, relation.getTargetFeatureType() );
-//
-// // don't overwrite, in case that the observation already exists
-// final Object objProperty = m_conflict.getProperty( property );
-// if( objProperty == null )
-// {
-// workspace.setFeatureAsComposition( m_conflict, relation, fObs, true );
-//
-// // new observation
-// final TupleResult result = new TupleResult();
-//
-// /* for each dataColumn add an attr_member */
-// for( int i = 0; i < m_dataColumns; i++ )
-// {
-// final Feature fConflictColumn = (Feature) m_categories[i];
-// final Object objLnkCategory = fConflictColumn.getProperty( GmlConstants.QN_CONFLICT_DETECTION_CONCERNED_CATEGORY_LNK
-// );
-// final Feature fRoot = m_conflict.getWorkspace().getRootFeature();
-//
-// if( fConflictColumn == null || objLnkCategory == null || !(objLnkCategory instanceof String) || fRoot == null )
-// throw new IllegalStateException();
-//
-// final Feature fCategory = GeoGmlUtils.getCategory( fRoot, (String) objLnkCategory );
-// final String name = FeatureUtils.getFeatureName( GmlConstants.NS_GEODATA, fCategory );
-//
-// final IComponent valueComponent = new Component( CDCombinations.CD_OBS_ID_ATTR_MEMBER, name, name, "none", "", new
-// QName( NS.XSD_SCHEMA, "string" ), null, new DictionaryPhenomenon( CDCombinations.CD_OBS_ID_ATTR_MEMBER, name, name )
-// );
-// result.addComponent( valueComponent );
-// }
-//
-// /* add the conflict component */
-// final IComponent resultComponent = ObservationFeatureFactory.createDictionaryComponent( fObs,
-// CDCombinations.CD_OBS_ID_CONFLICT );
-// result.addComponent( resultComponent );
-//
-// /* fill TupleResult with data */
-// writeCombinationsToObservation( result, m_baseMap );
-//
-// /* add observation to workspace */
-// final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new
-// ArrayList<MetadataObject>() );
-// // maybe set phenomenon?
-// ObservationFeatureFactory.toFeature( obs, fObs );
-// }
-// else if( objProperty instanceof Feature )
-// // we have to update the old table - new combinations
-// updateObservation( (Feature) objProperty );
+      final Feature fObs = workspace.createFeature( feature, relation, relation.getTargetFeatureType() );
+      workspace.setFeatureAsComposition( feature, relation, fObs, true );
 
+      /* new resultset */
+      final TupleResult result = new TupleResult();
+
+      /* add components to resultset */
+      result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, FinishWorkerEditBoundaryCondition.OBS_DATE ) );
+      result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, FinishWorkerEditBoundaryCondition.OBS_W ) );
+      result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, FinishWorkerEditBoundaryCondition.OBS_Q ) );
+
+      /* fill TupleResult with data */
+      // writeCombinationsToObservation( result, m_baseMap );
+      /* add observation to workspace */
+      final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() );
+
+      // maybe set phenomenon?
+      ObservationFeatureFactory.toFeature( obs, fObs );
+    }
+    catch( final Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /* nofdp relative link to time series repository */
