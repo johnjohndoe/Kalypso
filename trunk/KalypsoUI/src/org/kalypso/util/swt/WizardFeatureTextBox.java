@@ -163,4 +163,10 @@ public class WizardFeatureTextBox
   {
     return m_property;
   }
+
+  public void setEnabled( final boolean enabled )
+  {
+    m_textBox.setEnabled( enabled );
+
+  }
 }
