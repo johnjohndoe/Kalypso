@@ -9,7 +9,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
-import org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader;
+import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
+import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 
 /**
  * Small runnable, which loads the capabilities from a WMS.
@@ -28,11 +30,17 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
    */
   private WMSCapabilities m_capabilities = null;
 
-  public CapabilitiesGetter( URL service )
+  /**
+   * The ID of the provider.
+   */
+  private String m_providerID;
+
+  public CapabilitiesGetter( URL service, String providerID )
   {
     super();
 
     m_service = service;
+    m_providerID = providerID;
   }
 
   /**
@@ -44,8 +52,20 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
    */
   public IStatus execute( IProgressMonitor monitor ) throws CoreException
   {
-    // TODO Decide in the wizard, which capabilities loader should be used (use the combo box there for).
-    WMSCapabilities capabilities = DeegreeWMSUtilities.loadCapabilities( new WMSCapabilitiesLoader( m_service, 10000 ), monitor );
+    /*
+     * This image provider should do nothing, but create the neccessary image loader, so we need not to provide
+     * anything, except the providerID.
+     */
+    IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( "", "", "", "", m_providerID, null );
+
+    /* Get the loader. */
+    ICapabilitiesLoader loader = imageProvider.getLoader();
+
+    /* Init the loader. */
+    loader.init( m_service );
+
+    /* Load the capabilities. */
+    WMSCapabilities capabilities = DeegreeWMSUtilities.loadCapabilities( loader, monitor );
 
     m_capabilities = capabilities;
 

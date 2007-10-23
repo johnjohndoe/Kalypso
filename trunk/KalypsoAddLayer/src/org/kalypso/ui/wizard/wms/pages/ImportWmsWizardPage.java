@@ -786,10 +786,14 @@ public class ImportWmsWizardPage extends WizardPage
   {
     /* If there is one cached, take this. */
     if( m_capabilites.containsKey( service ) )
-      return m_capabilites.get( service );
+    {
+      WMSCapabilities capabilities = m_capabilites.get( service );
+      if( capabilities != null )
+        return capabilities;
+    }
 
     /* Create the runnable, which loads the capabilities. */
-    CapabilitiesGetter runnable = new CapabilitiesGetter( service );
+    CapabilitiesGetter runnable = new CapabilitiesGetter( service, getProviderID() );
 
     /* Execute it. */
     RunnableContextHelper.execute( getContainer(), false, false, runnable );

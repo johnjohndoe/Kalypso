@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.wms.provider;
 import java.awt.Image;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -78,12 +79,16 @@ public interface IKalypsoImageProvider
    * 
    * @param themeName
    *            The name of the theme.
-   * @param source
-   *            Some parameters for the WMS.
+   * @param layers
+   *            The layers.
+   * @param styles
+   *            The styles.
+   * @param service
+   *            The service.
    * @param localSRS
    *            The client coordinate system.
    */
-  public void init( String themeName, String source, CS_CoordinateSystem localSRS );
+  public void init( String themeName, String layers, String styles, String service, CS_CoordinateSystem localSRS );
 
   /**
    * This function will create the image and return it.
@@ -111,4 +116,11 @@ public interface IKalypsoImageProvider
    * @return The full extent.
    */
   public GM_Envelope getFullExtent( );
+
+  /**
+   * This function should return the loader, which is used for loading the capabilities.
+   * 
+   * @return The capabilities loader.
+   */
+  public ICapabilitiesLoader getLoader( );
 }

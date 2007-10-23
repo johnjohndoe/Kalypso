@@ -42,15 +42,13 @@ package org.kalypso.ogc.gml.wms.utils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.wms.provider.KalypsoWMSImageProvider;
+import org.kalypso.ogc.gml.wms.provider.WMSImageProvider;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -73,31 +71,31 @@ public class KalypsoWMSUtilities
    * will be returned.
    * 
    * @param themeName
-   *            The name of the theme.
-   * @param source
-   *            Some parameters for the WMS.
+   *            The name of the theme. Will be used to initialize the image provider.
+   * @param layers
+   *            The layers. Will be used to initialize the image provider.
+   * @param styles
+   *            The styles. Will be used to initialize the image provider.
+   * @param service
+   *            The service. Will be used to initialize the image provider.
+   * @param providerID
+   *            The ID of the image provider.
    * @param localSRS
-   *            The client coordinate system.
+   *            The client coordinate system. Will be used to initialize the image provider.
    * @return An image provider. Should never be null.
    */
-  public static IKalypsoImageProvider getImageProvider( String themeName, String source, CS_CoordinateSystem localSRS )
+  public static IKalypsoImageProvider getImageProvider( String themeName, String layers, String styles, String service, String providerID, CS_CoordinateSystem localSRS )
   {
-    /* Parse the source into properties. */
-    Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
-
-    /* Get the provider attribute. */
-    String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
-
     /* If it is missing or null, return the default provider. */
     if( providerID == null )
-      return getDefaultImageProvider( themeName, source, localSRS );
+      return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
 
     /* Get the extension registry. */
     IExtensionRegistry er = Platform.getExtensionRegistry();
 
     /* The registry must exist. */
     if( er == null )
-      return getDefaultImageProvider( themeName, source, localSRS );
+      return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
 
     IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" );
     for( IConfigurationElement element : configurationElementsFor )
@@ -110,7 +108,7 @@ public class KalypsoWMSUtilities
         {
           /* This is the wanted provider. */
           IKalypsoImageProvider provider = (IKalypsoImageProvider) element.createExecutableExtension( "class" );
-          provider.init( themeName, source, localSRS );
+          provider.init( themeName, layers, styles, service, localSRS );
 
           return provider;
         }
@@ -118,12 +116,12 @@ public class KalypsoWMSUtilities
         {
           e.printStackTrace();
 
-          return getDefaultImageProvider( themeName, source, localSRS );
+          return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
         }
       }
     }
 
-    return getDefaultImageProvider( themeName, source, localSRS );
+    return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
   }
 
   /**
@@ -131,16 +129,20 @@ public class KalypsoWMSUtilities
    * 
    * @param themeName
    *            The name of the theme.
-   * @param source
-   *            Some parameters for the WMS.
+   * @param layers
+   *            The layers.
+   * @param styles
+   *            The styles.
+   * @param service
+   *            The service.
    * @param localSRS
    *            The client coordinate system.
    * @return The default wms image provider.
    */
-  public static IKalypsoImageProvider getDefaultImageProvider( String themeName, String source, CS_CoordinateSystem localSRS )
+  public static IKalypsoImageProvider getDefaultImageProvider( String themeName, String layers, String styles, String service, CS_CoordinateSystem localSRS )
   {
-    KalypsoWMSImageProvider provider = new KalypsoWMSImageProvider();
-    provider.init( themeName, source, localSRS );
+    WMSImageProvider provider = new WMSImageProvider();
+    provider.init( themeName, layers, styles, service, localSRS );
 
     return provider;
   }

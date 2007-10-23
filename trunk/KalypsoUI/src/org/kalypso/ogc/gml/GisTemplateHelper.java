@@ -77,8 +77,7 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
-import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.wms.provider.KalypsoWMSImageProvider;
+import org.kalypso.ogc.gml.wms.provider.WMSImageProvider;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.Gismapview;
@@ -294,7 +293,7 @@ public class GisTemplateHelper
     return gismapview;
   }
 
-  public static GM_Surface getBoxAsSurface( final Gismapview mapview, final CoordinateSystem targetCS ) throws Exception
+  public static GM_Surface< ? > getBoxAsSurface( final Gismapview mapview, final CoordinateSystem targetCS ) throws Exception
   {
     final ExtentType extent = mapview.getExtent();
     final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
@@ -303,11 +302,11 @@ public class GisTemplateHelper
     {
       final GM_Envelope envelope = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
       final CS_CoordinateSystem crs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( crsName ) );
-      final GM_Surface bboxAsSurface = GeometryFactory.createGM_Surface( envelope, crs );
+      final GM_Surface< ? > bboxAsSurface = GeometryFactory.createGM_Surface( envelope, crs );
       if( targetCS != null )
       {
         final GeoTransformer transformer = new GeoTransformer( targetCS );
-        return (GM_Surface) transformer.transform( bboxAsSurface );
+        return (GM_Surface< ? >) transformer.transform( bboxAsSurface );
       }
       return bboxAsSurface;
     }
@@ -345,7 +344,7 @@ public class GisTemplateHelper
       String typeName = "";
       if( strictType && (property instanceof List) )
       {
-        final List list = (List) property;
+        final List< ? > list = (List< ? >) property;
         if( !list.isEmpty() )
         {
           final Feature firstChild = FeatureHelper.getFeature( feature.getWorkspace(), list.get( 0 ) );
@@ -431,14 +430,9 @@ public class GisTemplateHelper
       layer.setFeaturePath( "" ); //$NON-NLS-1$
       layer.setVisible( theme.isVisible() );
       layer.setId( "ID_" + count );
+      layer.setHref( "" );
 
-      final IKalypsoImageProvider imageProvider = ((KalypsoWMSTheme) theme).getImageProvider();
-      if( imageProvider instanceof KalypsoWMSImageProvider )
-        layer.setHref( ((KalypsoWMSImageProvider) imageProvider).getSource() );
-      else
-        layer.setHref( "" );
-
-      layer.setLinktype( KalypsoWMSImageProvider.TYPE_NAME );
+      layer.setLinktype( WMSImageProvider.TYPE_NAME );
       layer.setActuate( "onRequest" ); //$NON-NLS-1$
       layer.setType( "simple" ); //$NON-NLS-1$
 

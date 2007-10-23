@@ -154,7 +154,7 @@ public class URLGetter implements ICoreRunnableWithProgress
     };
 
     monitor.beginTask( urlAsString, IProgressMonitor.UNKNOWN );
-    monitor.subTask( " - Initialisiere Verbindung..." );
+    monitor.subTask( "Initialisiere Verbindung ..." );
     thread.start();
     while( thread.isAlive() )
     {
@@ -175,7 +175,7 @@ public class URLGetter implements ICoreRunnableWithProgress
       }
       catch( final Exception e )
       {
-        statusText = " - Verbindung wird aufgebaut ...";
+        statusText = "Verbindung wird aufgebaut ...";
       }
 
       monitor.subTask( statusText );
