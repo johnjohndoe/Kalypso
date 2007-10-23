@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 import org.kalypso.util.net.URLGetter;
 
@@ -58,7 +59,7 @@ import org.kalypso.util.net.URLGetter;
 public class WMSCapabilitiesLoader implements ICapabilitiesLoader
 {
   /**
-   * The service URL.
+   * The base URL of the service.
    */
   private URL m_baseURL;
 
@@ -70,15 +71,21 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
   /**
    * The conbstructor.
    * 
-   * @param baseURL
-   *            The service URL.
    * @param timeout
    *            The timeout for the access.
    */
-  public WMSCapabilitiesLoader( URL baseURL, int timeout )
+  public WMSCapabilitiesLoader( int timeout )
+  {
+    m_baseURL = null;
+    m_timeout = timeout;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader#init(java.net.URL)
+   */
+  public void init( URL baseURL )
   {
     m_baseURL = baseURL;
-    m_timeout = timeout;
   }
 
   /**
@@ -86,16 +93,29 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
    */
   public InputStream getCapabilitiesStream( IProgressMonitor monitor ) throws CoreException
   {
+    if( m_baseURL == null )
+      return null;
+
+    monitor.beginTask( "Loading capabilities: ", 100 );
+
     try
     {
+      monitor.subTask( "Creating the request ..." );
+
       /* Create the capabilities URL. */
       URL capabilitiesURL = KalypsoWMSUtilities.createCapabilitiesRequest( m_baseURL );
+
+      monitor.worked( 25 );
+      monitor.subTask( "Creating the object for getting the cababilities ..." );
 
       /* Create a getter for retrieving the URL. */
       URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, m_timeout );
 
+      monitor.worked( 25 );
+      monitor.subTask( "Loading the capabilities ..." );
+
       /* Execute. */
-      IStatus status = getter.execute( monitor );
+      IStatus status = getter.execute( new SubProgressMonitor( monitor, 50 ) );
       if( !status.isOK() )
         throw new Exception( status.getException() );
 
@@ -104,6 +124,10 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
     catch( Exception ex )
     {
       throw new CoreException( new Status( IStatus.ERROR, "org.kalypso.ui", "Fehler beim Zugriff auf " + m_baseURL.toExternalForm(), ex ) );
+    }
+    finally
+    {
+      monitor.done();
     }
   }
 }

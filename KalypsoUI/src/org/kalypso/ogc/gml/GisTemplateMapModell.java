@@ -46,6 +46,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 
@@ -57,6 +58,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
@@ -202,8 +204,17 @@ public class GisTemplateMapModell implements IMapModell
       final String layerName = layerType.getName();
       final String source = layerType.getHref();
 
+      /* Parse the source into properties. */
+      Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
+
+      /* Get the provider attribute. */
+      String layers = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
+      String styles = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
+      String service = sourceProps.getProperty( IKalypsoImageProvider.KEY_URL, null );
+      String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
+
       /* Create the image provider. */
-      IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, source, defaultCS );
+      IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, layers, styles, service, providerID, defaultCS );
 
       return new KalypsoWMSTheme( linktype, layerName, imageProvider, this );
     }

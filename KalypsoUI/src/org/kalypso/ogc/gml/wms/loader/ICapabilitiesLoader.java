@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.wms.loader;
 
 import java.io.InputStream;
+import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +53,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ICapabilitiesLoader
 {
+  /**
+   * This function inits this laoder. It must be called before calling getCapabilitiesStream().
+   * 
+   * @param baseURL
+   *            The service URL.
+   */
+  public void init( URL baseURL );
+
   /**
    * This function loads the capabilities and returns the Stream of them.
    * 
