@@ -72,7 +72,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.wms.provider.KalypsoWMSImageProvider;
+import org.kalypso.ogc.gml.wms.provider.WMSImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
@@ -504,8 +504,8 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
             provider.append( providerID );
 
           final String layerTitle = layer.getTitle();
-          source.append( "#" ).append( KalypsoWMSImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
-          source.append( "#" ).append( KalypsoWMSImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
+          source.append( "#" ).append( WMSImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
+          source.append( "#" ).append( WMSImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
           source.append( "#" ).append( provider.toString() );
 
           final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() );
