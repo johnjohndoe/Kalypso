@@ -93,10 +93,10 @@ public class FNGmlUtils
     final IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
 
     // start and end linkage node
-    final INode upperNode = createNode( model, upperNodeType, curve.getStartPoint(), nodes );
-    final INode lowerNode = createNode( model, lowerNodeType, curve.getEndPoint(), nodes );
+    final INode upperNode = FNGmlUtils.createNode( model, upperNodeType, curve.getStartPoint(), nodes );
+    final INode lowerNode = FNGmlUtils.createNode( model, lowerNodeType, curve.getEndPoint(), nodes );
 
-    CommandableWorkspace workspace = FeatureUtils.getWorkspace( model.getFeature() );
+    final CommandableWorkspace workspace = FeatureUtils.getWorkspace( model.getFeature() );
     final IFeatureType ftBranch = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH );
 
     final IRelationType rtBranchMember = (IRelationType) model.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
@@ -118,7 +118,7 @@ public class FNGmlUtils
 
       FeatureUtils.updateFeature( branch, values );
 
-      IBranch myBranch = new Branch( model, branch );
+      final IBranch myBranch = new Branch( model, branch );
       myBranch.setUpperNode( upperNode );
       myBranch.setLowerNode( lowerNode );
 
@@ -142,7 +142,7 @@ public class FNGmlUtils
         return node;
     }
 
-    INode node = AbstractNode.createNode( model, nodeType, point );
+    final INode node = AbstractNode.createNode( model, nodeType, point );
     return node;
   }
 
@@ -151,62 +151,69 @@ public class FNGmlUtils
    */
   public static void cleanUpNodes( final IModelMember model, final IBranch branch ) throws Exception
   {
-    INode[] nodes = model.getNodeMembers();
-    for( INode node : nodes )
-    {
+    final INode[] nodes = model.getNodeMembers();
+    for( final INode node : nodes )
       if( node.isEmpty() )
-      {
         node.delete();
-      }
-    }
   }
 
-  private static void addBranchesToLinkToNodes( IModelMember model, final INode[] nodes ) throws Exception
+  private static void addBranchesToLinkToNodes( final IModelMember model, final INode[] nodes ) throws Exception
   {
-    IBranch[] branches = model.getBranchMembers();
+    final IBranch[] branches = model.getBranchMembers();
     for( final IBranch branch : branches )
     {
-      final IConnectionNode branchUpperNode = branch.getUpperNode();
-      final IConnectionNode branchLowerNode = branch.getLowerNode();
+      final INode branchUpperNode = branch.getUpperNode();
+      final INode branchLowerNode = branch.getLowerNode();
 
       /* set inflowing and outflowing branches */
-      if( ArrayUtils.contains( nodes, branchUpperNode ) )
-        branchUpperNode.addOutflowingBranch( branch );
+      if( branchUpperNode instanceof IConnectionNode )
+      {
+        final IConnectionNode cn = (IConnectionNode) branchUpperNode;
 
-      if( ArrayUtils.contains( nodes, branchLowerNode ) )
-        branchLowerNode.addInflowingBranch( branch );
+        if( ArrayUtils.contains( nodes, branchUpperNode ) )
+          cn.addOutflowingBranch( branch );
+      }
+
+      if( branchLowerNode instanceof IConnectionNode )
+      {
+        final IConnectionNode cn = (IConnectionNode) branchLowerNode;
+
+        if( ArrayUtils.contains( nodes, branchLowerNode ) )
+          cn.addInflowingBranch( branch );
+      }
+
     }
 
     /* node is an linkage node? set linkToBranch (ln lays on branch x - lnk to this branch!) */
-    for( INode node : nodes )
+    for( final INode node : nodes )
     {
       if( !(node instanceof ILinkageNode) )
         continue;
 
-      ILinkageNode ln = (ILinkageNode) node;
+      final ILinkageNode ln = (ILinkageNode) node;
       ln.setLinkToBranch( branches );
 
     }
   }
 
-  public static void createInflowBranch( IModelMember model, IBranch branch, GM_Curve curve ) throws Exception
+  public static void createInflowBranch( final IModelMember model, final IBranch branch, final GM_Curve curve ) throws Exception
   {
-    INode[] nodes = new INode[] { branch.getUpperNode(), branch.getLowerNode() };
-    createBranch( model, curve, nodes, TYPE.eConnectionNode, TYPE.eLinkageNode );
+    final INode[] nodes = new INode[] { branch.getUpperNode(), branch.getLowerNode() };
+    FNGmlUtils.createBranch( model, curve, nodes, TYPE.eConnectionNode, TYPE.eLinkageNode );
   }
 
-  public static void createOutflowBranch( IModelMember model, IBranch branch, GM_Curve curve ) throws Exception
+  public static void createOutflowBranch( final IModelMember model, final IBranch branch, final GM_Curve curve ) throws Exception
   {
-    INode[] nodes = new INode[] { branch.getUpperNode(), branch.getLowerNode() };
-    createBranch( model, curve, nodes, TYPE.eLinkageNode, TYPE.eConnectionNode );
+    final INode[] nodes = new INode[] { branch.getUpperNode(), branch.getLowerNode() };
+    FNGmlUtils.createBranch( model, curve, nodes, TYPE.eLinkageNode, TYPE.eConnectionNode );
   }
 
-  public static void extendBranch( IModelMember model, final IBranch branch, final GM_Curve curve ) throws Exception
+  public static void extendBranch( final IModelMember model, final IBranch branch, final GM_Curve curve ) throws Exception
   {
-    INode upperNode = branch.getUpperNode();
-    INode lowerNode = branch.getLowerNode();
+    final INode upperNode = branch.getUpperNode();
+    final INode lowerNode = branch.getLowerNode();
 
-    createBranch( model, curve, new INode[] { upperNode, lowerNode }, TYPE.eConnectionNode, TYPE.eConnectionNode );
+    FNGmlUtils.createBranch( model, curve, new INode[] { upperNode, lowerNode }, TYPE.eConnectionNode, TYPE.eConnectionNode );
   }
 
   public static void connectBranches( final IModelMember model, final IBranch[] branches, final GM_Curve curve ) throws Exception
@@ -219,16 +226,16 @@ public class FNGmlUtils
       nodes.add( branch.getLowerNode() );
     }
 
-    createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eConnectionNode, TYPE.eConnectionNode );
+    FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eConnectionNode, TYPE.eConnectionNode );
   }
 
-  public static void createProfileNode( ISobekModelMember model, IBranch branch, GM_Point pointOnBranch, Feature profile ) throws Exception
+  public static void createProfileNode( final ISobekModelMember model, final IBranch branch, final GM_Point pointOnBranch, final Feature profile ) throws Exception
   {
-    if( (branch == null) || (pointOnBranch == null) || (profile == null) )
+    if( branch == null || pointOnBranch == null || profile == null )
       return;
 
     /* create new profile node */
-    INode node = createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
+    final INode node = FNGmlUtils.createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
 
     /* link branch and profile */
     FeatureUtils.updateLinkedFeature( node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH, "#" + branch.getFeature().getId() );

@@ -85,12 +85,14 @@ public class LastFallExplorer
 
   public LastFallExplorer( final ISobekModelMember modelBuilder )
   {
-
     m_modelBuilder = modelBuilder;
   }
 
   public void draw( final FormToolkit toolkit, final Composite body )
   {
+    if( m_modelBuilder == null )
+      return;
+
     /* header */
     final Composite header = toolkit.createComposite( body );
     final GridLayout layout = new GridLayout( 2, false );

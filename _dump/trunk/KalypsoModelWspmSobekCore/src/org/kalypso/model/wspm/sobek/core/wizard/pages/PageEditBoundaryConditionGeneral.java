@@ -72,6 +72,8 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
   private LastfallDateChooser m_tsEnds;
 
+  private PageEditBoundaryConditionTimeSeries m_timeSeriesPage;
+
   public PageEditBoundaryConditionGeneral( final IBoundaryNodeLastfallCondition condition )
   {
     super( "editBoundaryConditionGeneral" );
@@ -96,19 +98,20 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     iGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
     iGroup.setLayout( new GridLayout( 2, false ) );
     iGroup.setText( "Info" );
-    iGroup.setEnabled( false );
 
     /* lastfall */
     new Label( iGroup, SWT.NONE ).setText( "Loading case" );
 
     final WizardFeatureTextBox lf = new WizardFeatureTextBox( m_condition.getLastfall().getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     lf.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
+    lf.setEnabled( false );
 
     /* boundary node */
     new Label( iGroup, SWT.NONE ).setText( "Boundary node" );
 
     final WizardFeatureTextBox bn = new WizardFeatureTextBox( m_condition.getBoundaryNode().getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     bn.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
+    bn.setEnabled( false );
 
     /* bc type */
     new Label( iGroup, SWT.NONE ).setText( "Type of boundary node" );
@@ -194,19 +197,19 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
     final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
 
-    if( m_tsBegins.getDateTime().before( lastfallGregorianStart ) )
+    if( m_tsBegins.getDateTime().after( lastfallGregorianStart ) )
     {
       setMessage( null );
-      setErrorMessage( "Starting date is before lastfall starting date! (" + df.format( lastfallGregorianStart.getTime() ) + ")" );
+      setErrorMessage( "Boundary condition starting date is after lastfall starting date! (" + df.format( lastfallGregorianStart.getTime() ) + ")" );
       setPageComplete( false );
 
       return;
     }
 
-    if( m_tsEnds.getDateTime().after( lastfallGregorianEnd ) )
+    if( m_tsEnds.getDateTime().before( lastfallGregorianEnd ) )
     {
       setMessage( null );
-      setErrorMessage( "Ending date is after lastfall ending date! (" + df.format( lastfallGregorianEnd.getTime() ) + ")" );
+      setErrorMessage( "Boundary condition ending date is before lastfall ending date! (" + df.format( lastfallGregorianEnd.getTime() ) + ")" );
       setPageComplete( false );
 
       return;

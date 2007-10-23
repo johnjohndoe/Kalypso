@@ -62,10 +62,16 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
 
   private IBoundaryNodeLastfallCondition m_condition;
 
+  private PageEditBoundaryConditionTimeSeries m_timeSeries = null;
+
+  private PageEditBoundaryConditionGeneral m_general = null;
+
   public SobekWizardEditBoundaryCondition( final ILastfall lastfall, final IBoundaryNode node )
   {
     m_lastfall = lastfall;
     m_node = node;
+
+    setForcePreviousAndNextButtons( true );
   }
 
   /**
@@ -90,11 +96,14 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
   @Override
   public void addPages( )
   {
-    final PageEditBoundaryConditionGeneral pGeneral = new PageEditBoundaryConditionGeneral( m_condition );
-    addPage( pGeneral );
+    if( m_general == null )
+    {
+      m_general = new PageEditBoundaryConditionGeneral( m_condition );
+      addPage( m_general );
 
-    final PageEditBoundaryConditionTimeSeries pTimeSeries = new PageEditBoundaryConditionTimeSeries( (ISobekModelMember) m_lastfall.getModel(), pGeneral );
-    addPage( pTimeSeries );
+      m_timeSeries = new PageEditBoundaryConditionTimeSeries( (ISobekModelMember) m_lastfall.getModel(), m_general );
+      addPage( m_timeSeries );
+    }
   }
 
   @Override
@@ -107,4 +116,5 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
   {
     return m_condition;
   }
+
 }

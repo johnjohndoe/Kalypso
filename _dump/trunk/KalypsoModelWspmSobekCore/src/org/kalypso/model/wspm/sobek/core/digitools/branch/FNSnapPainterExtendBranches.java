@@ -113,7 +113,7 @@ public class FNSnapPainterExtendBranches implements ISnapPainter
   {
     try
     {
-      if( g == null || panel == null || currentPoint == null )
+      if( g == null || panel == null || currentPoint == null || panel.getMapModell() == null )
         return null;
 
       for( final GM_Curve curve : m_curves )

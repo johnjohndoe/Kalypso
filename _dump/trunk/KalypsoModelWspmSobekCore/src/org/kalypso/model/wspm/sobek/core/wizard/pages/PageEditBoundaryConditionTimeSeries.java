@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import java.awt.Frame;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -50,20 +52,29 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryLabelProvider;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryTreeContentProvider;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryViewerFilter;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
@@ -81,6 +92,14 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
   protected final IBoundaryConditionGeneral m_settings;
 
   private final ISobekModelMember m_model;
+
+  protected Button m_bTimeSeries;
+
+  protected Button m_bConstant;
+
+  private TreeViewer m_reposTree;
+
+  private Text m_tConstant;
 
   public PageEditBoundaryConditionTimeSeries( final ISobekModelMember model, final IBoundaryConditionGeneral settings )
   {
@@ -103,16 +122,112 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     if( layoutData instanceof GridData )
     {
       final GridData pLayout = (GridData) layoutData;
-      pLayout.widthHint = 800;
-      pLayout.heightHint = 400;
+      pLayout.widthHint = 900;
+      pLayout.heightHint = 600;
       parent.layout();
     }
 
     final Composite container = new Composite( parent, SWT.NULL );
-    container.setLayout( new GridLayout( 2, false ) );
+    container.setLayout( new GridLayout() );
     setControl( container );
 
-    final Composite cBrowser = new Composite( container, SWT.NULL );
+    final Group gMapping = new Group( container, SWT.NONE );
+    gMapping.setLayout( new GridLayout() );
+    gMapping.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    gMapping.setText( "Type of boundary condition data input" );
+
+    m_bTimeSeries = new Button( gMapping, SWT.RADIO );
+    m_bTimeSeries.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+    m_bTimeSeries.setText( "Select a time series from the time series repository." );
+
+    m_bConstant = new Button( gMapping, SWT.RADIO );
+    m_bConstant.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+    m_bConstant.setText( "Set a constant value for corrosponding discharge, waterlevel or Q-H relation" );
+
+    /* time series repository */
+    final Group gRepos = new Group( container, SWT.NULL );
+    gRepos.setLayout( new GridLayout( 2, false ) );
+    gRepos.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    gRepos.setText( "Time Series Repository" );
+
+    final List<Control> tsControls = renderRepositorySection( gRepos );
+
+    /* constant value */
+    final Group gConstant = new Group( container, SWT.NULL );
+    gConstant.setLayout( new GridLayout( 2, false ) );
+    gConstant.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    gConstant.setText( "Constant value for coorosponding discharge, waterlevel or Q-H relation" );
+
+    final List<Control> vControls = renderConstantValue( gConstant );
+
+    m_bTimeSeries.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        if( m_bTimeSeries.getSelection() )
+        {
+          for( final Control control : tsControls )
+            control.setEnabled( true );
+
+          for( final Control control : vControls )
+            control.setEnabled( false );
+
+        }
+
+      }
+    } );
+
+    m_bConstant.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        if( m_bConstant.getSelection() )
+        {
+          for( final Control control : tsControls )
+            control.setEnabled( false );
+
+          for( final Control control : vControls )
+            control.setEnabled( true );
+        }
+      }
+    } );
+
+    /* set selection */
+    m_bTimeSeries.setSelection( true );
+    for( final Control control : tsControls )
+      control.setEnabled( true );
+    for( final Control control : vControls )
+      control.setEnabled( false );
+
+    checkPageCompleted();
+  }
+
+  private List<Control> renderConstantValue( final Composite cBody )
+  {
+    final List<Control> controls = new ArrayList<Control>();
+
+    new Label( cBody, SWT.NONE ).setText( "Value" );
+
+    m_tConstant = new Text( cBody, SWT.BORDER );
+    m_tConstant.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    controls.add( m_tConstant );
+
+    return controls;
+  }
+
+  private List<Control> renderRepositorySection( final Composite repos )
+  {
+    final List<Control> controls = new ArrayList<Control>();
+
+    final Composite cBrowser = new Composite( repos, SWT.NULL );
     final GridData ld = new GridData( GridData.FILL, GridData.FILL, false, true );
     ld.widthHint = ld.minimumWidth = 200;
     cBrowser.setLayoutData( ld );
@@ -120,17 +235,18 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     bLayout.marginWidth = bLayout.horizontalSpacing = 0;
     cBrowser.setLayout( bLayout );
 
-    final TreeViewer reposTree = getTSBrowser( cBrowser );
+    m_reposTree = getTSBrowser( cBrowser );
+    controls.add( m_reposTree.getTree() );
 
-    final Composite cClient = new Composite( container, SWT.NULL );
+    final Composite cClient = new Composite( repos, SWT.NULL );
     cClient.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     final GridLayout cLayout = new GridLayout( 2, true );
     cLayout.marginWidth = bLayout.horizontalSpacing = 0;
     cClient.setLayout( cLayout );
 
-    renderDetails( reposTree, cClient );
+    renderDetails( m_reposTree, cClient );
 
-    checkPageCompleted();
+    return controls;
   }
 
   private void renderDetails( final TreeViewer reposTree, final Composite body )
@@ -177,11 +293,9 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
           final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
 
-          DateRange dateRange = null;
-
           final GregorianCalendar startDate = m_settings.getStartDate();
           final GregorianCalendar endDate = m_settings.getEndDate();
-          dateRange = new DateRange( startDate.getTime(), endDate.getTime() );
+          final DateRange dateRange = new DateRange( startDate.getTime(), endDate.getTime() );
 
           final PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dateRange ) );
           diagView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
@@ -208,14 +322,105 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
     viewer.expandAll();
 
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        checkPageCompleted();
+      }
+    } );
+
     return viewer;
   }
 
   protected void checkPageCompleted( )
   {
+    /* time series repository selected? check selection and values! */
+    if( m_bTimeSeries.getSelection() )
+    {
+      final TreeSelection selection = (TreeSelection) m_reposTree.getSelection();
+      final Object element = selection.getFirstElement();
+
+      if( !(element instanceof ZmlObservationItem) )
+      {
+        setMessage( null );
+        setErrorMessage( "No time series repository item selected." );
+        setPageComplete( false );
+
+        return;
+      }
+
+      final ZmlObservationItem item = (ZmlObservationItem) element;
+      final Object adapter = item.getAdapter( IObservation.class );
+      if( !(adapter instanceof IObservation) )
+      {
+        setMessage( null );
+        setErrorMessage( "No time series data found." );
+        setPageComplete( false );
+
+        return;
+      }
+
+      try
+      {
+        final IObservation observation = (IObservation) adapter;
+
+        final GregorianCalendar startDate = m_settings.getStartDate();
+        final GregorianCalendar endDate = m_settings.getEndDate();
+        final DateRange dateRange = new DateRange( startDate.getTime(), endDate.getTime() );
+
+        final PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dateRange ) );
+        final IRequest request = provider.getArguments();
+
+        final ITuppleModel values = observation.getValues( request );
+        if( values.getCount() <= 0 )
+        {
+          setMessage( null );
+          setErrorMessage( "No time series values in given date range found." );
+          setPageComplete( false );
+
+          return;
+        }
+      }
+      catch( final SensorException e )
+      {
+        setMessage( null );
+        setErrorMessage( "Error reading time series repository:" + e.getMessage() );
+        setPageComplete( false );
+
+        return;
+      }
+    }
+    else if( m_bConstant.getSelection() )
+    {
+      if( m_tConstant.getText() == null || m_tConstant.getText().trim().equals( "" ) )
+      {
+        setMessage( null );
+        setErrorMessage( "No constant value defined." );
+        setPageComplete( false );
+
+        return;
+      }
+      try
+      {
+        Double.valueOf( m_tConstant.getText() );
+      }
+      catch( final NumberFormatException e )
+      {
+        setMessage( null );
+        setErrorMessage( "Constant value is not a number." );
+        setPageComplete( false );
+
+        return;
+      }
+    }
+
     setMessage( null );
     setErrorMessage( null );
-    setPageComplete( false );
+    setPageComplete( true );
   }
 
 }

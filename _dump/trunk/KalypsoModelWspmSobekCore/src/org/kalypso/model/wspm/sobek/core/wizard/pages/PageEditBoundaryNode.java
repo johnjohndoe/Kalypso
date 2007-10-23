@@ -103,6 +103,7 @@ public class PageEditBoundaryNode extends WizardPage
 
     /* description */
     final Label lDescription = new Label( container, SWT.NONE );
+    lDescription.setLayoutData( new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
     lDescription.setText( "Description" );
 
     m_description = new WizardFeatureTextBox( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION );

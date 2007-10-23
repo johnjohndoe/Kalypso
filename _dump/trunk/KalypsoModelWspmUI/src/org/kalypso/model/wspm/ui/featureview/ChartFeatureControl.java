@@ -42,28 +42,15 @@ package org.kalypso.model.wspm.ui.featureview;
 
 import java.net.URL;
 
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.ui.editor.actions.ChartActionContributor;
-import org.kalypso.chart.ui.editor.mouse.DragZoomHandler;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -102,68 +89,69 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
    */
   public Control createControl( final Composite parent, final int style )
   {
-    final ChartActionContributor contributor = new ChartActionContributor();
-
-    final TabFolder folder = new TabFolder( parent, SWT.TOP );
-
-    m_charts = new ChartComposite[m_chartTypes.length];
-    for( int i = 0; i < m_chartTypes.length; i++ )
-    {
-      final TabItem item = new TabItem( folder, SWT.NONE );
-
-      final Composite composite = new Composite( folder, style );
-      final GridLayout gridLayout = new GridLayout();
-      gridLayout.horizontalSpacing = 0;
-      gridLayout.verticalSpacing = 0;
-      composite.setLayout( gridLayout );
-
-      final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-      manager.createControl( composite );
-
-      final ChartType chartType = m_chartTypes[i];
-      item.setText( chartType.getTitle() );
-      item.setToolTipText( chartType.getDescription() );
-
-      final IChartModel chartModel = new ChartModel();
-      final ChartComposite chart = new ChartComposite( composite, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
-      final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
-
-      chart.setLayoutData( gridData );
-      contributor.contributeActions( chart, manager );
-      final DragZoomHandler handler = new DragZoomHandler( chart );
-      chart.addMouseListener( handler );
-      chart.addMouseMoveListener( handler );
-
-      m_charts[i] = chart;
-
-      item.setControl( composite );
-    }
-
-    final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
-    final int selectedTab = selectedTabStr == null ? 0 : Integer.parseInt( selectedTabStr );
-    if( selectedTab < folder.getTabList().length )
-      folder.setSelection( selectedTab );
-
-    folder.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleFolderSelectionChanged( folder.getSelectionIndex() );
-      }
-    } );
-
-    updateControl();
-
-    return folder;
+// final ChartActionContributor contributor = new ChartActionContributor();
+//
+// final TabFolder folder = new TabFolder( parent, SWT.TOP );
+//
+// m_charts = new ChartComposite[m_chartTypes.length];
+// for( int i = 0; i < m_chartTypes.length; i++ )
+// {
+// final TabItem item = new TabItem( folder, SWT.NONE );
+//
+// final Composite composite = new Composite( folder, style );
+// final GridLayout gridLayout = new GridLayout();
+// gridLayout.horizontalSpacing = 0;
+// gridLayout.verticalSpacing = 0;
+// composite.setLayout( gridLayout );
+//
+// final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
+// manager.createControl( composite );
+//
+// final ChartType chartType = m_chartTypes[i];
+// item.setText( chartType.getTitle() );
+// item.setToolTipText( chartType.getDescription() );
+//
+// final IChartModel chartModel = new ChartModel();
+// final ChartComposite chart = new ChartComposite( composite, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
+// final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+//
+// chart.setLayoutData( gridData );
+// contributor.contributeActions( chart, manager );
+// final DragZoomHandler handler = new DragZoomHandler( chart );
+// chart.addMouseListener( handler );
+// chart.addMouseMoveListener( handler );
+//
+// m_charts[i] = chart;
+//
+// item.setControl( composite );
+// }
+//
+// final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
+// final int selectedTab = selectedTabStr == null ? 0 : Integer.parseInt( selectedTabStr );
+// if( selectedTab < folder.getTabList().length )
+// folder.setSelection( selectedTab );
+//
+// folder.addSelectionListener( new SelectionAdapter()
+// {
+// /**
+// * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+// */
+// @Override
+// public void widgetSelected( final SelectionEvent e )
+// {
+// handleFolderSelectionChanged( folder.getSelectionIndex() );
+// }
+// } );
+//
+// updateControl();
+//
+// return folder;
+    return null;
   }
 
   protected void handleFolderSelectionChanged( final int selectionIndex )
   {
-    SETTINGS.put( STR_SETTINGS_TAB, selectionIndex );
+    ChartFeatureControl.SETTINGS.put( ChartFeatureControl.STR_SETTINGS_TAB, selectionIndex );
   }
 
   /**
