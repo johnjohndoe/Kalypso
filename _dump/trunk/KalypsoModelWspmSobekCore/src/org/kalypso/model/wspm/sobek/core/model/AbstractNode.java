@@ -113,6 +113,14 @@ public abstract class AbstractNode implements INode
   }
 
   /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getStationName() 
+   */
+  public String getStationName( )
+  {
+    return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_STATION_NAME );
+  }
+
+  /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override

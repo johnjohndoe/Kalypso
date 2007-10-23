@@ -40,40 +40,83 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.utils;
 
-import nl.wldelft.fews.pi.LocationComplexType;
+import java.util.HashMap;
+import java.util.Map;
+
 import nl.wldelft.fews.pi.ObjectFactory;
 import nl.wldelft.fews.pi.LocationsComplexType.Location;
 
 import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author thuel2
  */
 public class PiSobekModelUtils
 {
-  public static String SOBEK_NODES_CONNECTION = "Sobek.Nodes.Connection";
 
-  public static String SOBEK_NODES_CONN_WITH_LAT_AND_STOR = "Sobek.Nodes.ConnWithLatAndStor";
-
-  public static String SOBEK_NODES_BOUNDARY_Q = "Sobek.Nodes.Bound_Q";
-
-  public static String SOBEK_NODES_BOUNDARY_W = "Sobek.Nodes.Bound_H";
-
-  public static String SOBEK_NODES_LINKAGE = "Sobek.Nodes.Linkage";
-
-  public static Location createLocationFromNode( ObjectFactory factory, INode node )
+  public Map<String, String> lookUpModelToPi = new HashMap<String, String>()
   {
-    final LocationComplexType createLocationComplexType = factory.createLocationComplexType();
+    @Override
+    public String put( final String key, final String value )
+    {
+
+      if( !(null == super.put( key, value )) )
+        throw new IllegalArgumentException( key + " is not unique in HashMap lookUpModelToPi." );
+      if( !(null == super.put( value, key )) )
+        throw new IllegalArgumentException( value + " is not unique in HashMap lookUpModelToPi." );
+      return null;
+    }
+
+    @Override
+    public String get( Object key )
+    {
+      if( super.containsKey( key ) )
+        return super.get( key );
+
+      throw new IllegalArgumentException( key.toString() + " can't be found in HashMap lookUpModelToPi." );
+    }
+  };
+
+  private static PiSobekModelUtils instance = null;
+
+  private PiSobekModelUtils( )
+  {
+    lookUpModelToPi.put( IBoundaryNode.BOUNDARY_TYPE.eQ.toString(), "Sobek.Nodes.Bound_Q" );
+    lookUpModelToPi.put( IBoundaryNode.BOUNDARY_TYPE.eW.toString(), "Sobek.Nodes.Bound_H" );
+    lookUpModelToPi.put( INode.TYPE.eLinkageNode.toString(), "Sobek.Nodes.linkage" );
+    lookUpModelToPi.put( INode.TYPE.eConnectionNode.toString(), "Sobek.Nodes.Connection" );
+
+  }
+
+  public static PiSobekModelUtils getInstance( )
+  {
+    if( instance == null )
+      instance = new PiSobekModelUtils();
+    return instance;
+  }
+
+  public Location createLocationFromNode( ObjectFactory factory, INode node )
+  {
     final Location location = factory.createLocationsComplexTypeLocation();
 
     location.setLocationId( node.getId() );
-    location.setStationName( node.getName() );
+
+    final String stationName = node.getStationName();
+    // stationName has to be set in PI but will be ignored by Sobek
+    if( !(stationName == null) )
+      location.setStationName( stationName );
+    else
+      location.setStationName( node.getName() );
+    location.setLongName( node.getName() );
     location.setX( node.getLocation().getX() );
     location.setY( node.getLocation().getY() );
 
@@ -81,20 +124,23 @@ public class PiSobekModelUtils
     {
       if( node instanceof IConnectionNode )
       {
-        location.setLocationType( SOBEK_NODES_CONNECTION );
+        location.setLocationType( lookUpModelToPi.get( node.getType().toString() ) );
       }
       else if( node instanceof ILinkageNode )
       {
-        final LinkageNode ln = (LinkageNode)node;
-        location.setLocationType( SOBEK_NODES_LINKAGE + "@" + ln.getLinkToBranch().getFeature().getId());
+        final LinkageNode ln = (LinkageNode) node;
+        final IBranch linkedBranch = ln.getLinkToBranch();
+        if( linkedBranch == null )
+          throw new IllegalArgumentException( "Missing linked branch for linkage node " + ln.getName() );
+        else
+          location.setLocationType( lookUpModelToPi.get( ln.getType().toString() ) + "@" + linkedBranch.getId() );
+
       }
       else if( node instanceof IBoundaryNode )
       {
-// differenzieren zw. Boundary_H und Boundary_W
-        BoundaryNode bn = (BoundaryNode) node;
-       
+        final BoundaryNode bn = (BoundaryNode) node;
+        location.setLocationType( lookUpModelToPi.get( bn.getBoundaryType().toString() ) );
       }
-
     }
     return location;
   }

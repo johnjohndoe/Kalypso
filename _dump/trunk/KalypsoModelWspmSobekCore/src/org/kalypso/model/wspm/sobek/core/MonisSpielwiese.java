@@ -68,7 +68,7 @@ public class MonisSpielwiese extends TestCase
     {
       final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( urlGml, null );
 
-      final IFeatureType modelFT = modelWorkspace.getGMLSchema().getFeatureType( ISobekConstants.QN_SOBEK_MODEL_MEMBER );
+      final IFeatureType modelFT = modelWorkspace.getGMLSchema().getFeatureType( ISobekConstants.QN_SOBEK_MODEL);
       final Feature[] sobekModelFeat = modelWorkspace.getFeatures( modelFT );
 
       final ISobekModelMember sobekModel = SobekModelMember.getModel( sobekModelFeat[0], null );

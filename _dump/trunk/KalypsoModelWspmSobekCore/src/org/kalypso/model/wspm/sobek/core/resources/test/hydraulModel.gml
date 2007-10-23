@@ -1,14 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="WINDOWS-1252"?>
 <nofdp1DModel:HydraulModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:nofdp1DModel="org.kalypso.nofdpidss.1dmodel" xmlns:swe="http://www.opengis.net/swe" gml:id="root">
- <nofdp1DModel:roughnessClassMember>
-  <nofdp1DModel:RoughnessClass gml:id="RoughnessClass1192708637479410">
-   <nofdp1DModel:name/>
-   <nofdp1DModel:description/>
-   <nofdp1DModel:kstValue/>
-   <nofdp1DModel:recommendedValueRange/>
-  </nofdp1DModel:RoughnessClass>
- </nofdp1DModel:roughnessClassMember>
- <nofdp1DModel:waterBodyMember xmlns:nofdpCommons="org.kalypso.nofdpidss.commons">
+ <nofdp1DModel:waterBodyMember>
   <nofdp1DModel:WaterBody gml:id="WaterBody11901009697431">
    <gml:name>Mümling</gml:name>
    <nofdp1DModel:profileMember>
@@ -2370,7 +2362,7 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:linkedInflowBranches xlink:href="#Branch1192615266631193"/>
      <wspmSobek:linkedInflowBranches xlink:href="#Branch1192615266631193"/>
      <wspmSobek:linkedOutflowBranches xlink:href="#Branch1192615270428239"/>
-     <wspmSobek:typeOfConnectionNode/>
+     <wspmSobek:typeOfConnectionNode>base</wspmSobek:typeOfConnectionNode>
     </wspmSobek:ConnectionNode>
    </wspmSobek:nodeMember>
    <wspmSobek:nodeMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
@@ -2388,7 +2380,7 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:linkedInflowBranches xlink:href="#Branch1192615270428239"/>
      <wspmSobek:linkedInflowBranches xlink:href="#Branch1192615270428239"/>
      <wspmSobek:linkedOutflowBranches xlink:href="#Branch1192708497013435"/>
-     <wspmSobek:typeOfConnectionNode/>
+     <wspmSobek:typeOfConnectionNode>base</wspmSobek:typeOfConnectionNode>
     </wspmSobek:ConnectionNode>
    </wspmSobek:nodeMember>
    <wspmSobek:nodeMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
@@ -2404,8 +2396,8 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:stationName/>
      <wspmSobek:isActiveCalcPoint>true</wspmSobek:isActiveCalcPoint>
      <wspmSobek:linkedInflowBranches xlink:href="#Branch1192708500654194"/>
-     <wspmSobek:typeOfConnectionNode/>
-     <wspmSobek:linksToBranch xlink:href="#null"/>
+     <wspmSobek:typeOfConnectionNode>linkage</wspmSobek:typeOfConnectionNode>
+     <wspmSobek:linksToBranch xlink:href="#Branch1192615266631193"/>
     </wspmSobek:LinkageNode>
    </wspmSobek:nodeMember>
    <wspmSobek:nodeMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
@@ -2421,8 +2413,8 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:stationName/>
      <wspmSobek:isActiveCalcPoint>true</wspmSobek:isActiveCalcPoint>
      <wspmSobek:linkedOutflowBranches xlink:href="#Branch1192708504685495"/>
-     <wspmSobek:typeOfConnectionNode/>
-     <wspmSobek:linksToBranch xlink:href="#null"/>
+     <wspmSobek:typeOfConnectionNode>linkage</wspmSobek:typeOfConnectionNode>
+     <wspmSobek:linksToBranch xlink:href="#Branch1192615270428239"/>
     </wspmSobek:LinkageNode>
    </wspmSobek:nodeMember>
    <wspmSobek:nodeMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
@@ -2440,13 +2432,13 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:linkedInflowBranches xlink:href="#Branch1192708504685495"/>
      <wspmSobek:linkedInflowBranches xlink:href="#Branch1192708504685495"/>
      <wspmSobek:linkedOutflowBranches xlink:href="#Branch1192708507935481"/>
-     <wspmSobek:typeOfConnectionNode/>
+     <wspmSobek:typeOfConnectionNode>base</wspmSobek:typeOfConnectionNode>
     </wspmSobek:ConnectionNode>
    </wspmSobek:nodeMember>
    <wspmSobek:nodeMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
     <wspmSobek:BoundaryConditionNode gml:id="BoundaryConditionNode1192708552559299">
      <wspmSobek:name>bn_00001</wspmSobek:name>
-     <wspmSobek:description></wspmSobek:description>
+     <wspmSobek:description/>
      <wspmSobek:location>
       <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:coordinates ts="," decimal="." cs=" ">3499168.3848505714 5501207.728720057</gml:coordinates>
@@ -2456,14 +2448,14 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:stationName/>
      <wspmSobek:isActiveCalcPoint>true</wspmSobek:isActiveCalcPoint>
      <wspmSobek:linkedOutflowBranches xlink:href="#Branch1192615266631193"/>
-     <wspmSobek:typeOfConnectionNode/>
+     <wspmSobek:typeOfConnectionNode>boundaryCondition</wspmSobek:typeOfConnectionNode>
      <wspmSobek:bcType>bc_q</wspmSobek:bcType>
     </wspmSobek:BoundaryConditionNode>
    </wspmSobek:nodeMember>
    <wspmSobek:nodeMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
     <wspmSobek:BoundaryConditionNode gml:id="BoundaryConditionNode1192708564715261">
      <wspmSobek:name>bn_00002</wspmSobek:name>
-     <wspmSobek:description></wspmSobek:description>
+     <wspmSobek:description/>
      <wspmSobek:location>
       <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:coordinates ts="," decimal="." cs=" ">3499587.814657953 5500945.041905513</gml:coordinates>
@@ -2473,14 +2465,14 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:stationName/>
      <wspmSobek:isActiveCalcPoint>true</wspmSobek:isActiveCalcPoint>
      <wspmSobek:linkedOutflowBranches xlink:href="#Branch1192708500654194"/>
-     <wspmSobek:typeOfConnectionNode/>
+     <wspmSobek:typeOfConnectionNode>boundaryCondition</wspmSobek:typeOfConnectionNode>
      <wspmSobek:bcType>bc_q</wspmSobek:bcType>
     </wspmSobek:BoundaryConditionNode>
    </wspmSobek:nodeMember>
    <wspmSobek:nodeMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
     <wspmSobek:BoundaryConditionNode gml:id="BoundaryConditionNode1192708575340225">
      <wspmSobek:name>bn_00003</wspmSobek:name>
-     <wspmSobek:description></wspmSobek:description>
+     <wspmSobek:description/>
      <wspmSobek:location>
       <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:coordinates ts="," decimal="." cs=" ">3499263.212459197 5500357.645000768</gml:coordinates>
@@ -2490,14 +2482,14 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:stationName/>
      <wspmSobek:isActiveCalcPoint>true</wspmSobek:isActiveCalcPoint>
      <wspmSobek:linkedInflowBranches xlink:href="#Branch1192708507935481"/>
-     <wspmSobek:typeOfConnectionNode/>
-     <wspmSobek:bcType>bc_q</wspmSobek:bcType>
+     <wspmSobek:typeOfConnectionNode>boundaryCondition</wspmSobek:typeOfConnectionNode>
+     <wspmSobek:bcType>bc_w</wspmSobek:bcType>
     </wspmSobek:BoundaryConditionNode>
    </wspmSobek:nodeMember>
    <wspmSobek:nodeMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
     <wspmSobek:BoundaryConditionNode gml:id="BoundaryConditionNode1192708584699219">
      <wspmSobek:name>bn_00004</wspmSobek:name>
-     <wspmSobek:description></wspmSobek:description>
+     <wspmSobek:description/>
      <wspmSobek:location>
       <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
        <gml:coordinates ts="," decimal="." cs=" ">3499399.9830485606 5500348.523930819</gml:coordinates>
@@ -2507,8 +2499,8 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:stationName/>
      <wspmSobek:isActiveCalcPoint>true</wspmSobek:isActiveCalcPoint>
      <wspmSobek:linkedInflowBranches xlink:href="#Branch1192708497013435"/>
-     <wspmSobek:typeOfConnectionNode/>
-     <wspmSobek:bcType>bc_q</wspmSobek:bcType>
+     <wspmSobek:typeOfConnectionNode>boundaryCondition</wspmSobek:typeOfConnectionNode>
+     <wspmSobek:bcType>bc_w</wspmSobek:bcType>
     </wspmSobek:BoundaryConditionNode>
    </wspmSobek:nodeMember>
    <wspmSobek:branchMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
@@ -2607,6 +2599,17 @@ true low 241.1174 229.136 0.0 5500056.651 3499895.119
      <wspmSobek:lowerConnectionNode xlink:href="#BoundaryConditionNode1192708575340225"/>
     </wspmSobek:Branch>
    </wspmSobek:branchMember>
+   <wspmSobek:lastfallMember xmlns:wspmSobek="org.kalypso.model.wspm.sobek">
+    <wspmSobek:Lastfall gml:id="Lastfall1192775237664364">
+     <wspmSobek:name>test</wspmSobek:name>
+     <wspmSobek:description/>
+     <wspmSobek:simulationBegin>2007-10-19T08:27:23.000+02:00</wspmSobek:simulationBegin>
+     <wspmSobek:simulationEnd>2007-10-20T08:27:26.000+02:00</wspmSobek:simulationEnd>
+     <wspmSobek:preSimulationTime>12</wspmSobek:preSimulationTime>
+     <wspmSobek:simulationTimestep>10</wspmSobek:simulationTimestep>
+     <wspmSobek:resultTimeStepAsMultiple>3</wspmSobek:resultTimeStepAsMultiple>
+    </wspmSobek:Lastfall>
+   </wspmSobek:lastfallMember>
   </wspmSobekProj:SobekModel>
  </wspmSobekProj:sobekModelMember>
 </nofdp1DModel:HydraulModel>

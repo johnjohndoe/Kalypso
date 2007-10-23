@@ -239,7 +239,6 @@ public final class SobekModelMember implements ISobekModelMember
       FileUtils.forceMkdir( fleTargetDir );
 
     final ObjectFactory factory = new ObjectFactory();
-
     JAXBElement< ? > xmlElements;
     String sFleXml;
 
@@ -253,11 +252,11 @@ public final class SobekModelMember implements ISobekModelMember
       final INode[] nodes = getNodeMembers();
       for( final INode node : nodes )
       {
-        final Location location = PiSobekModelUtils.createLocationFromNode( factory, node );
+        final Location location = PiSobekModelUtils.getInstance().createLocationFromNode( factory, node );
         locationsComplexType.getLocation().add( location );
       }
       // name of target file
-      sFleXml = "locations.xml";
+      sFleXml = "nodes.xml";
     }
     else
       throw new NotImplementedException();

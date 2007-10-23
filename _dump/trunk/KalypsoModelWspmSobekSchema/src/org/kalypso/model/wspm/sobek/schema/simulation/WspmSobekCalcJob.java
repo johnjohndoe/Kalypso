@@ -38,47 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.interfaces;
+package org.kalypso.model.wspm.sobek.schema.simulation;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import java.io.File;
+import java.net.URL;
+
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
- * Generic Node interface, Node implementations and special interface should be derived from this interface!
- * 
- * @author kuch
+ * @author thuel2
  */
-public interface INode
+public class WspmSobekCalcJob implements ISimulation
 {
-  public enum TYPE
+
+  /**
+   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
+   */
+  public URL getSpezifikation( )
   {
-    eBoundaryNode,
-    eConnectionNode,
-    eCrossSectionNode,
-    eLinkageNode
+    // TODO Auto-generated method stub
+    return null;
   }
 
-  public enum FLOW_DIRECTION
+  /**
+   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
+   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
+   */
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
-    eOutflowingBranch,
-    eInflowingBranch;
+    // TODO Auto-generated method stub
+
   }
 
-  public TYPE getType( );
-
-  public String getName( );
-
-  public String getStationName( );
-
-  public String getDescription( );
-
-  public String getId( );
-
-  public Feature getFeature( );
-
-  public GM_Point getLocation( );
-
-  public boolean isEmpty( );
-
-  public void delete( ) throws Exception;
 }

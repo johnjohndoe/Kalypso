@@ -142,4 +142,5 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
 
     return new BoundaryNodeLastfallCondition( lastfall, this, condition, true );
   }
+
 }

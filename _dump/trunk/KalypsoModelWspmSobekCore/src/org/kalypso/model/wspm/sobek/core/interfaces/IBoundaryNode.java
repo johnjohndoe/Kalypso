@@ -78,9 +78,9 @@ public interface IBoundaryNode extends IAbstractConnectionNode
       switch( type )
       {
         case eW:
-          return "bc_q";
-        case eQ:
           return "bc_w";
+        case eQ:
+          return "bc_q";
         case eWQ:
           return "bc_wq";
 
