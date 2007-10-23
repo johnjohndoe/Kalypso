@@ -652,12 +652,23 @@
 			<extension base="wspmSobekCommon:EmptyFeatureBaseType">
 				<sequence>
 					<element name="linkedLastfall" type="wspmSobek:LastfallLinkPropertyType"/>
-					<element name="data" type="om:ObservationType"/>
+					<element name="data"  type="wspmSobek:LastfallDefTablePropertyType"  />
 					<element name="sourceRepositoryObservation" type="obslink:TimeseriesLinkFeatureProperty"/>
 					<element name="observationBegin" type="date" nillable="true"/>
 					<element name="observationEnd" type="date" nillable="true"/>
 				</sequence>
 			</extension>
+		</complexContent>
+	</complexType>
+	<element name="LastfallDefTable" type="wspmSobek:LastfallDefTableType" substitutionGroup="om:Observation" />
+	<complexType name="LastfallDefTablePropertyType">
+		<sequence>
+			<element ref="wspmSobek:LastfallDefTable" />
+		</sequence>
+	</complexType>
+	<complexType name="LastfallDefTableType">
+		<complexContent>
+			<extension base="om:ObservationType" />
 		</complexContent>
 	</complexType>
 	<!-- 
