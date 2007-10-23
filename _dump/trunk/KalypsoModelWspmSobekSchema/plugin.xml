@@ -7,5 +7,12 @@
             class="org.kalypso.model.wspm.sobek.schema.schemata.WspmSobekUrlCatalog"
             id="org.kalypso.model.wspm.sobek.urlcatalog"/>
    </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.model.wspm.sobek.schema.schemata.dict.KalypsoModelWspmSobekSchemaDictionaryCatalogContribution"
+            name="WspmSobekDictionaryCatalogContribution">
+      </catalogContribution>
+   </extension>
 
 </plugin>

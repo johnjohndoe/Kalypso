@@ -311,6 +311,8 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
           tableView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
 
           m_selectedTreeItem = item;
+
+          checkPageCompleted();
         }
       } );
     }
