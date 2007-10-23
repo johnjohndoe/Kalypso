@@ -72,8 +72,6 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
   private LastfallDateChooser m_tsEnds;
 
-  private PageEditBoundaryConditionTimeSeries m_timeSeriesPage;
-
   public PageEditBoundaryConditionGeneral( final IBoundaryNodeLastfallCondition condition )
   {
     super( "editBoundaryConditionGeneral" );

@@ -215,6 +215,10 @@ public class ISobekConstants
 
   public static final QName QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS );
 
+  public static final String P_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES = "sourceRepositoryObservation";
+
+  public static final QName QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES );
+
   public static final String P_HYDRAULIC_NODE_STATION_NAME = "stationName";
 
   public static final QName QN_HYDRAULIC_NODE_STATION_NAME = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_NODE_STATION_NAME );

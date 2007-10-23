@@ -89,6 +89,14 @@ import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
  */
 public class PageEditBoundaryConditionTimeSeries extends WizardPage
 {
+  public enum TS_TYPE
+  {
+    eConstant,
+    eTimeSeries
+  }
+
+  protected ZmlObservationItem m_selectedTreeItem = null;
+
   protected final IBoundaryConditionGeneral m_settings;
 
   private final ISobekModelMember m_model;
@@ -278,6 +286,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
       reposTree.addSelectionChangedListener( new ISelectionChangedListener()
       {
+
         public void selectionChanged( final SelectionChangedEvent event )
         {
           // always remove items first (we don't know which selection we get)
@@ -300,6 +309,8 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
           final PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dateRange ) );
           diagView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
           tableView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+
+          m_selectedTreeItem = item;
         }
       } );
     }
@@ -341,10 +352,8 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     /* time series repository selected? check selection and values! */
     if( m_bTimeSeries.getSelection() )
     {
-      final TreeSelection selection = (TreeSelection) m_reposTree.getSelection();
-      final Object element = selection.getFirstElement();
 
-      if( !(element instanceof ZmlObservationItem) )
+      if( m_selectedTreeItem == null )
       {
         setMessage( null );
         setErrorMessage( "No time series repository item selected." );
@@ -353,8 +362,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
         return;
       }
 
-      final ZmlObservationItem item = (ZmlObservationItem) element;
-      final Object adapter = item.getAdapter( IObservation.class );
+      final Object adapter = m_selectedTreeItem.getAdapter( IObservation.class );
       if( !(adapter instanceof IObservation) )
       {
         setMessage( null );
@@ -423,4 +431,18 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     setPageComplete( true );
   }
 
+  public TS_TYPE getTypeOfTimeSeries( )
+  {
+    if( m_bConstant.getSelection() )
+      return TS_TYPE.eConstant;
+    else if( m_bTimeSeries.getSelection() )
+      return TS_TYPE.eTimeSeries;
+
+    throw new IllegalStateException();
+  }
+
+  public ZmlObservationItem getZmlObservationItem( )
+  {
+    return m_selectedTreeItem;
+  }
 }

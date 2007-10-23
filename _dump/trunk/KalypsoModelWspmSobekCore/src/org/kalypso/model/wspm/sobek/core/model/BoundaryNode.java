@@ -120,6 +120,11 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       {
         public Feature getLinkedFeature( final String id )
         {
+          ILastfall[] lastfalls = lastfall.getModel().getLastfallMembers();
+          for( ILastfall l : lastfalls )
+            if( l.getFeature().getId().equals( id ) )
+              return l.getFeature();
+
           throw new NotImplementedException();
         }
 
@@ -132,15 +137,14 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       final LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
       final Feature fLastfall = wrapper.getFeature();
       if( fLastfall == null )
-        continue; // FIXME throw illegalstateexception
+        throw new IllegalStateException();
 
-// return new BoundaryNodeLastfallCondition( lastfall, this, member );
-      throw new NotImplementedException();
+      if( lastfall.getFeature().equals( fLastfall ) )
+        return new BoundaryNodeLastfallCondition( lastfall, this, member, false );
     }
 
     final Feature condition = NodeUtils.createBoundaryNodeLastfallCondition( lastfall, this );
 
     return new BoundaryNodeLastfallCondition( lastfall, this, condition, true );
   }
-
 }

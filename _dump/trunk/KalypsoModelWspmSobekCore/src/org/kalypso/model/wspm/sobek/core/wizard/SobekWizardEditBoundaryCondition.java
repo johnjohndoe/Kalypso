@@ -40,16 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
+import org.kalypso.model.wspm.sobek.core.wizard.worker.FinishWorkerEditBoundaryCondition;
 
 /**
  * @author kuch
@@ -109,7 +114,15 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
   @Override
   public boolean performFinish( )
   {
-    return true;
+    final ICoreRunnableWithProgress worker = new FinishWorkerEditBoundaryCondition( m_lastfall, m_node, m_general, m_timeSeries );
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, worker );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Error updating boundary condition.", status );
+
+    if( status.isOK() )
+      return true;
+
+    return false;
   }
 
   public IBoundaryNodeLastfallCondition getBoundaryNodeLastfallCondition( )

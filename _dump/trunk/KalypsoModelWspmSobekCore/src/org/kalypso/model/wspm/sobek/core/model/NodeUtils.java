@@ -212,6 +212,10 @@ public class NodeUtils implements INodeUtils
     final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, targetType, boundaryNode.getFeature(), prop, -1, null, selectionManager );
     workspace.postCommand( command );
 
+    /* set linked lastfall! */
+    final Feature condition = command.getNewFeature();
+    FeatureUtils.updateLinkedFeature( condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, lastfall.getFeature().getId() );
+
     return command.getNewFeature();
   }
 }
