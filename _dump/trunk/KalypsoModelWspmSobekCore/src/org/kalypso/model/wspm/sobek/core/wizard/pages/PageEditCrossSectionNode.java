@@ -119,7 +119,7 @@ public class PageEditCrossSectionNode extends WizardPage
     setControl( container );
 
     /* name */
-    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, container );
+    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, "Name", container );
 
     m_name = new WizardFeatureTextBox( m_node, ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -133,7 +133,7 @@ public class PageEditCrossSectionNode extends WizardPage
     } );
 
     /* description */
-    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
+    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, "Description", container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_node, ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.WRAP | SWT.MULTI );

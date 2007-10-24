@@ -95,7 +95,7 @@ public class PageEditLastfall extends WizardPage
     setControl( container );
 
     /* name */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, container );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, "Name", container );
 
     m_name = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -109,7 +109,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* description */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, "Description", container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.MULTI | SWT.WRAP );
@@ -119,7 +119,7 @@ public class PageEditLastfall extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
     /* begin date */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, "Start date", group );
 
     m_dateBegin = new LastfallDateChooser( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
     m_dateBegin.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -133,7 +133,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* end date */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, "End date", group );
 
     m_dateEnd = new LastfallDateChooser( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END );
     m_dateEnd.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -147,7 +147,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* pre simulation time */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME, group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME, "Pre simulation time", group );
 
     m_pre = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME );
     m_pre.draw( group, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER );
@@ -161,7 +161,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* Simulation time step */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP, group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP, "Simulation Timestep", group );
 
     m_timeStep = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP );
     m_timeStep.draw( group, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER );
@@ -175,7 +175,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* Simulation time step multiplier */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER, group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER, "Simulation Timestep Multiplier", group );
 
     m_multiplier = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER );
     m_multiplier.draw( group, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER );

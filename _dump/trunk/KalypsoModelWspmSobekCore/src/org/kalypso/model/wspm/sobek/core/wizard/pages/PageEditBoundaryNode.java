@@ -87,7 +87,7 @@ public class PageEditBoundaryNode extends WizardPage
     setControl( container );
 
     /* name */
-    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, container );
+    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, "Name", container );
 
     m_name = new WizardFeatureTextBox( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -101,13 +101,13 @@ public class PageEditBoundaryNode extends WizardPage
     } );
 
     /* description */
-    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, container, new GridData( GridData.FILL, GridData.FILL, false, false ) );
+    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, "Description", container, new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.MULTI | SWT.WRAP );
 
     /* bc type */
-    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE, container );
+    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE, "Type of boundary condition", container );
 
     m_type = new FacadeComboViewer( new FCVFeatureDelegate( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) );
     m_type.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY );

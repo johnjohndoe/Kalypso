@@ -223,13 +223,13 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     m_subGroup.setText( "Constant value for coorosponding discharge, waterlevel or Q-H relation" );
 
     /* const value */
-    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, m_subGroup );
+    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, "Constant value", m_subGroup );
 
     m_tConstant = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
     m_tConstant.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
 
     /* const intervall */
-    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, m_subGroup );
+    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, "Intervall of value", m_subGroup );
 
     m_tConstantIntervall = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL );
     m_tConstantIntervall.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );

@@ -120,7 +120,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     bt.setEnabled( false );
 
     /* begin date */
-    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, container );
+    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, "Start date", container );
 
     if( m_condition.wasNewlyCreated() )
       m_tsBegins = new LastfallDateChooser( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
@@ -138,7 +138,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     } );
 
     /* end date */
-    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, container );
+    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, "End date", container );
 
     if( m_condition.wasNewlyCreated() )
       m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END );
