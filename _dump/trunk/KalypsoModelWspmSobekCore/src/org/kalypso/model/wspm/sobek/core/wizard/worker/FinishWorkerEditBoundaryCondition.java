@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.sobek.core.wizard.worker;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -51,6 +49,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -59,19 +58,13 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionGeneral;
-import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author kuch
@@ -88,16 +81,13 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
 
   private final IBoundaryNode m_node;
 
-  private final PageEditBoundaryConditionGeneral m_general;
+  private final ITimeSeriesProvider m_provider;
 
-  private final PageEditBoundaryConditionTimeSeries m_timeSeries;
-
-  public FinishWorkerEditBoundaryCondition( final ILastfall lastfall, final IBoundaryNode node, final PageEditBoundaryConditionGeneral general, final PageEditBoundaryConditionTimeSeries timeSeries )
+  public FinishWorkerEditBoundaryCondition( final ILastfall lastfall, final IBoundaryNode node, final ITimeSeriesProvider provider )
   {
     m_lastfall = lastfall;
     m_node = node;
-    m_general = general;
-    m_timeSeries = timeSeries;
+    m_provider = provider;
   }
 
   /**
@@ -105,29 +95,13 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
    */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
+
     try
     {
-      // TODO differ between constant and timeseries
       final IBoundaryNodeLastfallCondition condition = m_node.getLastfallCondition( m_lastfall );
 
-      final Map<QName, Object> changes = new HashMap<QName, Object>();
-
-      /* link to ts repository */
-      final TimeseriesLinkType lnkTimeSeries = new TimeseriesLinkType();
-      final ZmlObservationItem item = m_timeSeries.getZmlObservationItem();
-      final String path = getRelativePath( item.getFile().getPath() );
-      lnkTimeSeries.setHref( path );
-
-      changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnkTimeSeries );
-
-      /* start date */
-      final GregorianCalendar grStart = m_general.getStartDate();
-      changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS, new XMLGregorianCalendarImpl( grStart ) );
-
-      /* end date */
-      final GregorianCalendar grEnd = m_general.getEndDate();
-      changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS, new XMLGregorianCalendarImpl( grEnd ) );
-
+      // map with feature changes
+      final Map<QName, Object> changes = m_provider.getBasicChanges();
       FeatureUtils.updateFeature( condition.getFeature(), changes );
 
       generateTimeSeriesObs( condition );
@@ -137,7 +111,7 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    return null;
+    return Status.OK_STATUS;
   }
 
   private void generateTimeSeriesObs( final IBoundaryNodeLastfallCondition condition )
@@ -174,15 +148,6 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-  }
-
-  /* nofdp relative link to time series repository */
-  private String getRelativePath( final String path )
-  {
-    final String lowerCase = path.toLowerCase();
-    final int index = lowerCase.indexOf( "timeseriesrepository" );
-
-    return "project:/" + path.substring( index );
   }
 
 }

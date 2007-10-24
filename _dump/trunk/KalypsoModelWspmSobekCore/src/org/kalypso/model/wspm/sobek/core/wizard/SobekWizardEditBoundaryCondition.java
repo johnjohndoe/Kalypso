@@ -54,7 +54,10 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
+import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries.TS_TYPE;
+import org.kalypso.model.wspm.sobek.core.wizard.worker.AbstractTimeSeriesProvider;
 import org.kalypso.model.wspm.sobek.core.wizard.worker.FinishWorkerEditBoundaryCondition;
+import org.kalypso.model.wspm.sobek.core.wizard.worker.ITimeSeriesProvider;
 
 /**
  * @author kuch
@@ -114,7 +117,10 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
   @Override
   public boolean performFinish( )
   {
-    final ICoreRunnableWithProgress worker = new FinishWorkerEditBoundaryCondition( m_lastfall, m_node, m_general, m_timeSeries );
+    final TS_TYPE type = m_timeSeries.getTypeOfTimeSeries();
+    final ITimeSeriesProvider provider = AbstractTimeSeriesProvider.createProvider( type, m_general, m_timeSeries );
+
+    final ICoreRunnableWithProgress worker = new FinishWorkerEditBoundaryCondition( m_lastfall, m_node, provider );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, worker );
     ErrorDialog.openError( getShell(), getWindowTitle(), "Error updating boundary condition.", status );

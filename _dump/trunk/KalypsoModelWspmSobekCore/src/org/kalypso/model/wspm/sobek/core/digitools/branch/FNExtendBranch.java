@@ -156,6 +156,9 @@ public class FNExtendBranch extends AbstractWidget
   @Override
   public void leftClicked( final Point p )
   {
+    if( m_snapPainter == null )
+      return;
+
     if( !check() )
       reinit();
 

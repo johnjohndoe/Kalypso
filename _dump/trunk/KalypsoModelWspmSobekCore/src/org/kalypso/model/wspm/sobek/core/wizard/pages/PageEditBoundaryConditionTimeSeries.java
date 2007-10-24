@@ -41,25 +41,24 @@
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import java.awt.Frame;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -92,8 +91,30 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
   public enum TS_TYPE
   {
     eConstant,
-    eTimeSeries
+    eTimeSeries;
+
+    /**
+     * @see java.lang.Enum#toString()
+     */
+    @Override
+    public String toString( )
+    {
+      final TS_TYPE type = TS_TYPE.valueOf( name() );
+      switch( type )
+      {
+        case eConstant:
+          return "Set a constant value for corrosponding discharge, waterlevel or Q-H relation";
+
+        case eTimeSeries:
+          return "Select a time series from the time series repository.";
+
+        default:
+          throw new NotImplementedException();
+      }
+    }
   }
+
+  protected TS_TYPE m_type = TS_TYPE.eTimeSeries;
 
   protected ZmlObservationItem m_selectedTreeItem = null;
 
@@ -101,13 +122,11 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
   private final ISobekModelMember m_model;
 
-  protected Button m_bTimeSeries;
-
-  protected Button m_bConstant;
-
   private TreeViewer m_reposTree;
 
   private Text m_tConstant;
+
+  protected Group m_subGroup;
 
   public PageEditBoundaryConditionTimeSeries( final ISobekModelMember model, final IBoundaryConditionGeneral settings )
   {
@@ -144,98 +163,73 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     gMapping.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     gMapping.setText( "Type of boundary condition data input" );
 
-    m_bTimeSeries = new Button( gMapping, SWT.RADIO );
-    m_bTimeSeries.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
-    m_bTimeSeries.setText( "Select a time series from the time series repository." );
+    final TS_TYPE[] input = new TS_TYPE[] { TS_TYPE.eTimeSeries, TS_TYPE.eConstant };
 
-    m_bConstant = new Button( gMapping, SWT.RADIO );
-    m_bConstant.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
-    m_bConstant.setText( "Set a constant value for corrosponding discharge, waterlevel or Q-H relation" );
+    final ComboViewer viewer = new ComboViewer( gMapping, SWT.READ_ONLY | SWT.BORDER );
+    viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    viewer.setLabelProvider( new LabelProvider() );
+    viewer.setContentProvider( new ArrayContentProvider() );
 
-    /* time series repository */
-    final Group gRepos = new Group( container, SWT.NULL );
-    gRepos.setLayout( new GridLayout( 2, false ) );
-    gRepos.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    gRepos.setText( "Time Series Repository" );
+    viewer.setInput( input );
 
-    final List<Control> tsControls = renderRepositorySection( gRepos );
-
-    /* constant value */
-    final Group gConstant = new Group( container, SWT.NULL );
-    gConstant.setLayout( new GridLayout( 2, false ) );
-    gConstant.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    gConstant.setText( "Constant value for coorosponding discharge, waterlevel or Q-H relation" );
-
-    final List<Control> vControls = renderConstantValue( gConstant );
-
-    m_bTimeSeries.addSelectionListener( new SelectionAdapter()
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
+
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        if( m_bTimeSeries.getSelection() )
+        final StructuredSelection selection = (StructuredSelection) event.getSelection();
+        m_type = (TS_TYPE) selection.getFirstElement();
+
+        if( m_subGroup != null )
         {
-          for( final Control control : tsControls )
-            control.setEnabled( true );
+          if( !m_subGroup.isDisposed() )
+            m_subGroup.dispose();
 
-          for( final Control control : vControls )
-            control.setEnabled( false );
-
+          m_subGroup = null;
         }
 
+        switch( m_type )
+        {
+          case eConstant:
+            renderConstantValue( container );
+            break;
+
+          case eTimeSeries:
+            renderTimeSeriesRepository( container );
+            break;
+        }
+
+        container.layout();
       }
     } );
 
-    m_bConstant.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        if( m_bConstant.getSelection() )
-        {
-          for( final Control control : tsControls )
-            control.setEnabled( false );
-
-          for( final Control control : vControls )
-            control.setEnabled( true );
-        }
-      }
-    } );
-
-    /* set selection */
-    m_bTimeSeries.setSelection( true );
-    for( final Control control : tsControls )
-      control.setEnabled( true );
-    for( final Control control : vControls )
-      control.setEnabled( false );
+    viewer.setSelection( new StructuredSelection( TS_TYPE.eTimeSeries ) );
 
     checkPageCompleted();
   }
 
-  private List<Control> renderConstantValue( final Composite cBody )
+  protected void renderConstantValue( final Composite parent )
   {
-    final List<Control> controls = new ArrayList<Control>();
+    m_subGroup = new Group( parent, SWT.NULL );
+    m_subGroup.setLayout( new GridLayout( 2, false ) );
+    m_subGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    m_subGroup.setText( "Constant value for coorosponding discharge, waterlevel or Q-H relation" );
 
-    new Label( cBody, SWT.NONE ).setText( "Value" );
+    new Label( m_subGroup, SWT.NONE ).setText( "Value" );
 
-    m_tConstant = new Text( cBody, SWT.BORDER );
+    m_tConstant = new Text( m_subGroup, SWT.BORDER );
     m_tConstant.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    controls.add( m_tConstant );
 
-    return controls;
   }
 
-  private List<Control> renderRepositorySection( final Composite repos )
+  protected void renderTimeSeriesRepository( final Composite parent )
   {
-    final List<Control> controls = new ArrayList<Control>();
+    m_subGroup = new Group( parent, SWT.NULL );
+    m_subGroup.setLayout( new GridLayout( 2, false ) );
+    m_subGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_subGroup.setText( "Time Series Repository" );
 
-    final Composite cBrowser = new Composite( repos, SWT.NULL );
+    final Composite cBrowser = new Composite( m_subGroup, SWT.NULL );
     final GridData ld = new GridData( GridData.FILL, GridData.FILL, false, true );
     ld.widthHint = ld.minimumWidth = 200;
     cBrowser.setLayoutData( ld );
@@ -244,9 +238,8 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     cBrowser.setLayout( bLayout );
 
     m_reposTree = getTSBrowser( cBrowser );
-    controls.add( m_reposTree.getTree() );
 
-    final Composite cClient = new Composite( repos, SWT.NULL );
+    final Composite cClient = new Composite( m_subGroup, SWT.NULL );
     cClient.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     final GridLayout cLayout = new GridLayout( 2, true );
     cLayout.marginWidth = bLayout.horizontalSpacing = 0;
@@ -254,14 +247,12 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
     renderDetails( m_reposTree, cClient );
 
-    return controls;
   }
 
   private void renderDetails( final TreeViewer reposTree, final Composite body )
   {
     try
     {
-
       /* diagramm */
       final Composite cDiagram = new Composite( body, SWT.NULL );
       cDiagram.setLayout( new FillLayout() );
@@ -352,7 +343,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
   protected void checkPageCompleted( )
   {
     /* time series repository selected? check selection and values! */
-    if( m_bTimeSeries.getSelection() )
+    if( TS_TYPE.eTimeSeries.equals( m_type ) )
     {
 
       if( m_selectedTreeItem == null )
@@ -404,7 +395,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
         return;
       }
     }
-    else if( m_bConstant.getSelection() )
+    else if( TS_TYPE.eConstant.equals( m_type ) )
     {
       if( m_tConstant.getText() == null || m_tConstant.getText().trim().equals( "" ) )
       {
@@ -435,16 +426,12 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
   public TS_TYPE getTypeOfTimeSeries( )
   {
-    if( m_bConstant.getSelection() )
-      return TS_TYPE.eConstant;
-    else if( m_bTimeSeries.getSelection() )
-      return TS_TYPE.eTimeSeries;
-
-    throw new IllegalStateException();
+    return m_type;
   }
 
   public ZmlObservationItem getZmlObservationItem( )
   {
     return m_selectedTreeItem;
   }
+
 }

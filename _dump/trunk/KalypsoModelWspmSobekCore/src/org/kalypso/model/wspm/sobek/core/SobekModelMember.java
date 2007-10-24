@@ -56,13 +56,11 @@ import javax.xml.namespace.QName;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import nl.wldelft.fews.pi.BranchComplexType;
 import nl.wldelft.fews.pi.BranchesComplexType;
 import nl.wldelft.fews.pi.CrossSectionsComplexType;
 import nl.wldelft.fews.pi.GeoDatumEnumStringType;
 import nl.wldelft.fews.pi.LocationsComplexType;
 import nl.wldelft.fews.pi.ObjectFactory;
-import nl.wldelft.fews.pi.CrossSectionsComplexType.CrossSection;
 import nl.wldelft.fews.pi.LocationsComplexType.Location;
 
 import org.apache.commons.io.FileUtils;
@@ -77,7 +75,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember.TARGET;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
 import org.kalypso.model.wspm.sobek.core.model.Lastfall;
@@ -275,8 +272,9 @@ public final class SobekModelMember implements ISobekModelMember
       final IBranch[] branches = getBranchMembers();
       for( final IBranch branch : branches )
       {
-        final BranchComplexType piBranch = PiSobekModelUtils.getInstance().createPiBranchFromBranch( factory, branch );
-        branchesComplexType.getBranch().add( piBranch );
+        // FIXME
+// final BranchComplexType piBranch = PiSobekModelUtils.getInstance().createPiBranchFromBranch( factory, branch );
+// branchesComplexType.getBranch().add( piBranch );
       }
       // name of target file
       sFleXml = "Branches.xml";
@@ -291,8 +289,9 @@ public final class SobekModelMember implements ISobekModelMember
       final ICrossSectionNode[] crossSectionNodes = getCrossSectionNodeMembers();
       for( final ICrossSectionNode csNode : crossSectionNodes )
       {
-        final CrossSection cs = PiSobekModelUtils.getInstance().createCrossSectionFromCSNode( factory, csNode );
-        crossSectionsComplexType.getCrossSection().add( cs );
+        // FIXME
+// final CrossSection cs = PiSobekModelUtils.getInstance().createCrossSectionFromCSNode( factory, csNode );
+// crossSectionsComplexType.getCrossSection().add( cs );
       }
       sFleXml = "CrossSections.xml";
       getNodeMembers();
@@ -347,12 +346,8 @@ public final class SobekModelMember implements ISobekModelMember
     final INode[] allNodes = getNodeMembers();
     final List<ICrossSectionNode> crossSectionsNodes = new ArrayList<ICrossSectionNode>();
     for( final INode node : allNodes )
-    {
       if( node instanceof ICrossSectionNode )
-      {
         crossSectionsNodes.add( (ICrossSectionNode) node );
-      }
-    }
     return crossSectionsNodes.toArray( new ICrossSectionNode[] {} );
   }
 
@@ -375,12 +370,10 @@ public final class SobekModelMember implements ISobekModelMember
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#writePi(java.net.URL)
    */
-  public void writePi( URL targetDir ) throws IOException, GM_Exception
+  public void writePi( final URL targetDir ) throws IOException, GM_Exception
   {
     final TARGET[] values = TARGET.values();
-    for( TARGET target : values )
-    {
+    for( final TARGET target : values )
       writePi( targetDir, target );
-    }
   }
 }

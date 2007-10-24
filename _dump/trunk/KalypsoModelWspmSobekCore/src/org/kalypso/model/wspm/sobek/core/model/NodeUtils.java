@@ -203,7 +203,6 @@ public class NodeUtils implements INodeUtils
 
   public static Feature createBoundaryNodeLastfallCondition( final ILastfall lastfall, final IBoundaryNode boundaryNode ) throws Exception
   {
-
     final IRelationType prop = (IRelationType) boundaryNode.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
     final IFeatureType targetType = prop.getTargetFeatureType();
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
@@ -214,7 +213,7 @@ public class NodeUtils implements INodeUtils
 
     /* set linked lastfall! */
     final Feature condition = command.getNewFeature();
-    FeatureUtils.updateLinkedFeature( condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, lastfall.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, "#" + lastfall.getFeature().getId() );
 
     return command.getNewFeature();
   }
