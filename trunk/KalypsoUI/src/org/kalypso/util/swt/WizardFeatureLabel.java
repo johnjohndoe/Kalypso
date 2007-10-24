@@ -72,6 +72,36 @@ public class WizardFeatureLabel
     draw( annotation.getLabel(), body, gridData );
   }
 
+  public WizardFeatureLabel( final String text, final Composite body, final GridData gridData )
+  {
+    draw( text, body, gridData );
+  }
+
+  public WizardFeatureLabel( final Feature feature, final QName qname, final String fallback, final Composite body )
+  {
+    if( feature == null )
+
+      draw( fallback, body, new GridData( GridData.FILL, GridData.CENTER, false, false ) );
+    else
+    {
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType().getProperty( qname ) );
+      draw( annotation.getLabel(), body, new GridData( GridData.FILL, GridData.CENTER, false, false ) );
+    }
+
+  }
+
+  public WizardFeatureLabel( final Feature feature, final QName qname, final String fallback, final Composite body, final GridData gridData )
+  {
+    if( feature == null )
+      draw( fallback, body, gridData );
+    else
+    {
+      final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType().getProperty( qname ) );
+      draw( annotation.getLabel(), body, gridData );
+    }
+
+  }
+
   private void draw( final String text, final Composite body, final GridData gridData )
   {
     final Label label = new Label( body, SWT.NONE );
