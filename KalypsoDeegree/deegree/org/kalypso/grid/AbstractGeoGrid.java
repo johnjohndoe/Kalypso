@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -116,52 +113,6 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   }
 
   /**
-   * @return Midpoint of Rasterposition x,y and sets its value to the corresponding cell value.
-   */
-  public final Coordinate calcCoordinate( final int x, final int y, final Coordinate c ) throws GeoGridException
-  {
-    final Coordinate coordinate = GeoGridUtilities.toCoordinate( this, x, y, c );
-
-    final double value = getValueChecked( x, y );
-    coordinate.z = value;
-    return coordinate;
-  }
-
-  /**
-   * Simple, straightforward implementation of the interface method.
-   * <p>
-   * Override in order to optimize according to the underlying (real) grid.
-   * </p>
-   * 
-   * @see org.kalypso.grid.IGeoGrid#walk(org.kalypso.grid.IGeoGridWalker, org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public final Object walk( final IGeoGridWalker pwo, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException
-  {
-    final int sizeX = getSizeX();
-    final int sizeY = getSizeY();
-    if( monitor != null )
-      monitor.beginTask( "Raster wird durchlaufen", sizeY );
-
-    pwo.start( this );
-
-    final Coordinate tmpCrd = new Coordinate();
-
-    for( int y = 0; y < sizeY; y++ )
-    {
-      for( int x = 0; x < sizeX; x++ )
-        pwo.operate( x, y, calcCoordinate( x, y, tmpCrd ) );
-
-      if( monitor != null )
-        monitor.worked( 1 );
-
-      if( monitor != null && monitor.isCanceled() )
-        throw new OperationCanceledException( "Abbruch durch Benutzer" );
-    }
-
-    return pwo.finish();
-  }
-
-  /**
    * @see org.kalypso.gis.doubleraster.IDoubleProvider#getValue(Coordinate)
    */
   public double getValue( final Coordinate crd ) throws GeoGridException
@@ -195,6 +146,14 @@ public abstract class AbstractGeoGrid implements IGeoGrid
     dispose();
 
     super.finalize();
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getWalkingStrategy()
+   */
+  public IGeoWalkingStrategy getWalkingStrategy( )
+  {
+    return new DefaultWalkingStrategy();
   }
 
 }

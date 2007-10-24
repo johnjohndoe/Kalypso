@@ -73,8 +73,6 @@ public class RectifiedGridDomain
 
   private final GM_Surface<GM_SurfacePatch> m_rasterBoundaryAsSurface;
 
-  private String m_noDataValue;
-
   /**
    * constructs a RectifiedGridDomain with the given origin, offset and gridRange
    * 
@@ -105,9 +103,10 @@ public class RectifiedGridDomain
     final GM_Position pos2 = offsetY.move( pos1, maxY - minY );
     final GM_Position pos3 = offsetY.move( pos0, maxY - minY );
     final GM_Position[] ring = new GM_Position[] { pos0, pos1, pos2, pos3, pos0 };
-    final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( ring, null, new GM_SurfaceInterpolation_Impl(), origin.getCoordinateSystem() );
+    final CS_CoordinateSystem originCrs = origin.getCoordinateSystem();
+    final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( ring, null, new GM_SurfaceInterpolation_Impl(), originCrs );
 
-    if( origin.getCoordinateSystem().equals( cs ) )
+    if( originCrs == null || cs == null || originCrs.equals( cs ) )
       return surface;
 
     final GeoTransformer geoTrans = new GeoTransformer( cs );
@@ -191,14 +190,15 @@ public class RectifiedGridDomain
    */
   public GM_Envelope getGM_Envelope( final CS_CoordinateSystem cs ) throws Exception
   {
-    if( m_origin.getCoordinateSystem().equals( cs ) )
+    final CS_CoordinateSystem originCrs = m_origin.getCoordinateSystem();
+    if( originCrs == null || cs == null || originCrs.equals( cs ) )
       return m_rasterBoundaryAsSurface.getEnvelope();
 
     final GeoTransformer geoTrans = new GeoTransformer( cs );
     return geoTrans.transform( m_rasterBoundaryAsSurface ).getEnvelope();
   }
 
-  public GM_Surface getGM_Surface( final int lowX, final int lowY, final int highX, final int highY, final CS_CoordinateSystem cs ) throws Exception
+  public GM_Surface<GM_SurfacePatch> getGM_Surface( final int lowX, final int lowY, final int highX, final int highY, final CS_CoordinateSystem cs ) throws Exception
   {
     return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, lowX, lowY, highX, highY, cs );
   }
@@ -256,15 +256,5 @@ public class RectifiedGridDomain
   public GM_Position getPositionAt( final int x, final int y )
   {
     return m_offsetY.move( m_offsetX.move( m_origin.getPosition(), x ), y );
-  }
-
-  public void setNoDataValue( final String noDataValue )
-  {
-    m_noDataValue = noDataValue;
-  }
-
-  public String getNoDataValue( )
-  {
-    return m_noDataValue;
   }
 }

@@ -55,8 +55,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -64,7 +62,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -639,7 +636,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final int y = 0;
     final int w = getWidth();
     final int h = getHeight();
-    
+
     synchronized( this )
     {
       m_shouldPaint = false;
@@ -665,8 +662,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         // Why -2 ?
         m_projection.setDestRect( x - 2, y - 2, w + x, h + y );
 
-        m_modellPainter = m_mapModellPainter;        
-        
+        m_modellPainter = m_mapModellPainter;
+
         // delay the Schedule, so if another invalidate comes within that timespan, no repaint happens
         m_mapModellPainter.schedule( 250 );
       }

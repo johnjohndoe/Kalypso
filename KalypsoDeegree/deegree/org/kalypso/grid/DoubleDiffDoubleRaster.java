@@ -109,4 +109,5 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
   {
     return m_raster.getSizeY();
   }
+
 }

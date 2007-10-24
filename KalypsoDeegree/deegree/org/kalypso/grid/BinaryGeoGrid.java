@@ -85,7 +85,7 @@ import com.vividsolutions.jts.util.Assert;
  * @authro Thomas Jung
  * @author Gernot Belger
  */
-public class BinaryGeoGrid extends AbstractGeoGrid implements IGeoGrid
+public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 {
   private final static int HEADER_SIZE = 4 * 4;
 
@@ -94,7 +94,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   /* Buffer for encoding read/written integers. */
   private final byte[] m_intBuffer = new byte[4];
 
-  private final RandomAccessFile m_randomAccessFile;
+  private RandomAccessFile m_randomAccessFile;
 
   /* If set, this file will be deleted on dispose. Used if grid is hold in temporary file. */
   private final File m_binFile;
@@ -342,7 +342,10 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IGeoGrid
     try
     {
       if( m_randomAccessFile != null )
+      {
         m_randomAccessFile.close();
+        m_randomAccessFile = null;
+      }
     }
     catch( final IOException e )
     {

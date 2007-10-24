@@ -16,6 +16,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVec
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML31;
+import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -98,12 +99,15 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     final Element e_point = ownerDocument.createElementNS( NS.GML3, "gml:Point" );
     try
     {
-      e_point.setAttribute( "srsName", origin.getCoordinateSystem().getName() );
+      final CS_CoordinateSystem coordinateSystem = origin.getCoordinateSystem();
+      if( coordinateSystem != null )
+        e_point.setAttribute( "srsName", coordinateSystem.getName() );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
+
     final Element e_coordinates = ownerDocument.createElementNS( NS.GML3, "gml:pos" );
     // e_coordinates.setAttribute( "cs", "," );
     // e_coordinates.setAttribute( "decimal", "." );
@@ -160,8 +164,6 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     {
       final AdapterBindingToValue adapter = new AdapterBindingToValue_GML31();
       final GM_Point origin = (GM_Point) adapter.wrapFromNode( n_point );
-      System.out.println( "OriginX: " + origin.getX() + ", OriginY: " + origin.getY() );
-      System.out.println( "CoordinateSystem: " + origin.getCoordinateSystem().getName() );
 
       final NodeList nl_offSetVector = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "offsetVector" );
       final List<RectifiedGridDomain.OffsetVector> offSetVectors = new ArrayList<OffsetVector>();

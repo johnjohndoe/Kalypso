@@ -64,6 +64,8 @@ public class GridMetaReaderAscii implements IGridMetaReader
 
   private final URL m_urlImage;
 
+  private String m_noDataValue;
+
   public GridMetaReaderAscii( final URL urlImage, final CS_CoordinateSystem cs )
   {
     m_urlImage = urlImage;
@@ -78,7 +80,9 @@ public class GridMetaReaderAscii implements IGridMetaReader
 
     try
     {
-      m_domain = ConvertAscii2Coverage.importGridArc( new File( m_urlImage.getFile() ), m_cs );
+      final AscciiGridReader reader = new AscciiGridReader( new File( m_urlImage.getFile() ) );
+      m_domain = ConvertAscii2Coverage.importGridArc( reader, m_cs );
+      m_noDataValue = reader.getNoDataValue();
     }
     catch( final Exception e )
     {
@@ -181,6 +185,6 @@ public class GridMetaReaderAscii implements IGridMetaReader
 
   public String getNoDataValue( )
   {
-    return m_domain.getNoDataValue();
+    return m_noDataValue;
   }
 }
