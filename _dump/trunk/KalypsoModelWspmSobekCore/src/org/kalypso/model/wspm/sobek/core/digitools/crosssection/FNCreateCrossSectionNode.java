@@ -74,6 +74,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class FNCreateCrossSectionNode extends AbstractWidget
 {
+  final static private java.awt.Cursor CURSOR_CROSSHAIR = java.awt.Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
+
+  final static private java.awt.Cursor CURSOR_DEFAULT = java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
+
   protected FNSnapPainterCreateProfileNode m_snapPainter = null;
 
   private GM_Point m_pos;
@@ -168,11 +172,9 @@ public class FNCreateCrossSectionNode extends AbstractWidget
         {
           m_snappedBranchPoint = point;
 
-          final java.awt.Cursor cursor = java.awt.Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
-          getMapPanel().setCursor( cursor );
+          getMapPanel().setCursor( FNCreateCrossSectionNode.CURSOR_CROSSHAIR );
           getMapPanel().setMessage( "select profile by drawing a rectangle with help of left mouse button..." );
         }
-
       }
     }
     catch( final Exception e )
@@ -254,8 +256,8 @@ public class FNCreateCrossSectionNode extends AbstractWidget
   {
     try
     {
-      final java.awt.Cursor cursor = java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
-      getMapPanel().setCursor( cursor );
+
+      getMapPanel().setCursor( FNCreateCrossSectionNode.CURSOR_DEFAULT );
 
       getMapPanel().setMessage( "" );
 
