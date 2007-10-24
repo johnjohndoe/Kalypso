@@ -60,8 +60,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryLabelProvider;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryTreeContentProvider;
@@ -82,6 +82,8 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
+import org.kalypso.util.swt.WizardFeatureLabel;
+import org.kalypso.util.swt.WizardFeatureTextBox;
 
 /**
  * @author kuch
@@ -124,14 +126,19 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
   private TreeViewer m_reposTree;
 
-  private Text m_tConstant;
+  private WizardFeatureTextBox m_tConstant;
 
   protected Group m_subGroup;
 
-  public PageEditBoundaryConditionTimeSeries( final ISobekModelMember model, final IBoundaryConditionGeneral settings )
+  private final IBoundaryNodeLastfallCondition m_condition;
+
+  private WizardFeatureTextBox m_tConstantIntervall;
+
+  public PageEditBoundaryConditionTimeSeries( final ISobekModelMember model, final IBoundaryNodeLastfallCondition condition, final IBoundaryConditionGeneral settings )
   {
     super( "editBoundaryConditionTimeSeries" );
     m_model = model;
+    m_condition = condition;
     m_settings = settings;
 
     setTitle( "Edit boundary condition" );
@@ -215,11 +222,17 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     m_subGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_subGroup.setText( "Constant value for coorosponding discharge, waterlevel or Q-H relation" );
 
-    new Label( m_subGroup, SWT.NONE ).setText( "Value" );
+    /* const value */
+    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, m_subGroup );
 
-    m_tConstant = new Text( m_subGroup, SWT.BORDER );
-    m_tConstant.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    m_tConstant = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
+    m_tConstant.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
 
+    /* const intervall */
+    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, m_subGroup );
+
+    m_tConstantIntervall = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL );
+    m_tConstantIntervall.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
   }
 
   protected void renderTimeSeriesRepository( final Composite parent )

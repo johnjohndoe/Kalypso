@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.IFCVDelegate;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -118,8 +119,7 @@ public class PageEditCrossSectionNode extends WizardPage
     setControl( container );
 
     /* name */
-    final Label lName = new Label( container, SWT.NONE );
-    lName.setText( "Name" );
+    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, container );
 
     m_name = new WizardFeatureTextBox( m_node, ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -133,9 +133,7 @@ public class PageEditCrossSectionNode extends WizardPage
     } );
 
     /* description */
-    final Label lDescription = new Label( container, SWT.NONE );
-    lDescription.setText( "Description" );
-    lDescription.setLayoutData( new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
+    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_node, ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.WRAP | SWT.MULTI );

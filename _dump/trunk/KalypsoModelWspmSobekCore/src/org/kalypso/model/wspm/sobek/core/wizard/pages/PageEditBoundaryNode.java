@@ -46,11 +46,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.util.swt.FCVFeatureDelegate;
+import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 
 /**
@@ -87,8 +87,7 @@ public class PageEditBoundaryNode extends WizardPage
     setControl( container );
 
     /* name */
-    final Label lName = new Label( container, SWT.NONE );
-    lName.setText( "Name" );
+    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, container );
 
     m_name = new WizardFeatureTextBox( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -102,16 +101,13 @@ public class PageEditBoundaryNode extends WizardPage
     } );
 
     /* description */
-    final Label lDescription = new Label( container, SWT.NONE );
-    lDescription.setLayoutData( new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
-    lDescription.setText( "Description" );
+    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, container, new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.MULTI | SWT.WRAP );
 
     /* bc type */
-    final Label lType = new Label( container, SWT.NONE );
-    lType.setText( "Boundary Node Type" );
+    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE, container );
 
     m_type = new FacadeComboViewer( new FCVFeatureDelegate( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) );
     m_type.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY );

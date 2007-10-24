@@ -51,13 +51,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.LastfallDateChooser;
 import org.kalypso.util.swt.FCVFeatureDelegate;
+import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -98,28 +98,29 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     iGroup.setText( "Info" );
 
     /* lastfall */
-    new Label( iGroup, SWT.NONE ).setText( "Loading case" );
+// new Label( iGroup, SWT.NONE ).setText( "Loading case" );
+    new WizardFeatureLabel( "Loading case", iGroup );
 
     final WizardFeatureTextBox lf = new WizardFeatureTextBox( m_condition.getLastfall().getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     lf.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     lf.setEnabled( false );
 
     /* boundary node */
-    new Label( iGroup, SWT.NONE ).setText( "Boundary node" );
+    new WizardFeatureLabel( "Boundary node", iGroup );
 
     final WizardFeatureTextBox bn = new WizardFeatureTextBox( m_condition.getBoundaryNode().getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     bn.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     bn.setEnabled( false );
 
     /* bc type */
-    new Label( iGroup, SWT.NONE ).setText( "Type of boundary node" );
+    new WizardFeatureLabel( "Type of boundary node", iGroup );
 
     final FacadeComboViewer bt = new FacadeComboViewer( new FCVFeatureDelegate( m_condition.getBoundaryNode().getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) );
     bt.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY );
     bt.setEnabled( false );
 
     /* begin date */
-    new Label( container, SWT.NONE ).setText( "Time series starts" );
+    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, container );
 
     if( m_condition.wasNewlyCreated() )
       m_tsBegins = new LastfallDateChooser( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
@@ -137,7 +138,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     } );
 
     /* end date */
-    new Label( container, SWT.NONE ).setText( "Time series ends" );
+    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, container );
 
     if( m_condition.wasNewlyCreated() )
       m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END );

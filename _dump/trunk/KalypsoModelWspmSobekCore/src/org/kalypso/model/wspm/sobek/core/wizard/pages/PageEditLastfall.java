@@ -48,10 +48,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.LastfallDateChooser;
+import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 
 /**
@@ -95,8 +95,7 @@ public class PageEditLastfall extends WizardPage
     setControl( container );
 
     /* name */
-    final Label lName = new Label( container, SWT.NONE );
-    lName.setText( "Name" );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, container );
 
     m_name = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -110,9 +109,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* description */
-    final Label lDescription = new Label( container, SWT.NONE );
-    lDescription.setText( "Description" );
-    lDescription.setLayoutData( new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.MULTI | SWT.WRAP );
@@ -122,8 +119,7 @@ public class PageEditLastfall extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
     /* begin date */
-    final Label lBegin = new Label( group, SWT.NONE );
-    lBegin.setText( "Loading Case begins" );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, group );
 
     m_dateBegin = new LastfallDateChooser( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
     m_dateBegin.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -137,8 +133,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* end date */
-    final Label lEnd = new Label( group, SWT.NONE );
-    lEnd.setText( "Loading Case ends" );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, group );
 
     m_dateEnd = new LastfallDateChooser( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END );
     m_dateEnd.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -152,8 +147,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* pre simulation time */
-    final Label lPre = new Label( group, SWT.NONE );
-    lPre.setText( "Pre simulation time" );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME, group );
 
     m_pre = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME );
     m_pre.draw( group, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER );
@@ -167,8 +161,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* Simulation time step */
-    final Label lTimeStep = new Label( group, SWT.NONE );
-    lTimeStep.setText( "Simulation timestep" );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP, group );
 
     m_timeStep = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP );
     m_timeStep.draw( group, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER );
@@ -182,8 +175,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* Simulation time step multiplier */
-    final Label lMultiplier = new Label( group, SWT.NONE );
-    lMultiplier.setText( "Simulation timestep multiplier" );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER, group );
 
     m_multiplier = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER );
     m_multiplier.draw( group, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER );
