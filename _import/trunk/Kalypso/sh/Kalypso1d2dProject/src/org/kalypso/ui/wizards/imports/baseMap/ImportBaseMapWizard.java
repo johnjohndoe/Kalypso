@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.baseMap;
 
@@ -123,12 +123,12 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     super();
 
     /* Get the dialog settings. */
-    IDialogSettings dialogSettings = getDialogSettings();
+    final IDialogSettings dialogSettings = getDialogSettings();
 
     /* If not available, add a section inside the settings of the plugin. */
     if( dialogSettings == null )
     {
-      IDialogSettings settings = Kalypso1d2dProjectPlugin.getDefault().getDialogSettings();
+      final IDialogSettings settings = Kalypso1d2dProjectPlugin.getDefault().getDialogSettings();
 
       /* Cannot do anything, if even the plugin has no settings. */
       if( settings == null )
@@ -153,7 +153,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
    * @param selection
    *            the current object selection
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
@@ -164,7 +164,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) );
 
     // read service catalog file
-    InputStream is = getClass().getResourceAsStream( "wms.catalog" );
+    final InputStream is = getClass().getResourceAsStream( "wms.catalog" );
     try
     {
       readCatalog( is );
@@ -198,7 +198,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
   private SelectedPage getSelectedPage( )
   {
-    IWizardPage currentPage = getContainer().getCurrentPage();
+    final IWizardPage currentPage = getContainer().getCurrentPage();
     if( currentPage == m_PageImportImg )
       return SelectedPage.PageImportIMG;
     if( currentPage == m_PageImportShp )
@@ -271,7 +271,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     }
   }
 
-  private boolean performFinishIMG( MapView mapView, GisTemplateMapModell mapModell )
+  private boolean performFinishIMG( final MapView mapView, final GisTemplateMapModell mapModell )
   {
     final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" );
 
@@ -280,7 +280,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       {
         dstFilePath.create( true, true, null );
       }
-      catch( CoreException e1 )
+      catch( final CoreException e1 )
       {
         e1.printStackTrace();
       }
@@ -336,25 +336,25 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, extension, null, imgHref );
       mapView.postCommand( command, null );
     }
-    catch( InvocationTargetException e )
+    catch( final InvocationTargetException e )
     {
       e.printStackTrace();
       return false;
     }
-    catch( InterruptedException e )
+    catch( final InterruptedException e )
     {
       // User canceled, so stop but donít close wizard.
       e.printStackTrace();
       return false;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
     return true;
   }
 
-  private boolean performFinishSHP( MapView mapView, GisTemplateMapModell mapModell )
+  private boolean performFinishSHP( final MapView mapView, final GisTemplateMapModell mapModell )
   {
     final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" );
 
@@ -363,7 +363,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       {
         dstFilePath.create( true, true, null );
       }
-      catch( CoreException e1 )
+      catch( final CoreException e1 )
       {
         e1.printStackTrace();
       }
@@ -421,25 +421,25 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "shape", "featureMember", shpHref );
       mapView.postCommand( command, null );
     }
-    catch( InvocationTargetException e )
+    catch( final InvocationTargetException e )
     {
       e.printStackTrace();
       return false;
     }
-    catch( InterruptedException e )
+    catch( final InterruptedException e )
     {
       // User canceled, so stop but donít close wizard.
       e.printStackTrace();
       return false;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
     return true;
   }
 
-  private boolean performFinishWMS( MapView mapView, GisTemplateMapModell mapModell )
+  private boolean performFinishWMS( final MapView mapView, final GisTemplateMapModell mapModell )
   {
     /* Finishes the work on this page (dialog settings). */
     m_PageImportWMS.finish();
@@ -474,7 +474,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
           }
         }
 
-        String providerID = m_PageImportWMS.getProviderID();
+        final String providerID = m_PageImportWMS.getProviderID();
         if( providerID != null )
           provider.append( providerID );
 
@@ -488,9 +488,8 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       }
       else
       {
-        for( int i = 0; i < layerArray.length; i++ )
+        for( final Layer layer : layerArray )
         {
-          final Layer layer = layerArray[i];
           final String layerName = layer.getName();
           final String styleName;
           final Style[] styles2 = layer.getStyles();
@@ -499,7 +498,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
           else
             styleName = "default";
 
-          String providerID = m_PageImportWMS.getProviderID();
+          final String providerID = m_PageImportWMS.getProviderID();
           if( providerID != null )
             provider.append( providerID );
 
@@ -514,7 +513,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
