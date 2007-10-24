@@ -926,7 +926,7 @@
         Profilunterteilungen durch Ziehen der blauen Stützpunkte individuell
         der Profilgeometrie anzupassen. Hier gilt wiederum, dass die äußersten
         Knoten nicht verschoben werden können, da dies die definierten
-        Schnittstellen mit den Uferlinien sind. </para>
+        Schnittstellen mit den Uferlinien sind.</para>
 
         <para>Folgende Funktionen sind in der Profilansicht möglich:</para>
 
@@ -1813,7 +1813,12 @@
       <primary>Rauheitsmodellierung Kalypso 1D2D</primary>
     </indexterm>
 
-    <para></para>
+    <para>Für die Rauheitsmodellierung müssen Sie die Rauheitsshapes
+    importiert haben (siehe <xref linkend="Kalypso1D2DImportRoughness" />).
+    Die Rauheitsmodellierung besteht aus zwei Schritten. Im ersten Schritt
+    werden die Rauheitswerte in einer Tabelle bearbeitet. Im zweiten Schritt
+    können die Rauheitszonen in der Karte bearbeitet werden und z. B. neue
+    Rauheitspolygone erstellt werden.</para>
 
     <section>
       <title>Rauheitswerte bearbeiten</title>
@@ -1822,13 +1827,47 @@
         <primary>Rauheitswerte bearbeiten</primary>
       </indexterm>
 
-      <para><guilabel>Rauheitsdatenbank:</guilabel></para>
+      <para>Wenn Sie die Rauheitswerte bearbeiten möchten, öffnen Sie den Baum
+      <guimenuitem>Preprozessing &gt; Rauheitsmodellierung</guimenuitem>. Die
+      Rauheitsdatenbank wird geöffnet, wenn Sie <guimenuitem>Rauheitswerte
+      bearbeiten</guimenuitem> mit einem Doppelklick öffnen.</para>
 
-      <para><guilabel>Rauheitsklassen:</guilabel></para>
+      <para>In der ersten Ansicht sind vier Tabellen zu sehen. Die Spalten der
+      obersten Tabelle (Fließwiderstandsklassifizierungen) haben die selben
+      Bezeichnungen wie die anderen Tabelle dieser Ansicht: </para>
 
-      <para>Per Rechtsklick auf das Tabellenfeld kann zwischen verschieden
-      Funktionen um die Tabelle zu bearbeiten gewählt werden. Eine neue Zeile
-      wird automatisch zu oberst eingefügt.</para>
+      <itemizedlist>
+        <listitem>
+          <para>Rauheitsklassen,</para>
+        </listitem>
+
+        <listitem>
+          <para>Vegetationsklassen und</para>
+        </listitem>
+
+        <listitem>
+          <para>Virbelviskosität</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Die Einträge der Tabelle Fließwiderstandsklassifizierungen sind
+      mit den entsprechenden anderen Tabellen verlinkt. Diese Funktionalität
+      wird aber für jede Tabelle im Folgenden separat erläutert.</para>
+
+      <para><emphasis role="bold">Rauheitsklassen:</emphasis> </para>
+
+      <para>Jedem Element muss eine Rauheitsklasse zugeordnet sein. Zu jeder
+      Rauheitsklasse gehört ein bestimmter k<subscript>S</subscript>-Wert. Die
+      standardmäßig voreingestellten Werte setzen sich aus den Werten aus der
+      Literatur (BWK- und DVWK-Merkblatt) und aus Erfahrungswerten der Stör
+      zusammen. Die Quelle ist zum Teil der Spalte Beschreibung zu entnehmen.
+      Die voreingestellte Rauheitsklassenzuordnung stammt aus der importierten
+      Shape-Datei. Der Name für die einzelnen Elemente kann also von Ihnen
+      frei gewählt werden. </para>
+
+      <para>Um die Einträge in der Tabelle zu bearbeiten, klicken Sie mit der
+      rechten Maustaste auf den gewünschten Eintrag. Die Funktionalitäten sind
+      der folgenden Abbildung zu entnehmen.</para>
 
       <para><mediaobject>
           <imageobject>
@@ -1836,11 +1875,20 @@
           </imageobject>
         </mediaobject></para>
 
-      <para><guilabel>Bewuchsklassen:</guilabel></para>
+      <para>Wenn Sie eine neue Zeile hinzufügen wollen, wählen Sie Neues
+      Feature. Die neue Zeile wird immer oberhalb der ausgewählten Zeile
+      hinzugefügt. </para>
 
-      <para>Per Rechtsklick auf das Tabellenfeld kann zwischen verschieden
-      Funktionen um die Tabelle zu bearbeiten gewählt werden. Eine neue Zeile
-      wird automatisch zu oberst eingefügt</para>
+      <para><emphasis role="bold">Vegetationsklassen:</emphasis> </para>
+
+      <para>Die Eingabe bzw. Verlinkung einer Vegetationsklasse ist optional.
+      In der Tabelle können Sie die Abstände des Bewuchses sowohl in x- als
+      auch in y-Richtung einstellen (ax, ay) sowie den Durchmesser (dp).
+      </para>
+
+      <para>Um die Einträge in der Tabelle zu bearbeiten, klicken Sie mit der
+      rechten Maustaste auf den gewünschten Eintrag. Die Funktionalitäten sind
+      der folgenden Abbildung zu entnehmen.</para>
 
       <para><mediaobject>
           <imageobject>
@@ -1848,7 +1896,21 @@
           </imageobject>
         </mediaobject></para>
 
-      <para><guilabel>Wirbelviskosität:</guilabel></para>
+      <para>Wenn Sie eine neue Zeile hinzufügen wollen, wählen Sie Neues
+      Feature. Die neue Zeile wird immer oberhalb der ausgewählten Zeile
+      hinzugefügt.</para>
+
+      <para>Um die Einträge zu verlinken, klicken Sie in der Tabelle
+      Fließwiderstandsklassifizierung auf den gewünschten Eintrag wo
+      standardmäßig <guibutton>&lt;kein Link&gt;</guibutton> zu sehen ist. Es
+      öffnet sich ein Pulldownmenü, in dem Sie den gewünschten Namen des
+      Bewuchses auswählen können. Um eine Verlinkung wieder rückgängig zu
+      machen, wählen Sie einfach im Pulldownmenü wieder <guimenuitem>&lt;kein
+      Link&gt;</guimenuitem> aus.</para>
+
+      <para><emphasis role="bold">Wirbelviskosität:</emphasis></para>
+
+      <para></para>
 
       <para><guilabel>Fließwiderstandsklassifizierung:</guilabel></para>
 
@@ -1927,7 +1989,7 @@
       </itemizedlist>
 
       <para>Wenn Sie das entsprechende Kästchen mit einem Häkchen markiert
-      haben, klicken Sie auf <guibutton>Fertig stellen</guibutton>. </para>
+      haben, klicken Sie auf <guibutton>Fertig stellen</guibutton>.</para>
 
       <figure>
         <title>Assistent zum exportieren von FE-Netzen</title>
