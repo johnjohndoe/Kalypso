@@ -43,19 +43,29 @@ package org.kalypso.model.wspm.sobek.core.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.wldelft.fews.pi.BranchComplexType;
+import nl.wldelft.fews.pi.CrossSectionXdataComplexType;
+import nl.wldelft.fews.pi.NodePointComplexType;
 import nl.wldelft.fews.pi.ObjectFactory;
+import nl.wldelft.fews.pi.CrossSectionsComplexType.CrossSection;
 import nl.wldelft.fews.pi.LocationsComplexType.Location;
 
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author thuel2
@@ -143,5 +153,71 @@ public class PiSobekModelUtils
       }
     }
     return location;
+  }
+
+  public BranchComplexType createPiBranchFromBranch( ObjectFactory factory, IBranch branch ) throws GM_Exception
+  {
+    BranchComplexType piBranch = factory.createBranchComplexType();
+    piBranch.setBranchId( branch.getId() );
+    piBranch.setBranchName( branch.getName() );
+    final String description = branch.getDescription();
+    if( !(description == null) )
+      piBranch.setComment( description );
+    piBranch.setDownNode( branch.getLowerNode().getId() );
+    piBranch.setUpNode( branch.getUpperNode().getId() );
+
+    piBranch.setStartChainage( 0.0 );
+    final GM_Curve lineGeom = branch.getGeometryProperty();
+    piBranch.setEndChainage( lineGeom.getLength() );
+
+    // at first list of pt's represent true geometry of the branch
+    final GM_Position[] positions = lineGeom.getAsLineString().getPositions();
+    if( positions.length > 0 )
+    {
+      final Coordinate jtsFirstPos = JTSAdapter.export( positions[0] );
+      double chainage = 0;
+
+      for( final GM_Position position : positions )
+      {
+        final NodePointComplexType pt = factory.createNodePointComplexType();
+        pt.setX( position.getX() );
+        pt.setY( position.getY() );
+        pt.setLabel( "" ); // label has to be set but will be ignored by import to Sobek
+
+        chainage = chainage + JTSUtilities.getLengthBetweenPoints( jtsFirstPos, JTSAdapter.export( position ) );
+        pt.setChainage( chainage ); // chainage has to be set but will be ignored by import to Sobek
+
+        piBranch.getPt().add( pt );
+      }
+    }
+
+    return piBranch;
+  }
+
+  public CrossSection createCrossSectionFromCSNode( ObjectFactory factory, ICrossSectionNode csNode )
+  {
+    CrossSection piCrossSection = factory.createCrossSectionsComplexTypeCrossSection();
+//TODO
+    piCrossSection.setCrossSectionID( "csID" );
+    piCrossSection.setBranchId( csNode.getLinkToBranch().getId() );
+//    TODO
+    piCrossSection.setCrossSectionName( "csName" );
+    piCrossSection.setLabel( "" ); // label has to be set but will be ignored by import to Sobek
+    final String description = csNode.getDescription();
+    if( !(description == null) )
+      piCrossSection.setComment( description );
+    
+    piCrossSection.setRoughnessType( "Sobek.RoughnessType.StricklerKs" ); // nofdp default kSt
+
+// TODO loop crossSectiondata
+    final CrossSectionXdataComplexType csData = factory.createCrossSectionXdataComplexType();
+    csData.setCsy( 2.3 );
+    csData.setZ( 2.3 );
+    csData.setRoughness( 2.3 );
+    
+    piCrossSection.getCrossSectionData().add( csData );
+    
+
+    return piCrossSection;
   }
 }

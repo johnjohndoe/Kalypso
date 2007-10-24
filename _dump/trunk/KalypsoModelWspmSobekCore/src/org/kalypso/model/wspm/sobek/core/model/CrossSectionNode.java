@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -78,4 +80,24 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
   {
     return true;
   }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode#getLinkToBranch()
+   */
+  public IBranch getLinkToBranch( )
+  {
+      final Object objBranch = getFeature().getProperty( ISobekConstants.QN_LN_LINKS_TO_BRANCH );
+      final Feature f;
+      if( objBranch instanceof Feature )
+        // this branch should never be reached according to the schema file
+        f = (Feature) objBranch;
+      else
+        f = getFeature().getWorkspace().getFeature( (String) objBranch );
+      
+      final IBranch result = new Branch( getModel(), f );
+      
+      if( result == null )
+        return null;
+      return result;
+    }
 }

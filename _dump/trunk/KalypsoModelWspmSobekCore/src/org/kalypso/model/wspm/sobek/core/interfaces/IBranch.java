@@ -63,4 +63,6 @@ public interface IBranch
   void setUpperNode( INode upperNode ) throws Exception;
 
   void setLowerNode( INode lowerNode ) throws Exception;
+
+  String getDescription( );
 }

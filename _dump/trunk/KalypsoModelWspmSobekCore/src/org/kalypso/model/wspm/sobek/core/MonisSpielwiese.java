@@ -74,7 +74,7 @@ public class MonisSpielwiese extends TestCase
       final ISobekModelMember sobekModel = SobekModelMember.getModel( sobekModelFeat[0], null );
 
       final URL targetDir = fleTarget.toURL();
-      sobekModel.writePi( targetDir, TARGET.eLocations );
+      sobekModel.writePi( targetDir);
     }
 
     catch( final Exception e )

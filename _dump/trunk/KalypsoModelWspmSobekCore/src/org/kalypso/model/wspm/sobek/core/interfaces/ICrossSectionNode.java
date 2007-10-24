@@ -45,5 +45,5 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
  */
 public interface ICrossSectionNode extends INode
 {
-
+  public IBranch getLinkToBranch( );
 }

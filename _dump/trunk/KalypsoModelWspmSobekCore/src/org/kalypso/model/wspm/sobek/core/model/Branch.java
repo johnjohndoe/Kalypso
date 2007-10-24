@@ -45,7 +45,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
@@ -66,14 +65,14 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  */
 public class Branch implements IBranch
 {
-  public static String createBranchId( final IModelMember model )
+  public static String createBranchId( IModelMember model )
   {
     int count = 0;
 
-    final IBranch[] branches = model.getBranchMembers();
+    IBranch[] branches = model.getBranchMembers();
     for( final IBranch branch : branches )
     {
-      final String branchId = branch.getId();
+      String branchId = branch.getId();
       if( branchId == null )
         continue;
 
@@ -93,7 +92,7 @@ public class Branch implements IBranch
 
   protected final IModelMember m_model;
 
-  public Branch( final IModelMember model, final Feature branch )
+  public Branch( IModelMember model, Feature branch )
   {
     m_model = model;
     m_branch = branch;
@@ -111,12 +110,15 @@ public class Branch implements IBranch
     nodes.add( getUpperNode() );
     nodes.add( getLowerNode() );
 
-    for( final INode node : nodes )
+    for( INode node : nodes )
+    {
       if( node instanceof IAbstractConnectionNode )
       {
-        final IAbstractConnectionNode n = (IAbstractConnectionNode) node;
+        IAbstractConnectionNode n = (IAbstractConnectionNode) node;
         n.removeBranch( this );
       }
+
+    }
 
     // deletes empty nodes
     FNGmlUtils.cleanUpNodes( m_model, this );
@@ -129,13 +131,13 @@ public class Branch implements IBranch
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( final Object obj )
+  public boolean equals( Object obj )
   {
     if( obj instanceof IBranch )
     {
-      final IBranch branch = (IBranch) obj;
-      final Feature feature = branch.getFeature();
-      final EqualsBuilder builder = new EqualsBuilder();
+      IBranch branch = (IBranch) obj;
+      Feature feature = branch.getFeature();
+      EqualsBuilder builder = new EqualsBuilder();
       builder.append( getFeature(), feature );
 
       return builder.isEquals();
@@ -181,12 +183,12 @@ public class Branch implements IBranch
    */
   public String getName( )
   {
-    throw new NotImplementedException();
+    return (String) m_branch.getProperty( ISobekConstants.QN_HYDRAULIC_NAME );
   }
 
   private INode getNode( final QName lnkBranch )
   {
-    final ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
+    ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
     {
 
       public Feature getLinkedFeature( String id )
@@ -232,7 +234,7 @@ public class Branch implements IBranch
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#setLowerNode(org.kalypso.model.wspm.sobek.core.interfaces.INode)
    */
-  public void setLowerNode( final INode node ) throws Exception
+  public void setLowerNode( INode node ) throws Exception
   {
     FeatureUtils.updateLinkedFeature( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + node.getFeature().getId() );
   }
@@ -240,8 +242,19 @@ public class Branch implements IBranch
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#setUpperNode(org.kalypso.model.wspm.sobek.core.interfaces.INode)
    */
-  public void setUpperNode( final INode node ) throws Exception
+  public void setUpperNode( INode node ) throws Exception
   {
     FeatureUtils.updateLinkedFeature( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + node.getFeature().getId() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getDescription()
+   */
+  public String getDescription( )
+  {
+    final Object description = m_branch.getProperty( ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
+    if (description == null)
+      return null;
+    return (String) description;
   }
 }
