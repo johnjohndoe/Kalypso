@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
-import java.io.File;
-
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -70,10 +68,8 @@ public abstract class ConvertAscii2Coverage
    *            the coordinate system for the geometric data of the ascii-grid
    * @return RectifiedGridCoverage
    */
-  public static RectifiedGridDomain importGridArc( final File in, final CS_CoordinateSystem cs ) throws Exception
+  public static RectifiedGridDomain importGridArc( final AscciiGridReader reader, final CS_CoordinateSystem cs ) throws Exception
   {
-    final AscciiGridReader reader = new AscciiGridReader( in );
-
     final int nCols = new Integer( reader.getCols() ).intValue();
     final int nRows = new Integer( reader.getRows() ).intValue();
 
@@ -88,13 +84,10 @@ public abstract class ConvertAscii2Coverage
 
     final GM_Point origin = GeometryFactory.createGM_Point( originCornerX, adjustedCornerY, cs );
 
-    final String noDataValue = reader.getNoDataValue();
-
     final double[] low = { 0.0, 0.0 };
     final double[] high = { nCols, nRows };
     final GridRange gridRange = new GridRange_Impl( low, high );
     final RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
-    gridDomain.setNoDataValue( noDataValue );
 
     return gridDomain;
   }

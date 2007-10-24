@@ -63,14 +63,20 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridCell;
+import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
@@ -104,7 +110,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     if( m_grid == null )
     {
       final Feature feature = getFeature();
-      m_grid = new RectifiedGridCoverageGeoGrid( feature );
+      m_grid = getCachedGrid( feature );
     }
 
     return m_grid;
@@ -114,7 +120,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   {
     if( m_grid != null )
     {
-      m_grid.dispose();
+// m_grid.dispose();
       m_grid = null;
     }
   }
@@ -217,6 +223,71 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     g.setColor( color );
     g.fillRect( (int) paintMinX, (int) paintMaxY, width, height );
+  }
+
+  //
+  // THE GRID CACHE
+  //
+
+  private static final Map<GridCacheKey, WeakReference<IGeoGrid>> WEAK_CACHE = new HashMap<GridCacheKey, WeakReference<IGeoGrid>>();
+
+  private static synchronized IGeoGrid getCachedGrid( final Feature feature ) throws Exception
+  {
+    final GridCacheKey gridCacheKey = new GridCacheKey( feature.getId(), feature.getWorkspace().getContext() );
+
+    final WeakReference<IGeoGrid> ref = WEAK_CACHE.get( gridCacheKey );
+    if( ref != null )
+    {
+      final IGeoGrid cachedGrid = ref.get();
+      if( cachedGrid != null )
+        return cachedGrid;
+    }
+
+    // Grid not available, create it
+    final IGeoGrid newGrid = new RectifiedGridCoverageGeoGrid( feature );
+
+    final WeakReference<IGeoGrid> newRef = new WeakReference<IGeoGrid>( newGrid );
+    WEAK_CACHE.put( gridCacheKey, newRef );
+
+    return newGrid;
+  }
+
+  /**
+   * Key class used for caching the grids.
+   */
+  private static class GridCacheKey
+  {
+    // REMARK: all fields appear to be unsused, but they are: via reflection in equals() and hashCode()
+
+    @SuppressWarnings("unused")
+    private final String m_featureId;
+
+    @SuppressWarnings("unused")
+    private final URL m_url;
+
+    public GridCacheKey( final String featureId, final URL url )
+    {
+      m_featureId = featureId;
+      m_url = url;
+    }
+
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( final Object obj )
+    {
+      return EqualsBuilder.reflectionEquals( this, obj );
+    }
+
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode( )
+    {
+      return HashCodeBuilder.reflectionHashCode( this );
+    }
   }
 
 }

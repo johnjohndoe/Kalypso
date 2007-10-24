@@ -1,8 +1,5 @@
 package org.kalypso.grid;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -54,7 +51,8 @@ public interface IGeoGrid extends IGeoValueProvider
   public Coordinate getOffsetY( ) throws GeoGridException;
 
   /**
-   * Apply the given walker to this grid
+   * Returns a walking strategy suitable to iterate thorugh this grid.
    */
-  public Object walk( final IGeoGridWalker pwo, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException;
+  public IGeoWalkingStrategy getWalkingStrategy( ) throws GeoGridException;
+
 }

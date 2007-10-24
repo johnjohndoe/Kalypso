@@ -8,7 +8,6 @@ import javax.xml.namespace.QName;
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -83,7 +82,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
         if( file != null )
         {
           final URL url = new URL( m_context, file.getFileName() );
-          m_grid = GeoGridCache.getGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY );
+          m_grid = GeoGridUtilities.createGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY );
         }
       }
       catch( final IOException e )
@@ -134,8 +133,8 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   public void dispose( )
   {
     // do not dipose the grid, we access it via the weak-cache
-// if( m_grid != null )
-// m_grid.dispose();
+    if( m_grid != null )
+      m_grid.dispose();
   }
 
   /**
@@ -143,24 +142,22 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
    */
   public double getValueChecked( final int x, final int y ) throws GeoGridException
   {
-    final IGeoGrid grid = getGrid();
-    if( grid == null )
+    if( (x < 0) || (x >= getSizeX()) || (y < 0) || (y >= getSizeX()) )
       return Double.NaN;
 
-    return grid.getValueChecked( x, y );
+    return getValue( x, y );
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.IDoubleGeoGrid#walk(org.kalypso.gis.doubleraster.DoubleRasterWalker,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.grid.IGeoGrid#getWalkingStrategy()
    */
-  public Object walk( final IGeoGridWalker pwo, final IProgressMonitor monitor ) throws GeoGridException
+  public IGeoWalkingStrategy getWalkingStrategy( ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
     if( grid == null )
       return null;
 
-    return grid.walk( pwo, monitor );
+    return grid.getWalkingStrategy();
   }
 
   /**

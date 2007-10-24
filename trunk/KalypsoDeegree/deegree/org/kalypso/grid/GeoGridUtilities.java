@@ -40,16 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypsodeegree.model.coverage.GridRange;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
+import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Helper class for {@link IGeoGrid}s.
@@ -178,7 +188,8 @@ public class GeoGridUtilities
   }
 
   /**
-   * Converts a gml-coverage to a {@link IGeoGrid}.
+   * Converts a gml-coverage to a {@link IGeoGrid}.<br>
+   * After use, the grid has to be disposed.
    */
   public static IGeoGrid toGrid( final ICoverage coverage ) throws Exception
   {
@@ -201,7 +212,7 @@ public class GeoGridUtilities
       {
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
-        grid.walk( walker, monitor );
+        grid.getWalkingStrategy().walk( grid, walker, monitor );
 
         ProgressUtilities.worked( monitor, 1 );
       }
@@ -210,6 +221,102 @@ public class GeoGridUtilities
     {
       monitor.done();
     }
+  }
+
+  public static IWriteableGeoGrid createWriteableGrid( final String mimeType, final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
+  {
+    // HACK: internal binary grid
+    if( mimeType.endsWith( "/bin" ) )
+      return BinaryGeoGrid.createGrid( file, sizeX, sizeY, scale, origin, offsetX, offsetY );
+
+    throw new UnsupportedOperationException( "Mime-Type not supported for writing: " + mimeType );
+  }
+
+  /**
+   * Reads values from the given {@link IGeoGrid} and write it out into a new file which is then added as a new coverage
+   * to the outputCoverages.
+   * 
+   * @param coverages
+   *            The new coverage will be added to this collection
+   * @param grid
+   *            The values of the new coverage will be read from this grid.
+   * @param file
+   *            The new coverage will be serialized to this file.
+   * @param filePath
+   *            the (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *            file.
+   * @param mimeType
+   *            The mime type of the created underlying file.
+   * @throws GeoGridException
+   *             If the acces to the given grid fails.
+   * @throws IOException
+   *             If writing to the output file fails.
+   * @throws CoreException
+   *             If the monitor is cancelled.
+   */
+  public static ICoverage addCoverage( final ICoverageCollection coverages, final IGeoGrid grid, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
+  {
+    final SubMonitor progress = SubMonitor.convert( monitor, "Coverage wird erzeugt", 100 );
+
+    /* Create new grid file and copy all values */
+    final int scale = 2;
+    IWriteableGeoGrid outputGrid = null;
+    try
+    {
+      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY() );
+
+      ProgressUtilities.worked( monitor, 20 );
+
+      final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
+
+      grid.getWalkingStrategy().walk( grid, walker, progress.newChild( 70 ) );
+
+      outputGrid.dispose();
+
+      /* create new coverage and fill domain/range */
+      final ICoverage coverage = CoverageCollection.addCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
+
+      ProgressUtilities.worked( progress, 10 );
+
+      return coverage;
+    }
+    finally
+    {
+      if( outputGrid != null )
+        outputGrid.dispose();
+
+      progress.done();
+    }
+  }
+
+  private static RectifiedGridDomain toGridDomain( final IGeoGrid grid ) throws Exception
+  {
+    final Point jtsOrigin = JTSAdapter.jtsFactory.createPoint( grid.getOrigin() );
+    final GM_Point gmOrigin = (GM_Point) JTSAdapter.wrap( jtsOrigin );
+
+    final Coordinate jtsOffsetX = grid.getOffsetX();
+    final Coordinate jtsOffsetY = grid.getOffsetY();
+    final OffsetVector offsetX = new RectifiedGridDomain.OffsetVector( jtsOffsetX.x, jtsOffsetX.y );
+    final OffsetVector offsetY = new RectifiedGridDomain.OffsetVector( jtsOffsetY.x, jtsOffsetY.y );
+
+    final double[] lows = new double[] { 0, 0 };
+    final double[] highs = new double[] { grid.getSizeX(), grid.getSizeY() };
+
+    final GridRange gridRange = new GridRange_Impl( lows, highs );
+
+    return new RectifiedGridDomain( gmOrigin, offsetX, offsetY, gridRange );
+  }
+
+  /**
+   * @return Midpoint of Rasterposition x,y and sets its value to the corresponding cell value.
+   */
+  public static final Coordinate calcCoordinate( final IGeoGrid grid, final int x, final int y, final Coordinate c ) throws GeoGridException
+  {
+    final Coordinate coordinate = GeoGridUtilities.toCoordinate( grid, x, y, c );
+
+    final double value = grid.getValueChecked( x, y );
+    coordinate.z = value;
+    return coordinate;
   }
 
 }

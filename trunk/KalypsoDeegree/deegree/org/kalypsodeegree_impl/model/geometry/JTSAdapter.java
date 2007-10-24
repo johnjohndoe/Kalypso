@@ -100,10 +100,10 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 public class JTSAdapter
 {
   // precision model that is used for all JTS-Geometries
-  private static PrecisionModel pm = new PrecisionModel();
+  public static PrecisionModel pm = new PrecisionModel();
 
   // factory for creating JTS-Geometries
-  private static com.vividsolutions.jts.geom.GeometryFactory jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory( pm, 0 );
+  public static com.vividsolutions.jts.geom.GeometryFactory jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory( pm, 0 );
 
   /**
    * Converts a <tt>GM_Object</tt> to a corresponding JTS- <tt>Geometry</tt> object.

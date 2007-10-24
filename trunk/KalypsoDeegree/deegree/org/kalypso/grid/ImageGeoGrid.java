@@ -57,7 +57,6 @@ import com.vividsolutions.jts.geom.Coordinate;
  * slow (several seconds), but succeeding access is accpetable fast. However, no remarkable memory consumption is
  * noticed.
  * </p>
- * TODO:Override the <code>walk</code> method in order to optimize the access for tiles.
  * 
  * @author Dejan
  */
@@ -114,7 +113,8 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   @Override
   public void dispose( )
   {
-    m_image.dispose();
+    if( m_image != null )
+      m_image.dispose();
     m_image = null;
   }
 

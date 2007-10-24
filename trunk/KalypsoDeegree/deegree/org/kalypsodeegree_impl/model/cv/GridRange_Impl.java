@@ -38,7 +38,7 @@
  Germany
  E-Mail: jens.fitzke@uni-bonn.de
 
- 
+
  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.cv;
 
@@ -46,7 +46,6 @@ import org.kalypsodeegree.model.coverage.GridRange;
 
 /**
  * Implements the range of valid coordinates for each dimension of the coverage.
- * 
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -61,7 +60,7 @@ public class GridRange_Impl implements GridRange
 
   private double[] m_high = null;
 
-  public GridRange_Impl( double[] low, double[] high )
+  public GridRange_Impl( final double[] low, final double[] high )
   {
     this.m_low = low;
     this.m_high = high;
@@ -70,9 +69,8 @@ public class GridRange_Impl implements GridRange
   /**
    * The valid maximum exclusive grid coordinate. The sequence contains a maximum value for each dimension of the grid
    * coverage.
-   *  
    */
-  public double[] getHigh()
+  public double[] getHigh( )
   {
     return m_high;
   }
@@ -80,15 +78,14 @@ public class GridRange_Impl implements GridRange
   /**
    * The valid minimum inclusive grid coordinate. The sequence contains a minimum value for each dimension of the grid
    * coverage. The lowest valid grid coordinate is zero.
-   *  
    */
-  public double[] getLow()
+  public double[] getLow( )
   {
     return m_low;
   }
 
   @Override
-  public Object clone()
+  public Object clone( )
   {
     return new GridRange_Impl( m_low.clone(), m_high.clone() );
   }
