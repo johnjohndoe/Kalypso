@@ -4,13 +4,12 @@ import java.io.File;
 import java.rmi.RemoteException;
 
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.raster.GridUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
 import org.opengis.cs.CS_CoordinateSystem;
 
 public class AsciiRasterInfo
@@ -29,9 +28,9 @@ public class AsciiRasterInfo
 
   private int m_rasterSizeY;
 
-  private File m_rasterFile;
+  private final File m_rasterFile;
 
-  private RectifiedGridCoverage2 m_gridCoverage;
+  private RectifiedGridCoverage m_gridCoverage;
 
   public AsciiRasterInfo( final String rasterFileAbsolutePath ) throws Exception
   {
@@ -42,7 +41,7 @@ public class AsciiRasterInfo
 
   private void init( ) throws Exception
   {
-    m_gridCoverage = GridUtils.importGridArc( m_rasterFile, m_coordinateSystem );
+    // m_gridCoverage = GeoGridUtilities.importGridArc( m_rasterFile, m_coordinateSystem );
     final RectifiedGridDomain gridDomain = m_gridCoverage.getGridDomain();
     m_rasterSizeX = gridDomain.getNumColumns();
     m_rasterSizeY = gridDomain.getNumRows();
@@ -56,8 +55,9 @@ public class AsciiRasterInfo
   {
     return m_gridCoverage.getFeature();
   }
-  
-  public RectifiedGridDomain getGridDomain(){
+
+  public RectifiedGridDomain getGridDomain( )
+  {
     return m_gridCoverage.getGridDomain();
   }
 
@@ -93,7 +93,7 @@ public class AsciiRasterInfo
       final String csName = m_coordinateSystem.getName();
       return new String[] { m_rasterFile.getName(), getReturnPeriod() > 0 ? Integer.toString( getReturnPeriod() ) : "", csName };
     }
-    catch( RemoteException e )
+    catch( final RemoteException e )
     {
       return new String[] { m_rasterFile.getName(), getReturnPeriod() > 0 ? Integer.toString( getReturnPeriod() ) : "", "" };
     }
@@ -121,14 +121,14 @@ public class AsciiRasterInfo
       init();
       return true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       m_coordinateSystem = oldCoordinateSystem;
       try
       {
         init();
       }
-      catch( Exception e1 )
+      catch( final Exception e1 )
       {
         e1.printStackTrace();
       }
@@ -147,7 +147,7 @@ public class AsciiRasterInfo
     {
       return m_coordinateSystem.getName();
     }
-    catch( RemoteException e )
+    catch( final RemoteException e )
     {
       e.printStackTrace();
       return "null";
@@ -159,7 +159,7 @@ public class AsciiRasterInfo
     return m_rasterFile;
   }
 
-  public RectifiedGridCoverage2 getGridCoverage( )
+  public RectifiedGridCoverage getGridCoverage( )
   {
     return m_gridCoverage;
   }

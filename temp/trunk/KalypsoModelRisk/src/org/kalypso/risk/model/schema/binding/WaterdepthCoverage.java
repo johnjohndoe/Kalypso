@@ -3,8 +3,8 @@ package org.kalypso.risk.model.schema.binding;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 public class WaterdepthCoverage extends AbstractFeatureBinder implements IWaterdepthCoverage
 {

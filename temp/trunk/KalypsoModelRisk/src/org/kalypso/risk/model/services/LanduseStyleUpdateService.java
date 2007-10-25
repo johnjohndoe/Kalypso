@@ -56,7 +56,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
-import org.kalypso.risk.model.schema.binding.ILanduseClassCollection;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.ui.KalypsoGisPlugin;

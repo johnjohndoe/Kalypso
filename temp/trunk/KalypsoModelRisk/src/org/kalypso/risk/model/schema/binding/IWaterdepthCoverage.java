@@ -7,7 +7,7 @@ import ogc31.www.opengis.net.gml.RangeSetType;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 public interface IWaterdepthCoverage extends IFeatureWrapper2
 {

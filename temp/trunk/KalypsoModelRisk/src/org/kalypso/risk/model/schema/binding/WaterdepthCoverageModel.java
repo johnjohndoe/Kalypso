@@ -2,7 +2,7 @@ package org.kalypso.risk.model.schema.binding;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 public class WaterdepthCoverageModel extends AbstractFeatureBinder implements IWaterdepthCoverageModel
 {
