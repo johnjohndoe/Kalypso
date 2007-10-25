@@ -48,7 +48,6 @@ import junit.framework.TestCase;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember.TARGET;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

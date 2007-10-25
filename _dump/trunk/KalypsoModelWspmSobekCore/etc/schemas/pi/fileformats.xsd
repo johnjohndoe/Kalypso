@@ -6,6 +6,9 @@
 		<appinfo>
 			<!-- typesafeEnumBase = "string" -->
 			<jxb:globalBindings fixedAttributeAsConstantProperty="true"/>
+			<jxb:schemaBindings>
+				<jxb:package name="nl.wldelft.fews.pi" />
+			</jxb:schemaBindings>
 		</appinfo>
 	</annotation>
 	<include schemaLocation="pi_branches.xsd"/>
