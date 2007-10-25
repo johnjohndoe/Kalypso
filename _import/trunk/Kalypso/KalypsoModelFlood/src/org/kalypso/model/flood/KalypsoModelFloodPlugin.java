@@ -1,6 +1,7 @@
 package org.kalypso.model.flood;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -13,6 +14,8 @@ public class KalypsoModelFloodPlugin extends AbstractUIPlugin
 
   // The shared instance
   private static KalypsoModelFloodPlugin plugin;
+
+  private PluginImageProvider m_imageProvider;
 
   /**
    * The constructor
@@ -29,6 +32,10 @@ public class KalypsoModelFloodPlugin extends AbstractUIPlugin
   public void start( BundleContext context ) throws Exception
   {
     super.start( context );
+
+    // delete tmp images both on startup and shutdown
+    m_imageProvider = new PluginImageProvider( this );
+    m_imageProvider.resetTmpFiles();
   }
 
   /**
@@ -37,6 +44,10 @@ public class KalypsoModelFloodPlugin extends AbstractUIPlugin
   @Override
   public void stop( BundleContext context ) throws Exception
   {
+    // delete tmp images both on startup and shutdown
+    m_imageProvider.resetTmpFiles();
+    m_imageProvider = null;
+
     plugin = null;
     super.stop( context );
   }
@@ -49,6 +60,11 @@ public class KalypsoModelFloodPlugin extends AbstractUIPlugin
   public static KalypsoModelFloodPlugin getDefault( )
   {
     return plugin;
+  }
+
+  public static PluginImageProvider getImageProvider( )
+  {
+    return getDefault().m_imageProvider;
   }
 
 }

@@ -40,24 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.binding;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.internal.adaptor.IModel;
-import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Thomas Jung
- * 
  */
-public interface IFloodModelPolygon extends IModel
+public class FloodClipPolygon extends AbstractFeatureBinder implements IFloodClipPolygon
 {
-  public static final QName QNAME_PROP_CHILDREN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "childMember" );
-
-  public static final QName QNAME_PROP_PARENT = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "parentMember" );
-
-  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "ResultMeta" );
-
-  public void setStatus( IStatus status );
-
+  public FloodClipPolygon( Feature featureToBind )
+  {
+    super( featureToBind, IFloodClipPolygon.QNAME );
+  }
 }

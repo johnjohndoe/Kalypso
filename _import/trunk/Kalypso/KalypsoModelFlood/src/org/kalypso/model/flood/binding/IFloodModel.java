@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.flood.binding;
 
-package org.kalypso.model.flood.schema;
+import javax.xml.namespace.QName;
 
-import java.net.URL;
-import java.util.Map;
-
-import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
- * Catalog which provides the url to the flood model schema
- * 
  * @author Thomas Jung
  */
-public class UrlCatalogModelFlood extends AbstractUrlCatalog
+public interface IFloodModel extends IModel
 {
-  final static public String NS_MODEL_FLOOD = "org.kalypso.model.flood";
+  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodModel" );
 
-  final static public String PREFIX_MODEL_FLOOD = "flood";
+  public static final QName QNAME_PROP_POLYGONE_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "polygonMember" );
 
-  /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
-   */
-  @Override
-  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
-  {
-    catalog.put( NS_MODEL_FLOOD, myClass.getResource( "floodModel.xsd" ) );
-    prefixes.put( NS_MODEL_FLOOD, PREFIX_MODEL_FLOOD );
-  }
+  public static final QName QNAME_PROP_COVERAGES_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "coveragesMember" );
+
+  public static final QName QNAME_PROP_EVENT_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "eventMember" );
+
+  public ICoverageCollection getTerrainModel( );
+
+  // get Events
+
+  public IFeatureWrapperCollection<IFloodPolygon> getPolygons( );
+
+  public IFeatureWrapperCollection<IRunoffEvent> getEvents( );
+
 }

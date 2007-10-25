@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.flood.binding;
 
-package org.kalypso.model.flood.schema;
-
-import java.net.URL;
-import java.util.Map;
-
-import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
- * Catalog which provides the url to the flood model schema
- * 
  * @author Thomas Jung
  */
-public class UrlCatalogModelFlood extends AbstractUrlCatalog
+public class FloodExtrapolationPolygon extends AbstractFeatureBinder implements IFloodExtrapolationPolygon
 {
-  final static public String NS_MODEL_FLOOD = "org.kalypso.model.flood";
-
-  final static public String PREFIX_MODEL_FLOOD = "flood";
-
-  /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
-   */
-  @Override
-  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  public FloodExtrapolationPolygon( Feature featureToBind )
   {
-    catalog.put( NS_MODEL_FLOOD, myClass.getResource( "floodModel.xsd" ) );
-    prefixes.put( NS_MODEL_FLOOD, PREFIX_MODEL_FLOOD );
+    super( featureToBind, IFloodExtrapolationPolygon.QNAME );
   }
 }

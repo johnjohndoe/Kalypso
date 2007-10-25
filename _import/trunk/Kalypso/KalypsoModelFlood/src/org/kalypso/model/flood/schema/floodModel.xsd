@@ -2,6 +2,7 @@
 <schema xmlns:gml="http://www.opengis.net/gml"
 	xmlns="http://www.w3.org/2001/XMLSchema"
 	xmlns:flood="org.kalypso.model.flood"
+	xmlns:cov="org.kalypso.gml.common.coverage"
 	targetNamespace="org.kalypso.model.flood"
 	elementFormDefault="qualified" version="0.1">
 	<annotation>
@@ -11,11 +12,9 @@
 	</annotation>
 	<import namespace="http://www.opengis.net/gml"
 		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
+	<import namespace="org.kalypso.gml.common.coverage" />
 
-
-
-	<element name="FloodModel"
-		type="flood:FloodModelType" 
+	<element name="FloodModel" type="flood:FloodModelType"
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -31,8 +30,9 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="floodPolygonMember"
-						type="flood:FloodPolygonPropertyType" minOccurs="0" maxOccurs="unbounded">
+					<element name="polygonMember"
+						type="flood:FloodPolygonPropertyType" minOccurs="0"
+						maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Polygon</label>
@@ -42,30 +42,40 @@
 						</annotation>
 					</element>
 					<element name="eventMember"
-						type="flood:RunoffEventPropertyType" minOccurs="0" maxOccurs="unbounded">
+						type="flood:RunoffEventPropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+					</element>
+					<element name="coveragesMember"
+						type="flood:CoverageCollectionPropertyType" minOccurs="0"
+						maxOccurs="unbounded">
 					</element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 
+	<complexType name="CoverageCollectionPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="cov:CoverageCollection" />
+		</sequence>
+	</complexType>
 
 	<complexType name="RunoffEventPropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="flood:RunoffEvent"/>
+			<element ref="flood:RunoffEvent" />
 		</sequence>
 	</complexType>
 
 	<complexType name="RunoffEventReferencePropertyType">
 		<sequence minOccurs="0" maxOccurs="0">
-			<element ref="flood:RunoffEvent"/>
+			<element ref="flood:RunoffEvent" />
 		</sequence>
 		<attributeGroup ref="gml:AssociationAttributeGroup" />
 	</complexType>
 
 
-	<element name="RunoffEvent"
-		type="flood:RunoffEventType" substitutionGroup="gml:_Feature">
+	<element name="RunoffEvent" type="flood:RunoffEventType"
+		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name><![CDATA[Ereig	nisXXXX]]></name>
@@ -76,7 +86,7 @@
 		</annotation>
 	</element>
 
-	<complexType name="RunoffEventType" >
+	<complexType name="RunoffEventType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
@@ -89,7 +99,7 @@
 
 	<complexType name="FloodPolygonPropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
-			<element ref="flood:AbstractFloodPolygon"/>
+			<element ref="flood:AbstractFloodPolygon" />
 		</sequence>
 	</complexType>
 
@@ -125,7 +135,8 @@
 						</annotation>
 					</element>
 					<element name="eventMember"
-						type="flood:RunoffEventReferencePropertyType" minOccurs="0" maxOccurs="unbounded">
+						type="flood:RunoffEventReferencePropertyType" minOccurs="0"
+						maxOccurs="unbounded">
 					</element>
 				</sequence>
 			</extension>
@@ -168,8 +179,7 @@
 		</complexContent>
 	</complexType>
 
-	<element name="FloodClipPolygon"
-		type="flood:FloodClipPolygonType"
+	<element name="FloodClipPolygon" type="flood:FloodClipPolygonType"
 		substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
 			<documentation xml:lang="de">

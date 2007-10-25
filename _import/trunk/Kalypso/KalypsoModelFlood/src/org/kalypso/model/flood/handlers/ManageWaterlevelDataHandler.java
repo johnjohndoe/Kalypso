@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.flood.handlers;
 
-package org.kalypso.model.flood.schema;
-
-import java.net.URL;
-import java.util.Map;
-
-import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.kalypso.model.flood.ui.dialogs.WaterlevelDialog;
 
 /**
- * Catalog which provides the url to the flood model schema
- * 
  * @author Thomas Jung
  */
-public class UrlCatalogModelFlood extends AbstractUrlCatalog
+public class ManageWaterlevelDataHandler extends AbstractHandler
 {
-  final static public String NS_MODEL_FLOOD = "org.kalypso.model.flood";
-
-  final static public String PREFIX_MODEL_FLOOD = "flood";
-
   /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  public Object execute( final ExecutionEvent event )
   {
-    catalog.put( NS_MODEL_FLOOD, myClass.getResource( "floodModel.xsd" ) );
-    prefixes.put( NS_MODEL_FLOOD, PREFIX_MODEL_FLOOD );
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+
+    TitleAreaDialog dialog = new WaterlevelDialog( shell );
+
+    if( dialog.open() == Window.CANCEL )
+      return Status.CANCEL_STATUS;
+
+    return Status.OK_STATUS;
   }
+
 }
