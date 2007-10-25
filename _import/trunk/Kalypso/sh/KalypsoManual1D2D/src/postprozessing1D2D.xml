@@ -6,7 +6,32 @@
     <primary>Postprozessing Kalypso1D2D</primary>
   </indexterm>
 
-  <para></para>
+  <para>Nach dem Processing können die Ergebnisse im Postprocessing behandelt
+  werden. Dazu stehen fogende wesentliche Funktionen zur Verfügung:</para>
+
+  <orderedlist>
+    <listitem>
+      <para>Kartenansicht</para>
+    </listitem>
+
+    <listitem>
+      <para>Längsschnittansicht</para>
+    </listitem>
+
+    <listitem>
+      <para>Differenzenbildung</para>
+    </listitem>
+  </orderedlist>
+
+  <figure>
+    <title>Aktivitäten Ansicht im Postprocessing</title>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="img/1D2D/postp_01_aktivitätenansicht.png" />
+      </imageobject>
+    </mediaobject>
+  </figure>
 
   <section id="Kalypso1D2DModellkalibrierung">
     <title>Kartenansicht</title>
@@ -16,5 +41,91 @@
     </indexterm>
 
     <para></para>
+
+    <section>
+      <title>Ergebniskarte konfigurieren</title>
+
+      <indexterm>
+        <primary>Ergebniskarte konfigurieren</primary>
+      </indexterm>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title>Ergebniskarte anzeigen</title>
+
+      <indexterm>
+        <primary>Ergebniskarte anzeigen in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para>Um die Ergebnisse in einer Karte zu visualisieren, öffnen Sie im
+      Aktivitätenfenster den Baum <guimenuitem>Postprozessing &gt;
+      Kartenansicht</guimenuitem>. Mit einem Doppelklick auf
+      <guimenuitem>Ergebniskarte anzeigen</guimenuitem> wird eine Karte
+      geöffnet. In der Ansicht "Gliederung" kann man auswählen welche Werte
+      beziehungsweise Objekte man sich anzeigen lassen will. Im untenstehenden
+      Bild unter Anderem das Höhenmodell mittels Isoflächen.</para>
+
+      <figure>
+        <title>Ergebniskarte anzeigen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_02_ergebnisskarte.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+  </section>
+
+  <section>
+    <title>Längsschnittansicht</title>
+
+    <indexterm>
+      <primary>Längsschnittansicht Kalypso 1D2D</primary>
+    </indexterm>
+
+    <para></para>
+
+    <section>
+      <title>Längsschnitt konfigurieren</title>
+
+      <indexterm>
+        <primary>Längsschnitt konfigurieren in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para></para>
+    </section>
+
+    <section>
+      <title>Längsschnitt anzeigen</title>
+
+      <indexterm>
+        <primary>Längsschnitt anzeigen in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para></para>
+    </section>
+  </section>
+
+  <section>
+    <title>Differenzenbildung</title>
+
+    <indexterm>
+      <primary>Differenzenbildung in Kalypso 1D2D</primary>
+    </indexterm>
+
+    <para></para>
+
+    <section>
+      <title>Differenzen erzeugen</title>
+
+      <indexterm>
+        <primary>Diffenrenzen erzeugen in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para></para>
+    </section>
   </section>
 </chapter>
