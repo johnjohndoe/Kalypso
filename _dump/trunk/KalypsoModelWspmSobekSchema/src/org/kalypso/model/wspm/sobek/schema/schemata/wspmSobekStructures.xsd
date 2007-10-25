@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek"
+	xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekStructures="org.kalypso.model.wspm.sobek.structures" targetNamespace="org.kalypso.model.wspm.sobek.structures"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="org.kalypso.model.wspm.sobek.common" schemaLocation="wspmSobekCommons.xsd"/>
+	<import namespace="org.kalypso.model.wspm.sobek" schemaLocation="wspmSobek.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
+	<!-- schema for WSPM = 'water surface profile model' -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+	<!-- 
+	_________________________________________________________________________________________
+	ELEMENTS
+	_________________________________________________________________________________________
+	-->
+	<!--
+		_________________________________________________________________________________________
+		NODE ELEMENTS
+		_________________________________________________________________________________________
+	-->
+	<!--
+		Abstrakte Elemente für Structure-Nodes.
+	-->
+	<element name="AbstractSbkStructureNode" abstract="true" type="wspmSobekStructures:AbstractSbkStructureNodeType" substitutionGroup="wspmSobek:AbstractNetworkNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</tooltip>
+				<description>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</tooltip>
+				<description>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="AbstractSbkCompoundableStructureNode" abstract="true" type="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType"
+		substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>AbstractSbkCompoundableStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>AbstractSbkCompoundableStructureNode</tooltip>
+				<description>AbstractSbkCompoundableStructureNode</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="abstractSbkCompoundStructureNodeMember" type="wspmSobekStructures:AbstractSbkCompoundableStructureNodePropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>sbkCompoundStructureNodeMember</label>
+				<tooltip>sbkCompoundStructureNodeMember</tooltip>
+				<description>sbkCompoundStructureNodeMember</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>sbkCompoundStructureNodeMember</label>
+				<tooltip>sbkCompoundStructureNodeMember</tooltip>
+				<description>sbkCompoundStructureNodeMember</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!--
+		Structure Nodes
+	-->
+	<element name="SbkCompoundStructureNode" type="wspmSobekStructures:SbkCompoundStructureNodeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Verbundbauwerk - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Verbundbauwerk</tooltip>
+				<description>Verbundbauwerk</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Compound Structure - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Compound Structure</tooltip>
+				<description>Compound Structure</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkRiverWeir" type="wspmSobekStructures:SbkRiverWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Fluss-Wehr - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Fluss-Wehr</tooltip>
+				<description>Fluss-Wehr</description>
+			</documentation>
+			<documentation xml:lang="en"> Representation of Structure Sobek.RiverWeir <label>River Weir - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>River Weir</tooltip>
+				<description>River Weir</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkRiverAdvancedWeir" type="wspmSobekStructures:SbkRiverAdvancedWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Hochentwickeltes Fluss-Wehr - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Hochentwickeltes Fluss-Wehr</tooltip>
+				<description>Hochentwickeltes Fluss-Wehr</description>
+			</documentation>
+			<documentation xml:lang="en">Representation of Structure Sobek.RiverAdvancedWeir <label>Advanced River Weir - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Advanced River Weir</tooltip>
+				<description>Advanced River Weir</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkGeneralStructure" type="wspmSobekStructures:SbkGeneralStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Generelles Bauwerk - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Generelles Bauwerk</tooltip>
+				<description>Generelles Bauwerk</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>General Structure - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>General Structure</tooltip>
+				<description>General Structure</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkRiverPump" type="wspmSobekStructures:SbkRiverPumpType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Fluss-Pumpe - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Fluss-Pumpe</tooltip>
+				<description>Fluss-Pumpe</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>River Pump - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>River Pump</tooltip>
+				<description>River Pump</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkDatabaseStructure" type="wspmSobekStructures:SbkDatabaseStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Datenbank-Bauwerk - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Datenbank-Bauwerk</tooltip>
+				<description>Bauwerk, dessen Verhalten über eine Datenbank definiert wird</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Database Structure - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Database Structure</tooltip>
+				<description>Database Structure</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkWeir" type="wspmSobekStructures:SbkWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Wehr - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Wehr</tooltip>
+				<description>SbkWeir</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Weir - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Weir</tooltip>
+				<description>Weir</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkOrifice" type="wspmSobekStructures:SbkOrificeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Durchlass - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Durchlass</tooltip>
+				<description>Durchlass</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Orifice - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Orifice</tooltip>
+				<description>Orifice</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkPump" type="wspmSobekStructures:SbkPumpType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Pumpe - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Pumpe</tooltip>
+				<description>Pumpe</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Pump - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Pump</tooltip>
+				<description>Pump</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkCulvert" type="wspmSobekStructures:SbkCulvertType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Düker - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Düker</tooltip>
+				<description>Düker</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Culvert - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Culvert</tooltip>
+				<description>Culvert</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkUniversalWeir" type="wspmSobekStructures:SbkUniversalWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Universal-Wehr - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Universal-Wehr</tooltip>
+				<description>Universal-Wehr</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Universal Weir - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Universal Weir</tooltip>
+				<description>Universal Weir</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SbkBridge" type="wspmSobekStructures:SbkBridgeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Brücke - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Brücke</tooltip>
+				<description>Brücke</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Bridge - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<tooltip>Bridge</tooltip>
+				<description>Bridge</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________
+	-->
+	<!--
+		_______________________________________________________________________________________
+		NODE TYPES
+		_________________________________________________________________________________________
+	-->
+	<!--
+		abstrakte Node-Typen allgemein
+	-->
+	<complexType name="AbstractSbkStructureNodeType" abstract="true">
+		<complexContent>
+			<extension base="wspmSobek:AbstractNetworkNodeType">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--
+		abstrakter Knoten-Typ für StructureNodes, die in einer Compoundable Structure verwendet werden können
+	-->
+	<complexType name="AbstractSbkCompoundableStructureNodePropertyType">
+		<sequence>
+			<element ref="wspmSobekStructures:AbstractSbkCompoundableStructureNode"/>
+		</sequence>
+	</complexType>
+	<complexType name="AbstractSbkCompoundableStructureNodeType" abstract="true">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType"/>
+		</complexContent>
+	</complexType>
+	<!--
+		Structure Nodes
+	-->
+	<complexType name="SbkCompoundStructureNodeType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
+				<sequence>
+					<element ref="wspmSobekStructures:abstractSbkCompoundStructureNodeMember" minOccurs="2" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkRiverWeirType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkRiverAdvancedWeirType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkGeneralStructureType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkRiverPumpType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkDatabaseStructureType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkWeirType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
+				
+				<sequence> <element name="crestWidth" type="wspmSobekCommon:notNegDoubleType" nillable="false">
+					<annotation>
+						<documentation xml:lang="de">
+							<label>Überfallbreite [m]</label>
+							<tooltip>Überfallbreite [m]</tooltip>
+							<description>Überfallbreite [m]</description>
+						</documentation>
+						<documentation xml:lang="en">
+							<label>Crest Width [m]</label>
+							<tooltip>Crest Width [m]</tooltip>
+							<description>Crest Width [m]</description>
+						</documentation>
+					</annotation>
+				</element>
+					<element name="crestHeight" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Überfallhöhe [m NN]</label>
+								<tooltip>Überfallhöhe [m NN]</tooltip>
+								<description>Überfallhöhe [m NN]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Crest Height [m asl]</label>
+								<tooltip>Crest Height [m asl]</tooltip>
+								<description>Crest Height [m asl]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="dischargeCoeffCE" type="wspmSobekCommon:notNegDoubleType" default="1.0" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Abflussbeiwert []</label>
+								<tooltip>Abflussbeiwert []</tooltip>
+								<description>Abflussbeiwert []</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Discharge Coefficient Ce []</label>
+								<tooltip>Discharge Coefficient Ce []</tooltip>
+								<description>Discharge Coefficient Ce []</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="lateralContractionCoeffCW" type="wspmSobekCommon:notNegDoubleType" default="1.0" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Einengungsverlustbeiwert []</label>
+								<tooltip>Einengungsverlustbeiwert []</tooltip>
+								<description>Einengungsverlustbeiwert []</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Lateral Contraction Coefficient Cw []</label>
+								<tooltip>Lateral Contraction Coefficient Cw []</tooltip>
+								<description>Lateral Contraction Coefficient Cw []</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="flowDirection" type="wspmSobekCommon:sbkFlowDirectionType" default="Direction.Both" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Mögliche Fließrichtung</label>
+								<tooltip>Mögliche Fließrichtung</tooltip>
+								<description>Mögliche Fließrichtung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Possible Flow Direction</label>
+								<tooltip>Possible Flow Direction</tooltip>
+								<description>Possible Flow Direction</description>
+							</documentation>
+						</annotation>
+					</element></sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkOrificeType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkPumpType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkCulvertType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkUniversalWeirType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SbkBridgeType">
+		<complexContent>
+			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- 
+		_________________________________________________________________________________________
+		LINK PROPERTIES
+		_________________________________________________________________________________________
+	-->
+</schema>

@@ -129,4 +129,129 @@
 	<simpleType name="uniqueIdType">
 		<restriction base="string"> </restriction>
 	</simpleType>
+	<!-- 
+		______________________________
+		Special Sobek simple types (especially enumerations)
+		______________________________
+	-->
+	<simpleType name="sbkFlowDirectionType">
+		<restriction base="string">
+			<enumeration value="Direction.Both">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>positiv und negativ</label>
+						<tooltip>positiv und negativ</tooltip>
+						<description>positiv und negativ</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>positive and negative</label>
+						<tooltip>positive and negative</tooltip>
+						<description>positive and negative</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Direction.Positive">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>positiv</label>
+						<tooltip>positiv</tooltip>
+						<description>positiv</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>positive</label>
+						<tooltip>positive</tooltip>
+						<description>positive</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Direction.Negative">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>negativ</label>
+						<tooltip>negativ</tooltip>
+						<description>negativ</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>negative</label>
+						<tooltip>negative</tooltip>
+						<description>negative</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="sbkControlPositionType">
+		<restriction base="string">
+			<enumeration value="PumpControl.Upward">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>positiv und negativ</label>
+						<tooltip>positiv und negativ</tooltip>
+						<description>positiv und negativ</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>positive and negative</label>
+						<tooltip>positive and negative</tooltip>
+						<description>positive and negative</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="PumpControl.Downward">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>positiv</label>
+						<tooltip>positiv</tooltip>
+						<description>positiv</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>positive</label>
+						<tooltip>positive</tooltip>
+						<description>positive</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="PumpControl.Negative">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>negativ</label>
+						<tooltip>negativ</tooltip>
+						<description>negativ</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>negative</label>
+						<tooltip>negative</tooltip>
+						<description>negative</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	
+	<!-- 
+		______________________________
+		Very basic simple types
+		______________________________
+	-->
+	<simpleType name="notNegDoubleType">
+		<restriction base="double">
+			<minInclusive value="0"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="percentageType">
+		<restriction base="double">
+			<minInclusive value="0"/>
+			<maxInclusive value="100"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="posDoubleType">
+		<restriction base="double">
+			<minExclusive value="0"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="notNegIntType">
+		<restriction base="int">
+			<minInclusive value="0"/>
+		</restriction>
+	</simpleType>
 </schema>

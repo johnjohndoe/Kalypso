@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek"
-	xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekProj="org.kalypso.model.wspm.sobek.project" targetNamespace="org.kalypso.model.wspm.sobek.project"
+	xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekStructures="org.kalypso.model.wspm.sobek.structures" xmlns:wspmSobekProj="org.kalypso.model.wspm.sobek.project" targetNamespace="org.kalypso.model.wspm.sobek.project"
 	elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -9,6 +9,8 @@
 	</annotation>
 	<import namespace="org.kalypso.model.wspm.sobek" schemaLocation="wspmSobek.xsd"/>
 	<import namespace="org.kalypso.model.wspm.sobek.common" schemaLocation="wspmSobekCommons.xsd"/>
+	<import namespace="org.kalypso.model.wspm.sobek.structures" schemaLocation="wspmSobekStructures.xsd"/>
+	
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- schema for WSPM projects -->
