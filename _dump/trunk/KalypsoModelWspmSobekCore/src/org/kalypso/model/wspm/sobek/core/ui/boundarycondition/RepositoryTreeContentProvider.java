@@ -129,8 +129,9 @@ public class RepositoryTreeContentProvider extends org.kalypso.ui.repository.vie
   {
     final BOUNDARY_TYPE bnt = m_settings.getBoundaryNodeType();
 
-    if( bnt.toZmlString().equals( type ) )
-      return true;
+    //$ANALYSIS-IGNORE
+	if( bnt.toZmlString().equals( type ) )
+	      return true;
 
     return false;
   }

@@ -46,38 +46,42 @@ import org.osgi.framework.BundleContext;
 
 /**
  * @author thuel2
- * 
  */
-public class KalypsoModelWspmSobekCorePlugin extends Plugin {
-	// The shared instance.
-	private static KalypsoModelWspmSobekCorePlugin plugin;
+public class KalypsoModelWspmSobekCorePlugin extends Plugin
+{
+  // The shared instance.
+  private static KalypsoModelWspmSobekCorePlugin plugin = null;
 
-	public KalypsoModelWspmSobekCorePlugin() {
-		plugin = this;
-	}
+  public KalypsoModelWspmSobekCorePlugin( )
+  {
+    KalypsoModelWspmSobekCorePlugin.plugin = this;
+  }
 
-	/**
-	 * This method is called upon plug-in activation
-	 */
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-	}
+  /**
+   * This method is called upon plug-in activation
+   */
+  @Override
+  public void start( final BundleContext context ) throws Exception
+  {
+    super.start( context );
+  }
 
-	/**
-	 * This method is called when the plug-in is stopped
-	 */
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		plugin = null;
-	}
+  /**
+   * This method is called when the plug-in is stopped
+   */
+  @Override
+  public void stop( final BundleContext context ) throws Exception
+  {
+    super.stop( context );
+    KalypsoModelWspmSobekCorePlugin.plugin = null;
+  }
 
-	/**
-	 * Returns the shared instance.
-	 */
-	public static KalypsoModelWspmSobekCorePlugin getDefault() {
-		return plugin;
-	}
+  /**
+   * Returns the shared instance.
+   */
+  public static KalypsoModelWspmSobekCorePlugin getDefault( )
+  {
+    return KalypsoModelWspmSobekCorePlugin.plugin;
+  }
 
 }

@@ -75,7 +75,9 @@ public class PiSobekModelUtils
 
   public Map<String, String> lookUpModelToPi = new HashMap<String, String>()
   {
-    @Override
+    static final long serialVersionUID = 1L;
+
+	@Override
     public String put( final String key, final String value )
     {
 
@@ -109,12 +111,12 @@ public class PiSobekModelUtils
 
   public static PiSobekModelUtils getInstance( )
   {
-    if( instance == null )
-      instance = new PiSobekModelUtils();
-    return instance;
+    if( PiSobekModelUtils.instance == null )
+      PiSobekModelUtils.instance = new PiSobekModelUtils();
+    return PiSobekModelUtils.instance;
   }
 
-  public Location createLocationFromNode( ObjectFactory factory, INode node )
+  public Location createLocationFromNode( final ObjectFactory factory, final INode node )
   {
     final Location location = factory.createLocationsComplexTypeLocation();
 
@@ -122,7 +124,7 @@ public class PiSobekModelUtils
 
     final String stationName = node.getStationName();
     // stationName has to be set in PI but will be ignored by Sobek
-    if( !(stationName == null) )
+    if( stationName != null )
       location.setStationName( stationName );
     else
       location.setStationName( node.getName() );
@@ -131,11 +133,8 @@ public class PiSobekModelUtils
     location.setY( node.getLocation().getY() );
 
     if( node instanceof IAbstractConnectionNode )
-    {
       if( node instanceof IConnectionNode )
-      {
         location.setLocationType( lookUpModelToPi.get( node.getType().toString() ) );
-      }
       else if( node instanceof ILinkageNode )
       {
         final LinkageNode ln = (LinkageNode) node;
@@ -151,13 +150,12 @@ public class PiSobekModelUtils
         final BoundaryNode bn = (BoundaryNode) node;
         location.setLocationType( lookUpModelToPi.get( bn.getBoundaryType().toString() ) );
       }
-    }
     return location;
   }
 
-  public BranchComplexType createPiBranchFromBranch( ObjectFactory factory, IBranch branch ) throws GM_Exception
+  public BranchComplexType createPiBranchFromBranch( final ObjectFactory factory, final IBranch branch ) throws GM_Exception
   {
-    BranchComplexType piBranch = factory.createBranchComplexType();
+    final BranchComplexType piBranch = factory.createBranchComplexType();
     piBranch.setBranchId( branch.getId() );
     piBranch.setBranchName( branch.getName() );
     final String description = branch.getDescription();
@@ -194,19 +192,19 @@ public class PiSobekModelUtils
     return piBranch;
   }
 
-  public CrossSection createCrossSectionFromCSNode( ObjectFactory factory, ICrossSectionNode csNode )
+  public CrossSection createCrossSectionFromCSNode( final ObjectFactory factory, final ICrossSectionNode csNode )
   {
-    CrossSection piCrossSection = factory.createCrossSectionsComplexTypeCrossSection();
-//TODO
+    final CrossSection piCrossSection = factory.createCrossSectionsComplexTypeCrossSection();
+// TODO
     piCrossSection.setCrossSectionID( "csID" );
     piCrossSection.setBranchId( csNode.getLinkToBranch().getId() );
-//    TODO
+// TODO
     piCrossSection.setCrossSectionName( "csName" );
     piCrossSection.setLabel( "" ); // label has to be set but will be ignored by import to Sobek
     final String description = csNode.getDescription();
     if( !(description == null) )
       piCrossSection.setComment( description );
-    
+
     piCrossSection.setRoughnessType( "Sobek.RoughnessType.StricklerKs" ); // nofdp default kSt
 
 // TODO loop crossSectiondata
@@ -214,9 +212,8 @@ public class PiSobekModelUtils
     csData.setCsy( 2.3 );
     csData.setZ( 2.3 );
     csData.setRoughness( 2.3 );
-    
+
     piCrossSection.getCrossSectionData().add( csData );
-    
 
     return piCrossSection;
   }

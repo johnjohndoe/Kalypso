@@ -204,6 +204,9 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
           case eTimeSeries:
             renderTimeSeriesRepository( container );
             break;
+
+          default:
+            throw new IllegalStateException();
         }
 
         container.layout();
@@ -410,7 +413,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     }
     else if( TS_TYPE.eConstant.equals( m_type ) )
     {
-      if( m_tConstant.getText() == null || m_tConstant.getText().trim().equals( "" ) )
+      if( m_tConstant.getText() == null || "".equals( m_tConstant.getText().trim() ) )
       {
         setMessage( null );
         setErrorMessage( "No constant value defined." );
