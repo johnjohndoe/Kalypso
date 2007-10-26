@@ -48,8 +48,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Thomas Jung
@@ -75,7 +74,7 @@ public class ZoomToSelectedLayer extends MapModellViewActionDelegate
         return;
       }
 
-      final GM_Envelope wishBBox = calculateExtend( zoomBox );
+      final GM_Envelope wishBBox = GeometryUtilities.scaleEnvelope( zoomBox, 1.05 );
       panel.setBoundingBox( wishBBox );
     }
   }
@@ -92,23 +91,4 @@ public class ZoomToSelectedLayer extends MapModellViewActionDelegate
     action.setEnabled( getSelectedThemes( getSelection() ) != null );
   }
 
-  private GM_Envelope calculateExtend( final GM_Envelope zoomBox )
-  {
-    GM_Envelope wishBBox = null;
-
-    final GM_Position zoomMax = zoomBox.getMax();
-    final GM_Position zoomMin = zoomBox.getMin();
-
-    final double newMaxX = zoomMax.getX() + (zoomMax.getX() - zoomMin.getX()) / 20;
-    final double newMinX = zoomMin.getX() - (zoomMax.getX() - zoomMin.getX()) / 20;
-
-    final double newMaxY = zoomMax.getY() + (zoomMax.getY() - zoomMin.getY()) / 20;
-    final double newMinY = zoomMin.getY() - (zoomMax.getY() - zoomMin.getY()) / 20;
-
-    final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-    final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-
-    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-    return wishBBox;
-  }
 }

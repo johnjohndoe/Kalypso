@@ -836,4 +836,25 @@ public class GeometryUtilities
 
     return Math.toDegrees( alpha );
   }
+
+  /**
+   * Scales an envelope by the given factor (1 means no scaling) while maintaining the position of its center-point.
+   */
+  public static GM_Envelope scaleEnvelope( final GM_Envelope zoomBox, final double factor )
+  {
+    final GM_Position zoomMax = zoomBox.getMax();
+    final GM_Position zoomMin = zoomBox.getMin();
+
+    final double newMaxX = zoomMin.getX() + (zoomMax.getX() - zoomMin.getX()) * factor;
+    final double newMinX = zoomMax.getX() - (zoomMax.getX() - zoomMin.getX()) * factor;
+
+    final double newMaxY = zoomMin.getY() + (zoomMax.getY() - zoomMin.getY()) * factor;
+    final double newMinY = zoomMax.getY() - (zoomMax.getY() - zoomMin.getY()) * factor;
+
+    final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+    final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+
+    return GeometryFactory.createGM_Envelope( newMin, newMax );
+  }
+
 }

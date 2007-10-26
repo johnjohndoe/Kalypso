@@ -43,13 +43,10 @@ package org.kalypsodeegree_impl.gml.binding.commons;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
-import javax.xml.namespace.QName;
-
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
@@ -61,8 +58,6 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  */
 public class CoverageCollection extends FeatureWrapperCollection<ICoverage> implements ICoverageCollection
 {
-  private static final QName QNAME_PROP_COVERAGE_MEMBER = new QName( NS.COMMON_COVERAGE, "coverageMember" );
-
   /** Creates a new workspace with this collection as root feature. */
   public CoverageCollection( final URL context, final IFeatureProviderFactory providerFactory ) throws InvocationTargetException
   {
