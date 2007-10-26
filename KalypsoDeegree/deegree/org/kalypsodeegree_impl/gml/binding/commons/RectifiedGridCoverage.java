@@ -21,6 +21,8 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
 
   private static final QName QNAME_PROP_RANGE_SET = new QName( NS.GML3, "rangeSet" );
 
+  private static final QName QNAME_PROP_BOUNDED_BY = new QName( NS.GML3, "boundedBy" );
+
   public RectifiedGridCoverage( final Feature feature )
   {
     super( feature, RectifiedGridCoverage.QNAME );
@@ -47,12 +49,14 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
    */
   public void setGridDomain( final RectifiedGridDomain gridDomain )
   {
-    getFeature().setProperty( RectifiedGridCoverage.QNAME_PROP_GRID_DOMAIN, gridDomain );
+    final Feature feature = getFeature();
+    feature.setProperty( RectifiedGridCoverage.QNAME_PROP_GRID_DOMAIN, gridDomain );
 
     try
     {
       final GM_Envelope envelope = gridDomain.getGM_Envelope( gridDomain.getCoordinateSystem() );
-      getFeature().setProperty( new QName( NS.GML3, "boundedBy" ), envelope );
+      feature.setProperty( QNAME_PROP_BOUNDED_BY, envelope );
+      feature.invalidEnvelope();
     }
     catch( final Exception e )
     {
@@ -75,5 +79,13 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
   public void setRangeSet( final RangeSetType rangeSet )
   {
     getFeature().setProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET, rangeSet );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.gml.binding.commons.ICoverage#getEnvelope()
+   */
+  public GM_Envelope getEnvelope( )
+  {
+    return (GM_Envelope) getFeature().getProperty( QNAME_PROP_BOUNDED_BY );
   }
 }
