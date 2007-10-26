@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Gernot Belger
@@ -52,4 +53,5 @@ public interface ICoverage extends IFeatureWrapper2
 {
   public final static QName QNAME = new QName( NS.GML3, "_Coverage" );
 
+  public GM_Envelope getEnvelope( );
 }

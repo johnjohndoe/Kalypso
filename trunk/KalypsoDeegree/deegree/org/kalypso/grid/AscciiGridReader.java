@@ -88,7 +88,14 @@ public class AscciiGridReader
       for( int i = 0; i < 6; i++ )
       {
         line = reader.readLine();
-        final String[] values = line.split( "\\s+ " );
+
+        if( line.startsWith( "/*" ) )
+        {
+          i--;
+          continue;
+        }
+
+        final String[] values = line.split( "\\s+" );
 
         m_headerKeys[i] = values[0].trim();
         m_headerData[i] = values[1].trim();

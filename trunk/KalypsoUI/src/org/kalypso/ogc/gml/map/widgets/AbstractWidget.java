@@ -263,6 +263,8 @@ public abstract class AbstractWidget implements IWidget
   }
 
   /**
+   * TODO: give World2Screen Transformation into paint method
+   * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
   public void paint( final Graphics g )
