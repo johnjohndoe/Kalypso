@@ -54,19 +54,29 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 {
-  // TODO: don't! use protected members; call super constructor instead
-  protected TiledImage m_image;
-
-  protected RectifiedGridDomain m_domain;
-
-  protected final StyledLayerType m_layerType;
-
-  protected final URL m_context;
-
-  protected final IMapModell m_modell;
-
   // TODO: use tracing instead
   private static final Logger LOGGER = Logger.getLogger( KalypsoPictureTheme.class.getName() );
+
+  public static IKalypsoTheme getPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell, final CS_CoordinateSystem system ) throws Exception
+  {
+    final String[] arrWorldTypes = new String[] { "tif", "jpg", "png", "gif" };
+    if( ArrayUtils.contains( arrWorldTypes, layerType.getLinktype().toLowerCase() ) )
+      return new KalypsoPictureThemeWorldFile( layerType, context, modell, system );
+    else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) )
+      return new KalypsoPictureThemeGml( layerType, context, modell );
+
+    throw new IllegalStateException( "not supported layerType: " + layerType.getLinktype() );
+  }
+
+  private TiledImage m_image;
+
+  private RectifiedGridDomain m_domain;
+
+  private final StyledLayerType m_layerType;
+
+  private final URL m_context;
+
+  private final IMapModell m_modell;
 
   public KalypsoPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell ) throws Exception
   {
@@ -92,30 +102,17 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
+  public void fillLayerType( final StyledLayerType layer, final String id, final boolean visible )
   {
-    if( selected )
-    {
-      return;
-    }
+    layer.setName( m_layerType.getName() );
+    layer.setFeaturePath( "" );
 
-    try
-    {
-      final GM_Envelope envelope = m_domain.getGM_Envelope( m_domain.getCoordinateSystem() );
-      final CS_CoordinateSystem crs = m_domain.getCoordinateSystem();
-      // transform from crs to crs? optimisation possible?
-      TransformationUtilities.transformImage( m_image, envelope, crs, crs, p, g );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
+    layer.setVisible( visible );
+    layer.setId( id );
+    layer.setHref( m_layerType.getHref() );
+    layer.setLinktype( m_layerType.getLinktype() );
+    layer.setActuate( "onRequest" );
+    layer.setType( "simple" );
   }
 
   /**
@@ -136,31 +133,57 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     return bbox;
   }
 
-  public void fillLayerType( final StyledLayerType layer, final String id, final boolean visible )
+  protected TiledImage getImage( )
   {
-    layer.setName( m_layerType.getName() );
-    layer.setFeaturePath( "" );
-
-    layer.setVisible( visible );
-    layer.setId( id );
-    layer.setHref( m_layerType.getHref() );
-    layer.setLinktype( m_layerType.getLinktype() );
-    layer.setActuate( "onRequest" );
-    layer.setType( "simple" );
+    return m_image;
   }
 
-  public static IKalypsoTheme getPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell, final CS_CoordinateSystem system ) throws Exception
+  protected RectifiedGridDomain getRectifiedGridDomain( )
   {
-    final String[] arrWorldTypes = new String[] { "tif", "jpg", "png", "gif" };
-    if( ArrayUtils.contains( arrWorldTypes, layerType.getLinktype().toLowerCase() ) )
+    return m_domain;
+  }
+
+  protected StyledLayerType getStyledLayerType( )
+  {
+    return m_layerType;
+  }
+
+  protected URL getURLContext( )
+  {
+    return m_context;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
+  {
+    if( selected )
+      return;
+
+    try
     {
-      return new KalypsoPictureThemeWorldFile( layerType, context, modell, system );
+      final GM_Envelope envelope = m_domain.getGM_Envelope( m_domain.getCoordinateSystem() );
+      final CS_CoordinateSystem crs = m_domain.getCoordinateSystem();
+      // transform from crs to crs? optimisation possible?
+      TransformationUtilities.transformImage( m_image, envelope, crs, crs, p, g );
     }
-    else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) )
+    catch( final Exception e )
     {
-      return new KalypsoPictureThemeGml( layerType, context, modell );
+      e.printStackTrace();
     }
 
-    throw new IllegalStateException();
+  }
+
+  protected void setImage( final TiledImage image )
+  {
+    m_image = image;
+  }
+
+  protected void setRectifiedGridDomain( final RectifiedGridDomain domain )
+  {
+    m_domain = domain;
   }
 }

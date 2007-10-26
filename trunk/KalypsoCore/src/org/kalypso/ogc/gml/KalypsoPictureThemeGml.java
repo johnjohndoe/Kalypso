@@ -49,12 +49,15 @@ import javax.media.jai.TiledImage;
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
@@ -71,20 +74,32 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( UrlResolverSingleton.resolveUrl( context, layerType.getHref() ), null );
     final Feature fRoot = workspace.getRootFeature();
 
-    final RectifiedGridCoverage coverage2 = new RectifiedGridCoverage( fRoot );
+    final ICoverageCollection coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
+    if( coverages.size() != 1 )
+      throw new NotImplementedException( "Collection of Images not implemented!" );
 
-    /* imgFile */
-    final RangeSetType rangeSet = coverage2.getRangeSet();
-    final FileType type = rangeSet.getFile();
+    for( final ICoverage coverage : coverages )
+    {
+      final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
 
-    final URL imageContext = UrlResolverSingleton.resolveUrl( context, layerType.getHref() );
+      /* imgFile */
+      final RangeSetType rangeSet = coverage2.getRangeSet();
+      final FileType type = rangeSet.getFile();
 
-    final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
-    final RenderedOp image = JAI.create( "url", imageUrl );
-    m_image = new TiledImage( image, true );
+      final URL imageContext = UrlResolverSingleton.resolveUrl( context, layerType.getHref() );
 
-    /* recGridDomain */
-    m_domain = coverage2.getGridDomain();
+      final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
+      final RenderedOp image = JAI.create( "url", imageUrl );
+      setImage( new TiledImage( image, true ) );
+
+      image.dispose();
+
+      /* recGridDomain */
+      setRectifiedGridDomain( coverage2.getGridDomain() );
+
+      // HACK: we assume, that we only have exactly ONE coverage per picture-theme
+
+      break;
+    }
   }
-
 }
