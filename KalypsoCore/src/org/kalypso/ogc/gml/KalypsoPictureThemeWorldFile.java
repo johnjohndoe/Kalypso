@@ -70,16 +70,12 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
     super( layerType, context, modell );
 
     final String href = layerType.getHref();
-    if( (href == null) || !href.contains( "." ) )
-    {
-      throw (new IllegalStateException());
-    }
+    if( href == null || !href.contains( "." ) )
+      throw new IllegalStateException();
 
     final String[] arrFileName = href.split( "#" );
     if( arrFileName.length != 2 )
-    {
-      throw (new IllegalStateException());
-    }
+      throw new IllegalStateException();
 
     final URL imageUrl = UrlResolverSingleton.resolveUrl( context, arrFileName[0] );
 
@@ -90,13 +86,13 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
       final IGridMetaReader reader = verifier.getRasterMetaReader( imageUrl, system );
 
       final RenderedOp image = JAI.create( "url", imageUrl );
-      m_image = new TiledImage( image, true );
+      setImage( new TiledImage( image, true ) );
 
       // TODO: the image keeps does not release the stream onto the tiff
       // maybe we must call image.dispose in order to do this?
       // can we do that here??
-      final int height = m_image.getHeight();
-      final int width = m_image.getWidth();
+      final int height = getImage().getHeight();
+      final int width = getImage().getWidth();
 
       final GM_Point origin = GeometryFactory.createGM_Point( new Double( reader.getOriginCornerX() ), new Double( reader.getOriginCornerY() ), system );
 
@@ -104,7 +100,9 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
       final OffsetVector offsetY = new OffsetVector( new Double( reader.getVectorYx() ), new Double( reader.getVectorYy() ) );
       final GridRange gridRange = new GridRange_Impl( new double[] { 0, 0 }, new double[] { width, height } );
 
-      m_domain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
+      setRectifiedGridDomain( new RectifiedGridDomain( origin, offsetX, offsetY, gridRange ) );
+
+      image.dispose();
     }
   }
 }

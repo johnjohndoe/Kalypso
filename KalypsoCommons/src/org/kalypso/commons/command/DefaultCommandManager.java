@@ -51,9 +51,9 @@ import javax.swing.event.EventListenerList;
  */
 public class DefaultCommandManager implements ICommandManager
 {
-  private EventListenerList m_listenerList = new EventListenerList();
+  private final EventListenerList m_listenerList = new EventListenerList();
 
-  private Vector<ICommand> stack = new Vector<ICommand>();
+  private final Vector<ICommand> stack = new Vector<ICommand>();
 
   private boolean doable = false;
 
@@ -94,9 +94,12 @@ public class DefaultCommandManager implements ICommandManager
     }
     catch( final Exception e )
     {
-      // das letzte wieder löschen
-      stack.remove( stack.size() - 1 );
-      stackPos--;
+      if( command.isUndoable() )
+      {
+        // das letzte wieder löschen
+        stack.remove( stack.size() - 1 );
+        stackPos--;
+      }
 
       checkStatus();
 
@@ -153,8 +156,8 @@ public class DefaultCommandManager implements ICommandManager
 
   private void checkStatus( )
   {
-    undoable = (stackPos >= 0);
-    doable = (stackPos < stack.size() - 1);
+    undoable = stackPos >= 0;
+    doable = stackPos < stack.size() - 1;
     m_dirty = true;
 
     fireCommandManagerChanged();
@@ -173,8 +176,8 @@ public class DefaultCommandManager implements ICommandManager
   private void fireCommandManagerChanged( )
   {
     final ICommandManagerListener[] listeners = m_listenerList.getListeners( ICommandManagerListener.class );
-    for( int i = 0; i < listeners.length; i++ )
-      listeners[i].onCommandManagerChanged( this );
+    for( final ICommandManagerListener element : listeners )
+      element.onCommandManagerChanged( this );
   }
 
   /**
