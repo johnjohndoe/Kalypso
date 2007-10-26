@@ -53,4 +53,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 public interface ICoverageCollection extends IFeatureWrapperCollection<ICoverage>
 {
   public static final QName QNAME = new QName( NS.COMMON_COVERAGE, "CoverageCollection" );
+
+  public static final QName QNAME_PROP_COVERAGE_MEMBER = new QName( NS.COMMON_COVERAGE, "coverageMember" );
 }

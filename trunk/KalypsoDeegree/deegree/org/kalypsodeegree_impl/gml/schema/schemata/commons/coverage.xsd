@@ -3,7 +3,7 @@
 	xmlns:coverage="org.kalypso.gml.common.coverage" targetNamespace="org.kalypso.gml.common.coverage"
 	elementFormDefault="qualified" version="0.1">
 	<annotation>
-		<documentation lang="en">
+		<documentation xml:lang="en">
 			<![CDATA[Common schema for coverage support.]]></documentation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
