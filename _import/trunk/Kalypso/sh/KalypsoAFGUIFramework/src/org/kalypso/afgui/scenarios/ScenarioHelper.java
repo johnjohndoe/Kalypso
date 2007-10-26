@@ -43,10 +43,15 @@ package org.kalypso.afgui.scenarios;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.kalypso.afgui.scenarios.Scenario;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Stefan Kurzbach
@@ -93,5 +98,16 @@ public class ScenarioHelper
     {
       return null;
     }
+  }
+
+  /**
+   * Retrieves the folder of the currently active scenario via the current evaluation context of the handler service.
+   */
+  public static IFolder getScenarioFolder( )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    return (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
   }
 }
