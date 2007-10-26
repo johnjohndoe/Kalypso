@@ -308,7 +308,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   private synchronized CommandableWorkspace getModelWorkspace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
   {
-    if( !ScenarioDataExtension.getLocationMap( m_dataSetScope ).containsKey( wrapperClass ) )
+    final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( m_dataSetScope );
+    if( locationMap == null || !locationMap.containsKey( wrapperClass ) )
       throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + wrapperClass ); //$NON-NLS-1$
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
