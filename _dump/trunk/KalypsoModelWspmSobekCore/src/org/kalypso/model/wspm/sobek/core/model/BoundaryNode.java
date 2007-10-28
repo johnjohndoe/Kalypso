@@ -121,9 +121,10 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
         public Feature getLinkedFeature( final String id )
         {
           ILastfall[] lastfalls = lastfall.getModel().getLastfallMembers();
-          for( ILastfall l : lastfalls ) //$ANALYSIS-IGNORE
-		if( l.getFeature().getId().equals( id ) )
-		              return l.getFeature();
+          for( ILastfall l : lastfalls )
+            // $ANALYSIS-IGNORE
+            if( l.getFeature().getId().equals( id ) )
+              return l.getFeature();
 
           throw new NotImplementedException();
         }
@@ -137,7 +138,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       final LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
       final Feature fLastfall = wrapper.getFeature();
       if( fLastfall == null )
-        throw new IllegalStateException();
+        throw new IllegalStateException( "Loading case is null" );
 
       if( lastfall.getFeature().equals( fLastfall ) )
         return new BoundaryNodeLastfallCondition( lastfall, this, member, false );

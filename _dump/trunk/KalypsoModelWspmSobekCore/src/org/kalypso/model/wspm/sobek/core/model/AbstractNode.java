@@ -61,7 +61,7 @@ public abstract class AbstractNode implements INode
 
   private final IModelMember m_model;
 
-  public AbstractNode( IModelMember model, Feature node )
+  public AbstractNode( final IModelMember model, final Feature node )
   {
     m_model = model;
     m_node = node;
@@ -113,7 +113,7 @@ public abstract class AbstractNode implements INode
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getStationName() 
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getStationName()
    */
   public String getStationName( )
   {
@@ -124,13 +124,13 @@ public abstract class AbstractNode implements INode
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     if( obj instanceof INode )
     {
-      INode node = (INode) obj;
-      EqualsBuilder equalsBuilder = new EqualsBuilder();
-      equalsBuilder.append( this.getFeature(), node.getFeature() );
+      final INode node = (INode) obj;
+      final EqualsBuilder equalsBuilder = new EqualsBuilder();
+      equalsBuilder.append( getFeature(), node.getFeature() );
 
       return equalsBuilder.isEquals();
     }
@@ -147,29 +147,21 @@ public abstract class AbstractNode implements INode
     return HashCodeBuilder.reflectionHashCode( this );
   }
 
-  public static INode createNode( IModelMember model, TYPE nodeType, GM_Point point ) throws Exception
+  public static INode createNode( final IModelMember model, final TYPE nodeType, final GM_Point point ) throws Exception
   {
-    IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
+    final IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
 
     IFeatureType targetFeatureType;
     if( TYPE.eBoundaryNode.equals( nodeType ) )
-    {
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE );
-    }
     else if( TYPE.eConnectionNode.equals( nodeType ) )
-    {
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE );
-    }
     else if( TYPE.eCrossSectionNode.equals( nodeType ) )
-    {
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
-    }
     else if( TYPE.eLinkageNode.equals( nodeType ) )
-    {
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
-    }
     else
-      throw (new IllegalStateException());
+      throw new IllegalStateException( "Can't handle node type" + nodeType.name() );
 
     return FNNodeUtils.createNode( model, targetFeatureType, point );
   }

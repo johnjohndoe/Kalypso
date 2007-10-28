@@ -166,6 +166,6 @@ public class PageEditCrossSectionNode extends WizardPage
     if( element instanceof Feature )
       return (Feature) element;
 
-    throw new IllegalStateException();
+    throw new IllegalStateException( "Object type not supported: " + element.toString() );
   }
 }

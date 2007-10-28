@@ -65,20 +65,20 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  */
 public class Branch implements IBranch
 {
-  public static String createBranchId( IModelMember model )
+  public static String createBranchId( final IModelMember model )
   {
     int count = 0;
 
-    IBranch[] branches = model.getBranchMembers();
+    final IBranch[] branches = model.getBranchMembers();
     for( final IBranch branch : branches )
     {
-      String branchId = branch.getId();
+      final String branchId = branch.getId();
       if( branchId == null )
         continue;
 
       final String[] split = branchId.split( "_" );
       if( split.length != 2 )
-        throw new IllegalStateException();
+        throw new IllegalStateException( "Branch id isn't correct" );
 
       final Integer iBranch = new Integer( split[1] );
       if( iBranch > count )
@@ -92,7 +92,7 @@ public class Branch implements IBranch
 
   protected final IModelMember m_model;
 
-  public Branch( IModelMember model, Feature branch )
+  public Branch( final IModelMember model, final Feature branch )
   {
     m_model = model;
     m_branch = branch;
@@ -110,15 +110,12 @@ public class Branch implements IBranch
     nodes.add( getUpperNode() );
     nodes.add( getLowerNode() );
 
-    for( INode node : nodes )
-    {
+    for( final INode node : nodes )
       if( node instanceof IAbstractConnectionNode )
       {
-        IAbstractConnectionNode n = (IAbstractConnectionNode) node;
+        final IAbstractConnectionNode n = (IAbstractConnectionNode) node;
         n.removeBranch( this );
       }
-
-    }
 
     // deletes empty nodes
     FNGmlUtils.cleanUpNodes( m_model, this );
@@ -131,13 +128,13 @@ public class Branch implements IBranch
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     if( obj instanceof IBranch )
     {
-      IBranch branch = (IBranch) obj;
-      Feature feature = branch.getFeature();
-      EqualsBuilder builder = new EqualsBuilder();
+      final IBranch branch = (IBranch) obj;
+      final Feature feature = branch.getFeature();
+      final EqualsBuilder builder = new EqualsBuilder();
       builder.append( getFeature(), feature );
 
       return builder.isEquals();
@@ -188,7 +185,7 @@ public class Branch implements IBranch
 
   private INode getNode( final QName lnkBranch )
   {
-    ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
+    final ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
     {
 
       public Feature getLinkedFeature( String id )
@@ -234,7 +231,7 @@ public class Branch implements IBranch
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#setLowerNode(org.kalypso.model.wspm.sobek.core.interfaces.INode)
    */
-  public void setLowerNode( INode node ) throws Exception
+  public void setLowerNode( final INode node ) throws Exception
   {
     FeatureUtils.updateLinkedFeature( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + node.getFeature().getId() );
   }
@@ -242,7 +239,7 @@ public class Branch implements IBranch
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#setUpperNode(org.kalypso.model.wspm.sobek.core.interfaces.INode)
    */
-  public void setUpperNode( INode node ) throws Exception
+  public void setUpperNode( final INode node ) throws Exception
   {
     FeatureUtils.updateLinkedFeature( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + node.getFeature().getId() );
   }
@@ -253,7 +250,7 @@ public class Branch implements IBranch
   public String getDescription( )
   {
     final Object description = m_branch.getProperty( ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
-    if (description == null)
+    if( description == null )
       return null;
     return (String) description;
   }

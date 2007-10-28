@@ -194,10 +194,10 @@ public class LastFallExplorer
         {
           final TreePath[] path = selection.getPathsFor( element );
           if( path.length != 1 )
-            throw new IllegalStateException();
+            throw new IllegalStateException( "Tree path is incorrect" );
 
           if( path[0].getSegmentCount() != 2 )
-            throw new IllegalStateException();
+            throw new IllegalStateException( "Segment count of tree path is incorrect" );
 
           final ILastfall lastfall = (ILastfall) path[0].getFirstSegment();
           final IBoundaryNode node = (IBoundaryNode) element;

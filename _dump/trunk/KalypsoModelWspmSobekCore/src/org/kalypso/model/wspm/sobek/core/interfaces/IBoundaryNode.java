@@ -65,7 +65,7 @@ public interface IBoundaryNode extends IAbstractConnectionNode
       else if( BOUNDARY_TYPE.eWQ.toString().equals( type ) )
         return BOUNDARY_TYPE.eWQ;
 
-      throw new IllegalStateException();
+      throw new IllegalStateException( "Can't handle type: " + type );
     }
 
     /**
@@ -85,7 +85,7 @@ public interface IBoundaryNode extends IAbstractConnectionNode
           return "bc_wq";
 
         default:
-          throw new IllegalStateException();
+          throw new IllegalStateException( "Can't handle type: " + name() );
       }
     }
 

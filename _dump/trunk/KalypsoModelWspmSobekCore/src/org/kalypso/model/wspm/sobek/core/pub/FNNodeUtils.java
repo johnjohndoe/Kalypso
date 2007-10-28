@@ -69,11 +69,11 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class FNNodeUtils
 {
-  public static INode createNode( IModelMember model, IFeatureType targetFeatureType, GM_Point point ) throws Exception
+  public static INode createNode( final IModelMember model, final IFeatureType targetFeatureType, final GM_Point point ) throws Exception
   {
     final IRelationType targetPropertyType = (IRelationType) model.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-    final String nodeId = createNodeId( model, targetFeatureType );
+    final String nodeId = FNNodeUtils.createNodeId( model, targetFeatureType );
 
     final Map<IPropertyType, Object> values = new HashMap<IPropertyType, Object>();
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LOCATION ), point );
@@ -81,7 +81,7 @@ public class FNNodeUtils
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NAME ), nodeId );
 
     CommandableWorkspace cw;
-    GMLWorkspace workspace = model.getFeature().getWorkspace();
+    final GMLWorkspace workspace = model.getFeature().getWorkspace();
     if( workspace instanceof CommandableWorkspace )
       cw = (CommandableWorkspace) workspace;
     else
@@ -90,39 +90,36 @@ public class FNNodeUtils
     final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( cw, targetFeatureType, model.getFeature(), targetPropertyType, -1, values, selectionManager );
     cw.postCommand( command );
 
-    return getNode( model, command.getNewFeature() );
+    return FNNodeUtils.getNode( model, command.getNewFeature() );
   }
 
   private static String createNodeId( final IModelMember model, final IFeatureType targetFeatureType )
   {
     int count = 0;
 
-    INode[] nodes = model.getNodeMembers();
+    final INode[] nodes = model.getNodeMembers();
     for( final INode node : nodes )
-    {
-
       if( targetFeatureType.equals( node.getFeature().getFeatureType() ) )
       {
-        String nodeId = node.getId();
+        final String nodeId = node.getId();
         if( nodeId == null )
           continue;
 
         final String[] split = nodeId.split( "_" );
         if( split.length != 2 )
-          throw new IllegalStateException();
+          throw new IllegalStateException( "Node id is incorrect" );
 
         final Integer iBranch = new Integer( split[1] );
         if( iBranch > count )
           count = iBranch;
       }
-    }
 
-    return String.format( "%s%05d", getDelimiter( targetFeatureType ), ++count );
+    return String.format( "%s%05d", FNNodeUtils.getDelimiter( targetFeatureType ), ++count );
   }
 
-  private static String getDelimiter( IFeatureType targetFeatureType )
+  private static String getDelimiter( final IFeatureType targetFeatureType )
   {
-    QName qn = targetFeatureType.getQName();
+    final QName qn = targetFeatureType.getQName();
 
     if( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE.equals( qn ) )
       return "ln_";
@@ -139,15 +136,15 @@ public class FNNodeUtils
     else if( ISobekConstants.QN_NOFDP_WEIR_NODE.equals( qn ) )
       return "wn_";
     else
-      throw (new NotImplementedException());
+      throw new NotImplementedException();
   }
 
-  public static INode getNode( IModelMember model, Feature node )
+  public static INode getNode( final IModelMember model, final Feature node )
   {
     if( node == null )
       return null;
 
-    QName qname = node.getFeatureType().getQName();
+    final QName qname = node.getFeatureType().getQName();
     if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( qname ) )
       return new ConnectionNode( model, node );
     else if( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE.equals( qname ) )

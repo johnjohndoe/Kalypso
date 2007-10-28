@@ -71,7 +71,7 @@ public class LinkFeatureWrapper
     else if( property == null )
       return null;
 
-    throw new IllegalStateException();
+    throw new IllegalStateException( "Type not supported: " + property.toString() );
   }
 
 }

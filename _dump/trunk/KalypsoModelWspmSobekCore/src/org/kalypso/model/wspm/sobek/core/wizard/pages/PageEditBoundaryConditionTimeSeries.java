@@ -206,7 +206,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
             break;
 
           default:
-            throw new IllegalStateException();
+            throw new IllegalStateException( "Type not supported: " + m_type.name() );
         }
 
         container.layout();
