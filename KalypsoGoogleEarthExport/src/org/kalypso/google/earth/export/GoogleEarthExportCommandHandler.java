@@ -55,7 +55,7 @@ public class GoogleEarthExportCommandHandler implements IHandler
     }
 
     if( mapView == null )
-      throw new IllegalStateException();
+      throw new IllegalStateException( "Referece of MapView is null" );
 
     /* call google earth export wizard */
     final WizardGoogleExport wizard = new WizardGoogleExport( mapView, targetFile );
