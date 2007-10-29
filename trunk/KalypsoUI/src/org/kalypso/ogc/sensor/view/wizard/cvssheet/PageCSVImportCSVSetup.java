@@ -334,8 +334,11 @@ public class PageCSVImportCSVSetup extends WizardPage
     lDateFormat.setText( "Date format" );
 
     final List<SimpleDateFormat> dates = new ArrayList<SimpleDateFormat>();
-    dates.add( new SimpleDateFormat( "yyyy-MM-dd HH:mm" ) );
     dates.add( new SimpleDateFormat( "dd.MM.yyyy HH:mm" ) );
+    dates.add( new SimpleDateFormat( "dd.MM.yy HH:mm" ) );
+
+    dates.add( new SimpleDateFormat( "yyyy-MM-dd HH:mm" ) );
+    dates.add( new SimpleDateFormat( "yy-MM-dd HH:mm" ) );
 
     final FacadeComboViewer wDateFormats = new FacadeComboViewer( new FCVSimpleDateDelegate( dates.toArray( new SimpleDateFormat[] {} ) ) );
     wDateFormats.draw( grSeperators, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );

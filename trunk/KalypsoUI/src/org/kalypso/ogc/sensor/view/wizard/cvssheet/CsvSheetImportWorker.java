@@ -48,6 +48,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -95,6 +96,8 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
   private SimpleObservation addTimeSeries( final CSVReader readerTimeSeries ) throws IOException, ParseException, SensorException
   {
     final SimpleDateFormat dateFormat = (SimpleDateFormat) m_model.getValue( TSM_KEY.eCsvDateFormat );
+    dateFormat.set2DigitYearStart( Calendar.getInstance().getTime() );
+
     final WQ_KIND kind = (WQ_KIND) m_model.getValue( TSM_KEY.eCsvTimeSeriesIsWorQ );
     final DECIMAL_NUMBER_SEPERATORS dSep = (DECIMAL_NUMBER_SEPERATORS) m_model.getValue( TSM_KEY.eCsvDecimalNumberSeperator );
 
@@ -110,7 +113,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     else if( WQ_KIND.eQ.equals( kind ) )
       axisX = TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_RUNOFF, false );
     else
-      throw (new NotImplementedException());
+      throw new NotImplementedException();
 
     final SimpleAxis simpleDataAxis = new SimpleAxis( axisX );
 
@@ -196,7 +199,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       return new WQTableSet( new WQTable[] { table }, "W", "Q" );
     }
 
-    throw (new NotImplementedException());
+    throw new NotImplementedException();
 
   }
 
