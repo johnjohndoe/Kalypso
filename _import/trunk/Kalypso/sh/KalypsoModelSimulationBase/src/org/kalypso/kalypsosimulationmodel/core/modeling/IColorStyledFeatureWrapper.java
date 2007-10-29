@@ -44,10 +44,12 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * @author antanas
- *
+ * @author Dejan Antanaskovic
+ * 
  */
 public interface IColorStyledFeatureWrapper extends IFeatureWrapper2
 {
   public RGB getColorStyle( );
+
+  public int getOrdinalNumber( );
 }

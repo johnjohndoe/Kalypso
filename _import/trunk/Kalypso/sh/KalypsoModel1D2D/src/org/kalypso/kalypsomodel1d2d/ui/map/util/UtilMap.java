@@ -50,7 +50,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.UIPlugin;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -139,7 +138,7 @@ public class UtilMap
   private static List<IKalypsoFeatureTheme> loadKalypsoFeatureThemes( final IMapModell mapModel )
   {
     final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
-    UIPlugin.getDefault().getWorkbench().getDisplay().syncExec( waitForFeaturesLoading( mapModel ) );
+    PlatformUI.getWorkbench().getDisplay().syncExec( waitForFeaturesLoading( mapModel ) );
     final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
     for( int i = 0; i < allThemes.length; i++ )
     {

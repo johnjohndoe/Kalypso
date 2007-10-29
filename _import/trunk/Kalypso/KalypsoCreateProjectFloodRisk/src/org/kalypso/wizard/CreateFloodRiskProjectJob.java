@@ -85,17 +85,14 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
-import org.kalypso.floodrisk.tools.GridUtils;
 import org.kalypso.floodrisk.tools.Number;
-import org.kalypso.gis.doubleraster.DoubleRaster;
-import org.kalypso.gis.doubleraster.RectifiedGridCoverageDoubleRaster;
-import org.kalypso.gis.doubleraster.walker.MinMaxRasterWalker;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.grid.MinMaxRasterWalker;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
@@ -130,6 +127,7 @@ import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Geometry_Impl;
@@ -141,7 +139,6 @@ import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
-import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -558,35 +555,36 @@ public class CreateFloodRiskProjectJob extends Job
    */
   private Vector createWaterlevelGrids( final IProgressMonitor monitor ) throws Exception
   {
-    final Vector<File> targetFiles = new Vector<File>();
-    final int workedPart = 50 / m_waterlevelGrids.size();
-    for( int i = 0; i < m_waterlevelGrids.size(); i++ )
-    {
-      final File sourceFile = (File) m_waterlevelGrids.get( i );
-      RectifiedGridCoverage2 grid = GridUtils.importGridArc( sourceFile, m_waterlevelCooSystem );
-      final String sourceFileNameWithoutExtension = FileUtilities.nameWithoutExtension( sourceFile.getName() );
-      final File waterlevelDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Waterlevel" ) )).toFile(); //$NON-NLS-1$
-      waterlevelDir.mkdir();
-      final File targetFile = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Waterlevel/" + sourceFileNameWithoutExtension + ".gml" ) )).toFile(); //$NON-NLS-1$ //$NON-NLS-2$
-
-      GridUtils.writeRasterData( targetFile, grid );
-      targetFiles.add( targetFile );
-      final String sldFileName = m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/" + sourceFileNameWithoutExtension + ".sld"; //$NON-NLS-1$ //$NON-NLS-2$
-      final Color lightBlue = new Color( 150, 150, 255 );
-      final int numOfCategories = 5;
-
-      createRasterStyle( sldFileName, sourceFileNameWithoutExtension, grid, lightBlue, numOfCategories );
-
-      StyledLayerType styledLayerType = createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension );
-      JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( styledLayerType );
-      m_layerList.add( layerElement );
-
-      grid = null;
-      monitor.worked( workedPart );
-      if( monitor.isCanceled() )
-        return null;
-    }
-    return targetFiles;
+//    final Vector<File> targetFiles = new Vector<File>();
+//    final int workedPart = 50 / m_waterlevelGrids.size();
+//    for( int i = 0; i < m_waterlevelGrids.size(); i++ )
+//    {
+//      final File sourceFile = (File) m_waterlevelGrids.get( i );
+//      RectifiedGridCoverage grid = GridUtils.importGridArc( sourceFile, m_waterlevelCooSystem );
+//      final String sourceFileNameWithoutExtension = FileUtilities.nameWithoutExtension( sourceFile.getName() );
+//      final File waterlevelDir = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Waterlevel" ) )).toFile(); //$NON-NLS-1$
+//      waterlevelDir.mkdir();
+//      final File targetFile = (m_workspacePath.append( m_projectHandle.getFullPath().append( "/Waterlevel/" + sourceFileNameWithoutExtension + ".gml" ) )).toFile(); //$NON-NLS-1$ //$NON-NLS-2$
+//
+//      GridUtils.writeRasterData( targetFile, grid );
+//      targetFiles.add( targetFile );
+//      final String sldFileName = m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/" + sourceFileNameWithoutExtension + ".sld"; //$NON-NLS-1$ //$NON-NLS-2$
+//      final Color lightBlue = new Color( 150, 150, 255 );
+//      final int numOfCategories = 5;
+//
+//      createRasterStyle( sldFileName, sourceFileNameWithoutExtension, grid, lightBlue, numOfCategories );
+//
+//      StyledLayerType styledLayerType = createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension );
+//      JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( styledLayerType );
+//      m_layerList.add( layerElement );
+//
+//      grid = null;
+//      monitor.worked( workedPart );
+//      if( monitor.isCanceled() )
+//        return null;
+//    }
+//    return targetFiles;
+    return null;
   }
 
   /**
@@ -603,15 +601,15 @@ public class CreateFloodRiskProjectJob extends Job
    *            number of intervals
    * @throws Exception
    */
-  private void createRasterStyle( final String resultFileName, final String styleName, final RectifiedGridCoverage2 grid, Color color, final int numOfCategories ) throws Exception
+  private void createRasterStyle( final String resultFileName, final String styleName, final RectifiedGridCoverage grid, Color color, final int numOfCategories ) throws Exception
   {
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     final ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, WizardMessages.getString( "CreateFloodRiskProjectJob.NoData" ) ); //$NON-NLS-1$
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
 
-    final DoubleRaster dr = new RectifiedGridCoverageDoubleRaster( grid.getFeature() );
+//    final DoubleRaster dr = new RectifiedGridCoverageDoubleRaster( grid.getFeature() );
     final MinMaxRasterWalker walker = new MinMaxRasterWalker();
-    dr.walk( walker, null );
+//    dr.walk( walker, null );
     final double min = 0.0; // We don't use walker.getMin() because min is -9999.0, and we need 0.0 water level as min
     final double max = walker.getMax();
 

@@ -109,7 +109,7 @@ public class RoughnessStyleUpdateService extends Job
         while( roughnessWorkspace == null );
       }
       final IRoughnessClsCollection collection = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
-      SLDHelper.exportSLD( m_sldFile, collection, IRoughnessPolygon.PROP_GEOMETRY, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, STYLE_NAME, STYLE_TITLE, monitor );
+      SLDHelper.exportPolygonSymbolyzerSLD( m_sldFile, collection, IRoughnessPolygon.PROP_GEOMETRY, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, STYLE_NAME, STYLE_TITLE, monitor );
       return Status.OK_STATUS;
     }
     catch( final Throwable t )

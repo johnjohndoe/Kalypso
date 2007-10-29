@@ -44,6 +44,8 @@ import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.List;
+import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.OutputKeys;
@@ -64,6 +66,7 @@ import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
+import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Font;
@@ -71,20 +74,22 @@ import org.kalypsodeegree.graphics.sld.LabelPlacement;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
 import org.kalypsodeegree_impl.graphics.sld.LabelPlacement_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointPlacement_Impl;
+import org.kalypsodeegree_impl.graphics.sld.RasterSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
@@ -92,7 +97,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  * 
  */
 public class SLDHelper
@@ -117,10 +122,22 @@ public class SLDHelper
 
   private static final float[] DEFAULT_RULE_DASHARRAY = new float[] { 2, 5 };
 
-  public static void exportSLD( final IFile sldFile, final IFeatureWrapperCollection< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
+  public static void exportPolygonSymbolyzerSLD( final IFile sldFile, final List< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
   {
     final IProgressMonitor progressMonitor = monitor == null ? new NullProgressMonitor() : monitor;
-    final StyledLayerDescriptor descriptor = createSLD( collection, geometryProperty, styleProperty, styleName, styleTitle, progressMonitor );
+    final StyledLayerDescriptor descriptor = createPolygonSLD( collection, geometryProperty, styleProperty, styleName, styleTitle, progressMonitor );
+    exportSLD( sldFile, descriptor, progressMonitor );
+  }
+
+  public static void exportRasterSymbolyzerSLD( final IFile sldFile, final List< ? > collection, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
+  {
+    final IProgressMonitor progressMonitor = monitor == null ? new NullProgressMonitor() : monitor;
+    final StyledLayerDescriptor descriptor = createRasterSLD( collection, styleName, styleTitle, progressMonitor );
+    exportSLD( sldFile, descriptor, progressMonitor );
+  }
+
+  private static void exportSLD( final IFile sldFile, final StyledLayerDescriptor descriptor, final IProgressMonitor progressMonitor ) throws IOException, SAXException, CoreException
+  {
     final ByteArrayInputStream stream = new ByteArrayInputStream( descriptor.exportAsXML().getBytes( "UTF-8" ) );
     final Document doc = XMLTools.parse( stream );
     final Source source = new DOMSource( doc );
@@ -170,7 +187,43 @@ public class SLDHelper
     helper.setFileContents( sldFile, false, false, progressMonitor );
   }
 
-  private static StyledLayerDescriptor createSLD( final IFeatureWrapperCollection< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
+  private static StyledLayerDescriptor createRasterSLD( final List< ? > collection, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
+  {
+    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
+    final FeatureTypeStyle style = new FeatureTypeStyle_Impl();
+
+    for( final Object styledFeatureObject : collection )
+    {
+      final IColorStyledFeatureWrapper styledFeature;
+      if( styledFeatureObject instanceof IColorStyledFeatureWrapper )
+        styledFeature = (IColorStyledFeatureWrapper) styledFeatureObject;
+      else
+        continue;
+      if( monitor.isCanceled() )
+        throw new CoreException( Status.CANCEL_STATUS );
+
+      final RGB rgb = styledFeature.getColorStyle();
+      Color color = null;
+      if( rgb == null )
+        color = Color.WHITE;
+      else
+        color = new Color( rgb.red, rgb.green, rgb.blue );
+      final double quantity = styledFeature.getOrdinalNumber();
+      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 0.75, quantity, "" ); //$NON-NLS-1$
+      colorMap.put( new Double( quantity ), colorMapEntry );
+    }
+
+    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
+    final Rule rule = StyleFactory.createRule( rasterSymbolizer );
+    style.addRule( rule );
+
+    final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
+    final Style[] styles = new Style[] { new UserStyle_Impl( styleName, styleTitle, null, false, featureTypeStyles ) };
+    final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( LAYER_NAME, null, styles ) };
+    return SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+  }
+
+  private static StyledLayerDescriptor createPolygonSLD( final List< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
   {
     final FeatureTypeStyle style = new FeatureTypeStyle_Impl();
 
