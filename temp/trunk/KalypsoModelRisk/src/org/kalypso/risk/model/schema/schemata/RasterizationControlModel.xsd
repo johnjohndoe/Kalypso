@@ -23,44 +23,17 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element ref="krrcm:landuseClassCollection"
-						minOccurs="1" maxOccurs="1" />
+					<xs:element ref="krrcm:landuseClassMember"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="krrcm:damageFunctionMember"
+						minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- =================================================================
-		ControlModelMemberPropertyType member or property 
-		===================================================================-->
-	<xs:element name="landuseClassCollection"
-		type="krrcm:LanduseClassCollectionPropertyType" />
-	<xs:complexType name="LanduseClassCollectionPropertyType">
-		<xs:sequence>
-			<xs:element ref="krrcm:LanduseClassCollection"
-				minOccurs="0" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
-	<!-- =================================================================
-		Landuse classes Collection
-		================================================================== -->
-	<xs:element name="LanduseClassCollection"
-		type="krrcm:LanduseClassCollectionType"
-		substitutionGroup="gml:_Feature" />
-
-	<xs:complexType name="LanduseClassCollectionType">
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
-				<xs:sequence>
-					<xs:element ref="krrcm:landuseClassMember"
-						minOccurs="0" maxOccurs="unbounded" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 
 	<!-- =================================================================
-		landuseClassMember property
+		landuseClassMember (root property)
 		================================================================== -->
 	<xs:element name="landuseClassMember"
 		type="krrcm:LanduseClassPropertyType" />
@@ -92,6 +65,136 @@
 	</xs:element>
 
 	<xs:complexType name="LanduseClassType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.RasterizationControModelPropertyFunction"
+					kapp:property="krrcm:damageFunctionName" kapp:isVirtual="true"
+					kapp:valueType="xs:string" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+				<xs:element name="ordinalNumber" type="xs:int"/>
+					<xs:element name="damageFunctionLink"
+						type="krrcm:DamageFunctionLinkType" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Schadensfunktion</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Damage function</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="colorStyle" type="common:color">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Farbdarstellung</xs:label>
+								<xs:tooltip>
+									Farbdarstellung der
+									Landnutzungsklasse in der Karte
+								</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Color style</xs:label>
+								<xs:tooltip>
+									Color of landuse class in the map
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+
+	<xs:complexType name="DamageFunctionLinkType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+
+			<!--
+			IMPORTANT!!!
+
+				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+				should be written in one line, exactly like this!
+
+				Please check if your auto-formatting breaks it into:
+					<kapp:documentReference>
+						RasterizationControlModel.gml
+					</kapp:documentReference>
+				than fix it manually...
+
+			-->
+
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="krrcm:DamageFunction" minOccurs="0"
+				maxOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+
+	
+
+	<!-- =================================================================
+		Asset value classes Collection
+		================================================================== -->
+	<xs:element name="AssetValueClassCollection"
+		type="krrcm:AssetValueClassCollectionType"
+		substitutionGroup="gml:_Feature" />
+
+	<xs:complexType name="AssetValueClassCollectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="krrcm:assetValueClassMember"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- =================================================================
+		assetValueClassMember property
+		================================================================== -->
+	<xs:element name="assetValueClassMember"
+		type="krrcm:AssetValueClassPropertyType" />
+
+	<xs:complexType name="AssetValueClassPropertyType">
+		<xs:sequence>
+			<xs:element ref="krrcm:AssetValueClass" minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!-- =================================================================
+		Asset value classes
+		================================================================== -->
+	<xs:element name="AssetValueClass" type="krrcm:AssetValueClassType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="AssetValueClassType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
@@ -117,5 +220,50 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	
 
+	<!-- =================================================================
+		damageFunctionMember (root property)
+		================================================================== -->
+	<xs:element name="damageFunctionMember"
+		type="krrcm:DamageFunctionPropertyType" />
+
+	<xs:complexType name="DamageFunctionPropertyType">
+		<xs:sequence>
+			<xs:element ref="krrcm:DamageFunction" minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!-- =================================================================
+		Asset value classes
+		================================================================== -->
+	<xs:element name="DamageFunction" type="krrcm:DamageFunctionType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="DamageFunctionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="function" type="xs:string">
+					</xs:element>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 </xs:schema>

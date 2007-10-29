@@ -3,6 +3,7 @@ package org.kalypso.risk.model.schema.binding;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
@@ -41,5 +42,10 @@ public class WaterdepthCoverage extends AbstractFeatureBinder implements IWaterd
   public void setRangeSet( final RangeSetType rangeSet )
   {
     getFeature().setProperty( IWaterdepthCoverage.PROP_RANGE_SET, rangeSet );
+  }
+
+  public GM_Envelope getEnvelope( )
+  {
+    return getFeature().getEnvelope();
   }
 }

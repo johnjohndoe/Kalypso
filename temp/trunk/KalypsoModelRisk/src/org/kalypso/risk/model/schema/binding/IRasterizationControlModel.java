@@ -1,5 +1,7 @@
 package org.kalypso.risk.model.schema.binding;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
@@ -9,7 +11,11 @@ public interface IRasterizationControlModel extends IModel
 {
   public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "RasterizationControlModel" );
 
-  public QName PROPERTY_LANDUSE_CLASS_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassCollection" );
+  public QName PROPERTY_LANDUSE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
 
-  public ILanduseClassCollection getLanduseClassCollection( );
+  public QName PROPERTY_DAMAGE_FUNCTION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionMember" );
+
+  public List<ILanduseClass> getLanduseClassesList( );
+  
+  public ILanduseClass createNewLanduseClass();
 }

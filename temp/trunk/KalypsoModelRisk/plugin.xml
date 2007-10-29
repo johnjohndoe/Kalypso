@@ -60,6 +60,11 @@
         name="ImportWaterlevelRaster"
         project="false">
   </wizard>
+  <wizard
+        class="org.kalypso.risk.rasterization.RasterizationWizard"
+        id="org.kalypso.risk.rasterization.RasterizationWizard"
+        name="RasterizationWizard">
+  </wizard>
 	</extension>
  <extension
        point="org.kalypso.contribs.java.urlCatalog">
@@ -77,14 +82,14 @@
           class="org.kalypso.risk.model.schema.KalypsoRiskFeatureFactory">
        <adapter type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.ILanduseClassCollection"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILanduseClass"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.ILanduseModel"/>
+       <adapter type="org.kalypso.risk.model.schema.binding.ILanduseVectorModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygonCollection"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygon"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IWaterdepthCoverageModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IWaterdepthCoverageCollection"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IWaterdepthCoverage"/>
+       <adapter type="org.kalypso.risk.model.schema.binding.ILanduseCoverageModel"/>
     </factory>
  </extension>
  <extension
@@ -93,8 +98,13 @@
           id="org.kalypso.risk">
        <scenarioDatum
              bundle="org.kalypso.risk"
-             classKey="org.kalypso.risk.model.schema.binding.ILanduseModel"
+             classKey="org.kalypso.risk.model.schema.binding.ILanduseVectorModel"
              modelPath="models/LanduseVectorModel.gml">
+       </scenarioDatum>
+       <scenarioDatum
+             bundle="org.kalypso.risk"
+             classKey="org.kalypso.risk.model.schema.binding.ILanduseCoverageModel"
+             modelPath="models/LanduseCoverageModel.gml">
        </scenarioDatum>
        <scenarioDatum
              bundle="org.kalypso.risk"
@@ -119,6 +129,16 @@
           class="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
           id="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
           name="LanduseStylePropertyFunction">
+    </function>
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.LanduseClsOrdinalNumberPropertyFunction"
+          id="org.kalypso.risk.model.schema.propertyFunctions.LanduseClsOrdinalNumberPropertyFunction"
+          name="LanduseClsOrdinalNumberPropertyFunction">
+    </function>
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.RasterizationControModelPropertyFunction"
+          id="org.kalypso.risk.model.schema.propertyFunctions.RasterizationControModelPropertyFunction"
+          name="RasterizationControModelPropertyFunction">
     </function>
  </extension>
 </plugin>

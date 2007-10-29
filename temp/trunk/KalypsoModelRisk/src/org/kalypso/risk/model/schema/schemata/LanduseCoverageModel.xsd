@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseCoverageData"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:cov="org.kalypso.gml.common.coverage"
+	xmlns:krlcd="http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseCoverageData"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="org.kalypso.gml.common.coverage" />
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:element name="LanduseCoverageModel"
+		type="krlcd:LanduseCoverageModelType"
+		substitutionGroup="gml:_Feature">
+	</xs:element>
+
+	<xs:complexType name="LanduseCoverageModelType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="coveragesMember"
+						type="krlcd:CoverageCollectionPropertyType" minOccurs="1"
+						maxOccurs="1">
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="CoverageCollectionPropertyType">
+		<xs:sequence>
+			<xs:element ref="cov:CoverageCollection" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

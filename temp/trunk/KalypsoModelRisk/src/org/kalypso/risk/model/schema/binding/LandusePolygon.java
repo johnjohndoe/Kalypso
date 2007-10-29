@@ -1,6 +1,7 @@
 package org.kalypso.risk.model.schema.binding;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
@@ -31,6 +32,16 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public void setLanduseClass( final Feature landuseClassFeature )
   {
     getFeature().setProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS, landuseClassFeature );
+  }
+
+  public int getLanduseClassOrdinalNumber( )
+  {
+    return (Integer) getFeature().getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
+  }
+
+  public boolean contains( final GM_Position position )
+  {
+    return getFeature().getDefaultGeometryProperty().contains( position );
   }
 
 }

@@ -53,8 +53,8 @@
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Processing">
 		<Help><![CDATA[Processing: Rasterung und Rechnen]]></Help>
 		<Name>Processing: Rasterung und Rechnen</Name>
-		<Task type="ASYNCHRONOUS" context="RasterizingLanduseJob"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__RasterizingLanduseJob">
+		<Task context="RasterizeLanduseWizard"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__RasterizeLanduseWizard">
 			<Help><![CDATA[Rasterung der Landnutzung]]></Help>
 			<Name>Rasterung der Landnutzung</Name>
 		</Task>
@@ -142,6 +142,18 @@
 							id="ImportWaterdepthRasterWizard"
 							wizardId="org.kalypso.risk.model.wizards.importwaterdepth.ImportWaterdepthWizard"
 							wizardType="NEW_WIZARD" parent="ImportWaterdepthRasterContext" />
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="maps/basemap.gmt" />
+					</con:ExtensionContext>
+					<con:ExtensionContext
+						id="RasterizeLanduseContext" parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:WizardContext
+							id="RasterizeLanduseWizard"
+							wizardId="org.kalypso.risk.rasterization.RasterizationWizard"
+							wizardType="NEW_WIZARD" parent="RasterizeLanduseContext" />
 						<con:Parameter name="type"
 							value="mapViewInputContext" />
 						<con:Parameter name="input"

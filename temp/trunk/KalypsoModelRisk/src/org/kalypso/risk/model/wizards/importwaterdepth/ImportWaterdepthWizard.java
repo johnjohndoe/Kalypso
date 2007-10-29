@@ -40,17 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.wizards.importwaterdepth;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -68,6 +64,8 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
+import org.kalypso.grid.ConvertAscii2Binary;
+import org.kalypso.grid.GeoGridException;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.risk.model.schema.binding.IWaterdepthCoverage;
 import org.kalypso.risk.model.schema.binding.IWaterdepthCoverageModel;
@@ -151,12 +149,14 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
             {
               final IWaterdepthCoverage waterdepthCoverage = waterdepthCoverageCollection.addNew( IWaterdepthCoverage.QNAME );
 
-              final String dstFileName = "models/raster/input/" + asciiRasterInfo.getSourceFile().getName();
+              final String binFileName = asciiRasterInfo.getSourceFile().getName() + ".bin";
+              final String dstFileName = "models/raster/input/" + binFileName;
               final IFile dstRasterFile = scenarioFolder.getFile( dstFileName );
-              copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
+              importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile.getRawLocation().toFile(), monitor );
+              // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
               final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-              rangeSetFile.setFileName( "raster/input/" + asciiRasterInfo.getSourceFile().getName() );
-              rangeSetFile.setMimeType( "text/asc" );
+              rangeSetFile.setFileName( "raster/input/" + binFileName );
+              rangeSetFile.setMimeType( "kalypso/bin" );
               final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
               rangeSet.setFile( rangeSetFile );
 
@@ -167,17 +167,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               // TODO create map layer
               monitor.subTask( Messages.getString( "ImportWaterdepthWizard.10" ) ); //$NON-NLS-1$
 
-              // final String sourceFileNameWithoutExtension = FileUtilities.nameWithoutExtension(
-              // asciiRasterInfo.getSourceFile().getName() );
-              // final String sldFileName = scenarioFolder.getRawLocation().toPortableString()+ "/raster/input/" +
-              // sourceFileNameWithoutExtension + ".sld"; //$NON-NLS-1$ //$NON-NLS-2$
-              // final Color lightBlue = new Color( 150, 150, 255 );
-              // final int numOfCategories = 5;
-              // createRasterStyle( sldFileName, "Raster style", asciiRasterInfo.getGridCoverage(), lightBlue,
-              // numOfCategories );
-              // scenarioFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
-              // final String layerName = asciiRasterInfo.getReturnPeriod() + " year flood";
-
+              // final CascadingLayer layer = new CascadingLayer();
               final StyledLayerType layer = new StyledLayerType();
               layer.setName( asciiRasterInfo.getReturnPeriod() + " year flood" );
               layer.setFeaturePath( "#fid#" + waterdepthCoverage.getGmlID() );
@@ -195,6 +185,9 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               style.setType( "simple" );
               styleList.add( style );
               mapModell.addTheme( layer );
+              mapModell.invalidate( asciiRasterInfo.getGridDomain().getGM_Envelope( asciiRasterInfo.getGridDomain().getCoordinateSystem() ) );
+              
+              // mapModell.activateTheme( layer );
 
               // final AddThemeCommand command = new AddThemeCommand( mapModell, asciiRasterInfo.getReturnPeriod() + "
               // year flood", "gml", "#fid#" + waterdepthCoverage.getGmlID(), "project:/"
@@ -224,85 +217,32 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     return true;
   }
 
-  // private void createRasterStyle( final String resultFileName, final String styleName, final RectifiedGridCoverage2
-  // grid, Color color, final int numOfCategories ) throws Exception
+  private void importAsBinaryRaster( final File srcFile, final File dstFile, final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
+  {
+    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2 );
+    ascii2Binary.doConvert( monitor );
+  }
+
+  // private void copy( final File src, final IFile dstFileImage, final IProgressMonitor monitor ) throws CoreException,
+  // IOException
   // {
-  // final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
-  // final ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "no value" );
-  // //$NON-NLS-1$
-  // colorMap.put( new Double( -9999 ), colorMapEntry_noData );
-  //
-  // // final DoubleRaster dr = new RectifiedGridCoverageDoubleRaster( grid.getFeature() );
-  // // final MinMaxRasterWalker walker = new MinMaxRasterWalker();
-  // // dr.walk( walker, null );
-  // final double min = 0.0; // We don't use walker.getMin() because min is -9999.0, and we need 0.0 water level as min
-  // final double max = 20.0;
-  //
-  // final NumberFormat format = NumberFormat.getNumberInstance();
-  // format.setMaximumFractionDigits( 4 );
-  // final double intervalStep = (max - min) / numOfCategories;
-  // for( int i = 0; i < numOfCategories; i++ )
-  // {
-  // final double topBoundary = Double.parseDouble( format.format( min + i * intervalStep ) );
-  // final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 0.5, topBoundary, "" ); //$NON-NLS-1$
-  // color = color.darker();
-  // colorMap.put( topBoundary, colorMapEntry );
-  // }
-  // color = color.darker();
-  // final ColorMapEntry colorMapEntry_max = new ColorMapEntry_Impl( color, 0.5, max, "" ); //$NON-NLS-1$
-  // colorMap.put( new Double( max ), colorMapEntry_max );
-  // final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
-  // final Symbolizer[] symbolizers = new Symbolizer[] { rasterSymbolizer };
-  // final FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
-  // final double minScaleDenominator = 0;
-  // final double maxScaleDenominator = 1.8;
-  // final Rule rule = StyleFactory.createRule( symbolizers, "default", "default", "default", minScaleDenominator,
-  // maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-  // featureTypeStyle.addRule( rule );
-  // final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
-  // final org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new
-  // UserStyle_Impl( styleName, styleName, null, false, featureTypeStyles ) };
-  // final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] {
-  // SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
-  // final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
-  //
-  // final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
-  // final Source source = new DOMSource( doc );
-  // OutputStream os = null;
+  // InputStream in = null;
   // try
   // {
-  // os = new FileOutputStream( resultFileName );
-  // final StreamResult result = new StreamResult( os );
-  // final Transformer t = TransformerFactory.newInstance().newTransformer();
-  // t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
-  // t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
-  // t.transform( source, result );
+  // in = new BufferedInputStream( new FileInputStream( src ) );
+  // if( dstFileImage.exists() )
+  // {
+  // dstFileImage.setContents( in, false, true, monitor );
+  // }
+  // else
+  // {
+  // dstFileImage.create( in, false, monitor );
+  // }
   // }
   // finally
   // {
-  // IOUtils.closeQuietly( os );
+  // IOUtils.closeQuietly( in );
   // }
   // }
-
-  private void copy( final File src, final IFile dstFileImage, final IProgressMonitor monitor ) throws CoreException, IOException
-  {
-    InputStream in = null;
-    try
-    {
-      in = new BufferedInputStream( new FileInputStream( src ) );
-      if( dstFileImage.exists() )
-      {
-        dstFileImage.setContents( in, false, true, monitor );
-      }
-      else
-      {
-        dstFileImage.create( in, false, monitor );
-      }
-    }
-    finally
-    {
-      IOUtils.closeQuietly( in );
-    }
-  }
 
 }

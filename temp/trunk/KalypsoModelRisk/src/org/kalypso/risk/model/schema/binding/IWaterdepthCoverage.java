@@ -6,10 +6,10 @@ import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
-public interface IWaterdepthCoverage extends IFeatureWrapper2
+public interface IWaterdepthCoverage extends ICoverage
 {
   public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_WATERDEPTH_COVERAGE_MODEL, "WaterdepthCoverage" );
 

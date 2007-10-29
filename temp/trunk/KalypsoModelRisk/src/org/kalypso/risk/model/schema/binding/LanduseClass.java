@@ -20,4 +20,16 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   {
     getFeature().setProperty( ILanduseClass.PROP_COLOR_STYLE, rgb );
   }
+
+  public void setOrdinalNumber( int value )
+  {
+    getFeature().setProperty( ILanduseClass.PROP_ORDINAL_NUMBER, value );
+  }
+
+  public int getOrdinalNumber( )
+  {
+    final Integer value = (Integer) getFeature().getProperty( ILanduseClass.PROP_ORDINAL_NUMBER );
+    return value == null ? 0 : value.intValue();
+  }
+
 }

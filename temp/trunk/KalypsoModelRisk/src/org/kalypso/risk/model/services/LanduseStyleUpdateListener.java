@@ -103,7 +103,7 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
 // m_job.setSystem( true );
     m_jobStyleUpdate.setUser( false );
     m_jobStyleUpdate.setPriority( Job.LONG );
-    m_jobStyleUpdate.setRule( m_jobStyleUpdate.getSldFile().getProject() );
+    m_jobStyleUpdate.setRule( m_jobStyleUpdate.getPolygonSymbolzerSldFile().getProject() );
     m_jobStyleUpdate.schedule( 500 );
   }
 

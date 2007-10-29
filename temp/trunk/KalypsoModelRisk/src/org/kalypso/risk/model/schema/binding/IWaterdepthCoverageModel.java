@@ -13,5 +13,5 @@ public interface IWaterdepthCoverageModel extends IModel
   public QName PROPERTY_WATERDEPTH_COVERAGE_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_WATERDEPTH_COVERAGE_MODEL, "waterdepthCoverageCollection" );
 
   public IFeatureWrapperCollection<IWaterdepthCoverage> getWaterdepthCoverageCollection( );
-
+  
 }

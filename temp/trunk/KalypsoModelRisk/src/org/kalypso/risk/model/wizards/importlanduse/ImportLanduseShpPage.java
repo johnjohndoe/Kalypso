@@ -137,7 +137,9 @@ public class ImportLanduseShpPage extends WizardPage implements Listener
     msg_StatusLine = status;
     if( event.widget == btn_inputFileBrowse )
     {
-      txt_InputFile.setText( getFilenameFromDialog( new String[] { "*.shp" }, null ) ); //$NON-NLS-1$
+      final String filenameFromDialog = getFilenameFromDialog( new String[] { "*.shp" }, null ); //$NON-NLS-1$
+      if( filenameFromDialog != null )
+        txt_InputFile.setText( filenameFromDialog );
     }
     else if( event.widget == txt_InputFile )
     {

@@ -67,7 +67,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Dejan Antanaskovic
- * 
  */
 public class LanduseStyleUpdateService extends Job
 {
@@ -78,7 +77,9 @@ public class LanduseStyleUpdateService extends Job
 
   private final IFile m_dbFile;
 
-  private final IFile m_sldFile;
+  private final IFile m_polygonSymbolyzerSldFile;
+
+  private final IFile m_rasterSymbolyzerSldFile;
 
   public LanduseStyleUpdateService( final IFile file )
   {
@@ -87,9 +88,11 @@ public class LanduseStyleUpdateService extends Job
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final IPath resourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/LanduseVectorModel.sld");
+    final IPath polygonResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/LanduseVectorModel.sld" );
+    final IPath rasterResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/LanduseCoverageModel.sld" );
     m_dbFile = file;
-    m_sldFile = m_dbFile.getProject().getFile( resourcePath );
+    m_polygonSymbolyzerSldFile = m_dbFile.getProject().getFile( polygonResourcePath );
+    m_rasterSymbolyzerSldFile = m_dbFile.getProject().getFile( rasterResourcePath );
   }
 
   /**
@@ -106,8 +109,6 @@ public class LanduseStyleUpdateService extends Job
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
       GMLWorkspace workspace;
 
-      // Here happens a NPE (roughnessWorkspace == null) after creating a new 1d2d model
-      // reason: terrain model is still not loaded, so we will wait a bit...
       synchronized( this )
       {
         do
@@ -118,7 +119,8 @@ public class LanduseStyleUpdateService extends Job
         while( workspace == null );
       }
       final IRasterizationControlModel model = (IRasterizationControlModel) workspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
-      SLDHelper.exportSLD( m_sldFile, model.getLanduseClassCollection(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, STYLE_NAME, STYLE_TITLE, monitor );
+      SLDHelper.exportPolygonSymbolyzerSLD( m_polygonSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, STYLE_NAME, STYLE_TITLE, monitor );
+      SLDHelper.exportRasterSymbolyzerSLD( m_rasterSymbolyzerSldFile, model.getLanduseClassesList(), STYLE_NAME, STYLE_TITLE, monitor );
       return Status.OK_STATUS;
     }
     catch( final Throwable t )
@@ -127,8 +129,13 @@ public class LanduseStyleUpdateService extends Job
     }
   }
 
-  public IFile getSldFile( )
+  public IFile getPolygonSymbolzerSldFile( )
   {
-    return m_sldFile;
+    return m_polygonSymbolyzerSldFile;
+  }
+
+  public IFile getRasterSymbolzerSldFile( )
+  {
+    return m_rasterSymbolyzerSldFile;
   }
 }

@@ -2,4 +2,5 @@
 eclipse.preferences.version=1
 encoding//Basis/models/RasterizationControlModel.gml=Cp1252
 encoding//Basis/models/LanduseVectorModel.gml=Cp1252
+encoding//Basis/models/LanduseCoverageModel.gml=Cp1252
 encoding//Basis/models/WaterdepthCoverageModel.gml=Cp1252

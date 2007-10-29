@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoRisk">
     <input id="LanduseVectorModel" path="models/LanduseVectorModel.gml" relativeToCalcCase="true"/>
+	<input id="LanduseCoverageModel" path="models/LanduseCoverageModel.gml" relativeToCalcCase="true"/>
 	<input id="WaterdepthCoverageModel" path="models/WaterdepthCoverageModel.gml" relativeToCalcCase="true"/>
 	<input id="RasterizationControlModel" path="models/RasterizationControlModel.gml" relativeToCalcCase="true"/>
 <!-- 
