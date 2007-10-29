@@ -100,9 +100,15 @@ public class ImportTrippleHelper
 
       /* File Header */
       fileReader.readLine();
-
+      int count = 1;
       while( (line = fileReader.readLine()) != null )
       {
+        count++;
+
+        /* ignore empty lines */
+        if( line.length() == 0 )
+          continue;
+
         /* trippel-format should be: station, x, y, z */
         tokenizer = new StringTokenizer( line, separator );
 
@@ -135,9 +141,11 @@ public class ImportTrippleHelper
         else
         {
           // inform the user that his profile has not enough values...
-          final String message = "Import failed; profile no: \n" + (numStations + 1) + " has wrong number of values;\n necessary are: station, x, y, z";
+          final String message = "Import failed; profile no: \n" + (numStations + 1) + "(line no. " + count + ") has wrong number of values;\n necessary are: station, x, y, z";
           throw new Exception( message );
+          // continue;
         }
+
       }
 
       fileReader.close();
@@ -151,7 +159,8 @@ public class ImportTrippleHelper
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new ArrayList<IProfil>();
+      throw new IllegalStateException( e.getMessage() );
+      // return new ArrayList<IProfil>();
     }
     finally
     {
