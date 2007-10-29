@@ -300,4 +300,13 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
     return (RGB) getFeature().getProperty( KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE );
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper#getOrdinalNumber()
+   */
+  public int getOrdinalNumber( )
+  {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
 }
