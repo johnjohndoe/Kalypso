@@ -212,13 +212,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       }
     };
 
-    paint( g, p, scale, bbox, selected, monitor, paintDelegate );
+    paint( scale, bbox, selected, monitor, paintDelegate );
   }
 
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  public void paint( final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     if( m_theme != null )
-      m_theme.paint( g, p, scale, bbox, selected, monitor, delegate );
+      m_theme.paint( scale, bbox, selected, monitor, delegate );
   }
 
   /**
@@ -640,6 +640,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
   {
-    paint( null, delegate.getProjection(), delegate.getScale(), delegate.getBoundingBox(), delegate.getSelected(), new NullProgressMonitor(), delegate );
+    paint( delegate.getScale(), delegate.getBoundingBox(), delegate.getSelected(), new NullProgressMonitor(), delegate );
   }
 }

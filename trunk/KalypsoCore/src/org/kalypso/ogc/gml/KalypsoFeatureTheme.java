@@ -172,10 +172,10 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       }
     };
 
-    paint( graphics, projection, scale, bbox, selected, monitor, paintDelegate );
+    paint( scale, bbox, selected, monitor, paintDelegate );
   }
 
-  public void paint( final Graphics graphics, final GeoTransform projection, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  public void paint( final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     final Collection<UserStylePainter> styles = m_styleDisplayMap.values();
     final UserStylePainter[] styleArray = styles.toArray( new UserStylePainter[styles.size()] );
@@ -190,7 +190,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( final UserStylePainter map : styleArray )
     {
       final SubMonitor childProgress = progress.newChild( 1 );
-      map.paintSelected( workspace, graphics, projection, scale, bbox, m_featureList, selected, childProgress, delegate );
+      map.paintSelected( workspace, scale, bbox, m_featureList, selected, childProgress, delegate );
       ProgressUtilities.done( childProgress );
     }
   }
@@ -436,6 +436,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
   {
-    paint( null, delegate.getProjection(), delegate.getScale(), delegate.getBoundingBox(), delegate.getSelected(), new NullProgressMonitor(), delegate );
+    paint( delegate.getScale(), delegate.getBoundingBox(), delegate.getSelected(), new NullProgressMonitor(), delegate );
   }
 }
