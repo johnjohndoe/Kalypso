@@ -58,7 +58,6 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public class RepositoryTreeContentProvider extends org.kalypso.ui.repository.view.RepositoryTreeContentProvider
 {
-
   private final IBoundaryConditionGeneral m_settings;
 
   public RepositoryTreeContentProvider( final IBoundaryConditionGeneral settings )
@@ -129,9 +128,9 @@ public class RepositoryTreeContentProvider extends org.kalypso.ui.repository.vie
   {
     final BOUNDARY_TYPE bnt = m_settings.getBoundaryNodeType();
 
-    //$ANALYSIS-IGNORE
-	if( bnt.toZmlString().equals( type ) )
-	      return true;
+    // $ANALYSIS-IGNORE
+    if( bnt.toZmlString().equals( type ) )
+      return true;
 
     return false;
   }

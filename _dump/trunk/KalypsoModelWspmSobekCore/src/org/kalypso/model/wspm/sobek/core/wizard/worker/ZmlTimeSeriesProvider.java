@@ -76,20 +76,12 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
     /* set time series link */
     final TimeseriesLinkType lnkTimeSeries = new TimeseriesLinkType();
     final ZmlObservationItem item = getPageTS().getZmlObservationItem();
-    final String path = getRelativePath( item.getFile().getPath() );
-    lnkTimeSeries.setHref( path );
+    final String identifier = item.getIdentifier();
+    lnkTimeSeries.setHref( identifier );
 
     changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnkTimeSeries );
 
     return changes;
   }
 
-  /* nofdp relative link to time series repository */
-  private String getRelativePath( final String path )
-  {
-    final String lowerCase = path.toLowerCase();
-    final int index = lowerCase.indexOf( "timeseriesrepository" );
-
-    return "project:/" + path.substring( index );
-  }
 }

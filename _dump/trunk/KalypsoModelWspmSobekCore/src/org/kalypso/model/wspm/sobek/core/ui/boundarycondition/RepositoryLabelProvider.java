@@ -49,6 +49,7 @@ import org.kalypso.repository.file.FileItem;
  */
 public class RepositoryLabelProvider extends LabelProvider
 {
+
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
@@ -64,9 +65,11 @@ public class RepositoryLabelProvider extends LabelProvider
     if( element instanceof FileItem )
     {
       final FileItem i = (FileItem) element;
+
       return i.getFile().getName();
     }
 
     return super.getText( element );
   }
+
 }
