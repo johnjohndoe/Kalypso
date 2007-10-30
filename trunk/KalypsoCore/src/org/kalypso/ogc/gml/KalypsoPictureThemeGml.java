@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.awt.Graphics;
 import java.net.URL;
 
 import javax.media.jai.JAI;
@@ -50,12 +51,15 @@ import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
@@ -65,41 +69,71 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
  */
 public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 {
+  private final ICoverageCollection m_coverages;
+
   public KalypsoPictureThemeGml( final StyledLayerType layerType, final URL context, final IMapModell modell ) throws Exception
   {
     super( layerType, context, modell );
 
     // TODO: botch... find a better way of loading gml workspace!
     // maybe it could be treated as normal gm with a special display element?
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( UrlResolverSingleton.resolveUrl( context, layerType.getHref() ), null );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() ), null );
     final Feature fRoot = workspace.getRootFeature();
 
-    final ICoverageCollection coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
-    if( coverages.size() != 1 )
+    m_coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
+    if( m_coverages.size() != 1 )
       throw new NotImplementedException( "Collection of Images not implemented!" );
 
-    for( final ICoverage coverage : coverages )
+    for( final ICoverage coverage : m_coverages )
     {
       final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
-
-      /* imgFile */
-      final RangeSetType rangeSet = coverage2.getRangeSet();
-      final FileType type = rangeSet.getFile();
-
-      final URL imageContext = UrlResolverSingleton.resolveUrl( context, layerType.getHref() );
-
-      final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
-      final RenderedOp image = JAI.create( "url", imageUrl );
-      setImage( new TiledImage( image, true ) );
-
-      image.dispose();
 
       /* recGridDomain */
       setRectifiedGridDomain( coverage2.getGridDomain() );
 
       // HACK: we assume, that we only have exactly ONE coverage per picture-theme
-
       break;
     }
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.KalypsoPictureTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
+  {
+    /** image creation removed from constructor, so not visible themes will not be loaded! */
+    if( getImage() == null )
+      try
+      {
+        for( final ICoverage coverage : m_coverages )
+        {
+          final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
+
+          /* imgFile */
+          final RangeSetType rangeSet = coverage2.getRangeSet();
+          final FileType type = rangeSet.getFile();
+
+          final URL imageContext = UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() );
+
+          final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
+          final RenderedOp image = JAI.create( "url", imageUrl );
+          setImage( new TiledImage( image, true ) );
+          image.dispose();
+
+          // HACK: we assume, that we only have exactly ONE coverage per picture-theme
+
+          break;
+        }
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+
+    super.paint( g, p, scale, bbox, selected, monitor );
   }
 }

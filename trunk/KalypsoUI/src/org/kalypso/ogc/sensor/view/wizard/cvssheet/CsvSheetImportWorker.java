@@ -48,7 +48,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -96,7 +95,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
   private SimpleObservation addTimeSeries( final CSVReader readerTimeSeries ) throws IOException, ParseException, SensorException
   {
     final SimpleDateFormat dateFormat = (SimpleDateFormat) m_model.getValue( TSM_KEY.eCsvDateFormat );
-    dateFormat.set2DigitYearStart( Calendar.getInstance().getTime() );
+// dateFormat.set2DigitYearStart( Calendar.getInstance().getTime() );
 
     final WQ_KIND kind = (WQ_KIND) m_model.getValue( TSM_KEY.eCsvTimeSeriesIsWorQ );
     final DECIMAL_NUMBER_SEPERATORS dSep = (DECIMAL_NUMBER_SEPERATORS) m_model.getValue( TSM_KEY.eCsvDecimalNumberSeperator );

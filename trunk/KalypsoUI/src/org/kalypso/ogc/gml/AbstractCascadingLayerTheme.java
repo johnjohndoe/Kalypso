@@ -94,7 +94,8 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
-      invalidate( theme.getFullExtent() );
+      if( isVisible() )
+        invalidate( theme.getFullExtent() );
 
       handleThemeStatusChanged();
     }

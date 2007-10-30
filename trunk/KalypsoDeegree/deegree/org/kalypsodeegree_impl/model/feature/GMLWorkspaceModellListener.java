@@ -46,6 +46,8 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreeExtensions;
@@ -57,7 +59,6 @@ import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.visitors.IndexFeaturesVisitor;
 
 /**
  * @author Gernot Belger
@@ -78,7 +79,7 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
       addListener( listener );
 
     /* Find listeners for qnames */
-    m_workspace.accept( this, workspace.getRootFeature(), IndexFeaturesVisitor.DEPTH_INFINITE );
+    m_workspace.accept( this, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
   }
 
   /**
@@ -86,17 +87,22 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
    */
   public boolean visit( final Feature f )
   {
-    final QName qname = f.getFeatureType().getQName();
-    initQName( qname );
+    initQName( f.getFeatureType() );
 
     return true;
   }
 
-  private void initQName( final QName qname )
+  private void initQName( final IFeatureType featureType )
   {
-    final IGmlWorkspaceListener[] listeners = KalypsoDeegreeExtensions.getGmlWorkspaceListeners( qname );
-    for( final IGmlWorkspaceListener listener : listeners )
-      addListener( listener );
+    final IFeatureType[] substituts = GMLSchemaUtilities.getSubstituts( featureType, featureType.getGMLSchema(), true, true );
+    for( final IFeatureType substFeatureType : substituts )
+    {
+      final QName substQname = substFeatureType.getQName();
+
+      final IGmlWorkspaceListener[] listeners = KalypsoDeegreeExtensions.getGmlWorkspaceListeners( substQname );
+      for( final IGmlWorkspaceListener listener : listeners )
+        addListener( listener );
+    }
   }
 
   private void addListener( final IGmlWorkspaceListener listener )
@@ -121,23 +127,26 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
         final Feature[] parentFeatures = fscm.getParentFeatures();
         for( final Feature feature : parentFeatures )
         {
-          final IPropertyType[] properties = feature.getFeatureType().getProperties();
+          /* Check for qname of added feature */
+          final IFeatureType featureType = feature.getFeatureType();
+          initQName( featureType );
+
+          /* Check for its properties */
+          final IPropertyType[] properties = featureType.getProperties();
           for( final IPropertyType type : properties )
-          {
             if( type instanceof IRelationType )
             {
               final IRelationType rt = (IRelationType) type;
-              final QName qname = rt.getTargetFeatureType().getQName();
-              initQName( qname );
+              initQName( rt.getTargetFeatureType() );
+
+              /* Check for current values qname */
             }
-          }
         }
       }
     }
 
     // simply inform all listeners of this workspace
     for( final IGmlWorkspaceListener validator : m_validators )
-    {
       try
       {
         validator.onModellChange( modellEvent );
@@ -146,6 +155,5 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
       {
         KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
       }
-    }
   }
 }
