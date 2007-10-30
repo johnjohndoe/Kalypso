@@ -38,18 +38,34 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
+package org.kalypso.kalypsosimulationmodel.ui.map;
 
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.kalypsosimulationmodel.ui.map.AbstractEditFeatureWidget;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * @author Gernot Belger
+ * @author schrage
+ * 
  */
-public class EditFlowrelationWidget extends AbstractEditFeatureWidget
+public class Messages
 {
-  public EditFlowrelationWidget( )
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsosimulationmodel.ui.map.messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false, IFlowRelationship.QNAME, IFlowRelationship.QNAME_PROP_POSITION );
+  }
+
+  public static String getString( final String key )
+  {
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( final MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
 }

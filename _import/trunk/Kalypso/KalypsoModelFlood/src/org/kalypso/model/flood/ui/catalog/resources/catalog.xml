@@ -2,7 +2,9 @@
 <catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
 	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
-	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:ExtrapolationArea:sld:default" uri="ExtrapolationArea.sld" />
+	<!--
+		<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:FloodExtrapolationPolygon:sld:default" uri="FloodExtrapolationPolygon.sld" />
+	-->
 
 </catalog:catalog>
 

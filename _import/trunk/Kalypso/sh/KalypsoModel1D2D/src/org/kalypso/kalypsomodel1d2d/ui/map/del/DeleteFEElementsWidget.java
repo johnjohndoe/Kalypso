@@ -4,12 +4,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
@@ -158,20 +154,6 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     {
       e.printStackTrace();
     }
-    // try
-    // {
-    // final ICommand command = m_builder.finish();
-    // if( command != null )
-    // {
-    // m_nodeTheme.getWorkspace().postCommand( command );
-    // m_builder = new ElementGeometryBuilder( 4, m_nodeTheme );
-    // }
-    // }
-    // catch( final Exception e )
-    // {
-    // e.printStackTrace();
-    // KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    // }
   }
 
   /**
@@ -203,21 +185,7 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
       return;
     }
 
-    final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
-    // We are in the awt thread, so force it into swt
-    final boolean[] stop = new boolean[1];
-    shell.getDisplay().syncExec( new Runnable()
-    {
-      public void run( )
-      {
-        // TODO Auto-generated method stub
-        if( !MessageDialog.openConfirm( shell, "Elemente löschen", "Sind Sie sicher?" ) )
-          stop[0] = true;
-      }
-    } );
-
-    if( stop[0] )
+    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Objekte löschen", "Selektierte Objekte werden gelöscht. Sind Sie sicher?" ) )
       return;
 
     selectionManager.clear();

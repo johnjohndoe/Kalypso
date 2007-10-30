@@ -89,7 +89,6 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
-
     final MapPanel mapPanel = mapView.getMapPanel();
 
     final ICoreRunnableWithProgress waitForMapOperation = MapLoadHelper.waitForMap( mapPanel );
@@ -105,7 +104,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
 
     try
     {
-      IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
 
       final MapPanel panel = mapView.getMapPanel();
 
@@ -119,7 +118,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
         return Status.OK_STATUS;
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }

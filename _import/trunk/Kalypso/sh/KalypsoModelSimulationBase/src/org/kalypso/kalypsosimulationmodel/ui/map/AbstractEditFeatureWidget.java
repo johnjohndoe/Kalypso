@@ -38,15 +38,13 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.result;
+package org.kalypso.kalypsosimulationmodel.ui.map;
 
-import org.eclipse.core.runtime.IStatus;
+import javax.xml.namespace.QName;
+
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
-import org.kalypso.kalypsosimulationmodel.ui.map.AbstractSelectFeatureWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -54,24 +52,24 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * A widget that show the feature view on the grabbed feature.
+ * 
  * @author Gernot Belger
  */
-public class ShowHydrographWidget extends AbstractSelectFeatureWidget
+public class AbstractEditFeatureWidget extends AbstractSelectFeatureWidget
 {
-  public ShowHydrographWidget( )
+  public AbstractEditFeatureWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName qnameToSelect, final QName geomQName )
   {
-    super( Messages.getString( "ShowHydrographWidget.0" ), Messages.getString( "ShowHydrographWidget.1" ), false, IHydrograph.QNAME, IHydrograph.QNAME_PROP_LOCATION ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( name, toolTip, allowMultipleSelection, qnameToSelect, geomQName );
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractSelectFlowrelationWidget#flowRelationGrabbed(org.kalypsodeegree.model.feature.Feature[])
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectFlowrelationWidget#flowRelationGrabbed(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
+   *      org.kalypsodeegree.model.feature.Feature[])
    */
   @Override
   protected void flowRelationGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
   {
-    if( selectedFeatures.length == 0 )
-      return;
-
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
 
@@ -89,12 +87,12 @@ public class ShowHydrographWidget extends AbstractSelectFeatureWidget
       {
         try
         {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView" ); //$NON-NLS-1$
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
         }
         catch( final Throwable pie )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( pie );
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+          // final IStatus status = StatusUtilities.statusFromThrowable( pie );
+          // KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
           pie.printStackTrace();
         }
       }
@@ -113,5 +111,4 @@ public class ShowHydrographWidget extends AbstractSelectFeatureWidget
 
     super.finish();
   }
-
 }

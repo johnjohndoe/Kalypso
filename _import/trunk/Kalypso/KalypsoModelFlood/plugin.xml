@@ -8,24 +8,6 @@
             content="content/ext.xml"/>
    </extension>
    <extension
-         id="editorActions"
-         name="editorActions"
-         point="org.eclipse.ui.editorActions">
-      <editorContribution
-            id="org.kalypso.model.flood.mapeditorContributions"
-            targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-         <action
-               class="org.kalypso.model.flood.ui.map.CreateFeatureDelegate"
-               icon="icons/elcl16/createFeature.gif"
-               id="org.kalypso.model.flood.ui.map.CreateFeatureDelegate"
-               label="Feature digitalisieren"
-               menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-               style="radio"
-               toolbarPath="karte/edit"
-               tooltip="Ein neues Feature durch digitalisieren auf der Karte erzeugen."/>
-      </editorContribution>
-   </extension>
-   <extension
          point="org.kalypso.contribs.java.urlCatalog">
       <catalog
             class="org.kalypso.model.flood.schema.UrlCatalogModelFlood"
@@ -47,8 +29,8 @@
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
-                  
-	<!--*** manage waterlevel context handler ***-->	          
+
+	<!--*** manage waterlevel context handler ***-->
       <handler
             class="org.kalypso.model.flood.handlers.ManageWaterlevelDataHandler"
             commandId="org.kalypso.model.flood.ManageWaterlevelData">
@@ -67,11 +49,132 @@
             </parameter>
          </class>
       </handler>
+      <handler
+            class="org.kalypso.model.flood.handlers.PolygonEditingHandler"
+            commandId="org.kalypso.model.flood.PolygonEditing">
+      </handler>
+      <!--
+      <handler
+            commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.CreateFloodPolygonClipWidget">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                  value="icons/elcl16/create_flood_polygon_clip.gif">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                  value="Clip-Polygon erzeugen">
+            </parameter>
+         </class>
+      </handler>
+      -->
+      <handler
+            commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.DeleteFloodPolygonWidget">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                  value="icons/elcl16/delete_flood_polygon.gif">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                  value="WSP-Anpassung löschen">
+            </parameter>
+         </class>
+      </handler>
+      <handler
+            commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.EditFloodPolygonWidget">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                  value="icons/elcl16/edit_flood_polygon.gif">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                  value="WSP-Anpassung editieren">
+            </parameter>
+         </class>
+      </handler>
+      <handler
+            commandId="org.kalypso.model.flood.command.createExtrapolationPolygon">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.CreateFloodPolygonExtrapolationWidget">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                  value="icons/elcl16/create_flood_polygon_extrapolation.gif">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                  value="Extrapolationspolygon erzeugen">
+            </parameter>
+         </class>
+      </handler>
+      <handler
+            commandId="org.kalypso.model.flood.command.createClipPolygon">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.CreateFloodPolygonClipWidget">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                  value="icons/elcl16/create_flood_polygon_clip.gif">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                  value="Clip-Polygon erzeugen">
+            </parameter>
+         </class>
+      </handler>
    </extension>
    <extension
          point="org.kalypso.afgui.scenarioData">
       <dataSet
-            id="org.kalypso.model.flood.scenarioData">
+            id="org.kalypso.model.flood.scenarioDataScope">
          <scenarioDatum
                bundle="org.kalypso.model.flood"
                classKey="org.kalypso.model.flood.binding.IFloodModel"
@@ -98,5 +201,59 @@
          </adapter>
       </factory>
    </extension>
-
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+         <with
+               variable="activeContexts">
+            <iterate
+                  ifEmpty="false"
+                  operator="or">
+               <equals
+                     value="{org.kalypso.model.flood}AbstractFloodPolygon">
+               </equals>
+            </iterate>
+         </with>
+      </definition>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.createExtrapolationPolygon"
+            name="Extrapolations-Polygon erzeugen">
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.createClipPolygon"
+            name="Clip-Polygon erzeugen">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+ 		<menuContribution
+              locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
+           <command
+                 commandId="org.kalypso.model.flood.command.createExtrapolationPolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalypso.model.flood.command.createClipPolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+        </menuContribution>
+	</extension>
 </plugin>

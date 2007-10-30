@@ -2,6 +2,7 @@ package org.kalypso.model.flood.ui.map;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -34,23 +36,36 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Gernot Belger
  */
-public class CreateFeatureWidget extends AbstractWidget
+public abstract class AbstractCreateFloodPolygonWidget extends AbstractWidget
 {
+  private final List<IGeometryBuilder> m_buildersToDraw = new ArrayList<IGeometryBuilder>();
+
   private Point m_currentPoint = null;
 
   private IGeometryBuilder m_builder = null;
-
-  private List<IGeometryBuilder> m_buildersToDraw = new ArrayList<IGeometryBuilder>();
-
-  private Feature m_newFeature = null;
 
   private int m_currentGeometry = -1;
 
   private IKalypsoFeatureTheme m_theme;
 
-  public CreateFeatureWidget( )
+  private final QName m_qname;
+
+  private IFeatureType m_featureType;
+
+  private final QName[] m_geomProperties;
+
+  /**
+   * @param qname
+   *            The qname of the feature to create
+   * @param geomProperties
+   *            The properties of the feature which shalkl be editied (in the given order).
+   */
+  public AbstractCreateFloodPolygonWidget( final QName qname, final QName[] geomProperties )
   {
     super( "New Feature", "Creates a new Feature" );
+
+    m_qname = qname;
+    m_geomProperties = geomProperties;
   }
 
   /**
@@ -64,40 +79,44 @@ public class CreateFeatureWidget extends AbstractWidget
 
     reinit();
   }
-  
-  private void reinit()
+
+  private void reinit( )
   {
     m_buildersToDraw.clear();
-    m_newFeature = null;
     m_theme = null;
     m_currentGeometry = -1;
+    m_featureType = null;
 
     /* Get the active theme */
     final IKalypsoTheme activeTheme = getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
-      final IValuePropertyType[] geomProperties = theme.getFeatureType().getAllGeomteryProperties();
-      if( geomProperties.length > 0 )
+      final IFeatureType featureType = theme == null ? null : theme.getFeatureType();
+      final IGMLSchema schema = featureType == null ? null : featureType.getGMLSchema();
+      m_featureType = schema == null ? null : schema.getFeatureType( m_qname );
+      if( m_geomProperties.length > 0 )
       {
         m_theme = theme;
         m_currentGeometry = 0;
 
-        final FeatureList featureList = m_theme.getFeatureList();
-        final Feature parentFeature = featureList.getParentFeature();
-        final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
-        final IFeatureType featureType = featureList.getParentFeatureTypeProperty().getTargetFeatureType();
-        m_newFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentRelation, featureType );
-
-        initBuilder( geomProperties );
+        initNextBuilder();
         return;
       }
     }
   }
 
-  private void initBuilder( final IValuePropertyType[] geomProperties )
+  private void initNextBuilder( )
   {
-    final IValuePropertyType vpt = geomProperties[m_currentGeometry];
+    if( m_currentGeometry > m_geomProperties.length - 1 )
+    {
+      m_builder = null;
+      m_currentGeometry = -1;
+      return;
+    }
+
+    final QName geomProp = m_geomProperties[m_currentGeometry];
+    final IValuePropertyType vpt = (IValuePropertyType) m_featureType.getProperty( geomProp );
     final QName valueQName = vpt.getValueQName();
     final CS_CoordinateSystem targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
 
@@ -109,10 +128,8 @@ public class CreateFeatureWidget extends AbstractWidget
       m_builder = new PointGeometryBuilder( targetCrs );
     else
     {
-      m_newFeature = null;
       m_builder = null;
       m_currentGeometry = -1;
-      m_buildersToDraw.clear();
     }
   }
 
@@ -120,10 +137,10 @@ public class CreateFeatureWidget extends AbstractWidget
   public void moved( final Point p )
   {
     m_currentPoint = p;
-    
-//  TODO: check if this repaint is necessary for the widget
-    MapPanel panel = getMapPanel();
-    if ( panel != null)
+
+    // TODO: check if this repaint is necessary for the widget
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
   }
 
@@ -141,7 +158,7 @@ public class CreateFeatureWidget extends AbstractWidget
       final GM_Point currentPos = MapUtilities.transform( getMapPanel(), m_currentPoint );
       final GM_Object object = m_builder.addPoint( currentPos );
       if( object != null )
-        nextProperty( object );
+        nextProperty();
     }
     catch( final Exception e )
     {
@@ -162,7 +179,7 @@ public class CreateFeatureWidget extends AbstractWidget
     {
       final GM_Object object = m_builder.finish();
       if( object != null )
-        nextProperty( object );
+        nextProperty();
     }
     catch( final Exception e )
     {
@@ -170,18 +187,50 @@ public class CreateFeatureWidget extends AbstractWidget
     }
   }
 
-  private void nextProperty( final GM_Object object )
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyPressed( final KeyEvent e )
   {
-    final IFeatureType featureType = m_newFeature.getFeatureType();
-    final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
-    final IValuePropertyType currentVpt = allGeomteryProperties[m_currentGeometry];
-    m_newFeature.setProperty( currentVpt, object );
-
-    if( m_currentGeometry == allGeomteryProperties.length - 1 )
+    switch( e.getKeyCode() )
     {
+      case KeyEvent.VK_ESCAPE:
+        e.consume();
+        reinit();
+        getMapPanel().repaint();
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  private void nextProperty( ) throws Exception
+  {
+    m_buildersToDraw.add( m_builder );
+
+    m_currentGeometry++;
+    initNextBuilder();
+
+    if( m_currentGeometry == -1 )
+    {
+      final FeatureList featureList = m_theme.getFeatureList();
+      final Feature parentFeature = featureList.getParentFeature();
+      final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
+      final Feature newFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentRelation, m_featureType );
+
+      // set builded geometries to feature
+      for( int i = 0; i < m_geomProperties.length; i++ )
+      {
+        final QName geomProp = m_geomProperties[i];
+        final GM_Object geom = m_buildersToDraw.get( i ).finish();
+        newFeature.setProperty( geomProp, geom );
+      }
+
       // add new feature
       final IRelationType rt = m_theme.getFeatureList().getParentFeatureTypeProperty();
-      final ICommand command = new AddFeatureCommand( m_theme.getWorkspace(), m_newFeature.getParent(), rt, -1, m_newFeature, null );
+      final ICommand command = new AddFeatureCommand( m_theme.getWorkspace(), parentFeature, rt, -1, newFeature, null );
       try
       {
         m_theme.getWorkspace().postCommand( command );
@@ -192,13 +241,6 @@ public class CreateFeatureWidget extends AbstractWidget
       }
 
       reinit();
-    }
-    else
-    {
-      m_buildersToDraw.add( m_builder );
-
-      m_currentGeometry++;
-      initBuilder( allGeomteryProperties );
     }
   }
 

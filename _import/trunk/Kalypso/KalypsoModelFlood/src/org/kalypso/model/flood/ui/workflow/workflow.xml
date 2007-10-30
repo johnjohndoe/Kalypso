@@ -31,10 +31,10 @@
 		</Task>
 	</TaskGroup>
 
-	<TaskGroup URI="org.kalypso.model.flood.Editing">
+	<TaskGroup URI="org.kalypso.model.flood.PolygonEditing">
 		<Help><![CDATA[Manuelle Bearbeitung der Überschwemmungsgebiete]]></Help>
 		<Name>Manuelle Bearbeitung</Name>
-		<Task type="ASYNCHRONOUS" context="FloodMap"
+		<Task type="SYNCHRONOUS" context="FloodMap"
 			URI="org.kalypso.model.flood.PolygonEditing">
 			<Help><![CDATA[Ermöglicht das Anlegen von Korrekturpolygonen.]]></Help>
 			<Name>Korrekturpolygone</Name>
@@ -120,7 +120,7 @@
 							value="mapViewInputContext" />
 						<con:Parameter name="input"
 							value="maps/flood.gmt" />
-							
+
 						<con:ExtensionContext id="CoverageTheme"
 							parent="FloodMap"
 							handlerFactoryId="kalypsoContextHandlerFactory">
@@ -128,8 +128,8 @@
 								value="themeContext" />
 							<con:Parameter name="input"
 								value="{http://www.opengis.net/gml}_Coverage" />
-						</con:ExtensionContext>		
-											
+						</con:ExtensionContext>
+
 					</con:ExtensionContext>
 				</con:ViewContext>
 

@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml"
-	xmlns="http://www.w3.org/2001/XMLSchema"
-	xmlns:flood="org.kalypso.model.flood"
-	xmlns:cov="org.kalypso.gml.common.coverage"
-	targetNamespace="org.kalypso.model.flood"
-	elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:flood="org.kalypso.model.flood" xmlns:cov="org.kalypso.gml.common.coverage"
+	targetNamespace="org.kalypso.model.flood" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml"
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
 	<import namespace="org.kalypso.gml.common.coverage" />
 
-	<element name="FloodModel" type="flood:FloodModelType"
-		substitutionGroup="gml:_Feature">
+	<element name="FloodModel" type="flood:FloodModelType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name><![CDATA[FloodModel]]></name>
@@ -30,8 +25,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="polygonMember"
-						type="flood:FloodPolygonPropertyType" minOccurs="0"
+					<element name="polygonMember" type="flood:FloodPolygonPropertyType" minOccurs="0"
 						maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
@@ -41,13 +35,11 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="eventMember"
-						type="flood:RunoffEventPropertyType" minOccurs="0"
+					<element name="eventMember" type="flood:RunoffEventPropertyType" minOccurs="0"
 						maxOccurs="unbounded">
 					</element>
-					<element name="coveragesMember"
-						type="flood:CoverageCollectionPropertyType" minOccurs="0"
-						maxOccurs="unbounded">
+					<element name="coveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1"
+						maxOccurs="1">
 					</element>
 				</sequence>
 			</extension>
@@ -74,14 +66,13 @@
 	</complexType>
 
 
-	<element name="RunoffEvent" type="flood:RunoffEventType"
-		substitutionGroup="gml:_Feature">
+	<element name="RunoffEvent" type="flood:RunoffEventType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<name><![CDATA[Ereig	nisXXXX]]></name>
-				<label><![CDATA[Polygon]]></label>
-				<tooltip><![CDATA[Polygon]]></tooltip>
-				<description><![CDATA[Polygon]]></description>
+				<name><![CDATA[Ereignis]]></name>
+				<label><![CDATA[Ereignis]]></label>
+				<tooltip><![CDATA[Ereignis]]></tooltip>
+				<description><![CDATA[Ereignis]]></description>
 			</documentation>
 		</annotation>
 	</element>
@@ -103,8 +94,7 @@
 		</sequence>
 	</complexType>
 
-	<element name="AbstractFloodPolygon"
-		type="flood:AbstractFloodPolygonType" abstract="true"
+	<element name="AbstractFloodPolygon" type="flood:AbstractFloodPolygonType" abstract="true"
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -120,22 +110,16 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="areaMember"
-						type="gml:PolygonPropertyType" minOccurs="1" maxOccurs="1">
+					<element name="areaMember" type="gml:PolygonPropertyType" minOccurs="1" maxOccurs="1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Geometrie des Polygons</label>
-								<tooltip>
-									Geometrie des Polygons
-								</tooltip>
-								<description>
-									Geometrie des Polygons
-								</description>
+								<tooltip>Geometrie des Polygons</tooltip>
+								<description>Geometrie des Polygons</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="eventMember"
-						type="flood:RunoffEventReferencePropertyType" minOccurs="0"
+					<element name="eventMember" type="flood:RunoffEventReferencePropertyType" minOccurs="0"
 						maxOccurs="unbounded">
 					</element>
 				</sequence>
@@ -143,8 +127,7 @@
 		</complexContent>
 	</complexType>
 
-	<element name="FloodExtrapolationPolygon"
-		type="flood:FloodExtrapolationPolygonType"
+	<element name="FloodExtrapolationPolygon" type="flood:FloodExtrapolationPolygonType"
 		substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
 			<documentation xml:lang="de">
@@ -157,20 +140,43 @@
 	</element>
 
 	<complexType name="FloodExtrapolationPolygonType">
+		<annotation>
+			<appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty kapp:functionId="org.kalypso.gmlschema.functionProperty.connectCentersByLine"
+					kapp:property="flood:connectorLine" kapp:isVirtual="true" kapp:valueType="gml:LineStringPropertyType">
+					<kapp:parameter>
+						<kapp:name>geometry1Property</kapp:name>
+						<kapp:value>{org.kalypso.model.flood}referencePoint</kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>geometry2Property</kapp:name>
+						<kapp:value>{org.kalypso.model.flood}areaMember</kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>clip</kapp:name>
+						<kapp:value>true</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+			</appinfo>
+		</annotation>
 		<complexContent>
 			<extension base="flood:AbstractFloodPolygonType">
 				<sequence>
-					<element name="referencePoint"
-						type="gml:PointPropertyType">
+					<element name="referencePoint" type="gml:PointPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Bezugspunkt</label>
-								<tooltip>
-									Bezugspunkt zum Höhenmodell
-								</tooltip>
-								<description>
-									Bezugspunkt zum Höhenmodell
-								</description>
+								<tooltip>Bezugspunkt zum Höhenmodell</tooltip>
+								<description>Bezugspunkt zum Höhenmodell</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="connectorLine" type="gml:LineStringPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Verbindungslinie</label>
+								<tooltip>Verbindunglinie ziwschen Referenzpunkt und Fläche</tooltip>
+								<description>Verbindunglinie ziwschen Referenzpunkt und Fläche</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -179,8 +185,7 @@
 		</complexContent>
 	</complexType>
 
-	<element name="FloodClipPolygon" type="flood:FloodClipPolygonType"
-		substitutionGroup="flood:AbstractFloodPolygon">
+	<element name="FloodClipPolygon" type="flood:FloodClipPolygonType" substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
 			<documentation xml:lang="de">
 				<name><![CDATA[Clip-Polygon]]></name>

@@ -14,5 +14,6 @@ Require-Bundle: org.eclipse.ui,
  de.renew.workflow.model,
  org.kalypso.afgui,
  org.kalypso.ModelSimulationBase,
- org.kalypso.gml.ui
+ org.kalypso.gml.ui,
+ org.kalypso.model1d2d
 Eclipse-LazyStart: true
