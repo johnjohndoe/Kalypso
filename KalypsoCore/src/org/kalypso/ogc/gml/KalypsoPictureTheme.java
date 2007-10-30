@@ -68,7 +68,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     throw new IllegalStateException( "not supported layerType: " + layerType.getLinktype() );
   }
 
-  private TiledImage m_image;
+  private TiledImage m_image = null;
 
   private RectifiedGridDomain m_domain;
 

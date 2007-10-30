@@ -138,7 +138,7 @@ public class GisTemplateMapModell implements IMapModell
     setName( gisview.getName() );
 
     for( final IKalypsoTheme theme : getAllThemes() )
-      if( !((theme instanceof KalypsoLegendTheme) || (theme instanceof ScrabLayerFeatureTheme)) )
+      if( !(theme instanceof KalypsoLegendTheme || theme instanceof ScrabLayerFeatureTheme) )
         removeTheme( theme );
     final Layers layerListType = gisview.getLayers();
 
@@ -168,8 +168,8 @@ public class GisTemplateMapModell implements IMapModell
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
     {
-      addTheme( theme );
       theme.setVisible( layer.isVisible() );
+      addTheme( theme );
     }
     return theme;
   }
@@ -205,16 +205,16 @@ public class GisTemplateMapModell implements IMapModell
       final String source = layerType.getHref();
 
       /* Parse the source into properties. */
-      Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
+      final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
 
       /* Get the provider attribute. */
-      String layers = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
-      String styles = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
-      String service = sourceProps.getProperty( IKalypsoImageProvider.KEY_URL, null );
-      String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
+      final String layers = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
+      final String styles = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
+      final String service = sourceProps.getProperty( IKalypsoImageProvider.KEY_URL, null );
+      final String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
 
       /* Create the image provider. */
-      IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, layers, styles, service, providerID, defaultCS );
+      final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, layers, styles, service, providerID, defaultCS );
 
       return new KalypsoWMSTheme( linktype, layerName, imageProvider, this );
     }
@@ -270,7 +270,7 @@ public class GisTemplateMapModell implements IMapModell
       {
         final StyledLayerType layer = GisTemplateHelper.addLayer( layerList, theme, count++, bbox, srsName, monitor );
 
-        if( (layer != null) && m_modell.isThemeActivated( theme ) && !(theme instanceof KalypsoLegendTheme) && !(theme instanceof ScrabLayerFeatureTheme) )
+        if( layer != null && m_modell.isThemeActivated( theme ) && !(theme instanceof KalypsoLegendTheme) && !(theme instanceof ScrabLayerFeatureTheme) )
           layersType.setActive( layer );
       }
 
