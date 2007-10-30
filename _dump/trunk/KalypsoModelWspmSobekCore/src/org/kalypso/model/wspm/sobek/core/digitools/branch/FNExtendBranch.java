@@ -204,15 +204,19 @@ public class FNExtendBranch extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
     if( m_snapPainter != null && m_currentPoint != null )
     {
-      final Point point = m_snapPainter.paint( g, getMapPanel(), m_currentPoint );
+      final Point point = m_snapPainter.paint( g, mapPanel, m_currentPoint );
       if( point != null )
         m_currentPoint = point;
     }
 
     if( m_geoBuilder != null )
-      m_geoBuilder.paint( g, getMapPanel().getProjection(), m_currentPoint );
+      m_geoBuilder.paint( g, mapPanel.getProjection(), m_currentPoint );
   }
 
   private final void reinit( )

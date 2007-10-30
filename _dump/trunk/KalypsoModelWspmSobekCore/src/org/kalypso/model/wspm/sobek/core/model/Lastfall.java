@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -85,6 +89,30 @@ public class Lastfall implements ILastfall
   public IModelMember getModel( )
   {
     return m_sobekModelMember;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getLastfallEnd()
+   */
+  public GregorianCalendar getLastfallEnd( )
+  {
+    final Object property = getFeature().getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_END );
+    if( property instanceof XMLGregorianCalendar )
+      return ((XMLGregorianCalendar) property).toGregorianCalendar();
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getLastfallStart()
+   */
+  public GregorianCalendar getLastfallStart( )
+  {
+    final Object property = getFeature().getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
+    if( property instanceof XMLGregorianCalendar )
+      return ((XMLGregorianCalendar) property).toGregorianCalendar();
+
+    return null;
   }
 
 }

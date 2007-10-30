@@ -121,7 +121,7 @@ public class PageEditLastfall extends WizardPage
     /* begin date */
     new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, "Start date", group );
 
-    m_dateBegin = new LastfallDateChooser( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
+    m_dateBegin = new LastfallDateChooser( m_lastfall.getLastfallStart() );
     m_dateBegin.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     m_dateBegin.addModifyListener( new Runnable()
@@ -135,7 +135,7 @@ public class PageEditLastfall extends WizardPage
     /* end date */
     new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, "End date", group );
 
-    m_dateEnd = new LastfallDateChooser( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END );
+    m_dateEnd = new LastfallDateChooser( m_lastfall.getLastfallEnd() );
     m_dateEnd.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     m_dateEnd.addModifyListener( new Runnable()

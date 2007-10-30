@@ -333,7 +333,6 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
   {
     final TreeViewer viewer = new TreeViewer( body );
     viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
     viewer.setContentProvider( new RepositoryTreeContentProvider( m_settings ) );
     viewer.setLabelProvider( new RepositoryLabelProvider() );
 
@@ -352,6 +351,33 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
         checkPageCompleted();
       }
     } );
+
+// final Object lnkTimeSeries = m_condition.getFeature().getProperty(
+// ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES );
+// if( lnkTimeSeries instanceof TimeseriesLinkType )
+// {
+// final IRepositoryContainer container = m_model.getRepositoryContainer();
+//
+// final TimeseriesLinkType lnk = (TimeseriesLinkType) lnkTimeSeries;
+// final IRepository[] repositories = container.getRepositories();
+//
+// IRepositoryItem item = null;
+//
+// for( final IRepository repository : repositories )
+// try
+// {
+//
+// item = repository.findItem( lnk.getHref() );
+// break;
+// }
+// catch( final RepositoryException e )
+// {
+// continue;
+// }
+//
+// if( !(item instanceof FileItem) )
+// return viewer;
+// }
 
     return viewer;
   }

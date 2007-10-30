@@ -213,15 +213,14 @@ public class LastFallExplorer
           if( returnCode != Window.OK )
           {
             final IBoundaryNodeLastfallCondition condition = wizard.getBoundaryNodeLastfallCondition();
-            if( condition.wasNewlyCreated() )
-              try
-              {
-                FeatureUtils.deleteFeature( condition.getFeature() );
-              }
-              catch( final Exception e1 )
-              {
-                e1.printStackTrace();
-              }
+            try
+            {
+              FeatureUtils.deleteFeature( condition.getFeature() );
+            }
+            catch( final Exception e1 )
+            {
+              e1.printStackTrace();
+            }
           }
         }
       }

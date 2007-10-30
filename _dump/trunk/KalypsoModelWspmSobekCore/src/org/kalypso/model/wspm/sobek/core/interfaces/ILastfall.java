@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import java.util.GregorianCalendar;
+
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -52,5 +54,9 @@ public interface ILastfall
   public IModelMember getModel( );
 
   public Feature getFeature( );
+
+  GregorianCalendar getLastfallEnd( );
+
+  GregorianCalendar getLastfallStart( );
 
 }

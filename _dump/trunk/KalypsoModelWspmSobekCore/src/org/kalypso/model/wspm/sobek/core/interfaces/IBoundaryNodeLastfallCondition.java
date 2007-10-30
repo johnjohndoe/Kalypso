@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import java.util.GregorianCalendar;
+
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -53,6 +56,19 @@ public interface IBoundaryNodeLastfallCondition
 
   Feature getFeature( );
 
-  boolean wasNewlyCreated( );
+  boolean isTimeSeriesNode( );
 
+  boolean isConstantValueNode( );
+
+  TimeseriesLinkType getTimeseriesLink( );
+
+  void setTimeSeriesLink( TimeseriesLinkType lnk );
+
+  public GregorianCalendar getObservationStart( );
+
+  public GregorianCalendar getObservationEnd( );
+
+  public Double getConstantValue( );
+
+  public Integer getConstantValueInterveal( );
 }

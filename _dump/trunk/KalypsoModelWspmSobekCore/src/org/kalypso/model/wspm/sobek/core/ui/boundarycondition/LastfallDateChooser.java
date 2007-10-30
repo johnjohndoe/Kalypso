@@ -45,9 +45,6 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
-
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -56,27 +53,22 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.util.swt.WizardFeatureTextBox;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author kuch
  */
 public class LastfallDateChooser
 {
-
-  private final Feature m_feature;
-
-  protected GregorianCalendar m_dateTime = null;
-
-  private final QName m_qname;
-
   private final Set<Runnable> m_listener = new HashSet<Runnable>();
 
-  public LastfallDateChooser( final Feature feature, final QName qnLastfallSimulationBegin )
+  private GregorianCalendar m_calendar;
+
+  private Text m_text;
+
+  public LastfallDateChooser( final GregorianCalendar calendar )
   {
-    m_feature = feature;
-    m_qname = qnLastfallSimulationBegin;
+    m_calendar = calendar;
   }
 
   public void draw( final Composite container, final GridData gridData )
@@ -87,14 +79,14 @@ public class LastfallDateChooser
     composite.setLayout( layout );
     composite.setLayoutData( gridData );
 
-    final WizardFeatureTextBox tb = new WizardFeatureTextBox( m_feature, m_qname );
-    tb.draw( composite, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
+    m_text = new Text( composite, SWT.BORDER | SWT.READ_ONLY );
+    m_text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final Object property = tb.getLastRenderedProperty();
-    if( property instanceof XMLGregorianCalendar )
+    if( m_calendar != null )
     {
-      final XMLGregorianCalendar calendar = (XMLGregorianCalendar) property;
-      m_dateTime = calendar.toGregorianCalendar();
+      final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
+      final String date = df.format( m_calendar.getTime() );
+      m_text.setText( date );
     }
 
     final Button button = new Button( composite, SWT.NONE );
@@ -111,16 +103,16 @@ public class LastfallDateChooser
       {
 
         final DateTimeDialog dialog = new DateTimeDialog( button.getShell() );
-        if( m_dateTime != null )
-          dialog.setDateTime( m_dateTime );
+        if( m_calendar != null )
+          dialog.setDateTime( m_calendar );
 
         final int returnCode = dialog.open();
 
         if( returnCode == Window.OK )
         {
-          m_dateTime = dialog.getDateTime();
+          m_calendar = dialog.getDateTime();
           final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
-          tb.setText( df.format( m_dateTime.getTime() ) );
+          m_text.setText( df.format( m_calendar.getTime() ) );
         }
 
         processListener();
@@ -137,7 +129,7 @@ public class LastfallDateChooser
 
   public GregorianCalendar getDateTime( )
   {
-    return m_dateTime;
+    return m_calendar;
   }
 
   public void addModifyListener( final Runnable runnable )

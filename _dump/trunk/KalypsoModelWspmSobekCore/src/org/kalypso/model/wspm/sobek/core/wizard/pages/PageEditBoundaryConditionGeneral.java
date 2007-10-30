@@ -122,10 +122,11 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     /* begin date */
     new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, "Start date", container );
 
-    if( m_condition.wasNewlyCreated() )
-      m_tsBegins = new LastfallDateChooser( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
+    /* newly created boundary condition? */
+    if( m_condition.getObservationStart() == null )
+      m_tsBegins = new LastfallDateChooser( m_condition.getLastfall().getLastfallStart() );
     else
-      m_tsBegins = new LastfallDateChooser( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS );
+      m_tsBegins = new LastfallDateChooser( m_condition.getObservationStart() );
 
     m_tsBegins.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
@@ -138,12 +139,13 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     } );
 
     /* end date */
+    /* newly created boundary condition? */
     new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, "End date", container );
 
-    if( m_condition.wasNewlyCreated() )
-      m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END );
+    if( m_condition.getObservationEnd() == null )
+      m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getLastfallEnd() );
     else
-      m_tsEnds = new LastfallDateChooser( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS );
+      m_tsEnds = new LastfallDateChooser( m_condition.getObservationEnd() );
     m_tsEnds.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     m_tsEnds.addModifyListener( new Runnable()

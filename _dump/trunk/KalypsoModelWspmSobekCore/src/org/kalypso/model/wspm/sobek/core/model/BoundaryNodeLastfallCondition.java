@@ -40,9 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -50,25 +58,21 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondition
 {
-
   private final ILastfall m_lastfall;
 
   private final BoundaryNode m_boundaryNode;
 
   private final Feature m_feature;
 
-  private final boolean m_wasNewlyCreated;
-
   /**
    * @param wasNewlyCreated
    *            edit wizard of this condition differs between new and already created conditions (pre time selection!)
    */
-  public BoundaryNodeLastfallCondition( final ILastfall lastfall, final BoundaryNode boundaryNode, final Feature feature, final boolean wasNewlyCreated )
+  public BoundaryNodeLastfallCondition( final ILastfall lastfall, final BoundaryNode boundaryNode, final Feature feature )
   {
     m_lastfall = lastfall;
     m_boundaryNode = boundaryNode;
     m_feature = feature;
-    m_wasNewlyCreated = wasNewlyCreated;
   }
 
   /**
@@ -96,11 +100,90 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#wasNewlyCreated()
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getTimeseriesLink()
    */
-  public boolean wasNewlyCreated( )
+  public TimeseriesLinkType getTimeseriesLink( )
   {
-    return m_wasNewlyCreated;
+    return (TimeseriesLinkType) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#isConstantValueNode()
+   */
+  public boolean isConstantValueNode( )
+  {
+    final Object objValue = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
+    if( objValue instanceof Double )
+      return true;
+
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#isTimeSeriesNode()
+   */
+  public boolean isTimeSeriesNode( )
+  {
+    final Object lnkTS = getTimeseriesLink();
+    if( lnkTS instanceof TimeseriesLinkType )
+      return true;
+
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getConstantValue()
+   */
+  public Double getConstantValue( )
+  {
+    throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getConstantValueInterveal()
+   */
+  public Integer getConstantValueInterveal( )
+  {
+    throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getObservationEnd()
+   */
+  public GregorianCalendar getObservationEnd( )
+  {
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS );
+    if( property instanceof XMLGregorianCalendar )
+      return ((XMLGregorianCalendar) property).toGregorianCalendar();
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getObservationStart()
+   */
+  public GregorianCalendar getObservationStart( )
+  {
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS );
+    if( property instanceof XMLGregorianCalendar )
+      return ((XMLGregorianCalendar) property).toGregorianCalendar();
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#setTimeSeriesLink(org.kalypso.zml.obslink.TimeseriesLinkType)
+   */
+  public void setTimeSeriesLink( final TimeseriesLinkType lnk )
+  {
+    try
+    {
+      FeatureUtils.updateFeature( getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnk );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
 }

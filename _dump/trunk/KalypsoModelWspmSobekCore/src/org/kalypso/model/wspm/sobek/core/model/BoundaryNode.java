@@ -141,11 +141,10 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
         throw new IllegalStateException( "Loading case is null" );
 
       if( lastfall.getFeature().equals( fLastfall ) )
-        return new BoundaryNodeLastfallCondition( lastfall, this, member, false );
+        return new BoundaryNodeLastfallCondition( lastfall, this, member );
     }
 
     final Feature condition = NodeUtils.createBoundaryNodeLastfallCondition( lastfall, this );
-
-    return new BoundaryNodeLastfallCondition( lastfall, this, condition, true );
+    return new BoundaryNodeLastfallCondition( lastfall, this, condition );
   }
 }
