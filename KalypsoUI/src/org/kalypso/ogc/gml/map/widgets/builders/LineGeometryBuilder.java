@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.builders;
 
@@ -67,9 +67,11 @@ public class LineGeometryBuilder implements IGeometryBuilder
    */
   private int m_cnt_points;
 
-  private List<GM_Point> m_points = new ArrayList<GM_Point>();
+  private final List<GM_Point> m_points = new ArrayList<GM_Point>();
 
   private final CS_CoordinateSystem m_crs;
+
+  private GM_Object m_result;
 
   /**
    * The constructor.
@@ -108,6 +110,9 @@ public class LineGeometryBuilder implements IGeometryBuilder
    */
   public GM_Object finish( ) throws Exception
   {
+    if( m_result != null )
+      return m_result;
+
     if( (m_points.size() == m_cnt_points) || ((m_cnt_points == 0) && (m_points.size() > 1)) )
     {
       final GeoTransformer transformer = new GeoTransformer( m_crs );
@@ -119,7 +124,8 @@ public class LineGeometryBuilder implements IGeometryBuilder
         poses[i] = transformedPoint.getPosition();
       }
 
-      return createGeometry( poses );
+      m_result = createGeometry( poses );
+      return m_result;
     }
 
     return null;
@@ -185,7 +191,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   private void drawHandles( final Graphics g, final int[] x, final int[] y )
   {
-    int sizeOuter = 6;
+    final int sizeOuter = 6;
     for( int i = 0; i < y.length; i++ )
       g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
   }

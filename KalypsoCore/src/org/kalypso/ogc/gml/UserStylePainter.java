@@ -40,14 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.awt.Graphics;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -56,7 +58,6 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -76,7 +77,7 @@ public class UserStylePainter
     m_selectionManager = selectionManager;
   }
 
-  public void paintSelected( final GMLWorkspace workspace, final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final FeatureList features, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  public void paintSelected( final GMLWorkspace workspace, final double scale, final GM_Envelope bbox, final FeatureList features, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     paintFeatureTypeStyles( workspace, scale, bbox, features, selected, monitor, delegate );
   }
@@ -101,6 +102,8 @@ public class UserStylePainter
    */
   private void paintFeatureTypeStyle( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final FeatureTypeStyle element, final IPaintDelegate delegate ) throws CoreException
   {
+    final QName qname = element.getFeatureTypeName();
+
     final Rule[] rules = element.getRules();
 
     final SubMonitor progress = SubMonitor.convert( monitor, rules.length );
@@ -108,12 +111,12 @@ public class UserStylePainter
     for( final Rule rule : rules )
     {
       final SubMonitor childProgress = progress.newChild( 1 );
-      paintRule( workspace, scale, bbox, features, selected, childProgress, rule, delegate );
+      paintRule( workspace, scale, bbox, features, selected, childProgress, rule, qname, delegate );
       ProgressUtilities.done( monitor );
     }
   }
 
-  private void paintRule( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final Rule rule, final IPaintDelegate delegate ) throws CoreException
+  private void paintRule( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final Rule rule, final QName qname, final IPaintDelegate delegate ) throws CoreException
   {
     // does the filter rule apply?
     final Filter filter = rule.getFilter();
@@ -129,12 +132,12 @@ public class UserStylePainter
     for( final Object o : visibleFeatures )
     {
       final SubMonitor childProgress = loopProgress.newChild( 1 );
-      paintFeature( workspace, scale, selected, rule, filter, o, childProgress, delegate );
+      paintFeature( workspace, scale, selected, rule, filter, o, qname, childProgress, delegate );
       ProgressUtilities.done( childProgress );
     }
   }
 
-  private void paintFeature( final GMLWorkspace workspace, final Double scale, final Boolean selected, final Rule rule, final Filter filter, final Object featureOrLink, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  private void paintFeature( final GMLWorkspace workspace, final Double scale, final Boolean selected, final Rule rule, final Filter filter, final Object featureOrLink, final QName qname, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Feature", 100 );
 
@@ -146,15 +149,19 @@ public class UserStylePainter
       /* Only paint really visible features */
       if( filterFeature( feature, selected, filter ) )
       {
-        final Symbolizer[] symbolizers = rule.getSymbolizers();
-        for( final Symbolizer symbolizer : symbolizers )
+        /* Only paint features which apply to the given qname */
+        if( qname == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), qname ) )
         {
-          final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
-          if( displayElement != null )
+          final Symbolizer[] symbolizers = rule.getSymbolizers();
+          for( final Symbolizer symbolizer : symbolizers )
           {
-            /* does scale apply? */
-            if( (scale == null) || displayElement.doesScaleConstraintApply( scale ) )
-              delegate.paint( displayElement, progress.newChild( 100 ) );
+            final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+            if( displayElement != null )
+            {
+              /* does scale apply? */
+              if( (scale == null) || displayElement.doesScaleConstraintApply( scale ) )
+                delegate.paint( displayElement, progress.newChild( 100 ) );
+            }
           }
         }
       }
