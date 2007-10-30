@@ -9,8 +9,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 import de.renew.workflow.contexts.WorkflowSystemExtension;
 
@@ -19,7 +24,7 @@ import de.renew.workflow.contexts.WorkflowSystemExtension;
  * 
  * @author Patrice Congo, Stefan Kurzbach
  */
-public class WorkflowSystem implements IWorkflowSystem
+public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListener
 {
   public static final String WORKFLOW = "de.renew.workflow.model"; //$NON-NLS-1$
 
@@ -37,6 +42,8 @@ public class WorkflowSystem implements IWorkflowSystem
 
   private Workflow m_currentWorkflow;
 
+  private final IProject m_project;
+
   /**
    * Loads a workflow instance for the project
    * 
@@ -48,16 +55,27 @@ public class WorkflowSystem implements IWorkflowSystem
    */
   public WorkflowSystem( final IProject project ) throws CoreException
   {
+    m_project = project;
     final ProjectScope projectScope = new ProjectScope( project );
-    final String workflowId = projectScope.getNode( WORKFLOW ).get( WORKFLOW_DEFINITON_ID, "workflow1d2d" );
+    final IEclipsePreferences node = projectScope.getNode( WORKFLOW );
+    node.addPreferenceChangeListener( this );
+    final String workflowId = node.get( WORKFLOW_DEFINITON_ID, "workflow1d2d" );
+    handleWorkflowIdChanged( workflowId );
+  }
+
+  private void handleWorkflowIdChanged( final String workflowId ) throws CoreException
+  {
     final Workflow workflow = WorkflowSystemExtension.getWorkflow( workflowId );
     if( workflow != null )
     {
       m_currentWorkflow = workflow;
+      m_project.refreshLocal( 0, new NullProgressMonitor() );
     }
     else
     {
-      final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Workflow definition could not be found." );
+      m_currentWorkflow = null;
+      m_project.touch( new NullProgressMonitor() );
+      final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Workflow definition " + workflowId + " could not be found for project" + m_project.getName() + "." );
       throw new CoreException( status );
     }
   }
@@ -68,5 +86,25 @@ public class WorkflowSystem implements IWorkflowSystem
   public Workflow getCurrentWorkflow( )
   {
     return m_currentWorkflow;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
+   */
+  public void preferenceChange( final PreferenceChangeEvent event )
+  {
+    //this event is not generated when the file is manually edited, so it is never called at the time
+    if( event.getKey().equals( WORKFLOW_DEFINITON_ID ) )
+    {
+      final String newWorkflowId = (String) event.getNewValue();
+      try
+      {
+        handleWorkflowIdChanged( newWorkflowId );
+      }
+      catch( final CoreException e )
+      {
+        StatusManager.getManager().handle( e.getStatus(), StatusManager.SHOW | StatusManager.LOG );
+      }
+    }
   }
 }
