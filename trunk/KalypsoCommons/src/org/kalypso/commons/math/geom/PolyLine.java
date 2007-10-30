@@ -460,7 +460,7 @@ public class PolyLine
   public double[] intersect( PolyLine other )
   {
     // we expect no more than maximum of points intersections
-    double[] xe = new double[getX().length + other.getX().length];
+    double[] xe = new double[getX().length * other.getX().length];
     int xPos = 0;
 
     DoubleComparator dc = new DoubleComparator( m_delta );
