@@ -96,6 +96,10 @@ public class WorkflowView extends ViewPart
           }
           catch( final CoreException e )
           {
+            // TODO: do NOT eat exceptions!
+            // TODO: better error handling
+            // Consider using a UIJob instead, that thrown exceptions are shown as error dialog
+
             // project is not open or such
             m_workflowControl.setWorkflow( null );
           }
