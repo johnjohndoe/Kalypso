@@ -82,6 +82,8 @@ public class GuiTypeHandlerUtilities
     guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "dateTime" ) ), XsdDateGuiTypeHandler.DF_DateTime, true ) );
     guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "time" ) ), XsdDateGuiTypeHandler.DF_Time, false ) );
 
+    guiRegistry.registerTypeHandler( new XsdDecimalGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "decimal" ) ) ) );
+
     guiRegistry.registerTypeHandler( new Gml3EnvelopeGuiTypeHandler() );
     guiRegistry.registerTypeHandler( new Gml3PointGuiTypeHandler() );
 
