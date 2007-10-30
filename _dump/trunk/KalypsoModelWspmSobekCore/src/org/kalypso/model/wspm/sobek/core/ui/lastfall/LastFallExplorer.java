@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.ui.lastfall;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
@@ -246,14 +247,15 @@ public class LastFallExplorer
         if( element instanceof ILastfall )
         {
           final ILastfall lastfall = (ILastfall) element;
-          try
-          {
-            FeatureUtils.deleteFeature( lastfall.getFeature() );
-          }
-          catch( final Exception e1 )
-          {
-            e1.printStackTrace();
-          }
+          if( MessageDialog.openConfirm( toolBar.getShell(), "Delete Lastfall", "Delete Lastfall: " + lastfall.getName() + "?" ) )
+            try
+            {
+              FeatureUtils.deleteFeature( lastfall.getFeature() );
+            }
+            catch( final Exception e1 )
+            {
+              e1.printStackTrace();
+            }
         }
       }
     } );
