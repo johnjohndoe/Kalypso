@@ -45,6 +45,7 @@ import java.awt.Point;
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -83,36 +84,39 @@ public class MapUtilities
    *            This type of snapping will be used. {@link SNAP_TYPE}
    * @return The GM_Point snapped on the geometry.
    */
-  public static GM_Point snap( MapPanel mapPanel, GM_Object geometry, Point p, int radiusPx, SNAP_TYPE type ) throws GM_Exception
+  public static GM_Point snap( final MapPanel mapPanel, final GM_Object geometry, final Point p, final int radiusPx, final SNAP_TYPE type ) throws GM_Exception
   {
     /* Get the JTS geometry. */
-    Geometry geometryJTS = JTSAdapter.export( geometry );
+    final Geometry geometryJTS = JTSAdapter.export( geometry );
 
     /* Transform the point to a GM_Point. */
-    GM_Point point = MapUtilities.transform( mapPanel, p );
-    com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
+    final GM_Point point = MapUtilities.transform( mapPanel, p );
+    if( point == null )
+      return null;
+
+    final com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
 
     /* Buffer the point. */
-    Geometry pointBuffer = pointJTS.buffer( MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx ) );
+    final Geometry pointBuffer = pointJTS.buffer( MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx ) );
 
     if( !pointBuffer.intersects( geometryJTS ) )
       return null;
 
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
     {
-      com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
+      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
       if( snapPoint != null )
         return (GM_Point) JTSAdapter.wrap( snapPoint );
     }
     else if( geometryJTS instanceof LineString )
     {
-      com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
+      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
       if( snapPoint != null )
         return (GM_Point) JTSAdapter.wrap( snapPoint );
     }
     else if( geometryJTS instanceof Polygon )
     {
-      com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
+      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
       if( snapPoint != null )
         return (GM_Point) JTSAdapter.wrap( snapPoint );
     }
@@ -128,10 +132,14 @@ public class MapUtilities
    * @param p
    *            The AWT-Point.
    */
-  public static GM_Point transform( MapPanel mapPanel, Point p )
+  public static GM_Point transform( final MapPanel mapPanel, final Point p )
   {
     final GeoTransform projection = mapPanel.getProjection();
-    final CS_CoordinateSystem coordinatesSystem = mapPanel.getMapModell().getCoordinatesSystem();
+    final IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null )
+      return null;
+
+    final CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
 
     final double x = p.getX();
     final double y = p.getY();
@@ -147,7 +155,7 @@ public class MapUtilities
    * @param p
    *            The GM_Point.
    */
-  public static Point retransform( MapPanel mapPanel, GM_Point p )
+  public static Point retransform( final MapPanel mapPanel, final GM_Point p )
   {
     final GeoTransform projection = mapPanel.getProjection();
 
@@ -168,12 +176,12 @@ public class MapUtilities
    *            The distance to be calculated.
    * @return The distance in the world coords.
    */
-  public static double calculateWorldDistance( MapPanel mapPanel, GM_Point reference, int distancePx )
+  public static double calculateWorldDistance( final MapPanel mapPanel, final GM_Point reference, final int distancePx )
   {
-    Point point = retransform( mapPanel, reference );
+    final Point point = MapUtilities.retransform( mapPanel, reference );
     point.x = point.x + distancePx;
 
-    GM_Point destination = transform( mapPanel, point );
+    final GM_Point destination = MapUtilities.transform( mapPanel, point );
     return destination.getX() - reference.getX();
   }
 
@@ -186,11 +194,11 @@ public class MapUtilities
    *            The distance in pixel to be calculated.
    * @return The distance in the world coordinates system.
    */
-  public static double calculateWorldDistance( MapPanel mapPanel, int distancePx )
+  public static double calculateWorldDistance( final MapPanel mapPanel, final int distancePx )
   {
     final GM_Position minPosition = mapPanel.getBoundingBox().getMin();
     final GM_Point reference = GeometryFactory.createGM_Point( minPosition.getX(), minPosition.getY(), mapPanel.getMapModell().getCoordinatesSystem() );
-    
-    return calculateWorldDistance( mapPanel, reference, distancePx );
+
+    return MapUtilities.calculateWorldDistance( mapPanel, reference, distancePx );
   }
 }
