@@ -41,33 +41,19 @@
 package org.kalypso.ogc.gml.mapmodel.visitor;
 
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 
 /**
  * @author Thomas Jung
  */
-public class KalypsoThemeLoadStatusVisitor implements IKalypsoThemeVisitor
+public class LoadStatusPredicate implements IKalypsoThemePredicate
 {
-  boolean m_isLoaded = true;
-
-  private final LoadStatusPredicate m_predicate;
-
-  public KalypsoThemeLoadStatusVisitor( LoadStatusPredicate predicate )
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
+   */
+  public boolean decide( final IKalypsoTheme theme )
   {
-    m_predicate = predicate;
+    return theme.isLoaded();
   }
 
-  public boolean visit( IKalypsoTheme theme )
-  {
-    if( m_predicate.decide( theme ) == false )
-      m_isLoaded = false;
-
-    return true;
-
-  }
-
-  public boolean isLoaded( )
-  {
-    return m_isLoaded;
-  }
 }

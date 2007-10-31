@@ -137,4 +137,15 @@ public interface IMapModell extends IWorkbenchAdapter
    * This method is not intended to be called from outside of {@link IMapModell} implementations.
    */
   public void internalActivate( IKalypsoTheme theme );
+
+  /**
+   * Check if this map modell is still beeing filled with themes.<br>
+   * Implementors must ensure, that this flag becomes eventually <code>true</code> (even if there are errors while
+   * loading).
+   * 
+   * @return <code>false</code> if this map modell is under construction (for example if many theme are about to be
+   *         added in the near future...)
+   */
+  public boolean isLoaded( );
+
 }

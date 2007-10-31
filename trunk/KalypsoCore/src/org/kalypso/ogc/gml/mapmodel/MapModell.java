@@ -567,4 +567,14 @@ public class MapModell implements IMapModell
     // normally, its just me
     return this;
   }
+
+  /**
+   * Returns always <code>true</code>.
+   * 
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
+   */
+  public boolean isLoaded( )
+  {
+    return true;
+  }
 }
