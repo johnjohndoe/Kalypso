@@ -30,6 +30,13 @@
   </xs:complexType>
   <xs:complexType name="ControlType">
     <xs:sequence>
+      <xs:element name="backgroundColor" type="xs:anyType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The background-color of the control.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element name="visibleOperation" type="xs:anyType" minOccurs="0">
         <xs:annotation>
           <xs:documentation>

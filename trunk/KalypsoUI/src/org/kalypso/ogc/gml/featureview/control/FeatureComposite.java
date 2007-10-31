@@ -63,6 +63,8 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -73,6 +75,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -279,6 +282,19 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     m_swtControls.add( control );
 
+    /* Set the background-color. */
+    Object backgroundColor = controlType.getBackgroundColor();
+    if( backgroundColor != null )
+    {
+      RGB rgb = null;
+
+      if( backgroundColor instanceof String )
+        rgb = ColorUtilities.toRGBFromHTML( (String) backgroundColor );
+
+      if( rgb != null )
+        control.setBackground( new Color( control.getDisplay(), rgb ) );
+    }
+
     // einen bereits gesetzten Tooltip nicht überschreiben
     if( control.getToolTipText() == null )
       control.setToolTipText( controlType.getTooltip() );
@@ -343,7 +359,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     try
     {
-      if( operationElement instanceof Element )
+      if( operationElement instanceof String )
+        return Boolean.parseBoolean( (String) operationElement );
+      else if( operationElement instanceof Element )
       {
         KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( "Found operation: %s%nfor feature: %s%n", operationElement, feature );
 
