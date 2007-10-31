@@ -53,11 +53,13 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 /**
  * @author Dejan Antanaskovic
  */
-public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunction
+public class PF_LandusePolygon_DamageFunction extends FeaturePropertyFunction
 {
-  private final static QName XLINKED_FEATURE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
+  private final static QName XLINKED_LANDUSE_CLS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
 
-  private final static QName PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" );
+  private final static QName XLINKED_DAMAGE_FUNCTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionLink" );
+
+  private final static QName DAMAGE_FUNCTION_PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "function" );
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -76,16 +78,22 @@ public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunc
   {
     try
     {
-      final Feature member = (Feature) feature.getProperty( XLINKED_FEATURE );
-      if( member == null )
-        return new Integer(-1);
+      final Feature landuseClass = (Feature) feature.getProperty( XLINKED_LANDUSE_CLS );
+      if( landuseClass == null )
+        return "";
       else
       {
-        final Object object = member.getProperty( PROPERTY );
-        if( object instanceof List )
-          return ((List<Object>) object).get( 0 );
+        final Feature damageFunction = (Feature) landuseClass.getProperty( XLINKED_DAMAGE_FUNCTION );
+        if( damageFunction == null )
+          return "";
         else
-          return object;
+        {
+          final Object object = damageFunction.getProperty( DAMAGE_FUNCTION_PROPERTY );
+          if( object instanceof List )
+            return ((List<Object>) object).get( 0 );
+          else
+            return object;
+        }
       }
     }
     catch( IllegalStateException e )

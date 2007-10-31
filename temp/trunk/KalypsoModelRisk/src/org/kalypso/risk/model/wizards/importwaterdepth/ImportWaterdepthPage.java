@@ -40,7 +40,7 @@ public class ImportWaterdepthPage extends WizardPage
 
   private Button m_btnDeleteSelected;
 
-  private Integer m_selectedRasterIndex;
+  private int m_selectedRasterIndex = -1;
 
   private Combo m_cmbCoordinateSystem;
 
@@ -156,7 +156,7 @@ public class ImportWaterdepthPage extends WizardPage
       public void widgetSelected( SelectionEvent e )
       {
         int[] selection = m_tableViewer.getSelectionIndices();
-        m_selectedRasterIndex = new Integer( selection[0] );
+        m_selectedRasterIndex = new Integer( selection[0] ).intValue();
         updateComposite();
       }
     } );

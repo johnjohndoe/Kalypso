@@ -27,6 +27,10 @@
 						minOccurs="0" maxOccurs="unbounded" />
 					<xs:element ref="krrcm:damageFunctionMember"
 						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="krrcm:administrationUnitMember"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="krrcm:assetValueClassMember"
+						minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -65,18 +69,10 @@
 	</xs:element>
 
 	<xs:complexType name="LanduseClassType">
-		<xs:annotation>
-			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.RasterizationControModelPropertyFunction"
-					kapp:property="krrcm:damageFunctionName" kapp:isVirtual="true"
-					kapp:valueType="xs:string" />
-			</xs:appinfo>
-		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-				<xs:element name="ordinalNumber" type="xs:int"/>
+					<xs:element name="ordinalNumber" type="xs:int" />
 					<xs:element name="damageFunctionLink"
 						type="krrcm:DamageFunctionLinkType" nillable="true">
 						<xs:annotation>
@@ -111,56 +107,6 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-
-
-	<xs:complexType name="DamageFunctionLinkType">
-		<xs:annotation>
-			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-
-			<!--
-			IMPORTANT!!!
-
-				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-				should be written in one line, exactly like this!
-
-				Please check if your auto-formatting breaks it into:
-					<kapp:documentReference>
-						RasterizationControlModel.gml
-					</kapp:documentReference>
-				than fix it manually...
-
-			-->
-
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element ref="krrcm:DamageFunction" minOccurs="0"
-				maxOccurs="0" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
-
-
-	
-
-	<!-- =================================================================
-		Asset value classes Collection
-		================================================================== -->
-	<xs:element name="AssetValueClassCollection"
-		type="krrcm:AssetValueClassCollectionType"
-		substitutionGroup="gml:_Feature" />
-
-	<xs:complexType name="AssetValueClassCollectionType">
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
-				<xs:sequence>
-					<xs:element ref="krrcm:assetValueClassMember"
-						minOccurs="0" maxOccurs="unbounded" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 
 	<!-- =================================================================
 		assetValueClassMember property
@@ -198,20 +144,36 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="colorStyle" type="common:color">
+					<xs:element name="landuseClassLink"
+						type="krrcm:LanduseClassLinkType" nillable="true">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
-								<xs:label>Farbdarstellung</xs:label>
-								<xs:tooltip>
-									Farbdarstellung der
-									Landnutzungsklasse in der Karte
-								</xs:tooltip>
+								<xs:label>Landuse class</xs:label>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
-								<xs:label>Color style</xs:label>
-								<xs:tooltip>
-									Color of landuse class in the map
-								</xs:tooltip>
+								<xs:label>Landuse class</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="administrationUnitLink"
+						type="krrcm:AdministrationUnitLinkType" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Administration unit</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Administration unit</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="value"
+						type="xs:double" default="0.0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Asset value [€/m²]</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Asset value [€/m²]</xs:label>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -220,7 +182,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 
 	<!-- =================================================================
 		damageFunctionMember (root property)
@@ -265,5 +227,138 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+
+	<!-- =================================================================
+		assetValueClassMember property
+		================================================================== -->
+	<xs:element name="administrationUnitMember"
+		type="krrcm:AdministrationUnitPropertyType" />
+
+	<xs:complexType name="AdministrationUnitPropertyType">
+		<xs:sequence>
+			<xs:element ref="krrcm:AdministrationUnit"
+				minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!-- =================================================================
+		Administration units
+		================================================================== -->
+	<xs:element name="AdministrationUnit"
+		type="krrcm:AdministrationUnitType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="AdministrationUnitType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence />
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Link functions ======================================================== -->
+
+	<xs:complexType name="LanduseClassLinkType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+
+				<!--
+					IMPORTANT!!!
+					
+					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+					should be written in one line, exactly like this!
+					
+					Please check if your auto-formatting breaks it into:
+					<kapp:documentReference>
+					RasterizationControlModel.gml
+					</kapp:documentReference>
+					than fix it manually...
+					
+				-->
+
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="krrcm:LanduseClass" minOccurs="0"
+				maxOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
 	
+	
+	<xs:complexType name="DamageFunctionLinkType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+
+				<!--
+					IMPORTANT!!!
+					
+					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+					should be written in one line, exactly like this!
+					
+					Please check if your auto-formatting breaks it into:
+					<kapp:documentReference>
+					RasterizationControlModel.gml
+					</kapp:documentReference>
+					than fix it manually...
+					
+				-->
+
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="krrcm:DamageFunction" minOccurs="0"
+				maxOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	
+	
+	<xs:complexType name="AdministrationUnitLinkType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+
+				<!--
+					IMPORTANT!!!
+					
+					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+					should be written in one line, exactly like this!
+					
+					Please check if your auto-formatting breaks it into:
+					<kapp:documentReference>
+					RasterizationControlModel.gml
+					</kapp:documentReference>
+					than fix it manually...
+					
+				-->
+
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="krrcm:AdministrationUnit" minOccurs="0"
+				maxOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+
 </xs:schema>

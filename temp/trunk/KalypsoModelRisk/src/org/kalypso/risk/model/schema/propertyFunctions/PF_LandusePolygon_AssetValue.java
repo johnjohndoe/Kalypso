@@ -45,19 +45,30 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
+import org.kalypso.risk.model.schema.binding.IAssetValueClass;
+import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Dejan Antanaskovic
  */
-public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunction
+public class PF_LandusePolygon_AssetValue extends FeaturePropertyFunction
 {
-  private final static QName XLINKED_FEATURE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
+  private final static QName XLINKED_LANDUSE_CLS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
 
-  private final static QName PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" );
+  private List<IAssetValueClass> m_assetValueClassesList = null;
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -65,6 +76,27 @@ public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunc
   @Override
   public void init( Map<String, String> properties )
   {
+    // initialization of m_assetValueClassesList here produces a deadlock
+  }
+
+  private void loadAssetValueClassesList( )
+  {
+    if( m_assetValueClassesList != null )
+      return;
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    try
+    {
+      final IRasterizationControlModel model = scenarioDataProvider.getModel( IRasterizationControlModel.class );
+      m_assetValueClassesList = model.getAssetValueClassesList();
+    }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -74,23 +106,21 @@ public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunc
   @SuppressWarnings("unchecked")
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    try
+    loadAssetValueClassesList();
+    final XLinkedFeature_Impl landuseClass = (XLinkedFeature_Impl) feature.getProperty( XLINKED_LANDUSE_CLS );
+    if( landuseClass == null )
+      return Double.NaN;
+    else
     {
-      final Feature member = (Feature) feature.getProperty( XLINKED_FEATURE );
-      if( member == null )
-        return new Integer(-1);
-      else
+      // TODO For the moment, administration units are ignored; consider using administration units
+
+      final String landuseClassGmlID = landuseClass.getFeatureId();
+      for( final IAssetValueClass assetValueClass : m_assetValueClassesList )
       {
-        final Object object = member.getProperty( PROPERTY );
-        if( object instanceof List )
-          return ((List<Object>) object).get( 0 );
-        else
-          return object;
+        if( assetValueClass.getLanduseClassGmlID().equals( landuseClassGmlID ) )
+          return assetValueClass.getAssetValue();
       }
-    }
-    catch( IllegalStateException e )
-    {
-      return null;
+      return Double.NaN;
     }
   }
 

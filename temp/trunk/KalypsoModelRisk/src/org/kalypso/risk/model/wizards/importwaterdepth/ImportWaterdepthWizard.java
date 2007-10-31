@@ -66,7 +66,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GeoGridException;
+import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.risk.model.schema.binding.IWaterdepthCoverage;
 import org.kalypso.risk.model.schema.binding.IWaterdepthCoverageModel;
 import org.kalypso.template.types.StyledLayerType;
@@ -173,6 +175,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               layer.setFeaturePath( "#fid#" + waterdepthCoverage.getGmlID() );
               layer.setLinktype( "gml" );
               layer.setType( "simple" );
+              layer.setVisible( true );
               layer.setActuate( "onRequest" );
               layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/WaterdepthCoverageModel.gml" );
               layer.setVisible( true );
@@ -184,17 +187,19 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               style.setHref( "../styles/WaterdepthCoverageModel.sld" );
               style.setType( "simple" );
               styleList.add( style );
-              mapModell.addTheme( layer );
-              mapModell.invalidate( asciiRasterInfo.getGridDomain().getGM_Envelope( asciiRasterInfo.getGridDomain().getCoordinateSystem() ) );
               
-              // mapModell.activateTheme( layer );
-
-              // final AddThemeCommand command = new AddThemeCommand( mapModell, asciiRasterInfo.getReturnPeriod() + "
-              // year flood", "gml", "#fid#" + waterdepthCoverage.getGmlID(), "project:/"
-              // + scenarioFolder.getProjectRelativePath() + "/models/WaterdepthCoverageModel.gml", "sld", "Raster
-              // style", "../styles/WaterdepthCoverageModel.sld", "simple" );
-              // mapView.postCommand( command, null );
-
+              
+              final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+              for( final IKalypsoTheme kalypsoTheme : allThemes )
+              {
+                if(kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "HQ" ))
+                {
+                  ((CascadingKalypsoTheme)kalypsoTheme).addLayer( layer );
+                  kalypsoTheme.setVisible( true );
+                  break;
+                }
+              }
+              
               // fireModellEvent to redraw a map...
               workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getWrappedFeature(), new Feature[] { waterdepthCoverage.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             }

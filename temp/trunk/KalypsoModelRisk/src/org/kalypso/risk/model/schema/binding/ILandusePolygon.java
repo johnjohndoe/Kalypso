@@ -20,6 +20,10 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public QName PROPERTY_ORDNUMBER = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "clsOrdinalNumber" );
 
+  public QName PROPERTY_DAMAGE_FUNCTION = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "damageFunction" );
+
+  public QName PROPERTY_ASSET_VALUE = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "assetValue" );
+
   public void setGeometry( final GM_Surface< ? > surface );
 
   public void setStyleType( final String styleType );
@@ -29,6 +33,8 @@ public interface ILandusePolygon extends IFeatureWrapper2
   public void setLanduseClass( final Feature landuseClassFeature );
 
   public int getLanduseClassOrdinalNumber( );
+
+  public double getDamageValue( final double waterLevel );
 
   public boolean contains( final GM_Position position );
 }

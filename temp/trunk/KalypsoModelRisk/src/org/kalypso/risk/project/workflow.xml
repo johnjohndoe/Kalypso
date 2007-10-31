@@ -26,21 +26,11 @@
 		<TaskGroup
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__Databases">
 			<Help><![CDATA[Common data definition]]></Help>
-			<Name>Common data definition</Name>
-			<Task context="LanduseDatabase"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__LanduseDatabase">
+			<Name>Parameters definition</Name>
+			<Task context="CalculationControlPanel"
+				URI="http___www.tu-harburg.de_wb_kalypso_risk__CalculationControlPanel">
 				<Help><![CDATA[Landnutzung bearbeiten]]></Help>
-				<Name>Landnutzung bearbeiten</Name>
-			</Task>
-			<Task context="AssetValuesDatabase"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__AssetValuesDatabase">
-				<Help><![CDATA[Asset values definition]]></Help>
-				<Name>Asset values definition</Name>
-			</Task>
-			<Task context="DamageFunctionsDefinition"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__DamageFunctionsDefinition">
-				<Help><![CDATA[Damage functions definition]]></Help>
-				<Name>Damage functions definition</Name>
+				<Name>Calculation values definition</Name>
 			</Task>
 			<Task context="RiskZonesDefinition"
 				URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesDefinition">
@@ -92,29 +82,13 @@
 			<con:ViewContext id="FeatureView"
 				partId="org.kalypso.ui.views.featuretemplateview"
 				parent="ContextRiskModelling">
-				<con:ExtensionContext id="LanduseDatabase"
+				<con:ExtensionContext id="CalculationControlPanel"
 					parent="FeatureView"
 					handlerFactoryId="kalypsoContextHandlerFactory">
 					<con:Parameter name="type"
 						value="featureViewInputContext" />
 					<con:Parameter name="input"
-						value="templates/landuse.gft" />
-				</con:ExtensionContext>
-				<con:ExtensionContext id="AssetValuesDatabase"
-					parent="FeatureView"
-					handlerFactoryId="kalypsoContextHandlerFactory">
-					<con:Parameter name="type"
-						value="featureViewInputContext" />
-					<con:Parameter name="input"
-						value="templates/assetValues.gft" />
-				</con:ExtensionContext>
-				<con:ExtensionContext id="DamageFunctionsDefinition"
-					parent="FeatureView"
-					handlerFactoryId="kalypsoContextHandlerFactory">
-					<con:Parameter name="type"
-						value="featureViewInputContext" />
-					<con:Parameter name="input"
-						value="templates/damageFunctions.gft" />
+						value="templates/CalculationControlPanel.gft" />
 				</con:ExtensionContext>
 			</con:ViewContext>
 			<con:WorkbenchSiteContext id="MapContext"

@@ -61,7 +61,7 @@
         project="false">
   </wizard>
   <wizard
-        class="org.kalypso.risk.rasterization.RasterizationWizard"
+        class="org.kalypso.risk.model.wizards.rasterizeLanduse.RasterizationWizard"
         id="org.kalypso.risk.rasterization.RasterizationWizard"
         name="RasterizationWizard">
   </wizard>
@@ -90,6 +90,9 @@
        <adapter type="org.kalypso.risk.model.schema.binding.IWaterdepthCoverageCollection"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IWaterdepthCoverage"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILanduseCoverageModel"/>
+       <adapter
+             type="org.kalypso.risk.model.schema.binding.IAssetValueClass">
+       </adapter>
     </factory>
  </extension>
  <extension
@@ -136,9 +139,14 @@
           name="LanduseClsOrdinalNumberPropertyFunction">
     </function>
     <function
-          class="org.kalypso.risk.model.schema.propertyFunctions.RasterizationControModelPropertyFunction"
-          id="org.kalypso.risk.model.schema.propertyFunctions.RasterizationControModelPropertyFunction"
-          name="RasterizationControModelPropertyFunction">
+          class="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_DamageFunction"
+          id="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_DamageFunction"
+          name="PF_LandusePolygon_DamageFunction">
+    </function>
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_AssetValue"
+          id="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_AssetValue"
+          name="PF_LandusePolygon_AssetValue">
     </function>
  </extension>
 </plugin>

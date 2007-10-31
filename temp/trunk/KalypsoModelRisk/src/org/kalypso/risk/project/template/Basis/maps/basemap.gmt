@@ -2,13 +2,14 @@
 <mapv:gismapview name="Landnutzung" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
     <mapv:extent top="5995456.910174608" srs="EPSG:31467" right="3566967.5090796" left="3565455.283001168" bottom="5994066.26324792"/>
     <mapv:layers>
-        <mapv:layer visible="false" name="Landnutzungsraster" id="ID_3" linktype="gmt" xlink:type="simple" xlink:href="LanduseRasterMap.gmt" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="Landnutzung (raster)" id="ID_2" featurePath="#fid#RectifiedGridCoverage11936717807501" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/LanduseCoverageModel.gml" xlink:actuate="onRequest">
+            <templ:style style="Landuse style" linktype="sld" xlink:type="simple" xlink:href="../styles/LanduseCoverageModel.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="HQ" id="ID_3" linktype="gmt" xlink:type="simple" xlink:href="HQmap.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Landnutzung" id="ID_5" featurePath="#fid#PolygonCollection11921890705310/polygonMember[Polygon]" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/LanduseVectorModel.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="Landnutzung" id="ID_4" featurePath="#fid#PolygonCollection11921890705310/polygonMember[Polygon]" linktype="gml" xlink:type="simple" xlink:href="project:/Basis/models/LanduseVectorModel.gml" xlink:actuate="onRequest">
             <templ:style style="Landuse style" linktype="sld" xlink:type="simple" xlink:href="../styles/LanduseVectorModel.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>

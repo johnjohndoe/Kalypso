@@ -12,16 +12,26 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class RasterizationControlModel extends AbstractFeatureBinder implements IRasterizationControlModel
 {
   private FeatureList m_landuseClassesFeatureList;
-  
+
+  private FeatureList m_assetValueClassesFeatureList;
+
   private List<ILanduseClass> m_landuseClasses;
+
+  private List<IAssetValueClass> m_assetValueClasses;
 
   public RasterizationControlModel( final Feature featureToBind )
   {
     super( featureToBind, IRasterizationControlModel.QNAME );
+
     m_landuseClassesFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
     m_landuseClasses = new ArrayList<ILanduseClass>();
     for( final Object object : m_landuseClassesFeatureList )
-      m_landuseClasses.add( (ILanduseClass) ((Feature)object).getAdapter( ILanduseClass.class ) );
+      m_landuseClasses.add( (ILanduseClass) ((Feature) object).getAdapter( ILanduseClass.class ) );
+
+    m_assetValueClassesFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
+    m_assetValueClasses = new ArrayList<IAssetValueClass>();
+    for( final Object object : m_assetValueClassesFeatureList )
+      m_assetValueClasses.add( (IAssetValueClass) ((Feature) object).getAdapter( IAssetValueClass.class ) );
   }
 
   public List<ILanduseClass> getLanduseClassesList( )
@@ -45,5 +55,10 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
     }
     // TODO Auto-generated method stub
     return null;
+  }
+
+  public List<IAssetValueClass> getAssetValueClassesList( )
+  {
+    return m_assetValueClasses;
   }
 }

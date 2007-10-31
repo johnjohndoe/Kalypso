@@ -11,6 +11,8 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.risk.model.schema.binding.AssetValueClass;
+import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILanduseCoverageModel;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -106,6 +108,19 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( ILanduseClass.class, cTor );
+
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+        if( featureQName.equals( IAssetValueClass.QNAME ) )
+          return new AssetValueClass( feature );
+        else
+          return null;
+      }
+    };
+    cMap.put( IAssetValueClass.class, cTor );
 
     cTor = new AdapterConstructor()
     {

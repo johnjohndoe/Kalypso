@@ -14,7 +14,6 @@
           <MaxScaleDenominator>1.8</MaxScaleDenominator>
           <RasterSymbolizer uom="pixel">
 			<ColorMap>
-              <ColorMapEntry color="#ffffff" opacity="1.0" quantity="-9999.0"/>
               <ColorMapEntry color="#D3E2F2" opacity="1.0" quantity="0.0"/>
               <ColorMapEntry color="#BDD5EE" opacity="1.0" quantity="0.1"/>
               <ColorMapEntry color="#ADCDED" opacity="1.0" quantity="0.2"/>
@@ -31,7 +30,7 @@
               <ColorMapEntry color="#124C86" opacity="1.0" quantity="1.3"/>
               <ColorMapEntry color="#0B3B6C" opacity="1.0" quantity="1.4"/>
               <ColorMapEntry color="#05284B" opacity="1.0" quantity="1.5"/>
-              <ColorMapEntry color="#021427" opacity="1.0" quantity="100.0"/>
+              <ColorMapEntry color="#021427" opacity="1.0" quantity="100000.0"/>
             </ColorMap>
           </RasterSymbolizer>
         </Rule>

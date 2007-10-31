@@ -7,7 +7,7 @@
             <Title>Landuse style</Title>
             <FeatureTypeStyle>
                 <Rule>
-                    <Name>LanduseClass11924549336719</Name>
+                    <Name>LanduseClass11930532749211</Name>
                     <Title>Wohnen</Title>
                     <Abstract>Wohnen</Abstract>
                     <ogc:Filter>
@@ -23,7 +23,7 @@
                             <ogc:PropertyName>krvdm:polygonGeometry</ogc:PropertyName>
                         </Geometry>
                         <Fill>
-                            <CssParameter name="fill">#4a9eb1</CssParameter>
+                            <CssParameter name="fill">#ff8040</CssParameter>
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
@@ -36,7 +36,7 @@
                     </PolygonSymbolizer>
                 </Rule>
                 <Rule>
-                    <Name>LanduseClass11924549336877</Name>
+                    <Name>LanduseClass11930532749532</Name>
                     <Title>Gruenland</Title>
                     <Abstract>Gruenland</Abstract>
                     <ogc:Filter>
@@ -52,7 +52,7 @@
                             <ogc:PropertyName>krvdm:polygonGeometry</ogc:PropertyName>
                         </Geometry>
                         <Fill>
-                            <CssParameter name="fill">#05ad07</CssParameter>
+                            <CssParameter name="fill">#008000</CssParameter>
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
@@ -65,7 +65,7 @@
                     </PolygonSymbolizer>
                 </Rule>
                 <Rule>
-                    <Name>LanduseClass119245493368712</Name>
+                    <Name>LanduseClass11930532749533</Name>
                     <Title>Industrie</Title>
                     <Abstract>Industrie</Abstract>
                     <ogc:Filter>
@@ -81,7 +81,7 @@
                             <ogc:PropertyName>krvdm:polygonGeometry</ogc:PropertyName>
                         </Geometry>
                         <Fill>
-                            <CssParameter name="fill">#d18b0c</CssParameter>
+                            <CssParameter name="fill">#400000</CssParameter>
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
@@ -94,7 +94,7 @@
                     </PolygonSymbolizer>
                 </Rule>
                 <Rule>
-                    <Name>LanduseClass11924549336879</Name>
+                    <Name>LanduseClass11930532749531</Name>
                     <Title>Verkehr</Title>
                     <Abstract>Verkehr</Abstract>
                     <ogc:Filter>
@@ -110,7 +110,7 @@
                             <ogc:PropertyName>krvdm:polygonGeometry</ogc:PropertyName>
                         </Geometry>
                         <Fill>
-                            <CssParameter name="fill">#777777</CssParameter>
+                            <CssParameter name="fill">#c0c0c0</CssParameter>
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
@@ -123,7 +123,7 @@
                     </PolygonSymbolizer>
                 </Rule>
                 <Rule>
-                    <Name>LanduseClass11924549336876</Name>
+                    <Name>LanduseClass11930532749534</Name>
                     <Title>Ackerland</Title>
                     <Abstract>Ackerland</Abstract>
                     <ogc:Filter>
@@ -139,7 +139,7 @@
                             <ogc:PropertyName>krvdm:polygonGeometry</ogc:PropertyName>
                         </Geometry>
                         <Fill>
-                            <CssParameter name="fill">#6dc9bc</CssParameter>
+                            <CssParameter name="fill">#00ff00</CssParameter>
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
@@ -152,7 +152,7 @@
                     </PolygonSymbolizer>
                 </Rule>
                 <Rule>
-                    <Name>LanduseClass11924549336878</Name>
+                    <Name>LanduseClass11930532749535</Name>
                     <Title>Naturraum</Title>
                     <Abstract>Naturraum</Abstract>
                     <ogc:Filter>
@@ -168,7 +168,7 @@
                             <ogc:PropertyName>krvdm:polygonGeometry</ogc:PropertyName>
                         </Geometry>
                         <Fill>
-                            <CssParameter name="fill">#2c5e4e</CssParameter>
+                            <CssParameter name="fill">#808040</CssParameter>
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
@@ -181,7 +181,7 @@
                     </PolygonSymbolizer>
                 </Rule>
                 <Rule>
-                    <Name>LanduseClass119245493368715</Name>
+                    <Name>LanduseClass11930532749530</Name>
                     <Title>Wasser</Title>
                     <Abstract>Wasser</Abstract>
                     <ogc:Filter>
@@ -197,7 +197,7 @@
                             <ogc:PropertyName>krvdm:polygonGeometry</ogc:PropertyName>
                         </Geometry>
                         <Fill>
-                            <CssParameter name="fill">#0000ff</CssParameter>
+                            <CssParameter name="fill">#0080ff</CssParameter>
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
@@ -210,7 +210,7 @@
                     </PolygonSymbolizer>
                 </Rule>
                 <Rule>
-                    <Name>LanduseClass11924549336874</Name>
+                    <Name>LanduseClass11930532749539</Name>
                     <Title>Wald</Title>
                     <Abstract>Wald</Abstract>
                     <ogc:Filter>
@@ -226,7 +226,7 @@
                             <ogc:PropertyName>krvdm:polygonGeometry</ogc:PropertyName>
                         </Geometry>
                         <Fill>
-                            <CssParameter name="fill">#0db8b3</CssParameter>
+                            <CssParameter name="fill">#408080</CssParameter>
                             <CssParameter name="fill-opacity">0.75</CssParameter>
                         </Fill>
                         <Stroke>
