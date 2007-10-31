@@ -37,7 +37,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
@@ -84,7 +83,7 @@ public class RasterizationWizard extends Wizard implements INewWizard
     try
     {
       final IWaterdepthCoverage inputCoverage = m_pageSelectBaseRaster.getSelectedCoverage();
-      final GMLWorkspace workspace = m_scenarioDataProvider.getCommandableWorkSpace( IWaterdepthCoverageModel.class );
+      final GMLWorkspace workspace = m_scenarioDataProvider.getCommandableWorkSpace( ILanduseCoverageModel.class );
       getContainer().run( true, true, new IRunnableWithProgress()
       {
         public void run( final IProgressMonitor monitor ) throws InterruptedException
@@ -93,8 +92,6 @@ public class RasterizationWizard extends Wizard implements INewWizard
           try
           {
             monitor.subTask( Messages.getString( "ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
-            final IWaterdepthCoverageModel waterdepthCoverageModel = m_scenarioDataProvider.getModel( IWaterdepthCoverageModel.class );
-            final IFeatureWrapperCollection<IWaterdepthCoverage> waterdepthCoverageCollection = waterdepthCoverageModel.getWaterdepthCoverageCollection();
             final ILanduseVectorModel landuseVectorModel = (ILanduseVectorModel) m_scenarioDataProvider.getModel( ILanduseVectorModel.class );
             final ILanduseCoverageModel landuseCoverageModel = (ILanduseCoverageModel) m_scenarioDataProvider.getModel( ILanduseCoverageModel.class );
             final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = landuseVectorModel.getLandusePolygonCollection();
@@ -132,21 +129,16 @@ public class RasterizationWizard extends Wizard implements INewWizard
                 }
               }
             };
-            outputCoverage.setGridDomain( inputCoverage.getGridDomain() );
-
             final String outputFilePath = "raster/output/landuse_rasterized.dat";// + fileName;
-
             final IFile ifile = m_scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
             final File file = new File( ifile.getRawLocation().toPortableString() );
             GeoGridUtilities.setCoverage( outputCoverage, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
-
             inputGrid.dispose();
-            // ifile.refreshLocal( IFile.DEPTH_ZERO, new NullProgressMonitor() );
-
+            
             // fireModellEvent to redraw a map...
-            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getWrappedFeature(), new Feature[] { inputCoverage.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landuseCoverageModel.getWrappedFeature(), new Feature[] { outputCoverage.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-            m_scenarioDataProvider.postCommand( IWaterdepthCoverageModel.class, new EmptyCommand( "Get dirty!", false ) );
+            m_scenarioDataProvider.postCommand( ILanduseCoverageModel.class, new EmptyCommand( "Get dirty!", false ) );
           }
           catch( final Exception e )
           {
