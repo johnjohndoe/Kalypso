@@ -52,6 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
@@ -285,6 +286,51 @@ public class GeoGridUtilities
       if( outputGrid != null )
         outputGrid.dispose();
 
+      progress.done();
+    }
+  }
+
+  /**
+   * Reads values from the given {@link IGeoGrid} and write it out into a new file which is referenced by given coverage
+   * 
+   * @param coverage
+   *            The coverage that refers the grid
+   * @param grid
+   *            The values of the new coverage will be read from this grid.
+   * @param file
+   *            The new coverage will be serialized to this file.
+   * @param filePath
+   *            the (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *            file.
+   * @param mimeType
+   *            The mime type of the created underlying file.
+   * @throws GeoGridException
+   *             If the acces to the given grid fails.
+   * @throws IOException
+   *             If writing to the output file fails.
+   * @throws CoreException
+   *             If the monitor is cancelled.
+   */
+  public static void setCoverage( final RectifiedGridCoverage coverage, final IGeoGrid grid, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
+  {
+    final SubMonitor progress = SubMonitor.convert( monitor, "Coverage wird erzeugt", 100 );
+
+    final int scale = 2;
+    IWriteableGeoGrid outputGrid = null;
+    try
+    {
+      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY() );
+      ProgressUtilities.worked( monitor, 20 );
+      final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
+      grid.getWalkingStrategy().walk( grid, walker, progress.newChild( 70 ) );
+      outputGrid.dispose();
+      CoverageCollection.setCoverage( coverage, toGridDomain( grid ), filePath, mimeType );
+      ProgressUtilities.worked( progress, 10 );
+    }
+    finally
+    {
+      if( outputGrid != null )
+        outputGrid.dispose();
       progress.done();
     }
   }

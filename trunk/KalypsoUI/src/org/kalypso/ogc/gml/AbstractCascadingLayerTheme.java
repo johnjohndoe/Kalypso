@@ -52,6 +52,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
+import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -207,6 +208,11 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     m_innerMapModel.addTheme( theme );
   }
 
+  public void addLayer( final StyledLayerType layer ) throws Exception
+  {
+    m_innerMapModel.addTheme( layer );
+  }
+  
   /**
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getActiveTheme()
