@@ -42,28 +42,21 @@ package org.kalypso.model.wspm.ui.featureview;
 
 import java.net.URL;
 
-import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.ui.editor.actions.old.ChartActionContributor;
-import org.kalypso.chart.ui.editor.mouse.old.DragZoomHandler;
+import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -73,7 +66,7 @@ import org.ksp.chart.factory.ChartType;
 /**
  * @author Gernot Belger
  */
-public class ChartFeatureControl extends AbstractFeatureControl implements IFeatureControl
+public class ChartFeatureControl extends AbstractFeatureControl implements IFeatureControl, IAdaptable
 {
   /** These settings are used locally to remember the last selected tab-folder. */
   private final static IDialogSettings SETTINGS = new DialogSettings( "bla" );
@@ -87,6 +80,10 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   private final URL m_context;
 
   private final ChartConfigurationLoader m_ccl;
+
+  private ChartDragHandlerDelegate m_chartDragHandlerDelegate;
+
+  private ChartTabItem[] m_chartTabs;
 
   public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final URL context )
   {
@@ -102,41 +99,14 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
    */
   public Control createControl( final Composite parent, final int style )
   {
-    final ChartActionContributor contributor = new ChartActionContributor();
 
     final TabFolder folder = new TabFolder( parent, SWT.TOP );
+    m_chartTabs = new ChartTabItem[m_chartTypes.length];
 
     m_charts = new ChartComposite[m_chartTypes.length];
     for( int i = 0; i < m_chartTypes.length; i++ )
     {
-      final TabItem item = new TabItem( folder, SWT.NONE );
-
-      final Composite composite = new Composite( folder, style );
-      final GridLayout gridLayout = new GridLayout();
-      gridLayout.horizontalSpacing = 0;
-      gridLayout.verticalSpacing = 0;
-      composite.setLayout( gridLayout );
-
-      final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-      manager.createControl( composite );
-
-      final ChartType chartType = m_chartTypes[i];
-      item.setText( chartType.getTitle() );
-      item.setToolTipText( chartType.getDescription() );
-
-      final IChartModel chartModel = new ChartModel();
-      final ChartComposite chart = new ChartComposite( composite, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
-      final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
-
-      chart.setLayoutData( gridData );
-      contributor.contributeActions( chart, manager );
-      final DragZoomHandler handler = new DragZoomHandler( chart );
-      chart.addMouseListener( handler );
-      chart.addMouseMoveListener( handler );
-
-      m_charts[i] = chart;
-
-      item.setControl( composite );
+      m_chartTabs[i] = new ChartTabItem( m_chartTypes[i], folder, style );
     }
 
     final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
@@ -197,12 +167,17 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   {
     for( int i = 0; i < m_charts.length; i++ )
     {
-      final ChartComposite chart = m_charts[i];
+      final ChartComposite chart = m_chartTabs[i].getChartComposite();
 
       ChartFactory.doConfiguration( chart.getModel(), m_ccl, m_chartTypes[i], m_context );
 
       ChartUtilities.maximize( chart.getModel() );
     }
+  }
+
+  public Object getAdapter( Class adapter )
+  {
+    return null;
   }
 
 }
