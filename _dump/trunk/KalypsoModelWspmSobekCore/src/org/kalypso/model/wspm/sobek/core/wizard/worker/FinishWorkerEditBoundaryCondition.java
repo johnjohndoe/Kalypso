@@ -102,7 +102,7 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
 
       // map with feature changes
       final Map<QName, Object> changes = m_provider.getBasicChanges();
-      FeatureUtils.updateFeature( condition.getFeature(), changes );
+      FeatureUtils.updateFeature( m_lastfall.getModel().getWorkspace(), condition.getFeature(), changes );
 
       generateTimeSeriesObs( condition );
     }
@@ -119,7 +119,7 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
     try
     {
       final Feature feature = condition.getFeature();
-      final CommandableWorkspace workspace = FeatureUtils.getWorkspace( feature );
+      final CommandableWorkspace workspace = m_lastfall.getModel().getWorkspace();
 
       final IPropertyType property = feature.getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_OBSERVATION );
       final IRelationType relation = (IRelationType) property;

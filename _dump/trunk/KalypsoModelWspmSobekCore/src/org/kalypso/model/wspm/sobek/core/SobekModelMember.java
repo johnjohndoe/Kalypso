@@ -75,6 +75,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.IWorkspaceInterface;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
 import org.kalypso.model.wspm.sobek.core.model.Lastfall;
@@ -82,6 +83,7 @@ import org.kalypso.model.wspm.sobek.core.model.NodeUtils;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.model.wspm.sobek.core.utils.PiSobekModelUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -98,8 +100,11 @@ public final class SobekModelMember implements ISobekModelMember
 
   private final IRepositoryContainer m_reposContainer;
 
-  private SobekModelMember( final Feature modelMember, final IRepositoryContainer reposContainer )
+  private final IWorkspaceInterface m_workspace;
+
+  private SobekModelMember( final IWorkspaceInterface workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
   {
+    m_workspace = workspace;
     m_reposContainer = reposContainer;
     if( modelMember == null )
       throw new IllegalStateException( "modelMember is null" );
@@ -116,14 +121,22 @@ public final class SobekModelMember implements ISobekModelMember
 
   public static ISobekModelMember getModel( )
   {
-    return SobekModelMember.getModel( null, null );
+    return SobekModelMember.getModel( null, null, null );
   }
 
-  public static ISobekModelMember getModel( final Feature feature, final IRepositoryContainer reposContainer )
+  /**
+   * @param workspace
+   *            CommandableWorspace instance for posting new feature, updating features, aso
+   * @param modelMember
+   *            Sobek model member
+   * @param reposContainer
+   *            Time Series repository container
+   */
+  public static ISobekModelMember getModel( final IWorkspaceInterface workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
   {
-    if( SobekModelMember.m_model == null && feature != null )
+    if( SobekModelMember.m_model == null && modelMember != null )
     {
-      SobekModelMember.m_model = new SobekModelMember( feature, reposContainer );
+      SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
       return SobekModelMember.m_model;
     }
 
@@ -223,7 +236,7 @@ public final class SobekModelMember implements ISobekModelMember
     if( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH.equals( qn ) )
       new Branch( this, feature ).delete();
     else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qn ) )
-      FeatureUtils.deleteFeature( feature );
+      FeatureUtils.deleteFeature( m_workspace.getCommandableWorkspace(), feature );
     else
       throw new NotImplementedException();
   }
@@ -375,5 +388,13 @@ public final class SobekModelMember implements ISobekModelMember
     final TARGET[] values = TARGET.values();
     for( final TARGET target : values )
       writePi( targetDir, target );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getWorkspace()
+   */
+  public CommandableWorkspace getWorkspace( )
+  {
+    return m_workspace.getCommandableWorkspace();
   }
 }

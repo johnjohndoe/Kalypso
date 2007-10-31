@@ -113,7 +113,7 @@ public class NodeUtils implements INodeUtils
 // map.put( ISobekConstants.QN_HYDRAULIC_NAME, bn.getName() );
     map.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, bn.getDescription() );
 
-    FeatureUtils.updateFeature( connectionNode.getFeature(), map );
+    FeatureUtils.updateFeature( bn.getModel().getWorkspace(), connectionNode.getFeature(), map );
 
     for( final IBranch branch : bn.getInflowingBranches() )
       connectionNode.addInflowingBranch( branch );
@@ -144,7 +144,7 @@ public class NodeUtils implements INodeUtils
 // map.put( ISobekConstants.QN_HYDRAULIC_NAME, cn.getName() );
     map.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, cn.getDescription() );
 
-    FeatureUtils.updateFeature( boundaryNode.getFeature(), map );
+    FeatureUtils.updateFeature( cn.getModelMember().getWorkspace(), boundaryNode.getFeature(), map );
 
     for( final IBranch branch : cn.getInflowingBranches() )
       boundaryNode.addInflowingBranch( branch );
@@ -207,13 +207,13 @@ public class NodeUtils implements INodeUtils
     final IFeatureType targetType = prop.getTargetFeatureType();
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-    final CommandableWorkspace workspace = FeatureUtils.getWorkspace( boundaryNode.getFeature() );
-    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, targetType, boundaryNode.getFeature(), prop, -1, null, selectionManager );
-    workspace.postCommand( command );
+    final CommandableWorkspace cw = boundaryNode.getModelMember().getWorkspace();
+    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( cw, targetType, boundaryNode.getFeature(), prop, -1, null, selectionManager );
+    cw.postCommand( command );
 
     /* set linked lastfall! */
     final Feature condition = command.getNewFeature();
-    FeatureUtils.updateLinkedFeature( condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, "#" + lastfall.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, "#" + lastfall.getFeature().getId() );
 
     return command.getNewFeature();
   }

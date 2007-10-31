@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -86,4 +87,6 @@ public interface IModelMember
   public void deleteFoo( Feature feature ) throws Exception;
 
   public INodeUtils getNodeUtils( );
+
+  public CommandableWorkspace getWorkspace( );
 }

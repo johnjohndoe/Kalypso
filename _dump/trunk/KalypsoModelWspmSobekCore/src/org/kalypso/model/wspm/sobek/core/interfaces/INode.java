@@ -81,4 +81,6 @@ public interface INode
   public boolean isEmpty( );
 
   public void delete( ) throws Exception;
+
+  IModelMember getModelMember( );
 }

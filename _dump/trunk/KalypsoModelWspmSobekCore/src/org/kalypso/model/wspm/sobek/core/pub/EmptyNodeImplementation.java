@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class EmptyNodeImplementation extends AbstractNode
 {
-  public EmptyNodeImplementation( IModelMember model, Feature node )
+  public EmptyNodeImplementation( final IModelMember model, final Feature node )
   {
     super( model, node );
   }
@@ -62,7 +62,7 @@ public class EmptyNodeImplementation extends AbstractNode
    */
   public void delete( ) throws Exception
   {
-    FeatureUtils.deleteFeature( getFeature() );
+    FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
   }
 
   /**
@@ -79,5 +79,13 @@ public class EmptyNodeImplementation extends AbstractNode
   public boolean isEmpty( )
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
+   */
+  public IModelMember getModelMember( )
+  {
+    return getModelMember();
   }
 }

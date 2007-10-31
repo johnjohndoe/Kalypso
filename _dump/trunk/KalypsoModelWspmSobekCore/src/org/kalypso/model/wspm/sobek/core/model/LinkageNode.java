@@ -55,8 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
 {
-
-  public LinkageNode( IModelMember model, Feature node )
+  public LinkageNode( final IModelMember model, final Feature node )
   {
     super( model, node );
   }
@@ -66,7 +65,7 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
    */
   public void delete( ) throws Exception
   {
-    FeatureUtils.deleteFeature( getFeature() );
+    FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
   }
 
   /**
@@ -82,8 +81,8 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
    */
   public boolean isEmpty( )
   {
-    IBranch[] inflowing = getInflowingBranches();
-    IBranch[] outflowing = getOutflowingBranches();
+    final IBranch[] inflowing = getInflowingBranches();
+    final IBranch[] outflowing = getOutflowingBranches();
 
     if( inflowing.length == 0 && outflowing.length == 0 )
       return true;
@@ -94,12 +93,12 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#setLinkToBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch[])
    */
-  public void setLinkToBranch( IBranch[] branches ) throws Exception
+  public void setLinkToBranch( final IBranch[] branches ) throws Exception
   {
-    IBranch[] inflowing = getInflowingBranches();
-    IBranch[] outflowing = getOutflowingBranches();
+    final IBranch[] inflowing = getInflowingBranches();
+    final IBranch[] outflowing = getOutflowingBranches();
 
-    for( IBranch branch : branches )
+    for( final IBranch branch : branches )
     {
       /* if branch is an in- or outflowing branch -> continue */
       if( ArrayUtils.contains( inflowing, branch ) )
@@ -108,14 +107,11 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
         continue;
 
       /* linkage node lays on branch?!? */
-      GM_Curve curve = branch.getGeometryProperty();
-      GM_Point point = this.getLocation();
+      final GM_Curve curve = branch.getGeometryProperty();
+      final GM_Point point = getLocation();
 
-      if( curve.intersects( point ) ) // point lays on branch
-      {
-        FeatureUtils.updateLinkedFeature( getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getId() );
-
-      }
+      if( curve.intersects( point ) )
+        FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getId() );
     }
   }
 
@@ -131,12 +127,20 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
       f = (Feature) objBranch;
     else
       f = getFeature().getWorkspace().getFeature( (String) objBranch );
-    
+
     final IBranch result = new Branch( getModel(), f );
-    
+
     if( result == null )
       return null;
     return result;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
+   */
+  public IModelMember getModelMember( )
+  {
+    return getModelMember();
   }
 
 }

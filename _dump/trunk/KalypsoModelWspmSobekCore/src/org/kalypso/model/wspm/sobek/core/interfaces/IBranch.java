@@ -65,4 +65,6 @@ public interface IBranch
   void setLowerNode( INode lowerNode ) throws Exception;
 
   String getDescription( );
+
+  IModelMember getModelMember( );
 }

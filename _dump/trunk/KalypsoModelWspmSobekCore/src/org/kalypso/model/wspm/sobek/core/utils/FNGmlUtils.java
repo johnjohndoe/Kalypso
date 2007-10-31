@@ -96,7 +96,7 @@ public class FNGmlUtils
     final INode upperNode = FNGmlUtils.createNode( model, upperNodeType, curve.getStartPoint(), nodes );
     final INode lowerNode = FNGmlUtils.createNode( model, lowerNodeType, curve.getEndPoint(), nodes );
 
-    final CommandableWorkspace workspace = FeatureUtils.getWorkspace( model.getFeature() );
+    final CommandableWorkspace workspace = model.getWorkspace();
     final IFeatureType ftBranch = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH );
 
     final IRelationType rtBranchMember = (IRelationType) model.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
@@ -116,7 +116,7 @@ public class FNGmlUtils
       values.put( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID, id );
       values.put( ISobekConstants.QN_HYDRAULIC_NAME, id );
 
-      FeatureUtils.updateFeature( branch, values );
+      FeatureUtils.updateFeature( workspace, branch, values );
 
       final IBranch myBranch = new Branch( model, branch );
       myBranch.setUpperNode( upperNode );
@@ -238,7 +238,7 @@ public class FNGmlUtils
     final INode node = FNGmlUtils.createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
 
     /* link branch and profile */
-    FeatureUtils.updateLinkedFeature( node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH, "#" + branch.getFeature().getId() );
-    FeatureUtils.updateLinkedFeature( node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, "#" + profile.getId() );
+    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH, "#" + branch.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, "#" + profile.getId() );
   }
 }

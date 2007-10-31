@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
 {
-  public CrossSectionNode( IModelMember model, Feature node )
+  public CrossSectionNode( final IModelMember model, final Feature node )
   {
     super( model, node );
   }
@@ -62,7 +62,7 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
    */
   public void delete( ) throws Exception
   {
-    FeatureUtils.deleteFeature( getFeature() );
+    FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
   }
 
   /**
@@ -86,18 +86,26 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
    */
   public IBranch getLinkToBranch( )
   {
-      final Object objBranch = getFeature().getProperty( ISobekConstants.QN_LN_LINKS_TO_BRANCH );
-      final Feature f;
-      if( objBranch instanceof Feature )
-        // this branch should never be reached according to the schema file
-        f = (Feature) objBranch;
-      else
-        f = getFeature().getWorkspace().getFeature( (String) objBranch );
-      
-      final IBranch result = new Branch( getModel(), f );
-      
-      if( result == null )
-        return null;
-      return result;
-    }
+    final Object objBranch = getFeature().getProperty( ISobekConstants.QN_LN_LINKS_TO_BRANCH );
+    final Feature f;
+    if( objBranch instanceof Feature )
+      // this branch should never be reached according to the schema file
+      f = (Feature) objBranch;
+    else
+      f = getFeature().getWorkspace().getFeature( (String) objBranch );
+
+    final IBranch result = new Branch( getModel(), f );
+
+    if( result == null )
+      return null;
+    return result;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
+   */
+  public IModelMember getModelMember( )
+  {
+    return getModel();
+  }
 }

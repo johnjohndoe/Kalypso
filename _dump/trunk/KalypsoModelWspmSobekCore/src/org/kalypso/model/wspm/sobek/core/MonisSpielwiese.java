@@ -67,13 +67,13 @@ public class MonisSpielwiese extends TestCase
     {
       final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( urlGml, null );
 
-      final IFeatureType modelFT = modelWorkspace.getGMLSchema().getFeatureType( ISobekConstants.QN_SOBEK_MODEL);
+      final IFeatureType modelFT = modelWorkspace.getGMLSchema().getFeatureType( ISobekConstants.QN_SOBEK_MODEL );
       final Feature[] sobekModelFeat = modelWorkspace.getFeatures( modelFT );
 
-      final ISobekModelMember sobekModel = SobekModelMember.getModel( sobekModelFeat[0], null );
+      final ISobekModelMember sobekModel = SobekModelMember.getModel( null, sobekModelFeat[0], null );
 
       final URL targetDir = fleTarget.toURL();
-      sobekModel.writePi( targetDir);
+      sobekModel.writePi( targetDir );
     }
 
     catch( final Exception e )

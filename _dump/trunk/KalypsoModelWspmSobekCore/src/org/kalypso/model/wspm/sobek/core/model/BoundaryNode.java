@@ -70,7 +70,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
    */
   public void delete( ) throws Exception
   {
-    FeatureUtils.deleteFeature( getFeature() );
+    FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
   }
 
   /**
@@ -146,5 +146,13 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
 
     final Feature condition = NodeUtils.createBoundaryNodeLastfallCondition( lastfall, this );
     return new BoundaryNodeLastfallCondition( lastfall, this, condition );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
+   */
+  public IModelMember getModelMember( )
+  {
+    return getModelMember();
   }
 }

@@ -40,40 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-import java.io.IOException;
-import java.net.URL;
-
-import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author kuch
  */
-public interface ISobekModelMember extends IModelMember
+public interface IWorkspaceInterface
 {
-
-  public enum TARGET
-  {
-    eLocations,
-    eBranches,
-    eCrossSections
-  }
-
-  /**
-   * @param targetDir
-   *            directory into which result is written
-   * @param target
-   *            part of a Sobek model that shall be written into an XML file (with fixed filename)
-   */
-
-  public void writePi( final URL targetDir, final TARGET target ) throws IOException, GM_Exception;
-
-  public IRepositoryContainer getRepositoryContainer( );
-
-  /**
-   * @param targetDir
-   *            directory into which result is written
-   */
-  public void writePi( URL targetDir ) throws IOException, GM_Exception;
-
+  public CommandableWorkspace getCommandableWorkspace( );
 }

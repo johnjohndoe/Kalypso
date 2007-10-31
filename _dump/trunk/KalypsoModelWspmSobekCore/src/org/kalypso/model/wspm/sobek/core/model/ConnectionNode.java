@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ConnectionNode extends AbstractConnectionNode implements IConnectionNode
 {
-  public ConnectionNode( IModelMember model, Feature node )
+  public ConnectionNode( final IModelMember model, final Feature node )
   {
     super( model, node );
   }
@@ -70,7 +70,7 @@ public class ConnectionNode extends AbstractConnectionNode implements IConnectio
    */
   public void delete( ) throws Exception
   {
-    FeatureUtils.deleteFeature( getFeature() );
+    FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
   }
 
   /**
@@ -78,13 +78,21 @@ public class ConnectionNode extends AbstractConnectionNode implements IConnectio
    */
   public boolean isEmpty( )
   {
-    IBranch[] inflowingBranches = getInflowingBranches();
-    IBranch[] outflowingBranches = getOutflowingBranches();
+    final IBranch[] inflowingBranches = getInflowingBranches();
+    final IBranch[] outflowingBranches = getOutflowingBranches();
 
     if( inflowingBranches.length == 0 && outflowingBranches.length == 0 )
       return true;
 
     return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
+   */
+  public IModelMember getModelMember( )
+  {
+    return getModel();
   }
 
 }

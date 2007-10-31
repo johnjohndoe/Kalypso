@@ -121,7 +121,7 @@ public class Branch implements IBranch
     FNGmlUtils.cleanUpNodes( m_model, this );
 
     // delete branch
-    FeatureUtils.deleteFeature( m_branch );
+    FeatureUtils.deleteFeature( m_model.getWorkspace(), m_branch );
   }
 
   /**
@@ -233,7 +233,7 @@ public class Branch implements IBranch
    */
   public void setLowerNode( final INode node ) throws Exception
   {
-    FeatureUtils.updateLinkedFeature( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + node.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + node.getFeature().getId() );
   }
 
   /**
@@ -241,7 +241,7 @@ public class Branch implements IBranch
    */
   public void setUpperNode( final INode node ) throws Exception
   {
-    FeatureUtils.updateLinkedFeature( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + node.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + node.getFeature().getId() );
   }
 
   /**
@@ -253,5 +253,13 @@ public class Branch implements IBranch
     if( description == null )
       return null;
     return (String) description;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getModelMember()
+   */
+  public IModelMember getModelMember( )
+  {
+    return m_model;
   }
 }

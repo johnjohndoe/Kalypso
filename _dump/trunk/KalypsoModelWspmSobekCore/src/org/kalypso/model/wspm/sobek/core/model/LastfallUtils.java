@@ -47,8 +47,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
-import org.kalypso.ogc.gml.FeatureUtils;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -65,11 +63,10 @@ public class LastfallUtils
     final IFeatureType targetType = prop.getTargetFeatureType();
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-    final CommandableWorkspace workspace = FeatureUtils.getWorkspace( model );
-    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, targetType, model, prop, -1, null, selectionManager );
+    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( modelMember.getWorkspace(), targetType, model, prop, -1, null, selectionManager );
     try
     {
-      workspace.postCommand( command );
+      modelMember.getWorkspace().postCommand( command );
 
       return new Lastfall( modelMember, command.getNewFeature() );
     }

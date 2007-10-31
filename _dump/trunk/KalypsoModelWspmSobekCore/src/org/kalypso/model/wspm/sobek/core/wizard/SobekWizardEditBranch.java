@@ -52,6 +52,7 @@ import org.eclipse.ui.IWorkbench;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBranch;
 import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -64,8 +65,11 @@ public class SobekWizardEditBranch extends Wizard implements INewWizard
 
   private PageEditBranch m_pageEditBranch;
 
-  public SobekWizardEditBranch( final Feature branch )
+  private final CommandableWorkspace m_workspace;
+
+  public SobekWizardEditBranch( final CommandableWorkspace workspace, final Feature branch )
   {
+    m_workspace = workspace;
     m_branch = branch;
   }
 
@@ -94,7 +98,7 @@ public class SobekWizardEditBranch extends Wizard implements INewWizard
       values.put( ISobekConstants.QN_HYDRAULIC_NAME, name );
       values.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, description );
 
-      FeatureUtils.updateFeature( m_branch, values );
+      FeatureUtils.updateFeature( m_workspace, m_branch, values );
     }
     catch( final Exception e )
     {
