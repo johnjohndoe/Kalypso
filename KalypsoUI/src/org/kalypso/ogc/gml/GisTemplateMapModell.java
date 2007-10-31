@@ -513,4 +513,13 @@ public class GisTemplateMapModell implements IMapModell
   {
     return this;
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
+   */
+  public boolean isLoaded( )
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
 }
