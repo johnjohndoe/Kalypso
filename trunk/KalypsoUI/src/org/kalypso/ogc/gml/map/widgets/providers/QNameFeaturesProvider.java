@@ -94,6 +94,9 @@ public class QNameFeaturesProvider implements IFeaturesProvider
 
   private void handleTheme( final List<EasyFeatureWrapper> found, final IKalypsoTheme theme )
   {
+    if( theme instanceof AbstractCascadingLayerTheme )
+      return;
+
     final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
     final CommandableWorkspace workspace = featureTheme.getWorkspace();
 
