@@ -44,12 +44,23 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.observation.result.TupleResult;
+
 /**
  * @author kuch
  */
 public interface ITimeSeriesProvider
 {
 
+  /**
+   * @return map with basic timeseries changes, like timeseries begins, ends, aso
+   */
   Map<QName, Object> getBasicChanges( );
+
+  /**
+   * @param result
+   *            Already declared TupleResult set. TS data will be putted into this resultset
+   */
+  void fillTupleResult( TupleResult result );
 
 }

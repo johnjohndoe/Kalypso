@@ -61,6 +61,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryLabelProvider;
@@ -474,6 +475,11 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
   public ZmlObservationItem getZmlObservationItem( )
   {
     return m_selectedTreeItem;
+  }
+
+  public ILastfall getLastfall( )
+  {
+    return m_condition.getLastfall();
   }
 
 }

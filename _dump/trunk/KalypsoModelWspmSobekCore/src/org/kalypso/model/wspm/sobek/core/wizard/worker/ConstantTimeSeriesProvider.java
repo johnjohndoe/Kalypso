@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kuch
@@ -72,6 +73,15 @@ public class ConstantTimeSeriesProvider extends AbstractTimeSeriesProvider
     // - {org.kalypso.model.wspm.sobek}constValueIntervalMinutes
     // - {org.kalypso.model.wspm.sobek}observationBegin
     // - {org.kalypso.model.wspm.sobek}observationEnd
+
+    throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.wizard.worker.ITimeSeriesProvider#fillTupleResult(org.kalypso.observation.result.TupleResult)
+   */
+  public void fillTupleResult( final TupleResult result )
+  {
 
     throw new NotImplementedException();
   }

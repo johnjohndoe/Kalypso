@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.TupleResult;
@@ -108,7 +109,6 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return Status.OK_STATUS;
@@ -132,11 +132,17 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
 
       /* add components to resultset */
       result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, FinishWorkerEditBoundaryCondition.OBS_DATE ) );
-      result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, FinishWorkerEditBoundaryCondition.OBS_W ) );
-      result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, FinishWorkerEditBoundaryCondition.OBS_Q ) );
+
+      final BOUNDARY_TYPE boundaryType = m_node.getBoundaryType();
+      if( BOUNDARY_TYPE.eW.equals( boundaryType ) || BOUNDARY_TYPE.eWQ.equals( boundaryType ) )
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, FinishWorkerEditBoundaryCondition.OBS_W ) );
+
+      if( BOUNDARY_TYPE.eQ.equals( boundaryType ) || BOUNDARY_TYPE.eWQ.equals( boundaryType ) )
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, FinishWorkerEditBoundaryCondition.OBS_Q ) );
 
       /* fill TupleResult with data */
-      // writeCombinationsToObservation( result, m_baseMap );
+      m_provider.fillTupleResult( result );
+
       /* add observation to workspace */
       final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() );
 

@@ -47,7 +47,9 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
@@ -78,11 +80,11 @@ public abstract class AbstractTimeSeriesProvider implements ITimeSeriesProvider
     final Map<QName, Object> changes = new HashMap<QName, Object>();
 
     /* start date */
-    final GregorianCalendar grStart = m_general.getStartDate();
+    final GregorianCalendar grStart = getStartDate();
     changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS, new XMLGregorianCalendarImpl( grStart ) );
 
     /* end date */
-    final GregorianCalendar grEnd = m_general.getEndDate();
+    final GregorianCalendar grEnd = getEndDate();
     changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS, new XMLGregorianCalendarImpl( grEnd ) );
 
     return changes;
@@ -102,8 +104,28 @@ public abstract class AbstractTimeSeriesProvider implements ITimeSeriesProvider
     }
   }
 
+  protected GregorianCalendar getStartDate( )
+  {
+    return m_general.getStartDate();
+  }
+
+  protected GregorianCalendar getEndDate( )
+  {
+    return m_general.getEndDate();
+  }
+
   protected PageEditBoundaryConditionTimeSeries getPageTS( )
   {
     return m_pageTS;
+  }
+
+  protected ILastfall getLastfall( )
+  {
+    return m_pageTS.getLastfall();
+  }
+
+  protected BOUNDARY_TYPE getBoundaryNodeType( )
+  {
+    return m_general.getBoundaryNodeType();
   }
 }
