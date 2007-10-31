@@ -94,15 +94,13 @@ public class FeatureUtils
     return geoDataSetName;
   }
 
-  public static void deleteFeature( final Feature f ) throws Exception
+  public static void deleteFeature( final CommandableWorkspace workspace, final Feature f ) throws Exception
   {
     if( f == null )
       return;
 
     final Feature parent = f.getParent();
     final IRelationType rel = f.getParentRelation();
-
-    final CommandableWorkspace workspace = new CommandableWorkspace( f.getWorkspace() );
 
     final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parent, rel, f );
     workspace.postCommand( command );
@@ -155,7 +153,7 @@ public class FeatureUtils
     return null;
   }
 
-  public static void updateFeature( final Feature feature, final Map<QName, Object> map ) throws Exception
+  public static void updateFeature( final CommandableWorkspace workspace, final Feature feature, final Map<QName, Object> map ) throws Exception
   {
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -168,38 +166,38 @@ public class FeatureUtils
       changes.add( change );
     }
 
-    final GMLWorkspace workspace = feature.getWorkspace();
     final FeatureChange[] arrChanges = changes.toArray( new FeatureChange[] {} );
     final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, arrChanges );
 
-    CommandableWorkspace cmdWork = getWorkspace( feature );
-    cmdWork.postCommand( chgCmd );
+    workspace.postCommand( chgCmd );
   }
 
-  public static void updateFeature( final Feature feature, final QName qname, final Object value ) throws Exception
+  public static void updateFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Object value ) throws Exception
   {
     final Map<QName, Object> map = new HashMap<QName, Object>();
     map.put( qname, value );
 
-    FeatureUtils.updateFeature( feature, map );
+    FeatureUtils.updateFeature( workspace, feature, map );
   }
 
-  public static void updateLinkedFeature( final Feature feature, final QName qname, final String value ) throws Exception
+  public static void updateLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final String value ) throws Exception
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
     final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value, "", "", "", "", "" );
 
-    final GMLWorkspace workspace = feature.getWorkspace();
     final FeatureChange change = new FeatureChange( feature, chgProp, impl );
     final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
 
-    CommandableWorkspace cmdWork = getWorkspace( feature );
-    cmdWork.postCommand( chgCmd );
+    workspace.postCommand( chgCmd );
   }
 
-  public static CommandableWorkspace getWorkspace( Feature feature )
+  @Deprecated
+  /**
+   * ATTENTION: each time a new commandable workspace is returned, so you can't see that an workspace is dirty!
+   */
+  public static CommandableWorkspace getCommandableWorkspace( final Feature feature )
   {
-    GMLWorkspace workspace = feature.getWorkspace();
+    final GMLWorkspace workspace = feature.getWorkspace();
 
     if( workspace instanceof CommandableWorkspace )
       return (CommandableWorkspace) workspace;
