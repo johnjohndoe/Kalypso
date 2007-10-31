@@ -182,7 +182,6 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final StructuredSelection selection = (StructuredSelection) event.getSelection();
@@ -211,6 +210,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
         }
 
         container.layout();
+        checkPageCompleted();
       }
     } );
 
@@ -232,11 +232,27 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     m_tConstant = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
     m_tConstant.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
 
+    m_tConstant.addModifyListener( new Runnable()
+    {
+      public void run( )
+      {
+        checkPageCompleted();
+      }
+    } );
+
     /* const intervall */
     new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, "Intervall of value", m_subGroup );
 
     m_tConstantIntervall = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL );
     m_tConstantIntervall.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
+
+    m_tConstantIntervall.addModifyListener( new Runnable()
+    {
+      public void run( )
+      {
+        checkPageCompleted();
+      }
+    } );
   }
 
   protected void renderTimeSeriesRepository( final Composite parent )
@@ -460,6 +476,34 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
         return;
       }
+
+      try
+      {
+        final String text = m_tConstantIntervall.getText();
+        if( text != null || !"".equals( text.trim() ) )
+        {
+          final Integer value = Integer.valueOf( m_tConstantIntervall.getText() );
+
+          if( value <= 0 )
+          {
+            setMessage( null );
+            setErrorMessage( "Constant value intervall can't be zero or smaller than zero." );
+            setPageComplete( false );
+
+            return;
+          }
+        }
+
+      }
+      catch( final NumberFormatException e )
+      {
+        setMessage( null );
+        setErrorMessage( "Constant value intervall is not a number (type of integer)." );
+        setPageComplete( false );
+
+        return;
+      }
+
     }
 
     setMessage( null );
@@ -482,4 +526,21 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     return m_condition.getLastfall();
   }
 
+  public Double getConstValue( )
+  {
+    return Double.valueOf( m_tConstant.getText() );
+  }
+
+  public Integer getConstValueIntervall( )
+  {
+    try
+    {
+      final Integer intervall = Integer.valueOf( m_tConstantIntervall.getText() );
+      return intervall;
+    }
+    catch( final NumberFormatException e )
+    {
+      return null;
+    }
+  }
 }

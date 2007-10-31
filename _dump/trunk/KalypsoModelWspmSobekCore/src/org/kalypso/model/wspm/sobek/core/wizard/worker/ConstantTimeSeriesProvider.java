@@ -40,14 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.worker;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * @author kuch
@@ -65,16 +71,13 @@ public class ConstantTimeSeriesProvider extends AbstractTimeSeriesProvider
   @Override
   public Map<QName, Object> getBasicChanges( )
   {
-    // {org.kalypso.model.wspm.sobek}LastfallDefinition
-    // - {org.kalypso.model.wspm.sobek}linkedLastfall
-    // - {org.kalypso.model.wspm.sobek}data
-    // - {org.kalypso.model.wspm.sobek}sourceRepositoryObservation
-    // - {org.kalypso.model.wspm.sobek}constValue
-    // - {org.kalypso.model.wspm.sobek}constValueIntervalMinutes
-    // - {org.kalypso.model.wspm.sobek}observationBegin
-    // - {org.kalypso.model.wspm.sobek}observationEnd
+    /* set unused values null */
+    final Map<QName, Object> changes = super.getBasicChanges();
 
-    throw new NotImplementedException();
+    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, getPageTS().getConstValue() );
+    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, getPageTS().getConstValueIntervall() );
+
+    return changes;
   }
 
   /**
@@ -82,7 +85,39 @@ public class ConstantTimeSeriesProvider extends AbstractTimeSeriesProvider
    */
   public void fillTupleResult( final TupleResult result )
   {
+    final GregorianCalendar cStart = getStartDate();
+    final GregorianCalendar cEnd = getEndDate();
+    final Double value = getPageTS().getConstValue();
+    final Integer intervall = getPageTS().getConstValueIntervall();
 
-    throw new NotImplementedException();
+    /* set starting value */
+    addResult( result, cStart, value );
+
+    final GregorianCalendar base = (GregorianCalendar) cStart.clone();
+
+    while( base.before( cEnd ) )
+    {
+      base.add( Calendar.MINUTE, intervall );
+
+      addResult( result, base, value );
+    }
+
+    /* set end value */
+    addResult( result, cEnd, value );
+
+  }
+
+  private void addResult( final TupleResult result, final GregorianCalendar calendar, final Double value )
+  {
+    /* if wq-relation -> components must have the order date, w, q otherwise -> date, w or q */
+    final IComponent[] components = result.getComponents();
+
+    final IRecord record = result.createRecord();
+    record.setValue( components[0], new XMLGregorianCalendarImpl( calendar ) );
+
+    for( int i = 1; i < components.length; i++ )
+      record.setValue( components[i], value );
+
+    result.add( record );
   }
 }
