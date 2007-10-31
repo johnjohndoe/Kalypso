@@ -141,7 +141,7 @@ public class LastFallExplorer
         if( returnCode != Window.OK )
           try
           {
-            FeatureUtils.deleteFeature( lastfall.getModel().getWorkspace(), lastfall.getFeature() );
+            FeatureUtils.deleteFeature( lastfall.getModelMember().getWorkspace(), lastfall.getFeature() );
           }
           catch( final Exception e1 )
           {
@@ -249,7 +249,7 @@ public class LastFallExplorer
           if( MessageDialog.openConfirm( toolBar.getShell(), "Delete Lastfall", "Delete Lastfall: " + lastfall.getName() + "?" ) )
             try
             {
-              FeatureUtils.deleteFeature( lastfall.getModel().getWorkspace(), lastfall.getFeature() );
+              FeatureUtils.deleteFeature( lastfall.getModelMember().getWorkspace(), lastfall.getFeature() );
             }
             catch( final Exception e1 )
             {

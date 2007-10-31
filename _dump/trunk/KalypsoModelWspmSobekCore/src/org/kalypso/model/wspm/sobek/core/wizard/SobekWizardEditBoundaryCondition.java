@@ -109,7 +109,7 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
       m_general = new PageEditBoundaryConditionGeneral( m_condition );
       addPage( m_general );
 
-      m_timeSeries = new PageEditBoundaryConditionTimeSeries( (ISobekModelMember) m_lastfall.getModel(), m_condition, m_general );
+      m_timeSeries = new PageEditBoundaryConditionTimeSeries( (ISobekModelMember) m_lastfall.getModelMember(), m_condition, m_general );
       addPage( m_timeSeries );
     }
   }

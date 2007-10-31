@@ -73,7 +73,7 @@ public class LastfallTreeContentProvider implements ITreeContentProvider
   {
     final Set<IBoundaryNode> myNodes = new HashSet<IBoundaryNode>();
 
-    final INode[] nodes = lastfall.getModel().getNodeMembers();
+    final INode[] nodes = lastfall.getModelMember().getNodeMembers();
     for( final INode node : nodes )
       if( node instanceof IBoundaryNode )
         myNodes.add( (IBoundaryNode) node );

@@ -81,11 +81,4 @@ public class EmptyNodeImplementation extends AbstractNode
     return true;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
-   */
-  public IModelMember getModelMember( )
-  {
-    return getModelMember();
-  }
 }

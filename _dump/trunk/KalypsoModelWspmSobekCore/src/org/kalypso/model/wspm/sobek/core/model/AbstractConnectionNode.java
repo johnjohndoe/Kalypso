@@ -225,4 +225,5 @@ public abstract class AbstractConnectionNode extends AbstractNode implements INo
     final List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
     inflowing.remove( branch.getFeature().getId() );
   }
+
 }

@@ -120,7 +120,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       {
         public Feature getLinkedFeature( final String id )
         {
-          ILastfall[] lastfalls = lastfall.getModel().getLastfallMembers();
+          ILastfall[] lastfalls = lastfall.getModelMember().getLastfallMembers();
           for( ILastfall l : lastfalls )
             // $ANALYSIS-IGNORE
             if( l.getFeature().getId().equals( id ) )
@@ -148,11 +148,4 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
     return new BoundaryNodeLastfallCondition( lastfall, this, condition );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
-   */
-  public IModelMember getModelMember( )
-  {
-    return getModelMember();
-  }
 }

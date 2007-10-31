@@ -165,4 +165,12 @@ public abstract class AbstractNode implements INode
 
     return FNNodeUtils.createNode( model, targetFeatureType, point );
   }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
+   */
+  public IModelMember getModelMember( )
+  {
+    return m_model;
+  }
 }

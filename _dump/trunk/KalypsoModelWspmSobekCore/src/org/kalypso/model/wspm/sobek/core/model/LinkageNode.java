@@ -135,12 +135,4 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
     return result;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
-   */
-  public IModelMember getModelMember( )
-  {
-    return getModelMember();
-  }
-
 }

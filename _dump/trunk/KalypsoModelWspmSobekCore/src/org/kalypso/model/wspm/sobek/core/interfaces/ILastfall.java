@@ -51,7 +51,7 @@ public interface ILastfall
 {
   String getName( );
 
-  public IModelMember getModel( );
+  public IModelMember getModelMember( );
 
   public Feature getFeature( );
 

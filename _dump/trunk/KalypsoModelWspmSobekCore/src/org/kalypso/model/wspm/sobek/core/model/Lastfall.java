@@ -86,7 +86,7 @@ public class Lastfall implements ILastfall
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getModel()
    */
-  public IModelMember getModel( )
+  public IModelMember getModelMember( )
   {
     return m_sobekModelMember;
   }

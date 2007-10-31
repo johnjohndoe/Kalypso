@@ -87,12 +87,4 @@ public class ConnectionNode extends AbstractConnectionNode implements IConnectio
     return false;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
-   */
-  public IModelMember getModelMember( )
-  {
-    return getModel();
-  }
-
 }

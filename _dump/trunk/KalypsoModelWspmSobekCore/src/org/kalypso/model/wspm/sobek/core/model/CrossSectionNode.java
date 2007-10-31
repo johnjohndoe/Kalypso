@@ -101,11 +101,4 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
     return result;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
-   */
-  public IModelMember getModelMember( )
-  {
-    return getModel();
-  }
 }
