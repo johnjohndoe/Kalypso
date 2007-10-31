@@ -267,6 +267,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       final IMapModell mapModell = mapPanel.getMapModell();
       if( mapModell != null )
       {
+        // TODO check if theme exists; if not, "removeTheme" causes NPE
         mapModell.removeTheme( m_calcUnitTheme );
       }
     }
