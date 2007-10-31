@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
@@ -48,11 +48,22 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.awt.HighlightGraphics;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeLoadStatusVisitor;
+import org.kalypso.ogc.gml.mapmodel.visitor.LoadStatusPredicate;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
@@ -62,12 +73,79 @@ import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Helper class with static members
+ * Utility class for {@link IMapModell} associated functions.
  * 
- * @author Belger
+ * @author Gernot Belger
  */
 public class MapModellHelper
 {
+  public MapModellHelper( )
+  {
+    throw new UnsupportedOperationException( "Do not instantiate this helper class" );
+  }
+
+  /**
+   * Waitsfor a {@link MapPanel} to be completely loaded. A progress dialog opens if this operation takes long.<br>
+   * If an error occurs, an error dialog will be shown.
+   * 
+   * @return <code>false</code> if any error happened, the map is not garantueed to be loaded in this case.
+   * @see ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)
+   * @see #createWaitForMapOperation(MapPanel)
+   */
+  public static boolean waitForAndErrorDialog( final Shell shell, final MapPanel mapPanel, final String windowTitle, final String message )
+  {
+    final ICoreRunnableWithProgress operation = createWaitForMapOperation( mapPanel );
+    final IStatus waitErrorStatus = ProgressUtilities.busyCursorWhile( operation );
+    ErrorDialog.openError( shell, windowTitle, message, waitErrorStatus );
+    return waitErrorStatus.isOK();
+  }
+
+  /**
+   * Creates an {@link ICoreRunnableWithProgress} which waits for a {@link MapPanel} to be loaded.<br>
+   * Uses the {@link IMapModell#isLoaded()} and {@link IKalypsoTheme#isLoaded()} methods.
+   */
+  public static ICoreRunnableWithProgress createWaitForMapOperation( final MapPanel mapPanel )
+  {
+    final ICoreRunnableWithProgress waitForMapOperation = new ICoreRunnableWithProgress()
+    {
+      public IStatus execute( IProgressMonitor monitor ) throws InterruptedException
+      {
+        monitor.beginTask( "Karte wird geladen...", IProgressMonitor.UNKNOWN );
+
+        Thread.sleep( 500 );
+
+        while( true )
+        {
+          if( monitor.isCanceled() )
+            return Status.CANCEL_STATUS;
+
+          try
+          {
+            final IMapModell modell = mapPanel.getMapModell();
+            if( modell != null && modell.isLoaded() )
+            {
+              final LoadStatusPredicate predicate = new LoadStatusPredicate();
+              final KalypsoThemeLoadStatusVisitor visitor = new KalypsoThemeLoadStatusVisitor( predicate );
+              modell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
+
+              if( visitor.isLoaded() == true )
+                return Status.OK_STATUS;
+            }
+
+            Thread.sleep( 250 );
+
+            monitor.worked( 10 );
+          }
+          catch( final InterruptedException e )
+          {
+            return StatusUtilities.statusFromThrowable( e );
+          }
+        }
+      }
+    };
+    return waitForMapOperation;
+  }
+
   /**
    * calculates the map scale (denominator) as defined in the OGC SLD 1.0.0 specification
    * 
