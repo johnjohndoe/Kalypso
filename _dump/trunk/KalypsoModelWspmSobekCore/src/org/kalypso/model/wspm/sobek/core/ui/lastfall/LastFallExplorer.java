@@ -209,20 +209,6 @@ public class LastFallExplorer
 
           final WizardDialog dialog = new WizardDialog( null, wizard );
           dialog.open();
-
-          final int returnCode = dialog.getReturnCode();
-          if( returnCode != Window.OK )
-          {
-            final IBoundaryNodeLastfallCondition condition = wizard.getBoundaryNodeLastfallCondition();
-            try
-            {
-              FeatureUtils.deleteFeature( condition.getBoundaryNode().getModelMember().getWorkspace(), condition.getFeature() );
-            }
-            catch( final Exception e1 )
-            {
-              e1.printStackTrace();
-            }
-          }
         }
       }
     } );
