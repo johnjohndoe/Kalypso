@@ -136,6 +136,13 @@ public class SLDHelper
     exportSLD( sldFile, descriptor, progressMonitor );
   }
 
+  public static void exportRasterSymbolyzerSLD( final IFile sldFile, final double minValue, final double maxValue, final int numberOfIntervals, final Color darkestColor, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
+  {
+    final IProgressMonitor progressMonitor = monitor == null ? new NullProgressMonitor() : monitor;
+    final StyledLayerDescriptor descriptor = createRasterSLD( minValue, maxValue, numberOfIntervals, darkestColor, styleName, styleTitle, progressMonitor );
+    exportSLD( sldFile, descriptor, progressMonitor );
+  }
+
   private static void exportSLD( final IFile sldFile, final StyledLayerDescriptor descriptor, final IProgressMonitor progressMonitor ) throws IOException, SAXException, CoreException
   {
     final ByteArrayInputStream stream = new ByteArrayInputStream( descriptor.exportAsXML().getBytes( "UTF-8" ) );
@@ -185,6 +192,41 @@ public class SLDHelper
       throw new CoreException( Status.CANCEL_STATUS );
 
     helper.setFileContents( sldFile, false, false, progressMonitor );
+  }
+
+  private static StyledLayerDescriptor createRasterSLD( final double minValue, final double maxValue, final int numberOfIntervals, final Color darkestColor, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
+  {
+    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
+    final FeatureTypeStyle style = new FeatureTypeStyle_Impl();
+
+    final double step = (maxValue - minValue) / numberOfIntervals;
+    final int r = darkestColor.getRed();
+    final int g = darkestColor.getGreen();
+    final int b = darkestColor.getBlue();
+    for( int i = 0; i <= numberOfIntervals; i++ )
+    {
+      // making lighter color (color.brighter() is not so good...)
+      final int rc = (255 - r) * (numberOfIntervals - i) / numberOfIntervals + r;
+      final int gc = (255 - g) * (numberOfIntervals - i) / numberOfIntervals + g;
+      final int bc = (255 - b) * (numberOfIntervals - i) / numberOfIntervals + b;
+
+      double quantity = step * i;
+      if( quantity <= 0.0 )
+        quantity = 0.1;
+      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( new Color( rc, gc, bc ), 0.75, quantity, "" ); //$NON-NLS-1$
+      colorMap.put( new Double( quantity ), colorMapEntry );
+      if( monitor.isCanceled() )
+        throw new CoreException( Status.CANCEL_STATUS );
+    }
+
+    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
+    final Rule rule = StyleFactory.createRule( rasterSymbolizer );
+    style.addRule( rule );
+
+    final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
+    final Style[] styles = new Style[] { new UserStyle_Impl( styleName, styleTitle, null, false, featureTypeStyles ) };
+    final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( LAYER_NAME, null, styles ) };
+    return SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
   }
 
   private static StyledLayerDescriptor createRasterSLD( final List< ? > collection, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
