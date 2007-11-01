@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 import java.util.GregorianCalendar;
 
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -73,7 +74,9 @@ public interface IBoundaryNodeLastfallCondition
 
   public Integer getConstantValueInterveal( );
 
-  public IObservation getTimeSeriesObservation( );
+  public IObservation<TupleResult> getTimeSeriesObservation( );
+
+  public Feature getTimeSeriesObservationFeature( );
 
   public Boolean hasTimeSeriesObservation( );
 }

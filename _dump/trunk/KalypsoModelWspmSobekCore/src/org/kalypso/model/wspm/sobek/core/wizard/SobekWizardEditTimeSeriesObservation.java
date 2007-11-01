@@ -72,6 +72,7 @@ public class SobekWizardEditTimeSeriesObservation extends Wizard implements INew
   @Override
   public boolean performFinish( )
   {
+// ObservationFeatureFactory.toFeature( myObs, fConflictAttributeTable );
     return false;
   }
 

@@ -42,15 +42,23 @@ package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControl;
+import org.kalypso.template.featureview.ColumnTypeDescriptor;
 
 /**
  * @author kuch
  */
 public class PageEditTimeSeriesObservation extends WizardPage
 {
+
+  public static final String OBS_DATE = " urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE";
 
   private final IBoundaryNodeLastfallCondition m_condition;
 
@@ -70,8 +78,51 @@ public class PageEditTimeSeriesObservation extends WizardPage
     setPageComplete( false );
 
     final Composite container = new Composite( parent, SWT.NULL );
-    container.setLayout( new GridLayout( 2, false ) );
+    container.setLayout( new GridLayout() );
     setControl( container );
+
+    final Composite body = new Composite( container, SWT.NULL );
+    body.setLayout( new GridLayout() );
+    body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    final IObservation<TupleResult> myObs = m_condition.getTimeSeriesObservation();
+    final TupleResult tupleResult = myObs.getResult();
+
+    // obsTable
+    final ColumnTypeDescriptor descriptor = new ColumnTypeDescriptor();
+    descriptor.setAlignment( new Integer( SWT.LEFT | SWT.READ_ONLY ).toString() );
+    descriptor.setComponent( PageEditTimeSeriesObservation.OBS_DATE );
+
+    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null );
+// control.setViewerFilter( new CDViewerFilter( combinations ) );
+    control.setColumnTypeDescriptor( new ColumnTypeDescriptor[] { descriptor } );
+
+    final Control tblControl = control.createControl( body, SWT.BORDER );
+    tblControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+// control.addChangeListener( new IFeatureChangeListener()
+// {
+// public void featureChanged( final FeatureChange[] changes )
+// {
+// final UIJob job = new UIJob( "modelUpdate" )
+// {
+// @Override
+// public IStatus runInUIThread( IProgressMonitor monitor )
+// {
+// GMLWorkspace workspace = m_conflict.getWorkspace();
+// final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
+// m_pool.postCommand( command, null );
+//
+// return Status.OK_STATUS;
+// }
+// };
+// job.schedule();
+// }
+//
+// public void openFeatureRequested( final Feature feature, final IPropertyType pt )
+// {
+// }
+// } );
 
   }
 }

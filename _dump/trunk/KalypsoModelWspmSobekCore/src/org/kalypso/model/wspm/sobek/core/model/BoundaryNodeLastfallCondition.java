@@ -50,7 +50,9 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallConditi
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -190,9 +192,9 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getTimeSeriesObservation()
    */
-  public IObservation getTimeSeriesObservation( )
+  public IObservation<TupleResult> getTimeSeriesObservation( )
   {
-    throw new NotImplementedException();
+    return ObservationFeatureFactory.toObservation( getTimeSeriesObservationFeature() );
   }
 
   /**
@@ -200,11 +202,24 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
    */
   public Boolean hasTimeSeriesObservation( )
   {
-    final Object property = m_feature.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_OBSERVATION );
-    if( !(property instanceof Feature) )
+    final Feature obs = getTimeSeriesObservationFeature();
+    if( obs == null )
       return false;
 
     return true;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getTimeSeriesObservationFeature()
+   */
+  public Feature getTimeSeriesObservationFeature( )
+  {
+    final Object property = m_feature.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_OBSERVATION );
+    if( !(property instanceof Feature) )
+      return null;
+
+    return (Feature) property;
+
   }
 
 }
