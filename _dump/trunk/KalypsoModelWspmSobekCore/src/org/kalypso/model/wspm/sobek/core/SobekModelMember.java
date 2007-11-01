@@ -56,11 +56,15 @@ import javax.xml.namespace.QName;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import nl.wldelft.fews.pi.BranchComplexType;
 import nl.wldelft.fews.pi.BranchesComplexType;
 import nl.wldelft.fews.pi.CrossSectionsComplexType;
 import nl.wldelft.fews.pi.GeoDatumEnumStringType;
 import nl.wldelft.fews.pi.LocationsComplexType;
 import nl.wldelft.fews.pi.ObjectFactory;
+import nl.wldelft.fews.pi.Structure;
+import nl.wldelft.fews.pi.Structures;
+import nl.wldelft.fews.pi.CrossSectionsComplexType.CrossSection;
 import nl.wldelft.fews.pi.LocationsComplexType.Location;
 
 import org.apache.commons.io.FileUtils;
@@ -73,6 +77,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IWorkspaceInterface;
@@ -256,7 +261,7 @@ public final class SobekModelMember implements ISobekModelMember
       FileUtils.forceMkdir( fleTargetDir );
 
     final ObjectFactory factory = new ObjectFactory();
-    JAXBElement< ? > xmlElements;
+    Object xmlElements;
     String sFleXml;
 
     if( TARGET.eLocations.equals( target ) )
@@ -285,9 +290,8 @@ public final class SobekModelMember implements ISobekModelMember
       final IBranch[] branches = getBranchMembers();
       for( final IBranch branch : branches )
       {
-        // FIXME
-// final BranchComplexType piBranch = PiSobekModelUtils.getInstance().createPiBranchFromBranch( factory, branch );
-// branchesComplexType.getBranch().add( piBranch );
+        final BranchComplexType piBranch = PiSobekModelUtils.getInstance().createPiBranchFromBranch( factory, branch );
+        branchesComplexType.getBranch().add( piBranch );
       }
       // name of target file
       sFleXml = "Branches.xml";
@@ -302,13 +306,24 @@ public final class SobekModelMember implements ISobekModelMember
       final ICrossSectionNode[] crossSectionNodes = getCrossSectionNodeMembers();
       for( final ICrossSectionNode csNode : crossSectionNodes )
       {
-        // FIXME
-// final CrossSection cs = PiSobekModelUtils.getInstance().createCrossSectionFromCSNode( factory, csNode );
-// crossSectionsComplexType.getCrossSection().add( cs );
+        final CrossSection cs = PiSobekModelUtils.getInstance().createCrossSectionFromCSNode( factory, csNode );
+        crossSectionsComplexType.getCrossSection().add( cs );
       }
       sFleXml = "CrossSections.xml";
-      getNodeMembers();
-
+    }
+    else if( TARGET.eStructures.equals( target ) )
+    {
+      // root element Structures
+      final Structures structures = factory.createStructures();
+ 
+      final ISbkStructure[] sbkStructures = getSbkStructures();
+      for( final ISbkStructure sbkStruct : sbkStructures )
+      {
+        final Structure piStruct = PiSobekModelUtils.getInstance().createStructureFromSbkStruct( factory, sbkStruct );
+        structures.getStructure().add( piStruct );
+      }
+      xmlElements = structures;
+      sFleXml = "Structures.xml";
     }
     else
       throw new NotImplementedException();
@@ -349,6 +364,16 @@ public final class SobekModelMember implements ISobekModelMember
     {
       org.apache.commons.io.IOUtils.closeQuietly( os );
     }
+  }
+
+  private ISbkStructure[] getSbkStructures( )
+  {
+    final INode[] allNodes = getNodeMembers();
+    final List<ISbkStructure> structureNodes = new ArrayList<ISbkStructure>();
+    for( final INode node : allNodes )
+      if( node instanceof ISbkStructure )
+        structureNodes.add( (ISbkStructure) node );
+    return structureNodes.toArray( new ISbkStructure[] {} );
   }
 
   /**

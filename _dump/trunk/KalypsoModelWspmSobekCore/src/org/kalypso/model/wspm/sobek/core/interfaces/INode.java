@@ -55,7 +55,8 @@ public interface INode
     eBoundaryNode,
     eConnectionNode,
     eCrossSectionNode,
-    eLinkageNode
+    eLinkageNode,
+    eSbkStructure
   }
 
   public enum FLOW_DIRECTION

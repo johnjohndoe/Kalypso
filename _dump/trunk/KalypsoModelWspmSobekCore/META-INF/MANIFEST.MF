@@ -6,8 +6,7 @@ Bundle-Version: 0.0.1
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Eclipse-LazyStart: true
-Export-Package: nl.wldelft.fews.pi;uses:="javax.xml.bind,javax.xml.datatype",
- org.kalypso.model.wspm.sobek.core;
+Export-Package: org.kalypso.model.wspm.sobek.core;
   uses:="org.kalypsodeegree.model.feature,
    org.osgi.framework,
    junit.framework,

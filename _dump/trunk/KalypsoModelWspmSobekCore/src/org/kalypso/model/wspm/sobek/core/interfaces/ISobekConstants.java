@@ -235,4 +235,8 @@ public class ISobekConstants
 
   public static final QName QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL );
 
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE = "SbkCompoundStructureNode";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE );
+
 }

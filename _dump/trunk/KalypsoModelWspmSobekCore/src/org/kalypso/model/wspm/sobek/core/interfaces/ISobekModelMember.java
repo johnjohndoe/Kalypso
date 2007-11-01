@@ -56,7 +56,8 @@ public interface ISobekModelMember extends IModelMember
   {
     eLocations,
     eBranches,
-    eCrossSections
+    eCrossSections,
+    eStructures
   }
 
   /**

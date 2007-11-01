@@ -40,17 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.utils;
 
+import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import nl.wldelft.fews.pi.BranchComplexType;
 import nl.wldelft.fews.pi.CrossSectionXdataComplexType;
 import nl.wldelft.fews.pi.NodePointComplexType;
 import nl.wldelft.fews.pi.ObjectFactory;
+import nl.wldelft.fews.pi.Structure;
 import nl.wldelft.fews.pi.CrossSectionsComplexType.CrossSection;
 import nl.wldelft.fews.pi.LocationsComplexType.Location;
 
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
@@ -58,6 +64,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -75,16 +82,24 @@ public class PiSobekModelUtils
 
   public Map<String, String> lookUpModelToPi = new HashMap<String, String>()
   {
-    static final long serialVersionUID = 1L;
-
-	@Override
+     static final long serialVersionUID = 1L;
+    /**
+     * @see java.util.HashMap#put(java.lang.Object, java.lang.Object)
+     *      <p>
+     *      both pairs (key, value) and (value, key) are added to the HashMap. If key and value evaluate to the same
+     *      string only one pair is added.
+     *      </p>
+     */
+    @Override
     public String put( final String key, final String value )
     {
-
       if( !(null == super.put( key, value )) )
         throw new IllegalArgumentException( key + " is not unique in HashMap lookUpModelToPi." );
-      if( !(null == super.put( value, key )) )
-        throw new IllegalArgumentException( value + " is not unique in HashMap lookUpModelToPi." );
+      if( !key.equals( value ) )
+      {
+        if( !(null == super.put( value, key )) )
+          throw new IllegalArgumentException( value + " is not unique in HashMap lookUpModelToPi." );
+      }
       return null;
     }
 
@@ -133,8 +148,11 @@ public class PiSobekModelUtils
     location.setY( node.getLocation().getY() );
 
     if( node instanceof IAbstractConnectionNode )
+    {
       if( node instanceof IConnectionNode )
+      {
         location.setLocationType( lookUpModelToPi.get( node.getType().toString() ) );
+      }
       else if( node instanceof ILinkageNode )
       {
         final LinkageNode ln = (LinkageNode) node;
@@ -150,6 +168,7 @@ public class PiSobekModelUtils
         final BoundaryNode bn = (BoundaryNode) node;
         location.setLocationType( lookUpModelToPi.get( bn.getBoundaryType().toString() ) );
       }
+    }
     return location;
   }
 
@@ -180,10 +199,10 @@ public class PiSobekModelUtils
         final NodePointComplexType pt = factory.createNodePointComplexType();
         pt.setX( position.getX() );
         pt.setY( position.getY() );
-        pt.setLabel( "" ); // label has to be set but will be ignored by import to Sobek
+        pt.setLabel( "" ); // label has to be set but will be ignored during import to Sobek
 
         chainage = chainage + JTSUtilities.getLengthBetweenPoints( jtsFirstPos, JTSAdapter.export( position ) );
-        pt.setChainage( chainage ); // chainage has to be set but will be ignored by import to Sobek
+        pt.setChainage( chainage ); // chainage has to be set but will be ignored during import to Sobek
 
         piBranch.getPt().add( pt );
       }
@@ -195,26 +214,41 @@ public class PiSobekModelUtils
   public CrossSection createCrossSectionFromCSNode( final ObjectFactory factory, final ICrossSectionNode csNode )
   {
     final CrossSection piCrossSection = factory.createCrossSectionsComplexTypeCrossSection();
-// TODO
-    piCrossSection.setCrossSectionID( "csID" );
+    piCrossSection.setX( csNode.getLocation().getX() );
+    piCrossSection.setY( csNode.getLocation().getY() );
+    piCrossSection.setCrossSectionID( csNode.getId() );
     piCrossSection.setBranchId( csNode.getLinkToBranch().getId() );
-// TODO
-    piCrossSection.setCrossSectionName( "csName" );
-    piCrossSection.setLabel( "" ); // label has to be set but will be ignored by import to Sobek
+    piCrossSection.setCrossSectionName( csNode.getName() );
+    piCrossSection.setLabel( csNode.getName() ); // label has to be set but will be ignored by import to Sobek
     final String description = csNode.getDescription();
     if( !(description == null) )
       piCrossSection.setComment( description );
 
     piCrossSection.setRoughnessType( "Sobek.RoughnessType.StricklerKs" ); // nofdp default kSt
 
-// TODO loop crossSectiondata
-    final CrossSectionXdataComplexType csData = factory.createCrossSectionXdataComplexType();
-    csData.setCsy( 2.3 );
-    csData.setZ( 2.3 );
-    csData.setRoughness( 2.3 );
+    final IProfil profil = csNode.getProfile();
+    final LinkedList<IProfilPoint> points = profil.getPoints();
 
-    piCrossSection.getCrossSectionData().add( csData );
+    for( IProfilPoint point : points )
+    {
+      final CrossSectionXdataComplexType csData = factory.createCrossSectionXdataComplexType();
+      csData.setCsy( point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) );
+      csData.setZ( point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
+// TODO get real Roughness from nofdpIDSSProfile
+// csData.setRoughness( point.getValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) );
+      csData.setRoughness( 2.1 );
+      csData.setMark( new BigInteger( "0" ) );
+
+      piCrossSection.getCrossSectionData().add( csData );
+    }
 
     return piCrossSection;
+  }
+
+  public Structure createStructureFromSbkStruct( ObjectFactory factory, ISbkStructure sbkStruct )
+  {
+    final Structure piStruct = new Structure();
+
+    return piStruct;
   }
 }
