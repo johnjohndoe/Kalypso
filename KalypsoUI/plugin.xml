@@ -2004,7 +2004,7 @@
     <definition
           id="mapContext">
        <with
-             variable="activePartId">
+             variable="activeContexts">
           <iterate
                 ifEmpty="false"
                 operator="or">
