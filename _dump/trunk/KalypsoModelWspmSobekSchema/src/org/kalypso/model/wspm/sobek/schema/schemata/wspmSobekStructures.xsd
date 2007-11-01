@@ -30,14 +30,14 @@
 	<element name="AbstractSbkStructureNode" abstract="true" type="wspmSobekStructures:AbstractSbkStructureNodeType" substitutionGroup="wspmSobek:AbstractNetworkNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>${property:org.kalypso.model.wspm.sobek.structures#name}</label>
-				<tooltip>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</tooltip>
-				<description>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>${property:org.kalypso.model.wspm.sobek.structures#name}</label>
-				<tooltip>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</tooltip>
-				<description>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>AbstractSbkStructureNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -45,7 +45,7 @@
 		substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>AbstractSbkCompoundableStructureNode - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>AbstractSbkCompoundableStructureNode - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>AbstractSbkCompoundableStructureNode</tooltip>
 				<description>AbstractSbkCompoundableStructureNode</description>
 			</documentation>
@@ -71,12 +71,12 @@
 	<element name="SbkCompoundStructureNode" type="wspmSobekStructures:SbkCompoundStructureNodeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Verbundbauwerk - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Verbundbauwerk - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Verbundbauwerk</tooltip>
 				<description>Verbundbauwerk</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Compound Structure - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Compound Structure - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Compound Structure</tooltip>
 				<description>Compound Structure</description>
 			</documentation>
@@ -85,11 +85,11 @@
 	<element name="SbkRiverWeir" type="wspmSobekStructures:SbkRiverWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Fluss-Wehr - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Fluss-Wehr - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Fluss-Wehr</tooltip>
 				<description>Fluss-Wehr</description>
 			</documentation>
-			<documentation xml:lang="en"> Representation of Structure Sobek.RiverWeir <label>River Weir - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+			<documentation xml:lang="en"> Representation of Structure Sobek.RiverWeir <label>River Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>River Weir</tooltip>
 				<description>River Weir</description>
 			</documentation>
@@ -98,11 +98,11 @@
 	<element name="SbkRiverAdvancedWeir" type="wspmSobekStructures:SbkRiverAdvancedWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Hochentwickeltes Fluss-Wehr - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Hochentwickeltes Fluss-Wehr - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Hochentwickeltes Fluss-Wehr</tooltip>
 				<description>Hochentwickeltes Fluss-Wehr</description>
 			</documentation>
-			<documentation xml:lang="en">Representation of Structure Sobek.RiverAdvancedWeir <label>Advanced River Weir - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+			<documentation xml:lang="en">Representation of Structure Sobek.RiverAdvancedWeir <label>Advanced River Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Advanced River Weir</tooltip>
 				<description>Advanced River Weir</description>
 			</documentation>
@@ -111,12 +111,12 @@
 	<element name="SbkGeneralStructure" type="wspmSobekStructures:SbkGeneralStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Generelles Bauwerk - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Generelles Bauwerk - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Generelles Bauwerk</tooltip>
 				<description>Generelles Bauwerk</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>General Structure - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>General Structure - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>General Structure</tooltip>
 				<description>General Structure</description>
 			</documentation>
@@ -125,12 +125,12 @@
 	<element name="SbkRiverPump" type="wspmSobekStructures:SbkRiverPumpType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Fluss-Pumpe - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Fluss-Pumpe - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Fluss-Pumpe</tooltip>
 				<description>Fluss-Pumpe</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>River Pump - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>River Pump - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>River Pump</tooltip>
 				<description>River Pump</description>
 			</documentation>
@@ -139,12 +139,12 @@
 	<element name="SbkDatabaseStructure" type="wspmSobekStructures:SbkDatabaseStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Datenbank-Bauwerk - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Datenbank-Bauwerk - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Datenbank-Bauwerk</tooltip>
 				<description>Bauwerk, dessen Verhalten über eine Datenbank definiert wird</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Database Structure - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Database Structure - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Database Structure</tooltip>
 				<description>Database Structure</description>
 			</documentation>
@@ -153,12 +153,12 @@
 	<element name="SbkWeir" type="wspmSobekStructures:SbkWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Wehr - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Wehr - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Wehr</tooltip>
 				<description>SbkWeir</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Weir - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Weir</tooltip>
 				<description>Weir</description>
 			</documentation>
@@ -167,12 +167,12 @@
 	<element name="SbkOrifice" type="wspmSobekStructures:SbkOrificeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Durchlass - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Durchlass - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Durchlass</tooltip>
 				<description>Durchlass</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Orifice - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Orifice - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Orifice</tooltip>
 				<description>Orifice</description>
 			</documentation>
@@ -181,12 +181,12 @@
 	<element name="SbkPump" type="wspmSobekStructures:SbkPumpType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Pumpe - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Pumpe - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Pumpe</tooltip>
 				<description>Pumpe</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Pump - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Pump - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Pump</tooltip>
 				<description>Pump</description>
 			</documentation>
@@ -195,12 +195,12 @@
 	<element name="SbkCulvert" type="wspmSobekStructures:SbkCulvertType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Düker - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Düker - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Düker</tooltip>
 				<description>Düker</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Culvert - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Culvert - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Culvert</tooltip>
 				<description>Culvert</description>
 			</documentation>
@@ -209,12 +209,12 @@
 	<element name="SbkUniversalWeir" type="wspmSobekStructures:SbkUniversalWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Universal-Wehr - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Universal-Wehr - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Universal-Wehr</tooltip>
 				<description>Universal-Wehr</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Universal Weir - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Universal Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Universal Weir</tooltip>
 				<description>Universal Weir</description>
 			</documentation>
@@ -223,12 +223,12 @@
 	<element name="SbkBridge" type="wspmSobekStructures:SbkBridgeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>Brücke - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Brücke - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Brücke</tooltip>
 				<description>Brücke</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Bridge - ${property:org.kalypso.model.wspm.sobek.structures#name}</label>
+				<label>Bridge - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Bridge</tooltip>
 				<description>Bridge</description>
 			</documentation>
@@ -250,7 +250,9 @@
 	<complexType name="AbstractSbkStructureNodeType" abstract="true">
 		<complexContent>
 			<extension base="wspmSobek:AbstractNetworkNodeType">
-				<sequence/>
+				<sequence>
+					<element name="linksToBranch" type="wspmSobek:BranchLinkPropertyType"/>
+				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -282,7 +284,134 @@
 	<complexType name="SbkRiverWeirType">
 		<complexContent>
 			<extension base="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType">
-				<sequence> </sequence>
+				<sequence>
+					<element name="crestHeight" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Überfallhöhe [m NN]</label>
+								<tooltip>Überfallhöhe [m NN]</tooltip>
+								<description>Überfallhöhe [m NN]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Crest Height [m asl]</label>
+								<tooltip>Crest Height [m asl]</tooltip>
+								<description>Crest Height [m asl]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="crestWidth" type="wspmSobekCommon:notNegDoubleType" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Überfallbreite [m]</label>
+								<tooltip>Überfallbreite [m]</tooltip>
+								<description>Überfallbreite [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Crest Width [m]</label>
+								<tooltip>Crest Width [m]</tooltip>
+								<description>Crest Width [m]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="crestShape" type="wspmSobekCommon:sbkCrestShapeType" nillable="false" default="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Überfallform</label>
+								<tooltip>Überfallform</tooltip>
+								<description>Überfallform</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Crest Shape</label>
+								<tooltip>Crest Shape</tooltip>
+								<description>Crest Shape</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="posCorrectionCoeff" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Correction Coefficient (Flow)</label>
+								<tooltip>Correction Coefficient (Flow)</tooltip>
+								<description>Correction Coefficient (Flow)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Correction Coefficient (Flow)</label>
+								<tooltip>Correction Coefficient (Flow)</tooltip>
+								<description>Correction Coefficient (Flow)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="posSubmergeLimit" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Submerge Limit (Flow)</label>
+								<tooltip>Submerge Limit (Flow)</tooltip>
+								<description>Submerge Limit (Flow)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Submerge Limit (Flow)</label>
+								<tooltip>Submerge Limit (Flow)</tooltip>
+								<description>Submerge Limit (Flow)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="posReductionFactors" type="wspmSobekCommon:tableType" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Reduction Factors (Flow)</label>
+								<tooltip>Reduction Factors (Flow)</tooltip>
+								<description>Reduction Factors (Flow)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Reduction Factors (Flow)</label>
+								<tooltip>Reduction Factors (Flow)</tooltip>
+								<description>Reduction Factors (Flow)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="negCorrectionCoeff" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Correction Coefficient (Reverse)</label>
+								<tooltip>Correction Coefficient (Reverse)</tooltip>
+								<description>Correction Coefficient (Reverse)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Correction Coefficient (Reverse)</label>
+								<tooltip>Correction Coefficient (Reverse)</tooltip>
+								<description>Correction Coefficient (Reverse)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="negSubmergeLimit" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Submerge Limit (Reverse)</label>
+								<tooltip>Submerge Limit (Reverse)</tooltip>
+								<description>Submerge Limit (Reverse)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Submerge Limit (Reverse)</label>
+								<tooltip>Submerge Limit (Reverse)</tooltip>
+								<description>Submerge Limit (Reverse)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="negReductionFactors" type="wspmSobekCommon:tableType" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Reduction Factors (Reverse)</label>
+								<tooltip>Reduction Factors (Reverse)</tooltip>
+								<description>Reduction Factors (Reverse)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Reduction Factors (Reverse)</label>
+								<tooltip>Reduction Factors (Reverse)</tooltip>
+								<description>Reduction Factors (Reverse)</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -296,7 +425,316 @@
 	<complexType name="SbkGeneralStructureType">
 		<complexContent>
 			<extension base="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType">
-				<sequence> </sequence>
+				<sequence>
+					<element name="widthUpstream" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Breite stromaufwärts[m]</label>
+								<tooltip>Breite stromaufwärts[m]</tooltip>
+								<description>Breite stromaufwärts[m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Width Upstream [m]</label>
+								<tooltip>Width Upstream [m]</tooltip>
+								<description>Width Upstream [m]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="widthStructureLeft" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Einlassbreite [m]</label>
+								<tooltip>Einlassbreite [m]</tooltip>
+								<description>Einlassbreite [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Width Suction Side [m]</label>
+								<tooltip>Width Suction Side [m]</tooltip>
+								<description>Width Suction Side [m]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="widthStructure" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Durchlassbreite [m]</label>
+								<tooltip>Durchlassbreite [m]</tooltip>
+								<description>Durchlassbreite [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Width [m]</label>
+								<tooltip>Width [m]</tooltip>
+								<description>Width [m]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="widthStructureRight" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Auslassbreite [m]</label>
+								<tooltip>Auslassbreite [m]</tooltip>
+								<description>Auslassbreite [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Width Pressure Side [m]</label>
+								<tooltip>Width Pressure Side [m]</tooltip>
+								<description>Width Pressure Side [m]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="widthDownstream" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Breite stromabwärts [m]</label>
+								<tooltip>Breite stromabwärts [m]</tooltip>
+								<description>Breite stromabwärts [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Width Downstream [m]</label>
+								<tooltip>Width Downstream [m]</tooltip>
+								<description>Width Downstream [m]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bedLevelUpstream" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Sohlhöhe stromaufwärts [m NN]</label>
+								<tooltip>Sohlhöhe stromaufwärts [m NN]</tooltip>
+								<description>Sohlhöhe stromaufwärts [m NN]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Bed Level Upstream [m NN]</label>
+								<tooltip>Bed Level Upstream [m NN]</tooltip>
+								<description>Bed Level Upstream [m NN]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bedLevelStructureLeft" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Sohlhöhe am Einlass [m NN]</label>
+								<tooltip>Sohlhöhe am Einlass [m NN]</tooltip>
+								<description>Sohlhöhe am Einlass [m NN]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Bed Level Suction Side [m NN]</label>
+								<tooltip>Bed Level Suction Side [m NN]</tooltip>
+								<description>Bed Level Suction Side [m NN]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bedLevelStructure" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Sohlhöhe Durchlass [m NN]</label>
+								<tooltip>Sohlhöhe Durchlass [m NN]</tooltip>
+								<description>Sohlhöhe Durchlass [m NN]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Bed Level [m NN]</label>
+								<tooltip>Bed Level [m NN]</tooltip>
+								<description>Bed Level [m NN]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bedLevelStructureRight" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Sohlhöhe Auslass [m NN]</label>
+								<tooltip>Sohlhöhe Auslass [m NN]</tooltip>
+								<description>Sohlhöhe Auslass [m NN]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Bed Level Pressure Side [m NN]</label>
+								<tooltip>Bed Level Pressure Side [m NN]</tooltip>
+								<description>Bed Level Pressure Side [m NN]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="bedLevelDownstream" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Sohlhöhe stromabwärts [m NN]</label>
+								<tooltip>Sohlhöhe stromabwärts [m NN]</tooltip>
+								<description>Sohlhöhe stromabwärts [m NN]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Bed Level Downstream [m NN]</label>
+								<tooltip>Bed Level Downstream [m NN]</tooltip>
+								<description>Bed Level Downstream [m NN]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="gateHeight" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Durchlasshöhe [m]</label>
+								<tooltip>Durchlasshöhe [m]</tooltip>
+								<description>Durchlasshöhe [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Gate Height [m]</label>
+								<tooltip>Gate Height [m]</tooltip>
+								<description>Gate Height [m]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="posFreeGateFlowCoeff" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>posFreeGateFlowCoeff</label>
+								<tooltip>posFreeGateFlowCoeff</tooltip>
+								<description>posFreeGateFlowCoeff</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Free Gate Flow Coefficient (Flow)</label>
+								<tooltip>Free Gate Flow Coefficient (Flow)</tooltip>
+								<description>Free Gate Flow Coefficient (Flow)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="posDrownedGateFlowCoeff" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>posDrownedGateFlowCoeff</label>
+								<tooltip>posDrownedGateFlowCoeff</tooltip>
+								<description>posDrownedGateFlowCoeff</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Drowned Gate Flow Coefficient (Flow)</label>
+								<tooltip>Drowned Gate Flow Coefficient (Flow)</tooltip>
+								<description>Drowned Gate Flow Coefficient (Flow)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="posFreeWeirFlowCoeff" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>posFreeWeirFlowCoeff</label>
+								<tooltip>posFreeWeirFlowCoeff</tooltip>
+								<description>posFreeWeirFlowCoeff</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Free Weir Flow Coefficient (Flow)</label>
+								<tooltip>Free Weir Flow Coefficient (Flow)</tooltip>
+								<description>Free Weir Flow Coefficient (Flow)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="posDrownedWeirFlowCoeff" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>posDrownedWeirFlowCoeff</label>
+								<tooltip>posDrownedWeirFlowCoeff</tooltip>
+								<description>posDrownedWeirFlowCoeff</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Drowned Weir Flow Coefficient (Flow)</label>
+								<tooltip>Drowned Weir Flow Coefficient (Flow)</tooltip>
+								<description>Drowned Weir Flow Coefficient (Flow)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="posContractionCoefficient" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>posContractionCoefficient</label>
+								<tooltip>posContractionCoefficient</tooltip>
+								<description>posContractionCoefficient</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Contraction Coefficient (Flow)</label>
+								<tooltip>Contraction Coefficient (Flow)</tooltip>
+								<description>Contraction Coefficient (Flow)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="negFreeGateFlowCoeff" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>negFreeGateFlowCoeff</label>
+								<tooltip>negFreeGateFlowCoeff</tooltip>
+								<description>negFreeGateFlowCoeff</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Free Gate Flow Coefficient (Reverse)</label>
+								<tooltip>Free Gate Flow Coefficient (Reverse)</tooltip>
+								<description>Free Gate Flow Coefficient (Reverse)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="negDrownedGateFlowCoeff" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>negDrownedGateFlowCoeff</label>
+								<tooltip>negDrownedGateFlowCoeff</tooltip>
+								<description>negDrownedGateFlowCoeff</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Drowned Gate Flow Coefficient (Reverse)</label>
+								<tooltip>Drowned Gate Flow Coefficient (Reverse)</tooltip>
+								<description>Drowned Gate Flow Coefficient (Reverse)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="negFreeWeirFlowCoeff" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>negFreeWeirFlowCoeff</label>
+								<tooltip>negFreeWeirFlowCoeff</tooltip>
+								<description>negFreeWeirFlowCoeff</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Free Weir Flow Coefficient (Reverse)</label>
+								<tooltip>Free Weir Flow Coefficient (Reverse)</tooltip>
+								<description>Free Weir Flow Coefficient (Reverse)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="negDrownedWeirFlowCoeff" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>negDrownedWeirFlowCoeff</label>
+								<tooltip>negDrownedWeirFlowCoeff</tooltip>
+								<description>negDrownedWeirFlowCoeff</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Drowned Weir Flow Coefficient (Reverse)</label>
+								<tooltip>Drowned Weir Flow Coefficient (Reverse)</tooltip>
+								<description>Drowned Weir Flow Coefficient (Reverse)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="negContractionCoeff" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>negContractionCoeff</label>
+								<tooltip>negContractionCoeff</tooltip>
+								<description>negContractionCoeff</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Contraction Coefficient (Reverse)</label>
+								<tooltip>Contraction Coefficient (Reverse)</tooltip>
+								<description>Contraction Coefficient (Reverse)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="extraResistence" type="double" nillable="false" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>extraResistence</label>
+								<tooltip>extraResistence</tooltip>
+								<description>extraResistence</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Extra Resistence</label>
+								<tooltip>Extra Resistence</tooltip>
+								<description>Extra Resistence</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -310,28 +748,114 @@
 	<complexType name="SbkDatabaseStructureType">
 		<complexContent>
 			<extension base="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType">
-				<sequence> </sequence>
+				<sequence>
+					<element name="crestHeight" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Überfallhöhe [m NN]</label>
+								<tooltip>Überfallhöhe [m NN]</tooltip>
+								<description>Überfallhöhe [m NN]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Crest Height [m asl]</label>
+								<tooltip>Crest Height [m asl]</tooltip>
+								<description>Crest Height [m asl]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="numOfGateValues" type="long" nillable="false" default="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>numOfGateValues</label>
+								<tooltip>numOfGateValues</tooltip>
+								<description>numOfGateValues</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Number of Gate Values</label>
+								<tooltip>Number of Gate Values</tooltip>
+								<description>Number of Gate Values</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="secondHeightRelative" type="long" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>secondHeightRelative</label>
+								<tooltip>secondHeightRelative</tooltip>
+								<description>secondHeightRelative</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>secondHeightRelative</label>
+								<tooltip>secondHeightRelative</tooltip>
+								<description>secondHeightRelative</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="interpolationType" type="wspmSobekCommon:sbkRiverDatabaseStructInterpolationTypeType" nillable="false"
+						default="Sobek.RiverDatabaseStructure.InterpolationType.Lineair">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Art der Interpolation</label>
+								<tooltip>Art der Interpolation</tooltip>
+								<description>Art der Interpolation</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Interpolation Type</label>
+								<tooltip>Interpolation Type</tooltip>
+								<description>Interpolation Type</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="database" type="wspmSobekCommon:tableType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>database</label>
+								<tooltip>database</tooltip>
+								<description>database</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>database</label>
+								<tooltip>database</tooltip>
+								<description>database</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="databaseUsage" type="wspmSobekCommon:tableType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>databaseUsage</label>
+								<tooltip>databaseUsage</tooltip>
+								<description>databaseUsage</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>databaseUsage</label>
+								<tooltip>databaseUsage</tooltip>
+								<description>databaseUsage</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<complexType name="SbkWeirType">
 		<complexContent>
 			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
-				
-				<sequence> <element name="crestWidth" type="wspmSobekCommon:notNegDoubleType" nillable="false">
-					<annotation>
-						<documentation xml:lang="de">
-							<label>Überfallbreite [m]</label>
-							<tooltip>Überfallbreite [m]</tooltip>
-							<description>Überfallbreite [m]</description>
-						</documentation>
-						<documentation xml:lang="en">
-							<label>Crest Width [m]</label>
-							<tooltip>Crest Width [m]</tooltip>
-							<description>Crest Width [m]</description>
-						</documentation>
-					</annotation>
-				</element>
+				<sequence>
+					<element name="crestWidth" type="wspmSobekCommon:notNegDoubleType" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Überfallbreite [m]</label>
+								<tooltip>Überfallbreite [m]</tooltip>
+								<description>Überfallbreite [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Crest Width [m]</label>
+								<tooltip>Crest Width [m]</tooltip>
+								<description>Crest Width [m]</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="crestHeight" type="double" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
@@ -387,7 +911,8 @@
 								<description>Possible Flow Direction</description>
 							</documentation>
 						</annotation>
-					</element></sequence>
+					</element>
+				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -401,7 +926,120 @@
 	<complexType name="SbkPumpType">
 		<complexContent>
 			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
-				<sequence> </sequence>
+				<sequence>
+					<element name="flowDirection" type="wspmSobekCommon:sbkFlowDirectionType" default="Direction.Both" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Mögliche Fließrichtung</label>
+								<tooltip>Mögliche Fließrichtung</tooltip>
+								<description>Mögliche Fließrichtung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Possible Flow Direction</label>
+								<tooltip>Possible Flow Direction</tooltip>
+								<description>Possible Flow Direction</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="pumpControl" type="wspmSobekCommon:sbkControlPositionType" default="PumpControl.Downward" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Mögliche Fließrichtung</label>
+								<tooltip>Mögliche Fließrichtung</tooltip>
+								<description>Mögliche Fließrichtung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Possible Flow Direction</label>
+								<tooltip>Possible Flow Direction</tooltip>
+								<description>Possible Flow Direction</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="reductionConstant" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>reductionConstant</label>
+								<tooltip>reductionConstant</tooltip>
+								<description>reductionConstant</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Reduction Constant</label>
+								<tooltip>Reduction Constant</tooltip>
+								<description>Reduction Constant</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="capacity" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Pumprate [m³/s]</label>
+								<tooltip>Pumprate [m³/s]</tooltip>
+								<description>Pumprate [m³/s]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Capacity [m³/s]</label>
+								<tooltip>Capacity [m³/s]</tooltip>
+								<description>Capacity [m³/s]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="switchOnLevelSuctionSide" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe angeschaltet</label>
+								<tooltip>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe angeschaltet</tooltip>
+								<description>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe angeschaltet</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>If the waterlevel on suction side below this mark [m asl] the pump will be switched on</label>
+								<tooltip>If the waterlevel on suction side below this mark [m asl] the pump will be switched on</tooltip>
+								<description>If the waterlevel on suction side falls below this mark [m asl] the pump will be switched on</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="switchOffLevelSuctionSide" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe ausgeschaltet</label>
+								<tooltip>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe ausgeschaltet</tooltip>
+								<description>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe ausgeschaltet</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>If the waterlevel on suction side rises above this mark [m asl] the pump will be switched off</label>
+								<tooltip>If the waterlevel on suction side rises above this mark [m asl] the pump will be switched off</tooltip>
+								<description>If the waterlevel on suction side rises above this mark [m asl] the pump will be switched off</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="switchOnLevelPressureSide" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe angeschaltet</label>
+								<tooltip>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe angeschaltet</tooltip>
+								<description>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe angeschaltet</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>If the waterlevel on pressure side falls below this mark [m asl] the pump will be switched on</label>
+								<tooltip>If the waterlevel on pressure side falls below this mark [m asl] the pump will be switched on</tooltip>
+								<description>If the waterlevel on pressure side falls below this mark [m asl] the pump will be switched on</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="switchOffLevelPressureSide" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe ausgeschaltet</label>
+								<tooltip>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe ausgeschaltet</tooltip>
+								<description>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe ausgeschaltet</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>If the waterlevel on pressure side rises above this mark [m asl] the pump will be switched off</label>
+								<tooltip>If the waterlevel on pressure side rises above this mark [m asl] the pump will be switched off</tooltip>
+								<description>If the waterlevel on pressure side rises above this mark [m asl] the pump will be switched off</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>

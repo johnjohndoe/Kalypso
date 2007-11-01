@@ -494,10 +494,10 @@
 				<description>Lastfall - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Loading Case</name>
+				<name>Calculation Case</name>
 				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
-				<tooltip>Loading Case - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
-				<description>Loading Case - ${property:org.kalypso.model.wspm.sobek#name}</description>
+				<tooltip>Calculation Case - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>Calculation Case - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -620,9 +620,9 @@
 				<description>Lastfall Definitionen</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Loading Case Definitions</label>
-				<tooltip>Loading Case Definitions</tooltip>
-				<description>Loading Case Definitions</description>
+				<label>Calculation Case Definitions</label>
+				<tooltip>Calculation Case Definitions</tooltip>
+				<description>Calculation Case Definitions</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -635,10 +635,10 @@
 				<description>Lastfall Definition - ${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Loading Case Definition</name>
+				<name>Calculation Case Definition</name>
 				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
-				<tooltip>Loading Case Definition - ${listProperty:http://www.opengis.net/gml#name;0;-no name-}</tooltip>
-				<description>Loading Case Definition - ${listProperty:http://www.opengis.net/gml#name;0;-no name-}</description>
+				<tooltip>Calculation Case Definition - ${listProperty:http://www.opengis.net/gml#name;0;-no name-}</tooltip>
+				<description>Calculation Case Definition - ${listProperty:http://www.opengis.net/gml#name;0;-no name-}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -654,8 +654,33 @@
 					<element name="linkedLastfall" type="wspmSobek:LastfallLinkPropertyType"/>
 					<element name="data" type="wspmSobek:LastfallDefTablePropertyType"/>
 					<element name="sourceRepositoryObservation" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" maxOccurs="1" nillable="false"/>
-					<element name="constValue" type="double" minOccurs="0" maxOccurs="1" nillable="false"/>
-					<element name="constValueIntervalMinutes" type="int" minOccurs="0" maxOccurs="1" default="30" nillable="false"/>
+					<element name="constValue" type="double" minOccurs="0" maxOccurs="1" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Konstanter Wert</label>
+								<tooltip>Konstanter Wert</tooltip>
+								<description>Konstanter Wert</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Constant Value</label>
+								<tooltip>Constant Value</tooltip>
+								<description>Constant Value</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="constValueIntervalMinutes" type="int" minOccurs="0" maxOccurs="1" default="30" nillable="false"><annotation>
+						<documentation xml:lang="de">
+							<label>Zeitschritt [min]</label>
+							<tooltip>Zeitschritt [min]</tooltip>
+							<description>Zeitschritt [min]</description>
+						</documentation>
+						<documentation xml:lang="en">
+							<label>Time Step [min]</label>
+							<tooltip>Time Step [min]</tooltip>
+							<description>Time Step [min]</description>
+						</documentation> 
+					</annotation></element>
+					<element name="typeOfLastBoundaryCondition" type="wspmSobekCommon:lastBoundaryTypeType" default="zml" nillable="false"/>
 					<element name="observationBegin" type="date" minOccurs="0" maxOccurs="1" nillable="false"/>
 					<element name="observationEnd" type="date" minOccurs="0" maxOccurs="1" nillable="false"/>
 				</sequence>

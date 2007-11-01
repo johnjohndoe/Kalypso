@@ -180,59 +180,200 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	
 	<simpleType name="sbkControlPositionType">
 		<restriction base="string">
 			<enumeration value="PumpControl.Upward">
 				<annotation>
 					<documentation xml:lang="de">
-						<label>positiv und negativ</label>
-						<tooltip>positiv und negativ</tooltip>
-						<description>positiv und negativ</description>
+						<label>aufwärts</label>
+						<tooltip>aufwärts</tooltip>
+						<description>aufwärts</description>
 					</documentation>
 					<documentation xml:lang="en">
-						<label>positive and negative</label>
-						<tooltip>positive and negative</tooltip>
-						<description>positive and negative</description>
+						<label>upward</label>
+						<tooltip>upward</tooltip>
+						<description>upward</description>
 					</documentation>
 				</annotation>
 			</enumeration>
 			<enumeration value="PumpControl.Downward">
 				<annotation>
 					<documentation xml:lang="de">
-						<label>positiv</label>
-						<tooltip>positiv</tooltip>
-						<description>positiv</description>
+						<label>abwärts</label>
+						<tooltip>abwärts</tooltip>
+						<description>abwärts</description>
 					</documentation>
 					<documentation xml:lang="en">
-						<label>positive</label>
-						<tooltip>positive</tooltip>
-						<description>positive</description>
+						<label>downward</label>
+						<tooltip>downward</tooltip>
+						<description>downward</description>
 					</documentation>
 				</annotation>
 			</enumeration>
-			<enumeration value="PumpControl.Negative">
+			<enumeration value="PumpControl.Both">
 				<annotation>
 					<documentation xml:lang="de">
-						<label>negativ</label>
-						<tooltip>negativ</tooltip>
-						<description>negativ</description>
+						<label>auf- und abwärts</label>
+						<tooltip>auf- und abwärts</tooltip>
+						<description>auf- und abwärts</description>
 					</documentation>
 					<documentation xml:lang="en">
-						<label>negative</label>
-						<tooltip>negative</tooltip>
-						<description>negative</description>
+						<label>up- and downward</label>
+						<tooltip>up- and downward</tooltip>
+						<description>up- and downward</description>
 					</documentation>
 				</annotation>
 			</enumeration>
 		</restriction>
 	</simpleType>
-	
+	<simpleType name="sbkRiverDatabaseStructInterpolationTypeType">
+		<restriction base="string">
+			<enumeration value="Sobek.RiverDatabaseStructure.InterpolationType.Lineair">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>linear</label>
+						<tooltip>linear</tooltip>
+						<description>linear</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>linear</label>
+						<tooltip>linear</tooltip>
+						<description>linear</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Sobek.RiverDatabaseStructure.InterpolationType.Spline">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Spline</label>
+						<tooltip>Spline</tooltip>
+						<description>Spline</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>spline</label>
+						<tooltip>spline</tooltip>
+						<description>spline</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="sbkCrestShapeType">
+		<restriction base="double">
+			<enumeration value="0">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>breit</label>
+						<tooltip>breit</tooltip>
+						<description>breit</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>broad</label>
+						<tooltip>broad</tooltip>
+						<description>broad</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="1">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>dreieckig</label>
+						<tooltip>dreieckig</tooltip>
+						<description>dreieckig</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>triangular</label>
+						<tooltip>triangular</tooltip>
+						<description>triangular</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="2">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>rund</label>
+						<tooltip>rund</tooltip>
+						<description>rund</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>round</label>
+						<tooltip>round</tooltip>
+						<description>round</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="3">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>spitz</label>
+						<tooltip>spitz</tooltip>
+						<description>spitz</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>sharp</label>
+						<tooltip>sharp</tooltip>
+						<description>sharp</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="lastBoundaryTypeType">
+		<restriction base="string">
+			<enumeration value="zml">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>ZML-Import</label>
+						<tooltip>ZML-Import</tooltip>
+						<description>ZML-Import</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>ZML Import</label>
+						<tooltip>ZML Import</tooltip>
+						<description>ZML Import</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="const">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Konstante Zeitreihe</label>
+						<tooltip>Konstante Zeitreihe</tooltip>
+						<description>Konstante Zeitreihe</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>Constant Time Series</label>
+						<tooltip>Constant Time Series</tooltip>
+						<description>Constant Time Series</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<!-- 
+			<enumeration value="openmi">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>openMI</label>
+						<tooltip>openMI</tooltip>
+						<description>openMI</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>openMI</label>
+						<tooltip>openMI</tooltip>
+						<description>openMI</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			-->
+		</restriction>
+	</simpleType>
 	<!-- 
 		______________________________
 		Very basic simple types
 		______________________________
 	-->
+	<simpleType name="tableType">
+		<restriction base="double"/>
+	</simpleType>
 	<simpleType name="notNegDoubleType">
 		<restriction base="double">
 			<minInclusive value="0"/>
