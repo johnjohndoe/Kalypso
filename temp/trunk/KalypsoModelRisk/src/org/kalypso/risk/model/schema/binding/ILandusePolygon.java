@@ -10,19 +10,19 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 public interface ILandusePolygon extends IFeatureWrapper2
 {
-  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "Polygon" );
+  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "Polygon" );
 
-  public QName PROPERTY_GEOMETRY = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "polygonGeometry" );
+  public QName PROPERTY_GEOMETRY = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "polygonGeometry" );
 
   public QName PROPERTY_LANDUSE_CLASS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
 
-  public QName PROPERTY_SLDSTYLE = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "sldStyle" );
+  public QName PROPERTY_SLDSTYLE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "sldStyle" );
 
-  public QName PROPERTY_ORDNUMBER = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "clsOrdinalNumber" );
+  public QName PROPERTY_ORDNUMBER = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "clsOrdinalNumber" );
 
-  public QName PROPERTY_DAMAGE_FUNCTION = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "damageFunction" );
+  public QName PROPERTY_DAMAGE_FUNCTION = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "damageFunction" );
 
-  public QName PROPERTY_ASSET_VALUE = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "assetValue" );
+  public QName PROPERTY_ASSET_VALUE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "assetValue" );
 
   public void setGeometry( final GM_Surface< ? > surface );
 

@@ -11,26 +11,22 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.risk.model.schema.binding.AnnualCoverage;
 import org.kalypso.risk.model.schema.binding.AssetValueClass;
+import org.kalypso.risk.model.schema.binding.IAnnualCoverage;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
-import org.kalypso.risk.model.schema.binding.ILanduseCoverageModel;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
-import org.kalypso.risk.model.schema.binding.ILanduseVectorModel;
+import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
-import org.kalypso.risk.model.schema.binding.IWaterdepthCoverage;
-import org.kalypso.risk.model.schema.binding.IWaterdepthCoverageCollection;
-import org.kalypso.risk.model.schema.binding.IWaterdepthCoverageModel;
+import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.schema.binding.LanduseClass;
-import org.kalypso.risk.model.schema.binding.LanduseCoverageModel;
 import org.kalypso.risk.model.schema.binding.LandusePolygon;
 import org.kalypso.risk.model.schema.binding.LandusePolygonCollection;
-import org.kalypso.risk.model.schema.binding.LanduseVectorModel;
+import org.kalypso.risk.model.schema.binding.RasterDataModel;
 import org.kalypso.risk.model.schema.binding.RasterizationControlModel;
-import org.kalypso.risk.model.schema.binding.WaterdepthCoverage;
-import org.kalypso.risk.model.schema.binding.WaterdepthCoverageCollection;
-import org.kalypso.risk.model.schema.binding.WaterdepthCoverageModel;
+import org.kalypso.risk.model.schema.binding.VectorDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 
 public class KalypsoRiskFeatureFactory implements IAdapterFactory
@@ -80,20 +76,17 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( IRasterizationControlModel.QNAME ) )
           return new RasterizationControlModel( feature );
-        else if( featureQName.equals( ILanduseVectorModel.QNAME ) )
-          return new LanduseVectorModel( feature );
-        else if( featureQName.equals( ILanduseCoverageModel.QNAME ) )
-          return new LanduseCoverageModel( feature );
-        else if( featureQName.equals( IWaterdepthCoverageModel.QNAME ) )
-          return new WaterdepthCoverageModel( feature );
+        else if( featureQName.equals( IVectorDataModel.QNAME ) )
+          return new VectorDataModel( feature );
+        else if( featureQName.equals( IRasterDataModel.QNAME ) )
+          return new RasterDataModel( feature );
         else
           return null;
       }
     };
     cMap.put( IRasterizationControlModel.class, cTor );
-    cMap.put( ILanduseVectorModel.class, cTor );
-    cMap.put( ILanduseCoverageModel.class, cTor );
-    cMap.put( IWaterdepthCoverageModel.class, cTor );
+    cMap.put( IVectorDataModel.class, cTor );
+    cMap.put( IRasterDataModel.class, cTor );
     cMap.put( IModel.class, cTor );
 
     cTor = new AdapterConstructor()
@@ -153,26 +146,13 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
-        if( featureQName.equals( IWaterdepthCoverageCollection.QNAME ) )
-          return new WaterdepthCoverageCollection( feature );
+        if( featureQName.equals( IAnnualCoverage.QNAME ) )
+          return new AnnualCoverage( feature );
         else
           return null;
       }
     };
-    cMap.put( IWaterdepthCoverageCollection.class, cTor );
-
-    cTor = new AdapterConstructor()
-    {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-      {
-        final QName featureQName = feature.getFeatureType().getQName();
-        if( featureQName.equals( IWaterdepthCoverage.QNAME ) )
-          return new WaterdepthCoverage( feature );
-        else
-          return null;
-      }
-    };
-    cMap.put( IWaterdepthCoverage.class, cTor );
+    cMap.put( IAnnualCoverage.class, cTor );
 
     return Collections.unmodifiableMap( cMap );
   }

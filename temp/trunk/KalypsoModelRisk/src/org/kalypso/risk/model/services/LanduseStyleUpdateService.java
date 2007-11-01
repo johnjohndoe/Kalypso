@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.services;
 
+import java.awt.Color;
 import java.net.URL;
+import java.util.List;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
@@ -56,6 +58,8 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
+import org.kalypso.risk.model.schema.binding.IAssetValueClass;
+import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -71,28 +75,32 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 public class LanduseStyleUpdateService extends Job
 {
   // if this STYLE_NAME is changed, it should be changed in all SLD layers in gmt files also
-  private static final String STYLE_NAME = "Landuse style"; //$NON-NLS-1$     
+  private static final String STYLE_NAME = "Kalypso style"; //$NON-NLS-1$     
 
-  private static final String STYLE_TITLE = "Landuse style"; //$NON-NLS-1$     
+  private static final String STYLE_TITLE = "Kalypso style"; //$NON-NLS-1$     
 
   private final IFile m_dbFile;
 
-  private final IFile m_polygonSymbolyzerSldFile;
+  private final IFile m_landuseVectorSymbolyzerSldFile;
 
-  private final IFile m_rasterSymbolyzerSldFile;
+  private final IFile m_landuseRasterSymbolyzerSldFile;
+
+  private final IFile m_specificDamageRasterSymbolyzerSldFile;
 
   public LanduseStyleUpdateService( final IFile file )
   {
-    super( "Aktualisere Landnutzung-SLD Dienst" );
+    super( "Aktualisere SLD Dienst" );
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final IPath polygonResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/LanduseVectorModel.sld" );
-    final IPath rasterResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/LanduseCoverageModel.sld" );
+    final IPath landuseVectorResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/LanduseVector.sld" );
+    final IPath landuseRasterResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/LanduseCoverage.sld" );
+    final IPath specificDamageRasterResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/SpecificDamagePotentialCoverage.sld" );
     m_dbFile = file;
-    m_polygonSymbolyzerSldFile = m_dbFile.getProject().getFile( polygonResourcePath );
-    m_rasterSymbolyzerSldFile = m_dbFile.getProject().getFile( rasterResourcePath );
+    m_landuseVectorSymbolyzerSldFile = m_dbFile.getProject().getFile( landuseVectorResourcePath );
+    m_landuseRasterSymbolyzerSldFile = m_dbFile.getProject().getFile( landuseRasterResourcePath );
+    m_specificDamageRasterSymbolyzerSldFile = m_dbFile.getProject().getFile( specificDamageRasterResourcePath );
   }
 
   /**
@@ -119,8 +127,21 @@ public class LanduseStyleUpdateService extends Job
         while( workspace == null );
       }
       final IRasterizationControlModel model = (IRasterizationControlModel) workspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
-      SLDHelper.exportPolygonSymbolyzerSLD( m_polygonSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, STYLE_NAME, STYLE_TITLE, monitor );
-      SLDHelper.exportRasterSymbolyzerSLD( m_rasterSymbolyzerSldFile, model.getLanduseClassesList(), STYLE_NAME, STYLE_TITLE, monitor );
+      final List<ILanduseClass> landuseClassesList = model.getLanduseClassesList();
+      if( landuseClassesList != null && landuseClassesList.size() > 0 )
+      {
+        SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, STYLE_NAME, STYLE_TITLE, monitor );
+        SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolyzerSldFile, model.getLanduseClassesList(), STYLE_NAME, STYLE_TITLE, monitor );
+      }
+      final List<IAssetValueClass> assetValueClassesList = model.getAssetValueClassesList();
+      if( assetValueClassesList != null && assetValueClassesList.size() > 0 )
+      {
+        double maxAssetValue = 0.0;
+        for( final IAssetValueClass assetValueClass : assetValueClassesList )
+          if( assetValueClass.getAssetValue() > maxAssetValue )
+            maxAssetValue = assetValueClass.getAssetValue();
+        SLDHelper.exportRasterSymbolyzerSLD( m_specificDamageRasterSymbolyzerSldFile, 0.0, maxAssetValue, 20, new Color( 224, 0, 0 ), STYLE_NAME, STYLE_TITLE, monitor );
+      }
       return Status.OK_STATUS;
     }
     catch( final Throwable t )
@@ -131,11 +152,11 @@ public class LanduseStyleUpdateService extends Job
 
   public IFile getPolygonSymbolzerSldFile( )
   {
-    return m_polygonSymbolyzerSldFile;
+    return m_landuseVectorSymbolyzerSldFile;
   }
 
   public IFile getRasterSymbolzerSldFile( )
   {
-    return m_rasterSymbolyzerSldFile;
+    return m_landuseRasterSymbolyzerSldFile;
   }
 }

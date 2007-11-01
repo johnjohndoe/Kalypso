@@ -48,21 +48,21 @@
 		<description>Creates a new risk project</description>
 		</wizard>
 		<wizard
-            class="org.kalypso.risk.model.wizards.importlanduse.ImportLanduseWizard"
+            class="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
             icon="icons/pencil.gif"
-            id="org.kalypso.risk.model.wizards.importlanduse.ImportLanduseWizard"
+            id="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
             name="ImportLanduseShape"
             project="false"/>
   <wizard
-        class="org.kalypso.risk.model.wizards.importwaterdepth.ImportWaterdepthWizard"
+        class="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
         icon="icons/pencil.gif"
-        id="org.kalypso.risk.model.wizards.importwaterdepth.ImportWaterdepthWizard"
+        id="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
         name="ImportWaterlevelRaster"
         project="false">
   </wizard>
   <wizard
-        class="org.kalypso.risk.model.wizards.rasterizeLanduse.RasterizationWizard"
-        id="org.kalypso.risk.rasterization.RasterizationWizard"
+        class="org.kalypso.risk.model.actions.rasterizeLanduse.LanduseRasterizationHandler"
+        id="org.kalypso.risk.model.actions.rasterizeLanduse.RasterizationWizard"
         name="RasterizationWizard">
   </wizard>
 	</extension>
@@ -70,7 +70,7 @@
        point="org.kalypso.contribs.java.urlCatalog">
     <catalog
           class="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
-          id="org.kalypso.risk.model.schema.SchemaCatalog">
+          id="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog">
     </catalog>
  </extension>
  <extension
@@ -82,17 +82,13 @@
           class="org.kalypso.risk.model.schema.KalypsoRiskFeatureFactory">
        <adapter type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"/>
+       <adapter type="org.kalypso.risk.model.schema.binding.IVectorDataModel"/>
+       <adapter type="org.kalypso.risk.model.schema.binding.IRasterDataModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILanduseClass"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.ILanduseVectorModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygonCollection"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygon"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IWaterdepthCoverageModel"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IWaterdepthCoverageCollection"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IWaterdepthCoverage"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.ILanduseCoverageModel"/>
-       <adapter
-             type="org.kalypso.risk.model.schema.binding.IAssetValueClass">
-       </adapter>
+       <adapter type="org.kalypso.risk.model.schema.binding.IAnnualCoverage"/>
+       <adapter type="org.kalypso.risk.model.schema.binding.IAssetValueClass"/>
     </factory>
  </extension>
  <extension
@@ -101,18 +97,13 @@
           id="org.kalypso.risk">
        <scenarioDatum
              bundle="org.kalypso.risk"
-             classKey="org.kalypso.risk.model.schema.binding.ILanduseVectorModel"
-             modelPath="models/LanduseVectorModel.gml">
+             classKey="org.kalypso.risk.model.schema.binding.IVectorDataModel"
+             modelPath="models/VectorDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
              bundle="org.kalypso.risk"
-             classKey="org.kalypso.risk.model.schema.binding.ILanduseCoverageModel"
-             modelPath="models/LanduseCoverageModel.gml">
-       </scenarioDatum>
-       <scenarioDatum
-             bundle="org.kalypso.risk"
-             classKey="org.kalypso.risk.model.schema.binding.IWaterdepthCoverageModel"
-             modelPath="models/WaterdepthCoverageModel.gml">
+             classKey="org.kalypso.risk.model.schema.binding.IRasterDataModel"
+             modelPath="models/RasterDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
              bundle="org.kalypso.risk"
@@ -148,5 +139,16 @@
           id="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_AssetValue"
           name="PF_LandusePolygon_AssetValue">
     </function>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.kalypso.risk.model.actions.specificDamagePotential.DamagePotentialCalculationHandler"
+          commandId="http___www.tu-harburg.de_wb_kalypso_risk__DamagePotentialCalculationHandler">
+    </handler>
+    <handler
+          class="org.kalypso.risk.model.actions.rasterizeLanduse.LanduseRasterizationHandler"
+          commandId="http___www.tu-harburg.de_wb_kalypso_risk__LanduseRasterizationHandler">
+    </handler>
  </extension>
 </plugin>

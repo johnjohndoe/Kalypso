@@ -56,17 +56,13 @@ public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
 
   public static final String PREFIX_RASTERIZATION_CONTROL_MODEL = "krrcm";
 
-  public static final String NS_LANDUSE_VECTOR_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseVectorData";
+  public static final String NS_VECTOR_DATA_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel";
 
-  public static final String PREFIX_LANDUSE_VECTOR_MODEL = "krvdm";
+  public static final String PREFIX_VECTOR_DATA_MODEL = "krvdm";
 
-  public static final String NS_LANDUSE_COVERAGE_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseCoverageData";
+  public static final String NS_RASTER_DATA_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel";
   
-  public static final String PREFIX_LANDUSE_COVERAGE_MODEL = "krlcd";
-
-  public static final String NS_WATERDEPTH_COVERAGE_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/waterlevelCoverageData";
-
-  public static final String PREFIX_WATERDEPTH_COVERAGE_MODEL = "krwcd";
+  public static final String PREFIX_RASTER_DATA_MODEL = "krrdm";
 
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
@@ -76,12 +72,10 @@ public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
   {
     catalog.put( NS_RASTERIZATION_CONTROL_MODEL, myClass.getResource( "schemata/RasterizationControlModel.xsd" ) );
     prefixes.put( NS_RASTERIZATION_CONTROL_MODEL, PREFIX_RASTERIZATION_CONTROL_MODEL );
-    catalog.put( NS_LANDUSE_VECTOR_MODEL, myClass.getResource( "schemata/LanduseVectorModel.xsd" ) );
-    prefixes.put( NS_LANDUSE_VECTOR_MODEL, PREFIX_LANDUSE_VECTOR_MODEL );
-    catalog.put( NS_LANDUSE_COVERAGE_MODEL, myClass.getResource( "schemata/LanduseCoverageModel.xsd" ) );
-    prefixes.put( NS_LANDUSE_COVERAGE_MODEL, PREFIX_LANDUSE_COVERAGE_MODEL );
-    catalog.put( NS_WATERDEPTH_COVERAGE_MODEL, myClass.getResource( "schemata/WaterdepthCoverageModel.xsd" ) );
-    prefixes.put( NS_WATERDEPTH_COVERAGE_MODEL, PREFIX_WATERDEPTH_COVERAGE_MODEL );
+    catalog.put( NS_VECTOR_DATA_MODEL, myClass.getResource( "schemata/VectorDataModel.xsd" ) );
+    prefixes.put( NS_VECTOR_DATA_MODEL, PREFIX_VECTOR_DATA_MODEL );
+    catalog.put( NS_RASTER_DATA_MODEL, myClass.getResource( "schemata/RasterDataModel.xsd" ) );
+    prefixes.put( NS_RASTER_DATA_MODEL, PREFIX_RASTER_DATA_MODEL );
   }
 
 }

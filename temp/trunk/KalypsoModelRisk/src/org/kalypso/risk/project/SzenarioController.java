@@ -61,7 +61,7 @@ public class SzenarioController implements IScenarioDataListener
 //  
 //  private ILanduseModel m_landuseModel = null;
 //  
-//  private IWaterdepthCoverageModel m_waterdepthCoverageModel = null;
+//  private IRasterDataModel m_waterdepthCoverageModel = null;
   
   private LanduseStyleUpdateListener m_landuseStyleUpdateListener = new LanduseStyleUpdateListener();
 
