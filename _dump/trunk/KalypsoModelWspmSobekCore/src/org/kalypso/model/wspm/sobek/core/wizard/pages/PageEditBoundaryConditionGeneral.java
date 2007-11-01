@@ -98,8 +98,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     iGroup.setText( "Info" );
 
     /* lastfall */
-// new Label( iGroup, SWT.NONE ).setText( "Loading case" );
-    new WizardFeatureLabel( "Loading case", iGroup );
+    new WizardFeatureLabel( "Calculation case", iGroup );
 
     final WizardFeatureTextBox lf = new WizardFeatureTextBox( m_condition.getLastfall().getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     lf.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );

@@ -52,9 +52,9 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
-import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries.TS_TYPE;
 import org.kalypso.model.wspm.sobek.core.wizard.worker.AbstractTimeSeriesProvider;
 import org.kalypso.model.wspm.sobek.core.wizard.worker.FinishWorkerEditBoundaryCondition;
 import org.kalypso.model.wspm.sobek.core.wizard.worker.ITimeSeriesProvider;
@@ -117,7 +117,7 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
   @Override
   public boolean performFinish( )
   {
-    final TS_TYPE type = m_timeSeries.getTypeOfTimeSeries();
+    final BOUNDARY_CONDITION_TYPE type = m_timeSeries.getTypeOfTimeSeries();
     final ITimeSeriesProvider provider = AbstractTimeSeriesProvider.createProvider( type, m_general, m_timeSeries );
 
     final ICoreRunnableWithProgress worker = new FinishWorkerEditBoundaryCondition( m_lastfall, m_node, provider );

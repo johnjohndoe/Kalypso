@@ -50,10 +50,10 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
-import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries.TS_TYPE;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -90,13 +90,13 @@ public abstract class AbstractTimeSeriesProvider implements ITimeSeriesProvider
     return changes;
   }
 
-  public static ITimeSeriesProvider createProvider( final TS_TYPE type, final PageEditBoundaryConditionGeneral general, final PageEditBoundaryConditionTimeSeries timeSeries )
+  public static ITimeSeriesProvider createProvider( final BOUNDARY_CONDITION_TYPE type, final PageEditBoundaryConditionGeneral general, final PageEditBoundaryConditionTimeSeries timeSeries )
   {
     switch( type )
     {
       case eConstant:
         return new ConstantTimeSeriesProvider( general, timeSeries );
-      case eTimeSeries:
+      case eZml:
         return new ZmlTimeSeriesProvider( general, timeSeries );
 
       default:

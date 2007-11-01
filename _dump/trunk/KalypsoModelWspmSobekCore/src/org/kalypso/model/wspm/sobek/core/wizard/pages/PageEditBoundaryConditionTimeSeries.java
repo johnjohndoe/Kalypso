@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.sobek.core.wizard.pages;
 import java.awt.Frame;
 import java.util.GregorianCalendar;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -64,6 +63,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallConditi
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryLabelProvider;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryTreeContentProvider;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryViewerFilter;
@@ -91,33 +91,8 @@ import org.kalypso.util.swt.WizardFeatureTextBox;
  */
 public class PageEditBoundaryConditionTimeSeries extends WizardPage
 {
-  public enum TS_TYPE
-  {
-    eConstant,
-    eTimeSeries;
 
-    /**
-     * @see java.lang.Enum#toString()
-     */
-    @Override
-    public String toString( )
-    {
-      final TS_TYPE type = TS_TYPE.valueOf( name() );
-      switch( type )
-      {
-        case eConstant:
-          return "Set a constant value for corrosponding discharge, waterlevel or Q-H relation";
-
-        case eTimeSeries:
-          return "Select a time series from the time series repository.";
-
-        default:
-          throw new NotImplementedException();
-      }
-    }
-  }
-
-  protected TS_TYPE m_type = TS_TYPE.eTimeSeries;
+  protected BOUNDARY_CONDITION_TYPE m_type;
 
   protected ZmlObservationItem m_selectedTreeItem = null;
 
@@ -144,6 +119,8 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
     setTitle( "Edit boundary condition" );
     setDescription( "Enter boundary condition parameters, please." );
+
+    m_type = condition.getLastUsedType();
   }
 
   /**
@@ -171,7 +148,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     gMapping.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     gMapping.setText( "Type of boundary condition data input" );
 
-    final TS_TYPE[] input = new TS_TYPE[] { TS_TYPE.eTimeSeries, TS_TYPE.eConstant };
+    final BOUNDARY_CONDITION_TYPE[] input = new BOUNDARY_CONDITION_TYPE[] { BOUNDARY_CONDITION_TYPE.eZml, BOUNDARY_CONDITION_TYPE.eConstant };
 
     final ComboViewer viewer = new ComboViewer( gMapping, SWT.READ_ONLY | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -185,7 +162,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final StructuredSelection selection = (StructuredSelection) event.getSelection();
-        m_type = (TS_TYPE) selection.getFirstElement();
+        m_type = (BOUNDARY_CONDITION_TYPE) selection.getFirstElement();
 
         if( m_subGroup != null )
         {
@@ -201,7 +178,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
             renderConstantValue( container );
             break;
 
-          case eTimeSeries:
+          case eZml:
             renderTimeSeriesRepository( container );
             break;
 
@@ -214,7 +191,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       }
     } );
 
-    viewer.setSelection( new StructuredSelection( TS_TYPE.eTimeSeries ) );
+    viewer.setSelection( new StructuredSelection( m_type ) );
 
     checkPageCompleted();
   }
@@ -402,7 +379,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
   protected void checkPageCompleted( )
   {
     /* time series repository selected? check selection and values! */
-    if( TS_TYPE.eTimeSeries.equals( m_type ) )
+    if( BOUNDARY_CONDITION_TYPE.eZml.equals( m_type ) )
     {
 
       if( m_selectedTreeItem == null )
@@ -454,7 +431,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
         return;
       }
     }
-    else if( TS_TYPE.eConstant.equals( m_type ) )
+    else if( BOUNDARY_CONDITION_TYPE.eConstant.equals( m_type ) )
     {
       if( m_tConstant.getText() == null || "".equals( m_tConstant.getText().trim() ) )
       {
@@ -511,7 +488,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     setPageComplete( true );
   }
 
-  public TS_TYPE getTypeOfTimeSeries( )
+  public BOUNDARY_CONDITION_TYPE getTypeOfTimeSeries( )
   {
     return m_type;
   }

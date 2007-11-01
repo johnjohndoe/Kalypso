@@ -61,6 +61,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondition
 {
+
   private final ILastfall m_lastfall;
 
   private final BoundaryNode m_boundaryNode;
@@ -219,7 +220,15 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
       return null;
 
     return (Feature) property;
-
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getLastUsedType()
+   */
+  public BOUNDARY_CONDITION_TYPE getLastUsedType( )
+  {
+    final String name = (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_TYPE );
+
+    return BOUNDARY_CONDITION_TYPE.getType( name );
+  }
 }

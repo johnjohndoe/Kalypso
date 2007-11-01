@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral;
@@ -90,10 +91,6 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
   {
     final Map<QName, Object> changes = super.getBasicChanges();
 
-    /* set unused values null */
-    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, null );
-    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, null );
-
     /* set time series link */
     final TimeseriesLinkType lnkTimeSeries = new TimeseriesLinkType();
 
@@ -102,6 +99,9 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
     lnkTimeSeries.setHref( identifier );
 
     changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnkTimeSeries );
+
+    /* type */
+    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_TYPE, IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eZml.toGmlString() );
 
     return changes;
   }

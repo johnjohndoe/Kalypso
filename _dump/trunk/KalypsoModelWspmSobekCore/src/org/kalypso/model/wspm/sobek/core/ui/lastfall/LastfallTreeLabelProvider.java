@@ -59,7 +59,7 @@ public class LastfallTreeLabelProvider extends LabelProvider
     {
       final ILastfall lastfall = (ILastfall) element;
 
-      return "Loading Case: " + lastfall.getName();
+      return "Calculation Case: " + lastfall.getName();
     }
     else if( element instanceof INode )
     {

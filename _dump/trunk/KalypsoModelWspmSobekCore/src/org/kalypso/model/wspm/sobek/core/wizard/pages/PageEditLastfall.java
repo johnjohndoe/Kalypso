@@ -79,8 +79,8 @@ public class PageEditLastfall extends WizardPage
   {
     super( "createLastfall" );
     m_lastfall = lastfall;
-    setTitle( "Create a new Loading Case" );
-    setDescription( "Enter name and description for the Loading Case which will be created, please." );
+    setTitle( "Create a new Calculation Case" );
+    setDescription( "Enter name and description for the Calculation Case which will be created, please." );
   }
 
   /**
@@ -205,7 +205,7 @@ public class PageEditLastfall extends WizardPage
     if( m_dateBegin.getDateTime() == null )
     {
       setMessage( null );
-      setErrorMessage( "Loading case begin not defined" );
+      setErrorMessage( "Calculation case begin not defined" );
       setPageComplete( false );
 
       return;
@@ -214,7 +214,7 @@ public class PageEditLastfall extends WizardPage
     if( m_dateEnd.getDateTime() == null )
     {
       setMessage( null );
-      setErrorMessage( "Loading case end not defined" );
+      setErrorMessage( "Calculation case end not defined" );
       setPageComplete( false );
 
       return;
@@ -223,7 +223,7 @@ public class PageEditLastfall extends WizardPage
     if( m_dateEnd.getDateTime().before( m_dateBegin.getDateTime() ) )
     {
       setMessage( null );
-      setErrorMessage( "Loading case end date is earlier then beginning date" );
+      setErrorMessage( "Calculation case end date is earlier then beginning date" );
       setPageComplete( false );
 
       return;

@@ -46,6 +46,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
@@ -76,6 +77,7 @@ public class ConstantTimeSeriesProvider extends AbstractTimeSeriesProvider
 
     changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, getPageTS().getConstValue() );
     changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, getPageTS().getConstValueIntervall() );
+    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_TYPE, IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eConstant.toGmlString() );
 
     return changes;
   }

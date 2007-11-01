@@ -138,7 +138,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       final LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
       final Feature fLastfall = wrapper.getFeature();
       if( fLastfall == null )
-        throw new IllegalStateException( "Loading case is null" );
+        throw new IllegalStateException( "Calculation case is null" );
 
       if( lastfall.getFeature().equals( fLastfall ) )
         return new BoundaryNodeLastfallCondition( lastfall, this, member );

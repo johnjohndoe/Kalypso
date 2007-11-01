@@ -47,12 +47,11 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author thuel2
- *
  */
 public class SbkStructure extends AbstractNode implements ISbkStructure
 {
 
-  public SbkStructure(IModelMember model, Feature node )
+  public SbkStructure( final IModelMember model, final Feature node )
   {
     super( model, node );
   }
@@ -62,9 +61,8 @@ public class SbkStructure extends AbstractNode implements ISbkStructure
    */
   public void delete( ) throws Exception
   {
-    FeatureUtils.deleteFeature( getFeature() );
+    FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
   }
-
 
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
