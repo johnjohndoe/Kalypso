@@ -73,6 +73,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.model.LastfallUtils;
 import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditBoundaryCondition;
 import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditLastfall;
+import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditTimeSeriesObservation;
 import org.kalypso.ogc.gml.FeatureUtils;
 
 /**
@@ -103,7 +104,7 @@ public class LastFallExplorer
 
     final TreeViewer viewer = new TreeViewer( body );
 
-    getHeader( toolkit, header, viewer );
+    getToolbar( toolkit, header, viewer );
 
     /* tree */
     viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -153,7 +154,7 @@ public class LastFallExplorer
     viewer.expandAll();
   }
 
-  private void getHeader( final FormToolkit toolkit, final Composite header, final TreeViewer viewer )
+  private void getToolbar( final FormToolkit toolkit, final Composite header, final TreeViewer viewer )
   {
 
     /* label */
@@ -226,6 +227,50 @@ public class LastFallExplorer
       }
     } );
 
+    /* edit time series observation */
+    final ToolItem editObs = new ToolItem( toolBar, SWT.NONE );
+    final Image iEditObs = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/edit_ts_obs.gif" ) );
+    editObs.setImage( iEditObs );
+    editObs.setEnabled( false );
+
+    editObs.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final TreeSelection selection = (TreeSelection) viewer.getSelection();
+        final TreePath[] path = selection.getPathsFor( selection.getFirstElement() );
+
+        if( path.length != 1 || path[0].getSegmentCount() != 2 || !(path[0].getSegment( 0 ) instanceof ILastfall) || !(path[0].getSegment( 1 ) instanceof IBoundaryNode) )
+          return;
+
+        final ILastfall lastfall = (ILastfall) path[0].getSegment( 0 );
+        final IBoundaryNode node = (IBoundaryNode) path[0].getSegment( 1 );
+
+        try
+        {
+          final IBoundaryNodeLastfallCondition condition = node.getLastfallCondition( lastfall );
+
+          if( condition.hasTimeSeriesObservation() )
+          {
+            final IWorkbenchWizard wizard = new SobekWizardEditTimeSeriesObservation( condition );
+            wizard.init( PlatformUI.getWorkbench(), null );
+
+            final WizardDialog dialog = new WizardDialog( null, wizard );
+            dialog.open();
+          }
+
+        }
+        catch( final Exception e1 )
+        {
+          e1.printStackTrace();
+        }
+      }
+    } );
+
     /* delete */
     final ToolItem delete = new ToolItem( toolBar, SWT.NONE );
     final Image iDelete = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/delete.gif" ) );
@@ -271,17 +316,54 @@ public class LastFallExplorer
         {
           edit.setEnabled( true );
           delete.setEnabled( false );
+
+          final TreePath[] path = selection.getPathsFor( element );
+          if( hasTimeSeriesObservation( path ) )
+            editObs.setEnabled( true );
+          else
+            editObs.setEnabled( false );
+
         }
         else if( element instanceof ILastfall )
         {
           edit.setEnabled( true );
           delete.setEnabled( true );
+          editObs.setEnabled( false );
         }
         else
         {
           edit.setEnabled( false );
           delete.setEnabled( false );
+          editObs.setEnabled( false );
         }
+      }
+
+      /**
+       * @param path
+       *            path[0] ILastfall, path[1] IBoundaryNode
+       */
+      private boolean hasTimeSeriesObservation( final TreePath[] path )
+      {
+        if( path.length != 1 || path[0].getSegmentCount() != 2 || !(path[0].getSegment( 0 ) instanceof ILastfall) || !(path[0].getSegment( 1 ) instanceof IBoundaryNode) )
+          return false;
+
+        final ILastfall lastfall = (ILastfall) path[0].getSegment( 0 );
+        final IBoundaryNode node = (IBoundaryNode) path[0].getSegment( 1 );
+
+        try
+        {
+          final IBoundaryNodeLastfallCondition condition = node.getLastfallCondition( lastfall );
+
+          if( condition.hasTimeSeriesObservation() )
+            return true;
+
+        }
+        catch( final Exception e )
+        {
+          return false;
+        }
+
+        return false;
       }
     } );
 

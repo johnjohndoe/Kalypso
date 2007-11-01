@@ -38,42 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.interfaces;
+package org.kalypso.model.wspm.sobek.core.wizard;
 
-import java.util.GregorianCalendar;
-
-import org.kalypso.observation.IObservation;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
+import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditTimeSeriesObservation;
 
 /**
  * @author kuch
  */
-public interface IBoundaryNodeLastfallCondition
+public class SobekWizardEditTimeSeriesObservation extends Wizard implements INewWizard
 {
-  ILastfall getLastfall( );
 
-  IBoundaryNode getBoundaryNode( );
+  private PageEditTimeSeriesObservation m_page;
 
-  Feature getFeature( );
+  private final IBoundaryNodeLastfallCondition m_condition;
 
-  boolean isTimeSeriesNode( );
+  /**
+   * @param modelBuilder
+   *            instance of sobek model gml notation
+   */
+  public SobekWizardEditTimeSeriesObservation( final IBoundaryNodeLastfallCondition condition )
+  {
+    m_condition = condition;
+  }
 
-  boolean isConstantValueNode( );
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
+  @Override
+  public boolean performFinish( )
+  {
+    return false;
+  }
 
-  TimeseriesLinkType getTimeseriesLink( );
+  /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
+   */
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    m_page = new PageEditTimeSeriesObservation( m_condition );
+    addPage( m_page );
+  }
 
-  void setTimeSeriesLink( TimeseriesLinkType lnk );
-
-  public GregorianCalendar getObservationStart( );
-
-  public GregorianCalendar getObservationEnd( );
-
-  public Double getConstantValue( );
-
-  public Integer getConstantValueInterveal( );
-
-  public IObservation getTimeSeriesObservation( );
-
-  public Boolean hasTimeSeriesObservation( );
 }

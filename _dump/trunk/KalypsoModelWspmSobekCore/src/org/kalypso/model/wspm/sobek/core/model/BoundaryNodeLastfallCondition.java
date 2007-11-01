@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.observation.IObservation;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -184,6 +185,26 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
     {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getTimeSeriesObservation()
+   */
+  public IObservation getTimeSeriesObservation( )
+  {
+    throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#hasTimeSeriesObservation()
+   */
+  public Boolean hasTimeSeriesObservation( )
+  {
+    final Object property = m_feature.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_OBSERVATION );
+    if( !(property instanceof Feature) )
+      return false;
+
+    return true;
   }
 
 }
