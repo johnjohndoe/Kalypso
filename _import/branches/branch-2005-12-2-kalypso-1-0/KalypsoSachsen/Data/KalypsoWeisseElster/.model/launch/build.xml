@@ -26,6 +26,7 @@
         <!-- copy modell -->
         <copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml" />
         <copy file="${project.dir}/ombrometer.gml" tofile="${calc.dir}/ombrometer.gml" />
+        <copy file="${project.dir}/rcm.gml" tofile="${calc.dir}/rcm.gml" />
         <copy file="${project.dir}/.model/observationConf/ObsTMapping.gml"
               tofile="${calc.dir}/.obsT.gml" />
         <!-- copy others -->
@@ -201,17 +202,33 @@
 		 -->
         <echo message="aktualisiere Gebietsniederschläge (Messung)" />
 
-        <kalypso.copyObservation gml="${project.url}/.model/kriging/mapping.gml"
+    	<kalypso.gmlWeight 
+    				modelurl="${calc.url}/rcm.gml" 
+    				featurepathtarget="catchmentCollectionMember/catchmentMember" 
+    				propzmltarget="rainfall" 
+    				proprelationweightmember="rainfallWeightMember" 
+    				propweight="weight" 
+    				proprelationsourcefeature="ombrometerAssociation" 
+    				propzmlsource="timeserie" 
+    				targetcontext="${calc.url}" 
+    				sourceFrom="${startsim}" 
+    				sourceTo="${startforecast}" 
+    				targetFrom="${startforecast}" 
+    				targetTo="${stopsim}" 
+    				forecastfrom="${startforecast}" 
+    				forecastto="${stopsim}" 
+    	/>
+    	
+        <!--kalypso.copyObservation gml="${project.url}/.model/kriging/mapping.gml"
                                  featurePath="mappingMember"
                                  context="${calc.url}"
                                  targetObservation="outObservationLink"
                                  forecastFrom="${startforecast}"
                                  forecastTo="${stopsim}">
             <source property="inObservationLink" from="${startsim}" to="${startforecast}" />
-            <!-- Vorhersage übernehmen -->
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
             <metadata name="Szenario" value="${scenarioId}" />
-        </kalypso.copyObservation>
+        </kalypso.copyObservation-->
     </target>
 
     <target name="fetchRaster" depends="setProperties">
