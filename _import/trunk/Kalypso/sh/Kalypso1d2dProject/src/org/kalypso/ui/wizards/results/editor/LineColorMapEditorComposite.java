@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.ui.wizards.results.ResultSldHelper;
+import org.kalypso.ui.editor.sldEditor.SldHelper;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
@@ -158,7 +158,7 @@ public class LineColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+            final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
             if( value != null )
               m_stepWidth = value;
         }
@@ -170,7 +170,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+        final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
           m_stepWidth = value;
       }
@@ -178,7 +178,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+        final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
         {
           m_stepWidth = value;
@@ -333,7 +333,7 @@ public class LineColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
+            final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
             if( value != null )
               m_minValue = value;
         }
@@ -345,7 +345,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, minValueText, m_patternDouble );
+        final BigDecimal value = SldHelper.checkDoubleTextValue( displayComposite, minValueText, m_patternDouble );
         if( value != null )
           m_minValue = value;
       }
@@ -353,7 +353,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, minValueText, m_patternDouble );
+        final BigDecimal value = SldHelper.checkDoubleTextValue( displayComposite, minValueText, m_patternDouble );
         if( value != null )
         {
           m_minValue = value;
@@ -392,7 +392,7 @@ public class LineColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, maxValueText, m_patternDouble );
+            final BigDecimal value = SldHelper.checkDoubleTextValue( displayComposite, maxValueText, m_patternDouble );
             if( value != null )
               m_maxValue = value;
         }
@@ -404,7 +404,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, maxValueText, m_patternDouble );
+        final BigDecimal value = SldHelper.checkDoubleTextValue( displayComposite, maxValueText, m_patternDouble );
         if( value != null )
           m_maxValue = value;
       }
@@ -412,7 +412,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, maxValueText, m_patternDouble );
+        final BigDecimal value = SldHelper.checkDoubleTextValue( displayComposite, maxValueText, m_patternDouble );
         if( value != null )
         {
           m_maxValue = value;
@@ -475,7 +475,7 @@ public class LineColorMapEditorComposite extends Composite
         if( fromColor == toColor )
           lineColor = fromColor;
         else
-          lineColor = ResultSldHelper.interpolateColor( fromColor, toColor, currentClass, numOfClasses );
+          lineColor = SldHelper.interpolateColor( fromColor, toColor, currentClass, numOfClasses );
 
         final double strokeWidth;
         if( currentValue % m_fatValue == 0 )

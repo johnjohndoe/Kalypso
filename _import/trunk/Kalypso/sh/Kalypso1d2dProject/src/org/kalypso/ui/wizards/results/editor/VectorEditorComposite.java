@@ -69,8 +69,8 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.editor.sldEditor.FillEditorComposite;
 import org.kalypso.ui.editor.sldEditor.IFillModifyListener;
 import org.kalypso.ui.editor.sldEditor.IStrokeModifyListener;
+import org.kalypso.ui.editor.sldEditor.SldHelper;
 import org.kalypso.ui.editor.sldEditor.StrokeEditorComposite;
-import org.kalypso.ui.wizards.results.ResultSldHelper;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Graphic;
@@ -349,7 +349,7 @@ public class VectorEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
+            final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
             if( value != null )
             {
               m_scale = value;
@@ -365,7 +365,7 @@ public class VectorEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
+        final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
         if( value != null )
         {
           m_scale = value;
@@ -376,7 +376,7 @@ public class VectorEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
+        final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
         if( value != null )
         {
           m_firstExpression.setValue( value.toString() );

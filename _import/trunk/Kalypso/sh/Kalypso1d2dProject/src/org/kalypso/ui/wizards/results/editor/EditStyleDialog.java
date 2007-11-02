@@ -45,6 +45,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,9 +77,11 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -247,9 +250,22 @@ public class EditStyleDialog extends TitleAreaDialog
     {
       SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) m_symbolizer;
       final PolygonColorMap colorMap = symb.getColorMap();
-      if( colorMap.getColorMap().length > 0 )
+      final PolygonColorMapEntry[] colorMapEntries = colorMap.getColorMap();
+      if( colorMapEntries.length > 0 )
       {
-        PolygonColorMapEditorComposite comp = new PolygonColorMapEditorComposite( commonComposite, SWT.NONE, colorMap, m_minValue, m_maxValue );
+        final PolygonColorMapEntry fromEntry = colorMapEntries[0];
+        final PolygonColorMapEntry toEntry = colorMapEntries[colorMapEntries.length - 1];
+
+        PolygonColorMapEditorComposite comp = new PolygonColorMapEditorComposite( commonComposite, SWT.NONE, fromEntry, toEntry, m_minValue, m_maxValue )
+        {
+          @Override
+          protected void colorMapChanged( )
+          {
+            final List<PolygonColorMapEntry> colorMapList = getColorMap();
+            if( colorMapList.size() > 0 )
+              colorMap.replaceColorMap( colorMapList );
+          }
+        };
         GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
         gridDataComp.horizontalSpan = 2;
         comp.setLayoutData( gridDataComp );
@@ -268,7 +284,6 @@ public class EditStyleDialog extends TitleAreaDialog
       GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
       gridDataComp.horizontalSpan = 2;
       comp.setLayoutData( gridDataComp );
-
     }
     else
     {
@@ -314,6 +329,7 @@ public class EditStyleDialog extends TitleAreaDialog
     catch( CoreException e )
     {
       // TODO Auto-generated catch block e.printStackTrace();
+      e.printStackTrace();
     }
 
     super.okPressed();

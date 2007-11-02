@@ -46,17 +46,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -379,76 +374,6 @@ public class ResultSldHelper
     }
     return null;
 
-  }
-
-  /**
-   * checks the user typed string for the double value
-   * 
-   * @param comp
-   *            composite of the text field
-   * @param text
-   *            the text field
-   */
-  public static BigDecimal checkDoubleTextValue( final Composite comp, final Text text, Pattern pattern )
-  {
-    String tempText = text.getText();
-
-    final Matcher m = pattern.matcher( tempText );
-
-    if( !m.matches() )
-    {
-      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_RED ) );
-    }
-    else
-    {
-      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-      tempText = tempText.replaceAll( ",", "." );
-
-      BigDecimal db = new BigDecimal( tempText );
-      text.setText( db.toString() );
-
-      return db;
-    }
-    return null;
-  }
-
-  /**
-   * checks the user typed a string for a positive double value, if it is negative the value is set to 0.
-   * 
-   * @param comp
-   *            composite of the text field
-   * @param text
-   *            the text field
-   */
-  public static BigDecimal checkPositiveDoubleTextValue( final Composite comp, final Text text, Pattern pattern )
-  {
-    String tempText = text.getText();
-
-    final Matcher m = pattern.matcher( tempText );
-
-    if( !m.matches() )
-    {
-      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_RED ) );
-    }
-    else
-    {
-      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-      tempText = tempText.replaceAll( ",", "." );
-
-      BigDecimal db = new BigDecimal( tempText );
-      if( db.doubleValue() > 0 )
-      {
-        text.setText( db.toString() );
-      }
-      else
-      {
-        db = new BigDecimal( "0.0" );
-        text.setText( db.toString() );
-      }
-
-      return db;
-    }
-    return null;
   }
 
 }

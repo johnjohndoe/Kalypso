@@ -45,6 +45,8 @@ import java.awt.Graphics;
 import java.util.List;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -52,9 +54,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
@@ -69,14 +73,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeControlListener;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
@@ -84,6 +91,7 @@ import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.flood.binding.IFloodModel;
+import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -96,9 +104,20 @@ import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider;
+import org.kalypso.ui.editor.sldEditor.PolygonColorMapLabelProvider;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.NamedLayer;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -128,6 +147,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private IFloodModel m_model;
 
   private Object[] m_treeSelection;
+
+  private TableViewer m_colorMapTableViewer;
 
   public EventManagementWidget( )
   {
@@ -193,7 +214,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     treePanelLayout.leftMargin = 0;
     treePanel.setLayout( treePanelLayout );
 
-    m_eventViewer = new TreeViewer( treePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
+    m_eventViewer = new TreeViewer( treePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
     m_eventViewer.getControl().setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL ) );
     toolkit.adapt( m_eventViewer.getControl(), true, true );
 
@@ -201,7 +222,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final FillLayout treeButtonPanelLayout = new FillLayout( SWT.VERTICAL );
     treeButtonPanelLayout.spacing = 4;
     treeButtonPanel.setLayout( treeButtonPanelLayout );
-    // coverageButtonPanel.setLayout( new ColumnLayout() );
     treeButtonPanel.setLayoutData( new TableWrapData( TableWrapData.FILL, TableWrapData.FILL_GRAB ) );
 
     /* Info view */
@@ -235,25 +255,38 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     } );
 
     /* Color Map table */
-    final Composite createColorMapPanel = toolkit.createComposite( panel, SWT.BORDER );
-    createColorMapPanel.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
-
-    final Composite colormapPanel = toolkit.createComposite( panel, SWT.BORDER );
+    final Composite colormapPanel = toolkit.createComposite( panel, SWT.NONE );
     final TableWrapLayout colormapPanelLayout = new TableWrapLayout();
     colormapPanelLayout.numColumns = 2;
     colormapPanelLayout.makeColumnsEqualWidth = false;
+    colormapPanelLayout.bottomMargin = 0;
+    colormapPanelLayout.leftMargin = 0;
+    colormapPanelLayout.rightMargin = 0;
+    colormapPanelLayout.topMargin = 0;
     colormapPanel.setLayout( colormapPanelLayout );
-    colormapPanel.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+    TableWrapData colormapPanelData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB );
+    colormapPanel.setLayoutData( colormapPanelData );
 
-    final TableViewer colorMapTableViewer = new TableViewer( colormapPanel, SWT.BORDER );
-    colorMapTableViewer.getControl().setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
-    toolkit.adapt( colorMapTableViewer.getControl(), true, true );
+    m_colorMapTableViewer = new TableViewer( colormapPanel, SWT.BORDER );
+    TableWrapData colormapTableData = new TableWrapData( TableWrapData.FILL, TableWrapData.FILL_GRAB );
+    colormapTableData.heightHint = 200;
+    m_colorMapTableViewer.getControl().setLayoutData( colormapTableData );
+    toolkit.adapt( m_colorMapTableViewer.getControl(), true, true );
 
-    final Composite colormapPanelButtonPanel = toolkit.createComposite( colormapPanel, SWT.BORDER );
+    final Composite colormapPanelButtonPanel = toolkit.createComposite( colormapPanel, SWT.NONE );
+    final GridLayout colormapButtonPanelLayout = new GridLayout();
+    colormapButtonPanelLayout.marginHeight = 0;
+    colormapButtonPanelLayout.marginWidth = 0;
+    // colormapButtonPanelLayout.spacing = 4;
+    colormapPanelButtonPanel.setLayout( colormapButtonPanelLayout );
+    colormapPanelButtonPanel.setLayoutData( new TableWrapData( TableWrapData.FILL, TableWrapData.FILL ) );
 
     /* Fill contents */
     initalizeEventViewer( m_eventViewer );
     initalizeTreeActions( toolkit, treeButtonPanel );
+
+    initializeColorMapTableViewer( m_colorMapTableViewer );
+    initalizeColorMapActions( toolkit, colormapPanelButtonPanel );
 
     /* Hook Events */
     m_eventViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -264,6 +297,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         m_treeSelection = selection.toArray();
 
         featureComposite.disposeControl();
+
+        updateStylePanel( m_colorMapTableViewer );
 
         if( m_treeSelection != null && m_treeSelection.length > 0 )
         {
@@ -283,6 +318,118 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     return panel;
   }
 
+  private void initalizeColorMapActions( FormToolkit toolkit, Composite parent )
+  {
+    // We are reusing images of KalypsoGmlUi here
+    final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
+
+    createButton( toolkit, parent, new Action( "Generate ColorMap", generateID )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+       */
+      @Override
+      public void runWithEvent( final Event event )
+      {
+        handleGenerateColorMap( event );
+      }
+    } );
+
+  }
+
+  protected void handleGenerateColorMap( Event event )
+  {
+    // open colorMap dialog
+    final PolygonColorMap input = (PolygonColorMap) m_colorMapTableViewer.getInput();
+    if( input != null )
+    {
+      EventStyleDialog dialog = new EventStyleDialog( event.display.getActiveShell(), input );
+      if( dialog.open() == Window.OK )
+      {
+        m_colorMapTableViewer.refresh();
+
+        // TODO: save sld-file
+
+        m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
+      }
+    }
+  }
+
+  protected void updateStylePanel( TableViewer viewer )
+  {
+    final IRunoffEvent event = getCurrentEvent();
+    if( event == null )
+    {
+      // TODO: set input to null and hide/disable style editor
+      return;
+    }
+
+    /* get sld from event folder */
+    IFile styleFile = getSldFile( event );
+    PolygonColorMap colorMap = findColorMap( styleFile );
+
+    viewer.setInput( colorMap );
+  }
+
+  private PolygonColorMap findColorMap( IFile styleFile )
+  {
+    try
+    {
+      final StyledLayerDescriptor sld = SLDFactory.createSLD( ResourceUtilities.createURL( styleFile ) );
+      final NamedLayer wspLayer = sld.getNamedLayer( "wspLayer" );
+      final UserStyle style = (UserStyle) wspLayer.getStyle( "wspUserStyle" );
+      final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" );
+      final Rule wspRule = wspFts.getRule( "wspRule" );
+      final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) wspRule.getSymbolizers()[0];
+      return symb.getColorMap();
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+
+      return null;
+    }
+  }
+
+  private IFile getSldFile( IRunoffEvent event )
+  {
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    final IFolder eventsFolder = scenarioFolder.getFolder( "events" );
+    // TODO: change to file name
+    final IFolder eventFolder = eventsFolder.getFolder( event.getName() );
+    return eventFolder.getFile( "wsp.sld" );
+  }
+
+  private IRunoffEvent getCurrentEvent( )
+  {
+    if( m_treeSelection == null || m_treeSelection.length == 0 )
+      return null;
+
+    final Feature feature = (Feature) m_treeSelection[0];
+
+    final IRunoffEvent event = (IRunoffEvent) feature.getAdapter( IRunoffEvent.class );
+    if( event != null )
+      return event;
+
+    final Feature parent = feature.getParent();
+    if( parent == null )
+      return null;
+
+    return (IRunoffEvent) parent.getAdapter( IRunoffEvent.class );
+  }
+
+  private void initializeColorMapTableViewer( final TableViewer viewer )
+  {
+    viewer.setContentProvider( new PolygonColorMapContentProvider() );
+    viewer.setLabelProvider( new PolygonColorMapLabelProvider( viewer ) );
+
+    final Table viewerTable = viewer.getTable();
+    viewerTable.setLinesVisible( true );
+    viewerTable.setHeaderVisible( true );
+    viewerTable.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+  }
+
   private void initalizeEventViewer( final StructuredViewer viewer )
   {
     final GMLContentProvider contentProvider = new GMLContentProvider( false );
@@ -298,6 +445,10 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       final GMLXPath pathToModel = new GMLXPath( segment );
       final GMLXPath rootPath = new GMLXPath( pathToModel, IFloodModel.QNAME_PROP_EVENT_MEMBER );
       contentProvider.setRootPath( rootPath );
+
+      final IFeatureWrapperCollection<IRunoffEvent> events = m_model.getEvents();
+      if( events.size() > 0 )
+        m_eventViewer.setSelection( new StructuredSelection( events.get( 0 ) ), true );
     }
   }
 
@@ -423,6 +574,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     // TODO: collect all selected tins
 
     // TODO: update all collected tins
+
+    // TODO: check for existing sld . If none exists, create one
   }
 
   protected void handleJumpTo( )
