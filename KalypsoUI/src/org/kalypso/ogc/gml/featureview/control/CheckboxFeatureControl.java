@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
@@ -50,9 +50,10 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypsodeegree.model.feature.Feature;
@@ -101,13 +102,13 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
       public void widgetSelected( final SelectionEvent e )
       {
-        fireFeatureChange( new FeatureChange[] { getChange() } );
+        fireFeatureChange( getChange() );
         fireModified();
       }
 
       public void widgetDefaultSelected( final SelectionEvent e )
       {
-        fireFeatureChange( new FeatureChange[] { getChange() } );
+        fireFeatureChange( getChange() );
         fireModified();
       }
     } );
@@ -151,7 +152,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     }
   }
 
-  protected FeatureChange getChange( )
+  protected ICommand getChange( )
   {
     final Feature feature = getFeature();
 
@@ -164,7 +165,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
     // nur ändern, wenn sich wirklich was geändert hat
     if( (newData == null && oldData != null) || (newData != null && !newData.equals( oldData )) )
-      return new FeatureChange( feature, pt, newData );
+      return new ChangeFeatureCommand( feature, pt, newData );
 
     return null;
   }

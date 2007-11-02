@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
@@ -45,8 +45,8 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -114,10 +114,10 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_changelisteners.remove( l );
   }
 
-  protected final void fireFeatureChange( final FeatureChange[] changes )
+  protected final void fireFeatureChange( final ICommand changeCommand )
   {
     // do nothing if there are no changes
-    if( changes != null && changes.length == 0 )
+    if( changeCommand == null )
       return;
 
     final IFeatureChangeListener[] listeners = m_changelisteners.toArray( new IFeatureChangeListener[m_changelisteners.size()] );
@@ -127,7 +127,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
       {
         public void run( ) throws Exception
         {
-          listener.featureChanged( changes );
+          listener.featureChanged( changeCommand );
         }
       } );
     }

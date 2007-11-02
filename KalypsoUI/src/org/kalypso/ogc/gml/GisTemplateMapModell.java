@@ -83,11 +83,13 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class GisTemplateMapModell implements IMapModell
 {
+  private final IFeatureSelectionManager m_selectionManager;
+
   private final IMapModell m_modell;
 
   private final URL m_context;
 
-  private final IFeatureSelectionManager m_selectionManager;
+  private boolean m_isLoaded = true;
 
   /**
    * Special constructor for use only by the {@link CascadingKalypsoTheme}. Sets a special model as parent to use for
@@ -135,17 +137,26 @@ public class GisTemplateMapModell implements IMapModell
    */
   public void createFromTemplate( final Gismapview gisview ) throws Exception
   {
-    setName( gisview.getName() );
+    m_isLoaded = false;
 
-    for( final IKalypsoTheme theme : getAllThemes() )
-      if( !(theme instanceof KalypsoLegendTheme || theme instanceof ScrabLayerFeatureTheme) )
-        removeTheme( theme );
-    final Layers layerListType = gisview.getLayers();
+    try
+    {
+      setName( gisview.getName() );
 
-    final Object activeLayer = layerListType.getActive();
-    final List<JAXBElement< ? extends StyledLayerType>> layerList = layerListType.getLayer();
+      for( final IKalypsoTheme theme : getAllThemes() )
+        if( !(theme instanceof KalypsoLegendTheme || theme instanceof ScrabLayerFeatureTheme) )
+          removeTheme( theme );
+      final Layers layerListType = gisview.getLayers();
 
-    createFromTemplate( layerList, activeLayer );
+      final Object activeLayer = layerListType.getActive();
+      final List<JAXBElement< ? extends StyledLayerType>> layerList = layerListType.getLayer();
+
+      createFromTemplate( layerList, activeLayer );
+    }
+    finally
+    {
+      m_isLoaded = true;
+    }
   }
 
   public void createFromTemplate( final List<JAXBElement< ? extends StyledLayerType>> layerList, final Object activeLayer ) throws Exception
@@ -519,7 +530,6 @@ public class GisTemplateMapModell implements IMapModell
    */
   public boolean isLoaded( )
   {
-    // TODO Auto-generated method stub
-    return false;
+    return m_isLoaded;
   }
 }

@@ -1,30 +1,30 @@
 /*
  * --------------- Kalypso-Header --------------------------------------------------------------------
- * 
+ *
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
- * 
+ *
  * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
  * Germany http://www.tuhh.de/wb
- * 
+ *
  * and
- * 
+ *
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  * Contact:
- * 
+ *
  * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
- * 
+ *
  * ---------------------------------------------------------------------------------------------------
  */
 package org.kalypso.ui.editor.gmleditor.ui;
@@ -46,7 +46,10 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
@@ -55,10 +58,19 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * @author kuepfer
+ * @author Christoph Küpferle
+ * @author Gernot Belger
  */
-public class GMLEditorContentProvider2 implements ITreeContentProvider
+public class GMLContentProvider implements ITreeContentProvider
 {
+  private final ModellEventListener m_workspaceListener = new ModellEventListener()
+  {
+    public void onModellChange( ModellEvent modellEvent )
+    {
+      handleModelChanged( modellEvent );
+    }
+  };
+
   private TreeViewer m_viewer;
 
   private GMLWorkspace m_workspace;
@@ -69,6 +81,18 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    * If null, the root-feature is the root element of the tree.
    */
   private GMLXPath m_rootPath = new GMLXPath( "", null );
+
+  private final boolean m_showAssociations;
+
+  public GMLContentProvider( )
+  {
+    this( true );
+  }
+
+  public GMLContentProvider( final boolean showAssociations )
+  {
+    m_showAssociations = showAssociations;
+  }
 
   /**
    * Gets the children and updates the parent-hash.
@@ -108,46 +132,55 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
     final List<Object> result = new ArrayList<Object>();
     if( parentElement instanceof Feature )
-    {
-      final Feature parentFE = (Feature) parentElement;
-      final IPropertyType[] properties = parentFE.getFeatureType().getProperties();
+      collectFeatureChildren( parentElement, result );
+    else if( parentElement instanceof FeatureAssociationTypeElement )
+      collectAssociationChildren( (FeatureAssociationTypeElement) parentElement, result );
+    else if( parentElement instanceof FeatureList )
+      return ((FeatureList) parentElement).toArray(); // can happen in !showAssociation's mode
 
-      for( final IPropertyType property : properties )
-      {
-        if( property instanceof IRelationType )
-          result.add( new FeatureAssociationTypeElement( (Feature) parentElement, (IRelationType) property ) );
-
-        if( GeometryUtilities.isGeometry( property ) )
-        {
-          final Object value = parentFE.getProperty( property );
-          if( value != null )
-            result.add( value );
-        }
-      }
-      return result.toArray();
-    }
-
-    if( parentElement instanceof FeatureAssociationTypeElement )
-    {
-      final Feature parentFeature = ((FeatureAssociationTypeElement) parentElement).getParentFeature();
-      final IRelationType ftp = ((FeatureAssociationTypeElement) parentElement).getAssociationTypeProperty();
-      final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp );
-      for( int i = 0; i < features.length; i++ )
-      {
-        final Feature feature = features[i];
-        if( feature != null )
-        {
-          if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) || feature instanceof XLinkedFeature_Impl )
-            result.add( new LinkedFeatureElement2( feature ) );
-          else
-            result.add( feature );
-        }
-      }
-      return result.toArray();
-    }
-
-    // this should never happen
     return result.toArray();
+  }
+
+  private void collectFeatureChildren( final Object parentElement, final List<Object> result )
+  {
+    final Feature parentFE = (Feature) parentElement;
+    final IPropertyType[] properties = parentFE.getFeatureType().getProperties();
+
+    for( final IPropertyType property : properties )
+    {
+      if( property instanceof IRelationType )
+      {
+        final FeatureAssociationTypeElement fate = new FeatureAssociationTypeElement( (Feature) parentElement, (IRelationType) property );
+        if( m_showAssociations )
+          result.add( fate );
+        else
+          collectAssociationChildren( fate, result );
+      }
+      else if( GeometryUtilities.isGeometry( property ) )
+      {
+        final Object value = parentFE.getProperty( property );
+        if( value != null )
+          result.add( value );
+      }
+    }
+  }
+
+  private void collectAssociationChildren( final FeatureAssociationTypeElement fate, final List<Object> result )
+  {
+    final Feature parentFeature = (fate).getParentFeature();
+    final IRelationType ftp = (fate).getAssociationTypeProperty();
+    final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp );
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature feature = features[i];
+      if( feature != null )
+      {
+        if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) || feature instanceof XLinkedFeature_Impl )
+          result.add( new LinkedFeatureElement2( feature ) );
+        else
+          result.add( feature );
+      }
+    }
   }
 
   /**
@@ -178,6 +211,10 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     {
       final Feature feature = (Feature) element;
       final Feature parent = feature.getParent();
+
+      if( !m_showAssociations )
+        return parent;
+
       if( parent != null )
       {
         final Object[] parentChildren = getChildren( parent );
@@ -253,7 +290,7 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
     if( parent instanceof Feature )
     {
       final GMLXPathSegment segment = m_rootPath.getSegment( m_rootPath.getSegmentSize() - 1 );
-      final QName childName = QName.valueOf( segment.toString() );
+      final QName childName = segment.getQName();
       final Object[] children = getChildren( parent );
       for( final Object object : children )
       {
@@ -275,6 +312,9 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
    */
   public void dispose( )
   {
+    if( m_workspace != null )
+      m_workspace.removeModellListener( m_workspaceListener );
+
     m_viewer = null;
     m_workspace = null;
   }
@@ -289,11 +329,17 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
 
     if( oldInput != newInput )
     {
-      if( oldInput != null )
+      if( m_workspace != null )
+      {
+        m_workspace.removeModellListener( m_workspaceListener );
         m_workspace = null;
+      }
 
       if( newInput instanceof GMLWorkspace )
+      {
         m_workspace = (GMLWorkspace) newInput;
+        m_workspace.addModellListener( m_workspaceListener );
+      }
       else
         m_workspace = null;
 
@@ -418,4 +464,11 @@ public class GMLEditorContentProvider2 implements ITreeContentProvider
       }
     }
   }
+
+  protected void handleModelChanged( final ModellEvent modellEvent )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
 }

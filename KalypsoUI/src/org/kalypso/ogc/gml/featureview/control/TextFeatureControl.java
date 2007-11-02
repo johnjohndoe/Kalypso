@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
@@ -52,10 +52,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypsodeegree.model.feature.Feature;
@@ -114,7 +115,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
        * @see org.eclipse.swt.events.SelectionAdapter#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void widgetDefaultSelected( final SelectionEvent e )
       {
         fireFeatureChange( getChanges() );
       }
@@ -186,7 +187,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     return m_modifier.getLabel( getFeature() );
   }
 
-  protected FeatureChange[] getChanges( )
+  protected ICommand getChanges( )
   {
     final Feature feature = getFeature();
     final IPropertyType pt = getFeatureTypeProperty();
@@ -206,9 +207,9 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
     // nur ändern, wenn sich wirklich was geändert hat
     if( (newData == null && oldData != null) || (newData != null && !m_modifier.equals( newData, oldData )) )
-      return new FeatureChange[] { new FeatureChange( feature, pt, newData ) };
+      return new ChangeFeatureCommand( feature, pt, newData );
 
-    return new FeatureChange[] {};
+    return null;
   }
 
   protected void updateValid( )

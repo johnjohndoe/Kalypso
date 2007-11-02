@@ -9,9 +9,9 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -96,9 +96,9 @@ public class SubFeatureControl extends AbstractFeatureControl
 
     m_fc.addChangeListener( new IFeatureChangeListener()
     {
-      public void featureChanged( final FeatureChange[] changes )
+      public void featureChanged( final ICommand changeCommand )
       {
-        fireFeatureChange( changes );
+        fireFeatureChange( changeCommand );
       }
 
       public void openFeatureRequested( final Feature featureToOpen, final IPropertyType ftpToOpen )
@@ -140,7 +140,7 @@ public class SubFeatureControl extends AbstractFeatureControl
 // // Do not do this!
 // // This could be a property of the Combo-Feature-Control to select the first element, if nothing is selected
 // beforehand
-//          
+//
 // f = ((Feature) ((List) property).get( 0 ));
 // // final String xpath = feature.getWorkspace().getContext() + "#" + f.getId();
 // // final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( feature, f.getParentRelation(),

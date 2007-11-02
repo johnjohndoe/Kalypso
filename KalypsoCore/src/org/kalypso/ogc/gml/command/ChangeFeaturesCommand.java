@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class ChangeFeaturesCommand implements ICommand
 {
@@ -61,7 +61,7 @@ public class ChangeFeaturesCommand implements ICommand
   public ChangeFeaturesCommand( final GMLWorkspace workspace, final FeatureChange[] changes )
   {
     // just to avoid the exception...
-    if(changes == null)
+    if( changes == null )
       m_newChanges = new FeatureChange[0];
     else
       m_newChanges = changes;
@@ -73,8 +73,13 @@ public class ChangeFeaturesCommand implements ICommand
 
       final Object oldValue = change.getFeature().getProperty( change.getProperty() );
       m_oldChanges[i] = new FeatureChange( change.getFeature(), change.getProperty(), oldValue );
-//      System.out.println("FC prop: " + change.getProperty());
+// System.out.println("FC prop: " + change.getProperty());
     }
+  }
+
+  public FeatureChange[] getFeatureChanges( )
+  {
+    return m_newChanges;
   }
 
   /**
@@ -120,9 +125,8 @@ public class ChangeFeaturesCommand implements ICommand
   protected void applyChanges( final FeatureChange[] changes )
   {
     final Set<Feature> changedFeaturesList = new HashSet<Feature>();
-    for( int i = 0; i < changes.length; i++ )
+    for( final FeatureChange change : changes )
     {
-      final FeatureChange change = changes[i];
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
       changedFeaturesList.add( change.getFeature() );
     }

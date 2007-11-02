@@ -40,13 +40,16 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * This command changes the property of one feature
+ * 
  * @author Gernot Belger
  */
-public class FeatureChange
+public class ChangeFeatureCommand implements ICommand
 {
   private final Feature m_feature;
 
@@ -54,25 +57,66 @@ public class FeatureChange
 
   private final Object m_newValue;
 
-  public FeatureChange( final Feature feature, final IPropertyType property, final Object newValue )
+  private final Object m_oldValue;
+
+  public ChangeFeatureCommand( final Feature feature, final IPropertyType property, final Object newValue )
   {
     m_feature = feature;
     m_property = property;
     m_newValue = newValue;
+    m_oldValue = feature.getProperty( property );
   }
 
-  public Feature getFeature( )
+  /**
+   * @see org.kalypso.commons.command.ICommand#isUndoable()
+   */
+  public boolean isUndoable( )
   {
-    return m_feature;
+    return true;
   }
 
-  public Object getNewValue( )
+  /**
+   * @see org.kalypso.commons.command.ICommand#process()
+   */
+  public void process( ) throws Exception
   {
-    return m_newValue;
+    applyChanges( m_newValue );
   }
 
-  public IPropertyType getProperty( )
+  /**
+   * @see org.kalypso.commons.command.ICommand#redo()
+   */
+  public void redo( ) throws Exception
   {
-    return m_property;
+    applyChanges( m_newValue );
+  }
+
+  /**
+   * @see org.kalypso.commons.command.ICommand#undo()
+   */
+  public void undo( ) throws Exception
+  {
+    applyChanges( m_oldValue );
+  }
+
+  /**
+   * @see org.kalypso.commons.command.ICommand#getDescription()
+   */
+  public String getDescription( )
+  {
+    return "Feature verändern";
+  }
+
+  protected void applyChanges( final Object valueToSet )
+  {
+    m_feature.setProperty( m_property, valueToSet );
+
+    final FeatureChange change = new FeatureChange( m_feature, m_property, valueToSet );
+    m_feature.getWorkspace().fireModellEvent( new FeatureChangeModellEvent( m_feature.getWorkspace(), new FeatureChange[] { change } ) );
+  }
+
+  public FeatureChange asFeatureChange( )
+  {
+    return new FeatureChange( m_feature, m_property, m_newValue );
   }
 }

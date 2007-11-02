@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -90,6 +91,8 @@ public final class ActivateThemeJob extends Job
   public ActivateThemeJob( final IMapModell mapModell, final String name, final String themeContext )
   {
     super( name );
+
+    Assert.isNotNull( mapModell );
 
     m_themeContext = themeContext;
     m_mapModell = mapModell;

@@ -66,12 +66,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jwsdp.JaxbUtilities;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -109,9 +108,9 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private final IFeatureChangeListener m_changeListener = new IFeatureChangeListener()
   {
-    public void featureChanged( final FeatureChange[] changes )
+    public void featureChanged( final ICommand changeCommand )
     {
-      onFeatureChanged( changes );
+      onFeatureChanged( changeCommand );
     }
 
     public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
@@ -393,9 +392,9 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     }
   }
 
-  protected void onFeatureChanged( final FeatureChange[] changes )
+  protected void onFeatureChanged( final ICommand changeCommand )
   {
-    m_commandtarget.postCommand( new ChangeFeaturesCommand( m_workspace, changes ), null );
+    m_commandtarget.postCommand( changeCommand, null );
   }
 
   /**

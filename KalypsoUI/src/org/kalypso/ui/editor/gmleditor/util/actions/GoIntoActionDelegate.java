@@ -48,7 +48,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 
 /**
@@ -74,10 +74,10 @@ public class GoIntoActionDelegate implements IEditorActionDelegate
   {
     final TreeViewer treeViewer = m_targetEditor.getTreeView().getTreeViewer();
     final IContentProvider cp = treeViewer.getContentProvider();
-    if( !(cp instanceof GMLEditorContentProvider2) )
+    if( !(cp instanceof GMLContentProvider) )
       return;
 
-    final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) cp;
+    final GMLContentProvider contentProvider = (GMLContentProvider) cp;
     final IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
     contentProvider.goInto( selection.getFirstElement() );
 

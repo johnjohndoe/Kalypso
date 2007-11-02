@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorContentProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 
 /**
@@ -72,9 +72,9 @@ public class GoUpActionDelegate implements IEditorActionDelegate
   public void run( final IAction action )
   {
     final IContentProvider cp = m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
-    if( cp instanceof GMLEditorContentProvider2 )
+    if( cp instanceof GMLContentProvider )
     {
-      final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
+      final GMLContentProvider contentProvider = (GMLContentProvider) m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
       contentProvider.goUp();
     }
 
@@ -101,9 +101,9 @@ public class GoUpActionDelegate implements IEditorActionDelegate
     }
 
     final IContentProvider cp = m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
-    if( cp instanceof GMLEditorContentProvider2 )
+    if( cp instanceof GMLContentProvider )
     {
-      final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) cp;
+      final GMLContentProvider contentProvider = (GMLContentProvider) cp;
       action.setEnabled( contentProvider.canGoUp() );
     }
     else

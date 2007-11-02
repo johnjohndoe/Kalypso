@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
@@ -118,13 +118,13 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     final Object[] objects = featureList.toArray();
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) m_viewer.getInput();
     final GMLWorkspace workspace = theme.getWorkspace();
-    for( int i = 0, j = objects.length; i < j; i++ )
+    for( final Object element : objects )
     {
-      if( objects[i] instanceof Feature )
-        result.add( (Feature) objects[i] );
-      else if( objects[i] instanceof String ) // it is a ID
+      if( element instanceof Feature )
+        result.add( (Feature) element );
+      else if( element instanceof String ) // it is a ID
       {
-        final Feature feature = workspace.getFeature( (String) objects[i] );
+        final Feature feature = workspace.getFeature( (String) element );
         if( feature != null )
           result.add( feature );
       }
@@ -155,7 +155,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
-  public void inputChanged( final Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( oldInput instanceof IKalypsoFeatureTheme )
       ((IKalypsoFeatureTheme) oldInput).removeKalypsoThemeListener( m_themeListener );
@@ -184,6 +184,9 @@ public class LayerTableContentProvider implements IStructuredContentProvider
       return;
 
     // if viewer selection and tree selection are the same, do nothing
+    if( m_selectionManager == null )
+      return;
+
     final IStructuredSelection managerSelection = KalypsoFeatureThemeSelection.filter( m_selectionManager.toList(), theme );
     final Object[] managerFeatures = managerSelection.toArray();
     if( Arrays.equalsUnordered( managerFeatures, selection.toArray() ) )
@@ -194,7 +197,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     // TODO: remove only previously selected
     // collect elements as "Feature"
     final List<Feature> featureToRemove = new ArrayList<Feature>();
-    for( Iterator iter = featureList.iterator(); iter.hasNext(); )
+    for( final Iterator iter = featureList.iterator(); iter.hasNext(); )
     {
       final Object element = iter.next();
       if( element instanceof Feature )

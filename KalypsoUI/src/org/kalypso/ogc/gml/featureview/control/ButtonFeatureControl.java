@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
@@ -53,11 +53,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog;
@@ -93,9 +95,9 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
     m_listener = new IFeatureChangeListener()
     {
-      public void featureChanged( final FeatureChange[] changes )
+      public void featureChanged( final ICommand changeCommand )
       {
-        fireFeatureChange( changes );
+        fireFeatureChange( changeCommand );
       }
 
       public void openFeatureRequested( final Feature featureToOpen, final IPropertyType ftpToOpen )
@@ -200,7 +202,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       final Collection<FeatureChange> c = new LinkedList<FeatureChange>();
       m_dialog.collectChanges( c );
       final FeatureChange[] changes = c.toArray( new FeatureChange[c.size()] );
-      fireFeatureChange( changes );
+      fireFeatureChange( new ChangeFeaturesCommand( getFeature().getWorkspace(), changes ) );
 
       fireModfied();
 

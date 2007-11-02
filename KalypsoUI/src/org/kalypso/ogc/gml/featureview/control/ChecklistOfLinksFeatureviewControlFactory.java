@@ -38,43 +38,28 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.mapmodel.visitor;
+package org.kalypso.ogc.gml.featureview.control;
 
-import javax.xml.namespace.QName;
+import java.util.Properties;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Thomas Jung
+ * @author Gernot Belger
  */
-public class LoadStatusPredicater implements IKalypsoThemePredicate
+public class ChecklistOfLinksFeatureviewControlFactory implements IFeatureviewControlFactory
 {
-  private final QName[] m_QNames = new QName[] { GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING_PROPERTY };
-
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
    */
-  public boolean decide( IKalypsoTheme theme )
+  public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    if( theme instanceof IKalypsoFeatureTheme )
-    {
-      final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
-      final IFeatureType featureType = fTheme.getFeatureType();
-      if( featureType == null )
-        return true;
-      final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
+    final String showSelectButtonsStr = arguments.getProperty( ChecklistOfLinksFeatureControl.PARAM_SELECT_BUTTONS, "true" );
+    final Boolean showSelectButtons = Boolean.parseBoolean( showSelectButtonsStr );
 
-      if( allGeomteryProperties.length > 0 && allGeomteryProperties[0].getValueQName().equals( m_QNames[0] ) || allGeomteryProperties[0].getValueQName().equals( m_QNames[1] ) )
-        if( fTheme.isLoaded() == false )
-          return false;
-    }
-    return true;
-
+    return new ChecklistOfLinksFeatureControl( feature, pt, showSelectButtons );
   }
 
 }
