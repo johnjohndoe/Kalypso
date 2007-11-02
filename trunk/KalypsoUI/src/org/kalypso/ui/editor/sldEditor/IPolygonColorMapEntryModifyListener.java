@@ -38,29 +38,15 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.sld;
-
-import java.util.List;
+package org.kalypso.ui.editor.sldEditor;
 
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.xml.Marshallable;
 
 /**
- * @author Thomas Jung
+ * @author jung
+ * 
  */
-public interface PolygonColorMap extends Marshallable
+public interface IPolygonColorMapEntryModifyListener
 {
-  final String SLDNS_EXT = "http://www.opengis.net/sldExt";
-
-  public PolygonColorMapEntry[] getColorMap( );
-
-  public void setColorMap( final List<PolygonColorMapEntry> colorMap );
-
-  public void addColorMapClass( final PolygonColorMapEntry colorMapEntry );
-
-  public PolygonColorMapEntry findEntry( String string, final Feature feature );
-
-  public void replaceColorMap( List<PolygonColorMapEntry> colorMapList );
-
+  public void onEntryChanged( final Object source, final PolygonColorMapEntry entry );
 }

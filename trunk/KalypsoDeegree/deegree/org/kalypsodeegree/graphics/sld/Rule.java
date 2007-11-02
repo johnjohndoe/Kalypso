@@ -232,12 +232,6 @@ public interface Rule
   Symbolizer[] getSymbolizers( );
 
   /**
-   * 
-   * @return the Symbolizer for the rule
-   */
-  Symbolizer getSymbolizer( String SymbolizerName );
-
-  /**
    * Sets a set of <Symbolizer>s.
    * 
    * @param symbolizers
