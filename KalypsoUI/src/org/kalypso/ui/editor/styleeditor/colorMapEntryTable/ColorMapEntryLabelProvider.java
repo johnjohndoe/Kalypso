@@ -54,30 +54,29 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
  */
 public class ColorMapEntryLabelProvider extends LabelProvider implements ITableLabelProvider
 {
-
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
   public String getColumnText( Object element, int columnIndex )
   {
     String result = "";
-    ColorMapEntry colorMapEntry = (ColorMapEntry)element;
+    ColorMapEntry colorMapEntry = (ColorMapEntry) element;
     switch( columnIndex )
     {
-    case 0:
-      result = colorMapEntry.getLabel();
-      break;
-    case 1:
-      result = colorMapEntry.getQuantity() + "";
-      break;
-    case 2:
-      //no label
-      break;
-    case 3:
-      result = colorMapEntry.getOpacity() + "";
-      break;
-    default:
-      break;
+      case 0:
+        result = colorMapEntry.getLabel();
+        break;
+      case 1:
+        result = colorMapEntry.getQuantity() + "";
+        break;
+      case 2:
+        // no label
+        break;
+      case 3:
+        result = colorMapEntry.getOpacity() + "";
+        break;
+      default:
+        break;
     }
     return result;
   }
@@ -92,9 +91,8 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
     {
       image = new Image( ColorMapEntryTable.table.getDisplay(), 25, 15 );
       GC gc = new GC( image );
-      java.awt.Color color = ( (ColorMapEntry)element ).getColor();
-      gc.setBackground( new Color( ColorMapEntryTable.table.getDisplay(), color.getRed(), color.getGreen(), color
-          .getBlue() ) );
+      java.awt.Color color = ((ColorMapEntry) element).getColor();
+      gc.setBackground( new Color( ColorMapEntryTable.table.getDisplay(), color.getRed(), color.getGreen(), color.getBlue() ) );
       gc.fillRectangle( image.getBounds() );
       gc.dispose();
     }

@@ -80,11 +80,6 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<sldExt:PolygonColorMapEntry>" );
 
-    sb.append( ((Marshallable) m_fill).exportAsXML() );
-
-    if( m_stroke != null )
-      sb.append( ((Marshallable) m_stroke).exportAsXML() );
-
     sb.append( "<sldExt:label>" );
     sb.append( ((Marshallable) m_label).exportAsXML() );
     sb.append( "</sldExt:label>" );
@@ -96,6 +91,12 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
     sb.append( "<sldExt:to>" );
     sb.append( ((Marshallable) m_to).exportAsXML() );
     sb.append( "</sldExt:to>" );
+
+    if( m_stroke != null )
+      sb.append( ((Marshallable) m_stroke).exportAsXML() );
+
+    if( m_fill != null )
+      sb.append( ((Marshallable) m_fill).exportAsXML() );
 
     sb.append( "</sldExt:PolygonColorMapEntry>" );
 

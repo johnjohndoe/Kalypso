@@ -139,7 +139,7 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
   {
     final StringBuffer sb = new StringBuffer();
     sb.append( "scale constraint:  >=" + getMinScaleDenominator() + " AND <" + getMaxScaleDenominator() + "\n" );
-    sb.append( "<SurfacePolygonSymbolizer xmlns:sldExt=\"" + SLDFactory.SLDNS_EXT + "\"" );
+    sb.append( "<sldExt:SurfacePolygonSymbolizer xmlns:sldExt=\"" + SLDFactory.SLDNS_EXT + "\"" );
 
     final UOM uom = getUom();
 
@@ -160,7 +160,7 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
       sb.append( getColorMap() ).append( "\n" );
     }
 
-    sb.append( "</SurfacePolygonSymbolizer>\n" );
+    sb.append( "</sldExt:SurfacePolygonSymbolizer>\n" );
 
     return sb.toString();
   }

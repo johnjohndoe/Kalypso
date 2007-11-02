@@ -114,7 +114,7 @@ public class Rule_Impl implements Rule, Marshallable
   /**
    * default constructor
    */
-  Rule_Impl()
+  Rule_Impl( )
   {
     symbolizers = new ArrayList();
   }
@@ -122,8 +122,7 @@ public class Rule_Impl implements Rule, Marshallable
   /**
    * constructor initializing the class with the <Rule>
    */
-  Rule_Impl( Symbolizer[] symbolizers, String name, String title, String abstract_, LegendGraphic legendGraphic,
-      Filter filter, boolean elseFilter, double minScaleDenominator, double maxScaleDenominator )
+  Rule_Impl( Symbolizer[] symbolizers, String name, String title, String abstract_, LegendGraphic legendGraphic, Filter filter, boolean elseFilter, double minScaleDenominator, double maxScaleDenominator )
   {
     this();
     setSymbolizers( symbolizers );
@@ -142,7 +141,7 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return the name of the rule
    */
-  public String getName()
+  public String getName( )
   {
     return name;
   }
@@ -151,7 +150,7 @@ public class Rule_Impl implements Rule, Marshallable
    * sets the name of the rule. this for machine interpreting.
    * 
    * @param name
-   *          the name of the rule
+   *            the name of the rule
    */
   public void setName( String name )
   {
@@ -163,7 +162,7 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return the title of the rule
    */
-  public String getTitle()
+  public String getTitle( )
   {
     return title;
   }
@@ -172,7 +171,7 @@ public class Rule_Impl implements Rule, Marshallable
    * sets the human readable title of the rule
    * 
    * @param title
-   *          the title of the rule
+   *            the title of the rule
    */
   public void setTitle( String title )
   {
@@ -184,7 +183,7 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return the abstract of the rule
    */
-  public String getAbstract()
+  public String getAbstract( )
   {
     return abstract_;
   }
@@ -193,7 +192,7 @@ public class Rule_Impl implements Rule, Marshallable
    * sets the human readable abstract of the rule
    * 
    * @param abstract_
-   *          the abstract of the rule
+   *            the abstract of the rule
    */
   public void setAbstract( String abstract_ )
   {
@@ -205,7 +204,7 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return the legendGraphic of the rule
    */
-  public LegendGraphic getLegendGraphic()
+  public LegendGraphic getLegendGraphic( )
   {
     return legendGraphic;
   }
@@ -214,7 +213,7 @@ public class Rule_Impl implements Rule, Marshallable
    * sets the LegendGraphic element
    * 
    * @param legendGraphic
-   *          the legendGraphic of the rule
+   *            the legendGraphic of the rule
    */
   public void setLegendGraphic( LegendGraphic legendGraphic )
   {
@@ -227,7 +226,7 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return the filter element
    */
-  public Filter getFilter()
+  public Filter getFilter( )
   {
     return filter;
   }
@@ -236,7 +235,7 @@ public class Rule_Impl implements Rule, Marshallable
    * sets the <Filter>
    * 
    * @param filter
-   *          the filter element
+   *            the filter element
    */
   public void setFilter( Filter filter )
   {
@@ -249,7 +248,7 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return true if the rule has an elseFilter
    */
-  public boolean hasElseFilter()
+  public boolean hasElseFilter( )
   {
     return elseFilter;
   }
@@ -258,7 +257,7 @@ public class Rule_Impl implements Rule, Marshallable
    * sets the <ElseFilter>
    * 
    * @param elseFilter
-   *          an elseFilter
+   *            an elseFilter
    */
   public void setElseFilter( boolean elseFilter )
   {
@@ -272,7 +271,7 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return the MinScaleDenominator for the rule
    */
-  public double getMinScaleDenominator()
+  public double getMinScaleDenominator( )
   {
     return minScaleDenominator;
   }
@@ -281,7 +280,7 @@ public class Rule_Impl implements Rule, Marshallable
    * sets the <MinScaleDenominator>
    * 
    * @param minScaleDenominator
-   *          the MinScaleDenominator for the rule
+   *            the MinScaleDenominator for the rule
    */
   public void setMinScaleDenominator( double minScaleDenominator )
   {
@@ -295,7 +294,7 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return the MaxScaleDenominator for the rule
    */
-  public double getMaxScaleDenominator()
+  public double getMaxScaleDenominator( )
   {
     return maxScaleDenominator;
   }
@@ -304,7 +303,7 @@ public class Rule_Impl implements Rule, Marshallable
    * sets the <MaxScaleDenominator>
    * 
    * @param maxScaleDenominator
-   *          the MaxScaleDenominator for the rule
+   *            the MaxScaleDenominator for the rule
    */
   public void setMaxScaleDenominator( double maxScaleDenominator )
   {
@@ -325,16 +324,16 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return the Symbolizer for the rule
    */
-  public Symbolizer[] getSymbolizers()
+  public Symbolizer[] getSymbolizers( )
   {
-    return (Symbolizer[])symbolizers.toArray( new Symbolizer[symbolizers.size()] );
+    return (Symbolizer[]) symbolizers.toArray( new Symbolizer[symbolizers.size()] );
   }
 
   /**
    * sets the <Symbolizer>
    * 
    * @param symbolizers
-   *          symbolizers for the rule
+   *            symbolizers for the rule
    */
   public void setSymbolizers( Symbolizer[] symbolizers )
   {
@@ -353,7 +352,7 @@ public class Rule_Impl implements Rule, Marshallable
    * adds a <Symbolizer>
    * 
    * @param symbolizer
-   *          symbolizer to add
+   *            symbolizer to add
    */
   public void addSymbolizer( Symbolizer symbolizer )
   {
@@ -364,7 +363,7 @@ public class Rule_Impl implements Rule, Marshallable
    * Removes a <Symbolizer>from a set of Symbolizers.
    * 
    * @param symbolizer
-   *          symbolizer to remove
+   *            symbolizer to remove
    */
   public void removeSymbolizer( Symbolizer symbolizer )
   {
@@ -379,7 +378,7 @@ public class Rule_Impl implements Rule, Marshallable
    * 
    * @return xml representation of the Rule
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
@@ -415,7 +414,7 @@ public class Rule_Impl implements Rule, Marshallable
     sb.append( "</MaxScaleDenominator>" );
     for( int i = 0; i < symbolizers.size(); i++ )
     {
-      sb.append( ( (Marshallable)symbolizers.get( i ) ).exportAsXML() );
+      sb.append( ((Marshallable) symbolizers.get( i )).exportAsXML() );
     }
     sb.append( "</Rule>" );
 
@@ -423,12 +422,4 @@ public class Rule_Impl implements Rule, Marshallable
     return sb.toString();
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.Rule#getSymbolizer(java.lang.String)
-   */
-  public Symbolizer getSymbolizer( String SymbolizerName )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
 }
