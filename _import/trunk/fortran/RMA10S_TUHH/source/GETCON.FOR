@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007    0:22 am
+C     Last change:  WP   25 Oct 2007    9:00 am
       SUBROUTINE GETCON
       USE BLK10MOD
       USE BLKSANMOD
@@ -8,17 +8,8 @@ C     Routine to get elements connected to nodes and allocate areas
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG95      INCLUDE 'BLKSAND.COM'
 
-!nis,may07
-!Add midside node for polynom approach
-!      !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente (wegen Mittseitenknoten -9999)
       DO N=1,NE
-!      !nis,feb07: Allow for
         IF (IMAT(N) .LT. 900  .OR. IMAT(N) .GT. 999) then
-!        IF((IMAT(N) .LT. 900  .OR. IMAT(N) .GT. 999).and.
-!      !+      (nop(n,2).NE.-9999)) THEN
-!     +       (nop(n,2) > -1000)) then
-!      !-
-!-
           NCN=NCORN(N)
 	    DO M=1,NCN
             DO I=1,12
@@ -38,28 +29,6 @@ CIPK AUG95      INCLUDE 'BLKSAND.COM'
 	      STOP
   250       CONTINUE
           ENDDO
-!      !nis,feb07: Allow for numbered midside nodes of Flow1DFE elements
-!          ELSEIF((imat(N) .LT. 900  .OR. IMAT(N) .GT. 999).and.
-!      !+         (nop(n,2).eq.-9999)) then
-!     +         (nop(n,2) < -1000)) then
-!      !-
-!          NCN=NCORN(N)
-!	    DO M=1,NCN,2
-!            DO I=1,12
-!		    IF(ELTON(NOP(N,M),I) .EQ. 0) THEN
-!	          ELTON(NOP(N,M),I) = N
-!	          GO TO 251
-!	        ENDIF
-!	      ENDDO
-!  	      WRITE(75,*)
-!     +      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
-!            WRITE(*,*)
-!     +      'STOP!  TOO MANY ELEMENT CONNECTED TO NODE',NOP(N,M)
-!	      STOP
-!  251       CONTINUE
-!          ENDDO
-!Add midside node for polynom approach
-!-
 	ENDIF
       ENDDO
 

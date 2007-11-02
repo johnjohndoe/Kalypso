@@ -13,4 +13,5 @@ OBJDIR=../objs/
 LINK=@lf95 @%rf -ng -exe %ex
 
 TARGET=../exe/RMA10S35Kalypso.exe
+#TARGET=../source/RMA10S35KalypsoDebug.exe
 

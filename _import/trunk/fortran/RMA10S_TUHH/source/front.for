@@ -1,4 +1,4 @@
-C     Last change:  WP   25 Sep 2007    2:30 pm
+C     Last change:  WP   24 Oct 2007    3:23 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -216,16 +216,10 @@ CIPK NOV99     Either process surface integrals or collapse to 2-d
 CIPK MAR05
 !nis,may07
 
-              !material type 89 is used for polynom approach
-              if ( imat(n) /= 89 ) then
-                IF(INOTR .EQ. 0) THEN
-                  CALL COEF1(N,NRX)
-                ELSE
-                  CALL COEF1NT(N,NRX)
-                  endif
-              !use polynom approach
-              ELSEif( imat(n) == 89 ) then
-                call coef1dFE(n,nrx)
+              IF(INOTR .EQ. 0) THEN
+                CALL COEF1(N,NRX)
+              ELSE
+                CALL COEF1NT(N,NRX)
               endif
 
 C     Modify tests to allows for IDIFSW

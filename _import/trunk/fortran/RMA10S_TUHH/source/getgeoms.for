@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  WP    2 Oct 2007    9:08 pm
+C     Last change:  WP   25 Oct 2007   10:37 am
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -524,10 +524,6 @@ C-
 C-
 C....... Establish preliminary element types
 C-
-
-cWP Jan 2006, writing informations
-!        write (*, 999) J, NCORN(J), IMAT(J)
-!  999   format (1X, 'ELEM ', I8, ' NCORN(J) = ', I4, '  IMAT(J) = ', I4)
 
           IF(NCORN(J) .GT. 5) THEN
             NETYP(J)=16
@@ -1228,11 +1224,6 @@ cipk aug97 end changes
               !x- and y-distances
               DX = cord(n1,1) - cord(n2,1)
               DY = cord(n1,2) - cord(n2,2)
-              !nis,jan07,testing
-              !WRITE(*,*) DX, cord(n1,1), cord(n2,1)
-              !WRITE(*,*) DY, cord(n1,2), cord(n2,2)
-              !-
-
 
               !chord-length
               translength = sqrt(DX*DX + DY*DY)
@@ -1249,15 +1240,10 @@ cipk aug97 end changes
               !assign the value to the nodes of the line-coupling, the midside nodes will be filled in check.subroutine
               assigning: do j = 2, lmt(Translines(i,2))-1
                 alfak(Line(Translines(i,2),j)) = alfak_temp
-                !nis,jan07: Finding out what the global flow-angle does
-                !testingversion: alfak(Line(Translines(i,2),j)) = alfak_temp - 3.1415926
-                !-
               ENDDO assigning
 
               !nis,jan07,testing
               WRITE(*,*) alfak_temp, line(Translines(i,2),2)
-              !pause
-              !-
 
               !jump out of loop over all transitions
               EXIT Transitiontest

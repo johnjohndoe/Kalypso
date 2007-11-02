@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   26 Sep 2007   11:46 am
+C     Last change:  WP   24 Oct 2007    9:21 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -1052,7 +1052,7 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 
         !calculation of friction factor for roughness term in differential equation
         FFACT = lambdaTot(nn)/8.0
-      !-
+        !-
 
       ENDIF
 

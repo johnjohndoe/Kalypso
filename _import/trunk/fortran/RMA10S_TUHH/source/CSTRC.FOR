@@ -1,4 +1,4 @@
-C     Last change:  WP   29 Aug 2007    3:08 pm
+C     Last change:  WP    2 Oct 2007    9:24 pm
 cipk  last update nov 28 2006 allow for all 1-d control structure options
       SUBROUTINE CSTRC(NN)
       USE BLK10MOD
@@ -84,7 +84,7 @@ c     skip mid-side in loop
         IF(N1 .NE. 0) THEN
           NA=(KK-1)*NDF+1
           !EFa Apr07, if-clause
-          if (width(n1)==0) then
+          if (width(n1) == 0.0) then
             estifm(1,na)=dir(n1)*ah(n1)
           else
             ESTIFM(1,NA)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))/2.
@@ -95,7 +95,7 @@ c     skip mid-side in loop
           SA=SIN(ALFA(N1))
           R=VEL(1,N1)*CX+VEL(2,N1)*SA
           !EFa Apr07,if-clause
-          if (width(n1)==0) then
+          if (width(n1) == 0.0) then
             estifm(1,na+2)=dir(n1)*dahdh(n1)*r
           else
             ESTIFM(1,NA+2)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))
@@ -509,8 +509,8 @@ CIPK JAN06 ADD QFACT1
 
           IF(NTMREF(IMAT(NN)) .NE. 0) THEN
             CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET,QFACT1)
-	      IF(ISWTOF .EQ. 1) THEN
-	        Q1T=0.0
+            IF(ISWTOF .EQ. 1) THEN
+              Q1T=0.0
               F(NB)=Q-Q1T
 C              ESTIFM(NB,NA+2)=ESTIFM(NB,NA+2)+1.E6
 C              ESTIFM(NB,NB+2)=ESTIFM(NB,NB+2)+1.E6
@@ -523,8 +523,8 @@ C              ESTIFM(NB,NB+2)=ESTIFM(NB,NB+2)+1.E6
               ESTIFM(1,1)=1.E6              
               ESTIFM(9,9)=1.E6              
               GO TO 500
-	      ENDIF
-	    ENDIF
+            ENDIF
+          ENDIF
 
 
 c
@@ -551,45 +551,45 @@ c
           WLN=WLEN(N1)
           IF(WEC .LT. -9999.) THEN
 CIPK SEP04
-	      CLOSE(75)
-	      OPEN(75,file='ERROR.OUT')
-	      WRITE(*,*) 'ERROR   UNDEFINED LEVEE DATA FOR NODE',N1
-	      WRITE(*,*) 'EXECUTION TERMINATED'
-	      WRITE(75,*) 'ERROR   UNDEFINED LEVEE DATA FOR NODE',N1
-	      WRITE(75,*) 'EXECUTION TERMINATED'
-	      STOP
+            CLOSE(75)
+            OPEN(75,file='ERROR.OUT')
+            WRITE(*,*) 'ERROR   UNDEFINED LEVEE DATA FOR NODE',N1
+            WRITE(*,*) 'EXECUTION TERMINATED'
+            WRITE(75,*) 'ERROR   UNDEFINED LEVEE DATA FOR NODE',N1
+            WRITE(75,*) 'EXECUTION TERMINATED'
+            STOP
           ENDIF
 ccc   
 cipk oct03 add widem
 cipk jul04
-	    IF(GRAV .GT. 30.) THEN
+          IF(GRAV .GT. 30.) THEN
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM(Q1T,WH1/3.2808,WS1/3.2808,WV1/3.2808,WH2/3.2808
      +        ,WS2/3.2808,WV2/3.2808,WEC/3.2808,WLN/3.2808,ITP,IWTYP
      +        ,widem/3.2808)
-	        Q1T=Q1T*10.7636
+              Q1T=Q1T*10.7636
 CIPK JAN06
               Q1T=Q1T*QFACT1
 CIPK JUN05
             ELSE
-	        CALL WTFORM(Q1T,NCTREF(IMAT(NN)),WS1,WS2)
+              CALL WTFORM(Q1T,NCTREF(IMAT(NN)),WS1,WS2)
 CIPK JAN06
               Q1T=Q1T*QFACT1
-	      ENDIF
-	    ELSE
+            ENDIF
+          ELSE
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM(Q1T,WH1,WS1,WV1,WH2,WS2,WV2,WEC,WLN,ITP,IWTYP
      +        ,widem)
 CIPK JAN06
               Q1T=Q1T*QFACT1
 CIPK JUN05
-	      ELSE
-	        CALL WTFORM(Q1T,NCTREF(IMAT(NN)),WS1,WS2)
+            ELSE
+              CALL WTFORM(Q1T,NCTREF(IMAT(NN)),WS1,WS2)
 CIPK JAN06
               Q1T=Q1T*QFACT1
-	      ENDIF
+            ENDIF
 
             !nis,jun07: unit 175 leads to an error
             !WRITE(175,*) MAXN,Q1T,WS1,WS2,NCTREF(IMAT(NN))
@@ -600,140 +600,140 @@ CIPK JAN06
           F(NB)=Q-Q1T
 cipk oct03 add widem
 cipk jul04
-	    IF(GRAV .GT. 30.) THEN
+          IF(GRAV .GT. 30.) THEN
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM
      +        (Q1DH1,(WH1+DH/2.)/3.2808,(WS1+DH/2.)/3.2808,WV1/3.2808
      +        ,WH2/3.2808,WS2/3.2808,WV2/3.2808,WEC/3.2808,WLN/3.2808
      +        ,ITP,IWTYP,widem/3.2808)
-	        Q1DH1=Q1DH1*10.7636
+              Q1DH1=Q1DH1*10.7636
 CIPK JAN06
               Q1DH1=Q1DH1*QFACT1
 CIPKJUN05
-	      ELSE
-	        CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2)
+            ELSE
+              CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2)
 CIPK JAN06
               Q1DH1=Q1DH1*QFACT1
-	      ENDIF
-	    ELSE
+            ENDIF
+          ELSE
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM
      +      (Q1DH1,WH1+DH/2.,WS1+DH/2.,WV1,WH2,WS2,WV2,WEC,WLN,ITP,IWTYP
      +        ,widem)
 CIPK JAN06
               Q1DH1=Q1DH1*QFACT1
-	      ELSE
+            ELSE
 CIPK JUN05
-	        CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2)
+              CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2)
 CIPK JAN06
               Q1DH1=Q1DH1*QFACT1
-	      ENDIF
-	    ENDIF
+            ENDIF
+          ENDIF
           IWTYP=N1
 cipk jul04
-	    IF(GRAV .GT. 30.) THEN
+          IF(GRAV .GT. 30.) THEN
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM
      +        (Q2DH1,(WH1-DH/2.)/3.2808,(WS1-DH/2.)/3.2808,WV1/3.2808
      +        ,WH2/3.2808,WS2/3.2808,WV2/3.2808,WEC/3.2808,WLN/3.2808
      +        ,ITP,IWTYP,widem/3.2808)
-	        Q2DH1=Q2DH1*10.7636
+              Q2DH1=Q2DH1*10.7636
 CIPK JAN06
               Q2DH1=Q2DH1*QFACT1
 CIPK JUN05
-	      ELSE
-	        CALL WTFORM(Q2DH1,NCTREF(IMAT(NN)),WS1-DH/2.,WS2)
+            ELSE
+              CALL WTFORM(Q2DH1,NCTREF(IMAT(NN)),WS1-DH/2.,WS2)
 CIPK JAN06
               Q2DH1=Q2DH1*QFACT1
-	      ENDIF
-	    ELSE
+            ENDIF
+          ELSE
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM
      +      (Q2DH1,WH1-DH/2.,WS1-DH/2.,WV1,WH2,WS2,WV2,WEC,WLN,ITP,IWTYP
      +                ,widem)
 CIPK JAN06
               Q2DH1=Q2DH1*QFACT1
 CIPK JUN05
-	      ELSE
-	        CALL WTFORM(Q2DH1,NCTREF(IMAT(NN)),WS1-DH/2.,WS2)
+            ELSE
+              CALL WTFORM(Q2DH1,NCTREF(IMAT(NN)),WS1-DH/2.,WS2)
 CIPK JAN06
               Q2DH1=Q2DH1*QFACT1
-	      ENDIF
-	    ENDIF
+            ENDIF
+          ENDIF
           DQDH1=(Q1DH1-Q2DH1)/DH
           ESTIFM(NB,NA+2)=ESTIFM(NB,NA+2)+DQDH1
 cipk oct03 add widem
 cipk jul04
-	    IF(GRAV .GT. 30.) THEN
+          IF(GRAV .GT. 30.) THEN
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM
      +        (Q1DH2,WH1/3.2808,WS1/3.2808,WV1/3.2808,(WH2+DH/2.)/3.2808
      +        ,(WS2+DH/2.)/3.2808,WV2/3.2808,WEC/3.2808,WLN/3.2808
      +        ,ITP,IWTYP,widem/3.2808)
-	        Q1DH2=Q1DH2*10.7636
+              Q1DH2=Q1DH2*10.7636
 CIPK JAN06
               Q1DH2=Q1DH2*QFACT1
 CIPK JUN05
-	      ELSE
-	        CALL WTFORM(Q1DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2.)
+            ELSE
+              CALL WTFORM(Q1DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2.)
 CIPK JAN06
               Q1DH2=Q1DH2*QFACT1
-	      ENDIF
-	    ELSE
+            ENDIF
+          ELSE
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM
      +      (Q1DH2,WH1,WS1,WV1,WH2+DH/2.,WS2+DH/2.,WV2,WEC,WLN,ITP,IWTYP
      +        ,widem)
 CIPK JAN06
               Q1DH2=Q1DH2*QFACT1
 CIPK JUN05
-	      ELSE
-	        CALL WTFORM(Q1DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2.)
+            ELSE
+              CALL WTFORM(Q1DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2.)
 CIPK JAN06
               Q1DH2=Q1DH2*QFACT1
-	      ENDIF
-	    ENDIF
+            ENDIF
+          ENDIF
           IWTYP=N1
 cipk jul04
-	    IF(GRAV .GT. 30.) THEN
+          IF(GRAV .GT. 30.) THEN
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM
      +        (Q2DH2,WH1/3.2808,WS1/3.2808,WV1/3.2808,(WH2-DH/2.)/3.2808
      +        ,(WS2-DH/2.)/3.2808,WV2/3.2808,WEC/3.2808,WLN/3.2808
      +        ,ITP,IWTYP,widem/3.2808)
-	        Q2DH2=Q2DH2*10.7636
+              Q2DH2=Q2DH2*10.7636
 CIPK JAN06
               Q2DH2=Q2DH2*QFACT1
 CIPK JUN05
-	      ELSE
+            ELSE
 CIPK NOV06   FIX BUG IN SIGN
-	        CALL WTFORM(Q2DH2,NCTREF(IMAT(NN)),WS1,WS2-DH/2.)
+              CALL WTFORM(Q2DH2,NCTREF(IMAT(NN)),WS1,WS2-DH/2.)
 CIPK JAN06
               Q2DH2=Q2DH2*QFACT1
-	      ENDIF
-	    ELSE
+            ENDIF
+          ELSE
 CIPK JUN05
-	      IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
+            IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
               CALL WFORM
      +      (Q2DH2,WH1,WS1,WV1,WH2-DH/2.,WS2-DH/2.,WV2,WEC,WLN,ITP,IWTYP
      +                ,widem)
 CIPK JAN06
               Q2DH2=Q2DH2*QFACT1
 CIPK JUN05
-	      ELSE
+            ELSE
 CIPK NOV06   FIX BUG IN SIGN
-	        CALL WTFORM(Q2DH2,NCTREF(IMAT(NN)),WS1,WS2-DH/2.)
+              CALL WTFORM(Q2DH2,NCTREF(IMAT(NN)),WS1,WS2-DH/2.)
 CIPK JAN06
               Q2DH2=Q2DH2*QFACT1
-	      ENDIF
-	    ENDIF
+            ENDIF
+          ENDIF
 CIPK JUN04            DQDH2=(Q1DH2-Q1T)/DH
           DQDH2= (Q1DH2-Q2DH2)/DH
           ESTIFM(NB,NB+2)=ESTIFM(NB,NB+2)+DQDH2

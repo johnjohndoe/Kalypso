@@ -17,17 +17,10 @@ CIPK AUG05      INCLUDE 'BLK4.COM'
       DIMENSION   DD(4), X(8),Y(8)
 C
       DO 90 LL=1,NE
-!nis,may07
-!Add midside node for polynom approach
-!      !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
-!      !nis,feb07: Allow for numbered midsides of FFF
-!      !if (nop(ll,2).eq.-9999) then
-!      if (nop(ll,2) < -1000) GOTO 90
+      !nis,may07
       if (imat(ll) == 89) GO TO 90
-!      !-
-!      !-
-!Add midside node for polynom approach
-!-
+      !-
+
       IF (IMAT(LL) .EQ. 0) GO TO 90
 
 cipk dec03 add iedsw depedence
@@ -38,9 +31,11 @@ cipk OCT 96 add new options
 cipk nov97 clarify options see below      IF(IEDSW .EQ. 0  ) GO TO 90
 CIPK OCT96      IF (EEXXYY(1,LL) .GE. 0.) GO TO 90  
       IF(IEDSW .EQ. 0  .AND.  EEXXYY(1,LL) .GE. 0.) GO TO 90
+
       !EFa may07, necessary for new turbulence subroutine
       IF(IEDSW .ge. 10  .AND.  EEXXYY(1,LL) .GE. 0.) GO TO 90
       !-
+
 C
 C  1-D ELEMENTS
        IF (NOPS(LL,6) .EQ. 0)  then
@@ -229,17 +224,9 @@ cccc      ENDIF
 CIPK NOV97     open(75,file='elemdir.dat')
          open(76,file='elemxycoef.dat')
          do 11  j=1,ne
-!nis,may07
-!Add midside node for polynom approach
-!           !EFa Dec06, Fallunterscheidung für 1d-Teschke-ELemente
-!           !nis,feb07: Allow for numbered FFF midsides
-!           !if (nop(j,2).NE.-9999) then
-!           if (nop(j,2) > -1000) then
+           !nis,may07
            if (imat(j) /= 89) then
-!           !-
-!           !-
-!Add midside node for polynom approach
-!-
+           !-
 cipk jan01 put in test
 	     if(imat(j) .gt. 0) then
                angx = th(j)
@@ -247,6 +234,7 @@ c              if (angx .lt. 0.)  angx = angx + 3.14159
 CC             write(75,1500) j, (nop(j,k),k=1,8), nfixh(j),angx
                write(76,1600) j, (eexxyy(k,j),k=1,6),ort(imat(j),5)
              endif
+           !nis,may07
            end if
 11       continue
 1500     format(10i5,f10.3)

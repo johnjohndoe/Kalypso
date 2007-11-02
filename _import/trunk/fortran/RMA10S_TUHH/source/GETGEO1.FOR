@@ -1,4 +1,4 @@
-C     Last change:  WP    2 Oct 2007    8:34 pm
+C     Last change:  WP   25 Oct 2007   10:34 am
 CNis  LAST UPDATE MAR  XX 2006 Adding capabilities for Kalypso-2D-network-files
 CIPK  LAST UPDATE JUNE 25 2005 RESET LOWER LIMIT
       SUBROUTINE GETGEO1
@@ -23,14 +23,6 @@ cipk aug05      INCLUDE 'BLK10.COM'
 
 !nis,nov06: Initialize MaxLT, the dimensioner for the number of Line transitions
       MaxLT = 0
-!-
-!nis,may07
-!Add midside nodes for polynom approach
-!!nis,feb07: Initialize MaxFFFMS, the dimensioner of the number of midside nodes of Flow1DFE elements
-!      FFFMS = 0
-!      AddMS = 0
-!-
-!Add midside nodes for polynom approach
 !-
 
       NCLL=0

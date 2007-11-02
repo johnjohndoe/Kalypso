@@ -1,4 +1,4 @@
-C     Last change:  WP    8 Jul 2007    7:17 pm
+C     Last change:  WP   25 Oct 2007   10:35 am
 CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -157,12 +157,7 @@ C...... Skip slope calculation for sides that have fixed flow or elevation
 C-
 
 !nis,may07
-!Add midside node for polynom approach
-!          !nis,feb07: Add for direction of FFF-elements
           IF(IBN(N2) == 1) THEN
-!          if (ibn(n2) == 1 .or. n2 < -1000) then
-!          !-
-!Add midside node for polynom approach
 
 !-
 C-
@@ -172,11 +167,7 @@ C-
             IF(NCN .GT. 3) THEN
               CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
      +                CORD(N3,1),CORD(N3,2),SRT,1)
-        !NiS,may06,com: 1D-part
-            !nis,feb07: Add for direction of FFF-elements
             else
-            !ELSEIF (n2 > -1000) then
-            !-
               CALL OUTNRM(CORD(N1,1),CORD(N1,2),CORD(N2,1),CORD(N2,2),
      +                CORD(N3,1),CORD(N3,2),SRT,2)
 
@@ -186,16 +177,7 @@ C-
             VOUTN(N3)=SRT(3)
             NFK=NFIXK(N2)/100
 
-!nis,may07
-!Add midside node for polynom approach
-!            !nis,feb07: For Flow1DFE Elements the midside node has a negative number. So nfixk is not properly defined. But because the loop has to
-!            !           be cycled for every of those elements, add this control:
-!             !NiS,may06,com: following is related to the first three digits for boundary condition of nodal input-line
              IF(NFK < 113  .AND.  NFK /= 2) THEN
-!             IF((NFK < 113  .AND.  NFK /= 2)
-!     +           .or. n2 < -1000) THEN
-!Add midside node for polynom approach
-!-
 
 CIPK JUN05
               N1=NOP(N,M-1)
@@ -386,11 +368,6 @@ C-
   610     CONTINUE
 
 CIPK JUN05
-        !nis,feb07,testing
-        !WRITE(*,*) 'Test bei Winkel:'
-        !WRITE(*,*) n, xslp(n), yslp(n), alfa(n), ibn(n), alfak(n)
-        !pause
-        !-
           !nis,nov06: This must be the point for 1D-2D-transition-elements to assign angle ALFA=ALFAK. ALFAK is set in GETGEO!
           !nis,mar07: Because of machine accuracy, the node might have a none-zero alfak-value, changing to a check for range
           !IF(ALFAK(N) .NE. 0.  .AND. IBN(N) .NE. 15) THEN
@@ -469,11 +446,6 @@ CIPK JUL00 REVISE TEST
  
  
   630   CONTINUE
-        !nis,feb07,testing
-        !WRITE(*,*) 'Test bei Winkel:'
-        !WRITE(*,*) n, xslp(n), yslp(n), alfa(n), ibn(n), alfak(n)
-        !pause
-        !-
 
         IF(NTR .GT. 0) THEN
           IF(VEL(1,N) .EQ. 0.) ALOLD=PI2
@@ -544,12 +516,6 @@ cycw aug96 end additions
   700   CONTINUE
       ENDIF
   701 CONTINUE
-      !nis,feb07,testing
-      !do i = 1, np
-      !  WRITE(*,*) alfak(i), alfa(i), 'test Winkel'
-      !enddo
-      !pause
-      !-
 
   720 CONTINUE
       do 725 n=1,nem
@@ -606,6 +572,7 @@ C-
       DO 730 N=1,NP
         ADIF(N)=0.
 CIPK JUN05
+        !TOASK
         !nis,mar07: Because of machine accuracy, the node might have a none-zero alfak-value, changing to a check for range
         !IF(ALFAK(N) .NE. 0.  .AND.
         IF(ABS(ALFAK(N)) > 0.00001  .AND.
