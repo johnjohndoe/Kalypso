@@ -51,7 +51,6 @@ import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
  * The WQTuppleModel computes W, Q, V, etc. on the fly, depending on the underlying axis type. It also manages the
@@ -127,7 +126,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     m_destStatusAxisPos = destStatusAxisPos;
     mapAxisToPos( destAxis, destAxisPos );
     mapAxisToPos( destStatusAxis, destStatusAxisPos );
-    
+
     m_model = model;
     m_converter = converter;
 
@@ -186,20 +185,42 @@ public class WQTuppleModel extends AbstractTuppleModel
     {
       try
       {
-        if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        final String type = axis.getType();
+        if( type.equals( m_converter.getFromType() ) )
         {
           final double q = number.doubleValue();
           value = new Double( m_converter.computeW( d, q ) );
+          status = KalypsoStati.STATUS_DERIVATED;
         }
-        else
+        else if( type.equals( m_converter.getToType() ) )
         {
           final double w = number.doubleValue();
           double q = m_converter.computeQ( d, w );
 
           value = new Double( q );
+          status = KalypsoStati.STATUS_DERIVATED;
+        }
+        else
+        {
+          value = ZERO;
+          status = KalypsoStati.STATUS_DERIVATION_ERROR;
         }
 
-        status = KalypsoStati.STATUS_DERIVATED;
+        //        // TODO: remove if still everything works fine
+        //        if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        //        {
+        //          final double q = number.doubleValue();
+        //          value = new Double( m_converter.computeW( d, q ) );
+        //        }
+        //        else
+        //        {
+        //          final double w = number.doubleValue();
+        //          double q = m_converter.computeQ( d, w );
+        //
+        //          value = new Double( q );
+        //        }
+        //
+        //        status = KalypsoStati.STATUS_DERIVATED;
       }
       catch( final WQException e )
       {
@@ -211,7 +232,9 @@ public class WQTuppleModel extends AbstractTuppleModel
     }
 
     return new Number[]
-    { value, status };
+    {
+        value,
+        status };
   }
 
   /**
@@ -230,18 +253,37 @@ public class WQTuppleModel extends AbstractTuppleModel
       Integer status = null;
       try
       {
-        if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        final String type = axis.getType();
+        if( type.equals( m_converter.getFromType() ) )
         {
           final double w = ( (Number)element ).doubleValue();
           value = new Double( m_converter.computeQ( d, w ) );
+          status = KalypsoStati.STATUS_USERMOD;
         }
-        else
+        else if( type.equals( m_converter.getToType() ) )
         {
           final double q = ( (Number)element ).doubleValue();
           value = new Double( m_converter.computeW( d, q ) );
+          status = KalypsoStati.STATUS_USERMOD;
+        }
+        else
+        {
+          value = ZERO;
+          status = KalypsoStati.STATUS_CHECK;
         }
 
-        status = KalypsoStati.STATUS_USERMOD;
+        //        if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        //        {
+        //          final double w = ( (Number)element ).doubleValue();
+        //          value = new Double( m_converter.computeQ( d, w ) );
+        //        }
+        //        else
+        //        {
+        //          final double q = ( (Number)element ).doubleValue();
+        //          value = new Double( m_converter.computeW( d, q ) );
+        //        }
+        //
+        //        status = KalypsoStati.STATUS_USERMOD;
       }
       catch( final WQException e )
       {
@@ -351,7 +393,7 @@ public class WQTuppleModel extends AbstractTuppleModel
   {
     return m_destAxisPos;
   }
-  
+
   public int getDestStatusAxisPos()
   {
     return m_destStatusAxisPos;

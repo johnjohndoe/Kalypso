@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
@@ -146,8 +147,9 @@ public final class CsvFeatureReader
     {
       if( ignoreFormatExceptions )
         return null;
-
-      throw new CsvException( "Formatfehler beim Lesen der Spalten: " + columns, nfe );
+      
+      final String colStr = ArrayUtils.toString( columns );
+      throw new CsvException( "Formatfehler beim Lesen der Spalten: " + colStr, nfe );
     }
   }
 }

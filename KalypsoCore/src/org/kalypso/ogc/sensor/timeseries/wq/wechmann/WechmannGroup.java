@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
@@ -115,5 +116,23 @@ public class WechmannGroup implements IWQConverter
       return 0.0;
     
     return WechmannFunction.computeQ( params, W );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getFromType()
+   */
+  public String getFromType()
+  {
+    // HARDCODED: Wechman always converts from W to Q?
+    return TimeserieConstants.TYPE_WATERLEVEL;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getToType()
+   */
+  public String getToType()
+  {
+    // HARDCODED: Wechman always converts from W to Q?
+    return TimeserieConstants.TYPE_RUNOFF;
   }
 }

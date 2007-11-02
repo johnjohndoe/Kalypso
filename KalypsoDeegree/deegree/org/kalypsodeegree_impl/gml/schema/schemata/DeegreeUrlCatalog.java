@@ -61,12 +61,7 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
     catalog.put( "http://www.w3.org/1999/xlink", getClass().getResource( "gml2_2002/xlinks.xsd" ) );
     catalog.put( "http://www.opengis.net/gml", getClass().getResource( "gml2_2002/feature.xsd" ) );
     catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "dwd/v0.1/dwdGeoLayer.xsd" ) );
+    catalog.put( "org.kalypso.dwd.rcm", myClass.getResource( "dwd/v0.1/rainfallCatchmentModel.xsd" ) ); // Rainfall-Catchment-Model
     catalog.put( "inline.zml.kalypso.org", getClass().getResource( "obslink/zmlinline.xsd"));
-
-		// again two temporary schemas that do not belong here
-		// I will remove it as soon as this is an extension point
-		// do not remove, ask me (Andreas)
-//    catalog.put( "http://www.tuhh.de/opengis_river", getClass().getResource( "ofp/river.xsd"));
-//    catalog.put( "http://www.tuhh.de/opengis_landuse", getClass().getResource( "ofp/landuse.xsd"));
   }
 }
