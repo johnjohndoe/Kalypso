@@ -84,9 +84,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<target name="clean">
 		<echo message="Raeume auf..." />
-		<delete dir="${project.bin}" />
-		<delete dir="${project.deploy}" />
-		<delete dir="${project.doc}" />
+		<delete dir="${project.bin}" failonerror="false"/>
+		<delete dir="${project.deploy}" failonerror="false"/>
+		<delete dir="${project.doc}" failonerror="false"/>
 	</target>
 
 </project>

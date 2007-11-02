@@ -756,6 +756,11 @@
            headless="false"
            library="lib/kalypsoAnt.jar"
            name="kalypso.getFileTask"/>
+     <antTask
+           class="org.kalypso.ant.ThiessenWeightTask"
+           headless="true"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.thiessenWeightTask"/>
    </extension>
    
    <extension

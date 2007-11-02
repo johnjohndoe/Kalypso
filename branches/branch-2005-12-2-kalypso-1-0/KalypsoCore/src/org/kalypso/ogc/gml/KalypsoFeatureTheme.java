@@ -212,7 +212,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
               restyleFeature( feature );
           }
         }
-
       }
       else if( modellEvent instanceof FeatureStructureChangeModellEvent )
       {
