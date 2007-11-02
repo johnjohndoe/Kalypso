@@ -32,8 +32,18 @@
 
 	<!--*** manage waterlevel context handler ***-->
       <handler
-            class="org.kalypso.model.flood.handlers.ManageWaterlevelDataHandler"
             commandId="org.kalypso.model.flood.ManageWaterlevelData">
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.EventManagementWidget">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+                  value="org.kalypso.model.flood">
+            </parameter>
+         </class>
       </handler>
       <handler
             commandId="org.kalypso.model.flood.ImportDTMData">

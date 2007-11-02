@@ -70,7 +70,7 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name><![CDATA[Ereignis]]></name>
-				<label><![CDATA[Ereignis]]></label>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
 				<tooltip><![CDATA[Ereignis]]></tooltip>
 				<description><![CDATA[Ereignis]]></description>
 			</documentation>
@@ -81,8 +81,48 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<!--  TODO: referenc auf TIN, evtl. Järhlichkiet und andere Metadaten? -->
-					<!-- Quelle/Zeitstempel des TINs -->
+					<element name="tinMember" type="flood:TinReferencePropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<name><![CDATA[Wasserspiegellagen]]></name>
+								<label><![CDATA[Wasserspiegellagen]]></label>
+								<tooltip><![CDATA[Wasserspiegellagen]]></tooltip>
+								<description><![CDATA[Wasserspiegellagen]]></description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="TinReferencePropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="flood:TinReference" />
+		</sequence>
+	</complexType>
+
+	<element name="TinReference" type="flood:TinReferenceType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name><![CDATA[WSP-Referenz]]></name>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+				<tooltip><![CDATA[Referenz auf einen Wasserspiegel]]></tooltip>
+				<description><![CDATA[Referenz auf einen Wasserspiegel]]></description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="TinReferenceType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="tinBoundary" type="gml:PolygonPropertyType" minOccurs="1" maxOccurs="1" />
+					<element name="min" type="decimal" />
+					<element name="max" type="decimal" />
+					<element name="source" type="string" />
+					<element name="sourceDate" type="dateTime" />
 				</sequence>
 			</extension>
 		</complexContent>
@@ -200,14 +240,31 @@
 		<complexContent>
 			<extension base="flood:AbstractFloodPolygonType">
 				<sequence minOccurs="1" maxOccurs="1">
-					<element name="type">
+					<element name="type" default="negative">
 						<annotation>
-							<documentation><![CDATA[Type of this polygon.]]></documentation>
+							<documentation xml:lang="de">
+								<name><![CDATA[Art]]></name>
+								<label><![CDATA[Art]]></label>
+								<tooltip><![CDATA[Art des Clip-Polygons]]></tooltip>
+								<description><![CDATA[Die Art des Clip-Polygon bestimmt, ob der angegebene Bereich explizit ausgeschlossen oder eingeschlossen wird.]]></description>
+							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="positive"></enumeration>
-								<enumeration value="negative"></enumeration>
+								<enumeration value="positive">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[Einschluss]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="negative">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[Ausschluss]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
 							</restriction>
 						</simpleType>
 					</element>

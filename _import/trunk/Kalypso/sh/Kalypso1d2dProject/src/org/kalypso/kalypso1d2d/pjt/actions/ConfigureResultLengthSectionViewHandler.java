@@ -46,21 +46,18 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -91,11 +88,9 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     final MapPanel mapPanel = mapView.getMapPanel();
 
-    final ICoreRunnableWithProgress waitForMapOperation = MapLoadHelper.waitForMap( mapPanel );
-    final IStatus waitErrorStatus = ProgressUtilities.busyCursorWhile( waitForMapOperation );
-    ErrorDialog.openError( shell, "Längsschnitt erzeugen", "Fehler beim Öffnen der Karte", waitErrorStatus );
-    if( !waitErrorStatus.isOK() )
-      return waitErrorStatus;
+    /* wait for map to load */
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Längsschnitt erzeugen", "Fehler beim Öffnen der Karte" ) )
+      return null;
 
     final IMapModell orgMapModell = mapPanel.getMapModell();
 

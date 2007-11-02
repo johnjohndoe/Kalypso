@@ -45,20 +45,17 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -89,15 +86,13 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
 
     final MapPanel mapPanel = mapView.getMapPanel();
 
-    final ICoreRunnableWithProgress waitForMapOperation = MapLoadHelper.waitForMap( mapPanel );
-    final IStatus waitErrorStatus = ProgressUtilities.busyCursorWhile( waitForMapOperation );
-    ErrorDialog.openError( shell, "Differenzen erzeugen", "Fehler beim Öffnen der Karte", waitErrorStatus );
-    if( !waitErrorStatus.isOK() )
-      return waitErrorStatus;
+    /* wait for map to load */
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Differenzen erzeugen", "Fehler beim Öffnen der Karte" ) )
+      return null;
 
     try
     {
-      IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
 
       // open wizard
       final GenerateDifferenceResultTinWizard wizard = new GenerateDifferenceResultTinWizard( scenarioFolder, resultModel );
@@ -109,7 +104,7 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
         return Status.OK_STATUS;
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, "Differenzen konnten nicht erzeugt werden." );

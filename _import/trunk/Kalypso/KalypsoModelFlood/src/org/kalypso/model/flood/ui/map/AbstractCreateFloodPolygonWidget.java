@@ -15,6 +15,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsosimulationmodel.ui.map.AbstractEditFeatureWidget;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -25,6 +26,8 @@ import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PointGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -230,10 +233,15 @@ public abstract class AbstractCreateFloodPolygonWidget extends AbstractWidget
 
       // add new feature
       final IRelationType rt = m_theme.getFeatureList().getParentFeatureTypeProperty();
-      final ICommand command = new AddFeatureCommand( m_theme.getWorkspace(), parentFeature, rt, -1, newFeature, null );
+      final CommandableWorkspace workspace = m_theme.getWorkspace();
+      final ICommand command = new AddFeatureCommand( workspace, parentFeature, rt, -1, newFeature, null );
       try
       {
-        m_theme.getWorkspace().postCommand( command );
+        workspace.postCommand( command );
+
+        /* Also select the newly created feature */
+        final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+        AbstractEditFeatureWidget.selectAndShowFeatures( workspace, new Feature[] { newFeature }, selectionManager );
       }
       catch( final Exception e )
       {

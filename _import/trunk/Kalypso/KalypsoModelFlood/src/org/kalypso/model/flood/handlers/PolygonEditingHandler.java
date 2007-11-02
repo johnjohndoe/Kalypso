@@ -46,6 +46,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -57,6 +58,7 @@ import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 
 /**
@@ -71,7 +73,7 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    // final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
@@ -80,13 +82,21 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
     if( mapView == null )
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
 
+    /* wait for map to load */
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim Öffnen der Karte" ) )
+      return null;
+
+    /* Activate theme */
     final IMapModell mapModell = mapPanel.getMapModell();
+    final IKalypsoTheme themeToActivate = findTheme( mapModell );
+    mapModell.activateTheme( themeToActivate );
 
-    // TODO: wait for map to load
+    return null;
+  }
 
-    // TODO: ask user which event to edit
-
-    // TODO: activate corresponding polygone theme
+  private IKalypsoTheme findTheme( final IMapModell mapModell )
+  {
+    final IKalypsoTheme[] result = new IKalypsoTheme[1];
 
     final IKalypsoThemeVisitor kalypsoThemeVisitor = new IKalypsoThemeVisitor()
     {
@@ -101,7 +111,7 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
 
           if( GMLSchemaUtilities.substitutes( ftype, IFloodPolygon.QNAME ) )
           {
-            mapModell.activateTheme( theme );
+            result[0] = theme;
             throw new OperationCanceledException(); // stop visiting
           }
         }
@@ -119,6 +129,6 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
       // nothing, this should happen
     }
 
-    return null;
+    return result[0];
   }
 }

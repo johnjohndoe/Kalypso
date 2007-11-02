@@ -73,6 +73,13 @@ public class AbstractEditFeatureWidget extends AbstractSelectFeatureWidget
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
 
+    selectAndShowFeatures( workspace, selectedFeatures, selectionManager );
+  }
+
+  /* Public in order to be called as utility method. Maybe use elsewhere? */
+  public static void selectAndShowFeatures( final CommandableWorkspace workspace, final Feature[] selectedFeatures, final IFeatureSelectionManager selectionManager )
+  {
+
     final Feature featureToSelect = selectedFeatures[0];
     final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( workspace, featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
 
