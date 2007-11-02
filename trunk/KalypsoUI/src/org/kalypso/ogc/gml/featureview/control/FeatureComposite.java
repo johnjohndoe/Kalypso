@@ -73,6 +73,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
@@ -85,7 +86,6 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
@@ -938,11 +938,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#featureChanged(org.kalypso.ogc.gml.featureview.FeatureChange)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#featureChanged(org.kalypso.commons.command.ICommand)
    */
-  public void featureChanged( final FeatureChange[] changes )
+  public void featureChanged( final ICommand changeCommand )
   {
-    fireFeatureChange( changes );
+    fireFeatureChange( changeCommand );
   }
 
   /**

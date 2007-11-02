@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.command;
 
@@ -54,8 +54,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class RemoveRelationCommand implements ICommand
 {
-  private final GMLWorkspace m_workspace;
-
   private final Feature m_srcFE;
 
   private final Feature m_destFE;
@@ -66,9 +64,8 @@ public class RemoveRelationCommand implements ICommand
 
   private final int m_pos;
 
-  public RemoveRelationCommand( final GMLWorkspace workspace, Feature srcFE, IRelationType linkPropName, Feature destFE )
+  public RemoveRelationCommand( final Feature srcFE, final IRelationType linkPropName, final Feature destFE )
   {
-    m_workspace = workspace;
     m_srcFE = srcFE;
     m_linkPropName = linkPropName;
     m_destFE = destFE;
@@ -90,12 +87,14 @@ public class RemoveRelationCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    if( m_isComposition )
-      m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkPropName, m_destFE );
-    else
-      m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkPropName, m_destFE.getId() );
+    final GMLWorkspace workspace = m_srcFE.getWorkspace();
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    if( m_isComposition )
+      workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkPropName, m_destFE );
+    else
+      workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkPropName, m_destFE.getId() );
+
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   /**
@@ -111,12 +110,14 @@ public class RemoveRelationCommand implements ICommand
    */
   public void undo( ) throws Exception
   {
-    if( m_isComposition )
-      m_workspace.addFeatureAsComposition( m_srcFE, m_linkPropName, m_pos, m_destFE );
-    else
-      m_workspace.addFeatureAsAggregation( m_srcFE, m_linkPropName, m_pos, m_destFE.getId() );
+    final GMLWorkspace workspace = m_srcFE.getWorkspace();
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    if( m_isComposition )
+      workspace.addFeatureAsComposition( m_srcFE, m_linkPropName, m_pos, m_destFE );
+    else
+      workspace.addFeatureAsAggregation( m_srcFE, m_linkPropName, m_pos, m_destFE.getId() );
+
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**

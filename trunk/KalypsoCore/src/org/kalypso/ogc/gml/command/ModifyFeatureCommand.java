@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
@@ -56,15 +56,12 @@ import org.kalypsodeegree_impl.model.feature.visitors.CloneFeatureVisitor;
 
 /**
  * TODO: please comment
+ * 
  * @author belger
  */
 public class ModifyFeatureCommand implements ICommand
 {
   private final Feature[] m_targetFEs;
-
-  // private final Map m_newMap;
-
-  // private final Map[] m_oldMap;
 
   private final GMLWorkspace m_workspace;
 
@@ -75,7 +72,7 @@ public class ModifyFeatureCommand implements ICommand
   /**
    * @param workspace
    * @param targetFeatures
-   *          features to modify
+   *            features to modify
    */
   public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature srcFeature, final IPropertyType[] ftps, final Feature targetFeatures[] )
   {
@@ -83,19 +80,6 @@ public class ModifyFeatureCommand implements ICommand
     m_ftps = ftps;
     m_targetFEs = targetFeatures;
     m_srcFeature = srcFeature;
-
-    // m_newMap = map;
-    // m_oldMap = new HashMap[targetFeatures.length];
-    // for( int i = 0; i < targetFeatures.length; i++ )
-    // {
-    // final Feature feature = targetFeatures[i];
-    // m_oldMap[i] = new HashMap();
-    // for( Iterator iter = map.keySet().iterator(); iter.hasNext(); )
-    // {
-    // final String propName = (String)iter.next();
-    // m_oldMap[i].put( propName, feature.getProperty( propName ) );
-    // }
-    // }
   }
 
   public ModifyFeatureCommand( final GMLWorkspace workspace, final Feature srcFeature, final IPropertyType[] ftps, final Feature targetFeature )
@@ -116,54 +100,20 @@ public class ModifyFeatureCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    // for( Iterator iter = m_newMap.entrySet().iterator(); iter.hasNext(); )
-    // {
-    // final Map.Entry entry = (Entry)iter.next();
-    // final String propName = (String)entry.getKey();
-    // final IPropertyType ftp = m_targetFEs[0].getFeatureType().getProperty( propName );
-    // final String propType = ftp.getType();
-
-    for( int i = 0; i < m_targetFEs.length; i++ )
+    for( final Feature targetFE : m_targetFEs )
     {
       try
       {
-        final Feature targetFE = m_targetFEs[i];
         if( targetFE == m_srcFeature )
           continue;
-
-        // final Object valueOriginal = entry.getValue();
-        // if( ftp instanceof FeatureAssociationTypeProperty )
-        // {
-        // check if allowed
-        // check if target is empty, remove ...
-        // are linked feature about to be removed ?
-        // if( valueOriginal instanceof Feature )
-        // {
-        // featuresToCopyList = new ArrayList();
-        // featuresToCopyList.add( valueOriginal );
-        // }
-        // else if( valueOriginal instanceof String ) // FID
-        // {
-        // featuresToCopyList = new ArrayList();
-        // final Feature feature = m_workspace.getFeature( (String)valueOriginal );
-        // featuresToCopyList.add( feature );
-        // }
-        // else
-        // // it must be a featurelist
-        // featuresToCopyList = (List)valueOriginal;
-
-        // for( Iterator iterator = featuresToCopyList.iterator(); iterator.hasNext(); )
-        // {
-        // Feature featureToCopy = (Feature)iterator.next();
 
         // collect list of feature ids
 
         // 1. remove target // command
         // check features to remove // TODO UNDO....
         // new DeleteFeatureCommand(m_workspace,targetFE,m_);
-        for( int j = 0; j < m_ftps.length; j++ )
+        for( final IPropertyType ftp : m_ftps )
         {
-          final IPropertyType ftp = m_ftps[j];
           // final String propName = ftp.getName();
           if( ftp instanceof IRelationType ) // remove sub features of target
           {
@@ -215,10 +165,10 @@ public class ModifyFeatureCommand implements ICommand
       }
     }
     // }
-    FeatureList list = FeatureFactory.createFeatureList( null, null, m_targetFEs );
+    final FeatureList list = FeatureFactory.createFeatureList( null, null, m_targetFEs );
     final Feature[] fs = (Feature[]) list.toArray( new Feature[list.size()] );
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, fs ) );
-    //    
+    //
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_targetFEs, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 

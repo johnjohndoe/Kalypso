@@ -63,7 +63,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.gmlschema.property.relation.IDocumentReference;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -233,7 +233,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
     if( (newValue == null && oldValue != null) || !newValue.equals( oldValue ) )
     {
       m_ignoreNextUpdate = true;
-      fireFeatureChange( new FeatureChange[] { new FeatureChange( feature, pt, newValue ) } );
+      fireFeatureChange( new ChangeFeatureCommand( feature, pt, newValue ) );
     }
   }
 

@@ -2049,4 +2049,11 @@
           parentId="org.eclipse.ui.contexts.window">
     </context>
  </extension>
+ <extension
+       point="org.kalypso.ui.featureViewExtensionControl">
+    <extensionControl
+          class="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory"
+          id="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory">
+    </extensionControl>
+ </extension>
 </plugin>

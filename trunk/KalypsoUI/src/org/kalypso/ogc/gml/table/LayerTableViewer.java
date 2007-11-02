@@ -278,7 +278,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_templateTarget = templateTarget;
     m_selectionManager = selectionManager;
     m_fcl = fcl;
-    m_selectionManager.addSelectionListener( m_globalSelectionListener );
+    if( m_selectionManager != null )
+      m_selectionManager.addSelectionListener( m_globalSelectionListener );
 
     setContentProvider( new LayerTableContentProvider( selectionManager ) );
     setLabelProvider( new LayerTableLabelProvider( this ) );
@@ -308,7 +309,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     applyTableTemplate( null, null );
 
-    m_selectionManager.removeSelectionListener( m_globalSelectionListener );
+    if( m_selectionManager != null )
+      m_selectionManager.removeSelectionListener( m_globalSelectionListener );
   }
 
   public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused")

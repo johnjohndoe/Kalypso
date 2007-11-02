@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.maker;
 
-import java.util.List;
-
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
@@ -49,26 +47,30 @@ import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.template.featureview.Button;
-import org.kalypso.template.featureview.Combo;
-import org.kalypso.template.featureview.CompositeType;
+import org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory;
 import org.kalypso.template.featureview.ControlType;
+import org.kalypso.template.featureview.Extensioncontrol;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
+import org.kalypso.template.featureview.Group;
+import org.kalypso.template.featureview.Extensioncontrol.Param;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * Creates feature controls for lists of linked features
+ * 
  * @author Gernot Belger
  */
-public class LinkedFeatureControlMaker extends AbstractValueControlMaker
+public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
 {
-  private final boolean m_showButton;
+  private final boolean m_showSelectButtons;
 
-  public LinkedFeatureControlMaker( final boolean addValidator, final boolean showButton )
+  public LinkedListFeatureControlMaker( final boolean addValidator, final boolean showSelectButtons )
   {
     super( addValidator );
 
-    m_showButton = showButton;
+    m_showSelectButtons = showSelectButtons;
   }
 
   /**
@@ -88,61 +90,43 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
     if( !rt.isLinkAble() )
       return null;
 
-    if( pt.isList() )
+    if( !pt.isList() )
       return null;
 
     final QName qname = rt.getQName();
 
-    final CompositeType composite = TemplateUtilitites.OF_FEATUREVIEW.createCompositeType();
-    final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
+// final IAnnotation annotation = getAnnotation( rt );
+    final String groupText = "";// annotation == null ? qname.getLocalPart() : annotation.getLabel();
 
-    final GridLayout layout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
+    /* Create the UI components */
+    final GridDataType listData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
+    listData.setHorizontalAlignment( "GridData.FILL" );
+    listData.setVerticalAlignment( "GridData.FILL" );
+    listData.setGrabExcessHorizontalSpace( true );
 
-    /* If the button should be shown, make two columns, otherwise only one. */
-    if( m_showButton )
-      layout.setNumColumns( 2 );
-    else
-      layout.setNumColumns( 1 );
+    final Extensioncontrol extensioncontrol = TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrol();
+    extensioncontrol.setEnabled( true );
+    extensioncontrol.setExtensionId( ChecklistOfLinksFeatureviewControlFactory.class.getName() );
+    extensioncontrol.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( listData ) );
+    extensioncontrol.setStyle( "SWT.NONE" );
+// extensioncontrol.setTooltip( "" );
+    extensioncontrol.setVisible( true );
+    extensioncontrol.setProperty( qname );
 
-    layout.setMakeColumnsEqualWidth( false );
-    layout.setMarginWidth( 1 );
-    composite.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( layout ) );
-    composite.setStyle( "SWT.NONE" ); //$NON-NLS-1$
+    final Param selectParam = TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrolParam();
+    selectParam.setName( ChecklistOfLinksFeatureControl.PARAM_SELECT_BUTTONS );
+    selectParam.setValue( Boolean.toString( m_showSelectButtons ) );
+    extensioncontrol.getParam().add( selectParam );
 
-    griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
-    griddata.setGrabExcessHorizontalSpace( true );
+    final GridLayout groupLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
 
-    if( m_showButton )
-      griddata.setHorizontalSpan( 2 );
-    else
-      griddata.setHorizontalSpan( 1 );
+    final Group group = TemplateUtilitites.OF_FEATUREVIEW.createGroup();
+    group.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( groupLayout ) );
+    group.setText( groupText );
+    group.setStyle( "SWT.NONE" );
 
-    // Text
-    final Combo combo = TemplateUtilitites.OF_FEATUREVIEW.createCombo();
-    combo.setStyle( "SWT.DROP_DOWN | SWT.READ_ONLY" ); //$NON-NLS-1$
-    combo.setProperty( qname );
+    group.getControl().add( TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrol( extensioncontrol ) );
 
-    final GridDataType comboData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
-    comboData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
-    comboData.setGrabExcessHorizontalSpace( true );
-    combo.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( comboData ) );
-
-    control.add( TemplateUtilitites.OF_FEATUREVIEW.createCombo( combo ) );
-
-    // Knopf
-    if( m_showButton )
-    {
-      final Button button = TemplateUtilitites.OF_FEATUREVIEW.createButton();
-      final GridDataType buttonData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
-      button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
-      button.setProperty( qname );
-
-      buttonData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-      button.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( buttonData ) );
-
-      control.add( TemplateUtilitites.OF_FEATUREVIEW.createButton( button ) );
-    }
-
-    return TemplateUtilitites.OF_FEATUREVIEW.createComposite( composite );
+    return TemplateUtilitites.OF_FEATUREVIEW.createGroup( group );
   }
 }

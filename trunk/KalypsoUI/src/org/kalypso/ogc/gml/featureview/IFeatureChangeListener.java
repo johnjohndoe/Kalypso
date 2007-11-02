@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IFeatureChangeListener
 {
-  public void featureChanged( final FeatureChange[] changes );
+  public void featureChanged( final ICommand changeCommand );
 
   public void openFeatureRequested( final Feature feature, final IPropertyType pt );
 }

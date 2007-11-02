@@ -45,6 +45,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -69,6 +70,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.auth.KalypsoAuthPlugin;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
@@ -83,6 +85,8 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.AbstractExportTarget;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.services.metadoc.impl.DocumentBean;
@@ -155,7 +159,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
       final Metadata md = new Metadata();
       final List<org.kalypso.services.metadoc.impl.DocumentBean.Metadata.Entry> mdEntries = md.getEntry();
-      for( Map.Entry<Object, Object> confMapEntry : confMapEntries )
+      for( final Map.Entry<Object, Object> confMapEntry : confMapEntries )
       {
         final org.kalypso.services.metadoc.impl.DocumentBean.Metadata.Entry mdEntry = new org.kalypso.services.metadoc.impl.DocumentBean.Metadata.Entry();
         mdEntry.setKey( confMapEntry.getKey() );
@@ -169,7 +173,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
       final MetadataExtensions mdEx = new MetadataExtensions();
       final List<org.kalypso.services.metadoc.impl.DocumentBean.MetadataExtensions.Entry> mdExEntries = mdEx.getEntry();
-      for( Entry<Object, Object> exMapEntry : exMapEntries )
+      for( final Entry<Object, Object> exMapEntry : exMapEntries )
       {
         final org.kalypso.services.metadoc.impl.DocumentBean.MetadataExtensions.Entry mdExEntry = new org.kalypso.services.metadoc.impl.DocumentBean.MetadataExtensions.Entry();
         mdExEntry.setKey( exMapEntry.getKey() );
@@ -214,16 +218,31 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     final IWizardPage page = new FeaturePage( "metadocServicePage", "Metadaten für die Dokumentenablage", imgDesc, false, feature, new FeatureSelectionManager2() )
     {
       @Override
-      protected void applyFeatureChange( FeatureChange[] fcs )
+      protected void applyFeatureChange( ICommand changeCommand )
       {
-        super.applyFeatureChange( fcs );
+        super.applyFeatureChange( changeCommand );
 
         final Map<Object, Object> metadata = (Map<Object, Object>) configuration.getProperty( CONF_METADATA );
 
-        for( final FeatureChange fc : fcs )
+        // HACK: we assume its a ChangeFeaturesCommand here...
+        final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+        if( changeCommand instanceof ChangeFeaturesCommand )
         {
-          final Object newValue = org.kalypso.gmlschema.xml.Mapper.mapJavaValueToXml( fc.getNewValue() );
-          metadata.put( fc.getProperty(), newValue );
+          final ChangeFeaturesCommand cfc = (ChangeFeaturesCommand) changeCommand;
+          changes.addAll( Arrays.asList( cfc.getFeatureChanges() ) );
+        }
+        else if( changeCommand instanceof ChangeFeatureCommand )
+        {
+          final ChangeFeatureCommand cfc = (ChangeFeatureCommand) changeCommand;
+          changes.add( cfc.asFeatureChange() );
+        }
+        else
+          throw new IllegalStateException( "Oups..." );
+
+        for( FeatureChange featureChange : changes )
+        {
+          final Object newValue = org.kalypso.gmlschema.xml.Mapper.mapJavaValueToXml( featureChange.getNewValue() );
+          metadata.put( featureChange.getProperty(), newValue );
         }
 
       }
@@ -263,7 +282,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     final Map<IPropertyType, Object> fpColl = new LinkedHashMap<IPropertyType, Object>();
     final int[] ints = new int[map.size()];
     int count = 0;
-    for( org.kalypso.services.metadoc.impl.PrepareBean.Metadata.Entry entry : entries )
+    for( final org.kalypso.services.metadoc.impl.PrepareBean.Metadata.Entry entry : entries )
     {
       map.put( entry.getKey(), entry.getValue() );
 

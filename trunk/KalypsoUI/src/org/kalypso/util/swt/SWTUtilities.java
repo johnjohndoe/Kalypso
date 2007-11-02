@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.swt;
 
@@ -98,6 +98,7 @@ public class SWTUtilities
     SWTUtilities.putSWT( "SWT.WRAP", SWT.WRAP );
     SWTUtilities.putSWT( "SWT.V_SCROLL", SWT.V_SCROLL );
     SWTUtilities.putSWT( "SWT.H_SCROLL", SWT.H_SCROLL );
+    SWTUtilities.putSWT( "SWT.FILL", SWT.FILL );
     // TODO really a lot to complete SWT keys
   }
 
@@ -125,13 +126,16 @@ public class SWTUtilities
   {
     try
     {
+      if( style == null )
+        return SWT.NONE;
+
       int result = SWT.NONE;
       if( style.matches( "[0-9]+" ) )
         return Integer.parseInt( style );
       final String[] keys = style.split( "\\|" );
-      for( int i = 0; i < keys.length; i++ )
+      for( final String element : keys )
       {
-        final String key = keys[i].trim();
+        final String key = element.trim();
         final Integer value = (Integer) map.get( key );
         if( value != null )
           result |= value.intValue();

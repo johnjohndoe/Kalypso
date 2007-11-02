@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -139,7 +139,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
     final Object currentFeatureValue = feature.getProperty( pt );
 
     if( !m_valueToSet.equals( currentFeatureValue ) )
-      fireFeatureChange( new FeatureChange[] { new FeatureChange( feature, pt, m_valueToSet ) } );
+      fireFeatureChange( new ChangeFeatureCommand( feature, pt, m_valueToSet ) );
   }
 
   /**
@@ -175,7 +175,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
-  public void removeModifyListener( ModifyListener l )
+  public void removeModifyListener( final ModifyListener l )
   {
     m_listeners.remove( l );
   }

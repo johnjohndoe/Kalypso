@@ -131,7 +131,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private final GMLEditorLabelProvider2 m_labelProvider = new GMLEditorLabelProvider2();
 
-  private final GMLEditorContentProvider2 m_contentProvider = new GMLEditorContentProvider2();
+  private final GMLContentProvider m_contentProvider = new GMLContentProvider();
 
   private final ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
 
@@ -191,7 +191,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( (control == null) || control.isDisposed() )
       return;
 
-    final GMLEditorContentProvider2 contentProvider = m_contentProvider;
+    final GMLContentProvider contentProvider = m_contentProvider;
     control.getDisplay().syncExec( new Runnable()
     {
       public void run( )
@@ -436,7 +436,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       if( (control == null) || control.isDisposed() )
         return;
 
-      final GMLEditorContentProvider2 contentProvider = m_contentProvider;
+      final GMLContentProvider contentProvider = m_contentProvider;
       final GMLEditorLabelProvider2 labelProvider = m_labelProvider;
       final Display display = control.getDisplay();
       display.asyncExec( new Runnable()
@@ -609,7 +609,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     public IRelationType getParentFeatureProperty( final Feature feature )
     {
-      final GMLEditorContentProvider2 contentProvider = (GMLEditorContentProvider2) getTreeViewer().getContentProvider();
+      final GMLContentProvider contentProvider = (GMLContentProvider) getTreeViewer().getContentProvider();
       if( contentProvider == null )
         return null;
 

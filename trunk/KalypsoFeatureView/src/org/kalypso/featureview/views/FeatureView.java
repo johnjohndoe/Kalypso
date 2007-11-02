@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.featureview.views;
 
@@ -75,6 +75,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
@@ -83,8 +84,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.featureview.KalypsoFeatureViewPlugin;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -157,13 +156,10 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
-    public void featureChanged( final FeatureChange[] changes )
+    public void featureChanged( final ICommand changeCommand )
     {
-      final GMLWorkspace workspace = m_featureComposite.getFeature().getWorkspace();
-      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
-
       m_target.setCommandManager( m_commandManager );
-      m_target.postCommand( command, null );
+      m_target.postCommand( changeCommand, null );
     }
 
     public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
@@ -615,7 +611,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     return m_toolkit;
   }
 
-  public void setToolkit( FormToolkit toolkit )
+  public void setToolkit( final FormToolkit toolkit )
   {
     m_toolkit = toolkit;
   }

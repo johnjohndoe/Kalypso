@@ -50,6 +50,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -58,7 +59,7 @@ import org.kalypso.gmlschema.property.restriction.MaxInclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinExclusiveRestriction;
 import org.kalypso.gmlschema.property.restriction.MinInclusiveRestriction;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -149,7 +150,7 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
     return m_spinner;
   }
 
-  protected FeatureChange[] getChanges( )
+  protected ICommand getChanges( )
   {
     final Feature feature = getFeature();
 
@@ -160,9 +161,9 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
 
     // nur ändern, wenn sich wirklich was geändert hat
     if( (newData == null && oldData != null) || (newData != null && !newData.equals( oldData )) )
-      return new FeatureChange[] { new FeatureChange( feature, pt, newData ) };
+      return new ChangeFeatureCommand( feature, pt, newData );
 
-    return new FeatureChange[] {};
+    return null;
   }
 
   private Number getCurrentValue( )

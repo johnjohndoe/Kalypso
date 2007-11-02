@@ -418,7 +418,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
             else
             {
               final RelationType normalRelation = (RelationType) relation;
-              command = new AddRelationCommand( workspace, srcFeature, normalRelation.getLink(), 0, targetFeature );
+              command = new AddRelationCommand( srcFeature, normalRelation.getLink(), 0, targetFeature );
             }
             break;
           case MODE_REMOVE:
@@ -437,7 +437,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
             else
             {
               final RelationType normalRelation = (RelationType) relation;
-              command = new RemoveRelationCommand( workspace, srcFeature, normalRelation.getLink(), targetFeature );
+              command = new RemoveRelationCommand( srcFeature, normalRelation.getLink(), targetFeature );
             }
             break;
           default:
@@ -496,7 +496,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     {
       final IFeatureType ft = m_srcFE.getFeatureType();
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( ft );
-      labelBuffer.append( annotation.getTooltip() + "#" + m_srcFE.getProperty(new QName( NS.GML2, "name" )));
+      labelBuffer.append( annotation.getTooltip() + "#" + m_srcFE.getProperty( new QName( NS.GML2, "name" ) ) );
       tipBuffer.append( ft.getQName() + "#" + m_srcFE.getId() );
     }
     labelBuffer.append( "\n nach: " );
@@ -510,7 +510,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     {
       final IFeatureType ft = m_targetFE.getFeatureType();
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( ft );
-      labelBuffer.append( annotation.getTooltip() + "#" + m_targetFE.getProperty(new QName( NS.GML2, "name" )));
+      labelBuffer.append( annotation.getTooltip() + "#" + m_targetFE.getProperty( new QName( NS.GML2, "name" ) ) );
       tipBuffer.append( ft.getQName() + "#" + m_targetFE.getId() );
     }
     if( m_textInfo != null && !m_textInfo.isDisposed() )
@@ -597,7 +597,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     data3.verticalAlignment = GridData.FILL;
     data3.grabExcessHorizontalSpace = true;
     data3.grabExcessVerticalSpace = false;
-    
+
     m_modeCombo = new Combo( m_topLevel, SWT.READ_ONLY );
     toolkit.adapt( m_modeCombo );
     m_modeCombo.setItems( m_modeItems );

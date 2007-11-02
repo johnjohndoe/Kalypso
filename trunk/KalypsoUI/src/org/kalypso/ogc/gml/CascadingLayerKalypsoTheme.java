@@ -61,7 +61,6 @@ import org.kalypso.template.types.StyledLayerType;
 // themes.
 public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 {
-
   public CascadingLayerKalypsoTheme( final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws Exception
   {
     super( layerType.getName(), layerType.getLinktype(), mapModel );
