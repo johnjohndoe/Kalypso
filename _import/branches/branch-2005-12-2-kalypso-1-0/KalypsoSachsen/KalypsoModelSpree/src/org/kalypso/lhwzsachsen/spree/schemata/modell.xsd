@@ -115,8 +115,8 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewichtung Ombrometer</label>
-								<tooltip>Zuordnung der Omrbometerstationen zu diesem Einzugsgebiet</tooltip>
-								<description>Gewichtungsfaktoren zur Zuordnung von Omrbrometern zu diesem Einzugsgebiet</description>
+								<tooltip>Zuordnung der Ombrometerstationen zu diesem Einzugsgebiet</tooltip>
+								<description>Gewichtungsfaktoren zur Zuordnung von Ombrrometern zu diesem Einzugsgebiet</description>
 							</documentation>
 						</annotation>
 					</element>

@@ -38,7 +38,7 @@ import de.psi.go.lhwz.PSICompact.ArchiveData;
  * <li>20060124 schlienger Datenüberschreibungsproblem: jetzt werden auch negativen Werte zurückgeschrieben
  * </ol>
  * 
- * @author schlienger
+ * @author Marc Schlienger
  */
 public class PSICompactObservationItem implements IObservation
 {
