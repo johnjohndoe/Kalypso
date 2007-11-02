@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="Kalypso1D2DPostprozessing">
-  <title>Postprozessing</title>
+  <title>Postprocessing</title>
 
   <indexterm>
-    <primary>Postprozessing Kalypso1D2D</primary>
+    <primary>Postprocessing Kalypso1D2D</primary>
   </indexterm>
 
   <para>Nach dem Processing können die Ergebnisse im Postprocessing behandelt
@@ -24,7 +24,7 @@
   </orderedlist>
 
   <figure>
-    <title>Aktivitäten Ansicht im Postprocessing</title>
+    <title> Ansicht "Aktivitäten" im Postprocessing</title>
 
     <mediaobject>
       <imageobject>
@@ -37,19 +37,145 @@
     <title>Kartenansicht</title>
 
     <indexterm>
-      <primary>Modellkalibrierung Kalypso1D2D</primary>
+      <primary>Kartenansicht in Kalypso1D2D</primary>
     </indexterm>
 
-    <para></para>
+    <para>Bevor eine Karte mit Ergebnissen angezeigt wird, konfiguriert der
+    Benutzer die Ergebniskarte.</para>
 
     <section>
       <title>Ergebniskarte konfigurieren</title>
 
       <indexterm>
-        <primary>Ergebniskarte konfigurieren</primary>
+        <primary>Ergebniskarte konfigurieren in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para></para>
+      <para>Öffnen Sie in der Ansicht "Aktivitäten" den Baum
+      <guimenuitem>Postprocessing &gt; Kartenansicht. </guimenuitem>Mit einem
+      Doppelklick auf <guilabel>Ergebniskarte konfigurieren, </guilabel>öffnen
+      Sie einen Assistenten, mit dem Sie mittels Checkbox auf der linken Seite
+      auswählen können, welche Ergebnisse angezeigt werden sollen. Es stehen
+      im Allgemeinen folgende Ergebnisse zu Verfügung</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Stationäre/ instationäre Ergebnisse<itemizedlist>
+              <listitem>
+                <para>Geschwindigkeiten (als skalare Größe,
+                richtungsabhängig)</para>
+              </listitem>
+
+              <listitem>
+                <para>Geschwindigkeitsverktoren</para>
+              </listitem>
+
+              <listitem>
+                <para>Fließtiefen (Wasserstand minus Modellhöhe)</para>
+              </listitem>
+
+              <listitem>
+                <para>Wasserstände</para>
+              </listitem>
+            </itemizedlist></para>
+        </listitem>
+
+        <listitem>
+          <para>Modellhöhen</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Zunächst aktivieren Sie die Checkbox derer Ergebnisse, die Sie
+      sich anzeigen lassen wollen.</para>
+
+      <figure>
+        <title>Assistent zur Konfiguration der Ergebniskarte</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_02_Kartekonfig.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Auf der rechten Seite des Assistenten werden Informationen
+      angezeigt. Je tiefer man sich in der Gliederung befindet, desto
+      detaillierter werden die Informationen. Es kann wieder mittels Checkbox
+      ausgewählt werden ob die Ergebnisse mittels Isoflächen oder Isolinien
+      angezeigt werden sollen. Es können auch beide Boxen aktiviert
+      werden.</para>
+
+      <figure>
+        <title>Anzeigen von Informationen im Assistenten</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_04_ergebnisskarte.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Es besteht die Möglichkeit verschiedene "styles" zu kreieren, zu
+      bearbeiten oder zu löschen.</para>
+
+      <para><table>
+          <title>Styles bearbeiten</title>
+
+          <tgroup cols="2">
+            <tbody>
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/postp_06_style.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Style auswählen</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/postp_07_style.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>ausgewählten Style bearbeiten oder neuen Style
+                kreieren</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/postp_08_style.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>ausgewählten Style löschen</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table></para>
+
+      <para>Sollten Sie einen bereits verwendeten "style" verändern, dann
+      wirkt sich dies auch auf schon vorhande Ergebnisdarstellungen aus.
+      Wünschen Sie einen neuen "style" anzulegen, geben sie Im Feld
+      "Style-Name" einen neuen Namen ein. Es besteht die Möglichkeit
+      festzulegen welcher Wertebereich angezeigt werden soll.</para>
+
+      <figure>
+        <title>Style bearbeiten oder neu erstellen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_09_stylemanager.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Der Style Manager wird mit <guilabel>OK </guilabel>beendet.</para>
+
+      <para>Der Assistent wird mit einem Klick auf <guilabel>
+      Finish</guilabel> beendet.</para>
     </section>
 
     <section>
@@ -59,20 +185,98 @@
         <primary>Ergebniskarte anzeigen in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>Um die Ergebnisse in einer Karte zu visualisieren, öffnen Sie im
-      Aktivitätenfenster den Baum <guimenuitem>Postprozessing &gt;
+      <para>Um die Ergebnisse in einer Karte zu visualisieren, öffnen Sie in
+      der Ansicht " Aktivitäten" den Baum <guimenuitem>Postprocessing &gt;
       Kartenansicht</guimenuitem>. Mit einem Doppelklick auf
       <guimenuitem>Ergebniskarte anzeigen</guimenuitem> wird eine Karte
       geöffnet. In der Ansicht "Gliederung" kann man auswählen welche Werte
-      beziehungsweise Objekte man sich anzeigen lassen will. Im untenstehenden
-      Bild unter Anderem das Höhenmodell mittels Isoflächen.</para>
+      beziehungsweise Objekte man sich anzeigen lassen will.</para>
 
       <figure>
         <title>Ergebniskarte anzeigen</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/1D2D/postp_02_ergebnisskarte.png" />
+            <imagedata fileref="img/1D2D/postp_02b_ergebnisskarte.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Im Postprocessing können auch sämtliche Kartenansichten aus dem
+      Preprocessing bis hin zu den importierten Grundlagenkarten angezeigt
+      werden. Werden diese nicht benötigt, können sie genau wie die
+      berechneten Ergebnisse in der Ansicht "Gliederung" mittels Checkbox
+      deaktiviert werden. Die Grundlagenkarten befinden sich in der Gliederung
+      unter "fenet" und werden, wenn "fenet" deaktiviert wird, somit
+      automatisch mit deaktiviert.</para>
+
+      <figure>
+        <title>Daten aus dem Preprocessing im Postprocessing anzeigen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_05b_ergebnisskarte.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>In <guilabel>Ergebniskarte anzeigen </guilabel>können Werte aus
+      den TINs abgefragt werden.</para>
+
+      <table>
+        <title>Anzeigen von TIN Infos</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/postp_20_info.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry>Zeigt per Cursor, die Werte des TIN´s an</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>Sie werden nun aufgefordert das TIN-Thema in der Gliederung
+      auszuwählen, dessen Werte Sie sich anzeigen lassen wollen.</para>
+
+      <figure>
+        <title>Aufforderung ein TIN- Thema zu aktivieren</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_21_info.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Ausgewählt wird das TIN-Thema mittels Linksklick auf den
+      Schriftzug. Ein ausgewähltes Thema erscheint in der Ansicht "Gliederung"
+      blau hinterlegt.</para>
+
+      <figure>
+        <title>Auswahl eines TIN-Themas</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_22_info.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Fahren sie mit dem Mauscursor über die Karte! An den Stellen, an
+      denen Ergebnisse vorhanden sind, werden diese nun angezeigt.</para>
+
+      <figure>
+        <title>Anzeigen von Werten</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_23_info.png" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -83,10 +287,17 @@
     <title>Längsschnittansicht</title>
 
     <indexterm>
-      <primary>Längsschnittansicht Kalypso 1D2D</primary>
+      <primary>Längsschnittansicht in Kalypso 1D2D</primary>
     </indexterm>
 
-    <para></para>
+    <para>Sowohl für eindimensionale als auch für zweidimensionale Modelle
+    können Längsschnitte erstellt und angezeigt werden. Für zweidimensionale
+    Modellabschnitte muss zuvor eine Linien-shape-Datei importiert worden
+    sein. Die shape Datei muss die Kilometreirung und den Verlauf der
+    Gewässerachse enthalten.</para>
+
+    <para>Die Konfiguration des Längsschnittes ist nur für zweidimensionale
+    Modellbereiche erforderlich.</para>
 
     <section>
       <title>Längsschnitt konfigurieren</title>
@@ -95,7 +306,46 @@
         <primary>Längsschnitt konfigurieren in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para></para>
+      <para>Um einen Längsschnitt für Ihr zweidimensionales Modell zu
+      konfugurieren, öffnen Sie in der Ansicht " Aktivitäten" den Baum
+      <guimenuitem>Postprocessing &gt; Längsschnittansicht</guimenuitem>.
+      Doppelklicken Sie auf <guilabel> Längsschnitt
+      konfigurieren</guilabel>.</para>
+
+      <para>Im anschließenden Assistenten ist unter "Gewässerachse" zunächst
+      die entsprechende shape Datei auszuwählen. Unter "Parameter" werden dann
+      die entprechenden Spalten der shape Datei ausgewählt. Klicken Sie auf
+      <guilabel>Next</guilabel>.</para>
+
+      <figure>
+        <title>Längsschnitteinstellungen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_11_laengskonfig.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Im nächsten Assistenten werden Sie aufgefordert auszuwählen für
+      welches Ergebnis Sie sich den Längsschnitt anzeigen lassen
+      wollen.</para>
+
+      <figure>
+        <title>Ergebnis für Längsschnitt auswählen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_12_laengskonfig.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Der Assistent wird mit <guilabel>Finish</guilabel> beendet.</para>
+
+      <para>In der Ergebnisansicht ändert sich zunächst nichts. Um den
+      Längsschnitt zu visualisieren gehen Sie wie im folgenden Kapitel
+      vor.</para>
     </section>
 
     <section>
@@ -105,7 +355,38 @@
         <primary>Längsschnitt anzeigen in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para></para>
+      <para>Um sich einen Längsschnitt anzeigen zu lassen, öffnen Sie in der
+      Ansicht "Aktivitäten" den Baum <guimenuitem>Postprocessing &gt;
+      Längsschnittansicht</guimenuitem>. Doppelklicken Sie auf
+      <guilabel>Längsschnitt anzeigen</guilabel>.</para>
+
+      <para>Handelt es sich um ein zweidimensionales Modell und haben Sie im
+      vorherigen Schritt alles richtig gemacht, steht der zuvor konfigurierte
+      Längsschnitt hier zur Auswahl.</para>
+
+      <figure>
+        <title>Assistent zum Anzeigen eines Längsschnittes</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_13_laengsanz.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Beenden Sie den Assistenten mit <guilabel>Finish. </guilabel>Der
+      Längsschnitt wird nun automatisch in der Ansicht "Chart View"
+      angezeigt.</para>
+
+      <figure>
+        <title>Längsschnittansicht in Kalypso 1D2D</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_14_laengsanz.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
     </section>
   </section>
 
@@ -116,7 +397,8 @@
       <primary>Differenzenbildung in Kalypso 1D2D</primary>
     </indexterm>
 
-    <para></para>
+    <para>Kalypso 1D2D stellt die Funktion Differenzen zu bilden zur
+    Verfügung.</para>
 
     <section>
       <title>Differenzen erzeugen</title>
@@ -125,7 +407,81 @@
         <primary>Diffenrenzen erzeugen in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para></para>
+      <para>Um eine Differenz zu bilden, öffnen Sie in der Ansicht "
+      Aktivitäten" den Baum <guimenuitem>Postprocessing &gt;Differenzenbildung
+      </guimenuitem>. Doppelklicken Sie auf <guilabel>Differenzen
+      erzeugen</guilabel>. Ein Assistent führt durch die Differenzenbildung.
+      Als erstes wird der Minuend ausgewählt. Klicken Sie auf
+      <guilabel>Next</guilabel><guilabel>.</guilabel></para>
+
+      <figure>
+        <title>Assistent zur Auswahl des Minuenden</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_15_minuend.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Dann wird der Subtrahend ausgewählt.</para>
+
+      <figure>
+        <title>Assistent zur Auswahl des Subtrahenden</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_16_subtrahent.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Nun ist noch der Ort auszuwählen, an dem die Differenz abgelegt
+      werden soll.</para>
+
+      <figure>
+        <title>Ziel auswählen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_17_diff.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Die Differenz wird als zusätzliches Ergebnis abgelegt und kann
+      anschleißend über die Funktion <guilabel>Ergebniskarte
+      konfigurieren</guilabel> in die Karte geladen werden. Öffnen Sie in der
+      Ansicht "Aktivitäten" den Baum <guimenuitem>Postprocessing &gt;
+      Kartenansicht. </guimenuitem>Mit einem Doppelklick auf
+      <guilabel>Ergebniskarte konfigurieren,</guilabel> öffnen Sie den
+      Assistenten. Neu hinzugekommen ist nun die Differenz, die Sie zuvor
+      erzeugt haben.</para>
+
+      <figure>
+        <title>Differnz in Ergebniskarte laden</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_18_diffanz.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Nun kann die Differnez in der Karte angezeigt werden (Siehe <link
+      linkend="???">1.2 Ergebniskarte anzeigen)</link> Die Differenz kann in
+      der Ansicht "Gliederung" mittels Checkbox aktiviert beziehungsweise
+      deaktiviert werden.</para>
+
+      <figure>
+        <title>Anzeigen einer selbst erstellten Differenz in der Karte</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/postp_19_diffanz.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
     </section>
   </section>
 </chapter>
