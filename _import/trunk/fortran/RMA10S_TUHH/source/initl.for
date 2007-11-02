@@ -1,4 +1,4 @@
-C     Last change:  EF   22 Aug 2007   10:22 am
+C     Last change:  WP   25 Oct 2007   10:00 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -32,14 +32,7 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       USE PARAFlow1dFE
 !-
 
-!nis,may07
-!Add midside node for polynom approach
-!      !nis,feb07: Add minimum number for some allocations coming from the midside node numbers of FFF elements
-!      INTEGER :: minNoNu, MaxFFFMS
-!      !-
-!Add midside node for polynom approach
-!-
-      
+
 C	INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05	INCLUDE 'BLKDR.COM'
@@ -701,31 +694,34 @@ cipk jan02
         STQC(I)=0.
         STQ(I)=0.
         STQE(I)=0.
-	ENDDO
-	
+      ENDDO
+
       DO I=1,MAXE
         SIDF(I)=0.
-	IGTP(I)=0
+        IGTP(I)=0
 CIPK JUN05
         NFCTP(I)=0
         DO J=1,8
           NOPS(I,J)=0
-	  ENDDO
-	ENDDO
+        ENDDO
+      ENDDO
 
       DO J=1,100
-	  NDUPJ(J)=0
-	  NDDNJ(J)=0
-	  cj(j)=1.0
-	ENDDO
+        NDUPJ(J)=0
+        !nis,oct07: Needs to be initialized, if it should stand some tests
+        ndflj(j) = 0
+        !-
+        NDDNJ(J)=0
+        cj(j)=1.0
+      ENDDO
 
 CIPK MAR01
       DO J=1,50
- 	  NOUTCC(J)=0
-	  ADDSAL(J)=-9999.
-	  ADDTMP(J,1)=-9999.
-	  ADDSED(J)=-9999.
-	ENDDO
+        NOUTCC(J)=0
+        ADDSAL(J)=-9999.
+        ADDTMP(J,1)=-9999.
+        ADDSED(J)=-9999.
+      ENDDO
 
 !NiS,apr06: allocate and initialize the aour-array
       ALLOCATE (aour(maxp))

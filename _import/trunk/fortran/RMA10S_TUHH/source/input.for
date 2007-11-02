@@ -1,4 +1,4 @@
-C     Last change:  WP   25 Sep 2007    2:46 pm
+C     Last change:  WP   25 Oct 2007    9:12 am
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -1119,29 +1119,6 @@ C-
 !NiS,mar06: End of CONTINUITYLINEBLOCK-
 
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!       CONTROL VOLUME FEM (CVFEM)-CONTROL                                      !
-!                                                                               !
-!NiS,mar06      At this point the switch for CVFEM-method is introduced for the !
-!               user entry "CVFEM" in the last line before "ENDGEO". If the user!
-!               does not enter anything the switch is set to 0, if he enters    !
-!               CVFEM it is set to 1; there should be a depending reading option!
-!               whether FEM should be set to 1 or 2 like it is done in Kalypso2D!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      IF (ID(1:5) == 'CVFEM') THEN
-        write (*,*)'Control-Volume method, you have chosen, is not',
-     +             'available yet. It will be calculated with Galerkin',
-     +             'method'
-        FEM = 0
-        !FEM = 1
-      ELSE
-        FEM = 0
-      ENDIF
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!	End of CONTROL VOLUME FEM (CVFEM)-CONTROL				!
-!                                                                               !
-!NiS,mar06                                                                      !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 CIPK SEP96 ADD OCEAN BOUNDARY NODE LIST
 

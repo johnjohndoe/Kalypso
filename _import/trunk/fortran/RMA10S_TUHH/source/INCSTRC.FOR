@@ -1,4 +1,4 @@
-C     Last change:  WP   28 Aug 2007    8:50 am
+C     Last change:  WP    2 Oct 2007    9:06 pm
       SUBROUTINE INCSTRC
       
       USE CSVAR
@@ -9,6 +9,7 @@ cipk aug05	INCLUDE 'BLK10.COM'
       CHARACTER*72 DLINC
 
       NROWM=0
+      NCOLM=0
       NMAXM=0
       NSETS=0
       CALL GINPT(INCSTR,IDC,DLINC)

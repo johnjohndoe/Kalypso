@@ -1,4 +1,4 @@
-C     Last change:  WP   26 Sep 2007    2:20 pm
+C     Last change:  WP   25 Oct 2007    8:55 am
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -63,6 +63,7 @@ CIPK MAY02 EXPAND TO 7
         DO K=1,7
           NCNV(K)=9999
         ENDDO
+        !TOASK
         !nis,jan07: NITN is always the number of iterations in unsteady state. For steady state this would be NITI. The generalization for this
         !           loop would be using the NITA which is always a copy of the actual number
         !DO I=1,NITN
@@ -159,6 +160,7 @@ cipk dec97 define urfcc
       ITEST=0
       DO 150 J = 1, NP
 
+        !TOASK
         !nis,sep07: If node is deactivated because element is deactivated, it might still have invalid WSLL, therefore refresh that WSLL
         IF(vel(1,j) == 0.0 .AND. vel(2,j) == 0.0) then
           WSLL (J) = ado(j) + 0.0
@@ -347,6 +349,7 @@ CIPK MAY02 EXPAND TO 7
       WRITE(LITR,6040)TET,ICYC,MAXN,NSZF,(EMAX(J),NMX(J),J=1,7),
      +   (EAVG(J),J=1,7)
 
+!TOASK
 !NiS,mar06: Change of format-descriptor because number of descriptors does
 !           not fit the number of written Variables; increasing number
 !           from 6 to 7
@@ -423,22 +426,6 @@ C-
 C......UPDATE MIDSIDE VALUES
 C-
       DO 240 N=1,NE
-!nis,may07
-!Add midside node for polynom approach
-      !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
-      !nis,feb07: Allow for numbered FFF midsides
-      !if (nop(n,2).EQ.-9999) GOTO 240 !EFa Dec06
-      !if (nop(n,2) < -1000) GOTO 240 !EFa Dec06
-      !auxiliary update for velocities at linear-linear elements
-
-!      if (imat(n) == 89) then
-!        do i = 1, 2
-!          vel(i,nop(n,2)) = 0.5 * (vel(i,nop(n,1)) + vel(i,nop(n,3)))
-!        end do
-!      end if
-      !-
-!Add midside node for polynom approach
-!-
       IF(IMAT(N) .GT. 5000) GO TO 236
 
 CIPK DEC00 ALLOW FOR GATE STRUCTURE
@@ -498,10 +485,14 @@ C-
 
         CALL OUTPUT(2)
 cipk sep04
+
+        !TOASK
+        !nis,sep07
         !ERROR MESSAGE
         !EXECUTION TERMINATED BY EXCESS CHANGES
         call ErrorMessageAndStop (4001, problematicNode,
      +       cord(problematicNode, 1), cord(problematicNode, 2))
+        !-
       ENDIF
 C-
  6000 FORMAT( 1H1  / 10X, 'FINITE ELEMENT METHOD FOR FLUID FLOW...PROGRA

@@ -1,4 +1,4 @@
-C     Last change:  WP   29 Aug 2007   12:19 pm
+C     Last change:  WP   25 Oct 2007    9:05 am
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -203,7 +203,7 @@ C-
           IF(IMAT(N) .LT. 1) GO TO 105
 
           !nis,sep06,com: Jump over control structure elements
-          !               Here an overloaded messages is in because, if the value is .lt.1 the code can not reach this code part.
+          !               Here overloading messages are in because, if the value is .lt.1 the code can not reach this code part.
           !               It would be enough to have if(NM.gt.900) with NM=IMAT(N) without ABS()-function
           !-
 cipk oct98 update to f90
@@ -414,7 +414,7 @@ CIPK OCT01
           dxline = cord (nc, 1) - cord (na, 1)
           dyline = cord (nc, 2) - cord (na, 2)
 
-          !calculate the reduction of xl-length because of inflow angle (Strahlensatz)
+          !calculate the reduction of xl-length because of inflow angle (theorem of intersecting lines; Strahlensatz)
           !must be: xlstrike = xl * reductionfactor
           reductionfactor = (COS(thet) * dyline - SIN(thet) * dxline)
           reductionfactor = reductionfactor / SQRT(dxline**2+dyline**2) !*sqrt(cos(thet)**2 + sin(thet)**2)

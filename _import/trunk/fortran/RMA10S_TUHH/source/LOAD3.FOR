@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP   25 Sep 2007    2:40 pm
+C     Last change:  WP   25 Oct 2007    1:25 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -224,16 +224,6 @@ CIPK OCT98 CONVERT TO F90
         !-
           !NiS,may06: local copy of processed node number
           N=NCON(K)
-!nis,may07
-!Add midside node for polynom approach; at the moment only a linear approach is used for such elements, so the midsides must be cycled
-!          !nis,feb07: Cycle, if node is negative. It's only possible for midside nodes, which shouldn't be processed here
-!          if (n < 0) CYCLE NBCrelation
-!          !-
-      !herehere: deactivating midside node of polynomial approach
-      !if (imat (j) == 89 .and. k == 2) CYCLE NBCrelation
-      !herehere-
-!Add midside node for polynom approach; at the moment only a linear approach is used for such elements, so the midsides must be cycled
-!-
 
 C-
 C........ Setup for special case inflow quality conditions
@@ -930,10 +920,12 @@ cipk oct98 update to f90
 
             !get copy of node number
             nd = line(LiNo,k)
+            !deactivating nodes that are dry
             if (vel(3,nd) <= 0.0) then
               do eqdof = 1, 6
                 nbc(nd,eqdof) = 0
               end do
+            !deactivating nodes that are in deactivated element
             ELSEIF (MOD(k,2) == 0 .AND.
      +              imat(IsNodeOfElement(nd,1))<0) then
               do eqdof = 1, 6
@@ -949,7 +941,7 @@ cipk oct98 update to f90
               !the same node must not be processed on
               IF(NLN == nd) CYCLE equationassigning
 
-              !Stop, if there is gap in line
+              !Stop, if there is a gap in CCline
               if (nd == 0) then
                 WRITE(*,*) 'ERROR - Definition gap in transition line.'
                 WRITE(*,*) 'the ', k, 'th slot has a zero entry'

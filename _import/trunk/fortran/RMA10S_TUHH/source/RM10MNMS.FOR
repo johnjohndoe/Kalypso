@@ -1,4 +1,4 @@
-C     Last change:  K    20 Jun 2007   12:21 pm
+C     Last change:  WP   25 Oct 2007    1:22 pm
 c           RMA-10
 c           COPYRIGHT  
 c           RESOURCE MODELLING ASSOCIATES PTY LTD 
@@ -296,10 +296,15 @@ cWP        if(status .eq. -1  .or. fnam0(1:5) .eq. 'dummy') then
           WRITE(*,6000)
  6000     FORMAT(/' Enter RMA-10 input file name: ',/)
 CIPK JUN05
-!nis,feb07: fixed input file name
 !!cWP          call fileopen(fnam0)
-!          READ(*,*) FNAM0
+
+          !nis,oct07: standard control file for Kalypso application
+          !application ASCII
+          !READ(*,*) FNAM0
+          !application Kalypso GUI
           fnam0 = 'control.r10'
+          !-
+
 !CIPK JUN05 5000     FORMAT(A48)
 !cWP        endif
 !-
