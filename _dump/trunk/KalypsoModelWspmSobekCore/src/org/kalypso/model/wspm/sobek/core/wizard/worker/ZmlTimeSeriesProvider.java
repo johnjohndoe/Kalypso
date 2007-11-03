@@ -147,9 +147,9 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
       /* get time series values, iterate over the whole results, start and end values are only needed for filling */
       for( int i = 0; i < values.getCount(); i++ )
       {
-        final Date date = (Date) values.getElement( 0, dateAxis );
+        final Date date = (Date) values.getElement( i, dateAxis );
         for( final IAxis axis : valueAxis )
-          myValues.add( (Double) values.getElement( values.getCount() - 1, axis ) );
+          myValues.add( (Double) values.getElement( i, axis ) );
 
         addResult( result, date, myValues );
         myValues.clear();
