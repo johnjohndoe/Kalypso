@@ -110,8 +110,16 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
       final GM_Curve curve = branch.getGeometryProperty();
       final GM_Point point = getLocation();
 
-      if( curve.intersects( point ) )
-        FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getId() );
+      if( point.equals( curve.getStartPoint() ) )
+        continue;
+      else if( point.equals( curve.getEndPoint() ) )
+        continue;
+      else if( curve.intersects( point ) )
+      {
+        final String id = "#" + branch.getFeature().getId();
+        FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, id );
+      }
+
     }
   }
 
