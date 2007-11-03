@@ -56,7 +56,26 @@ public interface INode
     eConnectionNode,
     eCrossSectionNode,
     eLinkageNode,
-    eSbkStructure
+    eSbkStructure;
+
+    public String getTypeOfConnectionNode( )
+    {
+      final TYPE type = TYPE.valueOf( name() );
+      switch( type )
+      {
+        case eBoundaryNode:
+          return "boundaryCondition";
+
+        case eConnectionNode:
+          return "base";
+
+        case eLinkageNode:
+          return "linkage";
+
+        default:
+          return null;
+      }
+    }
   }
 
   public enum FLOW_DIRECTION

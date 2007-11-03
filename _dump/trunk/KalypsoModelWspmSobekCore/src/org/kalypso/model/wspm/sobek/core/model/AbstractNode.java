@@ -163,7 +163,7 @@ public abstract class AbstractNode implements INode
     else
       throw new IllegalStateException( "Can't handle node type" + nodeType.name() );
 
-    return FNNodeUtils.createNode( model, targetFeatureType, point );
+    return FNNodeUtils.createNode( model, targetFeatureType, point, nodeType );
   }
 
   /**

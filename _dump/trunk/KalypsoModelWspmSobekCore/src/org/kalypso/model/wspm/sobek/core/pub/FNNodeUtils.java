@@ -53,11 +53,11 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 import org.kalypso.model.wspm.sobek.core.model.ConnectionNode;
 import org.kalypso.model.wspm.sobek.core.model.CrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
-import org.kalypso.model.wspm.sobek.core.model.SbkStructure;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -70,7 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class FNNodeUtils
 {
-  public static INode createNode( final IModelMember model, final IFeatureType targetFeatureType, final GM_Point point ) throws Exception
+  public static INode createNode( final IModelMember model, final IFeatureType targetFeatureType, final GM_Point point, final TYPE nodeType ) throws Exception
   {
     final IRelationType targetPropertyType = (IRelationType) model.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
@@ -80,6 +80,9 @@ public class FNNodeUtils
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LOCATION ), point );
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID ), nodeId );
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NAME ), nodeId );
+
+    if( nodeType != null )
+      values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_CONNECTION_TYPE ), nodeType.getTypeOfConnectionNode() );
 
     CommandableWorkspace cw;
     final GMLWorkspace workspace = model.getFeature().getWorkspace();
@@ -154,7 +157,7 @@ public class FNNodeUtils
       return new BoundaryNode( model, node );
     else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qname ) )
       return new CrossSectionNode( model, node );
-    
+
     return new EmptyNodeImplementation( model, node );
   }
 }

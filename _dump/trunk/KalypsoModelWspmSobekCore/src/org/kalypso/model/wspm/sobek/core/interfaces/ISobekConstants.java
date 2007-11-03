@@ -243,4 +243,7 @@ public class ISobekConstants
 
   public static final QName QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE );
 
+  public static final String F_HYDRAULIC_NODE_CONNECTION_TYPE = "typeOfConnectionNode";
+
+  public static final QName QN_HYDRAULIC_NODE_CONNECTION_TYPE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_NODE_CONNECTION_TYPE );
 }
