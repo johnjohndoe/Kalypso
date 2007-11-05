@@ -71,7 +71,7 @@ import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFI
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -118,7 +118,7 @@ public class CreateProfileDeviderWizard extends Wizard
   public void addPages( )
   {
     m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles,1, "profileFeaturesChooserPage", "Profile ausw‰hlen", null );
-    m_profileChooserPage.setLabelProvider( new GMLEditorLabelProvider2() );
+    m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
     m_profileChooserPage.setMessage( "Bitte w‰hlen Sie aus, in welchen Profilen Flieﬂzonen erzeugt werden sollen." );
 
     m_deviderPage = new CreateProfileDeviderPage( m_foundProfiles.theme );

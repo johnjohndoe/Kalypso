@@ -64,7 +64,7 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -101,7 +101,7 @@ public class PropertyEditWizard extends Wizard
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
     m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", "Profile auswählen", null );
-    m_profileChooserPage.setLabelProvider( new GMLEditorLabelProvider2() );
+    m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
     m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Werte zugeweisen werden sollen." );
   }
 

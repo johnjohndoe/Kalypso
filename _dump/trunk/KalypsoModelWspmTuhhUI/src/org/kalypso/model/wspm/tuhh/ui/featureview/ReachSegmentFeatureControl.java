@@ -64,7 +64,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -133,7 +133,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
   {
     m_viewer = CheckboxTableViewer.newCheckList( parent, style | SWT.CHECK | SWT.MULTI );
     m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setLabelProvider( new GMLEditorLabelProvider2() );
+    m_viewer.setLabelProvider( new GMLLabelProvider() );
 
     m_viewer.addCheckStateListener( new ICheckStateListener()
     {

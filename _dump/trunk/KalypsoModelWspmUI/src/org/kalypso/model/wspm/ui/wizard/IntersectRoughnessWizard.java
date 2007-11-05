@@ -68,7 +68,7 @@ import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFI
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class IntersectRoughnessWizard extends Wizard
 {
-  private final GMLEditorLabelProvider2 m_chooserPageLabelProvider = new GMLEditorLabelProvider2();
+  private final GMLLabelProvider m_chooserPageLabelProvider = new GMLLabelProvider();
 
   private ArrayChooserPage m_profileChooserPage;
 
