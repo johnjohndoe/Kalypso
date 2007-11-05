@@ -116,7 +116,7 @@ public class GisTemplateMapModell implements IMapModell
       // layer 1 is legend
       final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
       addTheme( legendTheme );
-      legendTheme.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, false );
+      legendTheme.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
       legendTheme.setVisible( false );
     }
 
@@ -124,7 +124,7 @@ public class GisTemplateMapModell implements IMapModell
     {
       // layer 2 is scrablayer
       final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager, this );
-      scrabLayer.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, false );
+      scrabLayer.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
       addTheme( scrabLayer );
     }
   }
