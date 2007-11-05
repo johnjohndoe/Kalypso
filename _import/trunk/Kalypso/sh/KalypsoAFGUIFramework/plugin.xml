@@ -99,7 +99,7 @@
                <not>
                   <test
                         property="org.eclipse.core.resources.projectNature"
-                        value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature">
+                        value="org.kalypso.afgui.ScenarioHandlingProjectNature">
                   </test>
                </not>
             </and>
