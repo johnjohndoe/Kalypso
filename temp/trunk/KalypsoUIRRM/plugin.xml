@@ -37,7 +37,7 @@
          point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="false"
-            category="org.kalypso.ui.newwizards.kalypso"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.rrm"
             class="org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard"
             hasPages="true"
             icon="icons/kmStrang.gif"
