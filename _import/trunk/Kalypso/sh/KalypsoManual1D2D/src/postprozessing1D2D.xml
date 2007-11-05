@@ -24,11 +24,11 @@
   </orderedlist>
 
   <figure>
-    <title> Ansicht "Aktivitäten" im Postprocessing</title>
+    <title>Ansicht "Aktivitäten" im Postprocessing</title>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="img/1D2D/postp_01_aktivitätenansicht.png" />
+        <imagedata fileref="img/1D2D/postp_01_aktivitaetenansicht.png" />
       </imageobject>
     </mediaobject>
   </figure>
@@ -174,8 +174,8 @@
 
       <para>Der Style Manager wird mit <guilabel>OK </guilabel>beendet.</para>
 
-      <para>Der Assistent wird mit einem Klick auf <guilabel>
-      Finish</guilabel> beendet.</para>
+      <para>Der Assistent wird mit <guilabel> Finish</guilabel>
+      beendet.</para>
     </section>
 
     <section>
@@ -456,7 +456,7 @@
       Kartenansicht. </guimenuitem>Mit einem Doppelklick auf
       <guilabel>Ergebniskarte konfigurieren,</guilabel> öffnen Sie den
       Assistenten. Neu hinzugekommen ist nun die Differenz, die Sie zuvor
-      erzeugt haben.</para>
+      erzeugt haben. </para>
 
       <figure>
         <title>Differnz in Ergebniskarte laden</title>
