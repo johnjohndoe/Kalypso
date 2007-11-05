@@ -67,6 +67,7 @@ public class WorkflowProjectNature implements IProjectNature
    */
   public void configure( )
   {
+    System.out.println( "TODO: remove me" );
   }
 
   /**

@@ -117,38 +117,77 @@
             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario">
       </handler>
       <handler
+            class="org.kalypso.afgui.handlers.NewProjectHandler"
+            commandId="org.kalypso.afgui.command.newproject">
+      </handler>
+      <handler
             class="org.kalypso.afgui.handlers.RemoveScenarioHandler"
-            commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RemoveScenario">
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <reference
+                  definitionId="oneScenario">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.kalypso.afgui.handlers.DeleteResourceHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
+                  </instanceof>
+               </iterate>
+            </with>
+         </activeWhen>
       </handler>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
             categoryId="de.renew.workflow.tasks.category"
+            description="Neues Projekt anlegen"
+            id="org.kalypso.afgui.command.newproject"
+            name="Projekt neu">
+      </command>
+      <command
+            categoryId="de.renew.workflow.tasks.category"
+            description="Ein neues Szenario hinzufügen"
             id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"
             name="Szenario hinzufügen">
       </command>
       <command
             categoryId="de.renew.workflow.tasks.category"
-            id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RemoveScenario"
-            name="Szenario löschen">
-      </command>
-      <command
-            categoryId="de.renew.workflow.tasks.category"
+            description="Das gewählte Szenario aktivieren"
             id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"
             name="Szenario aktivieren">
       </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.kalypso.afgui.command.newproject"
+            icon="icons/newProject.gif">
+      </image>
+      <image
+            commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"
+            icon="icons/activate.gif">
+      </image>
+      <image
+            commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"
+            icon="icons/nuvola_select/edit_add.png">
+      </image>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="popup:org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
          <command
-               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"
-               icon="icons/activate.gif"
-               id="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenario"
-               label="Szenario aktivieren"
-               tooltip="Das gewählte Szenario aktivieren">
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario">
             <visibleWhen>
                <reference
                      definitionId="oneScenario">
@@ -156,11 +195,7 @@
             </visibleWhen>
          </command>
          <command
-               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"
-               icon="icons/nuvola_select/edit_add.png"
-               id="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"
-               label="Szenario hinzufügen"
-               tooltip="Ein neues Szenario hinzufügen">
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario">
             <visibleWhen>
                <reference
                      definitionId="oneScenario">
@@ -168,18 +203,50 @@
             </visibleWhen>
          </command>
          <command
-               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RemoveScenario"
-               helpContextId="org.eclipse.ui.edit.delete"
-               icon="icons/nuvola_select/edit_remove.png"
-               id="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"
-               label="Szenario löschen"
-               tooltip="Das gewählte Szenario löschen">
+               commandId="org.eclipse.ui.edit.delete">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
+         <separator
+               name="scenario"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.kalypso.afgui.command.newproject">
+         </command>
+         <command
+               commandId="org.eclipse.ui.edit.delete">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario">
             <visibleWhen>
                <reference
                      definitionId="oneScenario">
                </reference>
             </visibleWhen>
          </command>
+         <command
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario">
+            <visibleWhen>
+               <reference
+                     definitionId="oneScenario">
+               </reference>
+            </visibleWhen>
+         </command>
+         <separator
+               name="additions"
+               visible="true">
+         </separator>
       </menuContribution>
    </extension>
    <extension

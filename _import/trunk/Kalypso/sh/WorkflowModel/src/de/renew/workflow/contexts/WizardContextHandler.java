@@ -54,7 +54,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -91,6 +91,8 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
 
         if( wizardDialog.open() == Window.OK && wizard instanceof IDialogWithResult )
         {
+          // TODO: dubios: first, no one rally implements that, second: javadoc of this methods sais, nothing has to be
+          // returned
           return ((IDialogWithResult) wizard).getResult();
         }
         else
@@ -100,7 +102,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
       }
       catch( final CoreException e )
       {
-        throw new ExecutionException( Messages.getString("WizardContextHandler.1") + m_wizardId + Messages.getString("WizardContextHandler.2") + m_wizardType, e ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new ExecutionException( Messages.getString( "WizardContextHandler.1" ) + m_wizardId + Messages.getString( "WizardContextHandler.2" ) + m_wizardType, e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     return Status.OK_STATUS;

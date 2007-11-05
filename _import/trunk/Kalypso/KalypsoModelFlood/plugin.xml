@@ -180,6 +180,10 @@
             </parameter>
          </class>
       </handler>
+      <handler
+            class="org.kalypso.model.flood.handlers.ProcessFloodModelHandler"
+            commandId="org.kalypso.model.flood.ProcessFloodModel">
+      </handler>
    </extension>
    <extension
          point="org.kalypso.afgui.scenarioData">
@@ -208,6 +212,9 @@
          </adapter>
          <adapter
                type="org.kalypso.model.flood.binding.IRunoffEvent">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.ITinReference">
          </adapter>
       </factory>
    </extension>
@@ -266,4 +273,26 @@
            </command>
         </menuContribution>
 	</extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.kalypso.model.flood.newwizard"
+            name="Flood Model"
+            parentCategory="org.kalypso.ui.newwizards.kalypso">
+      </category>
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.model.flood.newwizard"
+            class="org.kalypso.model.flood.ui.wizards.NewProjectWizard"
+            descriptionImage="content/images/button_flood.gif"
+            finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+            hasPages="true"
+            id="org.kalypso.model.flood.ui.wizards.NewProjectWizard"
+            name="Kalypso Flood Model"
+            project="true">
+         <description>
+            Erzeugt ein neues Flood-Modeller Projekt zur Generierung von Fliesstiefenkarten anhand zuvor berechneter Wasserspiegel.
+         </description>
+      </wizard>
+   </extension>
 </plugin>
