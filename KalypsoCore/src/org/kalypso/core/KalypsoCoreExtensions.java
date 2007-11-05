@@ -52,9 +52,12 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalogContribution;
 import org.kalypso.core.catalog.urn.IURNGenerator;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.om.IComponentHandler;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
@@ -79,6 +82,11 @@ public class KalypsoCoreExtensions
 
   private static Map<String, IComponentHandler> THE_COMPONENT_MAP = null;
 
+  /* Theme-Info Extension-Point */
+  private static final String THE_THEME_INFO_EXTENSION_POINT = "org.kalypso.core.themeInfo";
+
+  private static Map<String, IConfigurationElement> THE_THEME_INFO_MAP = null;
+
   public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties ) throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -88,9 +96,8 @@ public class KalypsoCoreExtensions
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( VISITOR_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
       THE_VISITOR_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
-      for( int i = 0; i < configurationElements.length; i++ )
+      for( final IConfigurationElement element : configurationElements )
       {
-        final IConfigurationElement element = configurationElements[i];
         final String configid = element.getAttribute( "id" );
         THE_VISITOR_MAP.put( configid, element );
       }
@@ -120,11 +127,10 @@ public class KalypsoCoreExtensions
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( CATALOG_CONTRIBUTIONS_EXTENSION_POINT );
 
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-    for( int i = 0; i < configurationElements.length; i++ )
+    for( final IConfigurationElement element : configurationElements )
     {
       try
       {
-        final IConfigurationElement element = configurationElements[i];
         final String name = element.getName();
         if( "catalogContribution".equals( name ) )
         {
@@ -160,11 +166,11 @@ public class KalypsoCoreExtensions
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( COMPONENT_HANDLER_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
       THE_COMPONENT_MAP = new HashMap<String, IComponentHandler>( configurationElements.length );
-      for( int i = 0; i < configurationElements.length; i++ )
+      for( final IConfigurationElement element : configurationElements )
       {
         try
         {
-          final IConfigurationElement element = configurationElements[i];
+          // TODO: anti-eclipse! do not instantiate exension before they are REALLY needed
           final String configid = element.getAttribute( "id" );
           final IComponentHandler handler = (IComponentHandler) element.createExecutableExtension( "class" );
           THE_COMPONENT_MAP.put( configid, handler );
@@ -177,5 +183,57 @@ public class KalypsoCoreExtensions
     }
 
     return THE_COMPONENT_MAP.get( id );
+  }
+
+  /**
+   * @param themeInfoId
+   *            Id of the requested extension. Can contain properties. Example:
+   *            <code>org.kalypso.core.someId?prop1=value1&props2=values</code>
+   */
+  public static IKalypsoThemeInfo createThemeInfo( final String themeInfoId, final IKalypsoTheme theme )
+  {
+    if( THE_THEME_INFO_MAP == null )
+    {
+      /* Lookup the existing ids only once */
+
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IExtensionPoint extensionPoint = registry.getExtensionPoint( THE_THEME_INFO_EXTENSION_POINT );
+      final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+      THE_THEME_INFO_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
+      for( final IConfigurationElement element : configurationElements )
+      {
+        final String configid = element.getAttribute( "id" );
+        THE_THEME_INFO_MAP.put( configid, element );
+      }
+    }
+
+    final String id;
+    final Properties props = new Properties();
+    if( themeInfoId.contains( "?" ) )
+    {
+      final int queryPartIndex = themeInfoId.indexOf( '?' );
+      id = themeInfoId.substring( 0, queryPartIndex );
+
+      // replace in order to handle empty query
+      final String query = themeInfoId.substring( queryPartIndex ).replaceAll( "\\?", "" );
+      PropertiesUtilities.collectProperties( query, "&", "=", props );
+    }
+    else
+      id = themeInfoId;
+
+    try
+    {
+      final IConfigurationElement element = THE_THEME_INFO_MAP.get( id );
+      final IKalypsoThemeInfo info = (IKalypsoThemeInfo) element.createExecutableExtension( "class" );
+      info.init( theme, props );
+      return info;
+    }
+    catch( final Throwable e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoCorePlugin.getDefault().getLog().log( status );
+    }
+
+    return null;
   }
 }

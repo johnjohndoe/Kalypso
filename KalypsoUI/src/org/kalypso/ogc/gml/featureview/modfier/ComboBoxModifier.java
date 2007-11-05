@@ -52,7 +52,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -104,7 +104,7 @@ public class ComboBoxModifier implements IFeatureModifier
 
       final Feature[] features = ComboFeatureControl.collectReferencableFeatures( workspace, m_feature, m_rt );
 
-      final GMLEditorLabelProvider2 labelProvider = new GMLEditorLabelProvider2();
+      final GMLLabelProvider labelProvider = new GMLLabelProvider();
 
       for( final Feature foundFeature : features )
       {

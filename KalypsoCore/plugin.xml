@@ -8,6 +8,7 @@
    <extension-point id="catalogContribution" name="add or extend catalogs" schema="schema/catalogContribution.exsd"/>
    <extension-point id="componentHandler" name="componentHandler" schema="schema/componentHandler.exsd"/>
    <extension-point id="featureviewComparator" name="featureviewComparator" schema="schema/featureviewComparator.exsd"/>
+   <extension-point id="themeInfo" name="Kalypso Theme Info" schema="schema/themeInfo.exsd"/>
 
    <extension
          point="org.kalypso.core.nativeObsAdapter">
@@ -153,6 +154,13 @@
           properties="qname"
           type="org.kalypsodeegree.model.feature.Feature">
     </propertyTester>
+ </extension>
+ <extension
+       point="org.kalypso.core.themeInfo">
+    <themeInfo
+          class="org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo"
+          id="org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo">
+    </themeInfo>
  </extension>
 
 </plugin>

@@ -244,21 +244,25 @@ public class DisplayElementFactory
     }
 
     // if the geometry property is null, do not build a DisplayElement
-    if( geoProperty == null && !(symbolizer instanceof RasterSymbolizer) )
+    if( geoProperty == null )
     {
-      return null;
+      if( symbolizer instanceof RasterSymbolizer )
+      {
+        // these two symbs do allow empty geometry...
+      }
+      else
+        return null;
     }
 
     DisplayElement displayElement = null;
-    // PointSymbolizer
     if( symbolizer instanceof PointSymbolizer )
     {
       displayElement = buildPointDisplayElement( feature, geoProperty, (PointSymbolizer) symbolizer );
-    } // LineSymbolizer
+    }
     else if( symbolizer instanceof LineSymbolizer )
     {
       displayElement = buildLineStringDisplayElement( feature, geoProperty, (LineSymbolizer) symbolizer );
-    } // PolygonSymbolizer
+    }
     else if( symbolizer instanceof PolygonSymbolizer )
     {
       displayElement = buildPolygonDisplayElement( feature, geoProperty, (PolygonSymbolizer) symbolizer );
@@ -266,7 +270,7 @@ public class DisplayElementFactory
     else if( symbolizer instanceof TextSymbolizer )
     {
       displayElement = buildLabelDisplayElement( feature, geoProperty, (TextSymbolizer) symbolizer );
-    } // RasterSymbolizer
+    }
     else if( symbolizer instanceof RasterSymbolizer )
     {
       displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer) symbolizer );

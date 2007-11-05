@@ -64,7 +64,7 @@ import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.gmlschema.property.relation.IDocumentReference;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -156,7 +156,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
         final Feature[] features = collectReferencableFeatures( workspace, feature, rt );
 
-        final GMLEditorLabelProvider2 labelProvider = new GMLEditorLabelProvider2();
+        final GMLLabelProvider labelProvider = new GMLLabelProvider();
 
         for( final Feature foundFeature : features )
         {

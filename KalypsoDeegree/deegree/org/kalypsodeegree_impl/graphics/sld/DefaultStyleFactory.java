@@ -18,6 +18,7 @@ import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
@@ -156,17 +157,29 @@ public class DefaultStyleFactory
   public UserStyle createUserStyle( final IFeatureType featureType, final String styleName ) throws StyleNotDefinedException
   {
     final ArrayList<Symbolizer> symbolizer = new ArrayList<Symbolizer>();
-    if( featureType.getName().equals( "RectifiedGridCoverage" ) )
-      symbolizer.add( createRasterSymbolizer() );
+
+    if( featureType.getQName().equals( RectifiedGridCoverage.QNAME ) )
+      symbolizer.add( StyleFactory.createRasterSymbolizer() );
 
     final IPropertyType[] properties = featureType.getProperties();
+    createSymbolizersForProperties( symbolizer, properties );
+// final IVirtualFunctionPropertyType[] virtualGeometryProperties = featureType.getVirtualGeometryProperties();
+// createSymbolizersForProperties( symbolizer, virtualGeometryProperties );
+
+    final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer.toArray( new Symbolizer[symbolizer.size()] ) );
+
+    final UserStyle userStyle = (UserStyle_Impl) StyleFactory.createStyle( styleName, styleName, "empty Abstract", featureTypeStyle );
+    return userStyle;
+  }
+
+  private void createSymbolizersForProperties( final ArrayList<Symbolizer> symbolizer, final IPropertyType[] properties ) throws StyleNotDefinedException
+  {
     for( final IPropertyType pt : properties )
     {
       if( pt instanceof IValuePropertyType && GeometryUtilities.isUndefinedGeometry( (IValuePropertyType) pt ) )
       {
         symbolizer.add( StyleFactory.createPointSymbolizer() );
         symbolizer.add( StyleFactory.createLineSymbolizer() );
-        // symbolizer.add( StyleFactory.createPolygonSymbolizer() );
         symbolizer.add( StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.5d ), new PropertyName( pt.getQName() ) ) );
       }
       else if( GeometryUtilities.isGeometry( pt ) )
@@ -174,11 +187,6 @@ public class DefaultStyleFactory
         symbolizer.add( createGeometrySymbolizer( (IValuePropertyType) pt ) );
       }
     }
-
-    final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( styleName, symbolizer.toArray( new Symbolizer[symbolizer.size()] ) );
-
-    final UserStyle userStyle = (UserStyle_Impl) StyleFactory.createStyle( styleName, styleName, "empty Abstract", featureTypeStyle );
-    return userStyle;
   }
 
   public static StyledLayerDescriptor createDefaultStyle( final String styleName, final Symbolizer[] symbolizer )
@@ -208,11 +216,6 @@ public class DefaultStyleFactory
       return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.4d ), new PropertyName( ftp.getQName() ) );
     else
       throw new StyleNotDefinedException( "This geometry type: " + ftp.getQName() + " has no default style available" );
-  }
-
-  private Symbolizer createRasterSymbolizer( )
-  {
-    return StyleFactory.createRasterSymbolizer();
   }
 
   private Integer generateKey( final IFeatureType ft )

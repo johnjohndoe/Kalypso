@@ -91,8 +91,12 @@ public class RemoveThemeAction extends MapModellViewActionDelegate
   private boolean determineDeleteable( final IKalypsoTheme[] selectedThemes )
   {
     for( final IKalypsoTheme kalypsoTheme : selectedThemes )
-      if( !kalypsoTheme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE ) )
+    {
+      final String delStr = kalypsoTheme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
+      final boolean canDelete = Boolean.parseBoolean( delStr );
+      if( !canDelete )
         return false;
+    }
 
     return true;
   }

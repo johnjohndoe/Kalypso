@@ -618,7 +618,5 @@ public class FileUtilities
     {
       IOUtils.closeQuietly( is );
     }
-
   }
-
 }

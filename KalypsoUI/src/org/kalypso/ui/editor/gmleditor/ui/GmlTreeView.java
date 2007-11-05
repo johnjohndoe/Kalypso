@@ -59,8 +59,6 @@ import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
@@ -129,9 +127,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
-  private final GMLEditorLabelProvider2 m_labelProvider = new GMLEditorLabelProvider2();
+  private final GMLLabelProvider m_labelProvider = new GMLLabelProvider();
 
-  private final GMLContentProvider m_contentProvider = new GMLContentProvider();
+  private final GMLContentProvider m_contentProvider = new GMLContentProvider( true, true );
 
   private final ModellEventProviderAdapter m_eventProvider = new ModellEventProviderAdapter();
 
@@ -304,54 +302,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   @SuppressWarnings("unchecked")
   public void onModellChange( final ModellEvent modellEvent )
   {
-    if( modellEvent instanceof FeatureStructureChangeModellEvent )
-    {
-      final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent) modellEvent;
-      final Feature[] parentFeature = structureEvent.getParentFeatures();
-
-      final TreeViewer treeViewer = m_treeViewer;
-      final Control control = treeViewer.getControl();
-      if( !control.isDisposed() )
-        // REMARK: must be sync, if not we get a racing condition with handleGlobalSelection
-        control.getDisplay().syncExec( new Runnable()
-        {
-          public void run( )
-          {
-            // This does not work nicely. In order to refresh the tree in a nice way,
-            // the modell event should also provide which festures where added/removed
-            final Object[] expandedElements = treeViewer.getExpandedElements();
-
-            if( parentFeature == null )
-              treeViewer.refresh();
-            else
-              for( final Feature feature : parentFeature )
-              {
-                // treeViewer.refresh( feature ); childs are not updated!
-                treeViewer.refresh();
-              }
-
-            treeViewer.setExpandedElements( expandedElements );
-          }
-        } );
-    }
-    else if( modellEvent instanceof FeaturesChangedModellEvent )
-    {
-      final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
-      final Feature[] features = fcme.getFeatures();
-      final Control treeControl = m_treeViewer.getControl();
-      final TreeViewer treeViewer = m_treeViewer;
-      if( (treeControl != null) && !treeControl.isDisposed() )
-        treeControl.getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            if( !treeControl.isDisposed() )
-              for( final Feature feature : features )
-                treeViewer.refresh( feature, true );
-          }
-        } );
-    }
-
     fireModellEvent( modellEvent );
   }
 
@@ -437,7 +387,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         return;
 
       final GMLContentProvider contentProvider = m_contentProvider;
-      final GMLEditorLabelProvider2 labelProvider = m_labelProvider;
+      final GMLLabelProvider labelProvider = m_labelProvider;
       final Display display = control.getDisplay();
       display.asyncExec( new Runnable()
       {

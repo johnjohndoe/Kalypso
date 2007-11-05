@@ -403,8 +403,8 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
     {
       final List<GM_Point> pointList = new LinkedList<GM_Point>();
 
-      GM_Triangle[] triangles = m_items.toArray( new GM_Triangle[m_items.size()] );
-      for( GM_Triangle triangle : triangles )
+      final GM_Triangle[] triangles = m_items.toArray( new GM_Triangle[m_items.size()] );
+      for( final GM_Triangle triangle : triangles )
       {
         pointList.add( triangle.getCentroid() );
       }
@@ -541,12 +541,20 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
     // TODO: transform to my own crs
 
     final GM_Position position = location.getPosition();
+    return getValue( position );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_TriangulatedSurface#getValue(org.kalypsodeegree.model.geometry.GM_Position)
+   */
+  public double getValue( final GM_Position position )
+  {
     final Envelope searchEnv = new Envelope( position.getX(), position.getX(), position.getY(), position.getY() );
     final List<GM_Triangle> query = m_index.query( searchEnv );
     for( final GM_Triangle triangle : query )
     {
-      if( triangle.contains( location ) )
-        return triangle.getValue( location );
+      if( triangle.contains( position ) )
+        return triangle.getValue( position );
     }
 
     return Double.NaN;

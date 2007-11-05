@@ -123,10 +123,11 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   @Override
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
-    super.startElement( uri, localName, qName, atts );
-
     if( getDelegate() != null )
+    {
+      super.startElement( uri, localName, qName, atts );
       return;
+    }
 
     final String localUri = (uri == null || uri.length() < 1) ? m_schema.getTargetNamespace() : uri;
     final QName qname = new QName( localUri, localName );
@@ -272,10 +273,7 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   @Override
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
-    super.endElement( uri, localName, qName );
-
-    if( getDelegate() != null )
-      return;
+    /* First check, if a current scope is closing */
 
     final String localUri = (uri == null || uri.length() < 1) ? m_schema.getTargetNamespace() : uri;
 
@@ -283,6 +281,8 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     {
       /* Closing current property */
       m_scopeProperty = null;
+      setDelegate( null );
+      return;
     }
     else if( m_scopeFeature != null && QNameUtilities.equals( m_scopeFeature.getFeatureType().getQName(), localUri, localName ) )
     {
@@ -293,6 +293,15 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
         m_rootFeature = m_scopeFeature;
 
       m_scopeFeature = parent;
+      setDelegate( null );
+      return;
+    }
+
+    /* If still not handled, maybe we have an active delegate */
+    if( getDelegate() != null )
+    {
+      super.endElement( uri, localName, qName );
+      return;
     }
   }
 

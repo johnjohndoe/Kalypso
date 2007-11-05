@@ -69,7 +69,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
 import org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -153,7 +153,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
     m_linkChecklist = CheckboxTableViewer.newCheckList( panel, SWT.BORDER );
     m_linkChecklist.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_linkChecklist.setContentProvider( new ArrayContentProvider() );
-    m_linkChecklist.setLabelProvider( new GMLEditorLabelProvider2() );
+    m_linkChecklist.setLabelProvider( new GMLLabelProvider() );
 
     // TODO: we never show the buttons, as they do not work properly yet
     if( m_showSelectButtons && false )

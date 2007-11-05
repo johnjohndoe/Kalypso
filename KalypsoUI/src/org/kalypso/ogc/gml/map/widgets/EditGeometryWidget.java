@@ -81,7 +81,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class EditGeometryWidget extends AbstractWidget
 {
-
   double m_boxRadiusVisibleHandles = 50;
 
   int m_boxRadiusDrawnHandle = 10;
@@ -100,7 +99,7 @@ public class EditGeometryWidget extends AbstractWidget
 
   private Point m_dragPoint = null;
 
-  public EditGeometryWidget( String name, String toolTip )
+  public EditGeometryWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
   }
@@ -109,7 +108,7 @@ public class EditGeometryWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
   @Override
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     if( p == null || isInEditingMode() )
       return;
@@ -119,10 +118,10 @@ public class EditGeometryWidget extends AbstractWidget
     if( activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
       return;
     // GM_Envelope envelope = getMapPanel().getBoundingBox();
-    double minX = transform.getSourceX( p.getX() - m_boxRadiusVisibleHandles );
-    double minY = transform.getSourceY( p.getY() - m_boxRadiusVisibleHandles );
-    double maxX = transform.getSourceX( p.getX() + m_boxRadiusVisibleHandles );
-    double maxY = transform.getSourceY( p.getY() + m_boxRadiusVisibleHandles );
+    final double minX = transform.getSourceX( p.getX() - m_boxRadiusVisibleHandles );
+    final double minY = transform.getSourceY( p.getY() - m_boxRadiusVisibleHandles );
+    final double maxX = transform.getSourceX( p.getX() + m_boxRadiusVisibleHandles );
+    final double maxY = transform.getSourceY( p.getY() + m_boxRadiusVisibleHandles );
     // valid envelope with handles
     final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
     final JMSelector selector = new JMSelector();
@@ -130,12 +129,12 @@ public class EditGeometryWidget extends AbstractWidget
     final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
     final List<Object> features = selector.select( envelope, featureListVisible, false );
     m_handles = createHandles( features, null, envelope );
-    
-//  TODO: check if this repaint is necessary for the widget
-    MapPanel panel = getMapPanel();
-    if ( panel != null)
+
+// TODO: check if this repaint is necessary for the widget
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
-    
+
   }
 
   /**
@@ -162,12 +161,12 @@ public class EditGeometryWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
    */
   @Override
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
     m_dragPoint = p;
-    //TODO: check if this repaint is really necessary
-    MapPanel panel = getMapPanel();
-    if (panel != null)
+    // TODO: check if this repaint is really necessary
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
 
   }
@@ -176,14 +175,14 @@ public class EditGeometryWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
    */
   @Override
-  public void middleClicked( Point p )
+  public void middleClicked( final Point p )
   {
     final GeoTransform transform = getMapPanel().getProjection();
     final IKalypsoTheme activeTheme = getActiveTheme();
     if( activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
       return;
-    double g1 = transform.getSourceX( p.getX() );
-    double g2 = transform.getSourceX( p.getX() + m_boxRadiusDrawnHandle );
+    final double g1 = transform.getSourceX( p.getX() );
+    final double g2 = transform.getSourceX( p.getX() + m_boxRadiusDrawnHandle );
     m_gisRadiusTopology = Math.abs( g2 - g1 );
     m_careTopology = !m_careTopology;
   }
@@ -192,7 +191,7 @@ public class EditGeometryWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
    */
   @Override
-  public void leftReleased( Point p )
+  public void leftReleased( final Point p )
   {
     perform();
     // end editing mode for next editing
@@ -201,7 +200,8 @@ public class EditGeometryWidget extends AbstractWidget
 
   /**
    * Perform the translation of the selected feaetures.
-   * @return true to signal that features 
+   * 
+   * @return true to signal that features
    */
   protected Collection<Feature> perform( )
   {
@@ -218,7 +218,7 @@ public class EditGeometryWidget extends AbstractWidget
         final double gStartY = transform.getSourceY( m_startPoint.getY() );
 
         final double[] translation = new double[] { gDragX - gStartX, gDragY - gStartY };
-        
+
         if( !(activeTheme instanceof IKalypsoFeatureTheme) )
           return null;
 
@@ -230,7 +230,7 @@ public class EditGeometryWidget extends AbstractWidget
           workspace.postCommand( command );
           return command.getTranslatedFeatures();
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
           return null;
@@ -248,7 +248,7 @@ public class EditGeometryWidget extends AbstractWidget
    * 
    * @return filteres handles
    */
-  private List<Handle> filter( List<Handle> handles, Point pointOfInterest, List<Handle> collector )
+  private List<Handle> filter( final List<Handle> handles, final Point pointOfInterest, List<Handle> collector )
   {
     if( collector == null )
       collector = new ArrayList<Handle>();
@@ -305,12 +305,12 @@ public class EditGeometryWidget extends AbstractWidget
       if( distance <= m_gisRadiusTopology )
         collector.add( handle );
     }
-    
+
     return collector;
   }
 
   @Override
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
     final GeoTransform projection = getMapPanel().getProjection();
     int mask = Handle.MASK_BOX;
@@ -320,8 +320,8 @@ public class EditGeometryWidget extends AbstractWidget
     {
       if( m_startPoint != null && m_dragPoint != null )
       {
-        int dx = (int) (m_dragPoint.getX() - m_startPoint.getX());
-        int dy = (int) (m_dragPoint.getY() - m_startPoint.getY());
+        final int dx = (int) (m_dragPoint.getX() - m_startPoint.getX());
+        final int dy = (int) (m_dragPoint.getY() - m_startPoint.getY());
         for( final Handle handle : m_editHandles )
           handle.paint( g, projection, m_boxRadiusDrawnHandle, (int) m_gisRadiusTopology, dx, dy, Handle.MASK_BOX );
       }
@@ -331,28 +331,27 @@ public class EditGeometryWidget extends AbstractWidget
         handle.paint( g, projection, m_boxRadiusDrawnHandle, (int) m_gisRadiusTopology, mask );
   }
 
-  private List<Handle> createHandles( final List<Object> features, List<Handle> collector, GM_Envelope envelope )
+  private List<Handle> createHandles( final List<Object> features, List<Handle> collector, final GM_Envelope envelope )
   {
     if( collector == null )
       collector = new ArrayList<Handle>();
     for( final Object feature : features )
-      createHandles( (Feature)feature, collector, envelope );
+      createHandles( (Feature) feature, collector, envelope );
     return collector;
   }
 
-  private List<Handle> createHandles( final Feature feature, final List<Handle> collector, GM_Envelope envelope )
+  private List<Handle> createHandles( final Feature feature, final List<Handle> collector, final GM_Envelope envelope )
   {
     final IValuePropertyType[] geometryProperties = feature.getFeatureType().getAllGeomteryProperties();
-    for( int i = 0; i < geometryProperties.length; i++ )
+    for( final IValuePropertyType propType : geometryProperties )
     {
-      final IValuePropertyType propType = geometryProperties[i];
       final GM_Object geometry = (GM_Object) feature.getProperty( propType );
       createHandles( feature, propType, geometry, collector, envelope );
     }
     return collector;
   }
 
-  private void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Object geometry, final List<Handle> collector, GM_Envelope envelope )
+  private void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Object geometry, final List<Handle> collector, final GM_Envelope envelope )
   {
     if( geometry instanceof GM_Point )
       createPointHandles( feature, propType, (GM_Point) geometry, collector, envelope );
@@ -362,14 +361,14 @@ public class EditGeometryWidget extends AbstractWidget
       createSurfaceHandles( feature, propType, (GM_Surface) geometry, collector, envelope );
   }
 
-  private void createPointHandles( final Feature feature, final IValuePropertyType propType, final GM_Point point, final List<Handle> collector, GM_Envelope envelope )
+  private void createPointHandles( final Feature feature, final IValuePropertyType propType, final GM_Point point, final List<Handle> collector, final GM_Envelope envelope )
   {
     final GM_Position position = point.getPosition();
     if( envelope.contains( position ) )
       collector.add( new Handle( feature, propType, position ) );
   }
 
-  private void createCurveHandles( final Feature feature, final IValuePropertyType propType, final GM_Curve curve, final List<Handle> collector, GM_Envelope envelope )
+  private void createCurveHandles( final Feature feature, final IValuePropertyType propType, final GM_Curve curve, final List<Handle> collector, final GM_Envelope envelope )
   {
     final GM_Position[] positions;
     try
@@ -377,7 +376,7 @@ public class EditGeometryWidget extends AbstractWidget
       positions = curve.getAsLineString().getPositions();
       createHandles( feature, propType, positions, collector, envelope );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       // create no handles
       e.printStackTrace();
@@ -385,7 +384,7 @@ public class EditGeometryWidget extends AbstractWidget
 
   }
 
-  private void createSurfaceHandles( final Feature feature, final IValuePropertyType propType, final GM_Surface surface, final List<Handle> collector, GM_Envelope envelope )
+  private void createSurfaceHandles( final Feature feature, final IValuePropertyType propType, final GM_Surface surface, final List<Handle> collector, final GM_Envelope envelope )
   {
     final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
     if( surfaceBoundary == null )
@@ -395,20 +394,18 @@ public class EditGeometryWidget extends AbstractWidget
     createHandles( feature, propType, positionsExterior, collector, envelope );
     final GM_Ring[] interiorRings = surfaceBoundary.getInteriorRings();
     if( interiorRings != null )
-      for( int i = 0; i < interiorRings.length; i++ )
+      for( final GM_Ring ring : interiorRings )
       {
-        final GM_Ring ring = interiorRings[i];
-        GM_Position[] positionsInteror = ring.getPositions();
+        final GM_Position[] positionsInteror = ring.getPositions();
         createHandles( feature, propType, positionsInteror, collector, envelope );
       }
   }
 
-  private void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Position[] positions, final List<Handle> collector, GM_Envelope envelope )
+  private void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Position[] positions, final List<Handle> collector, final GM_Envelope envelope )
   {
     final Set<GM_Position> pos = new HashSet<GM_Position>();
-    for( int i = 0; i < positions.length; i++ )
+    for( final GM_Position position : positions )
     {
-      final GM_Position position = positions[i];
       if( envelope.contains( position ) )
       {
         if( !pos.contains( position ) )

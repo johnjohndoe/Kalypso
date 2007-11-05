@@ -53,9 +53,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * @author Christoph Kuepferle
  */
-public class GMLEditorLabelProvider2 extends LabelProvider
+public class GMLLabelProvider extends LabelProvider
 {
-  private Map<ImageDescriptor, Image> m_images = new HashMap<ImageDescriptor, Image>( 20 );
+  private final Map<ImageDescriptor, Image> m_images = new HashMap<ImageDescriptor, Image>( 20 );
 
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#dispose()
@@ -79,7 +79,7 @@ public class GMLEditorLabelProvider2 extends LabelProvider
 
     if( descriptor == null )
       return null;
-    
+
     if( m_images.containsKey( descriptor ) )
       return m_images.get( descriptor );
 
@@ -101,13 +101,13 @@ public class GMLEditorLabelProvider2 extends LabelProvider
 
     if( element instanceof Feature )
       return ImageProvider.IMAGE_FEATURE;
-    
+
     if( element instanceof FeatureAssociationTypeElement )
       return ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
-    
+
     if( element instanceof LinkedFeatureElement2 )
       return ImageProvider.IMAGE_FEATURE_LINKED;
-    
+
     if( element instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) element;
@@ -124,7 +124,7 @@ public class GMLEditorLabelProvider2 extends LabelProvider
       if( GeometryUtilities.isMultiPolygonGeometry( vpt ) )
         return ImageProvider.IMAGE_GEOM_PROP_MULTIPOLYGON;
     }
-    
+
     if( GeometryUtilities.getPolygonClass().isAssignableFrom( element.getClass() ) )
       return ImageProvider.IMAGE_GEOM_PROP_POLYGON;
 
@@ -159,7 +159,7 @@ public class GMLEditorLabelProvider2 extends LabelProvider
 
     if( element instanceof IValuePropertyType )
     {
-      IValuePropertyType vpt = (IValuePropertyType) element;
+      final IValuePropertyType vpt = (IValuePropertyType) element;
       return vpt.getValueClass().getName().replaceAll( ".+\\.", "" );
     }
 
