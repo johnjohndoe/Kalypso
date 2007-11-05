@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -48,6 +49,8 @@ import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -84,14 +87,33 @@ public class GMLContentProvider implements ITreeContentProvider
 
   private final boolean m_showAssociations;
 
+  private final boolean m_handleModelEvents;
+
+  /**
+   * @deprecated Use the full constructor instead
+   */
+  @Deprecated
   public GMLContentProvider( )
   {
-    this( true );
+    this( true, false );
   }
 
   public GMLContentProvider( final boolean showAssociations )
   {
+    this( showAssociations, true );
+  }
+
+  /**
+   * Full construcotr.<br>
+   * Likely to be replaced by {@link #GMLContentProvider(boolean)} in the future.<br>
+   * 
+   * @param handleModelEvents
+   *            Only for backwards compability. Should always be set to <code>true</code>.
+   */
+  public GMLContentProvider( final boolean showAssociations, final boolean handleModelEvents )
+  {
     m_showAssociations = showAssociations;
+    m_handleModelEvents = handleModelEvents;
   }
 
   /**
@@ -229,7 +251,7 @@ public class GMLContentProvider implements ITreeContentProvider
               return fate;
             else if( property instanceof List )
             {
-              if( ((List) property).contains( feature ) )
+              if( ((List< ? >) property).contains( feature ) )
                 return fate;
             }
           }
@@ -467,8 +489,63 @@ public class GMLContentProvider implements ITreeContentProvider
 
   protected void handleModelChanged( final ModellEvent modellEvent )
   {
-    // TODO Auto-generated method stub
+    if( !m_handleModelEvents )
+      return;
 
+    final TreeViewer treeViewer = m_viewer;
+    final Control control = treeViewer.getControl();
+
+    if( modellEvent instanceof FeatureStructureChangeModellEvent )
+    {
+      final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent) modellEvent;
+      final Feature[] parentFeature = structureEvent.getParentFeatures();
+
+      if( !control.isDisposed() )
+      {
+        // REMARK: must be sync, if not we get a racing condition with handleGlobalSelection
+        control.getDisplay().syncExec( new Runnable()
+        {
+          public void run( )
+          {
+            // This does not work nicely. In order to refresh the tree in a nice way,
+            // the modell event should also provide which festures where added/removed
+            final Object[] expandedElements = treeViewer.getExpandedElements();
+
+            if( parentFeature == null )
+              treeViewer.refresh();
+            else
+            {
+// for( final Feature feature : parentFeature )
+// {
+              // treeViewer.refresh( feature ); childs are not updated!
+              treeViewer.refresh();
+// }
+            }
+
+            treeViewer.setExpandedElements( expandedElements );
+          }
+        } );
+      }
+    }
+    else if( modellEvent instanceof FeaturesChangedModellEvent )
+    {
+      final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
+      final Feature[] features = fcme.getFeatures();
+      if( control != null && !control.isDisposed() )
+      {
+        control.getDisplay().asyncExec( new Runnable()
+        {
+          public void run( )
+          {
+            if( !control.isDisposed() )
+            {
+              for( final Feature feature : features )
+                treeViewer.refresh( feature, true );
+            }
+          }
+        } );
+      }
+    }
   }
 
 }
