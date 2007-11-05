@@ -630,15 +630,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Lastfall Definition</name>
-				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
-				<tooltip>Lastfall Definition - ${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</tooltip>
-				<description>Lastfall Definition - ${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#linkedLastfall}</label>
+				<tooltip>Lastfall Definition - ${property:org.kalypso.model.wspm.sobek#linkedLastfall}</tooltip>
+				<description>Lastfall Definition - ${property:org.kalypso.model.wspm.sobek#linkedLastfall}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Calculation Case Definition</name>
-				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
-				<tooltip>Calculation Case Definition - ${listProperty:http://www.opengis.net/gml#name;0;-no name-}</tooltip>
-				<description>Calculation Case Definition - ${listProperty:http://www.opengis.net/gml#name;0;-no name-}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#linkedLastfall}</label>
+				<tooltip>Calculation Case Definition -${property:org.kalypso.model.wspm.sobek#linkedLastfall}</tooltip>
+				<description>Calculation Case Definition - ${property:org.kalypso.model.wspm.sobek#linkedLastfall}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -668,21 +668,49 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="constValueIntervalMinutes" type="int" minOccurs="0" maxOccurs="1" default="30" nillable="false"><annotation>
-						<documentation xml:lang="de">
-							<label>Zeitschritt [min]</label>
-							<tooltip>Zeitschritt [min]</tooltip>
-							<description>Zeitschritt [min]</description>
-						</documentation>
-						<documentation xml:lang="en">
-							<label>Time Step [min]</label>
-							<tooltip>Time Step [min]</tooltip>
-							<description>Time Step [min]</description>
-						</documentation> 
-					</annotation></element>
+					<element name="constValueIntervalMinutes" type="int" minOccurs="0" maxOccurs="1" default="30" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zeitschritt [min]</label>
+								<tooltip>Zeitschritt [min]</tooltip>
+								<description>Zeitschritt [min]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Time Step [min]</label>
+								<tooltip>Time Step [min]</tooltip>
+								<description>Time Step [min]</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="typeOfLastBoundaryCondition" type="wspmSobekCommon:lastBoundaryTypeType" default="zml" nillable="false"/>
-					<element name="observationBegin" type="date" minOccurs="0" maxOccurs="1" nillable="false"/>
-					<element name="observationEnd" type="date" minOccurs="0" maxOccurs="1" nillable="false"/>
+					<element name="observationBegin" type="date" minOccurs="0" maxOccurs="1" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Anfang Zeitreihe</label>
+								<tooltip>Anfang Zeitreihe</tooltip>
+								<description>Anfang Zeitreihe</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Timeseries Begin</label>
+								<tooltip>Timeseries Begin</tooltip>
+								<description>Timeseries Begin</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="observationEnd" type="date" minOccurs="0" maxOccurs="1" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ende Zeitreihe</label>
+								<tooltip>Ende Zeitreihe</tooltip>
+								<description>Ende Zeitreihe</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Timeseries End</label>
+								<tooltip>Timeseries End</tooltip>
+								<description>Timeseries End</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
