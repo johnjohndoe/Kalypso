@@ -50,16 +50,28 @@ public interface IFeatureTypePropertiesConstants
   //
   // Common feature constants
   //
-  
+
   /** How many levels of children should be created if a feature is created (-1 means infinite, 0 means none) */
   public final static String FEATURE_CREATION_DEPTH = "feature.creationDepth";
+
   public final static String FEATURE_CREATION_DEPTH_DEFAULT = "0";
-  
+
   //
   // GmlTree Constants
   //
-  
+
   /** Show children of this element, defaults to true */
   public final static String GMLTREE_SHOW_CHILDREN = "gmltree.showChildren";
+
   public final static String GMLTREE_SHOW_CHILDREN_DEFAULT = "true";
+
+  //
+  // Map Constants
+  //
+
+  /**
+   * Extension id of a {@link org.kalypso.ogc.gml.IKalypsoThemeInfo} registered with the
+   * <code>org.kalypso.core.themeInfo</code> extension-point.
+   */
+  public static final String THEME_INFO_ID = "map.themeInfoId";
 }

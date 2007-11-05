@@ -44,6 +44,8 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * TODO: please comment
+ * 
  * @author kuch
  */
 public interface IToolTipComperator

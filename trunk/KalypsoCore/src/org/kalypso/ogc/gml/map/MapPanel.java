@@ -664,14 +664,16 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
         m_modellPainter = m_mapModellPainter;
 
-        // delay the Schedule, so if another invalidate comes within that timespan, no repaint happens
+        // delay the Schedule, so if another invalidate comes within that timespan, no repaint happens at all
         m_mapModellPainter.schedule( 250 );
       }
 
       m_shouldPaint = true;
     }
 
-    repaint();
+    // do not repaint here, as the painter trigger repaint events himself. Repainting here causes
+    // ugly sideeffect for pan
+    // repaint();
   }
 
   /**

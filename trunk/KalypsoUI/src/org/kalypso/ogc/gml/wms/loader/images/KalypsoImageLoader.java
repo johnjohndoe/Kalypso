@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.loader.images;
 
@@ -96,7 +96,7 @@ public class KalypsoImageLoader extends Job
    * @param bbox
    *            The requested bounding box.
    */
-  public KalypsoImageLoader( String name, IKalypsoImageProvider provider, int width, int height, GM_Envelope bbox )
+  public KalypsoImageLoader( final String name, final IKalypsoImageProvider provider, final int width, final int height, final GM_Envelope bbox )
   {
     super( name );
 
@@ -112,7 +112,7 @@ public class KalypsoImageLoader extends Job
    * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected IStatus run( IProgressMonitor monitor )
+  protected IStatus run( final IProgressMonitor monitor )
   {
     /* Start the task. */
     monitor.beginTask( "Loading image ...", 1000 );
@@ -128,9 +128,13 @@ public class KalypsoImageLoader extends Job
 
       return StatusUtilities.createOkStatus( "The theme was successfully loaded." );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       return e.getStatus();
+    }
+    catch( final Throwable throwable )
+    {
+      return StatusUtilities.statusFromThrowable( throwable );
     }
     finally
     {

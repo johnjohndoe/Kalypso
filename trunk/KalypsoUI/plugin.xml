@@ -1179,6 +1179,12 @@
             id="org.kalypso.ui.views.outline.ShapeExport"
             name="Shape Export">
       </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.widgets.category"
+            description="Zeigt in einem Tooltip ortsbezogene Informationen zu den selektierten Themen"
+            id="org.kalypso.ogc.gml.map.ThemeInfoCommand"
+            name="Quick-Info">
+      </command>
       </extension>
  <extension
        point="org.eclipse.ui.viewActions">
@@ -1385,6 +1391,10 @@
              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label"
              style="radio"
              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand"
+             style="radio">
        </command>
     </menuContribution>
     <menuContribution
@@ -1726,6 +1736,10 @@
           commandId="org.kalypso.ogc.gml.map.Screenshot"
           icon="icons/map/screenshot.gif">
     </image>
+    <image
+          commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand"
+          icon="icons/map/themeInfo.gif">
+    </image>
  </extension>
  <extension
        id="org.kalypso.ui.repositoryContainerCommands"
@@ -1987,6 +2001,21 @@
           </reference>
        </enabledWhen>
     </handler>
+    <handler
+          commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand">
+       <class
+             class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+          <parameter
+                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                value="org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget">
+          </parameter>
+       </class>
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
  </extension>
  <extension
        point="org.kalypso.core.featureviewComparator">
@@ -2055,5 +2084,12 @@
           class="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory"
           id="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory">
     </extensionControl>
+ </extension>
+ <extension
+       point="org.kalypso.core.themeInfo">
+    <themeInfo
+          class="org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo"
+          id="org.kalypso.ui.featureThemeInfo.default">
+    </themeInfo>
  </extension>
 </plugin>

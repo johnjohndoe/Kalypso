@@ -59,6 +59,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
+import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -83,7 +84,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   private final Collection<IKalypsoThemeListener> m_listeners = new HashSet<IKalypsoThemeListener>();
 
-  private final Map<String, Boolean> m_properties = Collections.synchronizedMap( new HashMap<String, Boolean>() );
+  private final Map<String, String> m_properties = Collections.synchronizedMap( new HashMap<String, String>() );
 
   private final IMapModell m_mapModel;
 
@@ -108,8 +109,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_mapModel = mapModel;
 
     /* Initialize properties */
-    m_properties.put( IKalypsoTheme.PROPERTY_DELETEABLE, true ); // deleteable defaults to 'true', because this was the
-    // old behaviour
+    // deleteable defaults to 'true', because this was the old behaviour
+    m_properties.put( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
   }
 
   /**
@@ -299,11 +300,13 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getProperty(java.lang.String)
+   * @return <code>defaultValue</code>, if the requested property is not set.
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getProperty(java.lang.String, java.lang.String)
    */
-  public boolean getProperty( final String name )
+  public String getProperty( final String name, final String defaultValue )
   {
-    Assert.isLegal( m_properties.containsKey( name ), "Unknown property: " + name );
+    if( !m_properties.containsKey( name ) )
+      return defaultValue;
 
     return m_properties.get( name );
   }
@@ -378,9 +381,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setProperty(java.lang.String, boolean)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setProperty(java.lang.String, java.lang.String)
    */
-  public void setProperty( final String name, final boolean value )
+  public void setProperty( final String name, final String value )
   {
     m_properties.put( name, value );
 
@@ -418,5 +421,23 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public String toString( )
   {
     return m_name;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == IKalypsoThemeInfo.class )
+    {
+      /* If an explizit info is configured for this map, use it */
+      final String themeInfoId = getProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, null );
+      if( themeInfoId != null )
+        return KalypsoCoreExtensions.createThemeInfo( themeInfoId, this );
+    }
+
+    return super.getAdapter( adapter );
   }
 }

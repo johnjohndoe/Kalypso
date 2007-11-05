@@ -45,6 +45,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
@@ -169,7 +170,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     final List<Property> propertyList = mapLayerType.getProperty();
     for( final Property property : propertyList )
-      theme.setProperty( property.getName(), property.isValue() );
+      theme.setProperty( property.getName(), property.getValue() );
   }
 
   /**
@@ -292,8 +293,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     {
       final Property property = extentFac.createStyledLayerTypeProperty();
       property.setName( name );
-      property.setValue( theme.getProperty( name ) );
-      propertyList.add( property );
+      final String value = theme.getProperty( name, null );
+      if( value != null )
+      {
+        property.setValue( value );
+        propertyList.add( property );
+      }
     }
   }
 
@@ -319,8 +324,19 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         if( newValue != null )
         {
           final CommandableWorkspace commandableWorkspace = (CommandableWorkspace) newValue;
+
+          /* Get current property set */
+          final String[] propertyNames = getPropertyNames();
+          final Properties properties = new Properties();
+          for( final String propName : propertyNames )
+            properties.put( propName, getProperty( propName, null ) );
+
           m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
+
+          /* Put current property set into m_theme */
+          for( final String propName : propertyNames )
+            m_theme.setProperty( propName, properties.getProperty( propName ) );
 
           // TODO is this really necessary?
           invalidate( getFullExtent() );
@@ -641,5 +657,46 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
   {
     paint( delegate.getScale(), delegate.getBoundingBox(), delegate.getSelected(), new NullProgressMonitor(), delegate );
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( m_theme != null )
+    {
+      final Object result = m_theme.getAdapter( adapter );
+      if( result != null )
+        return result;
+    }
+
+    return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getProperty(java.lang.String, java.lang.String)
+   */
+  @Override
+  public String getProperty( final String name, final String defaultValue )
+  {
+    if( m_theme == null )
+      return super.getProperty( name, defaultValue );
+
+    return m_theme.getProperty( name, defaultValue );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setProperty(java.lang.String, java.lang.String)
+   */
+  @Override
+  public void setProperty( final String name, final String value )
+  {
+    super.setProperty( name, value );
+
+    if( m_theme != null )
+      m_theme.setProperty( name, value );
   }
 }

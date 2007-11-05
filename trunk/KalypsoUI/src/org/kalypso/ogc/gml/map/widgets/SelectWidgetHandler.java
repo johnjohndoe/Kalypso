@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
@@ -89,13 +90,14 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
     final IWorkbenchPart activePart = (IWorkbenchPart) applicationContext.getVariable( ISources.ACTIVE_PART_NAME );
     final Shell shell = (Shell) applicationContext.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
     final MapPanel mapPanel = activePart == null ? null : (MapPanel) activePart.getAdapter( MapPanel.class );
     if( mapPanel == null )
       return StatusUtilities.createWarningStatus( "No map panel available" );
 
     if( mapPanel != null && widget != null )
     {
-      final UIJob job = new UIJob( shell.getDisplay(), "Widget auswählen" )
+      final UIJob job = new UIJob( display, "Widget auswählen" )
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )

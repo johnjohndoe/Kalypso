@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -55,6 +56,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -437,5 +439,40 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
   {
     paint( delegate.getScale(), delegate.getBoundingBox(), delegate.getSelected(), new NullProgressMonitor(), delegate );
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == IKalypsoThemeInfo.class )
+      return createThemeInfo();
+
+    return super.getAdapter( adapter );
+  }
+
+  private IKalypsoThemeInfo createThemeInfo( )
+  {
+    final IFeatureType featureType = getFeatureType();
+    if( featureType == null )
+      return null; // no data available; maybe show some status-message?
+
+    /* If an explizit info is configured for this map, use it */
+    // REMARK: ist necessary to copy this from AbstractFeatureTheme, as this adapter must be called first
+    final String themeInfoId = getProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, null );
+    if( themeInfoId != null )
+      return KalypsoCoreExtensions.createThemeInfo( themeInfoId, this );
+
+    // HACK: use featureThemeInfo from KalypsoUI as a default. This is needed, because this feature info the
+    // featureType-properties machnisms from KalypsoUI in order find a registered featureThemeInfo for the current
+    // qname
+    final IKalypsoThemeInfo defaultFeatureThemeInfo = KalypsoCoreExtensions.createThemeInfo( "org.kalypso.ui.featureThemeInfo.default", this );
+    if( defaultFeatureThemeInfo != null )
+      return defaultFeatureThemeInfo;
+
+    return new DefaultFeatureThemeInfo( this, new Properties() );
   }
 }

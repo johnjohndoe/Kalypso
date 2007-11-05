@@ -210,6 +210,54 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
   }
 
+  // REMARK: below is an essay of using geotools to render the coverages, but it
+  // does not work due to dependency problems.
+  // Please do not delete (for the moment).
+// private void paintCoverage( final Graphics2D g, final RectifiedGridCoverage coverage, final GeoTransform projection,
+// final ImageSymbolizer symbolizer, final IProgressMonitor monitor ) throws MalformedURLException,
+// NoSuchAuthorityCodeException, FactoryException, TransformException, NoninvertibleTransformException
+// {
+// final SubMonitor progress = SubMonitor.convert( monitor, "Painting coverage", 100 );
+//
+// final GM_Envelope coverageEnvelope = coverage.getEnvelope();
+// final Envelope jtsCoverageEnvelope = JTSAdapter.export( coverageEnvelope );
+//
+// paintEnvelope( g, projection, jtsCoverageEnvelope, new Color( 128, 128, 128, 20 ) );
+//
+// final RangeSetType rangeSet = coverage.getRangeSet();
+// final FileType file = rangeSet.getFile();
+// if( file == null )
+// {
+// // we definitely only support referenced images here
+// }
+// else
+// {
+// final String fileName = file.getFileName();
+// final URL context = getFeature().getWorkspace().getContext();
+// final URL fileURL = UrlResolverSingleton.getDefault().resolveURL( context, fileName );
+//
+// final RenderedOp image = JAI.create( "url", fileURL );
+//
+// final CoordinateReferenceSystem destinationCrs = CRS.decode( "ESPG:31467" );
+//
+// final ReferencedEnvelope envelope = new ReferencedEnvelope( jtsCoverageEnvelope, destinationCrs );
+//
+// final GM_Envelope screenEnvelope = projection.getDestRect();
+//
+// final GridCoverage2D geotoolsCoverage = new GridCoverageFactory().create( fileName, image, envelope );
+//
+// final Rectangle screenSize = new Rectangle( (int) screenEnvelope.getMin().getX(), (int)
+// screenEnvelope.getMin().getY(), (int) screenEnvelope.getWidth(), (int) screenEnvelope.getHeight() );
+// final RenderingHints java2dHints = null;
+// final GridCoverageRenderer gcr = new GridCoverageRenderer( destinationCrs, envelope, screenSize, java2dHints );
+//
+// // RasterSymbolizer geotoolsSymbolizer = new RasterSymbolizer();
+// gcr.paint( g, geotoolsCoverage, null );
+//
+// image.dispose();
+// }
+// }
+
   private void paintEnvelope( final Graphics2D g, final GeoTransform projection, final Envelope currentCellEnv, final Color color )
   {
     // We assume the envelope is normalized here, so we can safely switch minY anc maxY

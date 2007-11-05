@@ -41,74 +41,149 @@
 package org.kalypso.ogc.gml.map.utilities.tooltip;
 
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
+import java.util.regex.Pattern;
+
+import org.eclipse.core.runtime.Assert;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ToolTipRenderer
 {
-  private static final int ROW_HEIGHT = 14;
+  public static final Color DEFAULT_TEXT_COLOR = Color.BLACK;
 
-  private static final int BORDER = 5;
+  public static final Color DEFAULT_BORDER_COLOR = Color.DARK_GRAY;
 
-  private String[] m_rows; // content of tooltip (rows which will be rendered)
+  public static final Color DEFAULT_BACKGROUND_COLOR = new Color( 1f, 1f, 0.6f, 0.90f );
 
-  private Color m_backgroundColor = new Color( 1f, 1f, 0.6f, 0.65f );
+  public static final Point DEFAULT_OFFSET = new Point( 2, 2 );
+
+  public static final Insets DEFAULT_INSETS = new Insets( 4, 5, 4, 5 );
+
+  private static Pattern LINE_SPLIT = Pattern.compile( "$", Pattern.MULTILINE );
+
+  private final Insets m_insets;
+
+  /** Offset from paint-point to actual tooltip */
+  private final Point m_offset;
+
+  /** content of tooltip (rows which will be rendered) */
+  private String[] m_rows;
+
+  private final Color m_backgroundColor;
+
+  private final Color m_borderColor;
+
+  private final Color m_textColor;
 
   public ToolTipRenderer( )
   {
+    this( DEFAULT_INSETS, DEFAULT_OFFSET, DEFAULT_BACKGROUND_COLOR, DEFAULT_BORDER_COLOR, DEFAULT_TEXT_COLOR );
   }
 
-  private double calculateBoxWidth( final Graphics g )
+  public ToolTipRenderer( final Insets insets, final Point offset, final Color backgroundColor, final Color borderColor, final Color textColor )
   {
-    final Rectangle2D[] rectangles = new Rectangle2D[m_rows.length];
-    for( int i = 0; i < m_rows.length; i++ )
-      rectangles[i] = g.getFontMetrics().getStringBounds( m_rows[i], g );
-
-    double width = 0;
-    for( final Rectangle2D rectangle : rectangles )
-      if( rectangle.getWidth() > width )
-        width = rectangle.getWidth();
-
-    return width;
+    m_insets = insets;
+    m_offset = offset;
+    m_backgroundColor = backgroundColor;
+    m_borderColor = borderColor;
+    m_textColor = textColor;
   }
 
-  public void paintToolTip( final Point point, final Graphics g )
+  private Rectangle2D calculateBoxWidth( final Graphics g )
   {
-    if( m_rows == null )
-      throw new IllegalStateException();
+    final FontMetrics fontMetrics = g.getFontMetrics();
 
-    final double boxWidth = calculateBoxWidth( g );
+    final Rectangle2D maxRect = new Rectangle2D.Double();
+    for( final String row : m_rows )
+    {
+      final Rectangle2D rowBounds = fontMetrics.getStringBounds( row, g );
+      Rectangle2D.union( maxRect, rowBounds, maxRect );
+    }
+
+    return maxRect;
+  }
+
+  /**
+   * Paints a tooltip to the given position.<br>
+   * If a <code>screenRect</code> is given, the position may be adjusted in order to show the whole tooltip inside the
+   * given rectangle.
+   */
+  public void paintToolTip( final Point point, final Graphics g, final Rectangle screenRect )
+  {
+    Assert.isNotNull( point );
+    Assert.isNotNull( g );
+
+    /* Do not show empty tooltips */
+    if( m_rows == null || m_rows.length == 0 )
+      return;
+
+    final Rectangle2D maxRect = calculateBoxWidth( g );
+
+    final int textHeight = (int) (maxRect.getHeight()); // height of one line
+    final int textboxWidth = (int) maxRect.getWidth(); // width of textbox
+    final int textboxHeight = textHeight * m_rows.length; // height of textbox
+
+    final int insetsHeigth = m_insets.bottom + m_insets.top;
+    final int insetsWidth = m_insets.left + m_insets.right;
+
+    final Point basePoint = new Point( point.x + m_offset.x, point.y - m_offset.y - textboxHeight - insetsHeigth );
+
+    final int outlineWidth = textboxWidth + insetsWidth;
+    final int outlineHeight = textboxHeight + insetsHeigth;
+
+    if( screenRect != null )
+    {
+      /* Adjust basePoint in order to show the whole tooltip */
+
+      if( basePoint.x + outlineWidth > screenRect.getMaxX() )
+        basePoint.x = (int) screenRect.getMaxX() - outlineWidth - 1;
+
+      if( basePoint.y + outlineHeight > screenRect.getMaxY() )
+        basePoint.y = (int) screenRect.getMaxY() - outlineHeight;
+
+      if( basePoint.x < screenRect.x )
+        basePoint.x = screenRect.x;
+
+      if( basePoint.y < screenRect.y )
+        basePoint.y = screenRect.y;
+    }
 
     /* draw outer rectangle */
-    final Point myPoint = new Point( new Double( point.getX() ).intValue() + 20, new Double( point.getY() ).intValue() );
-
     g.setColor( m_backgroundColor );
-    g.fillRect( new Double( myPoint.getX() ).intValue() - ToolTipRenderer.BORDER, new Double( myPoint.getY() ).intValue() - ToolTipRenderer.ROW_HEIGHT, new Double( boxWidth ).intValue() + 2
-        * ToolTipRenderer.BORDER, m_rows.length * ToolTipRenderer.ROW_HEIGHT );
+    g.fillRect( basePoint.x, basePoint.y, outlineWidth, outlineHeight );
 
-    g.setColor( Color.BLACK );
-    g.drawRect( new Double( myPoint.getX() ).intValue() - ToolTipRenderer.BORDER, new Double( myPoint.getY() ).intValue() - ToolTipRenderer.ROW_HEIGHT, new Double( boxWidth ).intValue() + 2
-        * ToolTipRenderer.BORDER, m_rows.length * ToolTipRenderer.ROW_HEIGHT );
+    /* Draw Border */
+    g.setColor( m_borderColor );
+    g.drawRect( basePoint.x, basePoint.y, outlineWidth, outlineHeight );
+
+    // debug: draw textbox
+// g.drawRect( basePoint.x + m_insets.left, basePoint.y + m_insets.top, textboxWidth, textboxHeight );
 
     /* draw tooltip labels */
+    g.setColor( m_textColor );
+    final int magicNumber = 3; // move text a bit to the top, in order to nicely center it
+    int baseLineY = basePoint.y + m_insets.top + textHeight - magicNumber;
     for( final String element : m_rows )
     {
-      g.drawString( element, new Double( myPoint.getX() ).intValue(), new Double( myPoint.getY() ).intValue() );
-      myPoint.setLocation( myPoint.getX(), myPoint.getY() + 13 );
+      g.drawString( element, basePoint.x + m_insets.left, baseLineY );
+      baseLineY += textHeight;
     }
-  }
-
-  public void setBackgroundColor( final Color c )
-  {
-    m_backgroundColor = c;
   }
 
   public void setInputData( final String[] rows )
   {
     m_rows = rows;
+  }
+
+  public void setTooltip( final String tooltip )
+  {
+    setInputData( tooltip == null ? null : LINE_SPLIT.split( tooltip ) );
   }
 }

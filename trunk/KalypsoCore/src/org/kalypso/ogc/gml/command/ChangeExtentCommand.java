@@ -45,48 +45,49 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
+ * {@link ICommand} implementation that changes the extent of a map-panel.
  * 
- * @author Belger
+ * @author Gernot Belger
  */
 public class ChangeExtentCommand implements ICommand
 {
-  private final GM_Envelope myDoBoundingBox;
+  private final GM_Envelope m_doBoundingBox;
 
-  private final GM_Envelope myUndoBoundingBox;
+  private final GM_Envelope m_undoBoundingBox;
 
   private final MapPanel m_mapPanel;
 
   public ChangeExtentCommand( final MapPanel mapPanel, final GM_Envelope boundingBox )
   {
     m_mapPanel = mapPanel;
-    myUndoBoundingBox = mapPanel.getBoundingBox();
-    myDoBoundingBox = boundingBox;
+    m_undoBoundingBox = mapPanel.getBoundingBox();
+    m_doBoundingBox = boundingBox;
   }
 
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
 
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
-    m_mapPanel.setBoundingBox( myDoBoundingBox );
+    m_mapPanel.setBoundingBox( m_doBoundingBox );
   }
 
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     process();
   }
 
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
-    m_mapPanel.setBoundingBox( myUndoBoundingBox );
+    m_mapPanel.setBoundingBox( m_undoBoundingBox );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "Ausschnitt ändern";
   }

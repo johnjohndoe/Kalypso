@@ -110,7 +110,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * This variable stores a listener, which will be notified about job events.
    */
-  private JobChangeAdapter m_adapter = new JobChangeAdapter()
+  private final JobChangeAdapter m_adapter = new JobChangeAdapter()
   {
     /**
      * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
@@ -142,9 +142,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
         /* Need the full extent of the image. */
         m_maxEnvLocalSRS = m_loader.getFullExtent();
-
-        /* Finished loading. */
-        m_isFinished = true;
       }
       else
       {
@@ -156,10 +153,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
         /* Deactivate the theme. */
         setVisible( false );
-
-        /* Finished loading. */
-        m_isFinished = true;
       }
+
+      /* Finished loading. */
+      m_isFinished = true;
     }
   };
 
@@ -182,7 +179,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param mapModel
    *            The map modell.
    */
-  public KalypsoWMSTheme( String linktype, String themeName, IKalypsoImageProvider imageProvider, IMapModell mapModel )
+  public KalypsoWMSTheme( final String linktype, final String themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
   {
     super( themeName, linktype.toUpperCase(), mapModel );
 
@@ -190,7 +187,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     m_buffer = null;
     m_legend = null;
-    m_maxEnvLocalSRS = m_provider.getFullExtent();
     m_loader = null;
     m_isFinished = false;
   }
@@ -200,6 +196,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    */
   public GM_Envelope getFullExtent( )
   {
+    if( m_maxEnvLocalSRS == null )
+      m_maxEnvLocalSRS = m_provider.getFullExtent();
+
     return m_maxEnvLocalSRS;
   }
 
@@ -208,7 +207,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( Graphics g, GeoTransform world2screen, double scale, GM_Envelope bbox, boolean selected, IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform world2screen, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     /* The image can not be selected. */
     if( selected )
@@ -254,11 +253,15 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setExtent(int, int, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   @Override
-  public void setExtent( int width, int height, GM_Envelope extent )
+  public void setExtent( final int width, final int height, final GM_Envelope extent )
   {
     /* If the theme is not visible, do not restart the loading. */
     if( isVisible() == false )
+    {
+      // Set to finished, else this theme never 'isLoaded'
+      m_isFinished = true;
       return;
+    }
 
     /* If it is the same extent than the last time, do not load again. */
     if( m_extent != null && m_extent.equals( extent ) )
@@ -279,6 +282,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     }
 
     /* Reset the full extent. */
+    // TODO: why is this needed?
     if( m_maxEnvLocalSRS != null )
       m_maxEnvLocalSRS = m_provider.getFullExtent();
 
@@ -297,18 +301,21 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       m_loader.schedule( 250 );
 
       /* Repaint. */
+      // TODO: really needed here? should this not better happen if job has finished?
       invalidate( getFullExtent() );
 
       /* Memorize the extend, so it can be compared the next time, this method is called. */
       m_extent = extent;
     }
+    else
+      m_isFinished = true; // set to true, else this theme never 'isLoaded'
   }
 
   /**
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(java.awt.Font, java.lang.String)
    */
   @Override
-  public Image getLegendGraphic( Font font, String layerName ) throws CoreException
+  public Image getLegendGraphic( final Font font, final String layerName ) throws CoreException
   {
     if( m_provider == null )
       return null;
@@ -318,8 +325,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     if( m_legend == null )
     {
-      IKalypsoLegendProvider legendProvider = (IKalypsoLegendProvider) m_provider;
-      Image legend = legendProvider.getLegendGraphic( font, layerName );
+      final IKalypsoLegendProvider legendProvider = (IKalypsoLegendProvider) m_provider;
+      final Image legend = legendProvider.getLegendGraphic( font, layerName );
 
       m_legend = legend;
     }
@@ -330,7 +337,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
    */
-  public String getTooltip( Object element )
+  public String getTooltip( final Object element )
   {
     Assert.isTrue( element == this, "'Element' must be this" );
 
@@ -346,7 +353,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param image
    *            The newly loaded image.
    */
-  protected synchronized void setImage( Image image )
+  protected synchronized void setImage( final Image image )
   {
     /* Reset buffer. */
     if( m_buffer != null )
@@ -378,7 +385,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @throws Exception
    */
   @SuppressWarnings("unused")
-  public void performGetFeatureinfoRequest( Point pointOfInterest, String format, IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
+  public void performGetFeatureinfoRequest( final Point pointOfInterest, final String format, final IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
   {
 // final KalypsoRemoteWMService remoteWMS = m_remoteWMS;
 // if( remoteWMS == null )

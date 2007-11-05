@@ -92,7 +92,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -329,7 +329,7 @@ public class GmlShapeFileImportDialog extends Dialog
     } );
 
     m_treeViewer.setContentProvider( new GMLContentProvider() );
-    m_treeViewer.setLabelProvider( new GMLEditorLabelProvider2() );
+    m_treeViewer.setLabelProvider( new GMLLabelProvider() );
     m_treeViewer.setUseHashlookup( true );
     if( m_filter != null )
       m_treeViewer.addFilter( m_filter );

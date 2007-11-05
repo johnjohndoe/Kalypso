@@ -67,6 +67,11 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
   public final static String PROPERTY_DELETEABLE = "deleteable";
 
   /**
+   * Name of the property which determines the id of the IKalypsoThemeInfo for this theme.
+   */
+  public final static String PROPERTY_THEME_INFO_ID = "themeInfoId";
+
+  /**
    * * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
    */
   public void addKalypsoThemeListener( final IKalypsoThemeListener listener );
@@ -122,18 +127,18 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
    * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
    * </p>
    * 
+   * @param defaultValue
+   *            If the property is not set, use this default value.
    * @throws IllegalArgumentException
    *             If the given property name is unknown.
    */
-  public boolean getProperty( final String name );
+  public String getProperty( final String name, final String defaultValue );
 
   /**
-   * Sets the given property of this theme.
-   * <p>
+   * Sets the given property of this theme.<br>
    * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
-   * </p>
    */
-  public void setProperty( final String name, final boolean value );
+  public void setProperty( final String name, final String value );
 
   /**
    * This function sets the boundingbox for the new extent.

@@ -88,7 +88,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -176,7 +176,7 @@ public class GmlFileImportPage extends WizardPage
       }
     } );
     m_treeViewer.setContentProvider( new GMLContentProvider() );
-    m_treeViewer.setLabelProvider( new GMLEditorLabelProvider2() );
+    m_treeViewer.setLabelProvider( new GMLLabelProvider() );
     m_treeViewer.setUseHashlookup( true );
 
     return m_treeViewer.getControl();
