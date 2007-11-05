@@ -59,7 +59,15 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.zip.ZipFile;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
  * @author belger
@@ -75,7 +83,7 @@ public class ZipUtilities
    * Unzips a stream into a directory using the apache zip classes.
    * 
    * @param zipStream
-   *          Is closed after this operation.
+   *            Is closed after this operation.
    */
   public static void unzipApache( final InputStream zipStream, final File targetDir, final boolean overwriteExisting, final String encoding ) throws IOException
   {
@@ -218,7 +226,7 @@ public class ZipUtilities
    * unzips a zip-stream into a target dir.
    * 
    * @param overwriteExisting
-   *          if false, existing files will not be overwritten. Folders are always created.
+   *            if false, existing files will not be overwritten. Folders are always created.
    */
   public static void unzip( final InputStream inputStream, final File targetdir, final boolean overwriteExisting ) throws IOException
   {
@@ -260,12 +268,12 @@ public class ZipUtilities
    * Puts given files into a zip archive.
    * 
    * @param zipfile
-   *          Target file. will be created rep. overwritten.
+   *            Target file. will be created rep. overwritten.
    * @param files
-   *          The files to zip
+   *            The files to zip
    * @param basedir
-   *          If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
-   *          this dir). If null, alle ZipEntries are create with full path.
+   *            If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
+   *            this dir). If null, alle ZipEntries are create with full path.
    * @throws IOException
    */
   public static void zip( final File zipfile, final File[] files, final File basedir ) throws IOException
@@ -279,12 +287,12 @@ public class ZipUtilities
    * Puts given files into a zip archive stream.
    * 
    * @param out
-   *          Target output stream. will be created rep. overwritten.
+   *            Target output stream. will be created rep. overwritten.
    * @param files
-   *          The files to zip
+   *            The files to zip
    * @param basedir
-   *          If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
-   *          this dir). If null, alle ZipEntries are create with full path.
+   *            If given (i.e. != null) zipentries are genereates as relativ to this basedir (alle files must be within
+   *            this dir). If null, alle ZipEntries are create with full path.
    * @throws IOException
    */
   public static void zip( final OutputStream out, final File[] files, final File basedir ) throws IOException
@@ -294,10 +302,8 @@ public class ZipUtilities
     {
       zos = new ZipOutputStream( new BufferedOutputStream( out ) );
 
-      for( int i = 0; i < files.length; i++ )
+      for( final File file : files )
       {
-        final File file = files[i];
-
         final String relativePathTo = FileUtilities.getRelativePathTo( basedir, file );
         writeZipEntry( zos, file, relativePathTo );
       }
@@ -310,9 +316,9 @@ public class ZipUtilities
 
   /**
    * @param zipfile
-   *          file to write
+   *            file to write
    * @param dir
-   *          dir to archive
+   *            dir to archive
    * @throws IOException
    */
   public static void zip( final File zipfile, final File dir ) throws IOException
@@ -326,7 +332,7 @@ public class ZipUtilities
    */
   public static void zip( final ZipOutputStream zos, final File dir ) throws IOException
   {
-    ZipFileVisitor visitor = new ZipFileVisitor( zos );
+    final ZipFileVisitor visitor = new ZipFileVisitor( zos );
     try
     {
       visitor.setBasePattern( dir.getAbsolutePath() );
@@ -343,7 +349,7 @@ public class ZipUtilities
    * Writes a single File into a Zip-Stream
    * 
    * @param pathname
-   *          The name of the zip entry (relative Path into zip archive).
+   *            The name of the zip entry (relative Path into zip archive).
    */
   public static void writeZipEntry( final ZipOutputStream zos, final File file, final String pathname ) throws IOException
   {
@@ -380,4 +386,52 @@ public class ZipUtilities
       IOUtils.closeQuietly( is );
     }
   }
+
+  /**
+   * Unzips a zip into a {@link IContainer}.
+   * 
+   * @see org.eclipse.core.resources.IProjectNature#configure()
+   */
+  public static void unzipToContainer( final URL zipLocation, final IContainer targetContainer, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "ZIP wird entpackt nach: " + targetContainer.getName(), 2 ); //$NON-NLS-1$
+
+    InputStream zipStream = null;
+    try
+    {
+      // unpack other file structure from zip
+      zipStream = new BufferedInputStream( zipLocation.openStream() );
+
+      // REMARK: unzipping files with non UTF-8 filename encoding is really awesome in java.
+      // We do use the apache tools, which let us at least set the encoding.
+      // Try and error led to use the encoding: "IBM850" for WinZippes .zip's.
+      // REMARK: This doesn´t work in the deploy (I don´t know why???) -use simple unzip instead works!!!
+      // ZipUtilities.unzipApache( zipStream, targetContainer.getLocation().toFile(), true, "IBM850" );
+      unzip( zipStream, targetContainer.getLocation().toFile() );
+      zipStream.close();
+
+      monitor.worked( 1 );
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoCommonsPlugin.getDefault().getLog().log( status );
+      throw new CoreException( status );
+    }
+    finally
+    {
+      try
+      {
+        // Never leave the container unsynchronized
+        targetContainer.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1 ) );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( zipStream );
+
+        monitor.done();
+      }
+    }
+  }
+
 }
