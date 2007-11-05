@@ -86,9 +86,27 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<name><![CDATA[Wasserspiegellagen]]></name>
-								<label><![CDATA[Wasserspiegellagen]]></label>
 								<tooltip><![CDATA[Wasserspiegellagen]]></tooltip>
 								<description><![CDATA[Wasserspiegellagen]]></description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="resultCoveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1"
+						maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<name><![CDATA[Fließtiefen]]></name>
+								<tooltip><![CDATA[Fließtiefen]]></tooltip>
+								<description><![CDATA[Fließtiefen]]></description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="dataPath" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<name><![CDATA[Datenverzeichnis]]></name>
+								<tooltip><![CDATA[Pfad zu den unterliegenden Daten]]></tooltip>
+								<description><![CDATA[Datenverzeichnis]]></description>
 							</documentation>
 						</annotation>
 					</element>
@@ -123,9 +141,16 @@
 					<element name="max" type="decimal" />
 					<element name="source" type="string" />
 					<element name="sourceDate" type="dateTime" />
+					<element name="tin" type="flood:TriangulatedSurfacePropertyType"/>
 				</sequence>
 			</extension>
 		</complexContent>
+	</complexType>
+
+	<complexType name="TriangulatedSurfacePropertyType">
+		<sequence>
+			<element ref="gml:TriangulatedSurface" />
+		</sequence>
 	</complexType>
 
 	<complexType name="FloodPolygonPropertyType">

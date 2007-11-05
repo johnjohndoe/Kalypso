@@ -40,33 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.binding;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IPath;
-import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
- * @author Thomas Jung
- * 
+ * @author Gernot Belger
  */
-public interface IRunoffEvent extends IFeatureWrapper2
+public class TinReference extends AbstractFeatureBinder implements ITinReference
 {
-  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "RunoffEvent" );
+  public TinReference( final Feature featureToBind )
+  {
+    super( featureToBind, QNAME );
+  }
 
-  public final static QName QNAME_PROP_RESULT_COVERAGES = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "resultCoveragesMember" );
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getValue(org.kalypsodeegree.model.geometry.GM_Position)
+   */
+  public double getValue( final GM_Position pos )
+  {
+    final GM_TriangulatedSurface tin = getTin();
 
-  public final static QName QNAME_PROP_TIN_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tinMember" );
+    return tin.getValue( pos );
+  }
 
-  public final static QName QNAME_PROP_DATAPATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "dataPath" );
-
-  public ICoverageCollection getResultCoverages( );
-
-  public IFeatureWrapperCollection<ITinReference> getTins( );
-
-  public IPath getDataPath( );
-
-  public void setDataPath( final IPath path );
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getTin()
+   */
+  public GM_TriangulatedSurface getTin( )
+  {
+    return (GM_TriangulatedSurface) getFeature().getProperty( QNAME_PROP_TIN );
+  }
 }

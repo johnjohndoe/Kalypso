@@ -14,7 +14,8 @@ public class KalypsoModelFloodImages
 {
   public static enum DESCRIPTORS implements ImageKey
   {
-    DUMMY("icons/dummy.gif");
+    EVENT_IMPORT_TIN("icons/etool16/import_event_tin.gif"),
+    EVENT_UPDATE_TIN("icons/etool16/update_event_tin.gif");
 
     private final String m_imagePath;
 

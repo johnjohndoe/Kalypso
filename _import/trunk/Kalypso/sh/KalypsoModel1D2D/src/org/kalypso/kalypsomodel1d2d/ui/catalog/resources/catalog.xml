@@ -84,5 +84,9 @@
 		systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Hydrograph:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults.Hydrograph.kod" />
 
+	<!-- TriangulatedSurfaces -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:TinResult:uiproperties:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults.TinResult.properties" />
+
 
 </catalog:catalog>

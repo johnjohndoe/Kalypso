@@ -550,31 +550,6 @@
                     value="Profile selektieren"/>
 	       	</class>
 		 </handler>
-   <handler
-         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo">
-      <class
-            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-         <parameter
-               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-               value="org.kalypso.kalypsomodel1d2d.ui.map.result.CreateHydrographWidget">
-         </parameter>
-         <parameter
-               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-               value="TIN-Werte anzeigen">
-         </parameter>
-         <parameter
-               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-               value="icons/elcl16/tin_info.gif">
-         </parameter>
-      </class>
-      <activeWhen>
- <with
-               variable="selection">
-            <count
-                  value="0+">
-            </count>
-         </with>      </activeWhen>
-   </handler>
 		 <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties">
 		    <activeWhen>
 		       <with variable="activeContexts">
@@ -690,18 +665,6 @@
             name="Profil selektieren"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo"
-            name="Tin-Info">
-         <defaultHandler
-               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-                  value="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidget">
-            </parameter>
-         </defaultHandler>
-      </command>
-      <command
-            categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
             name="Polynomfunktionsparameter einem 1D Knoten hinzufügen">
          <defaultHandler
@@ -789,16 +752,6 @@
                  label="Profil selektieren"
                  style="radio"
                  tooltip="Profil selektieren und in Karte anzeigen">
-           </command>
-        </menuContribution>
-        <menuContribution
-              locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
-           <command
-                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo"
-                 icon="icons/elcl16/tin_info.gif"
-                 label="TIN-Info"
-                 style="radio"
-                 tooltip="TIN-Werte anzeigen">
            </command>
         </menuContribution>
         <menuContribution

@@ -92,6 +92,19 @@ public class KalypsoFloodAdapterFactory implements IAdapterFactory
     };
     cMap.put( IRunoffEvent.class, cTor );
 
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+        if( featureQName.equals( ITinReference.QNAME ) )
+          return new TinReference( feature );
+        else
+          return null;
+      }
+    };
+    cMap.put( ITinReference.class, cTor );
+
     return Collections.unmodifiableMap( cMap );
   }
 

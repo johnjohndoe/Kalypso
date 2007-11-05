@@ -45,7 +45,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.font.LineMetrics;
-import java.awt.geom.Rectangle2D;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
@@ -66,6 +65,7 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConst
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -82,11 +82,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class ApplyElevationWidget extends FENetConceptSelectionWidget implements IWidgetWithOptions
 {
-  ApplyElevationWidgetDataModel dataModel = new ApplyElevationWidgetDataModel();
+  private final ApplyElevationWidgetDataModel m_dataModel = new ApplyElevationWidgetDataModel();
 
-  private final ApplyElevationWidgetFace widgetFace = new ApplyElevationWidgetFace( dataModel );
+  private final ApplyElevationWidgetFace m_widgetFace = new ApplyElevationWidgetFace( m_dataModel );
 
-  private Point point;
+  private final ToolTipRenderer m_tooltipRenderer = new ToolTipRenderer();
+
+  private Point m_point;
 
   public ApplyElevationWidget( )
   {
@@ -109,8 +111,8 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
     super.activate( commandPoster, mapPanel );
 
     final IMapModell mapModell = mapPanel.getMapModell();
-    dataModel.setMapModell( mapModell );
-    dataModel.setMapPanel( mapPanel );
+    m_dataModel.setMapModell( mapModell );
+    m_dataModel.setMapPanel( mapPanel );
 
     // find and set Elevation model system
     final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapModell, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
@@ -118,11 +120,11 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
     final ITerrainElevationModelSystem system = (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( ITerrainElevationModelSystem.class );
 
     final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( mapModell, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
-    dataModel.setElevationModelSystem( system );
-    dataModel.setData( ApplyElevationWidgetDataModel.NODE_THEME, nodeTheme );
+    m_dataModel.setElevationModelSystem( system );
+    m_dataModel.setData( ApplyElevationWidgetDataModel.NODE_THEME, nodeTheme );
 
-    dataModel.setElevationTheme( terrainElevationTheme );
-    dataModel.setMapPanel( mapPanel );
+    m_dataModel.setElevationTheme( terrainElevationTheme );
+    m_dataModel.setMapPanel( mapPanel );
   }
 
   /**
@@ -132,7 +134,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
   {
     try
     {
-      return widgetFace.createControl( parent );
+      return m_widgetFace.createControl( parent );
     }
     catch( final Throwable th )
     {
@@ -146,11 +148,11 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
    */
   public void disposeControl( )
   {
-    if( widgetFace != null )
+    if( m_widgetFace != null )
     {
-      widgetFace.disposeControl();
+      m_widgetFace.disposeControl();
     }
-    dataModel.removeAllListeners();
+    m_dataModel.removeAllListeners();
   }
 
   /**
@@ -158,7 +160,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
    */
   public void setTerrainModel( final ITerrainElevationModel terrainModel )
   {
-    dataModel.setElevationModel( terrainModel );
+    m_dataModel.setElevationModel( terrainModel );
 
   }
 
@@ -222,29 +224,13 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
   @Override
   public void moved( final Point p )
   {
-    dataModel.setIgnoreMapSelection( false );
+    m_dataModel.setIgnoreMapSelection( false );
     super.moved( p );
-    this.point = p;
+    this.m_point = p;
 
-    final MapPanel mapPanel = dataModel.getMapPanel();
+    final MapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel != null )
       mapPanel.repaint();
-  }
-
-  public static void drawToolTip( final String tooltip, final Point p, final Graphics g )
-  {
-    if( tooltip == null )
-      return;
-    final Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
-
-    g.setColor( new Color( 255, 255, 225 ) );
-    g.fillRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
-
-    g.setColor( Color.BLUE );
-    g.drawRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
-
-    /* Tooltip zeichnen. */
-    g.drawString( tooltip, (int) p.getX() + 5, (int) p.getY() + 35 );
   }
 
   private final void drawElevationData( final Graphics g, final Point p )
@@ -257,7 +243,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
       {
         return;
       }
-      final MapPanel mapPanel = dataModel.getMapPanel();
+      final MapPanel mapPanel = m_dataModel.getMapPanel();
       if( mapPanel == null )
       {
         // System.out.println("map panel is null");
@@ -267,7 +253,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
       // finde node
       final GM_Point point = MapUtilities.transform( mapPanel, p );
       final double DELTA = MapUtilities.calculateWorldDistance( mapPanel, point, 10 );
-      final IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( point, DELTA );
+      final IFE1D2DNode node = m_dataModel.getDiscretisationModel().findNode( point, DELTA );
       double height = 0;
       GM_Point nodePoint = null;
 
@@ -288,8 +274,8 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
         }
 
         // show info
-        // g.drawString( nodeElevationText.toString(), (int)p.getX(), (int)p.getY() );
-        drawToolTip( nodeElevationText.toString(), p, g );
+        m_tooltipRenderer.setTooltip( nodeElevationText.toString() );
+        m_tooltipRenderer.paintToolTip( p, g, getMapPanel().getBounds() );
         final FontMetrics fontMetrics = g.getFontMetrics();
         final LineMetrics lineMetrics = fontMetrics.getLineMetrics( nodeElevationText.toString(), g );
         height = lineMetrics.getHeight() * 1.35;
@@ -318,10 +304,10 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
         modelEleText.append( Messages.getString( "ApplyElevationWidget.10" ) ); //$NON-NLS-1$
       }
 
-      // g.drawString( modelEleText.toString(), (int)p.getX(), (int)(p.getY()+height) );
       final Point p2 = new Point();
       p2.setLocation( (int) p.getX(), (int) (p.getY() + height) );
-      drawToolTip( modelEleText.toString(), p2, g );
+      m_tooltipRenderer.setTooltip( modelEleText.toString() );
+      m_tooltipRenderer.paintToolTip( p, g, getMapPanel().getBounds() );
       return;
     }
     catch( final RuntimeException e )
@@ -341,7 +327,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
   @Override
   public void doubleClickedLeft( final Point p )
   {
-    dataModel.setIgnoreMapSelection( false );
+    m_dataModel.setIgnoreMapSelection( false );
     super.doubleClickedLeft( p );
     if( !isPolygonSelectModus() )
     {
@@ -354,7 +340,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
 
   private void reselectSelected( )
   {
-    final MapPanel mapPanel = dataModel.getMapPanel();
+    final MapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel == null )
     {
       // System.out.println("Cannot reselect Map panel is null");
@@ -377,7 +363,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
   @Override
   public void doubleClickedRight( final Point p )
   {
-    dataModel.setIgnoreMapSelection( false );
+    m_dataModel.setIgnoreMapSelection( false );
     super.doubleClickedRight( p );
     assignElevationToSelectedNodes( p );
   }
@@ -388,13 +374,13 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
   @Override
   public void leftClicked( final Point p )
   {
-    dataModel.setIgnoreMapSelection( false );
+    m_dataModel.setIgnoreMapSelection( false );
     super.leftClicked( p );
   }
 
   private void assignElevationToSelectedNodes( final Point p )
   {
-    final MapPanel mapPanel = dataModel.getMapPanel();
+    final MapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel == null )
     {
       // System.out.println("map panel is null");
@@ -402,8 +388,8 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
     }
 
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-    final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( dataModel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    final IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
+    final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( m_dataModel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getDiscretisationModel();
     if( theme == null )
     {
       // System.out.println("Could not get node theme");
@@ -462,7 +448,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
       // finde node
       final GM_Point point = MapUtilities.transform( mapPanel, p );
       final double DELTA = MapUtilities.calculateWorldDistance( mapPanel, point, 10 );
-      final IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( point, DELTA );
+      final IFE1D2DNode node = m_dataModel.getDiscretisationModel().findNode( point, DELTA );
       if( node != null )
       {
         //
@@ -485,11 +471,11 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
 
   private final IElevationProvider getElevationProvider( )
   {
-    IElevationProvider elevationProvider = dataModel.getElevationModel();
+    IElevationProvider elevationProvider = m_dataModel.getElevationModel();
     if( elevationProvider == null )
     {
       // System.out.println("Could not found selected elevation model; trying to use elevation model system");
-      elevationProvider = dataModel.getElevationModelSystem();
+      elevationProvider = m_dataModel.getElevationModelSystem();
       if( elevationProvider == null )
       {
         // System.out.println("Could not find elevation model system");
@@ -505,8 +491,8 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
   public void paint( final Graphics g )
   {
     super.paint( g );
-    drawElevationData( g, point );
-    drawHandle( g, point, 6 );
+    drawElevationData( g, m_point );
+    drawHandle( g, m_point, 6 );
   }
 
   public static final void drawHandle( final Graphics g, final Point currentPoint, final int squareWidth )
