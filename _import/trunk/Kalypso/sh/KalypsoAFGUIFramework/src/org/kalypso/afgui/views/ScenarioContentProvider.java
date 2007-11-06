@@ -16,6 +16,7 @@ import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.ScenarioList;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.ICaseManager;
@@ -182,7 +183,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     {
       if( caze == null )
       {
-        m_viewer.refresh();
+        ViewerUtilities.refresh( m_viewer, true );
       }
       else
       {
@@ -192,17 +193,17 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
         final Scenario parentScenario = caze.getParentScenario();
         if( parentScenario != null )
         {
-          viewer.refresh( parentScenario );
+          ViewerUtilities.refresh( viewer, parentScenario, true );
         }
         else
         {
           if( project != null )
           {
-            viewer.refresh( project );
+            ViewerUtilities.refresh( viewer, project, true );
           }
         }
         final IFolder folder = ScenarioHelper.getFolder( caze );
-        viewer.refresh( folder.getParent() );
+        ViewerUtilities.refresh( viewer, folder.getParent(), true );
       }
     }
   }

@@ -22,7 +22,7 @@
    <extension
          point="de.renew.workflow.model.workflowSystem">
       <workflowSystem
-            definition="src/org/kalypso/model/flood/ui/workflow/workflow.xml"
+            definition="src/org/kalypso/model/flood/ui/resources/workflow.xml"
             id="org.kalypso.model.flood.workflow"
             name="Flood-Modeller-Workflow">
       </workflowSystem>

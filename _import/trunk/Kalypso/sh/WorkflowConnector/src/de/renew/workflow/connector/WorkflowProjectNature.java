@@ -41,10 +41,8 @@
 package de.renew.workflow.connector;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 
 import de.renew.workflow.base.IWorkflowSystem;
 import de.renew.workflow.base.Workflow;
@@ -52,7 +50,6 @@ import de.renew.workflow.base.WorkflowSystem;
 
 /**
  * @author Stefan Kurzbach
- * 
  */
 public class WorkflowProjectNature implements IProjectNature
 {
@@ -67,7 +64,6 @@ public class WorkflowProjectNature implements IProjectNature
    */
   public void configure( )
   {
-    System.out.println( "TODO: remove me" );
   }
 
   /**
@@ -108,23 +104,5 @@ public class WorkflowProjectNature implements IProjectNature
   public static final WorkflowProjectNature toThisNature( final IProject project ) throws CoreException
   {
     return (WorkflowProjectNature) project.getNature( ID );
-  }
-
-  public static final void addNature( final IProject project ) throws CoreException
-  {
-    if( project.hasNature( ID ) )
-    {
-      return;
-    }
-    else
-    {
-      final IProjectDescription description = project.getDescription();
-      final String[] natures = description.getNatureIds();
-      final String[] newNatures = new String[natures.length + 1];
-      System.arraycopy( natures, 0, newNatures, 0, natures.length );
-      newNatures[natures.length] = ID;
-      description.setNatureIds( newNatures );
-      project.setDescription( description, new NullProgressMonitor() );
-    }
   }
 }

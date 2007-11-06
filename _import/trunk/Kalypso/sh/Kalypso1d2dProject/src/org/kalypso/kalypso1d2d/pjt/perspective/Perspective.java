@@ -17,8 +17,8 @@ import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.ui.views.map.MapView;
 
-// TODO: move the perspective to the KalypsoModelProduct
-@SuppressWarnings("restriction")//$NON-NLS-1$
+// TODO: move the perspective to the afgui stuff
+@SuppressWarnings("restriction")
 public class Perspective implements IPerspectiveFactory
 {
   final static public String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective"; //$NON-NLS-1$

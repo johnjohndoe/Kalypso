@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt;
 
-import java.net.URL;
-
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
@@ -54,7 +52,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.ISimulationService;
@@ -71,8 +68,6 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
 public class Kalypso1D2DProjectNature implements IProjectNature
 {
   public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"; //$NON-NLS-1$
-
-  private static final String EMPTY_PROJECT_ZIP_PATH = "resources/emptyProject.zip"; //$NON-NLS-1$
 
   public static final boolean isOfThisNature( final IProject project ) throws CoreException
   {
@@ -94,16 +89,8 @@ public class Kalypso1D2DProjectNature implements IProjectNature
   /**
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
-  public void configure( ) throws CoreException
+  public void configure( )
   {
-    final NullProgressMonitor monitor = new NullProgressMonitor();
-
-    final IFolder basisFolder = getProject().getFolder( "Basis" );
-    if( !basisFolder.exists() )
-    {
-      final URL zipLocation = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
-      ZipUtilities.unzipToContainer( zipLocation, getProject(), monitor );
-    }
   }
 
   /**

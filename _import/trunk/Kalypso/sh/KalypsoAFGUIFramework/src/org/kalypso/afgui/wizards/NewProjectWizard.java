@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
@@ -49,13 +50,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
@@ -108,25 +113,53 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( IProgressMonitor monitor ) throws CoreException
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
-        /* Unpack project from template */
-        ZipUtilities.unzipToContainer( zipURl, project, monitor );
+        final SubMonitor progress = SubMonitor.convert( monitor, "Projektstruktur wird erzeugt", 50 );
 
-        /* configure all natures of this project */
-        final IProjectDescription description = project.getDescription();
-        final String[] natureIds = description.getNatureIds();
-        for( final String natureId : natureIds )
+        try
         {
-          final IProjectNature nature = project.getNature( natureId );
-          nature.configure();
+          /* Unpack project from template */
+          ZipUtilities.unzipToContainer( zipURl, project, progress.newChild( 40 ) );
+          ProgressUtilities.worked( progress, 0 );
+
+          /* configure all natures of this project */
+          final IProjectDescription description = project.getDescription();
+          final String[] natureIds = description.getNatureIds();
+
+          progress.setWorkRemaining( natureIds.length + 5 );
+
+          for( final String natureId : natureIds )
+          {
+            final IProjectNature nature = project.getNature( natureId );
+            nature.configure();
+
+            ProgressUtilities.worked( progress, 1 );
+          }
+
+          /* Also activate new project */
+          final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+          final Scenario caze = nature.getCaseManager().getCases().get( 0 );
+          KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+          ProgressUtilities.worked( progress, 5 );
+        }
+        catch( final CoreException t )
+        {
+          // If anything went wrong, clean up the project
+          progress.setWorkRemaining( 10 );
+          project.delete( true, progress );
+
+          throw t;
+        }
+        catch( final Throwable t )
+        {
+          // If anything went wrong, clean up the project
+          progress.setWorkRemaining( 10 );
+          project.delete( true, progress );
+
+          throw new InvocationTargetException( t );
         }
 
-        // important: add ScenarioHandlingProjectNature before KalypsoRiscNature
-
-        // ProjectUtilities.addNature( project, ScenarioHandlingProjectNature.ID, new NullProgressMonitor() );
-        // ProjectUtilities.addNature( project, WorkflowProjectNature.ID, new NullProgressMonitor() );
-        // KalypsoRiskProjectNature.addNature( project );
         return Status.OK_STATUS;
       }
     };
@@ -135,9 +168,9 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
     ErrorDialog.openError( getShell(), "Projekt Neu", "Fehler beim Erzeugen des Projekts", resultStatus );
 
-    // TODO: delete project if anything went wrong
-
-    return resultStatus.isOK();
+    // REMARK: we always return here, because the BasicNewProjectWizard does not allow to create a project twice
+    // So the wizard must be closed now
+    return true;
   }
 
 }

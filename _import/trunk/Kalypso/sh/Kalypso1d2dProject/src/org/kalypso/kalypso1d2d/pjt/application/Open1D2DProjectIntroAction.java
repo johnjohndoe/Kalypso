@@ -70,7 +70,7 @@ public class Open1D2DProjectIntroAction implements IIntroAction
   public void run( final IIntroSite site, final Properties params )
   {
     /* Validate parameters */
-    final String projectName = params.getProperty( "project", null );  //$NON-NLS-1$
+    final String projectName = params.getProperty( "project", null ); //$NON-NLS-1$
 
     final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
     if( !project.exists() )
@@ -93,7 +93,7 @@ public class Open1D2DProjectIntroAction implements IIntroAction
     {
       final Shell activeShell = workbench.getDisplay().getActiveShell();
       final IStatus status = e.getStatus();
-      ErrorDialog.openError( activeShell, Messages.getString("Open1D2DProjectIntroAction.1"), Messages.getString("Open1D2DProjectIntroAction.2"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( activeShell, Messages.getString( "Open1D2DProjectIntroAction.1" ), Messages.getString( "Open1D2DProjectIntroAction.2" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
     }
   }

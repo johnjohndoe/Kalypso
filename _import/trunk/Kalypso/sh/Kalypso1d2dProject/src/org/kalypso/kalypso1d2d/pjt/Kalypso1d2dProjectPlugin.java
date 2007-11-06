@@ -109,7 +109,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     return plugin;
   }
 
-  public static ImageDescriptor getImageDescriptor( String path )
+  public static ImageDescriptor getImageDescriptor( final String path )
   {
     return imageDescriptorFromPlugin( PLUGIN_ID, path );
   }
