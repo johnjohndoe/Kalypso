@@ -53,6 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
@@ -85,7 +86,7 @@ public class Open1D2DProjectIntroAction implements IIntroAction
     {
       final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
       final Scenario caze = nature.getCaseManager().getCases().get( 0 );
-      Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+      KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
       workbench.showPerspective( Perspective.ID, workbench.getActiveWorkbenchWindow() );
     }
     catch( final CoreException e )

@@ -206,9 +206,13 @@ public class SLDHelper
     for( int i = 0; i <= numberOfIntervals; i++ )
     {
       // making lighter color (color.brighter() is not so good...)
-      final int rc = (255 - r) * (numberOfIntervals - i) / numberOfIntervals + r;
-      final int gc = (255 - g) * (numberOfIntervals - i) / numberOfIntervals + g;
-      final int bc = (255 - b) * (numberOfIntervals - i) / numberOfIntervals + b;
+//      final int rc = r + (255 - r) * i / numberOfIntervals;
+//      final int gc = g + (255 - g) * i / numberOfIntervals;
+//      final int bc = b + (255 - b) * i / numberOfIntervals;
+
+       final int rc = (255 - r) * (numberOfIntervals - i) / numberOfIntervals + r;
+       final int gc = (255 - g) * (numberOfIntervals - i) / numberOfIntervals + g;
+       final int bc = (255 - b) * (numberOfIntervals - i) / numberOfIntervals + b;
 
       double quantity = step * i;
       if( quantity <= 0.0 )
