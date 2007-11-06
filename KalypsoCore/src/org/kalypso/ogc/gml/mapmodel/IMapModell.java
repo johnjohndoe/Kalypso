@@ -80,6 +80,9 @@ public interface IMapModell extends IWorkbenchAdapter
 
   public void insertTheme( final IKalypsoTheme theme, final int position );
 
+  /**
+   * Gets all themes of this model. Does NOT recurse into cascaded themes.
+   */
   public IKalypsoTheme[] getAllThemes( );
 
   public CS_CoordinateSystem getCoordinatesSystem( );

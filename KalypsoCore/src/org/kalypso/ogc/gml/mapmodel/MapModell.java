@@ -235,6 +235,9 @@ public class MapModell implements IMapModell
       activateTheme( theme );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getAllThemes()
+   */
   public IKalypsoTheme[] getAllThemes( )
   {
     return m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
