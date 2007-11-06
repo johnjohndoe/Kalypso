@@ -81,7 +81,7 @@ public class FNNodeUtils
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID ), nodeId );
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NAME ), nodeId );
 
-    if( nodeType != null )
+    if( nodeType != null && nodeType != TYPE.eCrossSectionNode )
       values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_CONNECTION_TYPE ), nodeType.getTypeOfConnectionNode() );
 
     CommandableWorkspace cw;
