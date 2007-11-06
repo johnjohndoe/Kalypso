@@ -144,7 +144,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    */
   public static BinaryGeoGrid createGrid( final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
   {
-    final RandomAccessFile randomAccessFile = new RandomAccessFile( file, "rwd" );
+    final RandomAccessFile randomAccessFile = new RandomAccessFile( file, "rw" );
     return new BinaryGeoGrid( randomAccessFile, sizeX, sizeY, scale, origin, offsetX, offsetY );
   }
 

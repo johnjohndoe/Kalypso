@@ -1743,38 +1743,29 @@ public class SLDFactory
     }
   }
 
-  /*
-   * private static Geometry createGeometry(net.opengis.sld.GeometryType geometryType){ List propertyNames =
-   * geometryType.getPropertyName().getContent(); return new Geometry_Impl((String)propertyNames.get(0),null); }
-   */
-
-  private static TreeMap createColorMap( final ColorMap colorMapType )
+  private static TreeMap<Double, ColorMapEntry> createColorMap( final ColorMap colorMapType )
   {
-    final TreeMap colorMap = new TreeMap();
-    /*
-     * NodeList nodeList = colorMapElement.getChildNodes(); Element node = null; Color color = null; double quantity =
-     * 0.0; String label = " "; double opacity = 1.0; for(int i=0; i<nodeList.getLength(); i++) { node =
-     * XMLTools.getChildByName( "ColorMapEntry", CommonNamespaces.SLDNS, nodeList.item( i ) ); color = Color.decode(
-     * XMLTools.getAttrValue( node, "color" ) ); quantity = Double.parseDouble( XMLTools.getAttrValue( node, "quantity" ) );
-     * ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label ); colorMap.put( new
-     * Double( quantity ), colorMapEntryObject ); }
-     */
+    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
 
     final List colorMapEntries = colorMapType.getColorMapEntry();
     for( int i = 0; i < colorMapEntries.size(); i++ )
     {
       final ogc2.www.opengis.net.sld.ColorMapEntry colorMapEntry = (ogc2.www.opengis.net.sld.ColorMapEntry) colorMapEntries.get( i );
-      Color color = null;
-      if( colorMapEntry.getColor() != null )
-        color = Color.decode( colorMapEntry.getColor() );
-      // double opacity = colorMapEntry.getOpacity();
-      final double opacity = 1.0;
-      final double quantity = colorMapEntry.getQuantity();
-      String label = " ";
-      if( colorMapEntry.getLabel() != null )
-        label = colorMapEntry.getLabel();
-      final ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label );
-      colorMap.put( new Double( quantity ), colorMapEntryObject );
+      final Color color = Color.decode( colorMapEntry.getColor() );
+      final Double opacity = colorMapEntry.getOpacity();
+      final Double quantity = colorMapEntry.getQuantity();
+      final String label = colorMapEntry.getLabel();
+      
+      final double realOpacity = opacity == null ? 1.0 : opacity;
+
+      // REMARK: what to do without quantity? i makes no sense, but what else...
+      final double realQuantity = quantity == null ? i : quantity;
+      
+      final String realLabel = label == null ? "" : label.trim();
+      
+      final ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, realOpacity, realQuantity, realLabel );
+      
+      colorMap.put( realQuantity, colorMapEntryObject );
     }
 
     return colorMap;

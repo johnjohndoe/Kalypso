@@ -137,23 +137,12 @@ public class ColorMapEntry_Impl implements ColorMapEntry
     m_quantity = quantity;
   }
 
-  public ogc2.www.opengis.net.sld.ColorMapEntry getColorMapEntry( )
-  {
-    final ogc2.www.opengis.net.sld.ColorMapEntry colorMapEntry = OF.createColorMapEntry();
-    colorMapEntry.setColor( StyleFactory.getColorAsHex( getColor() ) );
-    // colorMapEntry.setLabel( getLabel() );
-    // colorMapEntry.setOpacity( getOpacity() );
-    // colorMapEntry.setQuantity( getQuantity() );
-
-    return colorMapEntry;
-  }
-
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ColorMapEntry" );
     sb.append( " color=\"" ).append( StyleFactory.getColorAsHex( getColor() ) ).append( "\"" );
-    sb.append( " opacity=\"0.8\"" );
+    sb.append( " quantity=\"" ).append( getOpacity() ).append( "\"" );
     sb.append( " quantity=\"" ).append( getQuantity() ).append( "\"" );
     sb.append( "/>" );
     return sb.toString();
