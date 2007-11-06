@@ -41,6 +41,7 @@
 		<wizard
         category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
         class="org.kalypso.risk.project.KalypsoRiskProjectWizard"
+        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
         icon="icons/pencil.gif"
         id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
         name="Kalypso Risk Model"

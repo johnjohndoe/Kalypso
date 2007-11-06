@@ -40,15 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.risk.project;
 
-import java.net.URL;
-
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 
 /**
  * Project Nature for 1d 2d simulation, requires {@link org.kalypso.afgui.ScenarioHandlingProjectNature}
@@ -59,16 +53,9 @@ public class KalypsoRiskProjectNature implements IProjectNature
 {
   public static final String ID = "org.kalypso.risk.project.KalypsoRiskProjectNature"; //$NON-NLS-1$
 
-  private static final String EMPTY_PROJECT_ZIP_PATH = "RiskProjectTemplate.zip"; //$NON-NLS-1$
-
   public static final boolean isOfThisNature( final IProject project ) throws CoreException
   {
     return project == null ? false : project.hasNature( ID );
-  }
-
-  public static final void addNature( final IProject project ) throws CoreException
-  {
-    ProjectUtilities.addNature( project, ID, new NullProgressMonitor() );
   }
 
   public static KalypsoRiskProjectNature getNature( final IProject project ) throws CoreException
@@ -83,14 +70,6 @@ public class KalypsoRiskProjectNature implements IProjectNature
    */
   public void configure( ) throws CoreException
   {
-    final NullProgressMonitor monitor = new NullProgressMonitor();
-
-    final IFolder basisFolder = getProject().getFolder( "Basis" );
-    if( !basisFolder.exists() )
-    {
-      final URL zipLocation = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
-      ZipUtilities.unzipToContainer( zipLocation, getProject(), monitor );
-    }
   }
 
   /**
