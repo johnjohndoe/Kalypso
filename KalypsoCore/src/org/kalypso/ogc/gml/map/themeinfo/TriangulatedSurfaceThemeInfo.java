@@ -103,7 +103,6 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
     m_theme = (IKalypsoFeatureTheme) theme;
 
     final IFeatureType featureType = m_theme.getFeatureType();
-    Assert.isLegal( GMLSchemaUtilities.substitutes( featureType, ICoverage.QNAME ) );
 
     m_formatString = props.getProperty( PROP_FORMAT, DEFAULT_FORMAT_STRING );
 
