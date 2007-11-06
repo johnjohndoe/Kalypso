@@ -202,6 +202,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
           if( modell != null )
           {
             final AddThemeCommand addThemeCommand = new AddThemeCommand( modell, data.getThemeName(), data.getResultType(), data.getFeaturePath(), data.getSource(), data.getStyleLinkType(), data.getStyle(), data.getStyleLocation(), data.getStyleType() );
+            addThemeCommand.addProperties( data.getProperties() );
             m_commandTarget.postCommand( addThemeCommand, null );
           }
         }

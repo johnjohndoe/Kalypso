@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -54,6 +58,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
  */
 public class ResultAddLayerCommandData
 {
+  private final Map<String, String> m_properties = new HashMap<String, String>();
 
   private String m_themeName;
 
@@ -83,7 +88,7 @@ public class ResultAddLayerCommandData
 
   private String m_type;
 
-  public ResultAddLayerCommandData( String themeName, String resultType, String featurePath, String source, String style, String styleLocation, String styleLinkType, String styleType, IFolder scenarioFolder, String type )
+  public ResultAddLayerCommandData( final String themeName, final String resultType, final String featurePath, final String source, final String style, final String styleLocation, final String styleLinkType, final String styleType, final IFolder scenarioFolder, final String type )
   {
     m_themeName = themeName;
     m_resultType = resultType;
@@ -100,7 +105,7 @@ public class ResultAddLayerCommandData
       updateStyleLocation();
   }
 
-  public void setSldFile( IFile sldFile )
+  public void setSldFile( final IFile sldFile )
   {
     m_sldFile = sldFile;
 
@@ -164,7 +169,7 @@ public class ResultAddLayerCommandData
     return m_sldFile;
   }
 
-  public void setValues( String themeName, String resultType, String featurePath, String source, String style, String styleLocation, String styleLinkType, String styleType, String type )
+  public void setValues( final String themeName, final String resultType, final String featurePath, final String source, final String style, final String styleLocation, final String styleLinkType, final String styleType, final String type )
   {
     m_themeName = themeName;
     m_resultType = resultType;
@@ -184,7 +189,7 @@ public class ResultAddLayerCommandData
     return m_minValue;
   }
 
-  public void setMinValue( double minValue )
+  public void setMinValue( final double minValue )
   {
     m_minValue = minValue;
   }
@@ -194,7 +199,7 @@ public class ResultAddLayerCommandData
     return m_maxValue;
   }
 
-  public void setMaxValue( double maxValue )
+  public void setMaxValue( final double maxValue )
   {
     m_maxValue = maxValue;
   }
@@ -204,9 +209,19 @@ public class ResultAddLayerCommandData
     return m_selected;
   }
 
-  public void setSelected( boolean selected )
+  public void setSelected( final boolean selected )
   {
     m_selected = selected;
+  }
+
+  public void setProperty( final String name, final String value )
+  {
+    m_properties.put( name, value );
+  }
+
+  public Map<String, String> getProperties( )
+  {
+    return Collections.unmodifiableMap( m_properties );
   }
 
 }

@@ -53,8 +53,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
  * @author Thomas Jung
@@ -62,6 +64,8 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public class TinResultThemeCreator extends AbstractThemeCreator
 {
+  private static final String TIN_INFO_ID = "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo";
+
   private final ResultAddLayerCommandData[] m_resultLayerCommandData = new ResultAddLayerCommandData[2];
 
   private IDocumentResultMeta m_documentResult = null;
@@ -92,7 +96,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
   }
 
   @Override
-  public Composite createControl( Group parent )
+  public Composite createControl( final Group parent )
   {
     // check if it is a TIN
 
@@ -163,21 +167,21 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
     // TODO: this is dangerous, because the data need not to be stored in the document result level.
     // use a more general approach instead.
-    IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
-    IResultMeta timeStepMeta = m_documentResult.getParent();
+    final IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
+    final IResultMeta timeStepMeta = m_documentResult.getParent();
 
     final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
-    String resFolder = resultsFolder.getFullPath().toPortableString();
+    final String resFolder = resultsFolder.getFullPath().toPortableString();
 
     String style = null;
     String themeName = null;
     String styleLocation = null;
 
-    String resultType = "gml";
-    String styleLinkType = "sld";
-    String styleType = "simple";
-    String featurePath = "";
-    String source = "../" + m_documentResult.getFullPath().toPortableString();
+    final String resultType = "gml";
+    final String styleLinkType = "sld";
+    final String styleType = "simple";
+    final String featurePath = "";
+    final String source = "../" + m_documentResult.getFullPath().toPortableString();
 
     String type = null;
 
@@ -223,10 +227,19 @@ public class TinResultThemeCreator extends AbstractThemeCreator
         m_resultLayerCommandData[0] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, m_scenarioFolder, type );
         m_resultLayerCommandData[0].setSelected( true );
       }
+
+      final String label = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getLocalPart() );
+      final String unit = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getLocalPart() );
+      final String date = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getLocalPart() );
+
+      final String themeInfoId = String.format( "%s?geometry=%s&format=%s: %s %s (%s)", TIN_INFO_ID, label, "%.2f", unit, date );
+
+      m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
+      m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, themeInfoId );
     }
   }
 
-  private String getStyle( String resFolder, String type )
+  private String getStyle( final String resFolder, final String type )
   {
 
     final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
@@ -234,7 +247,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
     /* default location depending on type */
     final IFolder stylesFolder = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder );
-    IFolder sldFolder = stylesFolder.getFolder( type );
+    final IFolder sldFolder = stylesFolder.getFolder( type );
 
     final String sldFileName = "default" + type + m_documentResult.getDocumentType().name() + "Style.sld";
     final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName;
@@ -261,13 +274,13 @@ public class TinResultThemeCreator extends AbstractThemeCreator
         return m_resultLayerCommandData;
       else if( m_resultLayerCommandData[0].isSelected() == true && m_resultLayerCommandData[1].isSelected() == false )
       {
-        ResultAddLayerCommandData data[] = new ResultAddLayerCommandData[1];
+        final ResultAddLayerCommandData data[] = new ResultAddLayerCommandData[1];
         data[0] = m_resultLayerCommandData[0];
         return data;
       }
       else if( m_resultLayerCommandData[0].isSelected() == false && m_resultLayerCommandData[1].isSelected() == true )
       {
-        ResultAddLayerCommandData data[] = new ResultAddLayerCommandData[1];
+        final ResultAddLayerCommandData data[] = new ResultAddLayerCommandData[1];
         data[0] = m_resultLayerCommandData[1];
         return data;
       }
