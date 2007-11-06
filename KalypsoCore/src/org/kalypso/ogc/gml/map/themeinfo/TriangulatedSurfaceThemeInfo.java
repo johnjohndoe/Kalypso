@@ -140,7 +140,6 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
     for( final Object tinObject : tins )
     {
       /* Search for the first feature which provides a value */
-
       final Feature feature = FeatureHelper.getFeature( workspace, tinObject );
 
       final GM_TriangulatedSurface surface = findSurface( feature );
@@ -148,13 +147,10 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
       final double value = surface.getValue( pos );
       if( !Double.isNaN( value ) )
       {
-        formatter.format( m_formatString, value );
+        /* Replace tokens like in feature-annotations */
+        final String formatString = FeatureHelper.tokenReplace( feature, m_formatString );
 
-        // TODO: also show other properties
-        // TODO: use generel mechanism to do so (reuse feature-annotation stuff?)
-
-// formatter.format( "%17s: %.2f %4s (%s)%n", parameter, elevation, unit, date ); //$NON-NLS-1$
-
+        formatter.format( formatString, value );
         return;
       }
     }

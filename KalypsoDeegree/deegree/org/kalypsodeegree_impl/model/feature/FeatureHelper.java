@@ -1080,7 +1080,7 @@ public class FeatureHelper
   }
 
   /** Performs the token replace for the methods {@link #getLabel(Feature)}, ... */
-  private static String tokenReplace( final Feature feature, final String tokenString )
+  public static String tokenReplace( final Feature feature, final String tokenString )
   {
     return FeatureHelper.FEATURE_TOKEN_REPLACE.replaceTokens( feature, tokenString );
   }
