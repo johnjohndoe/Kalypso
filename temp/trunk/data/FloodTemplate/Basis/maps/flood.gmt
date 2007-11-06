@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <mapv:gismapview name="Flood" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <mapv:extent top="5387014.196937449" srs="EPSG:31467" right="4395115.386388118" left="4366614.578981769" bottom="5367485.865936803"/>
-    <mapv:layers>
+    <mapv:extent top="5986023.3523573205" srs="EPSG:31467" right="3550012.123331769" left="3549997.876668231" bottom="5986006.6476426795"/>
+    <mapv:layers active="ID_5">
         <mapv:layer visible="false" name="Wasserspiegellagen" id="ID_2" linktype="gmt" xlink:type="simple" xlink:href="wsp.gmt" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
