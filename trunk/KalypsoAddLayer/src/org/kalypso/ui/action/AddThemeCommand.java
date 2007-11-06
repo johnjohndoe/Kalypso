@@ -40,17 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.action;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 
 public class AddThemeCommand implements ICommand
 {
+  private final Map<String, String> m_properties = new HashMap<String, String>();
 
   private GisTemplateMapModell m_mapModell;
 
@@ -118,6 +123,14 @@ public class AddThemeCommand implements ICommand
   }
 
   /**
+   * Add properties to this command which will be added to the theme after creation.
+   */
+  public void addProperties( final Map<String, String> properties )
+  {
+    m_properties.putAll( properties );
+  }
+
+  /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
@@ -127,7 +140,6 @@ public class AddThemeCommand implements ICommand
 
   private StyledLayerType init( )
   {
-
     final int id = m_mapModell.getThemeSize() + 1;
     final ObjectFactory factory = new ObjectFactory();
 
@@ -149,6 +161,15 @@ public class AddThemeCommand implements ICommand
       layertype.setActuate( "onRequest" );
       layertype.setType( m_styleType );
       styleList.add( layertype );
+    }
+
+    for( final Entry<String, String> entry : m_properties.entrySet() )
+    {
+      final Property property = factory.createStyledLayerTypeProperty();
+      property.setName( entry.getKey() );
+      property.setValue( entry.getValue() );
+
+      layer.getProperty().add( property );
     }
 
     return layer;
@@ -193,5 +214,4 @@ public class AddThemeCommand implements ICommand
     m_mapModell = model;
     return init();
   }
-
 }

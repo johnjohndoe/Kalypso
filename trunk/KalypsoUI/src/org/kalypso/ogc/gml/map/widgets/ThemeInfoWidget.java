@@ -188,7 +188,8 @@ public class ThemeInfoWidget extends AbstractWidget
       info = sb.toString().trim();
     }
 
-    m_tooltipRenderer.setTooltip( info.length() > 0 ? info : null );
+    final String tooltip = info.length() > 0 ? info : null;
+    m_tooltipRenderer.setTooltip( tooltip );
 
     getMapPanel().repaint();
   }
