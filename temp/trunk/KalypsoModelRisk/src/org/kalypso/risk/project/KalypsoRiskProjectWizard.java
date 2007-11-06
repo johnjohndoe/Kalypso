@@ -14,7 +14,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
@@ -85,6 +87,11 @@ public class KalypsoRiskProjectWizard extends BasicNewProjectResourceWizard impl
         ScenarioHandlingProjectNature.addNature( project );
         WorkflowProjectNature.addNature( project );
         KalypsoRiskProjectNature.addNature( project );
+
+        /* Also activate new project */
+        final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+        final Scenario caze = nature.getCaseManager().getCases().get( 0 );
+        KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
       }
       catch( CoreException e )
       {

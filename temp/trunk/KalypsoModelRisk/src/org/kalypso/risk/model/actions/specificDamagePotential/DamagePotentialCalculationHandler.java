@@ -1,5 +1,6 @@
 package org.kalypso.risk.model.actions.specificDamagePotential;
 
+import java.awt.Color;
 import java.io.File;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -53,6 +55,10 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class DamagePotentialCalculationHandler extends AbstractHandler
 {
+  private double m_minDamageValue = Double.MAX_VALUE;
+
+  private double m_maxDamageValue = Double.MIN_VALUE;
+
   @Override
   public Object execute( final ExecutionEvent arg0 ) throws ExecutionException
   {
@@ -81,7 +87,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
         }
         final IVectorDataModel vectorDataModel = (IVectorDataModel) scenarioDataProvider.getModel( IVectorDataModel.class );
         final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
-        if(rasterizationControlModel.getAssetValueClassesList().size()==0)
+        if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
         {
           MessageDialog.openError( shell, "Error", "No asset value classes are properly defined. Damage potential cannot be calculated. Please define asset value classes." );
           return null;
@@ -90,6 +96,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
         final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
         final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
         final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell );
+        parentKalypsoTheme.setVisible( true );
         new ProgressMonitorDialog( shell ).run( true, false, new IRunnableWithProgress()
         {
           public void run( final IProgressMonitor monitor ) throws InterruptedException
@@ -126,7 +133,14 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                         for( final ILandusePolygon polygon : list )
                         {
                           if( polygon.contains( positionAt ) )
-                            return polygon.getDamageValue( value );
+                          {
+                            final double damageValue = polygon.getDamageValue( value );
+                            if( m_minDamageValue > damageValue )
+                              m_minDamageValue = damageValue;
+                            if( m_maxDamageValue < damageValue )
+                              m_maxDamageValue = damageValue;
+                            return damageValue;
+                          }
                         }
                       return Double.NaN;
                     }
@@ -155,6 +169,13 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 GeoGridUtilities.setCoverage( coverage, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
                 inputGrid.dispose();
 
+                // final MinMaxRasterWalker minMaxWalker = new MinMaxRasterWalker();
+                // outputGrid.getWalkingStrategy().walk( outputGrid, minMaxWalker, null );
+                //
+                // final double min = minMaxWalker.getMin();
+                // final double max = minMaxWalker.getMax();
+                // if(m_minDamageValue>min)m_minDamageValue=min;
+
                 // TODO create map layer
                 monitor.subTask( Messages.getString( "ImportWaterdepthWizard.10" ) ); //$NON-NLS-1$
 
@@ -177,7 +198,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 styleList.add( style );
 
                 parentKalypsoTheme.addLayer( layer );
-                
+
                 // fireModellEvent to redraw a map...
                 workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { dstAnnualCoverage.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
               }
@@ -191,6 +212,10 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
             }
           }
         } );
+        
+        final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" );
+        SLDHelper.exportRasterSymbolyzerSLD( sldFile, m_minDamageValue, m_maxDamageValue, 20, new Color( 237, 80, 25 ), "Kalypso style", "Kalypso style", null );
+        
         if( mapView != null )
           mapView.getMapPanel().invalidateMap();
       }

@@ -30,7 +30,8 @@
               <ColorMapEntry color="#124C86" opacity="1.0" quantity="1.3"/>
               <ColorMapEntry color="#0B3B6C" opacity="1.0" quantity="1.4"/>
               <ColorMapEntry color="#05284B" opacity="1.0" quantity="1.5"/>
-              <ColorMapEntry color="#021427" opacity="1.0" quantity="100000.0"/>
+              <ColorMapEntry color="#021427" opacity="1.0" quantity="2.5"/>
+              <ColorMapEntry color="#021427" opacity="1.0" quantity="100.0"/>
             </ColorMap>
           </RasterSymbolizer>
         </Rule>

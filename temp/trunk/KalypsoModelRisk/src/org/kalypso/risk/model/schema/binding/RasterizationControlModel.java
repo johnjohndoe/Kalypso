@@ -61,4 +61,24 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
   {
     return m_assetValueClasses;
   }
+
+  public boolean containsLanduseClass( final String landuseClassName )
+  {
+    for( final ILanduseClass landuseClass : m_landuseClasses )
+      if( landuseClass.getName().equals( landuseClassName ) )
+        return true;
+    return false;
+  }
+
+  public int getNextAvailableLanduseClassOrdinalNumber( )
+  {
+    int maxOrdinal = 0;
+    for( final ILanduseClass landuseClass : m_landuseClasses )
+    {
+      final int ordinalNumber = landuseClass.getOrdinalNumber();
+      if( ordinalNumber > maxOrdinal )
+        maxOrdinal = ordinalNumber;
+    }
+    return ++maxOrdinal;
+  }
 }

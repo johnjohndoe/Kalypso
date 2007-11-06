@@ -81,7 +81,7 @@ public class PF_LandusePolygon_AssetValue extends FeaturePropertyFunction
 
   private void loadAssetValueClassesList( )
   {
-    if( m_assetValueClassesList != null )
+    if( m_assetValueClassesList != null && m_assetValueClassesList.size() > 0 )
       return;
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );

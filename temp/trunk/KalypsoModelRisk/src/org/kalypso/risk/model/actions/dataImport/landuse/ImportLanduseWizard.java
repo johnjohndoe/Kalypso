@@ -94,6 +94,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
   private final HashSet<String> m_landuseTypeSet = new HashSet<String>();
 
+  private ImportDatabasePage m_PageimportDatabase;
+
   public ImportLanduseWizard( )
   {
     super();
@@ -110,8 +112,10 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   public void addPages( )
   {
     m_PageImportShp = new ImportLanduseShpPage();
+    m_PageimportDatabase = new ImportDatabasePage();
     m_PageImportShp.init( initialSelection );
     addPage( m_PageImportShp );
+    addPage( m_PageimportDatabase );
   }
 
   /**
@@ -171,15 +175,26 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                 m_landuseTypeSet.add( shpPropertyValue );
             }
             final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class );
+            
+            // implement the importing of the existing database
+            
+            // if there is no administration units defined, define the default one
+            
+            // if there is no damage functions defined, define the default one  
+            
             m_landuseClassesList = controlModel.getLanduseClassesList();
-            m_landuseClassesList.clear();
-            int classOrdinalNumber = 1;
+            // m_landuseClassesList.clear();
             for( final String landuseType : m_landuseTypeSet )
             {
-              final ILanduseClass landuseClass = controlModel.createNewLanduseClass();
-              landuseClass.setName( landuseType );
-              landuseClass.setColorStyle( getRandomColor() );
-              landuseClass.setOrdinalNumber( classOrdinalNumber++ );
+              if( !controlModel.containsLanduseClass( landuseType ) )
+              {
+                final ILanduseClass landuseClass = controlModel.createNewLanduseClass();
+                landuseClass.setName( landuseType );
+                landuseClass.setColorStyle( getRandomColor() );
+                landuseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
+                // create the asset mappings for this landuse class to each administration unit
+                // in the predefined DB are used, map the values as well 
+              }
             }
             szenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) );
 

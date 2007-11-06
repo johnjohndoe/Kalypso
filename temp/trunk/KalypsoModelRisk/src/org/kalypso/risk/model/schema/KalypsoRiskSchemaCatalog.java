@@ -52,6 +52,10 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
 {
+  public static final String NS_PREDEFINED_DATASET = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/predefinedDataset";
+
+  public static final String PREFIX_PREDEFINED_DATASET = "krpd";
+
   public static final String NS_RASTERIZATION_CONTROL_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel";
 
   public static final String PREFIX_RASTERIZATION_CONTROL_MODEL = "krrcm";
@@ -70,6 +74,8 @@ public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
+    catalog.put( NS_PREDEFINED_DATASET, myClass.getResource( "schemata/PredefinedDataset.xsd" ) );
+    prefixes.put( NS_PREDEFINED_DATASET, PREFIX_PREDEFINED_DATASET );
     catalog.put( NS_RASTERIZATION_CONTROL_MODEL, myClass.getResource( "schemata/RasterizationControlModel.xsd" ) );
     prefixes.put( NS_RASTERIZATION_CONTROL_MODEL, PREFIX_RASTERIZATION_CONTROL_MODEL );
     catalog.put( NS_VECTOR_DATA_MODEL, myClass.getResource( "schemata/VectorDataModel.xsd" ) );

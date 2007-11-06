@@ -73,9 +73,6 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   {
     try
     {
-      final double damage = m_assetValue * m_damageFunction.getResult( waterLevel );
-      if( damage < 0 )
-        System.out.println( damage );
       return m_assetValue * m_damageFunction.getResult( waterLevel );
     }
     catch( Exception e )

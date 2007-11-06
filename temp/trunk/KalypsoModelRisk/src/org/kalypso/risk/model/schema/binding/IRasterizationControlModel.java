@@ -24,4 +24,8 @@ public interface IRasterizationControlModel extends IModel
   public List<IAssetValueClass> getAssetValueClassesList( );
 
   public ILanduseClass createNewLanduseClass( );
+
+  public boolean containsLanduseClass( final String landuseClassName );
+
+  public int getNextAvailableLanduseClassOrdinalNumber( );
 }

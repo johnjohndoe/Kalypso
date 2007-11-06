@@ -47,7 +47,6 @@ import java.util.List;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -94,13 +93,10 @@ public class LanduseStyleUpdateService extends Job
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final IPath landuseVectorResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/LanduseVector.sld" );
-    final IPath landuseRasterResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/LanduseCoverage.sld" );
-    final IPath specificDamageRasterResourcePath = scenarioFolder.getProjectRelativePath().append( "/styles/SpecificDamagePotentialCoverage.sld" );
     m_dbFile = file;
-    m_landuseVectorSymbolyzerSldFile = m_dbFile.getProject().getFile( landuseVectorResourcePath );
-    m_landuseRasterSymbolyzerSldFile = m_dbFile.getProject().getFile( landuseRasterResourcePath );
-    m_specificDamageRasterSymbolyzerSldFile = m_dbFile.getProject().getFile( specificDamageRasterResourcePath );
+    m_landuseVectorSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" );
+    m_landuseRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" );
+    m_specificDamageRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" );
   }
 
   /**
@@ -140,7 +136,7 @@ public class LanduseStyleUpdateService extends Job
         for( final IAssetValueClass assetValueClass : assetValueClassesList )
           if( assetValueClass.getAssetValue() > maxAssetValue )
             maxAssetValue = assetValueClass.getAssetValue();
-        SLDHelper.exportRasterSymbolyzerSLD( m_specificDamageRasterSymbolyzerSldFile, 0.0, maxAssetValue, 20, new Color( 224, 0, 0 ), STYLE_NAME, STYLE_TITLE, monitor );
+        SLDHelper.exportRasterSymbolyzerSLD( m_specificDamageRasterSymbolyzerSldFile, 0.0, maxAssetValue, 20, new Color( 237, 80, 25 ), STYLE_NAME, STYLE_TITLE, monitor );
       }
       return Status.OK_STATUS;
     }
