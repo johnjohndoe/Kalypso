@@ -75,7 +75,7 @@ public class RemoveThemeCommand implements ICommand
     /* Check if deleteable, should never fail, all user actions should be aware of this flag. */
     final String deleteableStr = m_theme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
     final boolean deletable = Boolean.parseBoolean( deleteableStr );
-    if( deletable )
+    if( !deletable )
       throw new IllegalStateException( "Trying to delete a non-deleteable theme: " + m_theme.getName() );
 
     m_mapModell.removeTheme( m_theme );

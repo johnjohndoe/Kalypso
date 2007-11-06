@@ -44,7 +44,9 @@ import java.awt.Graphics;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -327,16 +329,19 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
           /* Get current property set */
           final String[] propertyNames = getPropertyNames();
-          final Properties properties = new Properties();
+          final Map<String, String> properties = new HashMap<String, String>();
           for( final String propName : propertyNames )
-            properties.put( propName, getProperty( propName, null ) );
+          {
+            final String value = getProperty( propName, null );
+            properties.put( propName, value );
+          }
 
           m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
           /* Put current property set into m_theme */
           for( final String propName : propertyNames )
-            m_theme.setProperty( propName, properties.getProperty( propName ) );
+            m_theme.setProperty( propName, properties.get( propName ) );
 
           // TODO is this really necessary?
           invalidate( getFullExtent() );
