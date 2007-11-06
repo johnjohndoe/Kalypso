@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author Gernot Belger
  * @author Patrice Congo
  */
-@SuppressWarnings("unchecked") //$NON-NLS-1$
+@SuppressWarnings("unchecked")
 public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements IFEDiscretisationModel1d2d
 {
   private final IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
@@ -198,6 +198,11 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
           minDistance = currentDistance;
         }
       }
+
+      // HACK: check again for the grab distance. This is necessary as the geoindex doe not work properly at the moment
+      if( minDistance > searchRectWidth )
+        return null;
+
       return nearestNode;
     }
   }
@@ -210,7 +215,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
    */
   public IPolyElement find2DElement( final GM_Point position, final double grabDistance )
   {
-    return (IPolyElement) findElement( position, grabDistance, IPolyElement.class );
+    return findElement( position, grabDistance, IPolyElement.class );
   }
 
   public <T extends IFENetItem> T findElement( final GM_Point position, final double grabDistance, final Class<T> elementClass )
