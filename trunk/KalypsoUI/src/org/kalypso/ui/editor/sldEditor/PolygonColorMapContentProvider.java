@@ -67,8 +67,10 @@ public class PolygonColorMapContentProvider implements IStructuredContentProvide
    */
   public Object[] getElements( final Object inputElement )
   {
-    final PolygonColorMap colorMap = (PolygonColorMap) inputElement;
-    return colorMap.getColorMap();
+    if( inputElement instanceof PolygonColorMap )
+      return ((PolygonColorMap) inputElement).getColorMap();
+
+    return new Object[] {};
   }
 
   /**
