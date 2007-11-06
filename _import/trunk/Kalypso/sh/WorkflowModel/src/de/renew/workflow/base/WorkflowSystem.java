@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
-import org.eclipse.ui.statushandlers.StatusManager;
 
 import de.renew.workflow.contexts.WorkflowSystemExtension;
 
@@ -93,18 +92,22 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
    */
   public void preferenceChange( final PreferenceChangeEvent event )
   {
-    //this event is not generated when the file is manually edited, so it is never called at the time
-    if( event.getKey().equals( WORKFLOW_DEFINITON_ID ) )
-    {
-      final String newWorkflowId = (String) event.getNewValue();
-      try
-      {
-        handleWorkflowIdChanged( newWorkflowId );
-      }
-      catch( final CoreException e )
-      {
-        StatusManager.getManager().handle( e.getStatus(), StatusManager.SHOW | StatusManager.LOG );
-      }
-    }
+    // This event is not generated when the settings file is manually edited,
+    // however it is called when the project is deleted!!
+    // When the workflowId is set to null, handleWorkflowIdChanged() will throw
+    // an exception, but this is not desired if the project is deleted.
+
+    // if( event.getKey().equals( WORKFLOW_DEFINITON_ID ) )
+    // {
+    // final String newWorkflowId = (String) event.getNewValue();
+    // try
+    // {
+    // handleWorkflowIdChanged( newWorkflowId );
+    // }
+    // catch( final CoreException e )
+    // {
+    // StatusManager.getManager().handle( e.getStatus(), StatusManager.SHOW | StatusManager.LOG );
+    // }
+    // }
   }
 }
