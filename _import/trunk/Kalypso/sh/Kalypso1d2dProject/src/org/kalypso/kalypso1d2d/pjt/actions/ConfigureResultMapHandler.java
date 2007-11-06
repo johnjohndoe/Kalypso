@@ -51,9 +51,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.results.AddResultThemeWizard;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -76,17 +80,21 @@ public class ConfigureResultMapHandler extends AbstractHandler
 
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
-    final GisMapOutlineView outlineView = (GisMapOutlineView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( GisMapOutlineView.ID );
-    if( mapView == null || outlineView == null )
+    final JobExclusiveCommandTarget commandTarget = mapView.getCommandTarget();
+    if( mapView == null  )
       throw new ExecutionException( Messages.getString( "AddProfileToMapHandler.0" ) ); //$NON-NLS-1$
 
+    final MapPanel mapPanel = mapView.getMapPanel();
+
     // wait until map has loaded
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Ergebniskarte konfigurieren", "Karte wird geladen..." ) )
+      return null;
 
     // Open wizard on that map!
     final AddResultThemeWizard addLayerWizard = new AddResultThemeWizard();
     addLayerWizard.init( PlatformUI.getWorkbench(), new StructuredSelection() );
-    addLayerWizard.setCommandTarget( outlineView );
-    addLayerWizard.setMapModel( outlineView.getMapPanel().getMapModell() );
+    addLayerWizard.setCommandTarget( commandTarget );
+    addLayerWizard.setMapModel( mapPanel.getMapModell() );
 
     // final KalypsoAddLayerWizard addLayerWizard = new KalypsoAddLayerWizard( outlineView );
     // addLayerWizard.init( PlatformUI.getWorkbench() );

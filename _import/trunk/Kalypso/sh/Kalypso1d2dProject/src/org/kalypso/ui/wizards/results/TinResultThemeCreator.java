@@ -64,6 +64,8 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
  */
 public class TinResultThemeCreator extends AbstractThemeCreator
 {
+  private static final String LABEL_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getLocalPart() );
+
   private static final String TIN_INFO_ID = "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo";
 
   private final ResultAddLayerCommandData[] m_resultLayerCommandData = new ResultAddLayerCommandData[2];
@@ -84,6 +86,13 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
   private final BigDecimal m_maxValue;
 
+  private static final String UNIT_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getLocalPart() );
+
+//  private static final String DATE_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getLocalPart() );
+
+  private final String THEME_INFO_ID = String.format( "%s?geometry=%s&format=%s: %s %s", TIN_INFO_ID, Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_TIN, LABEL_PROPERTY_FORMAT, "%.2f", UNIT_PROPERTY_FORMAT );
+
+
   public TinResultThemeCreator( final IDocumentResultMeta documentResult, final IFolder scenarioFolder )
   {
     m_documentResult = documentResult;
@@ -92,7 +101,6 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     m_scenarioFolder = scenarioFolder;
 
     updateThemeCommandData();
-
   }
 
   @Override
@@ -206,6 +214,9 @@ public class TinResultThemeCreator extends AbstractThemeCreator
         m_resultLayerCommandData[1] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, m_scenarioFolder, type );
         m_resultLayerCommandData[1].setSelected( true );
       }
+      
+      m_resultLayerCommandData[1].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
+      m_resultLayerCommandData[1].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
     }
 
     /* Iso-Lines */
@@ -228,14 +239,8 @@ public class TinResultThemeCreator extends AbstractThemeCreator
         m_resultLayerCommandData[0].setSelected( true );
       }
 
-      final String label = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getLocalPart() );
-      final String unit = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getLocalPart() );
-      final String date = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getLocalPart() );
-
-      final String themeInfoId = String.format( "%s?geometry=%s&format=%s: %s %s (%s)", TIN_INFO_ID, label, "%.2f", unit, date );
-
       m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
-      m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, themeInfoId );
+      m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
     }
   }
 
