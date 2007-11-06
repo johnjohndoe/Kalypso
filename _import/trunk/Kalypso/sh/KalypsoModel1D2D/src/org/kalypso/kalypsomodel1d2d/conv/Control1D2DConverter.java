@@ -216,14 +216,14 @@ public class Control1D2DConverter
       throw new IllegalArgumentException( Messages.getString( "Control1D2DConverter.17" ) ); //$NON-NLS-1$
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, eddy[0], eddy[1], eddy[2], eddy[3], -1.0, 1.0, 1.0 ); //$NON-NLS-1$
     formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
-    formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
+    formatter.format( "ED4%21.5f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
   }
 
   private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final double val, final Double ks, final Double axayCorrected, final Double dpCorrected )
   {
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 ); //$NON-NLS-1$
     formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
-    formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
+    formatter.format( "ED4%21.5f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
   }
 
   /**
