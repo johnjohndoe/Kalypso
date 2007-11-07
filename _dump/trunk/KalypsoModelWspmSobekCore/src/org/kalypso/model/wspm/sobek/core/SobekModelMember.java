@@ -49,7 +49,6 @@ import java.util.List;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
@@ -64,19 +63,26 @@ import nl.wldelft.fews.pi.LocationsComplexType;
 import nl.wldelft.fews.pi.ObjectFactory;
 import nl.wldelft.fews.pi.Structure;
 import nl.wldelft.fews.pi.Structures;
+import nl.wldelft.fews.pi.TimeSerieComplexType;
+import nl.wldelft.fews.pi.TimeSeriesComplexType;
 import nl.wldelft.fews.pi.CrossSectionsComplexType.CrossSection;
 import nl.wldelft.fews.pi.LocationsComplexType.Location;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICalculationLink;
+import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
@@ -91,7 +97,6 @@ import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.xml.sax.SAXException;
 
 /**
@@ -251,7 +256,7 @@ public final class SobekModelMember implements ISobekModelMember
    *      org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember.TARGET)
    * @author thuel2
    */
-  public void writePi( final URL targetDir, final TARGET target ) throws IOException, GM_Exception
+  public void writePi( final URL targetDir, final TARGET target ) throws Exception
   {
     // ensure existence of targetDir
     final File fleTargetDir = new File( targetDir.getFile() );
@@ -264,106 +269,196 @@ public final class SobekModelMember implements ISobekModelMember
     Object xmlElements;
     String sFleXml;
 
-    if( TARGET.eLocations.equals( target ) )
+    if( !TARGET.eBoundaryConditions.equals( target ) )
     {
-      // root element Locations
-      final LocationsComplexType locationsComplexType = factory.createLocationsComplexType();
-      locationsComplexType.setGeoDatum( GeoDatumEnumStringType.LOCAL.value() );
-      xmlElements = factory.createLocations( locationsComplexType );
-      // list of nodes to be converted to locations
-      final INode[] nodes = getNodeMembers();
-      for( final INode node : nodes )
+      if( TARGET.eLocations.equals( target ) )
       {
-        final Location location = PiSobekModelUtils.getInstance().createLocationFromNode( factory, node );
-        locationsComplexType.getLocation().add( location );
+        // root element Locations
+        final LocationsComplexType locationsComplexType = factory.createLocationsComplexType();
+        locationsComplexType.setGeoDatum( GeoDatumEnumStringType.LOCAL.value() );
+        xmlElements = factory.createLocations( locationsComplexType );
+        // list of nodes to be converted to locations
+        final INode[] nodes = getConnectionNodeTypeNodeMembers();
+        for( final INode node : nodes )
+        {
+          final Location location = PiSobekModelUtils.getInstance().createLocationFromNode( factory, node );
+          locationsComplexType.getLocation().add( location );
+        }
+        // name of target file
+        sFleXml = "nodes.xml";
       }
-      // name of target file
-      sFleXml = "nodes.xml";
-    }
-    else if( TARGET.eBranches.equals( target ) )
-    {
-      // root element Branches
-      final BranchesComplexType branchesComplexType = factory.createBranchesComplexType();
-      branchesComplexType.setGeoDatum( GeoDatumEnumStringType.LOCAL.value() );
-      xmlElements = factory.createBranches( branchesComplexType );
+      else if( TARGET.eBranches.equals( target ) )
+      {
+        // root element Branches
+        final BranchesComplexType branchesComplexType = factory.createBranchesComplexType();
+        branchesComplexType.setGeoDatum( GeoDatumEnumStringType.LOCAL.value() );
+        xmlElements = factory.createBranches( branchesComplexType );
 
-      final IBranch[] branches = getBranchMembers();
-      for( final IBranch branch : branches )
-      {
-        final BranchComplexType piBranch = PiSobekModelUtils.getInstance().createPiBranchFromBranch( factory, branch );
-        branchesComplexType.getBranch().add( piBranch );
+        final IBranch[] branches = getBranchMembers();
+        for( final IBranch branch : branches )
+        {
+          final BranchComplexType piBranch = PiSobekModelUtils.getInstance().createPiBranchFromBranch( factory, branch );
+          branchesComplexType.getBranch().add( piBranch );
+        }
+        // name of target file
+        sFleXml = "Branches.xml";
       }
-      // name of target file
-      sFleXml = "Branches.xml";
-    }
-    else if( TARGET.eCrossSections.equals( target ) )
-    {
-      // root element crossSections
-      final CrossSectionsComplexType crossSectionsComplexType = factory.createCrossSectionsComplexType();
-      crossSectionsComplexType.setGeoDatum( GeoDatumEnumStringType.LOCAL.value() );
-      xmlElements = factory.createCrossSections( crossSectionsComplexType );
+      else if( TARGET.eCrossSections.equals( target ) )
+      {
+        // root element crossSections
+        final CrossSectionsComplexType crossSectionsComplexType = factory.createCrossSectionsComplexType();
+        crossSectionsComplexType.setGeoDatum( GeoDatumEnumStringType.LOCAL.value() );
+        xmlElements = factory.createCrossSections( crossSectionsComplexType );
 
-      final ICrossSectionNode[] crossSectionNodes = getCrossSectionNodeMembers();
-      for( final ICrossSectionNode csNode : crossSectionNodes )
-      {
-        final CrossSection cs = PiSobekModelUtils.getInstance().createCrossSectionFromCSNode( factory, csNode );
-        crossSectionsComplexType.getCrossSection().add( cs );
+        final ICrossSectionNode[] crossSectionNodes = getCrossSectionNodeMembers();
+        for( final ICrossSectionNode csNode : crossSectionNodes )
+        {
+          final CrossSection cs = PiSobekModelUtils.getInstance().createCrossSectionFromCSNode( factory, csNode );
+          crossSectionsComplexType.getCrossSection().add( cs );
+        }
+        sFleXml = "CrossSections.xml";
       }
-      sFleXml = "CrossSections.xml";
-    }
-    else if( TARGET.eStructures.equals( target ) )
-    {
-      // root element Structures
-      final Structures structures = factory.createStructures();
- 
-      final ISbkStructure[] sbkStructures = getSbkStructures();
-      for( final ISbkStructure sbkStruct : sbkStructures )
+      else if( TARGET.eStructures.equals( target ) )
       {
-        final Structure piStruct = PiSobekModelUtils.getInstance().createStructureFromSbkStruct( factory, sbkStruct );
-        structures.getStructure().add( piStruct );
+        // root element Structures
+        final Structures structures = factory.createStructures();
+
+        final ISbkStructure[] sbkStructures = getSbkStructures();
+        for( final ISbkStructure sbkStruct : sbkStructures )
+        {
+          final Structure piStruct = PiSobekModelUtils.getInstance().createStructureFromSbkStruct( factory, sbkStruct );
+          structures.getStructure().add( piStruct );
+        }
+        xmlElements = structures;
+        sFleXml = "Structures.xml";
       }
-      xmlElements = structures;
-      sFleXml = "Structures.xml";
+      else
+        throw new NotImplementedException();
+
+      // marshall
+      final File fleXml = new File( targetDir.getFile(), sFleXml );
+      final FileOutputStream os = new FileOutputStream( fleXml );
+      final JAXBContext jc;
+      try
+      {
+        jc = JAXBContext.newInstance( ObjectFactory.class );
+
+        final Marshaller m = jc.createMarshaller();
+        m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
+
+        final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
+        final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/fileformats.xsd" );
+        final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
+        // TODO remove comment
+//        m.setSchema( schema );
+
+        m.marshal( xmlElements, os );
+
+        os.flush();
+        os.close();
+
+      }
+      catch( final JAXBException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( final SAXException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      finally
+      {
+        org.apache.commons.io.IOUtils.closeQuietly( os );
+      }
     }
     else
-      throw new NotImplementedException();
-
-    // marshall
-    final File fleXml = new File( targetDir.getFile(), sFleXml );
-    final FileOutputStream os = new FileOutputStream( fleXml );
-    final JAXBContext jc;
-    try
     {
-      jc = JAXBContext.newInstance( ObjectFactory.class );
+      // for each calculation case (loading case) export timeseries.xml
+      sFleXml = "Timeseries.xml";
+      final ILastfall[] lastfaelle = getLastfallMembers();
+      for( final ILastfall lastfall : lastfaelle )
+      {
+        // root element TimeSeries
+        final TimeSeriesComplexType timeSeriesComplexType = factory.createTimeSeriesComplexType();
+        // TODO set time zone
+        timeSeriesComplexType.setTimeZone( 0.0 );
+        xmlElements = factory.createTimeSeries( timeSeriesComplexType );
 
-      final Marshaller m = jc.createMarshaller();
-      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+        final IBoundaryNode[] boundaryCondNodes = getBoundaryNodeMembers();
 
-      final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
-      final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/fileformats.xsd" );
-      final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
-      m.setSchema( schema );
+        for( final IBoundaryNode bnNode : boundaryCondNodes )
+        {
+          final TimeSerieComplexType ts = PiSobekModelUtils.getInstance().createTimeSeriesFromBNNodeAndLastfall( factory, bnNode, lastfall );
+          timeSeriesComplexType.getSeries().add( ts );
+        }
+        // marshall
+        final String validatedLastfallName = FileUtilities.validateName( "calcCase_" + lastfall.getName(), "_" );
+        final File dirLastfall = new File( targetDir.getFile(), validatedLastfallName);
+        if( !dirLastfall.exists() )
+          FileUtils.forceMkdir( dirLastfall );
+        final File fleXml = new File(dirLastfall,sFleXml );
+        final FileOutputStream os = new FileOutputStream( fleXml );
+        final JAXBContext jc;
+        try
+        {
+          jc = JAXBContext.newInstance( ObjectFactory.class );
 
-      m.marshal( xmlElements, os );
+          final Marshaller m = jc.createMarshaller();
+          m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
 
-      os.flush();
-      os.close();
+          final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
+          final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/fileformats.xsd" );
+          final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
+          m.setSchema( schema );
 
+          m.marshal( xmlElements, os );
+
+          os.flush();
+          os.close();
+
+        }
+        catch( final JAXBException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( final SAXException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        finally
+        {
+          org.apache.commons.io.IOUtils.closeQuietly( os );
+        }
+      }
     }
-    catch( final JAXBException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( final SAXException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    finally
-    {
-      org.apache.commons.io.IOUtils.closeQuietly( os );
-    }
+  }
+
+  /**
+   * returns nodes that are somehow connection nodes (connection, linkage, boundary condition)
+   */
+  private INode[] getConnectionNodeTypeNodeMembers( )
+  {
+
+    final INode[] allNodes = getNodeMembers();
+    final List<INode> connNodes = new ArrayList<INode>();
+    for( final INode node : allNodes )
+      if( (node instanceof IBoundaryNode) || (node instanceof IConnectionNode) || (node instanceof ILinkageNode) )
+        connNodes.add( (INode) node );
+    return connNodes.toArray( new INode[] {} );
+  }
+
+  private IBoundaryNode[] getBoundaryNodeMembers( )
+  {
+    final INode[] allNodes = getNodeMembers();
+    final List<IBoundaryNode> boundaryCondNodes = new ArrayList<IBoundaryNode>();
+    for( final INode node : allNodes )
+      if( node instanceof IBoundaryNode )
+        boundaryCondNodes.add( (IBoundaryNode) node );
+    return boundaryCondNodes.toArray( new IBoundaryNode[] {} );
   }
 
   private ISbkStructure[] getSbkStructures( )
@@ -408,7 +503,7 @@ public final class SobekModelMember implements ISobekModelMember
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#writePi(java.net.URL)
    */
-  public void writePi( final URL targetDir ) throws IOException, GM_Exception
+  public void writePi( final URL targetDir ) throws Exception
   {
     final TARGET[] values = TARGET.values();
     for( final TARGET target : values )

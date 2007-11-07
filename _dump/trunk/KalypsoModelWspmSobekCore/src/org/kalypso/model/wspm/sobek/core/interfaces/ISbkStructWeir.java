@@ -38,52 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core;
-
-import java.io.File;
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+package org.kalypso.model.wspm.sobek.core.interfaces;
 
 /**
  * @author thuel2
  */
-public class MonisSpielwiese extends TestCase
+public interface ISbkStructWeir extends ISbkStructure
 {
-  public void testMain( )
-  {
-    final File fleTarget = new File( "C:\\temp\\Spielwiese\\PI" );
 
-    final URL urlGml = MonisSpielwiese.class.getResource( "resources/test/hydraulModel.gml" );
+  public String getFlowDirection( );
 
-    try
-    {
-      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( urlGml, null );
+  public double getCrestLevel( );
 
-      final IFeatureType modelFT = modelWorkspace.getGMLSchema().getFeatureType( ISobekConstants.QN_SOBEK_MODEL);
-      final Feature[] sobekModelFeat = modelWorkspace.getFeatures( modelFT );
+  public double getCrestWidth( );
 
-      final ISobekModelMember sobekModel = SobekModelMember.getModel( null, sobekModelFeat[0], null );
+  public double getDischargeCoeffCE( );
 
-      final URL targetDir = fleTarget.toURL();
-//      sobekModel.writePi( targetDir);
-      sobekModel.writePi( targetDir, ISobekModelMember.TARGET.eStructures);
-    }
-
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-    }
-  }
+  public double getLateralContractionCoeffCW( );
 
 }

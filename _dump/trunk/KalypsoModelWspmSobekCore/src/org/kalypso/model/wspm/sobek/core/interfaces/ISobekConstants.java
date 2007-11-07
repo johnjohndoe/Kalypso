@@ -239,11 +239,41 @@ public class ISobekConstants
 
   public static final QName QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL );
 
-  public static final String P_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE = "SbkCompoundStructureNode";
+  public static final String NS_SOBEK_STRUCTURES = "org.kalypso.model.wspm.sobek.structures";
+  
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE = "SbkCompoundStructure";
 
-  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE );
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE );
 
   public static final String F_HYDRAULIC_NODE_CONNECTION_TYPE = "typeOfConnectionNode";
 
   public static final QName QN_HYDRAULIC_NODE_CONNECTION_TYPE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_NODE_CONNECTION_TYPE );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_WEIR = "SbkWeir";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_WEIR = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_WEIR );
+
+  public static final String F_STRUCT_LINKS_TO_BRANCH = "linksToBranch";
+
+  public static final QName QN_STRUCT_LINKS_TO_BRANCH = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.F_STRUCT_LINKS_TO_BRANCH );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_HEIGHT = "crestHeight";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_HEIGHT = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_HEIGHT );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_WIDTH = "crestWidth";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_WIDTH = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_WIDTH );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_WEIR_DISCHARGE_COEFF = "dischargeCoeffCE";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_WEIR_DISCHARGE_COEFF = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_WEIR_DISCHARGE_COEFF );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_WEIR_FLOW_DIRECTION = "flowDirection";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_WEIR_FLOW_DIRECTION = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_WEIR_FLOW_DIRECTION );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_WEIR_LATERAL_CONTRACTION_COEFF = "lateralContractionCoeffCW";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_WEIR_LATERAL_CONTRACTION_COEFF = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_WEIR_LATERAL_CONTRACTION_COEFF );
 }
