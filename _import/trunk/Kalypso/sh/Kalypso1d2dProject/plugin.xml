@@ -400,14 +400,6 @@
       </workflowSystem>
    </extension>
    <extension
-         point="org.kalypso.ui.addlayer.addLayerWizard">
-      <wizard
-            class="org.kalypso.ui.wizards.results.AddResultThemeWizard"
-            id="org.kalypso.kalypso1d2d.pjt.addThemeWizard.resultMeta"
-            name="1D2D-Ergebnisse">
-      </wizard>
-   </extension>
-   <extension
          point="org.kalypso.afgui.scenarioData">
       <dataSet
             id="org.kalypso.kalypso1d2d">
