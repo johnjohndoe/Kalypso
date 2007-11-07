@@ -94,7 +94,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   /**
    * This variable stores the loader for the capabilities.
    */
-  private final ICapabilitiesLoader m_loader;
+  private ICapabilitiesLoader m_loader;
 
   /**
    * This variable stores the WMS service or is null.
@@ -112,7 +112,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * @param loader
    *            The loader for loading the capabilities.
    */
-  public AbstractDeegreeImageProvider( final ICapabilitiesLoader loader )
+  public AbstractDeegreeImageProvider( ICapabilitiesLoader loader )
   {
     m_themeName = null;
     m_layers = null;
@@ -129,7 +129,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * @see org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider#init(java.lang.String, java.lang.String,
    *      org.opengis.cs.CS_CoordinateSystem)
    */
-  public void init( final String themeName, final String layers, final String styles, final String service, final CS_CoordinateSystem localSRS )
+  public void init( String themeName, String layers, String styles, String service, CS_CoordinateSystem localSRS )
   {
     m_themeName = themeName;
     m_layers = layers;
@@ -145,7 +145,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * @see org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider#getImage(int, int,
    *      org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-  public Image getImage( final int width, final int height, final GM_Envelope bbox ) throws CoreException
+  public Image getImage( int width, int height, GM_Envelope bbox ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
     initializeRemoteWMS();
@@ -156,13 +156,13 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   /**
    * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(java.awt.Font, java.lang.String)
    */
-  public Image getLegendGraphic( final Font font, final String layerName ) throws CoreException
+  public Image getLegendGraphic( Font font, String layerName ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
     initializeRemoteWMS();
 
     /* Load the legend. */
-    final Image result = loadLegendGraphic( layerName );
+    Image result = loadLegendGraphic( layerName );
 
     return result;
   }
@@ -179,13 +179,13 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
         return;
 
       /* Create the service URL. */
-      final URL serviceURL = parseServiceUrl( m_service );
+      URL serviceURL = parseServiceUrl( m_service );
 
       /* Init the loader. */
       m_loader.init( serviceURL );
 
       /* Create the capabilities. */
-      final WMSCapabilities wmsCaps = DeegreeWMSUtilities.loadCapabilities( m_loader, new NullProgressMonitor() );
+      WMSCapabilities wmsCaps = DeegreeWMSUtilities.loadCapabilities( m_loader, new NullProgressMonitor() );
 
       /* Ask for the srs. */
       m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers.split( "," ) );
@@ -211,13 +211,13 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    *            The String representation of the URL to the WMS service.
    * @return The URL to the WMS service.
    */
-  private URL parseServiceUrl( final String service ) throws CoreException
+  private URL parseServiceUrl( String service ) throws CoreException
   {
     try
     {
       return new URL( service );
     }
-    catch( final MalformedURLException e )
+    catch( MalformedURLException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e, String.format( "Service URL fehlerhaft: %s (%s)", service, e.getLocalizedMessage() ) ) );
     }
@@ -236,19 +236,19 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    *            The layers that have to be matched to the local srs.
    * @return An array of possible coordiante systems.
    */
-  private CS_CoordinateSystem negotiateCRS( final CS_CoordinateSystem localSRS, final WMSCapabilities wmsCapabilities, final String[] layers ) throws CoreException
+  private CS_CoordinateSystem negotiateCRS( CS_CoordinateSystem localSRS, WMSCapabilities wmsCapabilities, String[] layers ) throws CoreException
   {
     /* Match the local with the remote coordinate system. */
     try
     {
-      final CS_CoordinateSystem[] crs = DeegreeWMSUtilities.negotiateCRS( localSRS, wmsCapabilities, layers );
+      CS_CoordinateSystem[] crs = DeegreeWMSUtilities.negotiateCRS( localSRS, wmsCapabilities, layers );
       if( crs.length > 0 )
         return crs[0];
     }
-    catch( final RemoteException e )
+    catch( RemoteException e )
     {
       /* Create the error status. */
-      final IStatus errorStatus = StatusUtilities.createErrorStatus( "Failed to negotiate CRS." );
+      IStatus errorStatus = StatusUtilities.createErrorStatus( "Failed to negotiate CRS." );
 
       /* Log the error. */
       KalypsoGisPlugin.getDefault().getLog().log( errorStatus );
@@ -295,12 +295,12 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       if( m_wms == null || m_layers == null )
         return null;
 
-      final GM_Envelope maxEnvRemoteSRS = DeegreeWMSUtilities.getMaxExtent( m_layers.split( "," ), (WMSCapabilities) m_wms.getCapabilities(), m_negotiatedSRS );
-      final GeoTransformer gt = new GeoTransformer( m_localSRS );
+      GM_Envelope maxEnvRemoteSRS = DeegreeWMSUtilities.getMaxExtent( m_layers.split( "," ), (WMSCapabilities) m_wms.getCapabilities(), m_negotiatedSRS );
+      GeoTransformer gt = new GeoTransformer( m_localSRS );
 
       return gt.transformEnvelope( maxEnvRemoteSRS, m_negotiatedSRS );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex, "Failed to determine extent." ) );
     }

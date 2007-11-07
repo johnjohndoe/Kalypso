@@ -196,7 +196,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       /* Create the image provider. */
       final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, layers, styles, service, providerID, defaultCS );
 
-      return new KalypsoWMSTheme( linktype, layerName, imageProvider, this );
+      return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, this );
     }
     else if( ArrayUtils.contains( arrImgTypes, linktype.toLowerCase() ) )
       return KalypsoPictureTheme.getPictureTheme( layerType, context, this, defaultCS );

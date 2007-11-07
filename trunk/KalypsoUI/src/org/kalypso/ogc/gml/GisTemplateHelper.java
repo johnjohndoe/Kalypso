@@ -428,8 +428,7 @@ public class GisTemplateHelper
       layer.setFeaturePath( "" ); //$NON-NLS-1$
       layer.setVisible( theme.isVisible() );
       layer.setId( "ID_" + count );
-      layer.setHref( "" );
-
+      layer.setHref( ((KalypsoWMSTheme) theme).getSource() );
       layer.setLinktype( WMSImageProvider.TYPE_NAME );
       layer.setActuate( "onRequest" ); //$NON-NLS-1$
       layer.setType( "simple" ); //$NON-NLS-1$
