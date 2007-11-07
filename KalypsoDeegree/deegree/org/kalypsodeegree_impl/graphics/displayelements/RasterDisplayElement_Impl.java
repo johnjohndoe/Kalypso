@@ -110,6 +110,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     if( m_grid == null )
     {
       final Feature feature = getFeature();
+      if( feature.getWorkspace() == null )
+        return null;
+
       m_grid = getCachedGrid( feature );
     }
 

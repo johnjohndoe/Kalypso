@@ -49,6 +49,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.CascadingLayerKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.ObjectFactory;
@@ -59,7 +60,7 @@ import org.kalypso.template.types.StyledLayerType;
  */
 public class AddCascadingThemeCommand implements ICommand
 {
-  private final GisTemplateMapModell m_mapModell;
+  private final IKalypsoLayerModell m_mapModell;
 
   private final String m_name;
 
@@ -79,7 +80,7 @@ public class AddCascadingThemeCommand implements ICommand
    * @param layerCommands
    *            cmd for adding sub-layers
    */
-  public AddCascadingThemeCommand( final GisTemplateMapModell mapModell, final String name, final ICommand[] layerCommands )
+  public AddCascadingThemeCommand( final IKalypsoLayerModell mapModell, final String name, final ICommand[] layerCommands )
   {
     m_mapModell = mapModell;
     m_name = name;
@@ -88,7 +89,7 @@ public class AddCascadingThemeCommand implements ICommand
       m_layerCommands.add( command );
   }
 
-  public AddCascadingThemeCommand( final GisTemplateMapModell mapModell, final String name )
+  public AddCascadingThemeCommand( final IKalypsoLayerModell mapModell, final String name )
   {
     this( mapModell, name, new ICommand[] {} );
   }
@@ -115,7 +116,7 @@ public class AddCascadingThemeCommand implements ICommand
   {
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), m_mapModell.getProject(), selectionManager, false, false );
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), m_mapModell.getProject(), selectionManager );
     for( final ICommand command : layerCommands )
       if( command instanceof AddThemeCommand )
       {
@@ -180,7 +181,7 @@ public class AddCascadingThemeCommand implements ICommand
     final List<JAXBElement< ? extends StyledLayerType>> layers = m_layer.getLayer();
     getSubLayer( factory, layers, m_layerCommands.toArray( new ICommand[] {} ) );
 
-    m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertTheme( m_layer, 0 );
+    m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, 0 );
     m_mapModell.activateTheme( m_theme );
   }
 

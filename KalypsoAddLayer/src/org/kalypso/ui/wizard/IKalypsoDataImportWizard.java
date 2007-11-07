@@ -42,12 +42,12 @@ package org.kalypso.ui.wizard;
 
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 
 public interface IKalypsoDataImportWizard extends IWorkbenchWizard
 {
   public void setCommandTarget( final ICommandTarget commandTarget );
 
-  public void setMapModel( final IMapModell modell );
+  public void setMapModel( final IKalypsoLayerModell modell );
 
 }

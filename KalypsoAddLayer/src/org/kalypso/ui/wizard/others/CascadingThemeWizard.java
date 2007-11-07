@@ -38,12 +38,24 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml;
+package org.kalypso.ui.wizard.others;
 
-/**
- * @author kuch
- */
-public interface IKalypsoCascadingTheme
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.action.AddCascadingThemeCommand;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+
+public class CascadingThemeWizard extends AbstractOtherThemeWizard implements IKalypsoDataImportWizard
 {
-  IKalypsoTheme[] getChildThemes( );
+  public CascadingThemeWizard( )
+  {
+    super( new ThemeNameWizardPage( "themeNamePage", "Themenverzeichnis", ImageProvider.IMAGE_KALYPSO_ICON_BIG, "" ) );
+  }
+
+  @Override
+  protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
+  {
+    return new AddCascadingThemeCommand( mapModell, themeName );
+  }
 }

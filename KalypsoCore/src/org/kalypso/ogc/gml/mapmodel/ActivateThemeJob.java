@@ -102,7 +102,7 @@ public final class ActivateThemeJob extends Job
   {
     try
     {
-      final String themeContext = themeToActivate.getContext();
+      final String themeContext = themeToActivate.getTypeContext();
       if( m_themeContext != null && m_themeContext.equals( themeContext ) )
       {
         m_mapModell.activateTheme( themeToActivate );

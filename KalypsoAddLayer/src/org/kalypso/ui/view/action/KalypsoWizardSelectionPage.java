@@ -41,19 +41,24 @@
 package org.kalypso.ui.view.action;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardNode;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardElement;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardListSelectionPage;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardNode;
 import org.eclipse.ui.model.AdaptableList;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
- * @author kuepfer
+ * @author Christoph Küpferle
  */
 @SuppressWarnings("restriction")
 public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
@@ -77,11 +82,32 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
       @Override
       public IWorkbenchWizard createWizard( ) throws CoreException
       {
-        final IKalypsoDataImportWizard createdwizard = (IKalypsoDataImportWizard) element.createWizard();
-        // Set the outlineViewer in the import wizard
-        createdwizard.setCommandTarget( m_outline );
-        createdwizard.setMapModel( m_outline.getMapPanel().getMapModell() );
-        return createdwizard;
+        /* Find the right map modell */
+        final IKalypsoLayerModell mapModell = findMapModell();
+
+        final IKalypsoDataImportWizard newWizard = (IKalypsoDataImportWizard) element.createWizard();
+        newWizard.setCommandTarget( m_outline );
+        newWizard.setMapModel( mapModell );
+        if( newWizard instanceof Wizard )
+          ((Wizard) newWizard).setWindowTitle( KalypsoWizardSelectionPage.this.getWizard().getWindowTitle() );
+        return newWizard;
+      }
+
+      private IKalypsoLayerModell findMapModell( )
+      {
+        final ISelection selection = m_outline.getSelection();
+        if( selection instanceof StructuredSelection )
+        {
+          final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+          if( firstElement instanceof IKalypsoLayerModell )
+            return (IKalypsoLayerModell) firstElement;
+
+          if( firstElement instanceof IKalypsoTheme )
+            return (IKalypsoLayerModell) ((IKalypsoTheme) firstElement).getMapModell();
+        }
+
+        /* Without valid selection, new themes go top-level */
+        return (IKalypsoLayerModell) m_outline.getMapPanel().getMapModell();
       }
     };
   }

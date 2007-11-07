@@ -81,7 +81,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Gernot Belger
  */
-public class GisTemplateMapModell implements IMapModell
+public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 {
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -91,42 +91,11 @@ public class GisTemplateMapModell implements IMapModell
 
   private boolean m_isLoaded = true;
 
-  /**
-   * Special constructor for use only by the {@link CascadingKalypsoTheme}. Sets a special model as parent to use for
-   * creation of themes.
-   * <p>
-   * This is needed in order to return the correct parent for the cascaded themes, so the outline view behaves
-   * correctly.
-   */
   public GisTemplateMapModell( final URL context, final CS_CoordinateSystem crs, final IProject project, final IFeatureSelectionManager selectionManager )
-  {
-    this( context, crs, project, selectionManager, true, true );
-  }
-
-  public GisTemplateMapModell( final URL context, final CS_CoordinateSystem crs, final IProject project, final IFeatureSelectionManager selectionManager, final boolean showScrabLayer, final boolean showLegend )
   {
     m_context = context;
     m_selectionManager = selectionManager;
     m_modell = new MapModell( crs, project );
-
-    // FIXME: this should not happen!
-    // Better: put special layers into gmt file, so the user can decide if he wants them.
-    if( showLegend )
-    {
-      // layer 1 is legend
-      final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
-      addTheme( legendTheme );
-      legendTheme.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
-      legendTheme.setVisible( false );
-    }
-
-    if( showScrabLayer )
-    {
-      // layer 2 is scrablayer
-      final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager, this );
-      scrabLayer.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
-      addTheme( scrabLayer );
-    }
   }
 
   /**
@@ -163,7 +132,7 @@ public class GisTemplateMapModell implements IMapModell
   {
     for( final JAXBElement< ? extends StyledLayerType> layerType : layerList )
     {
-      final IKalypsoTheme theme = addTheme( layerType.getValue() );
+      final IKalypsoTheme theme = addLayer( layerType.getValue() );
       if( layerType.getValue() == activeLayer )
         activateTheme( theme );
     }
@@ -174,7 +143,7 @@ public class GisTemplateMapModell implements IMapModell
     m_modell.setName( name );
   }
 
-  public IKalypsoTheme addTheme( final StyledLayerType layer ) throws Exception
+  public IKalypsoTheme addLayer( final StyledLayerType layer ) throws Exception
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
@@ -185,7 +154,7 @@ public class GisTemplateMapModell implements IMapModell
     return theme;
   }
 
-  public IKalypsoTheme insertTheme( final StyledLayerType layer, final int position ) throws Exception
+  public IKalypsoTheme insertLayer( final StyledLayerType layer, final int position ) throws Exception
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
@@ -210,9 +179,9 @@ public class GisTemplateMapModell implements IMapModell
       return new CascadingLayerKalypsoTheme( (CascadingLayer) layerType, context, m_selectionManager, this );
 
     final String linktype = layerType.getLinktype();
+    final String layerName = layerType.getName();
     if( "wms".equals( linktype ) ) //$NON-NLS-1$
     {
-      final String layerName = layerType.getName();
       final String source = layerType.getHref();
 
       /* Parse the source into properties. */
@@ -233,6 +202,10 @@ public class GisTemplateMapModell implements IMapModell
       return KalypsoPictureTheme.getPictureTheme( layerType, context, this, defaultCS );
     else if( "gmt".equals( linktype ) )
       return new CascadingKalypsoTheme( layerType, context, m_selectionManager, this );
+    else if( "legend".equals( linktype ) )
+      return new KalypsoLegendTheme( layerName, this );
+    else if( "scrab".equals( linktype ) )
+      return new ScrabLayerFeatureTheme( layerName, m_selectionManager, this );
     else
       // TODO: returns handling of gml files - part of else?!? dont assume it, proof it!
       return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this );

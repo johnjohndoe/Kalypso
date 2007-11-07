@@ -204,7 +204,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * 
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
    */
-  public String getContext( )
+  public String getTypeContext( )
   {
     return getType();
   }

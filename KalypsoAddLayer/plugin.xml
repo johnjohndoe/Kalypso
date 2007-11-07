@@ -20,35 +20,84 @@
          name="dataimport"
          point="org.kalypso.ui.addlayer.addLayerWizard">
       <wizard
-            icon="icon/file_shp.GIF"
             class="org.kalypso.ui.wizard.shape.ImportShapeSourceWizard"
-            name="%org.kalypso.ui.wizard.shape.name"
-            id="org.kalypso.ui.wizard.shape"/>
+            icon="icon/file_shp.GIF"
+            id="org.kalypso.ui.wizard.shape"
+            name="%org.kalypso.ui.wizard.shape.name">
+         <description>
+            Eine ESRI Shape Datei als Thema hinufügen.
+         </description>
+      </wizard>
       <wizard
-            icon="icon/Datastore_WMS.gif"
             class="org.kalypso.ui.wizard.wms.ImportWmsSourceWizard"
-            name="%org.kalypso.ui.wizard.wms.name"
-            id="org.kalypso.ui.wizard.wms"/>
+            icon="icon/Datastore_WMS.gif"
+            id="org.kalypso.ui.wizard.wms"
+            name="%org.kalypso.ui.wizard.wms.name">
+         <description>
+            Ein Thema aus einem externen WebMapService auswählen.
+         </description>
+      </wizard>
       <wizard
-            icon="icon/Datastore_WFS.gif"
             class="org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard"
-            name="%org.kalypso.ui.wizard.wfs.name"
-            id="org.kalypso.ui.wizard.wfs"/>
+            icon="icon/Datastore_WFS.gif"
+            id="org.kalypso.ui.wizard.wfs"
+            name="%org.kalypso.ui.wizard.wfs.name">
+         <description>
+            Daten von einem externen WebFeatureService als Thema hinzufügen.
+         </description>
+      </wizard>
       <wizard
-            icon="icon/fileGml.gif"
             class="org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard"
-            name="%gml.name"
-            id="gml"/>
+            icon="icon/fileGml.gif"
+            id="gml"
+            name="%gml.name">
+         <description>
+            Eine GML Datei als Thema hinzufügen.
+         </description>
+      </wizard>
       <wizard
-            icon="icon/raster.GIF"
             class="org.kalypso.ui.wizard.raster.ImportRasterSourceWizard"
-            name="%org.kalypso.ui.wizard.raster.name"
-            id="org.kalypso.ui.wizard.raster"/>
+            icon="icon/raster.GIF"
+            id="org.kalypso.ui.wizard.raster"
+            name="%org.kalypso.ui.wizard.raster.name">
+         <description>
+            Eine Rasterdatei (.asc) als Thema hinzufügen.
+         </description>
+      </wizard>
       <wizard
-            icon="icon/file_image.gif"
             class="org.kalypso.ui.wizard.image.ImportImageSourceWizard"
-            name="%org.kalypso.ui.wizard.image.name"
-            id="org.kalypso.ui.wizard.image"/>
+            icon="icon/file_image.gif"
+            id="org.kalypso.ui.wizard.image"
+            name="%org.kalypso.ui.wizard.image.name">
+         <description>
+            Eine georeferenziertes Bild (.tiff, .jpg, .png, ...) als Thema hinzufügen.
+         </description>
+      </wizard>
+      <wizard
+            class="org.kalypso.ui.wizard.others.LegendThemeWizard"
+            id="org.kalypso.ui.wizard.others.LegendThemeWizard"
+            name="Legende">
+         <description>
+            Eine in die Karte eingeblendete Legende hinzufügen.
+         </description>
+      </wizard>
+      <wizard
+            class="org.kalypso.ui.wizard.others.ScrabThemeWizard"
+            id="org.kalypso.ui.wizard.others.ScrabThemeWizard"
+            name="Skizzier-Thema">
+         <description>
+            Das Skizzier-Thema zum Zeichnen von Hilfsgeometrien hinzfügen.
+         </description>
+      </wizard>
+      <wizard
+            class="org.kalypso.ui.wizard.others.CascadingThemeWizard"
+            icon="icon/cascadingTheme.gif"
+            id="org.kalypso.ui.wizard.others.CascadingThemeWizard"
+            name="Verzeichnisthema">
+         <description>
+            Ein Thema, welches andere Themen als Unterthemen enthält, hinzufügen.
+         </description>
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
@@ -67,7 +116,7 @@
       <view
             category="org.kalypso.ui.gazetterview"
             class="org.kalypso.ui.gazetter.view.GazetterView"
-            icon="icons/sample.gif"
+            icon="icon/gazetterview.gif"
             id="org.kalypso.ui.gazetter.view.GazetterView"
             name="GazetterView"/>
    </extension>

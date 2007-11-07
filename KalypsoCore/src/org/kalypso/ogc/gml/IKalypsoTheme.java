@@ -104,7 +104,7 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
   /**
    * Returns the context id that this theme represents.
    */
-  public String getContext( );
+  public String getTypeContext( );
 
   /**
    * This function should return true, if the theme has tried to load the image, data, etc. once. Regardless if it was

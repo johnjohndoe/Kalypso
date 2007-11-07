@@ -47,6 +47,7 @@ import java.util.Map.Entry;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
@@ -57,7 +58,7 @@ public class AddThemeCommand implements ICommand
 {
   private final Map<String, String> m_properties = new HashMap<String, String>();
 
-  private GisTemplateMapModell m_mapModell;
+  private IKalypsoLayerModell m_mapModell;
 
   private IKalypsoTheme m_theme;
 
@@ -79,7 +80,7 @@ public class AddThemeCommand implements ICommand
 
   private StyledLayerType m_layer;
 
-  public AddThemeCommand( final GisTemplateMapModell model, final String name, final String type, final String featurePath, final String source )
+  public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String featurePath, final String source )
   {
     this( model, name, type, featurePath, source, null, null, null, null );
   }
@@ -109,7 +110,7 @@ public class AddThemeCommand implements ICommand
    *             is both
    */
   @Deprecated
-  public AddThemeCommand( final GisTemplateMapModell model, final String name, final String type, final String featurePath, final String source, final String stylelinktype, final String style, final String styleLocation, final String styleType )
+  public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String featurePath, final String source, final String stylelinktype, final String style, final String styleLocation, final String styleType )
   {
     m_mapModell = model;
     m_name = name;
@@ -189,7 +190,7 @@ public class AddThemeCommand implements ICommand
   public void process( ) throws Exception
   {
     m_layer = init();
-    m_theme = m_mapModell.insertTheme( m_layer, 0 );
+    m_theme = m_mapModell.insertLayer( m_layer, 0 );
     m_mapModell.activateTheme( m_theme );
   }
 
@@ -198,7 +199,7 @@ public class AddThemeCommand implements ICommand
    */
   public void redo( ) throws Exception
   {
-    m_mapModell.addTheme( m_layer );
+    m_mapModell.addLayer( m_layer );
   }
 
   /**

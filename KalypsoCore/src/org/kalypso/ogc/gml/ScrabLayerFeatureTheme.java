@@ -77,10 +77,12 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public ScrabLayerFeatureTheme( final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
+  public ScrabLayerFeatureTheme( final String layerName, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
-    super( "Scrab-Layer", "Scrab", mapModel );
+    super( layerName, "scrab", mapModel );
+
     m_selectionManager = selectionManager;
+
     final URL scrabLayerURL = getClass().getResource( "/org/kalypso/core/resources/basicScrabLayer.gml" );
     CommandableWorkspace workspace = null;
     try
@@ -237,7 +239,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getContext()
    */
   @Override
-  public String getContext( )
+  public String getTypeContext( )
   {
     return ScrabLayerFeatureTheme.CONTEXT;
   }
