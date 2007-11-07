@@ -66,7 +66,7 @@ public interface IGeometryBuilder
   /**
    * This method must be invoked if the geometry should be created (e.g. at double click).
    * <p>
-   * If this method is invoked multiple times, alwass the same geometry should be returned.
+   * If this method is invoked multiple times, always the same geometry should be returned.
    */
   public GM_Object finish( ) throws Exception;
 
