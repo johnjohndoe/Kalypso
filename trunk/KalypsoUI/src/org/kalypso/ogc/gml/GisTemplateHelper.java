@@ -423,8 +423,6 @@ public class GisTemplateHelper
     else if( theme instanceof KalypsoWMSTheme )
     {
       final String name = theme.getName();
-      // GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, kalypsoTheme.isVisible(), (KalypsoWMSTheme)
-      // kalypsoTheme );
 
       layer.setName( name );
       layer.setFeaturePath( "" ); //$NON-NLS-1$
@@ -476,6 +474,42 @@ public class GisTemplateHelper
       layerList.add( layerElement );
 
       return cascadingLayer;
+    }
+    else if( theme instanceof KalypsoLegendTheme )
+    {
+      final String name = theme.getName();
+
+      layer.setName( name );
+      layer.setFeaturePath( "" ); //$NON-NLS-1$
+      layer.setVisible( theme.isVisible() );
+      layer.setId( "ID_" + count );
+      layer.setHref( "" );
+
+      layer.setLinktype( "legend" );
+
+      layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
+
+      monitor.worked( 1000 );
+
+      return layer;
+    }
+    else if( theme instanceof ScrabLayerFeatureTheme )
+    {
+      final String name = theme.getName();
+
+      layer.setName( name );
+      layer.setFeaturePath( "" ); //$NON-NLS-1$
+      layer.setVisible( theme.isVisible() );
+      layer.setId( "ID_" + count );
+      layer.setHref( "" );
+
+      layer.setLinktype( "scrab" );
+
+      layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
+
+      monitor.worked( 1000 );
+
+      return layer;
     }
 
     return null;

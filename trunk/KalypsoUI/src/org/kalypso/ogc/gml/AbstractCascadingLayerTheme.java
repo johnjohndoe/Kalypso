@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.net.URL;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IProject;
@@ -62,7 +63,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Stefan Kurzbach extended by Dirk Kuch
  */
-public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IMapModell
+public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IMapModell, IKalypsoLayerModell
 {
   private GisTemplateMapModell m_innerMapModel;
 
@@ -208,11 +209,24 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     m_innerMapModel.addTheme( theme );
   }
 
-  public void addLayer( final StyledLayerType layer ) throws Exception
+  public IKalypsoTheme addLayer( final StyledLayerType layer ) throws Exception
   {
-    m_innerMapModel.addTheme( layer );
+    return m_innerMapModel.addLayer( layer );
   }
-  
+
+  public IKalypsoTheme insertLayer( final StyledLayerType layer, final int position ) throws Exception
+  {
+    return m_innerMapModel.insertLayer( layer, position );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoLayerModell#getContext()
+   */
+  public URL getContext( )
+  {
+    return m_innerMapModel.getContext();
+  }
+
   /**
    * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getActiveTheme()

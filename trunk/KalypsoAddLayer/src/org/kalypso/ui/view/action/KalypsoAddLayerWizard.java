@@ -66,7 +66,7 @@ public class KalypsoAddLayerWizard extends Wizard
   public KalypsoAddLayerWizard( final IMapModellView outlineviewer )
   {
     m_outlineviewer = outlineviewer;
-    setWindowTitle( "Kalypso Daten Import" ); //$NON-NLS-1$
+    setWindowTitle( "Thema hinzufügen" ); //$NON-NLS-1$
     setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ ) );
     setNeedsProgressMonitor( true );
 // setDialogSettings( PluginUtilities.getDialogSettings( KalypsoAddLayerPlugin.getDefault(), "addLayerWizard" ) );
@@ -78,7 +78,9 @@ public class KalypsoAddLayerWizard extends Wizard
   @Override
   public void addPages( )
   {
-    addPage( new KalypsoWizardSelectionPage( m_workbench, null, getAvailableImportWizards(), "Kalypso Import", m_outlineviewer ) );
+    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, null, getAvailableImportWizards(), "Themenarten:", m_outlineviewer );
+    page.setDescription( "Wählen Sie aus, welches Art Thema Sie hinzufügen möchten." );
+    addPage( page );
   }
 
   /**
@@ -95,8 +97,7 @@ public class KalypsoAddLayerWizard extends Wizard
   {
     final String pluginId = KalypsoAddLayerPlugin.getId();
     final String plugInpointId = KalypsoAddLayerPlugin.PL_IMPORT;
-    final AdaptableList wizards = new WizardsRegistryReader( pluginId, plugInpointId ).getWizardElements();
-    return wizards;
+    return new WizardsRegistryReader( pluginId, plugInpointId ).getWizardElements();
   }
 
   public IMapModellView getOutlineViewer( )

@@ -56,9 +56,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.loader.WfsLoader;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
@@ -87,7 +86,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   private ImportWfsFilterWizardPage m_filterWFSPage;
 
-  private IMapModell m_modell;
+  private IKalypsoLayerModell m_modell;
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
@@ -95,14 +94,13 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public boolean performFinish( )
   {
-    IMapModell mapModell = m_modell;
+    final IKalypsoLayerModell mapModell = m_modell;
     if( mapModell != null )
       try
       {
         final IWFSLayer[] layers = m_importWFSPage.getChoosenFeatureLayer();
-        for( int i = 0; i < layers.length; i++ )
+        for( final IWFSLayer layer : layers )
         {
-          final IWFSLayer layer = layers[i];
           final Filter complexFilter = m_importWFSPage.getFilter( layer );
           final Filter simpleFilter = m_filterWFSPage.getFilter( layer );
           final Filter mergedFilter = FilterUtilites.mergeFilters( complexFilter, simpleFilter );
@@ -143,31 +141,31 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
             title = layer.getQName().getLocalPart();
           // for( String fPath: featurePathes )
           // {
-          final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, title, "wfs", featurePath, source.toString() );
+          final AddThemeCommand command = new AddThemeCommand( mapModell, title, "wfs", featurePath, source.toString() );
           m_outlineviewer.postCommand( command, null );
           //            
           // }
         }
       }
-      catch( TransformException e )
+      catch( final TransformException e )
       {
         e.printStackTrace();
         m_filterWFSPage.setErrorMessage( e.getMessage() );
         return false;
       }
-      catch( OperationNotSupportedException e )
+      catch( final OperationNotSupportedException e )
       {
         e.printStackTrace();
         m_filterWFSPage.setErrorMessage( e.getMessage() );
         return false;
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         e.printStackTrace();
         m_filterWFSPage.setErrorMessage( e.getMessage() );
         return false;
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         e.printStackTrace();
         m_filterWFSPage.setErrorMessage( e.getMessage() );
@@ -181,16 +179,16 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" );
+    final InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" );
     try
     {
       // read service catalog file
       readCatalog( is );
       is.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
       m_catalog = new ArrayList<String>();
@@ -220,7 +218,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setCommandTarget( ICommandTarget commandTarget )
+  public void setCommandTarget( final ICommandTarget commandTarget )
   {
     m_outlineviewer = commandTarget;
   }
@@ -230,10 +228,10 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     return m_catalog;
   }
 
-  public void readCatalog( InputStream is ) throws IOException
+  public void readCatalog( final InputStream is ) throws IOException
   {
-    ArrayList<String> catalog = new ArrayList<String>();
-    BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
+    final ArrayList<String> catalog = new ArrayList<String>();
+    final BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
     String line = br.readLine();
     do
     {
@@ -247,7 +245,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     m_catalog = catalog;
   }
 
-  private String transformToRemoteCRS( ComplexFilter filter, CS_CoordinateSystem remoteCrs )
+  private String transformToRemoteCRS( final ComplexFilter filter, final CS_CoordinateSystem remoteCrs )
   {
     String xml = null;
     final TransformSRSVisitor visitor = new TransformSRSVisitor( remoteCrs );
@@ -257,9 +255,9 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   }
 
   /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
-  public void setMapModel( IMapModell modell )
+  public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_modell = modell;
   }

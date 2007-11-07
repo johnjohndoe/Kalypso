@@ -93,7 +93,7 @@ public class MapModellContextSwitcher
       }
       else
       {
-        final String contextId = m_theme.getContext();
+        final String contextId = m_theme.getTypeContext();
         final Context context = m_contextService.getContext( contextId );
         if( !context.isDefined() )
         {

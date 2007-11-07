@@ -35,8 +35,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -54,7 +53,7 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
 
   private ICommandTarget m_outlineviewer;
 
-  private IMapModell m_mapModel;
+  private IKalypsoLayerModell m_mapModel;
 
   private ImportImageWizardPage m_page;
 
@@ -64,16 +63,15 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   @Override
   public boolean performFinish( )
   {
-    final IMapModell mapModell = m_mapModel;
-    if( mapModell != null )
+    if( m_mapModel != null )
     {
       try
       {
-        AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, m_page.getRelativeSourcePath().removeFileExtension().lastSegment(), m_page.getFileType(), null, m_page.getURL().toString()
+        final AddThemeCommand command = new AddThemeCommand( m_mapModel, m_page.getRelativeSourcePath().removeFileExtension().lastSegment(), m_page.getFileType(), null, m_page.getURL().toString()
             + "#" + m_page.getCSName() );
         m_outlineviewer.postCommand( command, null );
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -87,7 +85,7 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setCommandTarget( ICommandTarget commandTarget )
+  public void setCommandTarget( final ICommandTarget commandTarget )
   {
     m_outlineviewer = commandTarget;
 
@@ -97,7 +95,7 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     // TODO Auto-generated method stub
 
@@ -119,7 +117,7 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   /**
    * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void setMapModel( IMapModell modell )
+  public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_mapModel = modell;
   }

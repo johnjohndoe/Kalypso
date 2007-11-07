@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
@@ -542,13 +541,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getContext()
    */
   @Override
-  public String getContext( )
+  public String getTypeContext( )
   {
     final IFeatureType featureType = getFeatureType();
     if( featureType != null )
       return featureType.getQName().toString();
     else
-      return super.getContext();
+      return super.getTypeContext();
   }
 
   /**

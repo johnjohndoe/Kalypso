@@ -46,6 +46,9 @@
 
    <element name="wizard">
       <complexType>
+         <sequence>
+            <element ref="description" minOccurs="0" maxOccurs="1"/>
+         </sequence>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
@@ -81,6 +84,9 @@
             </annotation>
          </attribute>
       </complexType>
+   </element>
+
+   <element name="description" type="string">
    </element>
 
    <annotation>

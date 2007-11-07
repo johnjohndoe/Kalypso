@@ -8,8 +8,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -64,7 +63,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
 
   private ICommandTarget m_outlineviewer;
 
-  private IMapModell m_modell;
+  private IKalypsoLayerModell m_modell;
 
   public ImportShapeSourceWizard( )
   {
@@ -80,7 +79,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     try
     {
       // Add Layer to mapModell
-      final IMapModell mapModell = m_modell;
+      final IKalypsoLayerModell mapModell = m_modell;
       final String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
       final String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
 
@@ -88,11 +87,11 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
       final String styleLocation = stylePath == null ? null : stylePath.toString();
       final String styleName = m_page.getStyleName();
 
-      final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, themeName, "shape", "featureMember", fileName, "sld", styleName, styleLocation, "simple" );
+      final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", "featureMember", fileName, "sld", styleName, styleLocation, "simple" );
       m_outlineviewer.postCommand( command, null );
     }
 
-    catch( RemoteException e )
+    catch( final RemoteException e )
     {
       e.printStackTrace();
     }
@@ -104,7 +103,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     // do nothing
   }
@@ -124,15 +123,15 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setCommandTarget( ICommandTarget commandTarget )
+  public void setCommandTarget( final ICommandTarget commandTarget )
   {
     m_outlineviewer = commandTarget;
   }
 
   /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
-  public void setMapModel( IMapModell modell )
+  public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_modell = modell;
   }

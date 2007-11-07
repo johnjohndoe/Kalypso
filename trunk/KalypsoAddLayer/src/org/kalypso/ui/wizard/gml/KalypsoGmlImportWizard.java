@@ -56,8 +56,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
@@ -75,7 +74,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
 {
   private ICommandTarget m_outlineviewer;
 
-  private IMapModell m_mapModel;
+  private IKalypsoLayerModell m_mapModel;
 
   private GmlFileImportPage m_page;
 
@@ -96,11 +95,10 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   {
     try
     {
-      final ICommand[] commands = getCommands( (GisTemplateMapModell) m_mapModel );
+      final ICommand[] commands = getCommands( m_mapModel );
 
-      for( int i = 0; i < commands.length; i++ )
+      for( final ICommand command : commands )
       {
-        final ICommand command = commands[i];
         m_outlineviewer.postCommand( command, null );
       }
     }
@@ -111,11 +109,11 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       ErrorDialog.openError( getShell(), getWindowTitle(), "Thema konnte nicht hinzugefügt werden: ", status );
       return false;
     }
-    
+
     return true;
   }
 
-  private ICommand[] getCommands( final GisTemplateMapModell modell )
+  private ICommand[] getCommands( final IKalypsoLayerModell model )
   {
     final String source = m_page.getSource();
     final IStructuredSelection selection = m_page.getSelection();
@@ -148,9 +146,8 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
       final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
 
-      for( int i = 0; i < associationFeatureTypes.length; i++ )
+      for( final IFeatureType ft : associationFeatureTypes )
       {
-        final IFeatureType ft = associationFeatureTypes[i];
         final String title = AnnotationUtilities.getAnnotation( ft ).getLabel();
         final String ftpName = ftp.getQName().getLocalPart();
         final String ftName = ft.getQName().getLocalPart();
@@ -163,11 +160,11 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     final ICommand[] result = new ICommand[pathList.size()];
     final Iterator titleIterator = titleList.iterator();
     int pos = 0;
-    for( Iterator pathIterator = pathList.iterator(); pathIterator.hasNext(); pos++ )
+    for( final Iterator pathIterator = pathList.iterator(); pathIterator.hasNext(); pos++ )
     {
       final String title = (String) titleIterator.next();
       final String featurePath = (String) pathIterator.next();
-      result[pos] = new AddThemeCommand( modell, title, "gml", featurePath, source );
+      result[pos] = new AddThemeCommand( model, title, "gml", featurePath, source );
     }
     return result;
   }
@@ -175,7 +172,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   /**
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
-  public void setCommandTarget( ICommandTarget commandTarget )
+  public void setCommandTarget( final ICommandTarget commandTarget )
   {
     m_outlineviewer = commandTarget;
   }
@@ -184,15 +181,15 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     setWindowTitle( "GML Datei" );
   }
 
   /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
-  public void setMapModel( IMapModell modell )
+  public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_mapModel = modell;
   }

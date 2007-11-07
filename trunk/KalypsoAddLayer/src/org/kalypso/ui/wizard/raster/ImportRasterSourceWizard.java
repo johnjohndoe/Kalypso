@@ -15,8 +15,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
@@ -71,7 +70,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
 
   private IProject m_project;
 
-  private IMapModell m_mapModel;
+  private IKalypsoLayerModell m_mapModel;
 
   public ImportRasterSourceWizard( )
   {
@@ -79,9 +78,9 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   }
 
   /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
-  public void setMapModel( final IMapModell modell )
+  public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_mapModel = modell;
     m_project = m_mapModel.getProject();
@@ -105,7 +104,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
   {
     final IPath filePath = m_page.getFilePath();
     final boolean useDefaultStyle = m_page.checkDefaultStyle();
-    final GisTemplateMapModell mapModell = (GisTemplateMapModell) m_mapModel;
+    final IKalypsoLayerModell mapModell = m_mapModel;
     final String source = getRelativeProjectPath( filePath );
     final String stylePath = useDefaultStyle ? null : getRelativeProjectPath( m_page.getStylePath() );
     final String styleName = useDefaultStyle ? null : m_page.getStyleName();
