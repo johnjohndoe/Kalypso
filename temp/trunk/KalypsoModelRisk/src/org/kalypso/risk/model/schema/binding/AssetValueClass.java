@@ -21,15 +21,15 @@ public class AssetValueClass extends AbstractFeatureBinder implements IAssetValu
   public String getAdministrationUnitGmlID( )
   {
     final Object property = getFeature().getProperty( IAssetValueClass.PROP_ADMINISTRATION_UNIT_LINK );
-    if(property!=null && property instanceof XLinkedFeature_Impl)
-      return ((XLinkedFeature_Impl)property).getFeatureId();
+    if( property != null && property instanceof XLinkedFeature_Impl )
+      return ((XLinkedFeature_Impl) property).getFeatureId();
     return "";
   }
 
   public Double getAssetValue( )
   {
     final Object property = getFeature().getProperty( IAssetValueClass.PROP_ASSET_VALUE );
-    if(property!=null)
+    if( property != null )
       return (Double) property;
     return Double.NaN;
   }
@@ -37,9 +37,14 @@ public class AssetValueClass extends AbstractFeatureBinder implements IAssetValu
   public String getLanduseClassGmlID( )
   {
     final Object property = getFeature().getProperty( IAssetValueClass.PROP_LANDUSE_CLASS_LINK );
-    if(property!=null && property instanceof XLinkedFeature_Impl)
-      return ((XLinkedFeature_Impl)property).getFeatureId();
+    if( property != null && property instanceof XLinkedFeature_Impl )
+      return ((XLinkedFeature_Impl) property).getFeatureId();
     return "";
+  }
+
+  public void setAssetValue( final Double assetValue )
+  {
+    getFeature().setProperty( IAssetValueClass.PROP_ASSET_VALUE, assetValue );
   }
 
 }

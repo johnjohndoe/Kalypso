@@ -3,6 +3,8 @@ package org.kalypso.risk.model.actions.dataImport.waterdepth;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
@@ -180,6 +182,7 @@ public class ImportWaterdepthPage extends WizardPage
           try
           {
             final AsciiRasterInfo rasterInfo = new AsciiRasterInfo( rasterFile );
+            rasterInfo.setReturnPeriod( guessReturnPeriodFromName( rasterFile ) );
             m_rasterInfos.add( rasterInfo );
             final TableItem tableItem = new TableItem( m_tableViewer, 0 );
             tableItem.setText( rasterInfo.getDisplayDetails() );
@@ -311,14 +314,8 @@ public class ImportWaterdepthPage extends WizardPage
   private List<String> getFilenamesFromDialog( )
   {
     final FileDialog dialog = new FileDialog( getShell(), SWT.MULTI );
-
-    // dialog.setFilterExtensions( new String[] { "*.jpg;*.gif;*.tif;*.asc;*.dat", "*.tif", "*.jpg", "*.gif",
-    // "*.asc;*.dat" } );
-    // dialog.setFilterNames( new String[] { "All supported files", "TIFF image (*.tif)", "JPEG image (*.jpg)", "GIF
-    // image (*.gif)", "ASCII grid (*.asc, *.dat)" } );
     dialog.setFilterExtensions( new String[] { "*.asc" } );
     dialog.setFilterNames( new String[] { "ASCII grid (*.asc)" } );
-
     dialog.open();
     final String[] fileNames = dialog.getFileNames();
     final String filterPath = dialog.getFilterPath();
@@ -334,10 +331,30 @@ public class ImportWaterdepthPage extends WizardPage
   {
     if( m_rasterInfos == null || m_rasterInfos.size() == 0 )
       return false;
-    boolean allReturnPeriodsSelected = true;
+    final List<Integer> returnPeriodsList = new ArrayList<Integer>();
     for( final AsciiRasterInfo rasterInfo : m_rasterInfos )
-      allReturnPeriodsSelected &= rasterInfo.getReturnPeriod() > 0;
-    return allReturnPeriodsSelected;
+    {
+      final Integer returnPeriod = rasterInfo.getReturnPeriod();
+      if( returnPeriod > 0 )
+      {
+        if( returnPeriodsList.contains( returnPeriod ) )
+          return false;
+        else
+          returnPeriodsList.add( returnPeriod );
+      }
+      else
+        return false;
+    }
+    return true;
+  }
+
+  private int guessReturnPeriodFromName( final String name )
+  {
+    final Pattern pattern = Pattern.compile( "([^0-9]*)([0-9]+)([^0-9]*)" );
+    final Matcher matcher = pattern.matcher( name );
+    if( matcher.matches() )
+      return Integer.parseInt( matcher.group( 2 ) );
+    return 0;
   }
 
   public List<AsciiRasterInfo> getRasterInfos( )

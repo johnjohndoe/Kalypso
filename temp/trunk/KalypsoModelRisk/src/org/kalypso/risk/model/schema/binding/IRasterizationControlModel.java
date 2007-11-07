@@ -23,9 +23,40 @@ public interface IRasterizationControlModel extends IModel
 
   public List<IAssetValueClass> getAssetValueClassesList( );
 
+  public List<IDamageFunction> getDamageFunctionsList( );
+
+  public List<IAdministrationUnit> getAdministrationUnits( );
+
   public ILanduseClass createNewLanduseClass( );
+
+  public IDamageFunction createNewDamageFunction( );
+
+  /**
+   * Created new asset value class with the given values.
+   * @param landuseClassGmlID
+   * @param administrationUnitGmlID
+   * @param value
+   * @param string 
+   * @return new IAssetValueClass, or <code>null</code> if landuse class or administration unit with the given ID does not exists  
+   */
+  public IAssetValueClass createNewAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final Double value, final String description );
+
+  public IAssetValueClass getAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final boolean createIfNotExists );
 
   public boolean containsLanduseClass( final String landuseClassName );
 
   public int getNextAvailableLanduseClassOrdinalNumber( );
+
+  public IAdministrationUnit createNewAdministrationUnit( final String name, final String description );
+
+  /**
+   * The list of GmlIDs of the Landuse classes with the given name (because there is no guarantee that landuse name is
+   * unique)
+   * 
+   * @param landuseClassName
+   *            The name of landuse class
+   * @return The list of landuse classes IDs; if no ID is found, returns empty list
+   */
+  public List<String> getLanduseClassID( final String landuseClassName );
+
 }

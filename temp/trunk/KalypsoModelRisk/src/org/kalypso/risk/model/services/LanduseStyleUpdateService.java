@@ -129,15 +129,15 @@ public class LanduseStyleUpdateService extends Job
         SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, STYLE_NAME, STYLE_TITLE, monitor );
         SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolyzerSldFile, model.getLanduseClassesList(), STYLE_NAME, STYLE_TITLE, monitor );
       }
-      final List<IAssetValueClass> assetValueClassesList = model.getAssetValueClassesList();
-      if( assetValueClassesList != null && assetValueClassesList.size() > 0 )
-      {
-        double maxAssetValue = 0.0;
-        for( final IAssetValueClass assetValueClass : assetValueClassesList )
-          if( assetValueClass.getAssetValue() > maxAssetValue )
-            maxAssetValue = assetValueClass.getAssetValue();
-        SLDHelper.exportRasterSymbolyzerSLD( m_specificDamageRasterSymbolyzerSldFile, 0.0, maxAssetValue, 20, new Color( 237, 80, 25 ), STYLE_NAME, STYLE_TITLE, monitor );
-      }
+//      final List<IAssetValueClass> assetValueClassesList = model.getAssetValueClassesList();
+//      if( assetValueClassesList != null && assetValueClassesList.size() > 0 )
+//      {
+//        double maxAssetValue = 0.0;
+//        for( final IAssetValueClass assetValueClass : assetValueClassesList )
+//          if( assetValueClass.getAssetValue() > maxAssetValue )
+//            maxAssetValue = assetValueClass.getAssetValue();
+//        SLDHelper.exportRasterSymbolyzerSLD( m_specificDamageRasterSymbolyzerSldFile, 0.0, maxAssetValue, 20, new Color( 237, 80, 25 ), STYLE_NAME, STYLE_TITLE, monitor );
+//      }
       return Status.OK_STATUS;
     }
     catch( final Throwable t )

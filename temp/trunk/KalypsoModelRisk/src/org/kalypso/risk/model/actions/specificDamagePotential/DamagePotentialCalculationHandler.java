@@ -2,6 +2,7 @@ package org.kalypso.risk.model.actions.specificDamagePotential;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -41,6 +42,7 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
@@ -147,13 +149,8 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                   }
                 };
                 final String outputFilePath = "raster/output/specificDamage_HQ" + srcAnnualCoverage.getReturnPeriod() + ".bin";
-                final IAnnualCoverage dstAnnualCoverage = model.getSpecificDamageCoverageCollection().addNew( IAnnualCoverage.QNAME );
-
-                // final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-                // rangeSetFile.setFileName( outputFilePath );
-                // rangeSetFile.setMimeType( "image/bin" );
-                // final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
-                // rangeSet.setFile( rangeSetFile );
+                final IFeatureWrapperCollection<IAnnualCoverage> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
+                final IAnnualCoverage dstAnnualCoverage = specificDamageCoverageCollection.addNew( IAnnualCoverage.QNAME );
 
                 final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
                 final IRelationType parentRelation = (IRelationType) dstAnnualCoverage.getWrappedFeature().getFeatureType().getProperty( IAnnualCoverage.PROP_COVERAGE );
@@ -161,26 +158,34 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
                 dstAnnualCoverage.setCoverage( coverage );
                 dstAnnualCoverage.setReturnPeriod( srcAnnualCoverage.getReturnPeriod() );
-                // coverage.setRangeSet( rangeSet );
-                // coverage.setGridDomain( srcAnnualCoverage.getCoverage().getGridDomain() );
 
                 final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
                 final File file = new File( ifile.getRawLocation().toPortableString() );
                 GeoGridUtilities.setCoverage( coverage, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
                 inputGrid.dispose();
+                
+                // remove existing (invalid) coverages from the model
+                final List<IAnnualCoverage> coveragesToRemove = new ArrayList<IAnnualCoverage>();
+                for( final IAnnualCoverage existingAnnualCoverage : specificDamageCoverageCollection )
+                  if( existingAnnualCoverage.getReturnPeriod() == dstAnnualCoverage.getReturnPeriod() )
+                    coveragesToRemove.add( existingAnnualCoverage );
+                for( final IAnnualCoverage coverageToRemove : coveragesToRemove )
+                  specificDamageCoverageCollection.remove( coverageToRemove );
 
-                // final MinMaxRasterWalker minMaxWalker = new MinMaxRasterWalker();
-                // outputGrid.getWalkingStrategy().walk( outputGrid, minMaxWalker, null );
-                //
-                // final double min = minMaxWalker.getMin();
-                // final double max = minMaxWalker.getMax();
-                // if(m_minDamageValue>min)m_minDamageValue=min;
-
-                // TODO create map layer
+                // create map layer
                 monitor.subTask( Messages.getString( "ImportWaterdepthWizard.10" ) ); //$NON-NLS-1$
+                final String layerName = "Schadenspotential (HQ " + dstAnnualCoverage.getReturnPeriod() + ")";
+                // remove themes that are showing invalid coverages
+                final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
+                final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
+                for( int i = 0; i < childThemes.length; i++ )
+                  if( childThemes[i].getName().equals( layerName ) )
+                    themesToRemove.add( childThemes[i] );
+                for( final IKalypsoTheme themeToRemove : themesToRemove )
+                  parentKalypsoTheme.removeTheme( themeToRemove );
 
                 final StyledLayerType layer = new StyledLayerType();
-                layer.setName( "SADP (HQ " + dstAnnualCoverage.getReturnPeriod() + ")" );
+                layer.setName( layerName );
                 layer.setFeaturePath( "#fid#" + coverageFeature.getId() );
                 layer.setLinktype( "gml" );
                 layer.setType( "simple" );
@@ -188,6 +193,15 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 layer.setActuate( "onRequest" );
                 layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" );
                 layer.setVisible( true );
+                final Property layerPropertyDeletable = new Property();
+                layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
+                layerPropertyDeletable.setValue( "false" );
+                final Property layerPropertyThemeInfoId = new Property();
+                layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
+                layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Schadenspotential %.2f €/m²" );
+                final List<Property> layerPropertyList = layer.getProperty();
+                layerPropertyList.add( layerPropertyDeletable );
+                layerPropertyList.add( layerPropertyThemeInfoId );
                 final List<Style> styleList = layer.getStyle();
                 final Style style = new Style();
                 style.setLinktype( "sld" );
@@ -212,10 +226,10 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
             }
           }
         } );
-        
+
         final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" );
-        SLDHelper.exportRasterSymbolyzerSLD( sldFile, m_minDamageValue, m_maxDamageValue, 20, new Color( 237, 80, 25 ), "Kalypso style", "Kalypso style", null );
-        
+        SLDHelper.exportRasterSymbolyzerSLD( sldFile, m_minDamageValue, m_maxDamageValue * 1.05, 20, new Color( 237, 80, 25 ), "Kalypso style", "Kalypso style", null );
+
         if( mapView != null )
           mapView.getMapPanel().invalidateMap();
       }
@@ -237,6 +251,5 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
     return null;
-
   }
 }

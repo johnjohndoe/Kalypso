@@ -17,6 +17,11 @@
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__DataLoad">
 			<Help>Daten aus dem Dateisystem in das Projekt laden</Help>
 			<Name>Daten laden</Name>
+			<Task context="ImportBaseMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__MapLoad">
+				<Help>Einladen von Hintergrunddaten (Bilddateien, shape-Dateien, MapServer)</Help>
+				<Name>Import von Hintergrunddaten</Name>
+			</Task>
 			<Task context="ImportLanduseShapeDataWizard"
 				URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportLanduseShapeData">
 				<Help><![CDATA[Import von Landnutzung shape-Dateien]]></Help>
@@ -102,6 +107,17 @@
 					partId="org.kalypso.ui.views.outline" parent="MapContext" />
 				<con:ViewContext id="MapView"
 					partId="org.kalypso.ui.views.mapView" parent="MapContext">
+					<con:ExtensionContext id="BaseMap"
+						parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:WizardContext id="ImportBaseMap"
+							wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
+							wizardType="NEW_WIZARD" parent="BaseMap" />
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="maps/BackroundMap.gmt" />
+					</con:ExtensionContext>
 					<con:ExtensionContext
 						id="ImportLanduseShapeDataContext" parent="MapContext"
 						handlerFactoryId="kalypsoContextHandlerFactory">

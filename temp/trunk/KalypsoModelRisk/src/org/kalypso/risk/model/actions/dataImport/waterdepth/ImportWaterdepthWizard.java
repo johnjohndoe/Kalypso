@@ -42,6 +42,7 @@ package org.kalypso.risk.model.actions.dataImport.waterdepth;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import ogc31.www.opengis.net.gml.FileType;
@@ -74,6 +75,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverage;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
@@ -96,7 +98,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     super();
   }
 
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "ImportWaterdepthWizard.0" ) ); //$NON-NLS-1$
@@ -136,6 +138,8 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell );
+    parentKalypsoTheme.setVisible( true );
     try
     {
       final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
@@ -174,12 +178,29 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               coverage.setRangeSet( rangeSet );
               coverage.setGridDomain( asciiRasterInfo.getGridDomain() );
 
+              // remove existing (invalid) coverages from the model
+              final List<IAnnualCoverage> coveragesToRemove = new ArrayList<IAnnualCoverage>();
+              for( final IAnnualCoverage existingAnnualCoverage : waterdepthCoverageCollection )
+                if( existingAnnualCoverage.getReturnPeriod() == annualCoverage.getReturnPeriod() )
+                  coveragesToRemove.add( existingAnnualCoverage );
+              for( final IAnnualCoverage coverageToRemove : coveragesToRemove )
+                waterdepthCoverageCollection.remove( coverageToRemove );
+
               // TODO create map layer
               monitor.subTask( Messages.getString( "ImportWaterdepthWizard.10" ) ); //$NON-NLS-1$
 
-              // final CascadingLayer layer = new CascadingLayer();
+              // remove themes that are showing invalid coverages
+              final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod();
+              final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
+              final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
+              for( int i = 0; i < childThemes.length; i++ )
+                if( childThemes[i].getName().equals( layerName ) )
+                  themesToRemove.add( childThemes[i] );
+              for( final IKalypsoTheme themeToRemove : themesToRemove )
+                parentKalypsoTheme.removeTheme( themeToRemove );
+
               final StyledLayerType layer = new StyledLayerType();
-              layer.setName( "HQ " + asciiRasterInfo.getReturnPeriod() );
+              layer.setName( layerName );
               layer.setFeaturePath( "#fid#" + coverageFeature.getId() );
               layer.setLinktype( "gml" );
               layer.setType( "simple" );
@@ -187,6 +208,15 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               layer.setActuate( "onRequest" );
               layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" );
               layer.setVisible( true );
+              final Property layerPropertyDeletable = new Property();
+              layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
+              layerPropertyDeletable.setValue( "false" );
+              final Property layerPropertyThemeInfoId = new Property();
+              layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
+              layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m" );
+              final List<Property> layerPropertyList = layer.getProperty();
+              layerPropertyList.add( layerPropertyDeletable );
+              layerPropertyList.add( layerPropertyThemeInfoId );
               final List<Style> styleList = layer.getStyle();
               final Style style = new Style();
               style.setLinktype( "sld" );
@@ -196,16 +226,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               style.setType( "simple" );
               styleList.add( style );
 
-              final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-              for( final IKalypsoTheme kalypsoTheme : allThemes )
-              {
-                if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "HQ" ) )
-                {
-                  ((CascadingKalypsoTheme) kalypsoTheme).addLayer( layer );
-                  kalypsoTheme.setVisible( true );
-                  break;
-                }
-              }
+              parentKalypsoTheme.addLayer( layer );
 
               // fireModellEvent to redraw a map...
               workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getWrappedFeature(), new Feature[] { annualCoverage.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
@@ -235,26 +256,15 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     ascii2Binary.doConvert( monitor );
   }
 
-  // private void copy( final File src, final IFile dstFileImage, final IProgressMonitor monitor ) throws CoreException,
-  // IOException
-  // {
-  // InputStream in = null;
-  // try
-  // {
-  // in = new BufferedInputStream( new FileInputStream( src ) );
-  // if( dstFileImage.exists() )
-  // {
-  // dstFileImage.setContents( in, false, true, monitor );
-  // }
-  // else
-  // {
-  // dstFileImage.create( in, false, monitor );
-  // }
-  // }
-  // finally
-  // {
-  // IOUtils.closeQuietly( in );
-  // }
-  // }
+  private CascadingKalypsoTheme getCascadingTheme( final GisTemplateMapModell mapModell )
+  {
+    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+    for( final IKalypsoTheme kalypsoTheme : allThemes )
+    {
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "HQ" ) )
+        return (CascadingKalypsoTheme) kalypsoTheme;
+    }
+    return null;
+  }
 
 }

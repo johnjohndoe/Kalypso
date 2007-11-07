@@ -90,6 +90,12 @@
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygon"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IAnnualCoverage"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IAssetValueClass"/>
+       <adapter
+             type="org.kalypso.risk.model.schema.binding.IDamageFunction">
+       </adapter>
+       <adapter
+             type="org.kalypso.risk.model.schema.binding.IAdministrationUnit">
+       </adapter>
     </factory>
  </extension>
  <extension

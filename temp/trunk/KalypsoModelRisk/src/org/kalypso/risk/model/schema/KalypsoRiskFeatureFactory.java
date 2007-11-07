@@ -11,10 +11,14 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.risk.model.schema.binding.AdministrationUnit;
 import org.kalypso.risk.model.schema.binding.AnnualCoverage;
 import org.kalypso.risk.model.schema.binding.AssetValueClass;
+import org.kalypso.risk.model.schema.binding.DamageFunction;
+import org.kalypso.risk.model.schema.binding.IAdministrationUnit;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverage;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
+import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
@@ -114,6 +118,32 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IAssetValueClass.class, cTor );
+
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+        if( featureQName.equals( IDamageFunction.QNAME ) )
+          return new DamageFunction( feature );
+        else
+          return null;
+      }
+    };
+    cMap.put( IDamageFunction.class, cTor );
+
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+        if( featureQName.equals( IAdministrationUnit.QNAME ) )
+          return new AdministrationUnit( feature );
+        else
+          return null;
+      }
+    };
+    cMap.put( IAdministrationUnit.class, cTor );
 
     cTor = new AdapterConstructor()
     {

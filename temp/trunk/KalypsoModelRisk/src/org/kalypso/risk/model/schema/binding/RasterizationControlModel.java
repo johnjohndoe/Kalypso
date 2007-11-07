@@ -8,6 +8,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 public class RasterizationControlModel extends AbstractFeatureBinder implements IRasterizationControlModel
 {
@@ -15,14 +16,23 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
 
   private FeatureList m_assetValueClassesFeatureList;
 
+  private FeatureList m_damageFunctionsFeatureList;
+
+  private FeatureList m_administrationUnitsFeatureList;
+
   private List<ILanduseClass> m_landuseClasses;
 
   private List<IAssetValueClass> m_assetValueClasses;
 
+  private List<IDamageFunction> m_damageFunctions;
+
+  private List<IAdministrationUnit> m_administrationUnits;
+
+  private static final String MODEL_NAME = "RasterizationControlModel.gml";
+
   public RasterizationControlModel( final Feature featureToBind )
   {
     super( featureToBind, IRasterizationControlModel.QNAME );
-
     m_landuseClassesFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
     m_landuseClasses = new ArrayList<ILanduseClass>();
     for( final Object object : m_landuseClassesFeatureList )
@@ -32,6 +42,16 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
     m_assetValueClasses = new ArrayList<IAssetValueClass>();
     for( final Object object : m_assetValueClassesFeatureList )
       m_assetValueClasses.add( (IAssetValueClass) ((Feature) object).getAdapter( IAssetValueClass.class ) );
+
+    m_damageFunctionsFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
+    m_damageFunctions = new ArrayList<IDamageFunction>();
+    for( final Object object : m_damageFunctionsFeatureList )
+      m_damageFunctions.add( (IDamageFunction) ((Feature) object).getAdapter( IDamageFunction.class ) );
+
+    m_administrationUnitsFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_ADMINISTRATION_UNIT_MEMBER );
+    m_administrationUnits = new ArrayList<IAdministrationUnit>();
+    for( final Object object : m_administrationUnitsFeatureList )
+      m_administrationUnits.add( (IAdministrationUnit) ((Feature) object).getAdapter( IAdministrationUnit.class ) );
   }
 
   public List<ILanduseClass> getLanduseClassesList( )
@@ -57,9 +77,111 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
     return null;
   }
 
+  public IDamageFunction createNewDamageFunction( )
+  {
+    try
+    {
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_damageFunctionsFeatureList, IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER, IDamageFunction.QNAME );
+      final IDamageFunction damageFunction = (IDamageFunction) feature.getAdapter( IDamageFunction.class );
+      m_damageFunctions.add( damageFunction );
+      return damageFunction;
+    }
+    catch( GMLSchemaException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public IAdministrationUnit createNewAdministrationUnit( final String name, final String description )
+  {
+    try
+    {
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_administrationUnitsFeatureList, IRasterizationControlModel.PROPERTY_ADMINISTRATION_UNIT_MEMBER, IAdministrationUnit.QNAME );
+      final IAdministrationUnit administrationUnit = (IAdministrationUnit) feature.getAdapter( IAdministrationUnit.class );
+      m_administrationUnits.add( administrationUnit );
+      administrationUnit.setName( name );
+      administrationUnit.setDescription( description );
+      return administrationUnit;
+    }
+    catch( GMLSchemaException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public IAssetValueClass getAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final boolean createIfNotExists )
+  {
+    for( final IAssetValueClass assetValueClass : m_assetValueClasses )
+      if( assetValueClass.getLanduseClassGmlID().equals( landuseClassGmlID ) && assetValueClass.getAdministrationUnitGmlID().equals( administrationUnitGmlID ) )
+        return assetValueClass;
+    if( createIfNotExists )
+      return createNewAssetValueClass( landuseClassGmlID, administrationUnitGmlID, null, "" );
+    return null;
+  }
+
+  public IAssetValueClass createNewAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final Double value, final String description )
+  {
+    try
+    {
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_assetValueClassesFeatureList, IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER, IAssetValueClass.QNAME );
+      final IAssetValueClass assetValueClass = (IAssetValueClass) feature.getAdapter( IAssetValueClass.class );
+      final String landusePath = MODEL_NAME + "#" + landuseClassGmlID;
+      final String administrationUnitPath = MODEL_NAME + "#" + administrationUnitGmlID;
+      Feature linkedLanduseClass = null;
+      for( final ILanduseClass landuseClass : m_landuseClasses )
+        if( landuseClass.getGmlID().equals( landuseClassGmlID ) )
+        {
+          linkedLanduseClass = landuseClass.getWrappedFeature();
+          break;
+        }
+      if( linkedLanduseClass == null )
+        return null;
+      Feature linkedAdministrationUnit = null;
+      for( final IAdministrationUnit administrationUnit : m_administrationUnits )
+        if( administrationUnit.getGmlID().equals( administrationUnitGmlID ) )
+        {
+          linkedAdministrationUnit = administrationUnit.getWrappedFeature();
+          break;
+        }
+      if( linkedAdministrationUnit == null )
+        return null;
+      final XLinkedFeature_Impl linkedLanduseClassXFeature = new XLinkedFeature_Impl( feature, linkedLanduseClass.getParentRelation(), linkedLanduseClass.getFeatureType(), landusePath, "", "", "", "", "" );
+      feature.setProperty( IAssetValueClass.PROP_LANDUSE_CLASS_LINK, linkedLanduseClassXFeature );
+      final XLinkedFeature_Impl linkedAdministrationUnitXFeature = new XLinkedFeature_Impl( feature, linkedAdministrationUnit.getParentRelation(), linkedAdministrationUnit.getFeatureType(), administrationUnitPath, "", "", "", "", "" );
+      feature.setProperty( IAssetValueClass.PROP_ADMINISTRATION_UNIT_LINK, linkedAdministrationUnitXFeature );
+      feature.setProperty( IAssetValueClass.PROP_ASSET_VALUE, value );
+      feature.setProperty( IAssetValueClass.PROP_DESCRIPTION, description );
+      m_assetValueClasses.add( assetValueClass );
+      return assetValueClass;
+    }
+    catch( GMLSchemaException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // TODO Auto-generated method stub
+    return null;
+  }
+
   public List<IAssetValueClass> getAssetValueClassesList( )
   {
     return m_assetValueClasses;
+  }
+
+  public List<IDamageFunction> getDamageFunctionsList( )
+  {
+    return m_damageFunctions;
+  }
+
+  public List<IAdministrationUnit> getAdministrationUnits( )
+  {
+    return m_administrationUnits;
   }
 
   public boolean containsLanduseClass( final String landuseClassName )
@@ -81,4 +203,14 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
     }
     return ++maxOrdinal;
   }
+
+  public List<String> getLanduseClassID( final String landuseClassName )
+  {
+    final List<String> list = new ArrayList<String>();
+    for( final ILanduseClass landuseClass : m_landuseClasses )
+      if( landuseClass.getName().equals( landuseClassName ) )
+        list.add( landuseClass.getGmlID() );
+    return list;
+  }
+
 }

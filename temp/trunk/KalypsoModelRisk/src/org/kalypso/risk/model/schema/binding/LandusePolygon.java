@@ -12,9 +12,9 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   private Integer m_landuseClassOrdinalNumber = null;
 
-  private ParseFunction m_damageFunction;
+  private ParseFunction m_damageFunction = null;
 
-  private double m_assetValue;
+  private Double m_assetValue = null;
 
   public LandusePolygon( final Feature featureToBind )
   {
@@ -71,6 +71,8 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   public double getDamageValue( double waterLevel )
   {
+    if( m_damageFunction == null || m_assetValue == null )
+      return Double.NaN;
     try
     {
       return m_assetValue * m_damageFunction.getResult( waterLevel );
