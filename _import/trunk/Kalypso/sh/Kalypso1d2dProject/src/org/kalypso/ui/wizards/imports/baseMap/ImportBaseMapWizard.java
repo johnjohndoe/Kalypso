@@ -446,15 +446,14 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
     try
     {
-      final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
-      final StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" );
-      final StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" );
-      final StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" );
-
-      final Layer[] layerArray = m_PageImportWMS.getLayersList();
-
       if( m_PageImportWMS.isMultiLayer() )
       {
+        final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
+        final StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" );
+        final StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" );
+        final StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" );
+
+        final Layer[] layerArray = m_PageImportWMS.getLayersList();
         for( int i = 0; i < layerArray.length; i++ )
         {
           final Layer layer = layerArray[i];
@@ -488,8 +487,11 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       }
       else
       {
+        final Layer[] layerArray = m_PageImportWMS.getLayersList();
         for( final Layer layer : layerArray )
         {
+          final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
+
           final String layerName = layer.getName();
           final String styleName;
           final Style[] styles2 = layer.getStyles();
@@ -498,19 +500,18 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
           else
             styleName = "default";
 
-          final String providerID = m_PageImportWMS.getProviderID();
-          if( providerID != null )
-            provider.append( providerID );
+          String providerID = m_PageImportWMS.getProviderID();
+          if( providerID == null )
+            providerID = "";
 
           final String layerTitle = layer.getTitle();
           source.append( "#" ).append( WMSImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
           source.append( "#" ).append( WMSImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
-          source.append( "#" ).append( provider.toString() );
+          source.append( "#" ).append( WMSImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID );
 
           final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() );
           mapView.postCommand( command, null );
         }
-
       }
     }
     catch( final Exception e )
