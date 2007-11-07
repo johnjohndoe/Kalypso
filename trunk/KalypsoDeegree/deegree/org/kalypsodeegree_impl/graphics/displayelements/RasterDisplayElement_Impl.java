@@ -191,9 +191,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     progress.setWorkRemaining( clippedMaxCell.y + 1 - clippedMinCell.y );
 
-    for( int j = clippedMinCell.y; j < clippedMaxCell.y + 1; j += clusterSize )
+    for( int j = clippedMinCell.y; j < clippedMaxCell.y ; j += clusterSize )
     {
-      for( int i = clippedMinCell.x; i < clippedMaxCell.x + 1; i += clusterSize )
+      for( int i = clippedMinCell.x; i < clippedMaxCell.x; i += clusterSize )
       {
         final double value = grid.getValue( i, j );
         if( !Double.isNaN( value ) )
