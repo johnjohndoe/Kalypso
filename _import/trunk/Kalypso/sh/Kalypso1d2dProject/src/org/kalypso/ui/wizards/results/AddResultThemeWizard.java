@@ -60,8 +60,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.results.filters.NonMapDataResultViewerFilter;
@@ -79,7 +78,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
 {
   private final static String PAGE_SELECT_RESULTS_NAME = "selectResults";
 
-  private IMapModell m_modell;
+  private IKalypsoLayerModell m_modell;
 
   private IScenarioResultMeta m_resultModel;
 
@@ -118,9 +117,9 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
   }
 
   /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
-  public void setMapModel( final IMapModell modell )
+  public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_modell = modell;
   }
@@ -159,7 +158,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
     final SelectResultWizardPage page = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = page.getSelectedResults();
     final IThemeConstructionFactory factory = page.getThemeFactory();
-    final GisTemplateMapModell modell = (GisTemplateMapModell) m_modell;
+    final IKalypsoLayerModell modell = m_modell;
 
     if( modell != null )
     {
@@ -187,7 +186,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
    * TODO: maybe move into helper class
    */
   @SuppressWarnings("deprecation")
-  protected IStatus addThemes( final GisTemplateMapModell modell, final IResultMeta[] results, final IThemeConstructionFactory factory, final IProgressMonitor monitor )
+  protected IStatus addThemes( final IKalypsoLayerModell modell, final IResultMeta[] results, final IThemeConstructionFactory factory, final IProgressMonitor monitor )
   {
     monitor.beginTask( "Themen hinzufügen", results.length );
 

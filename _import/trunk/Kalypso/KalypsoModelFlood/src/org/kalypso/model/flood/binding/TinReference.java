@@ -40,10 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.binding;
 
+import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
@@ -72,4 +85,124 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   {
     return (GM_TriangulatedSurface) getFeature().getProperty( QNAME_PROP_TIN );
   }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getMax()
+   */
+  public BigDecimal getMax( )
+  {
+    return getProperty( QNAME_PROP_MAX, BigDecimal.class );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getMin()
+   */
+  public BigDecimal getMin( )
+  {
+    return getProperty( QNAME_PROP_MIN, BigDecimal.class );
+  }
+
+  public void setSourceFeaturePath( final GMLXPath path )
+  {
+    setProperty( QNAME_PROP_SOURCE_PATH, path.toString() );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getSourceFeaturePath()
+   */
+  public GMLXPath getSourceFeaturePath( )
+  {
+    final String path = getProperty( QNAME_PROP_SOURCE_PATH, String.class );
+
+    final GMLWorkspace workspace = getFeature().getWorkspace();
+
+    return new GMLXPath( path, workspace.getNamespaceContext() );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getSourceLocation()
+   */
+  public URL getSourceLocation( )
+  {
+    final String uri = getProperty( QNAME_PROP_SOURCE_LOCATION, String.class );
+    if( uri == null )
+      return null;
+
+    try
+    {
+      final GMLWorkspace workspace = getFeature().getWorkspace();
+      return new URL( workspace.getContext(), uri );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoModelFloodPlugin.getDefault().getLog().log( status );
+
+      return null;
+    }
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getUpdateDate()
+   */
+  public Date getUpdateDate( )
+  {
+    final XMLGregorianCalendar date = getProperty( QNAME_PROP_SOURCE_DATE, XMLGregorianCalendar.class );
+    return DateUtilities.toDate( date );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#setMax(java.math.BigDecimal)
+   */
+  public void setMax( final BigDecimal max )
+  {
+    setProperty( QNAME_PROP_MAX, max );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#setMin(java.math.BigDecimal)
+   */
+  public void setMin( final BigDecimal min )
+  {
+    setProperty( QNAME_PROP_MIN, min );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#setSourceLocation(java.net.URL)
+   */
+  public void setSourceLocation( final URL location )
+  {
+    setProperty( QNAME_PROP_SOURCE_LOCATION, location.toExternalForm() );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#setTin(org.kalypsodeegree.model.geometry.GM_TriangulatedSurface)
+   */
+  public void setTin( final GM_TriangulatedSurface surface )
+  {
+    setProperty( QNAME_PROP_TIN, surface );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#setUpdateDate(java.util.Date)
+   */
+  public void setUpdateDate( final Date date )
+  {
+    setProperty( QNAME_PROP_SOURCE_DATE, DateUtilities.toXMLGregorianCalendar( date ) );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getRunoffEvent()
+   */
+  public IRunoffEvent getRunoffEvent( )
+  {
+    final Feature parent = getWrappedFeature().getParent();
+    if( parent == null )
+      return null;
+
+    return (IRunoffEvent) parent.getAdapter( IRunoffEvent.class );
+  }
+
 }

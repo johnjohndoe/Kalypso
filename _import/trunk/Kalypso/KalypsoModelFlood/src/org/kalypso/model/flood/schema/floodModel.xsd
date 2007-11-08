@@ -136,12 +136,60 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="tinBoundary" type="gml:PolygonPropertyType" minOccurs="1" maxOccurs="1" />
-					<element name="min" type="decimal" />
-					<element name="max" type="decimal" />
-					<element name="source" type="string" />
-					<element name="sourceDate" type="dateTime" />
-					<element name="tin" type="flood:TriangulatedSurfacePropertyType"/>
+					<element name="min" type="decimal">
+						<annotation>
+							<documentation xml:lang="de">
+								<label><![CDATA[Minimum]]></label>
+								<tooltip><![CDATA[Minimum aller TIN-Werte]]></tooltip>
+								<description><![CDATA[Minimum aller TIN-Werte]]></description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="max" type="decimal">
+						<annotation>
+							<documentation xml:lang="de">
+								<label><![CDATA[Maximum]]></label>
+								<tooltip><![CDATA[Maximum aller TIN-Werte]]></tooltip>
+								<description><![CDATA[Maximum aller TIN-Werte]]></description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="sourceLocation" type="anyURI">
+						<annotation>
+							<documentation xml:lang="de">
+								<label><![CDATA[Quell-URL]]></label>
+								<tooltip><![CDATA[Herkunftsort der TIN-Daten]]></tooltip>
+								<description><![CDATA[Herkunftsort der TIN-Daten]]></description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="sourcePath" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label><![CDATA[Quell-Pfad]]></label>
+								<tooltip><![CDATA[Pfad innerhalb der Herkunftsdatei]]></tooltip>
+								<description><![CDATA[GMLXPfad innerhalb der Herkunftsdatei auf die TIN-Geometry (gml:TriangulatedSurface)]]></description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="sourceDate" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label><![CDATA[Quell-Datum]]></label>
+								<tooltip><![CDATA[Datum der letzten Datenübernahme]]></tooltip>
+								<description><![CDATA[Datum der letzten Datenübernahme]]></description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="tin" type="flood:TriangulatedSurfacePropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label><![CDATA[Dreiecksnetz]]></label>
+								<tooltip><![CDATA[Die TIN-Geometry]]></tooltip>
+								<description><![CDATA[Die TIN-Geometry]]></description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>

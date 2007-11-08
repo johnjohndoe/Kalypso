@@ -42,32 +42,26 @@ package org.kalypso.model.flood.ui.map;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -80,12 +74,16 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -95,56 +93,46 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateContentProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateLabelProvider;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeControlListener;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.gml.provider.IGmlSource;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.flood.KalypsoModelFloodImages;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
+import org.kalypso.model.flood.binding.ITinReference;
+import org.kalypso.model.flood.ui.map.operations.AddEventOperation;
+import org.kalypso.model.flood.ui.map.operations.ImportTinOperation;
+import org.kalypso.model.flood.ui.map.operations.RemoveEventOperation;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.GisTemplateUserStyle;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.template.types.StyledLayerType;
-import org.kalypso.template.types.StyledLayerType.Property;
-import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapLabelProvider;
-import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.Rule;
@@ -170,15 +158,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private final Runnable m_refreshEventViewerRunnable = new Runnable()
-  {
-    @SuppressWarnings("synthetic-access")
-    public void run( )
-    {
-      ViewerUtilities.refresh( m_eventViewer, true );
-    }
-  };
-
   private TreeViewer m_eventViewer;
 
   protected SzenarioDataProvider m_dataProvider;
@@ -232,46 +211,71 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    final ScrolledComposite sc = new ScrolledComposite( parent, SWT.H_SCROLL | SWT.V_SCROLL );
-    sc.setExpandHorizontal( true );
+    // TRICKY: Scrolling behaviour:
+    // - vertical: all components have a minimum height and fill the whole area
+    // - vertical: if size is too small, a global scroll-bar appears
+    // - horizontal: the panel has a minimum widht, if the total area is too small, a global scrollbar appears
+    // - horizontal: the components (tree/table) have their additional horizontal scrollbars which appars if the content
+    // of the individual control is too big
+
+    final ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.H_SCROLL );
+    sc.setMinWidth( 200 );
     sc.setExpandVertical( true );
-    final Composite panel = toolkit.createComposite( sc );
-    panel.setLayout( new TableWrapLayout() );
+    sc.setExpandHorizontal( true );
+
+    final Composite panel = toolkit.createComposite( sc, SWT.NONE );
+    panel.setLayout( new GridLayout() );
+
     sc.setContent( panel );
-    parent.addControlListener( new ScrolledCompositeControlListener( sc ) );
+    parent.addControlListener( new ControlAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+       */
+      @Override
+      public void controlResized( final ControlEvent e )
+      {
+        final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+        panel.setSize( size );
+        sc.setMinHeight( size.y );
+      }
+    } );
 
     // Basic Layout
 
     /* Tree table + info pane */
     final Composite treePanel = toolkit.createComposite( panel, SWT.NONE );
-    final TableWrapLayout treePanelLayout = new TableWrapLayout();
-    treePanel.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
-    treePanelLayout.numColumns = 2;
-    treePanelLayout.rightMargin = 0;
-    treePanelLayout.topMargin = 0;
-    treePanelLayout.bottomMargin = 0;
-    treePanelLayout.leftMargin = 0;
+    final GridLayout treePanelLayout = new GridLayout( 2, false );
+    final GridData treePanelData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    treePanelData.heightHint = 200;
+    treePanel.setLayoutData( treePanelData );
+    treePanelLayout.marginHeight = 0;
+    treePanelLayout.marginWidth = 0;
     treePanel.setLayout( treePanelLayout );
 
     m_eventViewer = new TreeViewer( treePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-    m_eventViewer.getControl().setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL ) );
-    toolkit.adapt( m_eventViewer.getControl(), true, true );
+    final GridData eventViewerData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    eventViewerData.heightHint = 100;
+    m_eventViewer.getControl().setLayoutData( eventViewerData );
+    toolkit.adapt( m_eventViewer.getControl(), true, false );
 
     final Composite treeButtonPanel = toolkit.createComposite( treePanel );
     final FillLayout treeButtonPanelLayout = new FillLayout( SWT.VERTICAL );
     treeButtonPanelLayout.spacing = 4;
     treeButtonPanel.setLayout( treeButtonPanelLayout );
-    treeButtonPanel.setLayoutData( new TableWrapData( TableWrapData.FILL, TableWrapData.FILL_GRAB ) );
+    treeButtonPanel.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
 
     /* Info view */
-    final Group coverageInfoGroup = new Group( panel, SWT.NONE );
+    final Group coverageInfoGroup = new Group( panel, SWT.H_SCROLL );
     coverageInfoGroup.setLayout( new GridLayout() );
-    coverageInfoGroup.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+    final GridData infoGroupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    coverageInfoGroup.setLayoutData( infoGroupData );
     toolkit.adapt( coverageInfoGroup );
     coverageInfoGroup.setText( "Info" );
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     featureviewFactory.addView( getClass().getResource( "resources/event.gft" ) );
+    featureviewFactory.addView( getClass().getResource( "resources/tinReference.gft" ) );
     final FeatureComposite featureComposite = new FeatureComposite( null, null, featureviewFactory );
     featureComposite.setFormToolkit( toolkit );
     featureComposite.addChangeListener( new IFeatureChangeListener()
@@ -295,20 +299,19 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     /* Color Map table */
     final Composite colormapPanel = toolkit.createComposite( panel, SWT.NONE );
-    final TableWrapLayout colormapPanelLayout = new TableWrapLayout();
+    final GridLayout colormapPanelLayout = new GridLayout();
     colormapPanelLayout.numColumns = 2;
     colormapPanelLayout.makeColumnsEqualWidth = false;
-    colormapPanelLayout.bottomMargin = 0;
-    colormapPanelLayout.leftMargin = 0;
-    colormapPanelLayout.rightMargin = 0;
-    colormapPanelLayout.topMargin = 0;
+    colormapPanelLayout.marginWidth = 0;
+    colormapPanelLayout.marginHeight = 0;
+
     colormapPanel.setLayout( colormapPanelLayout );
-    final TableWrapData colormapPanelData = new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB );
+    final GridData colormapPanelData = new GridData( SWT.FILL, SWT.FILL, true, true );
     colormapPanel.setLayoutData( colormapPanelData );
 
-    m_colorMapTableViewer = new TableViewer( colormapPanel, SWT.BORDER );
-    final TableWrapData colormapTableData = new TableWrapData( TableWrapData.FILL, TableWrapData.FILL_GRAB );
-    colormapTableData.heightHint = 200;
+    m_colorMapTableViewer = new TableViewer( colormapPanel, SWT.BORDER | SWT.H_SCROLL );
+    final GridData colormapTableData = new GridData( SWT.FILL, SWT.FILL, true, true );
+
     m_colorMapTableViewer.getControl().setLayoutData( colormapTableData );
     toolkit.adapt( m_colorMapTableViewer.getControl(), true, true );
 
@@ -316,9 +319,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final GridLayout colormapButtonPanelLayout = new GridLayout();
     colormapButtonPanelLayout.marginHeight = 0;
     colormapButtonPanelLayout.marginWidth = 0;
-    // colormapButtonPanelLayout.spacing = 4;
     colormapPanelButtonPanel.setLayout( colormapButtonPanelLayout );
-    colormapPanelButtonPanel.setLayoutData( new TableWrapData( TableWrapData.FILL, TableWrapData.FILL ) );
+    colormapPanelButtonPanel.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, false ) );
 
     /* Fill contents */
     initalizeEventViewer( m_eventViewer );
@@ -344,16 +346,22 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         {
           featureComposite.setFeature( (Feature) m_treeSelection[0] );
           featureComposite.createControl( coverageInfoGroup, SWT.NONE );
-          parent.layout( true, true );
         }
 
-        sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+        parent.layout( true, true );
+
+        final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+        panel.setSize( size );
+        sc.setMinHeight( size.y );
 
         getMapPanel().repaint();
       }
     } );
 
-    sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+    final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    panel.setSize( size );
+    sc.setMinHeight( size.y );
+    // sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 
     return panel;
   }
@@ -432,23 +440,22 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
   }
 
-  private IFile getSldFile( final IRunoffEvent event )
+  public static IFile getSldFile( final IRunoffEvent event )
   {
     final IFolder eventFolder = getEventFolder( event );
     return eventFolder.getFile( "wsp.sld" );
   }
 
-  private IFolder getEventFolder( final IRunoffEvent event )
+  public static IFolder getEventFolder( final IRunoffEvent event )
   {
     final IFolder eventsFolder = getEventsFolder();
     return eventsFolder.getFolder( event.getDataPath() );
   }
 
-  private IFolder getEventsFolder( )
+  public static IFolder getEventsFolder( )
   {
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
-    final IFolder eventsFolder = scenarioFolder.getFolder( "events" );
-    return eventsFolder;
+    return scenarioFolder.getFolder( "events" );
   }
 
   private IRunoffEvent getCurrentEvent( )
@@ -477,7 +484,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final Table viewerTable = viewer.getTable();
     viewerTable.setLinesVisible( true );
     viewerTable.setHeaderVisible( true );
-    viewerTable.setLayoutData( new TableWrapData( TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB ) );
+    viewerTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
   }
 
   private void initalizeEventViewer( final StructuredViewer viewer )
@@ -598,12 +605,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final Action updateDataAction = new Action( "Update Data", updateDataID )
     {
       /**
-       * @see org.eclipse.jface.action.Action#run()
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
        */
       @Override
-      public void run( )
+      public void runWithEvent( final Event event )
       {
-        handleUpdateData();
+        handleUpdateData( event );
       }
     };
     updateDataAction.setDescription( "Daten aktualisieren" );
@@ -648,16 +655,46 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     } );
   }
 
-  protected void handleUpdateData( )
+  protected void handleUpdateData( final Event event )
   {
     if( m_treeSelection == null )
       return;
 
-    // TODO: collect all selected tins
+    /* Collect selected tins: either directly selected or all children of selected events */
+    final Collection<ITinReference> tinRefs = new HashSet<ITinReference>();
+    for( final Object o : m_treeSelection )
+    {
+      if( o instanceof IAdaptable )
+      {
+        final ITinReference tinRef = (ITinReference) ((IAdaptable) o).getAdapter( ITinReference.class );
+        if( tinRef != null )
+          tinRefs.add( tinRef );
+        else
+        {
+          final IRunoffEvent runoffEvent = (IRunoffEvent) ((IAdaptable) o).getAdapter( IRunoffEvent.class );
+          if( runoffEvent != null )
+            tinRefs.addAll( runoffEvent.getTins() );
+        }
+      }
+    }
 
-    // TODO: update all collected tins
+    final Shell shell = event.display.getActiveShell();
+    final ListSelectionDialog dialog = new ListSelectionDialog( shell, tinRefs, new ArrayContentProvider(), new GMLLabelProvider(), "Welche Wasserspiegel sollen aktualisiert werden?" );
+    dialog.setInitialSelections( tinRefs.toArray() );
+    if( dialog.open() != Window.OK )
+      return;
 
-    // TODO: check for existing sld . If none exists, create one
+    final Object[] result = dialog.getResult();
+    final ITinReference[] tinsToUpdate = new ITinReference[result.length];
+    for( int i = 0; i < tinsToUpdate.length; i++ )
+      tinsToUpdate[i] = (ITinReference) result[i];
+
+    final ICoreRunnableWithProgress operation = new UpdateTinsOperation( tinsToUpdate );
+
+    final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
+    if( !resultStatus.isOK() )
+      KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
+    ErrorDialog.openError( shell, "Daten aktualisieren", "Fehler beim Aktualisieren der Daten", resultStatus );
   }
 
   protected void handleJumpTo( )
@@ -724,205 +761,20 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     if( dialog.open() != Window.OK )
       return;
 
+    final String eventName = dialog.getValue();
     final IFloodModel model = m_model;
     final IFolder eventsFolder = getEventsFolder();
     final AbstractCascadingLayerTheme wspThemes = findWspTheme();
     Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
 
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      public IStatus execute( IProgressMonitor monitor ) throws InvocationTargetException
-      {
-        try
-        {
-          monitor.beginTask( "Ereignis hinzufügen", 7 );
+    final URL sldContent = getClass().getResource( "resources/wsp.sld" );
 
-          final String eventName = dialog.getValue();
-          final String dialogValue = FileUtilities.validateName( eventName, "_" );
-
-          /* Create a unique name */
-          final IFeatureWrapperCollection<IRunoffEvent> events = model.getEvents();
-          final Set<String> names = new HashSet<String>();
-          for( final IRunoffEvent runoffEvent : events )
-            names.add( runoffEvent.getName() );
-
-          int count = 0;
-          String newFolderName = dialogValue;
-          while( names.contains( newFolderName ) )
-            newFolderName = dialogValue + count++;
-
-          final IPath dataPath = Path.fromPortableString( newFolderName );
-
-          ProgressUtilities.worked( monitor, 1 );
-
-          /* Add new feature */
-          final CommandableWorkspace workspace = m_dataProvider.getCommandableWorkSpace( IFloodModel.class );
-          final Feature parentFeature = events.getWrappedFeature();
-          final IRelationType parentRelation = events.getWrappedList().getParentFeatureTypeProperty();
-          final IFeatureType featureType = parentRelation.getTargetFeatureType();
-          final Feature newEventFeature = workspace.createFeature( parentFeature, parentRelation, featureType, 0 );
-
-          final IRunoffEvent newEvent = (IRunoffEvent) newEventFeature.getAdapter( IRunoffEvent.class );
-          newEvent.setName( eventName );
-          newEvent.setDataPath( dataPath );
-
-          /* Create new folder and fill with defaults */
-          final IFolder newEventFolder = eventsFolder.getFolder( dataPath );
-          newEventFolder.create( false, true, new SubProgressMonitor( monitor, 2 ) );
-          final IFile sldFile = newEventFolder.getFile( "wsp.sld" );
-          final String sldContent = FileUtilities.toString( getClass().getResource( "resources/wsp.sld" ), "UTF-8" );
-          // search/replace in order to configure filter
-          sldContent.replaceAll( "%eventFeatureId%", newEvent.getWrappedFeature().getId() );
-          ProgressUtilities.worked( monitor, 1 );
-
-          final InputStream sldSource = IOUtils.toInputStream( sldContent, "UTF-8" );
-          sldFile.create( sldSource, false, new SubProgressMonitor( monitor, 1 ) );
-
-          /* Add event-themes to map */
-
-          // - check if theme is already there
-          // - add theme to map
-          addEventThemes( wspThemes, newEvent );
-
-          final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, newEventFeature, null, true );
-          workspace.postCommand( command );
-
-          ProgressUtilities.worked( monitor, 1 );
-
-          /*
-           * Save model and map, as undo is not possible here and the user should not be able to 'verwerfen' the changes
-           */
-          m_dataProvider.saveModel( IFloodModel.class, new SubProgressMonitor( monitor, 1 ) );
-          // TODO: save map. Necessary?
-
-          return Status.OK_STATUS;
-        }
-        catch( IOException e )
-        {
-          throw new InvocationTargetException( e );
-        }
-        catch( Exception e )
-        {
-          throw new InvocationTargetException( e );
-        }
-        finally
-        {
-          monitor.done();
-        }
-      }
-    };
+    final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, model, eventsFolder, wspThemes, m_dataProvider, sldContent );
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
       KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
     ErrorDialog.openError( shell, "Ereignis hinzufügen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
-  }
-
-  protected void addEventThemes( final AbstractCascadingLayerTheme wspThemes, final IRunoffEvent event ) throws Exception
-  {
-    { // Wasserspiegel
-      final StyledLayerType wspLayer = new StyledLayerType();
-
-      wspLayer.setName( "Wasserspiegel (" + event.getName() + ")" );
-      wspLayer.setFeaturePath( "#fid#" + event.getWrappedFeature().getId() );
-      wspLayer.setLinktype( "gml" );
-      wspLayer.setType( "simple" );
-      wspLayer.setVisible( true );
-      wspLayer.setActuate( "onRequest" );
-      wspLayer.setHref( "../models/flood.gml" );
-      wspLayer.setVisible( true );
-      final Property layerPropertyDeletable = new Property();
-      layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-      layerPropertyDeletable.setValue( "false" );
-
-      final Property layerPropertyThemeInfoId = new Property();
-      layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() + ") %.2f NN+m" );
-
-      final List<Property> layerPropertyList = wspLayer.getProperty();
-      layerPropertyList.add( layerPropertyDeletable );
-      layerPropertyList.add( layerPropertyThemeInfoId );
-
-      final List<Style> styleList = wspLayer.getStyle();
-      final Style style = new Style();
-      style.setLinktype( "sld" );
-      style.setStyle( "wspUserStyle" );
-      style.setActuate( "onRequest" );
-      style.setHref( styleLocationForEvent( event ) );
-      style.setType( "simple" );
-      styleList.add( style );
-
-      wspThemes.addLayer( wspLayer );
-    }
-
-    {// Polygone
-      final StyledLayerType polygoneLayer = new StyledLayerType();
-
-      polygoneLayer.setName( "Anpassungen (" + event.getName() + ")" );
-      polygoneLayer.setFeaturePath( "polygonMember" );
-      polygoneLayer.setLinktype( "gml" );
-      polygoneLayer.setType( "simple" );
-      polygoneLayer.setVisible( true );
-      polygoneLayer.setActuate( "onRequest" );
-      polygoneLayer.setHref( "../models/flood.gml" );
-      polygoneLayer.setVisible( true );
-      final Property layerPropertyDeletable = new Property();
-      layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-      layerPropertyDeletable.setValue( "false" );
-
-      final List<Property> layerPropertyList = polygoneLayer.getProperty();
-      layerPropertyList.add( layerPropertyDeletable );
-
-      final List<Style> styleList = polygoneLayer.getStyle();
-      final Style extrsStyle = new Style();
-      extrsStyle.setLinktype( "sld" );
-      extrsStyle.setStyle( "extrapolationPolygonUserStyle" );
-      extrsStyle.setActuate( "onRequest" );
-      extrsStyle.setHref( styleLocationForEvent( event ) );
-      extrsStyle.setType( "simple" );
-      styleList.add( extrsStyle );
-
-      final Style clipStyle = new Style();
-      clipStyle.setLinktype( "sld" );
-      clipStyle.setStyle( "clipPolygonUserStyle" );
-      clipStyle.setActuate( "onRequest" );
-      clipStyle.setHref( styleLocationForEvent( event ) );
-      clipStyle.setType( "simple" );
-      styleList.add( clipStyle );
-
-      wspThemes.addLayer( polygoneLayer );
-    }
-  }
-
-  private void deleteThemes( final AbstractCascadingLayerTheme wspThemes, final IRunoffEvent event )
-  {
-    final IKalypsoTheme[] allThemes = wspThemes.getAllThemes();
-    for( final IKalypsoTheme kalypsoTheme : allThemes )
-    {
-      if( kalypsoTheme instanceof IKalypsoFeatureTheme )
-      {
-        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) kalypsoTheme;
-        final UserStyle[] styles = featureTheme.getStyles();
-        for( final UserStyle userStyle : styles )
-        {
-          if( userStyle instanceof GisTemplateUserStyle )
-          {
-            final GisTemplateUserStyle pooledUserStyle = (GisTemplateUserStyle) userStyle;
-            final PoolableObjectType poolKey = pooledUserStyle.getPoolKey();
-            if( poolKey.getLocation().equals( styleLocationForEvent( event ) ) )
-            {
-              wspThemes.removeTheme( kalypsoTheme );
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  private String styleLocationForEvent( final IRunoffEvent event )
-  {
-    return "../events/" + event.getDataPath().toPortableString() + "/wsp.sld";
   }
 
   /**
@@ -944,10 +796,56 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   protected void handleImportTin( final Event event )
   {
+    final Shell shell = event.display.getActiveShell();
 
-    // TODO
-    // final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getMapPanel().getMapModell().getActiveTheme();
-    // theme.postCommand( new EmptyCommand( "", false ), m_refreshCoverageViewerRunnable );
+    // get selected event
+    final IRunoffEvent runoffEvent = findFirstEvent( m_treeSelection );
+    if( runoffEvent == null )
+    {
+      MessageDialog.openConfirm( shell, "Wasserspiegel importieren", "Wählen Sie das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
+      return;
+    }
+
+    // TODO: present dialog to user
+    final IGmlSource[] sources = new IGmlSource[] {};
+
+    final ICoreRunnableWithProgress operation = new ImportTinOperation( runoffEvent.getTins(), sources );
+
+    final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
+    if( !resultStatus.isOK() )
+      KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
+    ErrorDialog.openError( shell, "Wasserspiegel importieren", "Fehler beim Import eines Wasserspiegels", resultStatus );
+  }
+
+  /**
+   * Searches for the first occurency of {@link IRunoffEvent} in the current selection.<br>
+   * If a tin is selected its parent will be returned.
+   */
+  private IRunoffEvent findFirstEvent( final Object[] treeSelection )
+  {
+    if( treeSelection == null )
+      return null;
+
+    for( final Object object : m_treeSelection )
+    {
+      if( object instanceof IAdaptable )
+      {
+        final IAdaptable a = (IAdaptable) object;
+        final IRunoffEvent runoffEvent = (IRunoffEvent) a.getAdapter( IRunoffEvent.class );
+        if( runoffEvent != null )
+          return runoffEvent;
+
+        final ITinReference tinRef = (ITinReference) a.getAdapter( ITinReference.class );
+        if( tinRef != null )
+        {
+          final IRunoffEvent r2 = tinRef.getRunoffEvent();
+          if( r2 != null )
+            return r2;
+        }
+      }
+    }
+
+    return null;
   }
 
   protected void handleRemove( final Event event )
@@ -955,59 +853,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     if( m_treeSelection == null )
       return;
 
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
-      {
-        try
-        {
-          for( final Object element : m_treeSelection )
-          {
-            final Feature featureToRemove = (Feature) element;
+    final AbstractCascadingLayerTheme wspThemes = findWspTheme();
 
-            /* Delete associated themes */
-            final IRunoffEvent runoffEvent = (IRunoffEvent) featureToRemove.getAdapter( IRunoffEvent.class );
-            if( event != null )
-            {
-              /* Delete themes from map */
-              final AbstractCascadingLayerTheme wspThemes = findWspTheme();
-              deleteThemes( wspThemes, runoffEvent );
-
-              /* Delete event folder */
-              final IFolder eventFolder = getEventFolder( runoffEvent );
-              eventFolder.delete( true, new NullProgressMonitor() );
-            }
-
-            {
-              /* Delete coverage from collection */
-              final Feature parentFeature = featureToRemove.getParent();
-              final IRelationType pt = featureToRemove.getParentRelation();
-
-              final CommandableWorkspace workspace = m_dataProvider.getCommandableWorkSpace( IFloodModel.class );
-
-              final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, featureToRemove );
-              workspace.postCommand( command );
-              // TODO: should run after command is finished....
-              m_refreshEventViewerRunnable.run();
-            }
-          }
-
-          /*
-           * Save model and map, as undo is not possible here and the user should not be able to 'verwerfen' the changes
-           */
-          m_dataProvider.saveModel( IFloodModel.class, new SubProgressMonitor( monitor, 1 ) );
-        }
-        catch( Exception e )
-        {
-          if( e instanceof CoreException )
-            throw (CoreException) e;
-
-          throw new InvocationTargetException( e );
-        }
-
-        return Status.OK_STATUS;
-      }
-    };
+    final ICoreRunnableWithProgress operation = new RemoveEventOperation( m_treeSelection, m_dataProvider, wspThemes );
 
     final Shell shell = event.display.getActiveShell();
 

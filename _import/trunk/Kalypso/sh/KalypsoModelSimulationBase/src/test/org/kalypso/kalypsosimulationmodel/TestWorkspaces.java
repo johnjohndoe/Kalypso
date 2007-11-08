@@ -345,8 +345,8 @@ public class TestWorkspaces
 					featureTypes, 
 					(null), 
 					gmlURL, 
-					schemaLocation, 
-					null );
+					null, 
+					schemaLocation, null );
     
 		return modelWorkspace;
 	}

@@ -153,7 +153,7 @@ public class TestWorkspaces
 
     IFeatureType[] featureTypes = modelGmlSchema.getAllFeatureTypes();
 
-    GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( modelGmlSchema, featureTypes, (null), gmlURL, schemaLocation, null );
+    GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( modelGmlSchema, featureTypes, (null), gmlURL, null, schemaLocation, null );
 
     return modelWorkspace;
   }

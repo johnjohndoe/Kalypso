@@ -13,7 +13,7 @@
 					<Title>Wasserspiegel</Title>
 					<sldExt:SurfacePolygonSymbolizer xmlns:sldExt="http://www.opengis.net/sldExt" uom="pixel">
 						<Geometry>
-							<ogc:PropertyName>res1d2d:triangulatedSurfaceMember</ogc:PropertyName>
+							<ogc:PropertyName>flood:tin</ogc:PropertyName>
 						</Geometry>
 						<sldExt:PolygonColorMap>
 							<sldExt:PolygonColorMapEntry>

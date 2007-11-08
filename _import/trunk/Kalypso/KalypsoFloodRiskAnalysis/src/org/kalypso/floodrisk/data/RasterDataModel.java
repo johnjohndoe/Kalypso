@@ -108,7 +108,7 @@ public class RasterDataModel
     final Feature rootFeature = grid.getFeature();
 
     // create workspace
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, rasterDataGML_OutputFile.toURL(), null, null );
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( schema, rootFeature, rasterDataGML_OutputFile.toURL(), null, null, null );
 
     // serialize Workspace
     FileWriter fw = new FileWriter( rasterDataGML_OutputFile );
