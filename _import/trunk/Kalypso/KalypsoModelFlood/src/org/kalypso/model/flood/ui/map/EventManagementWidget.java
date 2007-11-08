@@ -42,11 +42,13 @@ package org.kalypso.model.flood.ui.map;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -54,6 +56,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -168,6 +171,10 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   private TableViewer m_colorMapTableViewer;
 
+  private StyledLayerDescriptor m_sld;
+
+  private IFile m_styleFile;
+
   public EventManagementWidget( )
   {
     super( "Ereignisse verwalten", "Ereignisse verwalten" );
@@ -200,7 +207,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
     catch( final CoreException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -387,16 +393,56 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   protected void handleGenerateColorMap( final Event event )
   {
+    final Shell shell = event.display.getActiveShell();
+
     // open colorMap dialog
     final PolygonColorMap input = (PolygonColorMap) m_colorMapTableViewer.getInput();
+
+    // get min / max of the selected runoff event
+    // get selected event
+    final IRunoffEvent runoffEvent = findFirstEvent( m_treeSelection );
+    if( runoffEvent == null )
+    {
+      MessageDialog.openConfirm( shell, "Wasserspiegel importieren", "Wählen Sie das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
+      return;
+    }
+    IFeatureWrapperCollection<ITinReference> tins = runoffEvent.getTins();
+
+    BigDecimal event_min = new BigDecimal( Double.MAX_VALUE );
+    BigDecimal event_max = new BigDecimal( Double.MIN_VALUE );
+
+    for( ITinReference tin : tins )
+    {
+      BigDecimal min = tin.getMin();
+      if( min.compareTo( event_min ) == -1 )
+        event_min = min;
+
+      BigDecimal max = tin.getMax();
+      if( max.compareTo( event_max ) == 1 )
+        event_max = max;
+    }
+
     if( input != null )
     {
-      final EventStyleDialog dialog = new EventStyleDialog( event.display.getActiveShell(), input );
+      final EventStyleDialog dialog = new EventStyleDialog( shell, input, event_min, event_max );
       if( dialog.open() == Window.OK )
       {
-        m_colorMapTableViewer.refresh();
+        // save sld-file
+        if( m_sld != null )
+        {
+          try
+          {
+            final String sldXML = m_sld.exportAsXML();
+            final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
 
-        // TODO: save sld-file
+            m_styleFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, true, new NullProgressMonitor() );
+          }
+          catch( CoreException e )
+          {
+            e.printStackTrace();
+          }
+        }
+        m_colorMapTableViewer.refresh();
 
         m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
       }
@@ -412,19 +458,18 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       return;
     }
 
-    /* get sld from event folder */
-    final IFile styleFile = getSldFile( event );
-    final PolygonColorMap colorMap = findColorMap( styleFile );
+    m_styleFile = getSldFile( event );
+    final PolygonColorMap colorMap = findColorMap();
 
     viewer.setInput( colorMap );
   }
 
-  private PolygonColorMap findColorMap( final IFile styleFile )
+  private PolygonColorMap findColorMap( )
   {
     try
     {
-      final StyledLayerDescriptor sld = SLDFactory.createSLD( ResourceUtilities.createURL( styleFile ) );
-      final NamedLayer wspLayer = sld.getNamedLayer( "wspLayer" );
+      m_sld = SLDFactory.createSLD( ResourceUtilities.createURL( m_styleFile ) );
+      final NamedLayer wspLayer = m_sld.getNamedLayer( "wspLayer" );
       final UserStyle style = (UserStyle) wspLayer.getStyle( "wspUserStyle" );
       final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" );
       final Rule wspRule = wspFts.getRule( "wspRule" );

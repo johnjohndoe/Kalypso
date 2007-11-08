@@ -62,10 +62,16 @@ public class EventStyleDialog extends TitleAreaDialog
 
   private PolygonColorMapEditorComposite m_polygonComponent;
 
-  public EventStyleDialog( final Shell shell, final PolygonColorMap colorMap )
+  private final BigDecimal m_min;
+
+  private final BigDecimal m_max;
+
+  public EventStyleDialog( final Shell shell, final PolygonColorMap colorMap, final BigDecimal min, final BigDecimal max )
   {
     super( shell );
     m_colorMap = colorMap;
+    m_min = min;
+    m_max = max;
 
     setTitle( "Farbverlauf erzeugen" );
   }
@@ -93,14 +99,11 @@ public class EventStyleDialog extends TitleAreaDialog
     }
     else
     {
-      // TODO: create some default values
-      // SLDFactory.createXXXXX
-      // new PolygonColorMapEntry_Impl();
       fromEntry = null;
       toEntry = null;
     }
 
-    m_polygonComponent = new PolygonColorMapEditorComposite( panel, SWT.NONE, fromEntry, toEntry, new BigDecimal( "0" ), new BigDecimal( "9000" ) )
+    m_polygonComponent = new PolygonColorMapEditorComposite( panel, SWT.NONE, fromEntry, toEntry, m_min, m_max )
     {
       @Override
       protected void colorMapChanged( )
