@@ -170,9 +170,8 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     m_scale = readInt();
 
     /* Read statistical data */
-    seekValue( m_sizeX, m_sizeY );
-    m_min = readBigDecimal();
-    m_max = readBigDecimal();
+    getStatistically();
+
   }
 
   public BinaryGeoGrid( final RandomAccessFile randomAccessFile, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
@@ -373,6 +372,20 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   public BigDecimal getMax( )
   {
     return m_max;
+  }
+
+  /**
+   * Gets the statistically values of this grid.
+   * 
+   * @throws IOException
+   *             If the file position is not valid.
+   */
+  public void getStatistically( ) throws IOException
+  {
+    final long pos = HEADER_SIZE + m_sizeY * m_sizeX * 4;
+    m_randomAccessFile.seek( pos );
+    m_min = readBigDecimal();
+    m_max = readBigDecimal();
   }
 
   /**

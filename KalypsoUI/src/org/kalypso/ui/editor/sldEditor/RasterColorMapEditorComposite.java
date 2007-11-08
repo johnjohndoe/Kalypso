@@ -99,12 +99,8 @@ public abstract class RasterColorMapEditorComposite extends Composite
       m_toEntry = colorMap[colorMap.length - 1];
     }
 
-    // TODO: get min / max
-
-// m_globalMin = minGlobalValue;
-// m_globalMax = maxGlobalValue;
-    m_globalMin = new BigDecimal( 0 );
-    m_globalMax = new BigDecimal( 500 );
+    m_globalMin = minGlobalValue;
+    m_globalMax = maxGlobalValue;
 
     if( m_fromEntry == null || m_toEntry == null )
     {
@@ -207,7 +203,12 @@ public abstract class RasterColorMapEditorComposite extends Composite
     gridDataMaxValueLabel.heightHint = 15;
 
     globalMaxValueLabel.setLayoutData( gridDataMaxValueLabel );
-    globalMaxValueLabel.setText( m_globalMax.toString() );
+    String max;
+    if( m_globalMax.toString() != null )
+      max = m_globalMax.toString();
+    else
+      max = "nicht bekannt";
+    globalMaxValueLabel.setText( max );
     globalMaxValueLabel.setAlignment( SWT.RIGHT );
 
     final Label globalMinLabel = new Label( globalComposite, SWT.NONE );
@@ -219,7 +220,13 @@ public abstract class RasterColorMapEditorComposite extends Composite
     gridDataMinValueLabel.widthHint = 40;
 
     globalMinValueLabel.setLayoutData( gridDataMinValueLabel );
-    globalMinValueLabel.setText( m_globalMin.toString() );
+    String min;
+    if( m_globalMin.toString() != null )
+      min = m_globalMin.toString();
+    else
+      min = "nicht bekannt";
+
+    globalMinValueLabel.setText( min );
     globalMinValueLabel.setAlignment( SWT.RIGHT );
 
     /* max value to display */

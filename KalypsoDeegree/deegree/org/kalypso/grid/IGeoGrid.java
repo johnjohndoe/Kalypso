@@ -57,8 +57,8 @@ public interface IGeoGrid extends IGeoValueProvider
    */
   public IGeoWalkingStrategy getWalkingStrategy( ) throws GeoGridException;
 
-  public BigDecimal getMin( );
+  public BigDecimal getMin( ) throws GeoGridException;
 
-  public BigDecimal getMax( );
+  public BigDecimal getMax( ) throws GeoGridException;
 
 }

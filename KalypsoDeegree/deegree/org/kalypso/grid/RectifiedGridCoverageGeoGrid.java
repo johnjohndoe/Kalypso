@@ -176,18 +176,24 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getMax()
    */
-  public BigDecimal getMax( )
+  public BigDecimal getMax( ) throws GeoGridException
   {
-    // TODO Auto-generated method stub
-    return null;
+    final IGeoGrid grid = getGrid();
+    if( grid == null )
+      return null;
+
+    return grid.getMax();
   }
 
   /**
    * @see org.kalypso.grid.IGeoGrid#getMin()
    */
-  public BigDecimal getMin( )
+  public BigDecimal getMin( ) throws GeoGridException
   {
-    // TODO Auto-generated method stub
-    return null;
+    final IGeoGrid grid = getGrid();
+    if( grid == null )
+      return null;
+
+    return grid.getMin();
   }
 }
