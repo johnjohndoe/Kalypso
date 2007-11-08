@@ -7,16 +7,20 @@
 	<Name>KalypsoFlood-Workflow</Name>
 
 	<TaskGroup URI="org.kalypso.model.flood.DataLoad">
-		<Help><![CDATA[Grunddaten importieren]]></Help>
-		<Name>Daten importieren</Name>
+		<Help><![CDATA[Grunddaten importieren und verwalten.]]></Help>
+		<Name>Daten verwalten</Name>
+		
+	<!--		
 		<Task context="ImportBaseMap"
 			URI="org.kalypso.model.flood.ImportBackgroundData">
 			<Help><![CDATA[Grunddaten anderer Projekte in die Karte importieren]]></Help>
 			<Name><![CDATA[Grunddaten anderer Projekte in die Karte importieren]]></Name>
 		</Task>
+	-->
+	
 		<Task context="ImportBaseMap"
 			URI="org.kalypso.model.flood.ImportBackgroundData">
-			<Help><![CDATA[importiert Hintergrunddaten.]]></Help>
+			<Help><![CDATA[Hier können Sie Hintergrunddaten (topographische Karten u.ä.) importieren.]]></Help>
 			<Name>Hintergrunddaten importieren</Name>
 		</Task>
 		<Task context="FloodMap"
@@ -26,29 +30,21 @@
 		</Task>
 		<Task context="CoverageTheme"
 			URI="org.kalypso.model.flood.ImportDTMData">
-			<Help><![CDATA[Importiert Gelände-Rasterdaten]]></Help>
-			<Name>Gelände-Raster verwalten</Name>
+			<Help><![CDATA[Hier können Sie Geländedaten (Raster) einladen und verwalten.]]></Help>
+			<Name>Geländedaten verwalten</Name>
 		</Task>
 	</TaskGroup>
 
-	<TaskGroup URI="org.kalypso.model.flood.PolygonEditing">
-		<Help><![CDATA[Manuelle Bearbeitung der Überschwemmungsgebiete]]></Help>
-		<Name>Manuelle Bearbeitung</Name>
-		<Task type="SYNCHRONOUS" context="FloodMap"
-			URI="org.kalypso.model.flood.PolygonEditing">
-			<Help><![CDATA[Ermöglicht das Anlegen von Korrekturpolygonen.]]></Help>
-			<Name>Korrekturpolygone</Name>
-		</Task>
+	<TaskGroup type="SYNCHRONOUS" context="FloodMap" 
+		URI="org.kalypso.model.flood.PolygonEditing">
+		<Help><![CDATA[Hier können Sie die hydraulisch ermittelten Überschwemmungsgebiete anpassen.]]></Help>
+		<Name>Überschwemmungsgebiete anpassen</Name>
 	</TaskGroup>
 
-	<TaskGroup URI="org.kalypso.model.flood.Processing">
-		<Help><![CDATA[Fliesstiefen generieren]]></Help>
-		<Name>Fliesstiefen generieren</Name>
-		<Task context="ProcessFloodModel"
-			URI="org.kalypso.model.flood.ProcessFloodModel">
-			<Help><![CDATA[Startet Generierung des Fliesstiefen-Rasters.]]></Help>
-			<Name>Start</Name>
-		</Task>
+	<TaskGroup context="ProcessFloodModel"
+		URI="org.kalypso.model.flood.ProcessFloodModel">
+		<Help><![CDATA[Startet das Prozessieren der Fließtiefen.]]></Help>
+		<Name>Fließtiefen generieren</Name>
 	</TaskGroup>
 
 	<TaskGroup URI="org.kalypso.model.flood.Postprocessing">
@@ -56,8 +52,8 @@
 		<Name>Ergebnisauswertung</Name>
 		<Task context="FloodMap"
 			URI="org.kalypso.model.flood.ExportRasterData">
-			<Help><![CDATA[Exportiert die Fliesstiefen-Rasterdaten in externe Dateien.]]></Help>
-			<Name>Rasterdatenexport</Name>
+			<Help><![CDATA[Hier können Sie sich die generierten Fließtiefen anzeigen lassen.]]></Help>
+			<Name>Fließtiefen anzeigen</Name>
 		</Task>
 	</TaskGroup>
 
