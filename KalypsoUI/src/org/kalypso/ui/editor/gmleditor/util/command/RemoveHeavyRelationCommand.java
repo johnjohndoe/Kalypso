@@ -70,11 +70,11 @@ public class RemoveHeavyRelationCommand implements ICommand
 
   private final int m_pos1;
 
-  private int m_pos2;
+  private final int m_pos2;
 
-  private boolean m_isComposition2;
+  private final boolean m_isComposition2;
 
-  public RemoveHeavyRelationCommand( final GMLWorkspace workspace, Feature srcFE, IRelationType linkName1, Feature bodyFE, IRelationType linkName2, Feature destFE )
+  public RemoveHeavyRelationCommand( final GMLWorkspace workspace, final Feature srcFE, final IRelationType linkName1, final Feature bodyFE, final IRelationType linkName2, final Feature destFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;
@@ -117,8 +117,9 @@ public class RemoveHeavyRelationCommand implements ICommand
       m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkName1, m_bodyFE );
     else
       m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkName1, m_bodyFE.getId() );
-    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
-    // TODO: hand over changed feature 
+
+    final Feature parentFE = m_srcFE.getParent();
+    // TODO: hand over changed feature
     // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
@@ -149,8 +150,8 @@ public class RemoveHeavyRelationCommand implements ICommand
     // m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
     // m_workspace, m_bodyFE,
     // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    final Feature parentFE = m_workspace.getParentFeature( m_srcFE );
-    // TODO: hand over changed feature 
+    final Feature parentFE = m_srcFE.getParent();
+    // TODO: hand over changed feature
     // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }

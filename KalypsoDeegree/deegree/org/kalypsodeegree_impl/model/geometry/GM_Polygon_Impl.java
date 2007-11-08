@@ -152,9 +152,9 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     ret = "interpolation = " + m_interpolation + "\n";
     ret += "exteriorRing = \n";
 
-    for( int i = 0; i < m_exteriorRing.length; i++ )
+    for( final GM_Position element : m_exteriorRing )
     {
-      ret += (m_exteriorRing[i] + "\n");
+      ret += (element + "\n");
     }
 
     ret += ("interiorRings = " + m_interiorRings + "\n");
@@ -163,7 +163,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   }
 
   /**
-   * returns a shallow copy of the geometry
+   * returns a deep copy of the geometry
    */
   @Override
   public Object clone( )

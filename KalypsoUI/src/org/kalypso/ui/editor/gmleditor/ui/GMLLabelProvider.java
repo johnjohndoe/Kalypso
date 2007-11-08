@@ -46,6 +46,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -102,6 +103,9 @@ public class GMLLabelProvider extends LabelProvider
     if( element instanceof Feature )
       return ImageProvider.IMAGE_FEATURE;
 
+    if( element instanceof IFeatureWrapper2 )
+      return ImageProvider.IMAGE_FEATURE;
+
     if( element instanceof FeatureAssociationTypeElement )
       return ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
 
@@ -143,6 +147,9 @@ public class GMLLabelProvider extends LabelProvider
     if( element instanceof Feature )
       return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL );
 
+    if( element instanceof IFeatureWrapper2 )
+      return FeatureHelper.getAnnotationValue( ((IFeatureWrapper2) element).getWrappedFeature(), IAnnotation.ANNO_LABEL );
+
     if( element instanceof FeatureAssociationTypeElement )
     {
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty() );
@@ -177,6 +184,11 @@ public class GMLLabelProvider extends LabelProvider
     if( element instanceof Feature )
     {
       final IFeatureType featureType = ((Feature) element).getFeatureType();
+      return featureType.getQName();
+    }
+    else if( element instanceof IFeatureWrapper2 )
+    {
+      final IFeatureType featureType = ((IFeatureWrapper2) element).getWrappedFeature().getFeatureType();
       return featureType.getQName();
     }
     else if( element instanceof FeatureAssociationTypeElement )

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -36,14 +37,15 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
  */
 public class GMLWorkspace_Impl implements GMLWorkspace
 {
-  private final Feature m_rootFeature;
-
-  private URL m_context;
-
-  private final String m_schemaLocation;
-
   /** id -> feature */
   final Map<String, Feature> m_indexMap = new HashMap<String, Feature>();
+
+  private final Feature m_rootFeature;
+
+  /** The namespace context for which to resolve any namespcae-prefixes inside this workspace. */
+  private final NamespaceContext m_namespaceContext;
+
+  private final String m_schemaLocation;
 
   private final IFeatureType[] m_featureTypes;
 
@@ -51,19 +53,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final IFeatureProviderFactory m_factory;
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
-   */
-  public Feature getFeature( final String id )
-  {
-    return m_indexMap.get( id );
-  }
+  /** The url-context against which to resolve any references inside this workspace. */
+  private URL m_context;
 
-  public GMLWorkspace_Impl( final IGMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory )
+  public GMLWorkspace_Impl( final IGMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final NamespaceContext namespaceContext, final String schemaLocation, final IFeatureProviderFactory factory )
   {
     m_schema = schema;
     m_featureTypes = featureTypes;
     m_context = context;
+    m_namespaceContext = namespaceContext;
     m_schemaLocation = schemaLocation;
     m_rootFeature = feature;
     m_factory = factory;
@@ -92,12 +90,20 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     // release other references?
   }
 
-  public Feature resolveLink( Feature srcFeature, IRelationType linkProperty )
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
+   */
+  public Feature getFeature( final String id )
+  {
+    return m_indexMap.get( id );
+  }
+
+  public Feature resolveLink( final Feature srcFeature, final IRelationType linkProperty )
   {
     return resolveLink( srcFeature, linkProperty, RESOLVE_ALL );
   }
 
-  public Feature resolveLink( Feature srcFeature, IRelationType linkProperty, final int resolveMode )
+  public Feature resolveLink( final Feature srcFeature, final IRelationType linkProperty, final int resolveMode )
   {
     final Object linkValue = srcFeature.getProperty( linkProperty );
     if( linkValue == null )
@@ -115,7 +121,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return null;
   }
 
-  public Feature[] resolveLinks( Feature srcFeature, IRelationType linkProperty )
+  public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkProperty )
   {
     return resolveLinks( srcFeature, linkProperty, RESOLVE_ALL );
   }
@@ -124,7 +130,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveLinks(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String)
    */
-  public Feature[] resolveLinks( Feature srcFeature, IRelationType linkProperty, final int resolveMode )
+  public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkProperty, final int resolveMode )
   {
     if( !linkProperty.isList() )
     {
@@ -179,7 +185,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     {
       accept( visitor, getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
     }
-    catch( Throwable e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
     }
@@ -215,11 +221,11 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     // use array instead of iterator, because the listener list may change in
     // response to this event (lead to a ConcurrentodificationException)
     final ModellEventListener[] objects = m_listener.toArray( new ModellEventListener[m_listener.size()] );
-    for( int i = 0; i < objects.length; i++ )
+    for( final ModellEventListener element : objects )
     {
       try
       {
-        objects[i].onModellChange( event );
+        element.onModellChange( event );
       }
       catch( final Throwable t )
       {
@@ -239,30 +245,30 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     final List<Feature> result = new ArrayList<Feature>();
     final Feature[] features = getFeatures( linkSrcFeatureType );
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature element : features )
     {
-      final Object prop = features[i].getProperty( linkProperty );
+      final Object prop = element.getProperty( linkProperty );
       if( prop == linkTargetfeature )
-        result.add( features[i] );
+        result.add( element );
       if( linkTargetfeature.getId().equals( prop ) )
-        result.add( features[i] );
+        result.add( element );
     }
 
     // final IFeatureType[] substiFTs =
     // GMLHelper.getResolveSubstitutionGroup( linkSrcFeatureType, getFeatureTypes() );
     final IFeatureType[] substiFTs = GMLSchemaUtilities.getSubstituts( linkSrcFeatureType, m_schema, false, true );
 
-    for( int _ft = 0; _ft < substiFTs.length; _ft++ )
+    for( final IFeatureType element : substiFTs )
     {
-      final Feature[] substiFeatures = getFeatures( substiFTs[_ft] );
+      final Feature[] substiFeatures = getFeatures( element );
 
-      for( int i = 0; i < substiFeatures.length; i++ )
+      for( final Feature element2 : substiFeatures )
       {
-        Object prop = substiFeatures[i].getProperty( linkProperty );
+        final Object prop = element2.getProperty( linkProperty );
         if( prop == linkTargetfeature )
-          result.add( substiFeatures[i] );
+          result.add( element2 );
         if( linkTargetfeature.getId().equals( prop ) )
-          result.add( substiFeatures[i] );
+          result.add( element2 );
       }
     }
     return result.toArray( new Feature[result.size()] );
@@ -276,7 +282,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_context;
   }
 
-  public void setContext( URL context )
+  public void setContext( final URL context )
   {
     m_context = context;
   }
@@ -289,9 +295,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     final Feature[] features = getFeatures( ft );
 
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
       accept( fv, feature, depth );
     }
   }
@@ -315,11 +320,11 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     if( recurse && depth != FeatureVisitor.DEPTH_ZERO )
     {
-      for( int j = 0; j < ftps.length; j++ )
+      for( final IPropertyType element : ftps )
       {
-        if( ftps[j] instanceof IRelationType )
+        if( element instanceof IRelationType )
         {
-          Object value = feature.getProperty( ftps[j] );
+          final Object value = feature.getProperty( element );
           if( value == null )
             continue;
 
@@ -424,9 +429,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   @Deprecated
   public IFeatureType getFeatureType( final String nameLocalPart )
   {
-    for( int i = 0; i < m_featureTypes.length; i++ )
+    for( final IFeatureType ft : m_featureTypes )
     {
-      final IFeatureType ft = m_featureTypes[i];
       if( ft.getQName().getLocalPart().equals( nameLocalPart ) )
         return ft;
     }
@@ -438,9 +442,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public IFeatureType getFeatureType( final QName featureQName )
   {
-    for( int i = 0; i < m_featureTypes.length; i++ )
+    for( final IFeatureType ft : m_featureTypes )
     {
-      final IFeatureType ft = m_featureTypes[i];
       if( ft.getQName().equals( featureQName ) )
         return ft;
     }
@@ -460,7 +463,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       final FeaturePath fPath = new FeaturePath( featurePath );
       return fPath.getFeature( this );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -607,7 +610,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int, java.lang.String)
    */
-  public void addFeatureAsAggregation( Feature srcFE, IRelationType linkProp, int pos, String featureID ) throws Exception
+  public void addFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final int pos, final String featureID ) throws Exception
   {
     // test if feature exists in workspace
     final GMLWorkspace workspace = srcFE.getWorkspace();
@@ -615,7 +618,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       throw new Exception( "tried to link a feature that does not exist in the workspace" );
     if( linkProp.isList() )
     {
-      int maxOccurs = linkProp.getMaxOccurs();
+      final int maxOccurs = linkProp.getMaxOccurs();
       final List list = (List) srcFE.getProperty( linkProp );
       if( list.size() < maxOccurs || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
         // when pos = -1 -> append to end of the list
@@ -679,7 +682,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, java.lang.String, boolean)
    */
-  public void setFeatureAsAggregation( Feature srcFE, IRelationType linkProp, String featureID, boolean overwrite ) throws Exception
+  public void setFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final String featureID, final boolean overwrite ) throws Exception
   {
     // TODO remove existing link correctly
     if( srcFE.getProperty( linkProp ) == null || overwrite )
@@ -692,12 +695,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsAggregationFeature(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, java.lang.String)
    */
-  public boolean removeLinkedAsAggregationFeature( Feature parentFeature, IRelationType linkProp, String childFeatureId )
+  public boolean removeLinkedAsAggregationFeature( final Feature parentFeature, final IRelationType linkProp, final String childFeatureId )
   {
     final Object prop = parentFeature.getProperty( linkProp );
     if( linkProp.isList() )
     {
-      List list = (List) prop;
+      final List list = (List) prop;
       return list.remove( childFeatureId );
     }
     if( childFeatureId.equals( parentFeature.getProperty( linkProp ) ) )
@@ -712,7 +715,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, IRelationType linkProp, Feature childFeature )
+  public boolean removeLinkedAsCompositionFeature( final Feature parentFeature, final IRelationType linkProp, final Feature childFeature )
   {
     boolean result = false;
     final Object prop = parentFeature.getProperty( linkProp );
@@ -761,12 +764,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.Feature, java.lang.String)
    */
-  public boolean isExistingRelation( Feature srcFE, Feature destFE, IRelationType relationProp )
+  public boolean isExistingRelation( final Feature srcFE, final Feature destFE, final IRelationType relationProp )
   {
-    Feature[] features = resolveLinks( srcFE, relationProp );
-    for( int i = 0; i < features.length; i++ )
+    final Feature[] features = resolveLinks( srcFE, relationProp );
+    for( final Feature element : features )
     {
-      if( features[i] == destFE )
+      if( element == destFE )
         return true;
     }
     return false;
@@ -779,7 +782,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int)
    */
-  public boolean isAggregatedLink( Feature parent, IRelationType linkProp, int pos )
+  public boolean isAggregatedLink( final Feature parent, final IRelationType linkProp, final int pos )
   {
     final boolean undefined = false;
     final Object value = parent.getProperty( linkProp );
@@ -805,66 +808,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * Finds the parent feature of a feature
-   * 
-   * @param toFindParentFrom
-   *          the feature to find the parent from
-   * @return this method returns the parent feature, if the parent feature is the root feature null is returned.
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getParentFeature(org.kalypsodeegree.model.feature.Feature)
-   */
-  public Feature getParentFeature( Feature toFindParentFrom )
-  {
-    // skip root feature
-    if( getRootFeature().equals( toFindParentFrom ) )
-      return null;
-    final Collection collection = m_indexMap.values();
-    final Iterator iterator = collection.iterator();
-    while( iterator.hasNext() )
-    {
-      final Feature f = (Feature) iterator.next();
-      // skips itself
-      if( f.equals( toFindParentFrom ) )
-        continue;
-      final IFeatureType featureType = f.getFeatureType();
-      final IPropertyType[] ftp = featureType.getProperties();
-      for( int i = 0; i < ftp.length; i++ )
-      {
-        final IPropertyType property = ftp[i];
-        if( property instanceof IRelationType )
-        {
-          if( property.isList() )
-          {
-            final List list = (List) f.getProperty( property );
-            for( int j = 0; j < list.size(); j++ )
-            {
-              final Object childFromList = list.get( j );
-              if( childFromList != null && childFromList.equals( toFindParentFrom ) )
-              {
-                // String substitutionGroup = ((Feature)childFromList).getFeatureType().getSubstitutionGroup();
-                return f;
-              }
-            }
-          }
-          if( property.equals( toFindParentFrom ) )
-            return f;
-        }
-        if( property.equals( toFindParentFrom ) )
-          return f;
-      }
-    }
-    Feature rootFeature = getRootFeature();
-    Object[] properties = rootFeature.getProperties();
-    for( int i = 0; i < properties.length; i++ )
-    {
-      Object property = properties[i];
-      if( property != null && property.equals( toFindParentFrom ) )
-        return rootFeature;
-    }
-    // TODO throw exception instead of returning null
-    return null;
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#contains(org.kalypsodeegree.model.feature.Feature)
    */
   public boolean contains( final Feature feature )
@@ -886,7 +829,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       return false;
     if( property instanceof List )
     {
-      Object object = ((List) property).get( pos );
+      final Object object = ((List) property).get( pos );
       if( object instanceof Feature )
         return false;
       return !m_indexMap.containsKey( object );
@@ -910,5 +853,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public IFeatureProviderFactory getFeatureProviderFactory( )
   {
     return m_factory;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceContext()
+   */
+  public NamespaceContext getNamespaceContext( )
+  {
+    return m_namespaceContext;
   }
 }
