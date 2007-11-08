@@ -298,7 +298,7 @@ public class ShapeSerializer
   public final static Feature createWorkspaceRootFeature( final IFeatureType featureType, final Object shapeFileType )
   {
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( featureType );
-    new GMLWorkspace_Impl( new EmptyGMLSchema(), new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null, null );
+    new GMLWorkspace_Impl( new EmptyGMLSchema(), new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null, null, null );
 
     rootFeature.setProperty( ShapeSerializer.PROPERTY_TYPE, shapeFileType );
 

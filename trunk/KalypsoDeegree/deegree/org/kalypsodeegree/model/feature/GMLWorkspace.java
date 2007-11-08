@@ -3,6 +3,7 @@ package org.kalypsodeegree.model.feature;
 import java.net.URL;
 import java.util.List;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.IGMLSchema;
@@ -119,8 +120,6 @@ public interface GMLWorkspace extends ModellEventProvider
    */
   public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type, final int depth );
 
-  public Feature getParentFeature( final Feature toFindParentFrom );
-
   /**
    * TODO: commont TODO: we should replace this method by: createAsComposition! First, it is always used as such (that i
    * sfirst created, that this method is called).; Second: a featuree hsould never live without workspace
@@ -199,4 +198,12 @@ public interface GMLWorkspace extends ModellEventProvider
 
   /** Return the factory which creates feature providers used to load linked features. */
   public IFeatureProviderFactory getFeatureProviderFactory( );
+
+  /**
+   * The namespace context with which this workspace was read from a gm file (if any).<br>
+   * May be <code>null</code>.<br>
+   * Sometimes needed/necessary, if after reading the complete document, fragments (like xpathes) are going to be
+   * evaluated.
+   */
+  public NamespaceContext getNamespaceContext( );
 }

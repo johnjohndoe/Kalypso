@@ -340,7 +340,21 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
   @Override
   public Object clone( ) throws CloneNotSupportedException
   {
-    throw new CloneNotSupportedException();
+    try
+    {
+      final GM_TriangulatedSurface_Impl clone = new GM_TriangulatedSurface_Impl( getCoordinateSystem() );
+
+      for( final GM_Triangle triangle : this )
+        clone.add( (GM_Triangle) triangle.clone() );
+
+      return clone;
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+
+      throw new CloneNotSupportedException( e.getLocalizedMessage() );
+    }
   }
 
   /**

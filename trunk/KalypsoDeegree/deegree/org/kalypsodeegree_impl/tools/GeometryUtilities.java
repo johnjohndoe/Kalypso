@@ -479,7 +479,7 @@ public class GeometryUtilities
    */
   public static boolean isPolygonGeometry( final IValuePropertyType ftp )
   {
-    return ftp.getValueClass().equals( getPolygonClass() );
+    return getPolygonClass().isAssignableFrom( ftp.getValueClass() );
   }
 
   /**

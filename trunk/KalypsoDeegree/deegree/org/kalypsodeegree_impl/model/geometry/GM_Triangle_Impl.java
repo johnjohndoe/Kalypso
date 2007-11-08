@@ -147,4 +147,24 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   {
     return (pos1.getX() * (pos2.getY() - pos3.getY()) + pos2.getX() * (pos3.getY() - pos1.getY()) + pos3.getX() * (pos1.getY() - pos2.getY()));
   }
+
+  /**
+   * Returns a deep copy of the geometry.
+   */
+  @Override
+  public Object clone( )
+  {
+    try
+    {
+      final GM_Position[] clonedExteriorRing = GeometryFactory.cloneGM_Position( getExteriorRing() );
+      return new GM_Triangle_Impl( clonedExteriorRing[0], clonedExteriorRing[1], clonedExteriorRing[2], getCoordinateSystem() );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    throw new IllegalStateException();
+  }
+
 }

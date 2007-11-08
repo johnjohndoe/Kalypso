@@ -68,9 +68,6 @@ public class GMLXPath
   /**
    * creates a GMLXPath from a string
    * 
-   * @param namespaceContext
-   *            The context against which qname's within the path are resolved. Not to implementors: the xpath does not
-   *            store a reference to this context and uses it only within the constructor.
    * @deprecated Use {@link #GMLXPath(String, NamespaceContext)} instead.
    */
   @Deprecated

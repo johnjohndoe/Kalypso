@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.mapmodel;
 import java.net.URL;
 import java.util.List;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -91,7 +92,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     m_workspace.dispose();
   }
 
-  public void addCommandManagerListener( ICommandManagerListener l )
+  public void addCommandManagerListener( final ICommandManagerListener l )
   {
     m_commandManager.addCommandManagerListener( l );
   }
@@ -129,7 +130,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     m_commandManager.redo();
   }
 
-  public void removeCommandManagerListener( ICommandManagerListener l )
+  public void removeCommandManagerListener( final ICommandManagerListener l )
   {
     m_commandManager.removeCommandManagerListener( l );
   }
@@ -139,27 +140,27 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     m_commandManager.undo();
   }
 
-  public void accept( FeatureVisitor fv, Feature feature, int depth )
+  public void accept( final FeatureVisitor fv, final Feature feature, final int depth )
   {
     m_workspace.accept( fv, feature, depth );
   }
 
-  public void accept( FeatureVisitor fv, IFeatureType ft, int depth )
+  public void accept( final FeatureVisitor fv, final IFeatureType ft, final int depth )
   {
     m_workspace.accept( fv, ft, depth );
   }
 
-  public void accept( FeatureVisitor fv, List features, int depth )
+  public void accept( final FeatureVisitor fv, final List features, final int depth )
   {
     m_workspace.accept( fv, features, depth );
   }
 
-  public void addModellListener( ModellEventListener listener )
+  public void addModellListener( final ModellEventListener listener )
   {
     m_workspace.addModellListener( listener );
   }
 
-  public void fireModellEvent( ModellEvent event )
+  public void fireModellEvent( final ModellEvent event )
   {
     m_workspace.fireModellEvent( event );
   }
@@ -169,17 +170,17 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getContext();
   }
 
-  public Feature getFeature( String id )
+  public Feature getFeature( final String id )
   {
     return m_workspace.getFeature( id );
   }
 
-  public Object getFeatureFromPath( String featurePath )
+  public Object getFeatureFromPath( final String featurePath )
   {
     return m_workspace.getFeatureFromPath( featurePath );
   }
 
-  public Feature[] getFeatures( IFeatureType ft )
+  public Feature[] getFeatures( final IFeatureType ft )
   {
     return m_workspace.getFeatures( ft );
   }
@@ -189,7 +190,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getFeatureType( featureName );
   }
 
-  public IFeatureType getFeatureTypeFromPath( String featurePath )
+  public IFeatureType getFeatureTypeFromPath( final String featurePath )
   {
     return m_workspace.getFeatureTypeFromPath( featurePath );
   }
@@ -199,32 +200,32 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getRootFeature();
   }
 
-  public void removeModellListener( ModellEventListener listener )
+  public void removeModellListener( final ModellEventListener listener )
   {
     m_workspace.removeModellListener( listener );
   }
 
-  public Feature resolveLink( Feature srcFeature, IRelationType linkPropertyName, int resolveMode )
+  public Feature resolveLink( final Feature srcFeature, final IRelationType linkPropertyName, final int resolveMode )
   {
     return m_workspace.resolveLink( srcFeature, linkPropertyName, resolveMode );
   }
 
-  public Feature resolveLink( Feature srcFeature, IRelationType linkPropertyName )
+  public Feature resolveLink( final Feature srcFeature, final IRelationType linkPropertyName )
   {
     return m_workspace.resolveLink( srcFeature, linkPropertyName );
   }
 
-  public Feature[] resolveLinks( Feature srcFeature, IRelationType linkPropertyName )
+  public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkPropertyName )
   {
     return m_workspace.resolveLinks( srcFeature, linkPropertyName );
   }
 
-  public Feature[] resolveLinks( Feature srcFeature, IRelationType linkPropertyName, int resolveMode )
+  public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkPropertyName, final int resolveMode )
   {
     return m_workspace.resolveLinks( srcFeature, linkPropertyName, resolveMode );
   }
 
-  public Feature[] resolveWhoLinksTo( Feature linkTargetfeature, IFeatureType linkSrcFeatureType, IRelationType linkPropertyName )
+  public Feature[] resolveWhoLinksTo( final Feature linkTargetfeature, final IFeatureType linkSrcFeatureType, final IRelationType linkPropertyName )
   {
     return m_workspace.resolveWhoLinksTo( linkTargetfeature, linkSrcFeatureType, linkPropertyName );
   }
@@ -275,12 +276,12 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
    */
-  public void addFeatureAsComposition( Feature parent, IRelationType propName, int pos, Feature newFeature ) throws Exception
+  public void addFeatureAsComposition( final Feature parent, final IRelationType propName, final int pos, final Feature newFeature ) throws Exception
   {
     m_workspace.addFeatureAsComposition( parent, propName, pos, newFeature );
   }
 
-  public void addFeatureAsAggregation( Feature parent, IRelationType propName, int pos, String featureID ) throws Exception
+  public void addFeatureAsAggregation( final Feature parent, final IRelationType propName, final int pos, final String featureID ) throws Exception
   {
     m_workspace.addFeatureAsAggregation( parent, propName, pos, featureID );
   }
@@ -289,12 +290,12 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int, java.lang.String)
    */
-  public void setFeatureAsAggregation( Feature srcFE, IRelationType propName, int pos, String featureID ) throws Exception
+  public void setFeatureAsAggregation( final Feature srcFE, final IRelationType propName, final int pos, final String featureID ) throws Exception
   {
     m_workspace.setFeatureAsAggregation( srcFE, propName, pos, featureID );
   }
 
-  public boolean removeLinkedAsAggregationFeature( Feature parentFeature, IRelationType propName, String linkFeatureId )
+  public boolean removeLinkedAsAggregationFeature( final Feature parentFeature, final IRelationType propName, final String linkFeatureId )
   {
     return m_workspace.removeLinkedAsAggregationFeature( parentFeature, propName, linkFeatureId );
   }
@@ -303,7 +304,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean removeLinkedAsCompositionFeature( Feature parentFeature, IRelationType propName, Feature childFeature )
+  public boolean removeLinkedAsCompositionFeature( final Feature parentFeature, final IRelationType propName, final Feature childFeature )
   {
     return m_workspace.removeLinkedAsCompositionFeature( parentFeature, propName, childFeature );
   }
@@ -321,7 +322,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypsodeegree.model.feature.Feature, java.lang.String)
    */
-  public boolean isExistingRelation( Feature f1, Feature f2, IRelationType name )
+  public boolean isExistingRelation( final Feature f1, final Feature f2, final IRelationType name )
   {
     return m_workspace.isExistingRelation( f1, f2, name );
   }
@@ -330,7 +331,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int)
    */
-  public boolean isAggregatedLink( Feature parent, IRelationType linkPropName, int pos )
+  public boolean isAggregatedLink( final Feature parent, final IRelationType linkPropName, final int pos )
   {
     return m_workspace.isAggregatedLink( parent, linkPropName, pos );
   }
@@ -339,7 +340,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, org.kalypsodeegree.model.feature.Feature, boolean)
    */
-  public void setFeatureAsComposition( Feature parentFE, IRelationType linkPropName, Feature linkedFE, boolean overwrite ) throws Exception
+  public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkPropName, final Feature linkedFE, final boolean overwrite ) throws Exception
   {
     m_workspace.setFeatureAsComposition( parentFE, linkPropName, linkedFE, overwrite );
   }
@@ -348,24 +349,16 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, java.lang.String, boolean)
    */
-  public void setFeatureAsAggregation( Feature parent, IRelationType propName, String featureID, boolean overwrite ) throws Exception
+  public void setFeatureAsAggregation( final Feature parent, final IRelationType propName, final String featureID, final boolean overwrite ) throws Exception
   {
     m_workspace.setFeatureAsAggregation( parent, propName, featureID, overwrite );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getParentFeature(org.kalypsodeegree.model.feature.Feature)
-   */
-  public Feature getParentFeature( Feature toFindParentFrom )
-  {
-    return m_workspace.getParentFeature( toFindParentFrom );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
    *      org.kalypsodeegree.model.feature.Feature, int, org.kalypsodeegree.model.feature.IPropertyType[])
    */
-  public void accept( FeatureVisitor visitor, Feature feature, int depth, IPropertyType[] featureProperties )
+  public void accept( final FeatureVisitor visitor, final Feature feature, final int depth, final IPropertyType[] featureProperties )
   {
     m_workspace.accept( visitor, feature, depth, featureProperties );
   }
@@ -384,7 +377,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @param pos
    * @return
    */
-  public boolean isBrokenLink( Feature parentFeature, IPropertyType ftp, int pos )
+  public boolean isBrokenLink( final Feature parentFeature, final IPropertyType ftp, final int pos )
   {
     return m_workspace.isBrokenLink( parentFeature, ftp, pos );
   }
@@ -394,7 +387,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
    */
   @Deprecated
-  public IFeatureType getFeatureType( String nameLocalPart )
+  public IFeatureType getFeatureType( final String nameLocalPart )
   {
     return m_workspace.getFeatureType( nameLocalPart );
   }
@@ -426,5 +419,13 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public void clear( )
   {
     m_commandManager.clear();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceContext()
+   */
+  public NamespaceContext getNamespaceContext( )
+  {
+    return m_workspace.getNamespaceContext();
   }
 }
