@@ -66,7 +66,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * TODO: overide the walk method in order to make sure, that we iterate thorugh lines, not columns
  * 
  * @author Dejan Antanaskovic
- * @authro Thomas Jung
+ * @author Thomas Jung
  * @author Gernot Belger
  */
 public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid implements IGeoGrid
@@ -98,7 +98,7 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid implements IGeoGri
     m_ascTmpFile = File.createTempFile( "ascTmp", ".asc" );
     m_ascTmpFile.deleteOnExit();
 
-    // TODO: maybe dont do it if it is already a file
+    // TODO: maybe don't do it, if it is already a file
     FileUtils.copyURLToFile( asciiFileURL, m_ascTmpFile );
 
     /* open tmp-file as random-access */
@@ -252,5 +252,21 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid implements IGeoGri
     {
       m_ascTmpFile.delete();
     }
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMax()
+   */
+  public BigDecimal getMax( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMin()
+   */
+  public BigDecimal getMin( )
+  {
+    return null;
   }
 }

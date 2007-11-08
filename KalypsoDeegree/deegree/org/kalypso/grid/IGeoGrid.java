@@ -1,5 +1,7 @@
 package org.kalypso.grid;
 
+import java.math.BigDecimal;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -54,5 +56,9 @@ public interface IGeoGrid extends IGeoValueProvider
    * Returns a walking strategy suitable to iterate thorugh this grid.
    */
   public IGeoWalkingStrategy getWalkingStrategy( ) throws GeoGridException;
+
+  public BigDecimal getMin( );
+
+  public BigDecimal getMax( );
 
 }

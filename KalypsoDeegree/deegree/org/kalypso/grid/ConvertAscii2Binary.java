@@ -122,10 +122,12 @@ public class ConvertAscii2Binary
           final String next = scanner.next(); // do not use 'nextDouble' it is much too slow
           final BigDecimal currentValue = new BigDecimal( next );
           if( !currentValue.equals( noData ) )
+          {
             binaryGrid.setValue( x, y, currentValue );
 
-          min = min.min( currentValue );
-          max = max.max( currentValue );
+            min = min.min( currentValue );
+            max = max.max( currentValue );
+          }
         }
 
         ProgressUtilities.worked( monitor, 1 );

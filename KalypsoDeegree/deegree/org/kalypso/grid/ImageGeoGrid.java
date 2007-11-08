@@ -41,6 +41,7 @@
 package org.kalypso.grid;
 
 import java.awt.image.Raster;
+import java.math.BigDecimal;
 import java.net.URL;
 
 import javax.media.jai.JAI;
@@ -116,6 +117,24 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
     if( m_image != null )
       m_image.dispose();
     m_image = null;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMax()
+   */
+  public BigDecimal getMax( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMin()
+   */
+  public BigDecimal getMin( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

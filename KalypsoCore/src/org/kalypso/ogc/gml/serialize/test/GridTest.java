@@ -89,6 +89,7 @@ public class GridTest extends TestCase
         {
           return 2 * super.getValue( x, y );
         }
+
       };
 
       final File file = File.createTempFile( "gridTest_grid", ".ascbin" );

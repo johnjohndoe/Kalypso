@@ -1,6 +1,7 @@
 package org.kalypso.grid;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -18,7 +19,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * {@link IGeoGrid} implementation based on {@link org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage}s.<br>
- * This implementation analyses the wrapped coverage and generates a suitable grid, to which all call are delegated.
+ * This implementation analyzes the wrapped coverage and generates a suitable grid, to which all calls are delegated.
  * 
  * @author Gernot Belger
  */
@@ -132,7 +133,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
    */
   public void dispose( )
   {
-    // do not dipose the grid, we access it via the weak-cache
+    // do not dispose the grid, we access it via the weak-cache
     if( m_grid != null )
       m_grid.dispose();
   }
@@ -170,5 +171,23 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
       return Double.NaN;
 
     return grid.getValue( crd );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMax()
+   */
+  public BigDecimal getMax( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMin()
+   */
+  public BigDecimal getMin( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
