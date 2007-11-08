@@ -98,7 +98,7 @@ public class LanduseRasterizationHandler extends AbstractHandler
             monitor.beginTask( "Rasterizing landuse vector data...", IProgressMonitor.UNKNOWN );
             try
             {
-              final IVectorDataModel vectorDataModel = (IVectorDataModel) scenarioDataProvider.getModel( IVectorDataModel.class );
+              final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
               final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorDataModel.getLandusePolygonCollection();
 
               final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
@@ -131,6 +131,7 @@ public class LanduseRasterizationHandler extends AbstractHandler
                     return Double.NaN;
                   }
                 }
+
               };
               final String outputFilePath = "raster/output/LanduseCoverage.dat";
               final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
