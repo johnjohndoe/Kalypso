@@ -109,7 +109,9 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateContentProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateLabelProvider;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.gml.provider.IGmlSource;
+import org.kalypso.core.KalypsoCoreExtensions;
+import org.kalypso.core.gml.provider.GmlSourceChooserWizard;
+import org.kalypso.core.gml.provider.IGmlSourceProvider;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -842,24 +844,23 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   protected void handleImportTin( final Event event )
   {
     final Shell shell = event.display.getActiveShell();
+    final String windowTitle = "Wasserspiegel importieren";
 
     // get selected event
     final IRunoffEvent runoffEvent = findFirstEvent( m_treeSelection );
     if( runoffEvent == null )
     {
-      MessageDialog.openConfirm( shell, "Wasserspiegel importieren", "Wählen Sie das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
+      MessageDialog.openConfirm( shell, windowTitle, "Wählen Sie das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
       return;
     }
 
-    // TODO: present dialog to user
-    final IGmlSource[] sources = new IGmlSource[] {};
+    /* Get source provider for tins */
+    final IGmlSourceProvider[] provider = KalypsoCoreExtensions.createGmlSourceProvider( "org.kalypso.core.tin.waterlevel" );
 
-    final ICoreRunnableWithProgress operation = new ImportTinOperation( runoffEvent.getTins(), sources );
-
-    final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
-    if( !resultStatus.isOK() )
-      KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, "Wasserspiegel importieren", "Fehler beim Import eines Wasserspiegels", resultStatus );
+    /* Show dialog to user and import tnis afterwards */
+    final ImportTinOperation operation = new ImportTinOperation( m_dataProvider, runoffEvent.getTins() );
+    final GmlSourceChooserWizard wizard = new GmlSourceChooserWizard( provider, operation );
+    wizard.setWindowTitle( windowTitle );
   }
 
   /**
