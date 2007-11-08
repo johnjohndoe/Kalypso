@@ -236,7 +236,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard
     final File parameterGmlFile = paraPath.toFile();
     final NAConfiguration ascii2GmlConfiguration = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, parameterGmlFile );
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
-    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( m_parameterSchema, m_parameterSchema.getAllFeatureTypes(), parameterRootFeature, null, "http://www.tuhh.de/parameter", null );
+    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( m_parameterSchema, m_parameterSchema.getAllFeatureTypes(), parameterRootFeature, null, null, "http://www.tuhh.de/parameter", null );
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
     System.out.println( "Die parameter.gml Datei befindet sich unter: " + parameterGmlFile.getPath() );
   }

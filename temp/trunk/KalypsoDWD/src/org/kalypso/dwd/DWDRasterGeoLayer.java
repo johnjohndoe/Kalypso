@@ -135,7 +135,7 @@ public class DWDRasterGeoLayer
     m_positionFeature = schema.getFeatureType( "DWDCell" );
     final IFeatureType layerFT = schema.getFeatureType( "DWDLayer" );
     final Feature rootFE = FeatureFactory.createFeature( null, null, "main", layerFT, true );
-    m_workspace = FeatureFactory.createGMLWorkspace( schema, rootFE, null, null, null );
+    m_workspace = FeatureFactory.createGMLWorkspace( schema, rootFE, null, null, null, null );
 
     IRelationType cellMemeberPT = (IRelationType) layerFT.getProperty( PROP_CELLMEMBER );
     // create all feature with point geom property
