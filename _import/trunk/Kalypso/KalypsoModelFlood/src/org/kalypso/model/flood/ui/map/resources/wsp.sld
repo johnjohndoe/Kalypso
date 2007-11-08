@@ -16,38 +16,6 @@
 							<ogc:PropertyName>flood:tin</ogc:PropertyName>
 						</Geometry>
 						<sldExt:PolygonColorMap>
-							<sldExt:PolygonColorMapEntry>
-								<sldExt:label>Isofläche 24</sldExt:label>
-								<sldExt:from>0.0</sldExt:from>
-								<sldExt:to>400.0</sldExt:to>
-								<Stroke>
-									<CssParameter name='stroke-width'>1.0</CssParameter>
-									<CssParameter name='stroke-opacity'>1.0</CssParameter>
-									<CssParameter name='stroke'>#aa0000</CssParameter>
-									<CssParameter name='stroke-linejoin'>mitre</CssParameter>
-									<CssParameter name='stroke-linecap'>butt</CssParameter>
-								</Stroke>
-								<Fill>
-									<CssParameter name='fill'>#aaaaf00</CssParameter>
-									<CssParameter name='fill-opacity'>0.21</CssParameter>
-								</Fill>
-							</sldExt:PolygonColorMapEntry>
-							<sldExt:PolygonColorMapEntry>
-								<sldExt:label>Isofläche 25</sldExt:label>
-								<sldExt:from>400.0</sldExt:from>
-								<sldExt:to>9000.0</sldExt:to>
-								<Stroke>
-									<CssParameter name='stroke-width'>1.0</CssParameter>
-									<CssParameter name='stroke-opacity'>1.0</CssParameter>
-									<CssParameter name='stroke'>#ff0000</CssParameter>
-									<CssParameter name='stroke-linejoin'>mitre</CssParameter>
-									<CssParameter name='stroke-linecap'>butt</CssParameter>
-								</Stroke>
-								<Fill>
-									<CssParameter name='fill'>#fffff00</CssParameter>
-									<CssParameter name='fill-opacity'>0.21</CssParameter>
-								</Fill>
-							</sldExt:PolygonColorMapEntry>
 						</sldExt:PolygonColorMap>
 					</sldExt:SurfacePolygonSymbolizer>
 				</Rule>
