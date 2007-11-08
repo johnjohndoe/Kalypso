@@ -189,27 +189,83 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final GeoGridCell clippedMinCell = normalizedMinCell.max( originCell );
     final GeoGridCell clippedMaxCell = normaliedMaxCell.min( maxGridCell );
 
-    progress.setWorkRemaining( clippedMaxCell.y + 1 - clippedMinCell.y );
+    System.out.println( "Cellpixelwidth: " + cellPixelWidth );
 
-    for( int j = clippedMinCell.y; j < clippedMaxCell.y ; j += clusterSize )
+    if( cellPixelWidth < 1 )
     {
-      for( int i = clippedMinCell.x; i < clippedMaxCell.x; i += clusterSize )
+      final int screenXfrom = (int) projection.getDestX( env.getMinX() );
+      final int screenXto = (int) projection.getDestX( env.getMaxX() );
+      final int screenYfrom = (int) projection.getDestY( env.getMaxY() );
+      final int screenYto = (int) projection.getDestY( env.getMinY() );
+
+      final int screenYheight = screenYto - screenYfrom;
+
+      progress.setWorkRemaining( screenYheight );
+
+      GeoGridCell lastCell = null;
+      Color lastColor = null;
+      for( int y = screenYfrom; y < screenYto; y++ )
       {
-        final double value = grid.getValue( i, j );
-        if( !Double.isNaN( value ) )
+        for( int x = screenXfrom; x < screenXto; x++ )
         {
-          final Color color = symbolizer.getColor( value );
+          final double geoX = projection.getSourceX( x );
+          final double geoY = projection.getSourceY( y );
+
+          final Coordinate crd = new Coordinate( geoX, geoY );
+
+          final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, crd );
+
+          final Color color;
+          if( lastCell == null || !cell.equals( lastCell ) )
+          {
+            final double value = grid.getValueChecked( cell.x, cell.y );
+            color = symbolizer.getColor( value );
+          }
+          else
+            color = lastColor;
+
           if( color == null )
             continue;
 
-          final Coordinate currentCellCrd = GeoGridUtilities.toCoordinate( grid, i, j, null );
-          final Coordinate nextCellCrd = GeoGridUtilities.toCoordinate( grid, i + clusterSize, j + clusterSize, null );
-          final Envelope clusterEnvelope = new Envelope( currentCellCrd, nextCellCrd ); // necessairy to normalize rect
-          paintEnvelope( g, projection, clusterEnvelope, color );
+          g.setColor( color );
+          g.fillRect( x, y, 1, 1 );
+
+          lastCell = cell;
+          lastColor = color;
         }
+
+        ProgressUtilities.worked( monitor, 1 );
       }
 
-      ProgressUtilities.worked( monitor, 1 );
+    }
+    else
+    {
+      progress.setWorkRemaining( clippedMaxCell.y + 2 - clippedMinCell.y );
+
+      /* Iterate through the grid */
+      // REMARK: always iterate through a bigger extent in order to compemsate for rounding problems during detmination
+      // of the cell-box
+      for( int j = clippedMinCell.y - 1; j < clippedMaxCell.y + 1; j += clusterSize )
+      {
+        for( int i = clippedMinCell.x - 1; i < clippedMaxCell.x + 1; i += clusterSize )
+        {
+          final double value = grid.getValueChecked( i, j );
+          if( !Double.isNaN( value ) )
+          {
+            final Color color = symbolizer.getColor( value );
+            if( color == null )
+              continue;
+
+            final Coordinate currentCellCrd = GeoGridUtilities.toCoordinate( grid, i, j, null );
+            final Coordinate nextCellCrd = GeoGridUtilities.toCoordinate( grid, i + clusterSize, j + clusterSize, null );
+            final Envelope clusterEnvelope = new Envelope( currentCellCrd, nextCellCrd ); // necessairy to normalize
+            // rect
+            paintEnvelope( g, projection, clusterEnvelope, color );
+          }
+        }
+
+        ProgressUtilities.worked( monitor, 1 );
+      }
     }
   }
 
@@ -269,11 +325,17 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final double paintMaxX = projection.getDestX( currentCellEnv.getMaxX() );
     final double paintMaxY = projection.getDestY( currentCellEnv.getMaxY() );
 
-    final int width = (int) Math.ceil( paintMaxX - paintMinX );
-    final int height = (int) Math.ceil( paintMinY - paintMaxY );
+    final int x1 = (int) Math.ceil( paintMinX );
+    final int y1 = (int) Math.ceil( paintMaxY );
+
+    final int x2 = (int) Math.ceil( paintMaxX );
+    final int y2 = (int) Math.ceil( paintMinY );
+
+    final int width = x2 - x1;
+    final int height = y2 - y1;
 
     g.setColor( color );
-    g.fillRect( (int) paintMinX, (int) paintMaxY, width, height );
+    g.fillRect( x1, y1, width, height );
   }
 
   //

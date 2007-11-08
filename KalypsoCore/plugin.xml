@@ -9,6 +9,7 @@
    <extension-point id="componentHandler" name="componentHandler" schema="schema/componentHandler.exsd"/>
    <extension-point id="featureviewComparator" name="featureviewComparator" schema="schema/featureviewComparator.exsd"/>
    <extension-point id="themeInfo" name="Kalypso Theme Info" schema="schema/themeInfo.exsd"/>
+   <extension-point id="gmlSourceProvider" name="GML Source Provider" schema="schema/gmlSourceProvider.exsd"/>
 
    <extension
          point="org.kalypso.core.nativeObsAdapter">

@@ -41,7 +41,9 @@
 
 package org.kalypso.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -56,6 +58,7 @@ import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalogContribution;
 import org.kalypso.core.catalog.urn.IURNGenerator;
+import org.kalypso.core.gml.provider.IGmlSourceProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.om.IComponentHandler;
@@ -83,9 +86,12 @@ public class KalypsoCoreExtensions
   private static Map<String, IComponentHandler> THE_COMPONENT_MAP = null;
 
   /* Theme-Info Extension-Point */
-  private static final String THE_THEME_INFO_EXTENSION_POINT = "org.kalypso.core.themeInfo";
+  private static final String THEME_INFO_EXTENSION_POINT = "org.kalypso.core.themeInfo";
 
   private static Map<String, IConfigurationElement> THE_THEME_INFO_MAP = null;
+
+  /* GmlSourceProvider Extension-Point */
+  private static final String GML_SOURCE_PROVIDER_EXTENSION_POINT = "org.kalypso.core.gmlSourceProvider";
 
   public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties ) throws CoreException
   {
@@ -197,7 +203,7 @@ public class KalypsoCoreExtensions
       /* Lookup the existing ids only once */
 
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IExtensionPoint extensionPoint = registry.getExtensionPoint( THE_THEME_INFO_EXTENSION_POINT );
+      final IExtensionPoint extensionPoint = registry.getExtensionPoint( THEME_INFO_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
       THE_THEME_INFO_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
       for( final IConfigurationElement element : configurationElements )
@@ -235,5 +241,46 @@ public class KalypsoCoreExtensions
     }
 
     return null;
+  }
+
+  /**
+   * @param category
+   *            If non-<code>null</code>, returned providers are filtered by this category. Else all registered
+   *            providers are returned.
+   */
+  public static IGmlSourceProvider[] createGmlSourceProvider( final String category )
+  {
+    final List<IGmlSourceProvider> result = new ArrayList<IGmlSourceProvider>();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( GML_SOURCE_PROVIDER_EXTENSION_POINT );
+    final IConfigurationElement[] providerElements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement providerElement : providerElements )
+    {
+      final String providerId = providerElement.getAttribute( "id" );
+      final IConfigurationElement[] categoryElements = providerElement.getChildren( "category" );
+      for( final IConfigurationElement categoryElement : categoryElements )
+      {
+        final String categoryId = categoryElement.getAttribute( "id" );
+        if( category == null || category.equals( categoryId ) )
+        {
+          try
+          {
+            providerElement.createExecutableExtension( "class" );
+          }
+          catch( final Throwable e )
+          {
+            final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to create gml source provider: " + providerId );
+            KalypsoCorePlugin.getDefault().getLog().log( status );
+          }
+
+          /* Add each provider only once */
+          break;
+        }
+      }
+
+    }
+
+    return result.toArray( new IGmlSourceProvider[result.size()] );
   }
 }
