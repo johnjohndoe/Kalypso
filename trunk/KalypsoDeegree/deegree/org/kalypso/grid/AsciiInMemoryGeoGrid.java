@@ -43,6 +43,7 @@ package org.kalypso.grid;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -62,6 +63,10 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   private int m_sizeX;
 
   private int m_sizeY;
+
+  private double m_min;
+
+  private double m_max;
 
   public AsciiInMemoryGeoGrid( final URL asciiFileURL, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
   {
@@ -90,6 +95,9 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
 
       m_grid = new double[m_sizeY][m_sizeX];
 
+      double min = Double.MAX_VALUE;
+      double max = Double.MIN_VALUE;
+
       String[] strRow;
       for( int y = 0; y < m_sizeY; y++ )
       {
@@ -98,9 +106,18 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
         {
           currentValue = Double.parseDouble( strRow[x] );
           m_grid[y][x] = (currentValue != noDataValue) ? currentValue : Double.NaN;
+
+          if( currentValue > max )
+            max = currentValue;
+
+          if( currentValue < min )
+            min = currentValue;
         }
       }
       br.close();
+
+      m_min = min;
+      m_max = max;
     }
     finally
     {
@@ -140,5 +157,21 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   {
     // Get rid of grid value in order to free memory more quickly
     m_grid = null;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMax()
+   */
+  public BigDecimal getMax( )
+  {
+    return new BigDecimal( m_max );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMin()
+   */
+  public BigDecimal getMin( )
+  {
+    return new BigDecimal( m_min );
   }
 }

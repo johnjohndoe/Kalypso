@@ -69,9 +69,13 @@ import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 public abstract class RasterColorMapEditorComposite extends Composite
 {
-  private final ColorMapEntry m_toEntry;
+  private static final Color DEFAULT_COLOR_MIN = new Color( Integer.parseInt( "00ff00", 16 ) );
 
-  private final ColorMapEntry m_fromEntry;
+  private static final Color DEFAULT_COLOR_MAX = new Color( Integer.parseInt( "330033", 16 ) );
+
+  private ColorMapEntry m_toEntry;
+
+  private ColorMapEntry m_fromEntry;
 
   private final Pattern m_patternDouble = Pattern.compile( "[\\+\\-]?[0-9]+[\\.\\,]?[0-9]*?" );
 
@@ -81,36 +85,42 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
   private BigDecimal m_maxValue;
 
-  private final String m_globalMin;
+  private final BigDecimal m_globalMin;
 
-  private final String m_globalMax;
-
-  private final int m_numOfClasses;
-
-  private ColorMapEntry m_nodataEntry;
+  private final BigDecimal m_globalMax;
 
   public RasterColorMapEditorComposite( final Composite parent, final int style, final ColorMapEntry[] colorMap, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
   {
     super( parent, style );
 
-    m_fromEntry = colorMap[0];
-    m_toEntry = colorMap[colorMap.length - 1];
+    if( colorMap.length > 0 )
+    {
+      m_fromEntry = colorMap[0];
+      m_toEntry = colorMap[colorMap.length - 1];
+    }
 
-    m_numOfClasses = colorMap.length;
+    // TODO: get min / max
+
+// m_globalMin = minGlobalValue;
+// m_globalMax = maxGlobalValue;
+    m_globalMin = new BigDecimal( 0 );
+    m_globalMax = new BigDecimal( 500 );
+
+    if( m_fromEntry == null || m_toEntry == null )
+    {
+      // set default entries
+      m_fromEntry = new ColorMapEntry_Impl( DEFAULT_COLOR_MIN, 0.8, m_globalMin.doubleValue(), m_globalMin.toString() );
+      m_toEntry = new ColorMapEntry_Impl( DEFAULT_COLOR_MAX, 0.8, m_globalMax.doubleValue(), m_globalMax.toString() );
+    }
 
     // calculate step width
     if( colorMap.length > 1 )
-    {
       m_stepWidth = new BigDecimal( colorMap[1].getQuantity() - colorMap[0].getQuantity() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-    }
     else
-      m_stepWidth = maxGlobalValue.subtract( minGlobalValue );
+      m_stepWidth = m_globalMax.subtract( m_globalMin );
 
     m_minValue = new BigDecimal( m_fromEntry.getQuantity() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_maxValue = new BigDecimal( m_toEntry.getQuantity() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-
-    m_globalMin = minGlobalValue.toString();
-    m_globalMax = maxGlobalValue.toString();
 
     createControl();
   }
@@ -197,7 +207,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     gridDataMaxValueLabel.heightHint = 15;
 
     globalMaxValueLabel.setLayoutData( gridDataMaxValueLabel );
-    globalMaxValueLabel.setText( m_globalMax );
+    globalMaxValueLabel.setText( m_globalMax.toString() );
     globalMaxValueLabel.setAlignment( SWT.RIGHT );
 
     final Label globalMinLabel = new Label( globalComposite, SWT.NONE );
@@ -209,7 +219,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     gridDataMinValueLabel.widthHint = 40;
 
     globalMinValueLabel.setLayoutData( gridDataMinValueLabel );
-    globalMinValueLabel.setText( m_globalMin );
+    globalMinValueLabel.setText( m_globalMin.toString() );
     globalMinValueLabel.setAlignment( SWT.RIGHT );
 
     /* max value to display */
@@ -446,8 +456,13 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     final Color fromColor = fromEntry.getColor();
     final Color toColor = toEntry.getColor();
-    final double opacityFrom = fromEntry.getOpacity();
-    final double opacityTo = toEntry.getOpacity();
+    double opacityFrom = fromEntry.getOpacity();
+    if( !checkValue( opacityFrom ) == true )
+      opacityFrom = 1.0;
+
+    double opacityTo = toEntry.getOpacity();
+    if( !checkValue( opacityTo ) == true )
+      opacityTo = 1.0;
 
     // get rounded values below min and above max (rounded by first decimal)
     final BigDecimal minDecimal = minValue.setScale( 2, BigDecimal.ROUND_FLOOR );
@@ -458,13 +473,13 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
     {
-      final BigDecimal quantity = new BigDecimal( minDecimal.doubleValue() + currentClass * rasterStepWidth.doubleValue() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      final BigDecimal quantity = new BigDecimal( minDecimal.doubleValue() + currentClass * rasterStepWidth.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
       // Color
       final Color color = SldHelper.interpolateColor( fromColor, toColor, currentClass, numOfClasses );
       double opacity = SldHelper.interpolate( opacityFrom, opacityTo, currentClass, numOfClasses );
 
-      final String label = String.format( "%.2f", quantity );
+      final String label = String.format( "%.2f", quantity.doubleValue() );
 
       final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, opacity, quantity.doubleValue(), label );
 
@@ -472,6 +487,13 @@ public abstract class RasterColorMapEditorComposite extends Composite
     }
 
     return colorMapList;
+  }
+
+  private static boolean checkValue( double value )
+  {
+    if( value > 1 || value < 0 )
+      return false;
+    return true;
   }
 
 }

@@ -149,7 +149,6 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
     }
     catch( FilterEvaluationException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return val;

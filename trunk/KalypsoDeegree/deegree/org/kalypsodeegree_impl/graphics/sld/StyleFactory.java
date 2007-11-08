@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -2007,6 +2008,37 @@ public class StyleFactory
     if( b.length() < 2 )
       b = "0" + b;
     return "#" + r + g + b;
+  }
+
+  /**
+   * creates a PolygonColorMapEntry
+   * 
+   * @param fillColor
+   *            fill color
+   * @param strokeColor
+   *            stroke color
+   * @param fromValue
+   *            from value of the entry
+   * @param toValue
+   *            to value of the entry
+   * @return {@link PolygonColorMapEntry_Impl}
+   */
+  public static PolygonColorMapEntry_Impl createPolygonColorMapEntry( final Color fillColor, final Color strokeColor, final BigDecimal fromValue, final BigDecimal toValue )
+  {
+    // fill
+    final Fill defaultFill = StyleFactory.createFill( fillColor );
+
+    // stroke
+    final Stroke defaultStroke = StyleFactory.createStroke( strokeColor );
+
+    // parameters
+    final String label = String.format( "%s - %s", fromValue.toString(), toValue.toString() );
+
+    final ParameterValueType defaultLabel = createParameterValueType( label );
+    final ParameterValueType defaultFrom = createParameterValueType( fromValue.doubleValue() );
+    final ParameterValueType defaultTo = createParameterValueType( toValue.doubleValue() );
+
+    return new PolygonColorMapEntry_Impl( defaultFill, defaultStroke, defaultLabel, defaultFrom, defaultTo );
   }
 
 }

@@ -55,7 +55,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.util.Assert;
 
 /**
- * A {@link IGeoGrid} implementation based on THE Kalypso Binary-Grid-Format.
+ * A {@link IGeoGrid} implementation based on the Kalypso Binary-Grid-Format.
  * <p>
  * The grid is accessed on demand, so the memory consumption of this implementation is very low.
  * </p>
@@ -82,7 +82,7 @@ import com.vividsolutions.jts.util.Assert;
  * </p>
  * 
  * @author Dejan Antanaskovic
- * @authro Thomas Jung
+ * @author Thomas Jung
  * @author Gernot Belger
  */
 public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
@@ -105,9 +105,9 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   private final int m_scale;
 
-  private final BigDecimal m_min;
+  private BigDecimal m_min;
 
-  private final BigDecimal m_max;
+  private BigDecimal m_max;
 
   /**
    * Opens an exsiting grid for read-only access.<br>
@@ -194,7 +194,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     /* Read header */
     m_randomAccessFile.seek( 0 );
 
-    writeInt( 0 ); // Version numbr
+    writeInt( 0 ); // Version number
     writeInt( sizeX );
     writeInt( sizeY );
     writeInt( scale );
@@ -207,6 +207,8 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     }
 
     /* Read statistical data */
+
+    // ? values are not set ?!
     writeBigDecimal( m_min );
     writeBigDecimal( m_max );
   }
@@ -385,5 +387,8 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     m_randomAccessFile.seek( pos );
     writeBigDecimal( min );
     writeBigDecimal( max );
+
+    m_min = min;
+    m_max = max;
   }
 }

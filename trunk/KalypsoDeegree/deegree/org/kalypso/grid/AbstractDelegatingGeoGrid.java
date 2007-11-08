@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
+import java.math.BigDecimal;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -193,4 +195,21 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
     return m_delegate.getWalkingStrategy();
   }
 
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMin()
+   */
+  public BigDecimal getMin( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMax()
+   */
+  public BigDecimal getMax( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

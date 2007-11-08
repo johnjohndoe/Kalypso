@@ -141,10 +141,11 @@ public class ColorMapEntry_Impl implements ColorMapEntry
   {
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ColorMapEntry" );
+    sb.append( " label=\"" ).append( getLabel() ).append( "\"" );
     sb.append( " color=\"" ).append( StyleFactory.getColorAsHex( getColor() ) ).append( "\"" );
     sb.append( " opacity=\"" ).append( getOpacity() ).append( "\"" );
     sb.append( " quantity=\"" ).append( getQuantity() ).append( "\"" );
-    sb.append( "/>" );
+    sb.append( "/>\n" );
     return sb.toString();
   }
 

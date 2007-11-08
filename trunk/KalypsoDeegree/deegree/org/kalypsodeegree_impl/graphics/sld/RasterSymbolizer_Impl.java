@@ -144,7 +144,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     else
       sb.append( ">\n" );
 
-    sb.append( "<ColorMap>" );
+    sb.append( "<ColorMap>\n" );
 
     if( m_colorMap != null )
     {
@@ -155,8 +155,8 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
       }
     }
 
-    sb.append( "</ColorMap>" );
-    sb.append( "</RasterSymbolizer>" );
+    sb.append( "</ColorMap>\n" );
+    sb.append( "</RasterSymbolizer>\n" );
 
     return sb.toString();
   }

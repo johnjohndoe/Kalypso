@@ -77,9 +77,13 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 public abstract class PolygonColorMapEditorComposite extends Composite
 {
-  private final PolygonColorMapEntry m_toEntry;
+  private static final Color DEFAULT_COLOR_MIN = new Color( Integer.parseInt( "ff0000", 16 ) );
 
-  private final PolygonColorMapEntry m_fromEntry;
+  private static final Color DEFAULT_COLOR_MAX = new Color( Integer.parseInt( "0000ff", 16 ) );
+
+  private PolygonColorMapEntry m_toEntry;
+
+  private PolygonColorMapEntry m_fromEntry;
 
   private final Pattern m_patternDouble = Pattern.compile( "[\\+\\-]?[0-9]+[\\.\\,]?[0-9]*?" );
 
@@ -91,26 +95,54 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
   private BigDecimal m_maxValue;
 
-  private final String m_globalMin;
+  private final BigDecimal m_globalMin;
 
-  private final String m_globalMax;
+  private final BigDecimal m_globalMax;
 
   public PolygonColorMapEditorComposite( final Composite parent, final int style, final PolygonColorMapEntry from, final PolygonColorMapEntry to, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
   {
     super( parent, style );
-
     m_fromEntry = from;
     m_toEntry = to;
+
+    m_globalMin = minGlobalValue;
+    m_globalMax = maxGlobalValue;
+
+    // check if an entry is null. If that is the case, create both entries.
+    if( m_fromEntry == null || m_toEntry == null )
+    {
+      final BigDecimal width = m_globalMax.subtract( m_globalMin ).divide( new BigDecimal( 4 ), BigDecimal.ROUND_HALF_UP ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      m_fromEntry = StyleFactory.createPolygonColorMapEntry( DEFAULT_COLOR_MIN, DEFAULT_COLOR_MIN, m_globalMin, m_globalMin.add( width ) );
+      m_toEntry = StyleFactory.createPolygonColorMapEntry( DEFAULT_COLOR_MAX, DEFAULT_COLOR_MAX, m_globalMax.subtract( width ), m_globalMax );
+    }
 
     m_minValue = new BigDecimal( m_fromEntry.getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_maxValue = new BigDecimal( m_toEntry.getTo( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
-    m_globalMin = minGlobalValue.toString();
-    m_globalMax = maxGlobalValue.toString();
-
     m_stepWidth = new BigDecimal( m_fromEntry.getTo( null ) - m_fromEntry.getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
     createControl();
+  }
+
+  /**
+   * creates an default PolygonColorMapEntry TODO: move to style helper classes
+   */
+  protected static PolygonColorMapEntry_Impl createDefaultColorMapEntry( final Color color, final BigDecimal fromValue, final BigDecimal toValue )
+  {
+    // fill
+    final Fill defaultFillFrom = StyleFactory.createFill( color );
+
+    // stroke
+    final Stroke defaultStrokeFrom = StyleFactory.createStroke( color );
+
+    // parameters
+    final String label = String.format( "%s - %s", fromValue.toString(), toValue.toString() );
+
+    final ParameterValueType defaultLabel = StyleFactory.createParameterValueType( label );
+    final ParameterValueType defaultFrom = StyleFactory.createParameterValueType( fromValue.doubleValue() );
+    final ParameterValueType defaultTo = StyleFactory.createParameterValueType( toValue.doubleValue() );
+
+    return new PolygonColorMapEntry_Impl( defaultFillFrom, defaultStrokeFrom, defaultLabel, defaultFrom, defaultTo );
   }
 
   private void createControl( )
@@ -183,7 +215,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     gridDataMaxValueLabel.heightHint = 15;
 
     globalMaxValueLabel.setLayoutData( gridDataMaxValueLabel );
-    globalMaxValueLabel.setText( m_globalMax );
+    globalMaxValueLabel.setText( m_globalMax.toString() );
     globalMaxValueLabel.setAlignment( SWT.RIGHT );
 
     final Label globalMinLabel = new Label( globalComposite, SWT.NONE );
@@ -195,7 +227,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     gridDataMinValueLabel.widthHint = 40;
 
     globalMinValueLabel.setLayoutData( gridDataMinValueLabel );
-    globalMinValueLabel.setText( m_globalMin );
+    globalMinValueLabel.setText( m_globalMin.toString() );
     globalMinValueLabel.setAlignment( SWT.RIGHT );
 
     final Label checkStroke = new Label( globalComposite, SWT.NONE );

@@ -1,5 +1,7 @@
 package org.kalypso.grid;
 
+import java.math.BigDecimal;
+
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
@@ -41,5 +43,21 @@ public class DoubleFakeRaster extends AbstractGeoGrid implements IGeoGrid
   public int getSizeY( )
   {
     return m_sizeY;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMax()
+   */
+  public BigDecimal getMax( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMin()
+   */
+  public BigDecimal getMin( )
+  {
+    return null;
   }
 }
