@@ -156,6 +156,8 @@ public class AbstractFeatureBinder implements IFeatureWrapper2
   }
   
   /**
+   * TODO: also make helper to adapt to given class if it is not yet of the given type
+   * 
    * Returns the property  of bind feature given the property 
    * {@link QName}
    * @param propertyQName the {@link QName} of the property

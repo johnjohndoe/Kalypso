@@ -44,11 +44,13 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -58,6 +60,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
 {
   private IKalypsoFeatureTheme m_theme = null;
+
+  private String m_format;
+
+  private String m_geom;
 
   public DefaultFeatureThemeInfo( )
   {
@@ -79,6 +85,10 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
 
     m_theme = (IKalypsoFeatureTheme) theme;
+
+    m_format = props.getProperty( "format" );
+    final String geomStr = props.getProperty( "geometry" );
+    m_geom = geomStr == null ? null : geomStr.valueOf( geomStr );
   }
 
   /**
@@ -109,19 +119,48 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
       return;
     }
 
-    final List foundFeature = featureList.query( pos, null );
-    if( foundFeature.size() == 0 )
+    final List foundFeatures = featureList.query( pos, null );
+    if( foundFeatures.size() == 0 )
     {
       formatter.format( "-" );
       return;
     }
+    
+    /** 
+     * explanation: it is possible (with ATKIS data) that one shape covers the part 
+     * of another's shape area, without intersecting (one shape "inside" another)
+     * If several such features contains the same position, 
+     * the topmost is actually drawn - and that feature is the last in the query list.
+     * That is the reason why we are here searching for the last one. 
+     */
+    Feature feature = null;
+    for( int i = foundFeatures.size() - 1; i >= 0; i-- )
+    {
+      feature = (Feature) foundFeatures.get( i );
+      if( m_geom != null )
+      {
+        final Object property = feature.getProperty( new QName( m_geom ) );
+        if( property instanceof GM_Object && ((GM_Object) property).contains( pos ) )
+          break;
+      }
+      else
+      {
+        if( feature.getDefaultGeometryProperty().contains( pos ) )
+          break;
+      }
+      feature = null;
+    }
+    if( feature == null )
+    {
+      formatter.format( "-" );
+      return;
+    }
+    final String label;
+    if( m_format == null )
+      label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+    else
+      label = FeatureHelper.tokenReplace( feature, m_format );
 
-    final CommandableWorkspace workspace = m_theme.getWorkspace();
-
-    final Object object = foundFeature.get( 0 );
-    final Feature feature = FeatureHelper.getFeature( workspace, object );
-
-    final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
     formatter.format( "%s", label );
   }
 
