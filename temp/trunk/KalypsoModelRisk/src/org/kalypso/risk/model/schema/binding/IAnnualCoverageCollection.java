@@ -3,10 +3,9 @@ package org.kalypso.risk.model.schema.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
-public interface IAnnualCoverage extends ICoverage
+public interface IAnnualCoverageCollection extends ICoverageCollection
 {
   public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "AnnualCoverage" );
 
@@ -17,8 +16,4 @@ public interface IAnnualCoverage extends ICoverage
   public Integer getReturnPeriod( );
 
   public void setReturnPeriod( final Integer value );
-
-  public RectifiedGridCoverage getCoverage( );
-
-  public void setCoverage( final RectifiedGridCoverage coverage );
 }

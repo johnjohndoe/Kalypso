@@ -16,7 +16,7 @@ import org.kalypso.risk.model.schema.binding.AnnualCoverage;
 import org.kalypso.risk.model.schema.binding.AssetValueClass;
 import org.kalypso.risk.model.schema.binding.DamageFunction;
 import org.kalypso.risk.model.schema.binding.IAdministrationUnit;
-import org.kalypso.risk.model.schema.binding.IAnnualCoverage;
+import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -176,13 +176,13 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
-        if( featureQName.equals( IAnnualCoverage.QNAME ) )
+        if( featureQName.equals( IAnnualCoverageCollection.QNAME ) )
           return new AnnualCoverage( feature );
         else
           return null;
       }
     };
-    cMap.put( IAnnualCoverage.class, cTor );
+    cMap.put( IAnnualCoverageCollection.class, cTor );
 
     return Collections.unmodifiableMap( cMap );
   }

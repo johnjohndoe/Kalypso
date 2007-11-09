@@ -72,7 +72,7 @@ import org.kalypso.grid.GeoGridException;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.risk.model.schema.binding.IAnnualCoverage;
+import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
@@ -153,7 +153,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
             monitor.subTask( Messages.getString( "ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
             final List<AsciiRasterInfo> rasterInfos = m_page.getRasterInfos();
             final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.class );
-            final IFeatureWrapperCollection<IAnnualCoverage> waterdepthCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
+            final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
             for( final AsciiRasterInfo asciiRasterInfo : rasterInfos )
             {
               final String binFileName = asciiRasterInfo.getSourceFile().getName() + ".bin";
@@ -168,23 +168,24 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
               rangeSet.setFile( rangeSetFile );
 
-              final IAnnualCoverage annualCoverage = waterdepthCoverageCollection.addNew( IAnnualCoverage.QNAME );
+              // remove existing (invalid) coverages from the model
+              final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<IAnnualCoverageCollection>();
+              for( final IAnnualCoverageCollection existingAnnualCoverage : waterdepthCoverageCollection )
+                if( existingAnnualCoverage.getReturnPeriod() == asciiRasterInfo.getReturnPeriod() )
+                  coveragesToRemove.add( existingAnnualCoverage );
+              for( final IAnnualCoverageCollection coverageToRemove : coveragesToRemove )
+                waterdepthCoverageCollection.remove( coverageToRemove );
+              
+              final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
               final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
-              final IRelationType parentRelation = (IRelationType) annualCoverage.getWrappedFeature().getFeatureType().getProperty( IAnnualCoverage.PROP_COVERAGE );
-              final Feature coverageFeature = workspace.createFeature( annualCoverage.getWrappedFeature(), parentRelation, rgcFeatureType );
+              final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getWrappedFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
+              final Feature coverageFeature = workspace.createFeature( annualCoverageCollection.getWrappedFeature(), parentRelation, rgcFeatureType );
               final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
-              annualCoverage.setCoverage( coverage );
-              annualCoverage.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
+              annualCoverageCollection.add( coverage );
+              annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
               coverage.setRangeSet( rangeSet );
               coverage.setGridDomain( asciiRasterInfo.getGridDomain() );
 
-              // remove existing (invalid) coverages from the model
-              final List<IAnnualCoverage> coveragesToRemove = new ArrayList<IAnnualCoverage>();
-              for( final IAnnualCoverage existingAnnualCoverage : waterdepthCoverageCollection )
-                if( existingAnnualCoverage.getReturnPeriod() == annualCoverage.getReturnPeriod() )
-                  coveragesToRemove.add( existingAnnualCoverage );
-              for( final IAnnualCoverage coverageToRemove : coveragesToRemove )
-                waterdepthCoverageCollection.remove( coverageToRemove );
 
               // TODO create map layer
               monitor.subTask( Messages.getString( "ImportWaterdepthWizard.10" ) ); //$NON-NLS-1$
@@ -201,7 +202,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
 
               final StyledLayerType layer = new StyledLayerType();
               layer.setName( layerName );
-              layer.setFeaturePath( "#fid#" + coverageFeature.getId() );
+              layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID()+"/coverageMember" );
               layer.setLinktype( "gml" );
               layer.setType( "simple" );
               layer.setVisible( true );
@@ -229,7 +230,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               parentKalypsoTheme.addLayer( layer );
 
               // fireModellEvent to redraw a map...
-              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getWrappedFeature(), new Feature[] { annualCoverage.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getWrappedFeature(), new Feature[] { annualCoverageCollection.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             }
             scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
           }

@@ -4,6 +4,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:gml="http://www.opengis.net/gml"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:cov="org.kalypso.gml.common.coverage"
 	xmlns:krrdm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
@@ -29,9 +30,9 @@
 						ref="krrdm:specificDamageCoverageCollection" minOccurs="1"
 						maxOccurs="1" />
 					<xs:element name="landuseCoverage"
-						type="krrdm:CoveragePropertyType" minOccurs="1" maxOccurs="1" />
+						type="krrdm:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1" />
 					<xs:element name="riskZonesCoverage"
-						type="krrdm:CoveragePropertyType" minOccurs="1" maxOccurs="1" />
+						type="krrdm:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -78,22 +79,19 @@
 
 	<xs:complexType name="AnnualCoverageMemberPropertyType">
 		<xs:sequence>
-			<xs:element ref="krrdm:AnnualCoverage" minOccurs="0"
+			<xs:element ref="krrdm:AnnualCoverage" minOccurs="1"
 				maxOccurs="1" />
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
 
 	<xs:element name="AnnualCoverage" type="krrdm:AnnualCoverageType"
-		substitutionGroup="gml:_Feature">
+		substitutionGroup="cov:CoverageCollection">
 	</xs:element>
 
 	<xs:complexType name="AnnualCoverageType">
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="cov:CoverageCollectionType">
 				<xs:sequence>
-					<xs:element name="coverage"
-						type="krrdm:CoveragePropertyType" minOccurs="0" maxOccurs="1" />
 					<xs:element name="annuality" type="xs:int"
 						minOccurs="0" maxOccurs="1" default="-1"/>
 				</xs:sequence>
@@ -101,11 +99,10 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="CoveragePropertyType">
+	<xs:complexType name="CoverageCollectionPropertyType">
 		<xs:sequence>
-			<xs:element ref="gml:_Coverage" minOccurs="0" maxOccurs="1" />
+			<xs:element ref="cov:CoverageCollection" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
 
 </xs:schema>

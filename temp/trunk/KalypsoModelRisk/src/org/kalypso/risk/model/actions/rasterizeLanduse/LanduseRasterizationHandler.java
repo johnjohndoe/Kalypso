@@ -27,7 +27,7 @@ import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.risk.model.schema.binding.IAnnualCoverage;
+import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
@@ -37,8 +37,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -71,16 +74,17 @@ public class LanduseRasterizationHandler extends AbstractHandler
       return null;
     }
 
-    RectifiedGridCoverage maxCoverage = null;
+    IAnnualCoverageCollection maxCoveragesCollection = null;
     int maxReturnPeriod = Integer.MIN_VALUE;
-    for( final IAnnualCoverage annualCoverage : model.getWaterlevelCoverageCollection() )
+    for( final IAnnualCoverageCollection annualCoverageCollection : model.getWaterlevelCoverageCollection() )
     {
-      if( annualCoverage.getReturnPeriod() > maxReturnPeriod )
+      if( annualCoverageCollection.getReturnPeriod() > maxReturnPeriod )
       {
-        maxReturnPeriod = annualCoverage.getReturnPeriod();
-        maxCoverage = annualCoverage.getCoverage();
+        maxReturnPeriod = annualCoverageCollection.getReturnPeriod();
+        maxCoveragesCollection = annualCoverageCollection;
       }
     }
+
     final String dialogTitle = "Rasterize landuse";
     final String dialogMessage = "Do you want to create landuse raster (base raster is HQ " + maxReturnPeriod + ")?";
     final Dialog dialog = new MessageDialog( shell, dialogTitle, null, dialogMessage, MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 );
@@ -88,8 +92,8 @@ public class LanduseRasterizationHandler extends AbstractHandler
     {
       try
       {
-        final RectifiedGridCoverage inputCoverage = maxCoverage;
-        final RectifiedGridCoverage outputCoverage = model.getLanduseCoverage();
+        final ICoverageCollection inputCoverages = maxCoveragesCollection;
+        final ICoverageCollection outputCoverages = model.getLanduseCoverage();
         final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
         new ProgressMonitorDialog( shell ).run( true, false, new IRunnableWithProgress()
         {
@@ -98,51 +102,62 @@ public class LanduseRasterizationHandler extends AbstractHandler
             monitor.beginTask( "Rasterizing landuse vector data...", IProgressMonitor.UNKNOWN );
             try
             {
-              final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
+              final IVectorDataModel vectorDataModel = (IVectorDataModel) scenarioDataProvider.getModel( IVectorDataModel.class );
               final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorDataModel.getLandusePolygonCollection();
 
-              final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
-
-              final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
+              // TODO: delete old landuse coverage (also the files!)
+              
+              int count = 0;
+              for( final ICoverage inputCoverage : inputCoverages )
               {
-                private RectifiedGridDomain m_gridDomain = inputCoverage.getGridDomain();
+                final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
 
-                /**
-                 * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
-                 */
-                @Override
-                public double getValue( int x, int y ) throws GeoGridException
+                final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
                 {
-                  final Double value = super.getValue( x, y );
-                  if( value.equals( Double.NaN ) )
-                    return Double.NaN;
-                  else
+                  /**
+                   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
+                   */
+                  @Override
+                  public double getValue( int x, int y ) throws GeoGridException
                   {
-                    final GM_Position positionAt = m_gridDomain.getPositionAt( x, y );
-                    final List<ILandusePolygon> list = polygonCollection.query( positionAt );
-                    if( list == null || list.size() == 0 )
+                    final Double value = super.getValue( x, y );
+                    if( value.equals( Double.NaN ) )
                       return Double.NaN;
                     else
-                      for( final ILandusePolygon polygon : list )
-                      {
-                        if( polygon.contains( positionAt ) )
-                          return polygon.getLanduseClassOrdinalNumber();
-                      }
-                    return Double.NaN;
+                    {
+                      final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
+                      final GM_Position positionAt = JTSAdapter.wrap( coordinate );
+                      final List<ILandusePolygon> list = polygonCollection.query( positionAt );
+                      if( list == null || list.size() == 0 )
+                        return Double.NaN;
+                      else
+                        for( final ILandusePolygon polygon : list )
+                        {
+                          if( polygon.contains( positionAt ) )
+                            return polygon.getLanduseClassOrdinalNumber();
+                        }
+                      return Double.NaN;
+                    }
                   }
-                }
+                };
 
-              };
-              final String outputFilePath = "raster/output/LanduseCoverage.dat";
-              final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
-              final File file = new File( ifile.getRawLocation().toPortableString() );
-              GeoGridUtilities.setCoverage( outputCoverage, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
-              inputGrid.dispose();
+                // TODO: change name: better: use input name
+                final String outputFilePath = "raster/output/LanduseCoverage" + count + ".dat";
+
+                final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
+                final File file = new File( ifile.getRawLocation().toPortableString() );
+                GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
+                inputGrid.dispose();
+
+                count++;
+              }
 
               // fireModellEvent to redraw a map...
-              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getWrappedFeature(), new Feature[] { outputCoverage.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+              // TODO: check if still ok
+              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getWrappedFeature(), new Feature[] { outputCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+
             }
             catch( final Exception e )
             {

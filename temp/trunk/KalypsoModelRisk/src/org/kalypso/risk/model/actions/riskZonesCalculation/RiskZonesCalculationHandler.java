@@ -1,0 +1,127 @@
+package org.kalypso.risk.model.actions.riskZonesCalculation;
+
+import java.io.File;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.grid.GeoGridUtilities;
+import org.kalypso.grid.IGeoGrid;
+import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
+import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.ui.views.map.MapView;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
+
+public class RiskZonesCalculationHandler extends AbstractHandler
+{
+  @Override
+  public Object execute( final ExecutionEvent arg0 ) throws ExecutionException
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final Shell shell = workbench.getDisplay().getActiveShell();
+    final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
+    if( mapView == null )
+    {
+      StatusUtilities.createWarningStatus( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+      return false;
+    }
+    final Dialog dialog = new MessageDialog( shell, "Rasterizing specific annual damage", null, "Do you want to calcualte risk zones?", MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 );
+    if( dialog.open() == 0 )
+    {
+      try
+      {
+        final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+        final IEvaluationContext context = handlerService.getCurrentState();
+        final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+        final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+        final IRasterDataModel model = scenarioDataProvider.getModel( IRasterDataModel.class );
+        if( model.getSpecificDamageCoverageCollection().size() < 2 )
+        {
+          MessageDialog.openError( shell, "Error", "Risk zones calculation cannot be started. Not enough specific damage potentials are calculated. To start risk zones calculation, al least two specific damage potentials should be available." );
+          return null;
+        }
+        IAnnualCoverageCollection maxCoveragesCollection = null;
+        int maxReturnPeriod = Integer.MIN_VALUE;
+        for( final IAnnualCoverageCollection annualCoverageCollection : model.getSpecificDamageCoverageCollection() )
+        {
+          if( annualCoverageCollection.getReturnPeriod() > maxReturnPeriod )
+          {
+            maxReturnPeriod = annualCoverageCollection.getReturnPeriod();
+            maxCoveragesCollection = annualCoverageCollection;
+          }
+        }
+        final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
+        final ICoverageCollection baseCoverages = maxCoveragesCollection;
+        new ProgressMonitorDialog( shell ).run( true, false, new IRunnableWithProgress()
+        {
+          public void run( final IProgressMonitor monitor ) throws InterruptedException
+          {
+            monitor.beginTask( "Calculating risk zones", IProgressMonitor.UNKNOWN );
+            try
+            {
+              final ICoverageCollection outputCoverages = model.getRiskZonesCoverage();
+              int count = 0;
+              for( final ICoverage srcSpecificDamageCoverage : baseCoverages )
+              {
+                final IGeoGrid inputGrid = GeoGridUtilities.toGrid( srcSpecificDamageCoverage );
+                final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, model.getSpecificDamageCoverageCollection() );
+                // TODO: change name: better: use input name
+                final String outputFilePath = "raster/output/RiskZonesCoverage" + count + ".dat";
+
+                final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
+                final File file = new File( ifile.getRawLocation().toPortableString() );
+                GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
+                inputGrid.dispose();
+
+                count++;
+
+                // fireModellEvent to redraw a map...
+                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { outputCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+              }
+
+              scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+            }
+            catch( final Exception e )
+            {
+              e.printStackTrace();
+              throw new InterruptedException( e.getLocalizedMessage() );
+            }
+          }
+        } );
+
+        if( mapView != null )
+          mapView.getMapPanel().invalidateMap();
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+
+    }
+    return null;
+  }
+
+}

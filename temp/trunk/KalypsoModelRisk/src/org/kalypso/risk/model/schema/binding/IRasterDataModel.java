@@ -5,7 +5,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 public interface IRasterDataModel extends IModel
 {
@@ -21,11 +21,11 @@ public interface IRasterDataModel extends IModel
 
   public QName PROPERTY_RISK_ZONES_COVERAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTER_DATA_MODEL, "riskZonesCoverage" );
 
-  public IFeatureWrapperCollection<IAnnualCoverage> getWaterlevelCoverageCollection( );
+  public IFeatureWrapperCollection<IAnnualCoverageCollection> getWaterlevelCoverageCollection( );
 
-  public IFeatureWrapperCollection<IAnnualCoverage> getSpecificDamageCoverageCollection( );
+  public IFeatureWrapperCollection<IAnnualCoverageCollection> getSpecificDamageCoverageCollection( );
 
-  public RectifiedGridCoverage getLanduseCoverage( );
+  public ICoverageCollection getLanduseCoverage( );
 
-  public RectifiedGridCoverage getRiskZonesCoverage( );
+  public ICoverageCollection getRiskZonesCoverage( );
 }

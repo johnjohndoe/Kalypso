@@ -75,7 +75,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
       return Double.NaN;
     try
     {
-      return m_assetValue * m_damageFunction.getResult( waterLevel );
+      return m_assetValue * m_damageFunction.getResult( waterLevel ) / 100.0;
     }
     catch( Exception e )
     {

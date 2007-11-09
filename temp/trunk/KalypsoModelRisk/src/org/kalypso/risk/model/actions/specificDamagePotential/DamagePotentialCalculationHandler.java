@@ -25,8 +25,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -36,7 +34,7 @@ import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
-import org.kalypso.risk.model.schema.binding.IAnnualCoverage;
+import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -50,8 +48,10 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -106,75 +106,83 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
             monitor.beginTask( "Rasterizing specific annual damage...", IProgressMonitor.UNKNOWN );
             try
             {
-              for( final IAnnualCoverage srcAnnualCoverage : model.getWaterlevelCoverageCollection() )
+              for( final IAnnualCoverageCollection srcAnnualCoverages : model.getWaterlevelCoverageCollection() )
               {
-                monitor.subTask( "Calculating specific annual damage for HQ " + srcAnnualCoverage.getReturnPeriod() );
-                final RectifiedGridCoverage inputCoverage = srcAnnualCoverage.getCoverage();
-                final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
+                monitor.subTask( "Calculating specific annual damage for HQ " + srcAnnualCoverages.getReturnPeriod() );
 
-                final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
-                {
-                  private RectifiedGridDomain m_gridDomain = inputCoverage.getGridDomain();
-
-                  /**
-                   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
-                   */
-                  @Override
-                  public double getValue( int x, int y ) throws GeoGridException
-                  {
-                    final Double value = super.getValue( x, y );
-                    if( value.equals( Double.NaN ) )
-                      return Double.NaN;
-                    else
-                    {
-                      final GM_Position positionAt = m_gridDomain.getPositionAt( x, y );
-                      final List<ILandusePolygon> list = polygonCollection.query( positionAt );
-                      if( list == null || list.size() == 0 )
-                        return Double.NaN;
-                      else
-                        for( final ILandusePolygon polygon : list )
-                        {
-                          if( polygon.contains( positionAt ) )
-                          {
-                            final double damageValue = polygon.getDamageValue( value );
-                            if( m_minDamageValue > damageValue )
-                              m_minDamageValue = damageValue;
-                            if( m_maxDamageValue < damageValue )
-                              m_maxDamageValue = damageValue;
-                            return damageValue;
-                          }
-                        }
-                      return Double.NaN;
-                    }
-                  }
-                };
-                final String outputFilePath = "raster/output/specificDamage_HQ" + srcAnnualCoverage.getReturnPeriod() + ".bin";
-                final IFeatureWrapperCollection<IAnnualCoverage> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
-                final IAnnualCoverage dstAnnualCoverage = specificDamageCoverageCollection.addNew( IAnnualCoverage.QNAME );
-
-                final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
-                final IRelationType parentRelation = (IRelationType) dstAnnualCoverage.getWrappedFeature().getFeatureType().getProperty( IAnnualCoverage.PROP_COVERAGE );
-                final Feature coverageFeature = workspace.createFeature( dstAnnualCoverage.getWrappedFeature(), parentRelation, rgcFeatureType );
-                final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
-                dstAnnualCoverage.setCoverage( coverage );
-                dstAnnualCoverage.setReturnPeriod( srcAnnualCoverage.getReturnPeriod() );
-
-                final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
-                final File file = new File( ifile.getRawLocation().toPortableString() );
-                GeoGridUtilities.setCoverage( coverage, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
-                inputGrid.dispose();
+                final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
+                // TODO: check if still ok: propbably delete all underlying grids
                 
                 // remove existing (invalid) coverages from the model
-                final List<IAnnualCoverage> coveragesToRemove = new ArrayList<IAnnualCoverage>();
-                for( final IAnnualCoverage existingAnnualCoverage : specificDamageCoverageCollection )
-                  if( existingAnnualCoverage.getReturnPeriod() == dstAnnualCoverage.getReturnPeriod() )
+                final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<IAnnualCoverageCollection>();
+                for( final IAnnualCoverageCollection existingAnnualCoverage : specificDamageCoverageCollection )
+                  if( existingAnnualCoverage.getReturnPeriod() == srcAnnualCoverages.getReturnPeriod() )
                     coveragesToRemove.add( existingAnnualCoverage );
-                for( final IAnnualCoverage coverageToRemove : coveragesToRemove )
+                for( final IAnnualCoverageCollection coverageToRemove : coveragesToRemove )
                   specificDamageCoverageCollection.remove( coverageToRemove );
+
+                final IAnnualCoverageCollection dstAnnualCoverages = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
+
+                int count = 0;
+                for( final ICoverage inputCoverage : srcAnnualCoverages )
+                {
+                  final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
+
+                  final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
+                  {
+                    /**
+                     * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
+                     */
+                    @Override
+                    public double getValue( int x, int y ) throws GeoGridException
+                    {
+                      final Double value = super.getValue( x, y );
+                      if( value.equals( Double.NaN ) )
+                        return Double.NaN;
+                      else
+                      {
+                        final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
+                        final GM_Position positionAt = JTSAdapter.wrap( coordinate );
+                        
+                        final List<ILandusePolygon> list = polygonCollection.query( positionAt );
+                        if( list == null || list.size() == 0 )
+                          return Double.NaN;
+                        else
+                          for( final ILandusePolygon polygon : list )
+                          {
+                            if( polygon.contains( positionAt ) )
+                            {
+                              final double damageValue = polygon.getDamageValue( value );
+                              if( m_minDamageValue > damageValue )
+                                m_minDamageValue = damageValue;
+                              if( m_maxDamageValue < damageValue )
+                                m_maxDamageValue = damageValue;
+                              return damageValue;
+                            }
+                          }
+                        return Double.NaN;
+                      }
+                    }
+                  };
+                  
+                  // TODO: change count to better name...
+                  final String outputFilePath = "raster/output/specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod()+"_part" + count + ".bin";
+
+                  final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
+                  final File file = new File( ifile.getRawLocation().toPortableString() );
+                  
+                  GeoGridUtilities.addCoverage( dstAnnualCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
+
+                  inputGrid.dispose();
+                  
+                  count++;
+                }
+
+                dstAnnualCoverages.setReturnPeriod( srcAnnualCoverages.getReturnPeriod() );
 
                 // create map layer
                 monitor.subTask( Messages.getString( "ImportWaterdepthWizard.10" ) ); //$NON-NLS-1$
-                final String layerName = "Schadenspotential (HQ " + dstAnnualCoverage.getReturnPeriod() + ")";
+                final String layerName = "Schadenspotential (HQ " + dstAnnualCoverages.getReturnPeriod() + ")";
                 // remove themes that are showing invalid coverages
                 final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
                 final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
@@ -186,7 +194,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
 
                 final StyledLayerType layer = new StyledLayerType();
                 layer.setName( layerName );
-                layer.setFeaturePath( "#fid#" + coverageFeature.getId() );
+                layer.setFeaturePath( "#fid#" + dstAnnualCoverages.getWrappedFeature().getId()  + "/coverageMember");
                 layer.setLinktype( "gml" );
                 layer.setType( "simple" );
                 layer.setVisible( true );
@@ -214,7 +222,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 parentKalypsoTheme.addLayer( layer );
 
                 // fireModellEvent to redraw a map...
-                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { dstAnnualCoverage.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { dstAnnualCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
               }
 
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );

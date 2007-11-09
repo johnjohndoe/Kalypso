@@ -64,8 +64,8 @@
 			<Help><![CDATA[Schadenspotentialberechnung]]></Help>
 			<Name>Schadenspotentialberechnung</Name>
 		</Task>
-		<Task type="ASYNCHRONOUS" context="CalculatingRiskZonesJob"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__CalculatingRiskZonesJob">
+		<Task type="ASYNCHRONOUS" context="ImportWaterdepthRasterContext"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler">
 			<Help><![CDATA[Ausweisung des Hochwasserrisikos]]></Help>
 			<Name>Ausweisung des Hochwasserrisikos</Name>
 		</Task>

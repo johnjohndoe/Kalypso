@@ -88,7 +88,7 @@
        <adapter type="org.kalypso.risk.model.schema.binding.ILanduseClass"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygonCollection"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygon"/>
-       <adapter type="org.kalypso.risk.model.schema.binding.IAnnualCoverage"/>
+       <adapter type="org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IAssetValueClass"/>
        <adapter
              type="org.kalypso.risk.model.schema.binding.IDamageFunction">
@@ -156,6 +156,10 @@
     <handler
           class="org.kalypso.risk.model.actions.rasterizeLanduse.LanduseRasterizationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__LanduseRasterizationHandler">
+    </handler>
+    <handler
+          class="org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler"
+          commandId="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler">
     </handler>
  </extension>
 </plugin>
