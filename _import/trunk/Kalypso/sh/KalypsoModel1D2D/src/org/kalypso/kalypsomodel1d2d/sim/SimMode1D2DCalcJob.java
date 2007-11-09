@@ -145,7 +145,7 @@ public class SimMode1D2DCalcJob implements ISimulation
         return;
 
       PrintWriter r10pw = null;
-      PrintWriter weirPw = null;
+      PrintWriter buildingPw = null;
       try
       {
         /* Control model */
@@ -157,16 +157,16 @@ public class SimMode1D2DCalcJob implements ISimulation
         r10pw.close();
 
         /* Weir File */
-        weirPw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.BUILDING_File ) );
-        final Building1D2DConverter weirConverter = new Building1D2DConverter( buildingProvider );
-        weirConverter.writeBuildingFile( new java.util.Formatter( weirPw ) );
-        weirPw.close();
+        buildingPw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.BUILDING_File ) );
+        final Building1D2DConverter buildingConverter = new Building1D2DConverter( buildingProvider );
+        buildingConverter.writeBuildingFile( new java.util.Formatter( buildingPw ) );
+        buildingPw.close();
       }
       finally
       {
         /* Always close stream in a finally block */
         IOUtils.closeQuietly( r10pw );
-        IOUtils.closeQuietly( weirPw );
+        IOUtils.closeQuietly( buildingPw );
       }
 
       /** start calculation... */

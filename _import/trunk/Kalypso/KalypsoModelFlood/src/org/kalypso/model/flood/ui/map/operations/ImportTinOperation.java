@@ -40,45 +40,110 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.ui.map.operations;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.gml.provider.IGmlSource;
+import org.kalypso.core.gml.provider.IGmlSourceRunnableWithProgress;
+import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.ITinReference;
+import org.kalypso.model.flood.ui.map.UpdateTinsOperation;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * Handles the import of a tins.
  * 
  * @author Gernot Belger
  */
-public class ImportTinOperation implements ICoreRunnableWithProgress
+public class ImportTinOperation implements IGmlSourceRunnableWithProgress
 {
-  private final IGmlSource[] m_sources;
+  private IGmlSource[] m_sources;
 
   private final IFeatureWrapperCollection<ITinReference> m_tins;
 
-  public ImportTinOperation( final IFeatureWrapperCollection<ITinReference> tins, final IGmlSource[] sources )
+  private final SzenarioDataProvider m_provider;
+
+  public ImportTinOperation( final SzenarioDataProvider provider, final IFeatureWrapperCollection<ITinReference> tins )
   {
+    m_provider = provider;
     m_tins = tins;
+  }
+
+  /**
+   * @see org.kalypso.core.gml.provider.IGmlSourceRunnableWithProgress#setGmlSource(org.kalypso.core.gml.provider.IGmlSource[])
+   */
+  public void setGmlSource( final IGmlSource[] sources )
+  {
     m_sources = sources;
   }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    for( final IGmlSource source : m_sources )
+    final SubMonitor progress = SubMonitor.convert( monitor, "Wasserspiegel-Import", 100 );
+
+    /* Add sources as new tin references */
+    progress.subTask( "erstelle Referenzen" );
+    final ITinReference[] tinRefs = new ITinReference[m_sources.length];
+    final Feature[] changedFeatures = new Feature[m_sources.length];
+
+    for( int i = 0; i < m_sources.length; i++ )
     {
+      final IGmlSource source = m_sources[i];
+
       final ITinReference tinRef = m_tins.addNew( -1, ITinReference.QNAME, ITinReference.class );
       tinRef.setName( source.getName() );
       tinRef.setDescription( source.getDescription() );
       tinRef.setSourceLocation( source.getLocation() );
       tinRef.setSourceFeaturePath( source.getPath() );
+
+      tinRefs[i] = tinRef;
+      changedFeatures[i] = tinRef.getWrappedFeature();
     }
+    ProgressUtilities.worked( progress, 20 );
+
+    /* post command for events stuff... */
+    final Feature parentFeature = m_tins.getWrappedFeature();
+    final GMLWorkspace workspace = parentFeature.getWorkspace();
+    final ModellEvent modelEvent = new FeatureStructureChangeModellEvent( workspace, parentFeature, changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+    workspace.fireModellEvent( modelEvent );
+
+    /* Save data model */
+    progress.subTask( "speichere Datenmodell" );
+    m_provider.saveModel( IFloodModel.class, progress.newChild( 20 ) );
+
+    /* update tins */
+    progress.subTask( "importiere Daten" );
+    final UpdateTinsOperation updateOp = new UpdateTinsOperation( tinRefs );
+    updateOp.execute( progress.newChild( 60 ) );
 
     return Status.OK_STATUS;
+  }
+
+  /**
+   * @see org.kalypso.core.gml.provider.IGmlSourceRunnableWithProgress#handleResult(org.eclipse.swt.widgets.Shell,
+   *      org.eclipse.core.runtime.IStatus)
+   */
+  public boolean handleResult( final Shell shell, final IStatus resultStatus )
+  {
+    if( !resultStatus.isOK() )
+      KalypsoCorePlugin.getDefault().getLog().log( resultStatus );
+    ErrorDialog.openError( shell, "Wasserspiegel importieren", "Fehler beim Import eines Wasserspiegels", resultStatus );
+    return resultStatus.isOK();
   }
 }
