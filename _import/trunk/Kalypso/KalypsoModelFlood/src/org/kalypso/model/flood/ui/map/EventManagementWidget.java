@@ -157,7 +157,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
- * A widget with option pane, which allows the user to edit a coverage collection.
+ * A widget with option pane, which allows the user to manage (add/remove) run-off events and to import water level data
+ * for each event.
  * 
  * @author Thomas Jung
  */
@@ -374,6 +375,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     return panel;
   }
 
+  /**
+   * initializes the button action for the style panel.
+   */
   private void initalizeColorMapActions( final FormToolkit toolkit, final Composite parent )
   {
     // We are reusing images of KalypsoGmlUi here
@@ -393,6 +397,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   }
 
+  /**
+   * handles the creation of a RasterColorMap via an {@link EventStyleDialog}
+   */
   protected void handleGenerateColorMap( final Event event )
   {
     final Shell shell = event.display.getActiveShell();
@@ -400,7 +407,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     // open colorMap dialog
     final PolygonColorMap input = (PolygonColorMap) m_colorMapTableViewer.getInput();
 
-    // get min / max of the selected runoff event
     // get selected event
     final IRunoffEvent runoffEvent = findFirstEvent( m_treeSelection );
     if( runoffEvent == null )
@@ -410,6 +416,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
     IFeatureWrapperCollection<ITinReference> tins = runoffEvent.getTins();
 
+    // get min / max of the selected runoff event
     BigDecimal event_min = new BigDecimal( Double.MAX_VALUE );
     BigDecimal event_max = new BigDecimal( Double.MIN_VALUE );
 
@@ -451,6 +458,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
   }
 
+  /**
+   * update the style panel with the {@link PolygonColorMap}
+   */
   protected void updateStylePanel( final TableViewer viewer )
   {
     final IRunoffEvent event = getCurrentEvent();
@@ -757,6 +767,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     getMapPanel().setBoundingBox( scaledBox );
   }
 
+  @SuppressWarnings("unchecked")
   protected void handleMove( final int step )
   {
     if( m_treeSelection == null )
@@ -857,14 +868,14 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     /* Get source provider for tins */
     final IGmlSourceProvider[] provider = KalypsoCoreExtensions.createGmlSourceProvider( "org.kalypso.core.tin.waterlevel" );
 
-    /* Show dialog to user and import tnis afterwards */
+    /* Show dialog to user and import tins afterwards */
     final ImportTinOperation operation = new ImportTinOperation( m_dataProvider, runoffEvent.getTins() );
     final GmlSourceChooserWizard wizard = new GmlSourceChooserWizard( provider, operation );
     wizard.setWindowTitle( windowTitle );
   }
 
   /**
-   * Searches for the first occurency of {@link IRunoffEvent} in the current selection.<br>
+   * Searches for the first occurrence of {@link IRunoffEvent} in the current selection.<br>
    * If a tin is selected its parent will be returned.
    */
   private IRunoffEvent findFirstEvent( final Object[] treeSelection )
