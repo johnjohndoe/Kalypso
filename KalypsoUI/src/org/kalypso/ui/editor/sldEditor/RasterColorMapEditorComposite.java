@@ -64,6 +64,9 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 /**
+ * In this composite the user can specify the colors, values and opacities for two ColorMapEntries. The classes
+ * inbetween get interpolated by defining the step width, min and max value.
+ * 
  * @author Thomas Jung
  */
 
