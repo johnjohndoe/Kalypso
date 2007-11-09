@@ -123,7 +123,7 @@ public class TokenReplacerEngine
     }
     catch( final Throwable e )
     {
-      return e.getLocalizedMessage();
+      return e.toString();
     }
   }
 
