@@ -50,6 +50,7 @@ import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
+import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -66,11 +67,17 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final IFeatureWrapperCollection<ILandusePolygon> m_landusePolygonCollection;
 
-  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection ) throws Exception
+  private final List<ILanduseClass> m_landuseClassesList;
+
+  private final double m_cellSize;
+
+  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
   {
     super( resultGrid );
+    m_cellSize = Math.abs( resultGrid.getOffsetX().x - resultGrid.getOffsetY().x ) * Math.abs( resultGrid.getOffsetX().y - resultGrid.getOffsetY().y );
     m_annualCoverageCollection = annualCoverageCollection;
     m_landusePolygonCollection = landusePolygonCollection;
+    m_landuseClassesList = landuseClassesList;
     m_gridMap = new HashMap<String, List<IGeoGrid>>();
     for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
     {
@@ -109,9 +116,29 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       for( final ILandusePolygon polygon : list )
       {
         if( polygon.contains( positionAt ) )
+        {
+          fillStatistics( polygon, result );
           return polygon.getRiskZone( result );
+        }
       }
     return Double.NaN;
+  }
+
+  private void fillStatistics( final ILandusePolygon polygon, final double result )
+  {
+    final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
+    for( final ILanduseClass landuseClass : m_landuseClassesList )
+    {
+      if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
+      {
+        if( result < landuseClass.getMinDamage() )
+          landuseClass.setMinDamage( result );
+        if( result > landuseClass.getMaxDamage() )
+          landuseClass.setMaxDamage( result );
+        final double totalDamage = landuseClass.getTotalDamage() + result * m_cellSize;
+        landuseClass.setTotalDamage( totalDamage );
+      }
+    }
   }
 
   private double getValue( final IAnnualCoverageCollection collection, final int x, final int y ) throws GeoGridException

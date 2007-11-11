@@ -26,6 +26,7 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
@@ -58,6 +59,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
         final IEvaluationContext context = handlerService.getCurrentState();
         final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
         final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+        final IRasterizationControlModel controlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
         final IRasterDataModel rasterModel = scenarioDataProvider.getModel( IRasterDataModel.class );
         final IVectorDataModel vectorModel = scenarioDataProvider.getModel( IVectorDataModel.class );
         if( rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
@@ -92,7 +94,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
               for( final ICoverage srcSpecificDamageCoverage : baseCoverages )
               {
                 final IGeoGrid inputGrid = GeoGridUtilities.toGrid( srcSpecificDamageCoverage );
-                final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection() );
+                final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection(),controlModel.getLanduseClassesList() );
                 // TODO: change name: better: use input name
                 final String outputFilePath = "raster/output/RiskZonesCoverage" + count + ".dat";
 
@@ -108,6 +110,9 @@ public class RiskZonesCalculationHandler extends AbstractHandler
               }
 
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+              
+              // statistics...
+              scenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) );
             }
             catch( final Exception e )
             {

@@ -32,4 +32,37 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
     return value == null ? 0 : value.intValue();
   }
 
+  public double getMaxDamage( )
+  {
+    final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_MAX_DAMAGE );
+    return value == null ? 0 : value.intValue();
+  }
+
+  public double getMinDamage( )
+  {
+    final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_MIN_DAMAGE );
+    return value == null ? Double.MAX_VALUE : value.intValue();
+  }
+
+  public double getTotalDamage( )
+  {
+    final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_TOTAL_DAMAGE );
+    return value == null ? 0 : value.intValue();
+  }
+
+  public void setMaxDamage( double value )
+  {
+    getFeature().setProperty( ILanduseClass.PROP_MAX_DAMAGE, value );
+  }
+
+  public void setMinDamage( double value )
+  {
+    getFeature().setProperty( ILanduseClass.PROP_MIN_DAMAGE, value );
+  }
+
+  public void setTotalDamage( double value )
+  {
+    getFeature().setProperty( ILanduseClass.PROP_TOTAL_DAMAGE, value );
+  }
+
 }

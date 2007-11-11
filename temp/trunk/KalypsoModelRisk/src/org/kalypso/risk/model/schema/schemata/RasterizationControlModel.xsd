@@ -114,6 +114,39 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="minDamage" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Min. damage [€/m²]</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Min. damage [€/m²]</xs:label>
+								<xs:fractionDigits value="5"></xs:fractionDigits>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="maxDamage" type="xs:double" default="0.0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Max. damage [€/m²]</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Max. damage [€/m²]</xs:label>
+								<xs:fractionDigits value="5"></xs:fractionDigits>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="totalDamage" type="xs:double" default="0.0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Total damage [€]</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Total damage [€]</xs:label>
+								<xs:fractionDigits value="5"></xs:fractionDigits>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 			</xs:extension>

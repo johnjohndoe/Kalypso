@@ -71,8 +71,8 @@
 			<Help><![CDATA[Ausweisung des Hochwasserrisikos]]></Help>
 			<Name>Ausweisung des Hochwasserrisikos</Name>
 		</Task>
-		<Task type="ASYNCHRONOUS" context="StatisticalAnalysesJob"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__StatisticalAnalysesJob">
+		<Task context="StatisticsPanel"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__StatisticsPanel">
 			<Help><![CDATA[Statistische Auswertung]]></Help>
 			<Name>Statistische Auswertung</Name>
 		</Task>
@@ -101,6 +101,14 @@
 						value="featureViewInputContext" />
 					<con:Parameter name="input"
 						value="templates/CalculationControlPanel.gft" />
+				</con:ExtensionContext>
+				<con:ExtensionContext id="StatisticsPanel"
+					parent="FeatureView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type"
+						value="featureViewInputContext" />
+					<con:Parameter name="input"
+						value="templates/StatisticsPanel.gft" />
 				</con:ExtensionContext>
 			</con:ViewContext>
 			<con:WorkbenchSiteContext id="MapContext"
