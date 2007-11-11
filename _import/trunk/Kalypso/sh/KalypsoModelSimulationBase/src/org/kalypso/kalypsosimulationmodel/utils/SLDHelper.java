@@ -102,44 +102,64 @@ import org.xml.sax.SAXException;
  */
 public class SLDHelper
 {
+  // if this DEFAULT_STYLE_NAME and/or DEFAULT_STYLE_TITLE is changed,
+  // it should be changed in all SLD layers in gmt files also
+  public static final String DEFAULT_STYLE_NAME = "Kalypso style"; //$NON-NLS-1$     
+
+  public static final String DEFAULT_STYLE_TITLE = "Kalypso style"; //$NON-NLS-1$     
+
   private static final String LAYER_NAME = "deegree style definition";
 
   private static final String LABEL_RULE_NAME = "Labelle";
 
-  private static final String DEFAULT_RULE_NAME = "undefinierterStilID";
+  private static final double DEFAULT_FILLOPACITY = 0.75;
 
-  private static final String DEFAULT_RULE_TITLE = "undefinierter Stil";
+  private static final double DEFAULT_STROKEOPACITY = 1.0;
 
-  private static final Color DEFAULT_RULE_FILLCOLOR = new Color( Integer.parseInt( "ffffff", 16 ) ); //$NON-NLS-1$
+  private static final Color DEFAULT_STROKECOLOR = Color.BLACK;
 
-  private static final double DEFAULT_RULE_FILLOPACITY = 0.0;
+  private static final double DEFAULT_STROKEWIDTH = 0.5;
 
-  private static final Color DEFAULT_RULE_STROKECOLOR = new Color( Integer.parseInt( "ff0000", 16 ) ); //$NON-NLS-1$
+  private static final String ELSEFILTER_NAME = "undefinierterStilID";
 
-  private static final double DEFAULT_RULE_STROKEOPACITY = 1.0;
+  private static final String ELSEFILTER_TITLE = "undefinierter Stil";
 
-  private static final double DEFAULT_RULE_STROKEWIDTH = 2.0;
+  private static final Color ELSEFILTER_FILLCOLOR = new Color( Integer.parseInt( "ffffff", 16 ) ); //$NON-NLS-1$
 
-  private static final float[] DEFAULT_RULE_DASHARRAY = new float[] { 2, 5 };
+  private static final double ELSEFILTER_FILLOPACITY = 0.0;
+
+  private static final Color ELSEFILTER_STROKECOLOR = new Color( Integer.parseInt( "ff0000", 16 ) ); //$NON-NLS-1$
+
+  private static final double ELSEFILTER_STROKEOPACITY = 1.0;
+
+  private static final double ELSEFILTER_STROKEWIDTH = 2.0;
+
+  private static final float[] ELSEFILTER_DASHARRAY = new float[] { 2, 5 };
 
   public static void exportPolygonSymbolyzerSLD( final IFile sldFile, final List< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
   {
     final IProgressMonitor progressMonitor = monitor == null ? new NullProgressMonitor() : monitor;
-    final StyledLayerDescriptor descriptor = createPolygonSLD( collection, geometryProperty, styleProperty, styleName, styleTitle, progressMonitor );
+    final String myStyleName = styleName == null ? DEFAULT_STYLE_NAME : styleName;
+    final String myStyleTitle = styleTitle == null ? DEFAULT_STYLE_TITLE : styleTitle;
+    final StyledLayerDescriptor descriptor = createPolygonSLD( collection, geometryProperty, styleProperty, myStyleName, myStyleTitle, progressMonitor );
     exportSLD( sldFile, descriptor, progressMonitor );
   }
 
   public static void exportRasterSymbolyzerSLD( final IFile sldFile, final List< ? > collection, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
   {
     final IProgressMonitor progressMonitor = monitor == null ? new NullProgressMonitor() : monitor;
-    final StyledLayerDescriptor descriptor = createRasterSLD( collection, styleName, styleTitle, progressMonitor );
+    final String myStyleName = styleName == null ? DEFAULT_STYLE_NAME : styleName;
+    final String myStyleTitle = styleTitle == null ? DEFAULT_STYLE_TITLE : styleTitle;
+    final StyledLayerDescriptor descriptor = createRasterSLD( collection, myStyleName, myStyleTitle, progressMonitor );
     exportSLD( sldFile, descriptor, progressMonitor );
   }
 
   public static void exportRasterSymbolyzerSLD( final IFile sldFile, final double minValue, final double maxValue, final int numberOfIntervals, final Color darkestColor, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
   {
     final IProgressMonitor progressMonitor = monitor == null ? new NullProgressMonitor() : monitor;
-    final StyledLayerDescriptor descriptor = createRasterSLD( minValue, maxValue, numberOfIntervals, darkestColor, styleName, styleTitle, progressMonitor );
+    final String myStyleName = styleName == null ? DEFAULT_STYLE_NAME : styleName;
+    final String myStyleTitle = styleTitle == null ? DEFAULT_STYLE_TITLE : styleTitle;
+    final StyledLayerDescriptor descriptor = createRasterSLD( minValue, maxValue, numberOfIntervals, darkestColor, myStyleName, myStyleTitle, progressMonitor );
     exportSLD( sldFile, descriptor, progressMonitor );
   }
 
@@ -206,18 +226,14 @@ public class SLDHelper
     for( int i = 0; i <= numberOfIntervals; i++ )
     {
       // making lighter color (color.brighter() is not so good...)
-//      final int rc = r + (255 - r) * i / numberOfIntervals;
-//      final int gc = g + (255 - g) * i / numberOfIntervals;
-//      final int bc = b + (255 - b) * i / numberOfIntervals;
-
-       final int rc = (255 - r) * (numberOfIntervals - i) / numberOfIntervals + r;
-       final int gc = (255 - g) * (numberOfIntervals - i) / numberOfIntervals + g;
-       final int bc = (255 - b) * (numberOfIntervals - i) / numberOfIntervals + b;
+      final int rc = (255 - r) * (numberOfIntervals - i) / numberOfIntervals + r;
+      final int gc = (255 - g) * (numberOfIntervals - i) / numberOfIntervals + g;
+      final int bc = (255 - b) * (numberOfIntervals - i) / numberOfIntervals + b;
 
       double quantity = step * i;
       if( quantity <= 0.0 )
         quantity = 0.1;
-      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( new Color( rc, gc, bc ), 0.75, quantity, "" ); //$NON-NLS-1$
+      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( new Color( rc, gc, bc ), DEFAULT_FILLOPACITY, quantity, "" ); //$NON-NLS-1$
       colorMap.put( new Double( quantity ), colorMapEntry );
       if( monitor.isCanceled() )
         throw new CoreException( Status.CANCEL_STATUS );
@@ -255,7 +271,7 @@ public class SLDHelper
       else
         color = new Color( rgb.red, rgb.green, rgb.blue );
       final double quantity = styledFeature.getOrdinalNumber();
-      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, 0.75, quantity, "" ); //$NON-NLS-1$
+      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, DEFAULT_FILLOPACITY, quantity, "" ); //$NON-NLS-1$
       colorMap.put( new Double( quantity ), colorMapEntry );
     }
 
@@ -290,8 +306,8 @@ public class SLDHelper
         color = Color.WHITE;
       else
         color = new Color( rgb.red, rgb.green, rgb.blue );
-      final Stroke stroke = StyleFactory.createStroke( Color.BLACK, 1.0, 0.5 );
-      final Fill fill = StyleFactory.createFill( color, 0.75 );
+      final Stroke stroke = StyleFactory.createStroke( DEFAULT_STROKECOLOR, DEFAULT_STROKEWIDTH, DEFAULT_STROKEOPACITY );
+      final Fill fill = StyleFactory.createFill( color, DEFAULT_FILLOPACITY );
       final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, new PropertyName( geometryProperty ) );
       final Rule rule = StyleFactory.createRule( newSymbolizer );
       final String ruleName = styledFeature.getName();
@@ -324,15 +340,15 @@ public class SLDHelper
     style.addRule( labelRule );
 
     // adding default rule
-    final Stroke defaultRuleStroke = StyleFactory.createStroke( DEFAULT_RULE_STROKECOLOR, DEFAULT_RULE_STROKEWIDTH, DEFAULT_RULE_STROKEOPACITY );
-    defaultRuleStroke.setDashArray( DEFAULT_RULE_DASHARRAY );
-    final Fill defaultRuleFill = StyleFactory.createFill( DEFAULT_RULE_FILLCOLOR, DEFAULT_RULE_FILLOPACITY );
+    final Stroke defaultRuleStroke = StyleFactory.createStroke( ELSEFILTER_STROKECOLOR, ELSEFILTER_STROKEWIDTH, ELSEFILTER_STROKEOPACITY );
+    defaultRuleStroke.setDashArray( ELSEFILTER_DASHARRAY );
+    final Fill defaultRuleFill = StyleFactory.createFill( ELSEFILTER_FILLCOLOR, ELSEFILTER_FILLOPACITY );
     final PolygonSymbolizer defaultRuleSymbolizer = StyleFactory.createPolygonSymbolizer( defaultRuleStroke, defaultRuleFill, new PropertyName( geometryProperty ) );
     final Rule defaultRule = StyleFactory.createRule( defaultRuleSymbolizer );
     defaultRule.setElseFilter( true );
-    defaultRule.setName( DEFAULT_RULE_NAME );
-    defaultRule.setTitle( DEFAULT_RULE_TITLE );
-    defaultRule.setAbstract( DEFAULT_RULE_TITLE );
+    defaultRule.setName( ELSEFILTER_NAME );
+    defaultRule.setTitle( ELSEFILTER_TITLE );
+    defaultRule.setAbstract( ELSEFILTER_TITLE );
     style.addRule( defaultRule );
 
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
