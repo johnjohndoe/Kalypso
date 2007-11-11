@@ -24,6 +24,8 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public QName PROPERTY_ASSET_VALUE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "assetValue" );
 
+  public QName PROPERTY_ISURBANTYPE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "isUrbanLanduseType" );
+
   public void setGeometry( final GM_Surface< ? > surface );
 
   public void setStyleType( final String styleType );
@@ -36,5 +38,8 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public double getDamageValue( final double waterLevel );
 
+  public double getRiskZone( final double damage );
+
   public boolean contains( final GM_Position position );
+
 }

@@ -13,15 +13,14 @@
                     <MinScaleDenominator>0.0</MinScaleDenominator>
                     <MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
                     <RasterSymbolizer uom="pixel">
-<ColorMap>
-                            <ColorMapEntry color="#ff8040" opacity="0.8" quantity="1.0"/>
-                            <ColorMapEntry color="#008000" opacity="0.8" quantity="2.0"/>
-                            <ColorMapEntry color="#400000" opacity="0.8" quantity="3.0"/>
-                            <ColorMapEntry color="#c0c0c0" opacity="0.8" quantity="4.0"/>
-                            <ColorMapEntry color="#00ff00" opacity="0.8" quantity="5.0"/>
-                            <ColorMapEntry color="#808040" opacity="0.8" quantity="6.0"/>
-                            <ColorMapEntry color="#0080ff" opacity="0.8" quantity="7.0"/>
-                            <ColorMapEntry color="#408080" opacity="0.8" quantity="8.0"/>
+						<ColorMap>
+                            <ColorMapEntry color="#ffff00" opacity="0.85" quantity="1.0"/>
+                            <ColorMapEntry color="#ff9900" opacity="0.85" quantity="2.0"/>
+                            <ColorMapEntry color="#ff0000" opacity="0.85" quantity="3.0"/>
+                            <ColorMapEntry color="#00ccff" opacity="0.85" quantity="4.0"/>
+                            <ColorMapEntry color="#006699" opacity="0.85" quantity="5.0"/>
+                            <ColorMapEntry color="#000033" opacity="0.85" quantity="6.0"/>
+                            <ColorMapEntry color="#000033" opacity="0.85" quantity="6.0"/>
                         </ColorMap>
                     </RasterSymbolizer>
                 </Rule>

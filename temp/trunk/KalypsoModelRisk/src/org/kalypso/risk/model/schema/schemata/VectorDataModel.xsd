@@ -97,6 +97,10 @@
 					kapp:property="krvdm:damageFunction" kapp:isVirtual="true"
 					kapp:valueType="xs:string" />
 				<kapp:functionProperty
+					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_IsUrbanType"
+					kapp:property="krvdm:isUrbanLanduseType" kapp:isVirtual="true"
+					kapp:valueType="xs:boolean" />
+				<kapp:functionProperty
 					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_AssetValue"
 					kapp:property="krvdm:assetValue" kapp:isVirtual="true"
 					kapp:valueType="xs:double" />
@@ -116,7 +120,6 @@
 					<xs:element ref="krrcm:landuseClassMember" />
 					<xs:element name="sldStyle" type="xs:string" />
 					<xs:element name="clsOrdinalNumber" type="xs:int" />
-					<xs:element name="damageFunction" type="xs:string" />
 					<xs:element name="assetValue" type="xs:double" />
 				</xs:sequence>
 			</xs:extension>

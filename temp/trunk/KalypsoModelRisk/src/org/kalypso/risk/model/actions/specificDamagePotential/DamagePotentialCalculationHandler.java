@@ -112,7 +112,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
 
                 final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
                 // TODO: check if still ok: propbably delete all underlying grids
-                
+
                 // remove existing (invalid) coverages from the model
                 final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<IAnnualCoverageCollection>();
                 for( final IAnnualCoverageCollection existingAnnualCoverage : specificDamageCoverageCollection )
@@ -143,7 +143,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                       {
                         final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
                         final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-                        
+
                         final List<ILandusePolygon> list = polygonCollection.query( positionAt );
                         if( list == null || list.size() == 0 )
                           return Double.NaN;
@@ -153,6 +153,8 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                             if( polygon.contains( positionAt ) )
                             {
                               final double damageValue = polygon.getDamageValue( value );
+                              if( Double.isNaN( damageValue ) )
+                                return Double.NaN;
                               if( m_minDamageValue > damageValue )
                                 m_minDamageValue = damageValue;
                               if( m_maxDamageValue < damageValue )
@@ -164,17 +166,17 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                       }
                     }
                   };
-                  
+
                   // TODO: change count to better name...
-                  final String outputFilePath = "raster/output/specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod()+"_part" + count + ".bin";
+                  final String outputFilePath = "raster/output/specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod() + "_part" + count + ".bin";
 
                   final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
                   final File file = new File( ifile.getRawLocation().toPortableString() );
-                  
+
                   GeoGridUtilities.addCoverage( dstAnnualCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
 
                   inputGrid.dispose();
-                  
+
                   count++;
                 }
 
@@ -194,7 +196,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
 
                 final StyledLayerType layer = new StyledLayerType();
                 layer.setName( layerName );
-                layer.setFeaturePath( "#fid#" + dstAnnualCoverages.getWrappedFeature().getId()  + "/coverageMember");
+                layer.setFeaturePath( "#fid#" + dstAnnualCoverages.getWrappedFeature().getId() + "/coverageMember" );
                 layer.setLinktype( "gml" );
                 layer.setType( "simple" );
                 layer.setVisible( true );
@@ -226,6 +228,9 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
               }
 
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+
+              // Undoing this operation is not possible because old raster files are deleted...
+              scenarioDataProvider.saveModel( new NullProgressMonitor() );
             }
             catch( final Exception e )
             {

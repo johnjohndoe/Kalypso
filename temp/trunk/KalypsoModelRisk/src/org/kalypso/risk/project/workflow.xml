@@ -42,11 +42,13 @@
 				<Help><![CDATA[Landnutzung bearbeiten]]></Help>
 				<Name>Calculation values definition</Name>
 			</Task>
+			<!-- 
 			<Task context="RiskZonesDefinition"
 				URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesDefinition">
 				<Help><![CDATA[Risk zones definition]]></Help>
 				<Name>Risk zones definition</Name>
 			</Task>
+			 -->
 		</TaskGroup>
 	</TaskGroup>
 	<TaskGroup

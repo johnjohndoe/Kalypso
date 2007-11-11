@@ -9,4 +9,16 @@
   </krrcm:AdministrationUnit>
  </krrcm:administrationUnitMember>
  <krrcm:assetValueClassMember/>
+ <krrcm:landuseRiskTypeMember>
+  <krrcm:LanduseRiskType gml:id="LanduseRiskType11946232986252">
+   <gml:name>Freifläche</gml:name>
+   <krrcm:isUrbanLanduseType>false</krrcm:isUrbanLanduseType>
+  </krrcm:LanduseRiskType>
+ </krrcm:landuseRiskTypeMember>
+ <krrcm:landuseRiskTypeMember>
+  <krrcm:LanduseRiskType gml:id="LanduseRiskType119462338753110">
+   <gml:name>bebaute Fläche</gml:name>
+   <krrcm:isUrbanLanduseType>true</krrcm:isUrbanLanduseType>
+  </krrcm:LanduseRiskType>
+ </krrcm:landuseRiskTypeMember>
 </krrcm:RasterizationControlModel>

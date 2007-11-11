@@ -50,8 +50,13 @@ import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
+import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 {
@@ -59,10 +64,13 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final IFeatureWrapperCollection<IAnnualCoverageCollection> m_annualCoverageCollection;
 
-  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection ) throws Exception
+  private final IFeatureWrapperCollection<ILandusePolygon> m_landusePolygonCollection;
+
+  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection ) throws Exception
   {
     super( resultGrid );
     m_annualCoverageCollection = annualCoverageCollection;
+    m_landusePolygonCollection = landusePolygonCollection;
     m_gridMap = new HashMap<String, List<IGeoGrid>>();
     for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
     {
@@ -90,7 +98,20 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       final double p = Math.abs( probability[i - 1] - probability[i] );
       result += (damage[i - 1] + damage[i]) * p / 2;
     }
-    return result != 0 ? result : Double.NaN;
+    if( result == 0 || Double.isNaN( result ) )
+      return Double.NaN;
+    final Coordinate coordinate = GeoGridUtilities.toCoordinate( this, x, y, null );
+    final GM_Position positionAt = JTSAdapter.wrap( coordinate );
+    final List<ILandusePolygon> list = m_landusePolygonCollection.query( positionAt );
+    if( list == null || list.size() == 0 )
+      return Double.NaN;
+    else
+      for( final ILandusePolygon polygon : list )
+      {
+        if( polygon.contains( positionAt ) )
+          return polygon.getRiskZone( result );
+      }
+    return Double.NaN;
   }
 
   private double getValue( final IAnnualCoverageCollection collection, final int x, final int y ) throws GeoGridException

@@ -26,6 +26,7 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -57,15 +58,16 @@ public class RiskZonesCalculationHandler extends AbstractHandler
         final IEvaluationContext context = handlerService.getCurrentState();
         final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
         final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-        final IRasterDataModel model = scenarioDataProvider.getModel( IRasterDataModel.class );
-        if( model.getSpecificDamageCoverageCollection().size() < 2 )
+        final IRasterDataModel rasterModel = scenarioDataProvider.getModel( IRasterDataModel.class );
+        final IVectorDataModel vectorModel = scenarioDataProvider.getModel( IVectorDataModel.class );
+        if( rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
         {
           MessageDialog.openError( shell, "Error", "Risk zones calculation cannot be started. Not enough specific damage potentials are calculated. To start risk zones calculation, al least two specific damage potentials should be available." );
           return null;
         }
         IAnnualCoverageCollection maxCoveragesCollection = null;
         int maxReturnPeriod = Integer.MIN_VALUE;
-        for( final IAnnualCoverageCollection annualCoverageCollection : model.getSpecificDamageCoverageCollection() )
+        for( final IAnnualCoverageCollection annualCoverageCollection : rasterModel.getSpecificDamageCoverageCollection() )
         {
           if( annualCoverageCollection.getReturnPeriod() > maxReturnPeriod )
           {
@@ -73,6 +75,9 @@ public class RiskZonesCalculationHandler extends AbstractHandler
             maxCoveragesCollection = annualCoverageCollection;
           }
         }
+        // remove existing (invalid) coverages from the model
+        rasterModel.getRiskZonesCoverage().clear();
+
         final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
         final ICoverageCollection baseCoverages = maxCoveragesCollection;
         new ProgressMonitorDialog( shell ).run( true, false, new IRunnableWithProgress()
@@ -82,12 +87,12 @@ public class RiskZonesCalculationHandler extends AbstractHandler
             monitor.beginTask( "Calculating risk zones", IProgressMonitor.UNKNOWN );
             try
             {
-              final ICoverageCollection outputCoverages = model.getRiskZonesCoverage();
+              final ICoverageCollection outputCoverages = rasterModel.getRiskZonesCoverage();
               int count = 0;
               for( final ICoverage srcSpecificDamageCoverage : baseCoverages )
               {
                 final IGeoGrid inputGrid = GeoGridUtilities.toGrid( srcSpecificDamageCoverage );
-                final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, model.getSpecificDamageCoverageCollection() );
+                final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection() );
                 // TODO: change name: better: use input name
                 final String outputFilePath = "raster/output/RiskZonesCoverage" + count + ".dat";
 
@@ -99,7 +104,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
                 count++;
 
                 // fireModellEvent to redraw a map...
-                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { outputCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { outputCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
               }
 
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );

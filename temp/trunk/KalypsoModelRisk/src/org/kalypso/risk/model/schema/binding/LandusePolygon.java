@@ -16,12 +16,25 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   private Double m_assetValue = null;
 
+  private final Boolean m_isUrbanLanduseType;
+
+  private double m_riskBorderLowMiddle = Double.NaN;
+
+  private double m_riskBorderMiddleHigh = Double.NaN;
+
   public LandusePolygon( final Feature featureToBind )
   {
     super( featureToBind, QNAME );
 
     final Object styleProp = getFeature().getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
     m_styleType = (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_";
+
+    final Object isUrbanTypeProperty = getFeature().getProperty( ILandusePolygon.PROPERTY_ISURBANTYPE );
+    if( isUrbanTypeProperty instanceof Boolean )
+      m_isUrbanLanduseType = (Boolean) isUrbanTypeProperty;
+    else
+      m_isUrbanLanduseType = null;
+    m_landuseClassOrdinalNumber = (Integer) getFeature().getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
 
     final Object damageFunctionProp = getFeature().getProperty( ILandusePolygon.PROPERTY_DAMAGE_FUNCTION );
     if( damageFunctionProp != null && damageFunctionProp != "" )
@@ -33,10 +46,26 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
         if( !m_damageFunction.parse() )
           throw new IllegalArgumentException( "Damage function not parsable: " + damageFunctionProp.toString() );
         m_assetValue = ((Double) assetValueProp).doubleValue();
+        try
+        {
+          if( m_isUrbanLanduseType != null )
+            if( m_isUrbanLanduseType )
+            {
+              m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
+              m_riskBorderMiddleHigh = 0.08 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
+            }
+            else
+            {
+              m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
+              m_riskBorderMiddleHigh = 0.03 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
+            }
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
       }
     }
-
-    m_landuseClassOrdinalNumber = (Integer) getFeature().getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
   }
 
   public void setGeometry( GM_Surface< ? > surface )
@@ -84,4 +113,25 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     }
   }
 
+  public double getRiskZone( double damageValue )
+  {
+    if( m_isUrbanLanduseType == null || Double.isNaN( damageValue ) )
+      return Double.NaN;
+    if( m_isUrbanLanduseType )
+    {
+      if( damageValue < m_riskBorderLowMiddle )
+        return IRasterizationControlModel.RISKZONE_URBANAREA_LOW;
+      if( damageValue < m_riskBorderMiddleHigh )
+        return IRasterizationControlModel.RISKZONE_URBANAREA_MIDDLE;
+      return IRasterizationControlModel.RISKZONE_URBANAREA_HIGH;
+    }
+    else
+    {
+      if( damageValue < m_riskBorderLowMiddle )
+        return IRasterizationControlModel.RISKZONE_NONURBANAREA_LOW;
+      if( damageValue < m_riskBorderMiddleHigh )
+        return IRasterizationControlModel.RISKZONE_NONURBANAREA_MIDDLE;
+      return IRasterizationControlModel.RISKZONE_NONURBANAREA_HIGH;
+    }
+  }
 }

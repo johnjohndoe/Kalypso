@@ -94,6 +94,10 @@ public class LanduseRasterizationHandler extends AbstractHandler
       {
         final ICoverageCollection inputCoverages = maxCoveragesCollection;
         final ICoverageCollection outputCoverages = model.getLanduseCoverage();
+        
+        // remove existing (invalid) coverages from the model
+        model.getRiskZonesCoverage().clear();
+        
         final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
         new ProgressMonitorDialog( shell ).run( true, false, new IRunnableWithProgress()
         {

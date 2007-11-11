@@ -146,6 +146,11 @@
           id="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_AssetValue"
           name="PF_LandusePolygon_AssetValue">
     </function>
+    <function
+          class="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_IsUrbanType"
+          id="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_IsUrbanType"
+          name="PF_LandusePolygon_IsUrbanType">
+    </function>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">

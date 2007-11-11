@@ -62,6 +62,12 @@
      <krpd:value>#FF8040</krpd:value>
     </krpd:DataMember>
    </krpd:dataMember>
+   <krpd:dataMember>
+    <krpd:DataMember gml:id="DataMember119461797220314">
+     <gml:name>Gewerbe</gml:name>
+     <krpd:value>#FF8080</krpd:value>
+    </krpd:DataMember>
+   </krpd:dataMember>
   </krpd:DataCollection>
  </krpd:landuseClassesDefaultColorsCollection>
  <krpd:damageFunctionsCollection>

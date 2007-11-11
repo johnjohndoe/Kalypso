@@ -31,6 +31,8 @@
 						minOccurs="0" maxOccurs="unbounded" />
 					<xs:element ref="krrcm:assetValueClassMember"
 						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="krrcm:landuseRiskTypeMember"
+						minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -81,6 +83,17 @@
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Damage function</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="landuseRiskTypeLink"
+						type="krrcm:LanduseRiskTypeLinkType" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Kategorie</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Category</xs:label>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -166,8 +179,8 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="value"
-						type="xs:double" default="0.0">
+					<xs:element name="value" type="xs:double"
+						default="0.0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Asset value [€/m²]</xs:label>
@@ -237,8 +250,7 @@
 
 	<xs:complexType name="AdministrationUnitPropertyType">
 		<xs:sequence>
-			<xs:element ref="krrcm:AdministrationUnit"
-				minOccurs="0" />
+			<xs:element ref="krrcm:AdministrationUnit" minOccurs="0" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
@@ -272,6 +284,51 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<!-- =================================================================
+		landuseRiskTypeMember (root property)
+		================================================================== -->
+	<xs:element name="landuseRiskTypeMember"
+		type="krrcm:LanduseRiskTypePropertyType" />
+
+	<xs:complexType name="LanduseRiskTypePropertyType">
+		<xs:sequence>
+			<xs:element ref="krrcm:LanduseRiskType" minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!-- =================================================================
+		Landuse classes
+		================================================================== -->
+	<xs:element name="LanduseRiskType" type="krrcm:LanduseRiskTypeType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="LanduseRiskTypeType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="isUrbanLanduseType" type="xs:boolean" />
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+
 	<!-- Link functions ======================================================== -->
 
 	<xs:complexType name="LanduseClassLinkType">
@@ -301,8 +358,8 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-	
-	
+
+
 	<xs:complexType name="DamageFunctionLinkType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -330,8 +387,8 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-	
-	
+
+
 	<xs:complexType name="AdministrationUnitLinkType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -355,6 +412,35 @@
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element ref="krrcm:AdministrationUnit" minOccurs="0"
+				maxOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+
+	<xs:complexType name="LanduseRiskTypeLinkType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+
+				<!--
+					IMPORTANT!!!
+					
+					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+					should be written in one line, exactly like this!
+					
+					Please check if your auto-formatting breaks it into:
+					<kapp:documentReference>
+					RasterizationControlModel.gml
+					</kapp:documentReference>
+					than fix it manually...
+					
+				-->
+
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="krrcm:LanduseRiskType" minOccurs="0"
 				maxOccurs="0" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />

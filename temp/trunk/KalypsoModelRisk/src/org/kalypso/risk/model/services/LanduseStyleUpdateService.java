@@ -71,18 +71,11 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class LanduseStyleUpdateService extends Job
 {
-  // if this STYLE_NAME is changed, it should be changed in all SLD layers in gmt files also
-  private static final String STYLE_NAME = "Kalypso style"; //$NON-NLS-1$     
-
-  private static final String STYLE_TITLE = "Kalypso style"; //$NON-NLS-1$     
-
   private final IFile m_dbFile;
 
   private final IFile m_landuseVectorSymbolyzerSldFile;
 
   private final IFile m_landuseRasterSymbolyzerSldFile;
-
-  private final IFile m_specificDamageRasterSymbolyzerSldFile;
 
   public LanduseStyleUpdateService( final IFile file )
   {
@@ -94,7 +87,6 @@ public class LanduseStyleUpdateService extends Job
     m_dbFile = file;
     m_landuseVectorSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" );
     m_landuseRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" );
-    m_specificDamageRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" );
   }
 
   /**
@@ -124,18 +116,9 @@ public class LanduseStyleUpdateService extends Job
       final List<ILanduseClass> landuseClassesList = model.getLanduseClassesList();
       if( landuseClassesList != null && landuseClassesList.size() > 0 )
       {
-        SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, STYLE_NAME, STYLE_TITLE, monitor );
-        SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolyzerSldFile, model.getLanduseClassesList(), STYLE_NAME, STYLE_TITLE, monitor );
+        SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor );
+        SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolyzerSldFile, model.getLanduseClassesList(), null, null, monitor );
       }
-//      final List<IAssetValueClass> assetValueClassesList = model.getAssetValueClassesList();
-//      if( assetValueClassesList != null && assetValueClassesList.size() > 0 )
-//      {
-//        double maxAssetValue = 0.0;
-//        for( final IAssetValueClass assetValueClass : assetValueClassesList )
-//          if( assetValueClass.getAssetValue() > maxAssetValue )
-//            maxAssetValue = assetValueClass.getAssetValue();
-//        SLDHelper.exportRasterSymbolyzerSLD( m_specificDamageRasterSymbolyzerSldFile, 0.0, maxAssetValue, 20, new Color( 237, 80, 25 ), STYLE_NAME, STYLE_TITLE, monitor );
-//      }
       return Status.OK_STATUS;
     }
     catch( final Throwable t )

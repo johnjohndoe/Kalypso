@@ -9,15 +9,27 @@ import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 
 public interface IRasterizationControlModel extends IModel
 {
-  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "RasterizationControlModel" );
+  public static final double RISKZONE_URBANAREA_LOW = 1.0;
 
-  public QName PROPERTY_LANDUSE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
+  public static final double RISKZONE_URBANAREA_MIDDLE = 2.0;
 
-  public QName PROPERTY_ASSET_VALUE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "assetValueClassMember" );
+  public static final double RISKZONE_URBANAREA_HIGH = 3.0;
 
-  public QName PROPERTY_ADMINISTRATION_UNIT_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "administrationUnitMember" );
+  public static final double RISKZONE_NONURBANAREA_LOW = 4.0;
 
-  public QName PROPERTY_DAMAGE_FUNCTION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionMember" );
+  public static final double RISKZONE_NONURBANAREA_MIDDLE = 5.0;
+
+  public static final double RISKZONE_NONURBANAREA_HIGH = 6.0;
+
+  public static final QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "RasterizationControlModel" );
+
+  public static final QName PROPERTY_LANDUSE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
+
+  public static final QName PROPERTY_ASSET_VALUE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "assetValueClassMember" );
+
+  public static final QName PROPERTY_ADMINISTRATION_UNIT_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "administrationUnitMember" );
+
+  public static final QName PROPERTY_DAMAGE_FUNCTION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionMember" );
 
   public List<ILanduseClass> getLanduseClassesList( );
 
@@ -33,11 +45,13 @@ public interface IRasterizationControlModel extends IModel
 
   /**
    * Created new asset value class with the given values.
+   * 
    * @param landuseClassGmlID
    * @param administrationUnitGmlID
    * @param value
-   * @param string 
-   * @return new IAssetValueClass, or <code>null</code> if landuse class or administration unit with the given ID does not exists  
+   * @param string
+   * @return new IAssetValueClass, or <code>null</code> if landuse class or administration unit with the given ID does
+   *         not exists
    */
   public IAssetValueClass createNewAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final Double value, final String description );
 
