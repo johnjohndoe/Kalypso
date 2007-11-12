@@ -189,8 +189,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final GeoGridCell clippedMinCell = normalizedMinCell.max( originCell );
     final GeoGridCell clippedMaxCell = normaliedMaxCell.min( maxGridCell );
 
-    System.out.println( "Cellpixelwidth: " + cellPixelWidth );
-
     if( cellPixelWidth < 1 )
     {
       final int screenXfrom = (int) projection.getDestX( env.getMinX() );

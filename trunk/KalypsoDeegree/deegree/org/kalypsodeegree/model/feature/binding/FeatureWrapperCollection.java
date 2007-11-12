@@ -123,14 +123,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     Feature feature = null;
     try
     {
-      feature = FeatureHelper.createFeatureForListProp( m_featureList, m_featureMemberProp, newChildType );
+      feature = FeatureHelper.createFeatureForListProp( m_featureList, newChildType, -1 );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
         throw new IllegalArgumentException( "Feature not adaptable. FeatureType: " + newChildType + ", TypeToAdapt: " + m_defaultWrapperClass + ", Feature: " + feature );
       }
-      // Feature was already added by Util.create..., so dont add it again
-      // featureList.add(feature);
+
       return wrapper;
     }
     catch( final GMLSchemaException e )
@@ -172,13 +171,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     try
     {
-      final Feature feature = FeatureHelper.createFeatureForListProp( m_featureList, m_featureMemberProp, newChildType );
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_featureList, newChildType, index );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
         throw new IllegalArgumentException( "Feature not adaptable. FeatureType: " + newChildType + ", TypeToAdapt: " + m_defaultWrapperClass + ", Feature: " + feature );
       }
-      m_featureList.add( index, feature );
+
       return wrapper;
     }
     catch( final GMLSchemaException e )
@@ -442,7 +441,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       final Feature feature = FeatureHelper.getFeature( m_featureList.getParentFeature().getWorkspace(), fObj );
       if( feature == null )
         throw new RuntimeException( "Type not known:" + fObj );
-      Object object = getAdaptedFeature( feature );
+      final Object object = getAdaptedFeature( feature );
       if( object != null )
         objs[i] = object;
     }
@@ -662,5 +661,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     }
     return adapted;
 
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection#getBoundingBox()
+   */
+  public GM_Envelope getBoundingBox( )
+  {
+    return getWrappedList().getBoundingBox();
   }
 }

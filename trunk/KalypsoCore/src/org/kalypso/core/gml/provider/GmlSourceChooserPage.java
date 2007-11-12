@@ -40,8 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.gml.provider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ICheckable;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -63,9 +69,9 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
 {
   private final IGmlSourceProvider[] m_provider;
 
-  private Object[] m_selectedObjects;
-
   private final GmlSourceContentProvider m_contentProvider = new GmlSourceContentProvider();
+
+  private Object[] m_checkedElements;
 
   public GmlSourceChooserPage( final String pageName, final String title, final ImageDescriptor titleImage, final IGmlSourceProvider[] provider )
   {
@@ -83,13 +89,14 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
     panel.setLayout( new GridLayout( 2, false ) );
 
     /* Tree View */
-    final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer( parent, SWT.BORDER );
+    final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer( panel, SWT.BORDER );
     final GridData treeGridData = new GridData( SWT.FILL, SWT.FILL, false, true );
-    treeGridData.widthHint = 150;
+    treeGridData.widthHint = 250;
     treeViewer.getControl().setLayoutData( treeGridData );
 
     /* Info Panel */
-    final Group infoGroup = new Group( parent, SWT.NONE );
+    final Group infoGroup = new Group( panel, SWT.NONE );
+    infoGroup.setText( "Information" );
     infoGroup.setLayout( new FillLayout() );
     final GridData infoGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     infoGroup.setLayoutData( infoGridData );
@@ -107,7 +114,42 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
       }
     } );
 
+    treeViewer.addCheckStateListener( new ICheckStateListener()
+    {
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        handleCheckStateChanged( event, treeViewer );
+      }
+    } );
+
     setControl( panel );
+
+    setPageComplete( false );
+  }
+
+  protected void handleCheckStateChanged( final CheckStateChangedEvent event, final CheckboxTreeViewer treeViewer )
+  {
+    final Object element = event.getElement();
+
+    // Set checkstate of children as well
+    // TODO: implementation does not work well, as Dirk for better implementation
+    setChildrenCheckstate( event.getCheckable(), element, event.getChecked(), treeViewer );
+    treeViewer.update( element, null );
+
+    m_checkedElements = treeViewer.getCheckedElements();
+
+    verifyPage();
+  }
+
+  private void setChildrenCheckstate( final ICheckable checkable, final Object element, final boolean checked, final CheckboxTreeViewer treeViewer )
+  {
+    final Object[] children = m_contentProvider.getChildren( element );
+    for( final Object child : children )
+    {
+      checkable.setChecked( element, checked );
+      treeViewer.update( element, null );
+      setChildrenCheckstate( checkable, child, checked, treeViewer );
+    }
   }
 
   protected void handleSelectionChanged( final SelectionChangedEvent event, final Group infoGroup )
@@ -133,17 +175,33 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
       provider.createInfoControl( infoGroup, firstElement );
     }
 
-    infoGroup.getParent().layout();
-
-    m_selectedObjects = selection.toArray();
+    infoGroup.layout( true, true );
   }
 
   public IGmlSource[] getChoosenSources( )
   {
-    final IGmlSource[] sources = new IGmlSource[m_selectedObjects.length];
-    for( int i = 0; i < m_selectedObjects.length; i++ )
-      sources[i] = m_contentProvider.getSource( m_selectedObjects[i] );
-    return sources;
+    final List<IGmlSource> result = new ArrayList<IGmlSource>();
+
+    for( final Object element : m_checkedElements )
+    {
+      final IGmlSource source = m_contentProvider.getSource( element );
+      if( source != null )
+        result.add( source );
+    }
+
+    return result.toArray( new IGmlSource[result.size()] );
+  }
+
+  private void verifyPage( )
+  {
+    // REMARK: it is light-weight enough just to create the sources....
+    final IGmlSource[] choosenSources = getChoosenSources();
+    setPageComplete( choosenSources.length > 0 );
+
+    if( choosenSources.length == 0 )
+      setMessage( "Wählen Sie bitte mindestens einen Wasserspiegel", WARNING );
+    else
+      setMessage( null );
   }
 
 }

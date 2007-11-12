@@ -40,58 +40,60 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.gml.provider;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import java.net.URL;
+
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * This wizard lets the user choose from various available gml sources.
- * 
  * @author Gernot Belger
  */
-public class GmlSourceChooserWizard extends Wizard
+public class GmlSource implements IGmlSource
 {
-  private final IGmlSourceProvider[] m_provider;
+  private final String m_name;
 
-  private final GmlSourceChooserPage m_page;
+  private final String m_description;
 
-  private final IGmlSourceRunnableWithProgress m_operation;
+  private final URL m_location;
 
-  /**
-   * @param operation
-   *            This operation will be executed when the finish button is pressed, using the choosen {@link IGmlSource}s.
-   */
-  public GmlSourceChooserWizard( final IGmlSourceProvider[] provider, final IGmlSourceRunnableWithProgress operation )
+  private final GMLXPath m_path;
+
+  public GmlSource( final String name, final String description, final URL location, final GMLXPath path )
   {
-    m_provider = provider;
-    m_operation = operation;
-
-    setForcePreviousAndNextButtons( false );
-    setNeedsProgressMonitor( true );
-
-    setDialogSettings( getDialogSettings() );
-
-    m_page = new GmlSourceChooserPage( "sourceProviderPage", "Auswahl", null, m_provider );
+    m_name = name;
+    m_description = description;
+    m_location = location;
+    m_path = path;
   }
 
   /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   * @see org.kalypso.core.gml.provider.IGmlSource#getDescription()
    */
-  @Override
-  public void addPages( )
+  public String getDescription( )
   {
-    addPage( m_page );
+    return m_description;
   }
 
   /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   * @see org.kalypso.core.gml.provider.IGmlSource#getLocation()
    */
-  @Override
-  public boolean performFinish( )
+  public URL getLocation( )
   {
-    m_operation.setGmlSource( m_page.getChoosenSources() );
+    return m_location;
+  }
 
-    final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
-    return m_operation.handleResult( getShell(), resultStatus );
+  /**
+   * @see org.kalypso.core.gml.provider.IGmlSource#getName()
+   */
+  public String getName( )
+  {
+    return m_name;
+  }
+
+  /**
+   * @see org.kalypso.core.gml.provider.IGmlSource#getPath()
+   */
+  public GMLXPath getPath( )
+  {
+    return m_path;
   }
 }
