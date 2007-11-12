@@ -249,11 +249,11 @@ public class GeoGridUtilities
    * @param mimeType
    *            The mime type of the created underlying file.
    * @throws GeoGridException
-   *             If the acces to the given grid fails.
+   *             If the access to the given grid fails.
    * @throws IOException
    *             If writing to the output file fails.
    * @throws CoreException
-   *             If the monitor is cancelled.
+   *             If the monitor is canceled.
    */
   public static ICoverage addCoverage( final ICoverageCollection coverages, final IGeoGrid grid, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
   {
@@ -362,6 +362,17 @@ public class GeoGridUtilities
 
     final double value = grid.getValueChecked( x, y );
     coordinate.z = value;
+    return coordinate;
+  }
+
+  /**
+   * @return Midpoint of raster position x,y and sets its value to the given cell value.
+   */
+  public static final Coordinate calcCoordinateWithoutZ( final IGeoGrid grid, final int x, final int y, final double z, final Coordinate c ) throws GeoGridException
+  {
+    final Coordinate coordinate = GeoGridUtilities.toCoordinate( grid, x, y, c );
+    coordinate.z = z;
+
     return coordinate;
   }
 

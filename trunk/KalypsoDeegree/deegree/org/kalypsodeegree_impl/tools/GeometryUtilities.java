@@ -857,4 +857,55 @@ public class GeometryUtilities
     return GeometryFactory.createGM_Envelope( newMin, newMax );
   }
 
+  /**
+   * checks, if a position lies inside or outside of an polygon defined by a position array
+   * 
+   * @param pos
+   *            position array of the polygon object
+   * @param position
+   *            position to be checked
+   * @return 0 - if position lies outside of the polygon<BR>
+   *         1 - if position lies inside of the polygon<BR>
+   *         2 - if position lies on polygon's border.
+   */
+  public static int pointInsideOrOutside( final GM_Position[] pos, final GM_Position position )
+  {
+    int hits = 0;
+
+    for( int i = 0; i < pos.length - 1; i++ )
+    {
+      /* check, if position lies on ring's border */
+      final double sC = pos[i].getDistance( pos[i + 1] );
+      final double sA = pos[i].getDistance( position );
+      final double sB = pos[i + 1].getDistance( position );
+
+      if( Math.abs( sC - sA - sB ) < 0.001 )
+        return 2;
+
+      /* calculate determinant */
+      final double a00 = 2181.2838;
+      final double a10 = 0.31415926; // = PI/10 (??)
+      final double a01 = pos[i].getX() - pos[i + 1].getX();
+      final double a11 = pos[i].getY() - pos[i + 1].getY();
+      final double b0 = pos[i].getX() - position.getX();
+      final double b1 = pos[i].getY() - position.getY();
+
+      final double det = a00 * a11 - a10 * a01;
+      if( det == 0.0 )
+      {
+        System.out.println( "Indefinite problem in pointInsideOrOutside" );
+      }
+      final double x0 = (a11 * b0 - a01 * b1) / det;
+      final double x1 = (-a10 * b0 + a00 * b1) / det;
+
+      if( x0 > 0. && x1 >= 0. && x1 <= 1. )
+        hits++;
+    }
+    int check = hits % 2;
+
+    if( check == 1 )
+      return 1;
+
+    return 0;
+  }
 }
