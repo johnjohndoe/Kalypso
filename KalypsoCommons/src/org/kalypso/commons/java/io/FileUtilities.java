@@ -309,6 +309,7 @@ public class FileUtilities
    * the new file name. This method can hang a little while in the case the file it tries to create already exist.
    * 
    * @param prefix
+   * @param extension
    * @param parentDir
    * @return unique file
    */

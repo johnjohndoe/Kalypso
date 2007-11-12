@@ -46,6 +46,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -117,12 +118,22 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     return JTSUtilities.calculateTriangleZ( planarEquation, x, y );
   }
 
+  public boolean contains( final GM_Position position )
+  {
+    final GM_Position[] exteriorRing = getExteriorRing();
+    final int pointInsideOrOutside = GeometryUtilities.pointInsideOrOutside( exteriorRing, position );
+    if( pointInsideOrOutside == 0 )
+      return false;
+    return true;
+  }
+
   /**
-   * Overwritten for better perfomance.
+   * Overwritten for better performance. <BR>
+   * TODO: this method does not recognize, if the positions lies on an edge or a corner of the triangle.
    * 
    * @see org.kalypsodeegree.model.geometry.GM_Triangle#contains(org.kalypsodeegree.model.geometry.GM_Position)
    */
-  public boolean contains( final GM_Position position )
+  public boolean contains2( final GM_Position position )
   {
     final GM_Position[] exteriorRing = getExteriorRing();
 
@@ -133,6 +144,24 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     final int orientation12 = orientation( pos1, pos2, position );
     final int orientation23 = orientation( pos2, pos3, position );
     final int orientation31 = orientation( pos3, pos1, position );
+
+    // edge
+    if( orientation12 == orientation23 && orientation31 == 0 )
+      return true;
+
+    if( orientation23 == orientation31 && orientation12 == 0 )
+      return true;
+
+    if( orientation31 == orientation12 && orientation23 == 0 )
+      return true;
+
+    // corner
+    if( orientation12 == 0 && orientation23 == 0 && orientation31 != 0 )
+      return true;
+    if( orientation23 == 0 && orientation31 == 0 && orientation12 != 0 )
+      return true;
+    if( orientation31 == 0 && orientation12 == 0 && orientation23 != 0 )
+      return true;
 
     return orientation12 == orientation23 && orientation23 == orientation31;
   }
@@ -166,5 +195,4 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
 
     throw new IllegalStateException();
   }
-
 }

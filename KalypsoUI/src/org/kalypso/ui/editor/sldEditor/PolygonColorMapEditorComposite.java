@@ -515,8 +515,8 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
       for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
       {
-        final double fromValue = minDecimal.doubleValue() + currentClass * polygonStepWidth.doubleValue();
-        final double toValue = minDecimal.doubleValue() + (currentClass + 1) * polygonStepWidth.doubleValue();
+        final BigDecimal fromValue = new BigDecimal( minDecimal.doubleValue() + currentClass * polygonStepWidth.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+        final BigDecimal toValue = new BigDecimal( minDecimal.doubleValue() + (currentClass + 1) * polygonStepWidth.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
         // Stroke
         Color lineColor;
@@ -531,29 +531,30 @@ public abstract class PolygonColorMapEditorComposite extends Composite
         final Fill fill = StyleFactory.createFill( polygonColor, polygonOpacity );
 
         // Stroke
-        double lineOpacity;
-        double lineWidth;
+        BigDecimal lineOpacity;
+        BigDecimal lineWidth;
 
         if( useStroke == false )
         {
-          lineOpacity = 0;
-          lineWidth = 0.01;
+          lineOpacity = new BigDecimal( 0 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+          lineWidth = new BigDecimal( 0.01 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
         }
         else
         {
-          lineOpacity = SldHelper.interpolate( lineOpacityFrom, lineOpacityTo, currentClass, numOfClasses );
-          lineWidth = SldHelper.interpolate( lineWidthFrom, lineWidthTo, currentClass, numOfClasses );
-          if( lineWidth == 0 )
-            lineWidth = 0.01;
+          lineOpacity = new BigDecimal( SldHelper.interpolate( lineOpacityFrom, lineOpacityTo, currentClass, numOfClasses ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+          lineWidth = new BigDecimal( SldHelper.interpolate( lineWidthFrom, lineWidthTo, currentClass, numOfClasses ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+          if( lineWidth == new BigDecimal( 0 ) )
+            lineWidth = new BigDecimal( 0.01 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
         }
 
-        final Stroke stroke = StyleFactory.createStroke( lineColor, lineWidth, lineOpacity );
-
+        final Stroke stroke = StyleFactory.createStroke( lineColor, lineWidth.doubleValue(), lineOpacity.doubleValue() );
+        stroke.setLineCap( java.awt.BasicStroke.CAP_ROUND );
+        stroke.setLineJoin( java.awt.BasicStroke.JOIN_ROUND );
         final String labelStr = String.format( "%.2f - %.2f", fromValue, toValue );
 
         final ParameterValueType label = StyleFactory.createParameterValueType( labelStr );
-        final ParameterValueType from = StyleFactory.createParameterValueType( fromValue );
-        final ParameterValueType to = StyleFactory.createParameterValueType( toValue );
+        final ParameterValueType from = StyleFactory.createParameterValueType( fromValue.doubleValue() );
+        final ParameterValueType to = StyleFactory.createParameterValueType( toValue.doubleValue() );
 
         final PolygonColorMapEntry colorMapEntry = new PolygonColorMapEntry_Impl( fill, stroke, label, from, to );
 
