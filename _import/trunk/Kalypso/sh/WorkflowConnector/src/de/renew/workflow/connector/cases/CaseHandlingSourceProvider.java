@@ -32,7 +32,7 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
   /** data provider for the current szenario */
   private final ICaseDataProvider<D> m_dataProvider;
 
-  private IActiveContextChangeListener<T> workContextChangeListener = new IActiveContextChangeListener<T>()
+  private final IActiveContextChangeListener<T> workContextChangeListener = new IActiveContextChangeListener<T>()
   {
     @SuppressWarnings("synthetic-access")
     public void activeContextChanged( final CaseHandlingProjectNature newProject, T scenario )
@@ -103,7 +103,7 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
     {
       // TODO: is this really up to date? We allways assume that the scenarioFolder is a IFolder
       // TODO: comment why we need that
-      final IPath projectPath = currentProject.getProjectPath( currentCase );
+      final IPath projectPath = currentProject.getRelativeProjectPath( currentCase );
       if( projectPath.isEmpty() )
       {
         return currentProject.getProject();

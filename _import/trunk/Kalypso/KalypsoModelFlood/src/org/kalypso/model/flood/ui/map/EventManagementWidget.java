@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -104,10 +105,12 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateContentProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateLabelProvider;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.gml.provider.GmlSourceChooserWizard;
@@ -144,6 +147,7 @@ import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -414,19 +418,19 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       MessageDialog.openConfirm( shell, "Wasserspiegel importieren", "Wählen Sie das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
       return;
     }
-    IFeatureWrapperCollection<ITinReference> tins = runoffEvent.getTins();
+    final IFeatureWrapperCollection<ITinReference> tins = runoffEvent.getTins();
 
     // get min / max of the selected runoff event
     BigDecimal event_min = new BigDecimal( Double.MAX_VALUE );
     BigDecimal event_max = new BigDecimal( Double.MIN_VALUE );
 
-    for( ITinReference tin : tins )
+    for( final ITinReference tin : tins )
     {
-      BigDecimal min = tin.getMin();
+      final BigDecimal min = tin.getMin();
       if( min.compareTo( event_min ) == -1 )
         event_min = min;
 
-      BigDecimal max = tin.getMax();
+      final BigDecimal max = tin.getMax();
       if( max.compareTo( event_max ) == 1 )
         event_max = max;
     }
@@ -446,7 +450,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
             m_styleFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, true, new NullProgressMonitor() );
           }
-          catch( CoreException e )
+          catch( final CoreException e )
           {
             e.printStackTrace();
           }
@@ -490,7 +494,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
 
       return null;
@@ -623,12 +626,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final Action moveUpAction = new Action( "Move Up", upID )
     {
       /**
-       * @see org.eclipse.jface.action.Action#run()
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
        */
       @Override
-      public void run( )
+      public void runWithEvent( Event event )
       {
-        handleMove( -1 );
+        handleMove( event, -1 );
       }
     };
     moveUpAction.setDescription( "Nach Oben verschieben" );
@@ -636,12 +639,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final Action moveDownAction = new Action( "Move Down", downID )
     {
       /**
-       * @see org.eclipse.jface.action.Action#run()
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
        */
       @Override
-      public void run( )
+      public void runWithEvent( Event event )
       {
-        handleMove( 1 );
+        handleMove( event, 1 );
       }
     };
     moveDownAction.setDescription( "Nach Unten verschieben" );
@@ -768,7 +771,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   }
 
   @SuppressWarnings("unchecked")
-  protected void handleMove( final int step )
+  protected void handleMove( final Event event, final int step )
   {
     if( m_treeSelection == null )
       return;
@@ -781,7 +784,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final Feature parentFeature = selectedFeature.getParent();
     final IPropertyType pt = selectedFeature.getParentRelation();
 
-    final List featureList = (List) parentFeature.getProperty( pt );
+    final List< ? > featureList = (List< ? >) parentFeature.getProperty( pt );
     final int newIndex = featureList.indexOf( selectedFeature ) + step;
     if( newIndex < 0 || newIndex >= featureList.size() )
       return;
@@ -795,8 +798,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoModelFloodPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( event.display.getActiveShell(), "Reihenfolge ändern", "Fehler beim Ändern der Reihenfolge", status );
     }
   }
 
@@ -861,17 +865,28 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final IRunoffEvent runoffEvent = findFirstEvent( m_treeSelection );
     if( runoffEvent == null )
     {
-      MessageDialog.openConfirm( shell, windowTitle, "Wählen Sie das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
+      MessageDialog.openConfirm( shell, windowTitle, "Wählen Sie bitte zuerst das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
       return;
     }
 
     /* Get source provider for tins */
     final IGmlSourceProvider[] provider = KalypsoCoreExtensions.createGmlSourceProvider( "org.kalypso.core.tin.waterlevel" );
+    if( provider.length == 0 )
+    {
+      MessageDialog.openConfirm( shell, windowTitle, "In dieser Installation stehen keine Wasserspiegel zur Verfügung." );
+      return;
+    }
 
     /* Show dialog to user and import tins afterwards */
     final ImportTinOperation operation = new ImportTinOperation( m_dataProvider, runoffEvent.getTins() );
     final GmlSourceChooserWizard wizard = new GmlSourceChooserWizard( provider, operation );
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), getClass().getName() );
+    wizard.setDialogSettings( dialogSettings );
     wizard.setWindowTitle( windowTitle );
+
+    final WizardDialog2 wizardDialog = new WizardDialog2( shell, wizard );
+    wizardDialog.setRememberSize( true );
+    wizardDialog.open();
   }
 
   /**
@@ -940,21 +955,47 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     if( m_treeSelection == null )
       return;
 
-    final GM_Envelope envelope = envelopeForSelection();
-    if( envelope != null )
+    for( final Object selectedObject : m_treeSelection )
     {
-      final GM_Position minPoint = getMapPanel().getProjection().getDestPoint( envelope.getMin() );
-      final GM_Position maxPoint = getMapPanel().getProjection().getDestPoint( envelope.getMax() );
+      if( selectedObject instanceof Feature )
+      {
+        final Object adaptedObject = adaptToKnownObject( selectedObject );
 
-      final int x = (int) Math.min( minPoint.getX(), maxPoint.getX() );
-      final int y = (int) Math.min( minPoint.getY(), maxPoint.getY() );
+        if( adaptedObject instanceof ITinReference )
+          paintEnvelope( g, ((ITinReference) adaptedObject).getWrappedFeature().getEnvelope() );
+        else if( adaptedObject instanceof IRunoffEvent )
+        {
+          final IFeatureWrapperCollection<ITinReference> tins = ((IRunoffEvent) adaptedObject).getTins();
+          paintEnvelope( g, tins.getWrappedList().getBoundingBox() );
 
-      final int width = (int) Math.abs( minPoint.getX() - maxPoint.getX() );
-      final int height = (int) Math.abs( minPoint.getY() - maxPoint.getY() );
+          for( final ITinReference tinReference : tins )
+            paintEnvelope( g, tinReference.getWrappedFeature().getEnvelope() );
+        }
 
-      g.setColor( Color.RED );
-      g.drawRect( x, y, width, height );
+        final GM_Envelope envelope = envelopeForSelected( selectedObject );
+        paintEnvelope( g, envelope );
+      }
     }
+  }
+
+  private void paintEnvelope( final Graphics g, final GM_Envelope envelope )
+  {
+    if( envelope == null )
+      return;
+
+    final GeoTransform projection = getMapPanel().getProjection();
+
+    final GM_Position minPoint = projection.getDestPoint( envelope.getMin() );
+    final GM_Position maxPoint = projection.getDestPoint( envelope.getMax() );
+
+    final int x = (int) Math.min( minPoint.getX(), maxPoint.getX() );
+    final int y = (int) Math.min( minPoint.getY(), maxPoint.getY() );
+
+    final int width = (int) Math.abs( minPoint.getX() - maxPoint.getX() );
+    final int height = (int) Math.abs( minPoint.getY() - maxPoint.getY() );
+
+    g.setColor( Color.RED );
+    g.drawRect( x, y, width, height );
   }
 
   private GM_Envelope envelopeForSelection( )
@@ -966,21 +1007,44 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     for( final Object selectedObject : m_treeSelection )
     {
-      if( selectedObject instanceof Feature )
+      final GM_Envelope envelope = envelopeForSelected( selectedObject );
+      if( envelope != null )
       {
-        final Feature feature = (Feature) selectedObject;
-        final GM_Envelope envelope = feature.getEnvelope();
-        if( envelope != null )
-        {
-          if( result == null )
-            result = envelope;
-          else
-            result = result.getMerged( envelope );
-        }
+        if( result == null )
+          result = envelope;
+        else
+          result = result.getMerged( envelope );
       }
     }
 
     return result;
+  }
+
+  private GM_Envelope envelopeForSelected( final Object selectedObject )
+  {
+    final Object adaptedObject = adaptToKnownObject( selectedObject );
+
+    if( adaptedObject instanceof ITinReference )
+      return ((ITinReference) adaptedObject).getWrappedFeature().getEnvelope();
+
+    if( adaptedObject instanceof IRunoffEvent )
+      return ((IRunoffEvent) adaptedObject).getTins().getWrappedList().getBoundingBox();
+
+    return null;
+  }
+
+  private Object adaptToKnownObject( final Object object )
+  {
+    if( !(object instanceof Feature) )
+      return null;
+
+    final Feature feature = (Feature) object;
+
+    final Object event = feature.getAdapter( IRunoffEvent.class );
+    if( event != null )
+      return event;
+
+    return feature.getAdapter( ITinReference.class );
   }
 
 }

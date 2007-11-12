@@ -26,14 +26,22 @@ import de.renew.workflow.connector.context.IActiveContextChangeListener;
 
 /**
  * @author Stefan Kurzbach
- * 
  */
 public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener<Scenario>, IActiveContextChangeListener<Scenario>
 {
   private Viewer m_viewer;
 
+  private final boolean m_showResources;
+
   public ScenarioContentProvider( )
   {
+    this( true );
+  }
+
+  public ScenarioContentProvider( final boolean showResources )
+  {
+    m_showResources = showResources;
+
     final ActiveWorkContext<Scenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     activeWorkContext.addActiveContextChangeListener( this );
   }
@@ -44,7 +52,11 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   @Override
   public Object[] getChildren( final Object parentElement )
   {
-    final Object[] children = super.getChildren( parentElement );
+    final Object[] children = m_showResources ? super.getChildren( parentElement ) : new Object[] {};
+
+    // TODO: does that really belong here??? should'nt it be more correct to add the resource content provider to the
+    // scenario view in order to allow the displayment of resources?
+
     if( parentElement instanceof IProject )
     {
       final IProject project = (IProject) parentElement;

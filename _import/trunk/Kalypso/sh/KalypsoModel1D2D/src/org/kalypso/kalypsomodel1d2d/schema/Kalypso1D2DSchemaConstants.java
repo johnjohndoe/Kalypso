@@ -290,6 +290,8 @@ public class Kalypso1D2DSchemaConstants
 
   public static final QName RES_1D2D_F_NODE_RES_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" );
 
+  public static final QName TIN_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" );
+
   public static final QName TIN_RESULT_PROP_TIN = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" );
 
   public static final QName TIN_RESULT_PROP_PARAMETER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" );

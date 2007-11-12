@@ -119,7 +119,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   /**
    * Constructs a path for the case relative to the project location.
    */
-  public IPath getProjectPath( @SuppressWarnings("unused")
+  public IPath getRelativeProjectPath( @SuppressWarnings("unused")
   final Case caze )
   {
     return Path.EMPTY;// caze.getName() );
@@ -130,7 +130,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
    */
   public void caseAdded( final Case caze )
   {
-    final IFolder newFolder = m_project.getFolder( getProjectPath( caze ) );
+    final IFolder newFolder = m_project.getFolder( getRelativeProjectPath( caze ) );
 
     if( !newFolder.exists() )
     {
@@ -150,7 +150,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
 
   public void caseRemoved( final Case caze )
   {
-    final IFolder folder = m_project.getFolder( getProjectPath( caze ) );
+    final IFolder folder = m_project.getFolder( getRelativeProjectPath( caze ) );
     try
     {
       folder.delete( true, null );

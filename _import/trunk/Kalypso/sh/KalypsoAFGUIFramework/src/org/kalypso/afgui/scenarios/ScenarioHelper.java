@@ -110,4 +110,17 @@ public class ScenarioHelper
     final IEvaluationContext context = handlerService.getCurrentState();
     return (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
   }
+
+  /**
+   * Find the oldest parent (=root) of the given scenario.<br>
+   * If the scenario has no parent, itself is returned-.
+   */
+  public static Scenario findRootScenario( final Scenario scenario )
+  {
+    final Scenario parentScenario = scenario.getParentScenario();
+    if( parentScenario == null )
+      return scenario;
+
+    return findRootScenario( scenario );
+  }
 }

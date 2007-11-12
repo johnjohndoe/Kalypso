@@ -121,11 +121,12 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     final Date sourceDate = new Date();
 
     final Object sourceObject = GMLXPathUtilities.query( sourcePath, sourceWorkspace );
-    if( sourceObject != null && !(sourceObject instanceof GM_TriangulatedSurface) )
+    if( sourceObject == null || !(sourceObject instanceof GM_TriangulatedSurface) )
     {
       final String msg = String.format( "Zielpfad (%s) referenziert kein GM_TriangulatedSurface: %s", sourcePath, sourceObject );
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
+
     final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) sourceObject;
 
     ProgressUtilities.worked( monitor, 33 );

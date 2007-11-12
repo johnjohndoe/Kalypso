@@ -87,11 +87,19 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
    * Constructs a path for the scenario relative to the project location.
    */
   @Override
-  public IPath getProjectPath( final Case caze )
+  public IPath getRelativeProjectPath( final Case caze )
+  {
+    return getProjectRelativePath( caze );
+  }
+
+  /**
+   * Static version of {@link #getRelativeProjectPath(Case)}.
+   */
+  public static IPath getProjectRelativePath( final Case caze )
   {
     final Scenario scenario = (Scenario) caze;
     if( scenario.getParentScenario() != null )
-      return getProjectPath( scenario.getParentScenario() ).append( scenario.getName() );
+      return getProjectRelativePath( scenario.getParentScenario() ).append( scenario.getName() );
     else
       return new Path( scenario.getName() );
   }
@@ -103,7 +111,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   public void caseAdded( final Case caze )
   {
     super.caseAdded( caze );
-    final IPath projectPath = getProjectPath( caze );
+    final IPath projectPath = getRelativeProjectPath( caze );
     final IFolder newFolder = getProject().getFolder( projectPath );
 
     final Scenario scenario = (Scenario) caze;
@@ -136,7 +144,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
     if( parentScenario != null )
     {
       // this is a new derived scenario, so copy scenario contents of parent folder
-      final IPath parentPath = getProjectPath( parentScenario );
+      final IPath parentPath = getRelativeProjectPath( parentScenario );
       final IFolder parentFolder = getProject().getFolder( parentPath );
       try
       {

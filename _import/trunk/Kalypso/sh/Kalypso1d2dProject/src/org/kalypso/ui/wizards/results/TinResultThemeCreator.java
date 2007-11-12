@@ -88,10 +88,11 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
   private static final String UNIT_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getLocalPart() );
 
-//  private static final String DATE_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getLocalPart() );
+  // private static final String DATE_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}",
+  // Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getNamespaceURI(),
+  // Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getLocalPart() );
 
   private final String THEME_INFO_ID = String.format( "%s?geometry=%s&format=%s: %s %s", TIN_INFO_ID, Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_TIN, LABEL_PROPERTY_FORMAT, "%.2f", UNIT_PROPERTY_FORMAT );
-
 
   public TinResultThemeCreator( final IDocumentResultMeta documentResult, final IFolder scenarioFolder )
   {
@@ -180,6 +181,8 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
     final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
     final String resFolder = resultsFolder.getFullPath().toPortableString();
+    // FIXME: PLATFORM DEPENDECY! Always use IPath/IResource-API to manipuate pathes
+    final String source = "../" + m_documentResult.getFullPath().toPortableString();
 
     String style = null;
     String themeName = null;
@@ -189,7 +192,6 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     final String styleLinkType = "sld";
     final String styleType = "simple";
     final String featurePath = "";
-    final String source = "../" + m_documentResult.getFullPath().toPortableString();
 
     String type = null;
 
@@ -214,7 +216,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
         m_resultLayerCommandData[1] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, m_scenarioFolder, type );
         m_resultLayerCommandData[1].setSelected( true );
       }
-      
+
       m_resultLayerCommandData[1].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
       m_resultLayerCommandData[1].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
     }
@@ -295,5 +297,4 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     else
       return null;
   }
-
 }

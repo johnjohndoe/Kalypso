@@ -67,7 +67,6 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public class ResultMetaInfoViewer extends Viewer
 {
-
   private static final DateFormat INFO_DF = SimpleDateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
 
   /*
@@ -158,7 +157,7 @@ public class ResultMetaInfoViewer extends Viewer
     m_panel.layout( true );
   }
 
-  private String getInformationText( final IResultMeta result )
+  public static String getInformationText( final IResultMeta result )
   {
     if( result == null )
       return "kein Ergebnis selektiert";
@@ -318,7 +317,7 @@ public class ResultMetaInfoViewer extends Viewer
   /**
    * gets the ScenarioResultMeta as the papa of all results
    */
-  private IScenarioResultMeta getScenarioResultMeta( final IResultMeta result )
+  private static IScenarioResultMeta getScenarioResultMeta( final IResultMeta result )
   {
     if( result instanceof IScenarioResultMeta )
       return (IScenarioResultMeta) result;
@@ -336,7 +335,7 @@ public class ResultMetaInfoViewer extends Viewer
   /**
    * gets the CalcUnitResultMeta as the papa of all steps
    */
-  private ICalcUnitResultMeta getCalcUnitResultMeta( final IResultMeta result )
+  private static ICalcUnitResultMeta getCalcUnitResultMeta( final IResultMeta result )
   {
     if( result instanceof ICalcUnitResultMeta )
       return (ICalcUnitResultMeta) result;
@@ -354,7 +353,7 @@ public class ResultMetaInfoViewer extends Viewer
   /**
    * gets the StepResultMeta as the papa of all documents (except tin_terrain)
    */
-  private IStepResultMeta getStepResultMeta( final IResultMeta result )
+  private static IStepResultMeta getStepResultMeta( final IResultMeta result )
   {
     if( result instanceof IStepResultMeta )
       return (IStepResultMeta) result;
