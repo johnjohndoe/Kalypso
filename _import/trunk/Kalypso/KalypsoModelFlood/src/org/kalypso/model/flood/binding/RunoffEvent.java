@@ -98,4 +98,12 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   {
     getFeature().setProperty( QNAME_PROP_DATAPATH, path.toPortableString() );
   }
+
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#setResultCoverages(org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection)
+   */
+  public void setResultCoverages( ICoverageCollection collection )
+  {
+    getFeature().setProperty( QNAME_PROP_RESULT_COVERAGES, collection );
+  }
 }

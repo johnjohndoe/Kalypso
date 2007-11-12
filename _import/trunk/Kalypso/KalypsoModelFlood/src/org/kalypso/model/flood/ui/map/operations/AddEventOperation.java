@@ -28,6 +28,7 @@ import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
@@ -90,7 +91,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       final Feature parentFeature = events.getWrappedFeature();
       final IRelationType parentRelation = events.getWrappedList().getParentFeatureTypeProperty();
       final IFeatureType featureType = parentRelation.getTargetFeatureType();
-      final Feature newEventFeature = workspace.createFeature( parentFeature, parentRelation, featureType, 0 );
+      final Feature newEventFeature = workspace.createFeature( parentFeature, parentRelation, featureType, 1 );
 
       final IRunoffEvent newEvent = (IRunoffEvent) newEventFeature.getAdapter( IRunoffEvent.class );
       newEvent.setName( m_eventName );
@@ -143,41 +144,6 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   protected void addEventThemes( final AbstractCascadingLayerTheme wspThemes, final IRunoffEvent event ) throws Exception
   {
-    { // Wasserspiegel
-      final StyledLayerType wspLayer = new StyledLayerType();
-
-      wspLayer.setName( "Wasserspiegel (" + event.getName() + ")" );
-      wspLayer.setFeaturePath( "#fid#" + event.getWrappedFeature().getId() + "/tinMember" );
-      wspLayer.setLinktype( "gml" );
-      wspLayer.setType( "simple" );
-      wspLayer.setVisible( true );
-      wspLayer.setActuate( "onRequest" );
-      wspLayer.setHref( "../models/flood.gml" );
-      wspLayer.setVisible( true );
-      final Property layerPropertyDeletable = new Property();
-      layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-      layerPropertyDeletable.setValue( "false" );
-
-      final Property layerPropertyThemeInfoId = new Property();
-      layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() + ") %.2f NN+m" );
-
-      final List<Property> layerPropertyList = wspLayer.getProperty();
-      layerPropertyList.add( layerPropertyDeletable );
-      layerPropertyList.add( layerPropertyThemeInfoId );
-
-      final List<Style> styleList = wspLayer.getStyle();
-      final Style style = new Style();
-      style.setLinktype( "sld" );
-      style.setStyle( "wspUserStyle" );
-      style.setActuate( "onRequest" );
-      style.setHref( styleLocationForEvent( event ) );
-      style.setType( "simple" );
-      styleList.add( style );
-
-      wspThemes.addLayer( wspLayer );
-    }
-
     {// Polygone
       final StyledLayerType polygoneLayer = new StyledLayerType();
 
@@ -215,11 +181,62 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
       wspThemes.addLayer( polygoneLayer );
     }
+
+    { // Wasserspiegel
+      final StyledLayerType wspLayer = new StyledLayerType();
+
+      wspLayer.setName( "Wasserspiegel (" + event.getName() + ")" );
+      wspLayer.setFeaturePath( "#fid#" + event.getWrappedFeature().getId() + "/tinMember" );
+      wspLayer.setLinktype( "gml" );
+      wspLayer.setType( "simple" );
+      wspLayer.setVisible( true );
+      wspLayer.setActuate( "onRequest" );
+      wspLayer.setHref( "../models/flood.gml" );
+      wspLayer.setVisible( true );
+      final Property layerPropertyDeletable = new Property();
+      layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
+      layerPropertyDeletable.setValue( "false" );
+
+      final Property layerPropertyThemeInfoId = new Property();
+      layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
+      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() + ") %.2f NN+m" );
+
+      final List<Property> layerPropertyList = wspLayer.getProperty();
+      layerPropertyList.add( layerPropertyDeletable );
+      layerPropertyList.add( layerPropertyThemeInfoId );
+
+      final List<Style> styleList = wspLayer.getStyle();
+      final Style style = new Style();
+      style.setLinktype( "sld" );
+      style.setStyle( "wspUserStyle" );
+      style.setActuate( "onRequest" );
+      style.setHref( styleLocationForEvent( event ) );
+      style.setType( "simple" );
+      styleList.add( style );
+
+      wspThemes.addLayer( wspLayer );
+    }
   }
 
   public static String styleLocationForEvent( final IRunoffEvent event )
   {
     return "../events/" + event.getDataPath().toPortableString() + "/wsp.sld";
+  }
+
+  /**
+   * Finds the wsp cascading theme containing the event themes.
+   */
+  public static AbstractCascadingLayerTheme findWspTheme( final IMapModell mapModell )
+  {
+    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+    for( final IKalypsoTheme kalypsoTheme : allThemes )
+    {
+      // REMARK: not nice, but not otherwise possible: use name to find the theme.
+      if( kalypsoTheme instanceof AbstractCascadingLayerTheme && kalypsoTheme.getName().equals( "Wasserspiegellagen" ) )
+        return (AbstractCascadingLayerTheme) kalypsoTheme;
+    }
+
+    return null;
   }
 
 }

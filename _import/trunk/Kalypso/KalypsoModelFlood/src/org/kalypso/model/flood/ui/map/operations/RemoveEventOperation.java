@@ -43,7 +43,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
     m_wspThemes = wspThemes;
   }
 
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     try
     {
@@ -63,16 +63,14 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
           eventFolder.delete( true, new NullProgressMonitor() );
         }
 
-        {
-          /* Delete coverage from collection */
-          final Feature parentFeature = featureToRemove.getParent();
-          final IRelationType pt = featureToRemove.getParentRelation();
+        /* Delete coverage from collection */
+        final Feature parentFeature = featureToRemove.getParent();
+        final IRelationType pt = featureToRemove.getParentRelation();
 
-          final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class );
+        final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class );
 
-          final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, featureToRemove );
-          workspace.postCommand( command );
-        }
+        final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, featureToRemove );
+        workspace.postCommand( command );
       }
 
       /*

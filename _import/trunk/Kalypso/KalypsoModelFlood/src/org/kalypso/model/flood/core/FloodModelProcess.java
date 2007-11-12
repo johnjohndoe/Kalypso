@@ -43,12 +43,18 @@ package org.kalypso.model.flood.core;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
@@ -108,21 +114,46 @@ public class FloodModelProcess
     final ICoverageCollection terrainModel = m_model.getTerrainModel();
 
     final ICoverageCollection resultCoverages = event.getResultCoverages();
+
     if( resultCoverages.size() != 0 )
       throw new IllegalStateException( "Event enthält noch Ergebnisse: " + event.getName() );
+
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    final IFolder eventsFolder = scenarioFolder.getFolder( "events" );
+    final IFolder eventFolder = eventsFolder.getFolder( event.getDataPath().toPortableString() );
 
     for( final ICoverage terrainCoverage : terrainModel )
     {
       final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
-
       final IFeatureWrapperCollection<ITinReference> tins = event.getTins();
       final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins );
 
-      final File file = File.createTempFile( "gridTest_grid", ".ascbin" );
-      final String filePath = file.getName();
-      GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, filePath, "image/bin", new NullProgressMonitor() );
+      /* set destination: => event folder/results */
+
+      // generate unique name for grid file
+      final File gridsPath = new File( eventFolder.toString(), "results" );
+      final String uniqueFileName = FileUtilities.createNewUniqueFileName( "grid", ".ascbin", gridsPath );
+
+      // get results folder
+      final IFolder destFolder = eventFolder.getFolder( "results" );
+      if( destFolder.exists() == false )
+        destFolder.create( false, true, new SubProgressMonitor( monitor, 2 ) );
+
+      // get file
+      final IFile destFile = destFolder.getFile( uniqueFileName );
+      final File file = destFile.getLocation().toFile();
+
+      final String fileName = "../events/" + event.getDataPath() + "/results/" + file.getName();
+      GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", new NullProgressMonitor() );
 
       terrainGrid.dispose();
+
+      // TODO: save model
     }
+
+    /* update resource folder */
+    scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+
   }
+
 }

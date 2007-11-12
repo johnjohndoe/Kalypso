@@ -127,14 +127,12 @@ import org.kalypso.model.flood.ui.map.operations.AddEventOperation;
 import org.kalypso.model.flood.ui.map.operations.ImportTinOperation;
 import org.kalypso.model.flood.ui.map.operations.RemoveEventOperation;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
@@ -279,12 +277,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     treeButtonPanel.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
 
     /* Info view */
-    final Group coverageInfoGroup = new Group( panel, SWT.H_SCROLL );
-    coverageInfoGroup.setLayout( new GridLayout() );
+    final Group eventInfoGroup = new Group( panel, SWT.H_SCROLL );
+    eventInfoGroup.setLayout( new GridLayout() );
     final GridData infoGroupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    coverageInfoGroup.setLayoutData( infoGroupData );
-    toolkit.adapt( coverageInfoGroup );
-    coverageInfoGroup.setText( "Info" );
+    eventInfoGroup.setLayoutData( infoGroupData );
+    toolkit.adapt( eventInfoGroup );
+    eventInfoGroup.setText( "Info" );
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     featureviewFactory.addView( getClass().getResource( "resources/event.gft" ) );
@@ -358,7 +356,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         if( m_treeSelection != null && m_treeSelection.length > 0 )
         {
           featureComposite.setFeature( (Feature) m_treeSelection[0] );
-          featureComposite.createControl( coverageInfoGroup, SWT.NONE );
+          featureComposite.createControl( eventInfoGroup, SWT.NONE );
         }
 
         parent.layout( true, true );
@@ -552,9 +550,11 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final GMLContentProvider gmlcp = new GMLContentProvider( false );
     final IContentProvider cp = new StatusAndDelegateContentProvider( gmlcp );
     final ILabelProvider lp = new StatusAndDelegateLabelProvider( new GMLLabelProvider() );
+    final CoverageFilterViewerFilter coverageFilter = new CoverageFilterViewerFilter();
 
     viewer.setContentProvider( cp );
     viewer.setLabelProvider( lp );
+    viewer.addFilter( coverageFilter );
 
     if( m_model == null )
       viewer.setInput( StatusUtilities.createErrorStatus( "Flood-Modell nicht geladen." ) );
@@ -826,7 +826,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final String eventName = dialog.getValue();
     final IFloodModel model = m_model;
     final IFolder eventsFolder = getEventsFolder();
-    final AbstractCascadingLayerTheme wspThemes = findWspTheme();
+    final AbstractCascadingLayerTheme wspThemes = AddEventOperation.findWspTheme( getMapPanel().getMapModell() );
     Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
 
     final URL sldContent = getClass().getResource( "resources/wsp.sld" );
@@ -837,23 +837,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     if( !resultStatus.isOK() )
       KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
     ErrorDialog.openError( shell, "Ereignis hinzufügen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
-  }
-
-  /**
-   * Finds THE wsp cascading theme containing the event themes.
-   */
-  private AbstractCascadingLayerTheme findWspTheme( )
-  {
-    final IMapModell mapModell = getMapPanel().getMapModell();
-    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    for( final IKalypsoTheme kalypsoTheme : allThemes )
-    {
-      // REMARK: not nice, but not otherwise possible: use name to find the theme.
-      if( kalypsoTheme instanceof AbstractCascadingLayerTheme && kalypsoTheme.getName().equals( "Wasserspiegellagen" ) )
-        return (AbstractCascadingLayerTheme) kalypsoTheme;
-    }
-
-    return null;
   }
 
   protected void handleImportTin( final Event event )
@@ -925,7 +908,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     if( m_treeSelection == null )
       return;
 
-    final AbstractCascadingLayerTheme wspThemes = findWspTheme();
+    final AbstractCascadingLayerTheme wspThemes = AddEventOperation.findWspTheme( getMapPanel().getMapModell() );
 
     final ICoreRunnableWithProgress operation = new RemoveEventOperation( m_treeSelection, m_dataProvider, wspThemes );
 
@@ -934,7 +917,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
       KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, "Ereignis hinzufügen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
+    ErrorDialog.openError( shell, "Ereignis löschen", "Fehler beim Löschen des Ereignisses", resultStatus );
   }
 
   /**

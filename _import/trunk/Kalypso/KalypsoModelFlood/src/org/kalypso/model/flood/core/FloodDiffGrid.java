@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.core;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
@@ -61,11 +62,18 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 {
   private final IFeatureWrapperCollection<ITinReference> m_tins;
 
+  private BigDecimal m_min;
+
+  private BigDecimal m_max;
+
   public FloodDiffGrid( final IGeoGrid terrainGrid, final IFeatureWrapperCollection<ITinReference> tins )
   {
     super( terrainGrid );
 
     m_tins = tins;
+
+    m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    m_max = new BigDecimal( Double.MIN_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 
   /**
@@ -79,20 +87,27 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     if( Double.isNaN( terrainValue ) )
       return Double.NaN;
 
-    final Coordinate crd = GeoGridUtilities.calcCoordinate( this, x, y, null );
+    // get coordinate for raster cell x/y
+    final Coordinate crd = GeoGridUtilities.calcCoordinateWithoutZ( this, x, y, terrainValue, null );
 
-    // TODO: check polygone stuff
+    // TODO: check polygon stuff
     // - if not clip (+): Double.NaN
     // - if clip (-): Double.NaN
 
     final double wspValue = getWspValue( crd );
-    if( !Double.isNaN( wspValue ) )
-      return wspValue - terrainValue;
+    // if( !Double.isNaN( wspValue ) )
+    // return wspValue - terrainValue;
 
     // TODO: - if extrapolation: getExtrapolationsvalue
     final double extraWspValue = wspValue;
 
-    return extraWspValue - terrainValue;
+    double value = extraWspValue - terrainValue;
+
+    // check min/max
+    m_min = m_min.min( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+    m_max = m_max.max( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+
+    return value;
   }
 
   private double getWspValue( final Coordinate crd )
@@ -108,6 +123,18 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
 
     return Double.NaN;
+  }
+
+  @Override
+  public BigDecimal getMin( )
+  {
+    return m_min;
+  }
+
+  @Override
+  public BigDecimal getMax( )
+  {
+    return m_max;
   }
 
 }
