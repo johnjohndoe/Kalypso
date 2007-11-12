@@ -12,21 +12,21 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 public class RasterizationControlModel extends AbstractFeatureBinder implements IRasterizationControlModel
 {
-  private FeatureList m_landuseClassesFeatureList;
+  private final FeatureList m_landuseClassesFeatureList;
 
-  private FeatureList m_assetValueClassesFeatureList;
+  private final FeatureList m_assetValueClassesFeatureList;
 
-  private FeatureList m_damageFunctionsFeatureList;
+  private final FeatureList m_damageFunctionsFeatureList;
 
-  private FeatureList m_administrationUnitsFeatureList;
+  private final FeatureList m_administrationUnitsFeatureList;
 
-  private List<ILanduseClass> m_landuseClasses;
+  private final List<ILanduseClass> m_landuseClasses;
 
-  private List<IAssetValueClass> m_assetValueClasses;
+  private final List<IAssetValueClass> m_assetValueClasses;
 
-  private List<IDamageFunction> m_damageFunctions;
+  private final List<IDamageFunction> m_damageFunctions;
 
-  private List<IAdministrationUnit> m_administrationUnits;
+  private final List<IAdministrationUnit> m_administrationUnits;
 
   private static final String MODEL_NAME = "RasterizationControlModel.gml";
 
@@ -63,12 +63,12 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
   {
     try
     {
-      final Feature feature = FeatureHelper.createFeatureForListProp( m_landuseClassesFeatureList, IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER, ILanduseClass.QNAME );
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_landuseClassesFeatureList, ILanduseClass.QNAME, -1 );
       final ILanduseClass landuseClass = (ILanduseClass) feature.getAdapter( ILanduseClass.class );
       m_landuseClasses.add( landuseClass );
       return landuseClass;
     }
-    catch( GMLSchemaException e )
+    catch( final GMLSchemaException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -81,12 +81,12 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
   {
     try
     {
-      final Feature feature = FeatureHelper.createFeatureForListProp( m_damageFunctionsFeatureList, IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER, IDamageFunction.QNAME );
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_damageFunctionsFeatureList, IDamageFunction.QNAME, -1 );
       final IDamageFunction damageFunction = (IDamageFunction) feature.getAdapter( IDamageFunction.class );
       m_damageFunctions.add( damageFunction );
       return damageFunction;
     }
-    catch( GMLSchemaException e )
+    catch( final GMLSchemaException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -99,14 +99,14 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
   {
     try
     {
-      final Feature feature = FeatureHelper.createFeatureForListProp( m_administrationUnitsFeatureList, IRasterizationControlModel.PROPERTY_ADMINISTRATION_UNIT_MEMBER, IAdministrationUnit.QNAME );
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_administrationUnitsFeatureList, IAdministrationUnit.QNAME, -1 );
       final IAdministrationUnit administrationUnit = (IAdministrationUnit) feature.getAdapter( IAdministrationUnit.class );
       m_administrationUnits.add( administrationUnit );
       administrationUnit.setName( name );
       administrationUnit.setDescription( description );
       return administrationUnit;
     }
-    catch( GMLSchemaException e )
+    catch( final GMLSchemaException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -129,7 +129,7 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
   {
     try
     {
-      final Feature feature = FeatureHelper.createFeatureForListProp( m_assetValueClassesFeatureList, IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER, IAssetValueClass.QNAME );
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_assetValueClassesFeatureList, IAssetValueClass.QNAME, -1 );
       final IAssetValueClass assetValueClass = (IAssetValueClass) feature.getAdapter( IAssetValueClass.class );
       final String landusePath = MODEL_NAME + "#" + landuseClassGmlID;
       final String administrationUnitPath = MODEL_NAME + "#" + administrationUnitGmlID;
@@ -160,7 +160,7 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
       m_assetValueClasses.add( assetValueClass );
       return assetValueClass;
     }
-    catch( GMLSchemaException e )
+    catch( final GMLSchemaException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
