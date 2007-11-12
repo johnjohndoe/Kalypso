@@ -1246,7 +1246,7 @@ public class FeatureHelper
     return result;
   }
 
-  public static Feature createFeatureForListProp( final FeatureList list, final QName listProperty, final QName newFeatureName ) throws GMLSchemaException
+  public static Feature createFeatureForListProp( final FeatureList list, final QName newFeatureName, final int index ) throws GMLSchemaException
   {
     final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
@@ -1272,7 +1272,7 @@ public class FeatureHelper
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFeatureType );
     try
     {
-      workspace.addFeatureAsComposition( parentFeature, parentRelation, list.size(), newFeature );
+      workspace.addFeatureAsComposition( parentFeature, parentRelation, index, newFeature );
     }
     catch( final Exception e )
     {

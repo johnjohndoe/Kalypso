@@ -266,7 +266,7 @@ public class KalypsoCoreExtensions
         {
           try
           {
-            providerElement.createExecutableExtension( "class" );
+            result.add( (IGmlSourceProvider) providerElement.createExecutableExtension( "class" ) );
           }
           catch( final Throwable e )
           {

@@ -71,7 +71,7 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
   /**
    * constructor initializing the class with the <PolygonSymbolizer>
    */
-  public SurfacePolygonSymbolizer_Impl( PolygonColorMap colorMap, final Geometry geometry, final double min, final double max, final UOM uom )
+  public SurfacePolygonSymbolizer_Impl( final PolygonColorMap colorMap, final Geometry geometry, final double min, final double max, final UOM uom )
   {
     super( geometry, uom );
     setColorMap( colorMap );
@@ -84,7 +84,7 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
    *      org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public void paint( GC gc, Feature feature ) throws FilterEvaluationException
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
     final Rectangle clipping = gc.getClipping();
 
@@ -95,16 +95,19 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
     /* we draw 2 rects in the colors of the color map and a black rectangle around it */
     final PolygonColorMapEntry[] colorMapEntries = m_colorMap.getColorMap();
 
+    if( colorMapEntries.length == 0 )
+      return;
+
     // the black border
-    java.awt.Color startColor = colorMapEntries[0].getFill().getFill( null );
-    Color fillColorStart = new Color( gc.getDevice(), startColor.getRed(), startColor.getGreen(), startColor.getBlue() );
+    final java.awt.Color startColor = colorMapEntries[0].getFill().getFill( null );
+    final Color fillColorStart = new Color( gc.getDevice(), startColor.getRed(), startColor.getGreen(), startColor.getBlue() );
 // gc.setForeground( color );
     gc.setBackground( fillColorStart );
     gc.fillRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height / 2 );
 
     // the black border
-    java.awt.Color endColor = colorMapEntries[colorMapEntries.length - 1].getFill().getFill( null );
-    Color fillColorEnd = new Color( gc.getDevice(), endColor.getRed(), endColor.getGreen(), endColor.getBlue() );
+    final java.awt.Color endColor = colorMapEntries[colorMapEntries.length - 1].getFill().getFill( null );
+    final Color fillColorEnd = new Color( gc.getDevice(), endColor.getRed(), endColor.getGreen(), endColor.getBlue() );
     gc.setBackground( fillColorEnd );
     gc.fillRectangle( clipping.x, clipping.height / 2, clipping.width - 1, clipping.height - 1 );
 
@@ -124,7 +127,7 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
   /**
    * @see org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer#setColorMap(org.kalypsodeegree_impl.graphics.sld.PolygonColorMap)
    */
-  public void setColorMap( PolygonColorMap colorMap )
+  public void setColorMap( final PolygonColorMap colorMap )
   {
     m_colorMap = colorMap;
   }

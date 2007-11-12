@@ -137,6 +137,9 @@ public class GmlSourceContentProvider implements ITreeContentProvider
 
     m_contentProvider.clear();
 
+    if( m_provider == null )
+      return;
+
     // create content provider for each provider
     for( final IGmlSourceProvider provider : m_provider )
     {
