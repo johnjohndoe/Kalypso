@@ -91,8 +91,6 @@ public class PlainProfil implements IProfil
 
   private String m_name = "";
 
-  private String m_comment;
-
   public PlainProfil( final String type )
   {
     m_type = type;
@@ -485,12 +483,12 @@ public class PlainProfil implements IProfil
 
   public String getComment( )
   {
-    return m_comment;
+    return m_profilMetaData.get(IWspmConstants.PROFIL_PROPERTY_COMMENT)==null?"":m_profilMetaData.get(IWspmConstants.PROFIL_PROPERTY_COMMENT).toString();
   }
 
   public void setComment( final String comment )
   {
-    m_comment = comment;
+    m_profilMetaData.put(IWspmConstants.PROFIL_PROPERTY_COMMENT,comment);
   }
 
   public String getName( )

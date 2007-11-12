@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -94,6 +97,34 @@ public class PrfSink implements IProfilSink
       writeHochRechts( pw, p );
     if( p.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) )
       writeBewuchs( pw, p );
+    if( p.getComment() != null )
+      writeComment( pw, p );
+  }
+  private void writeComment( final PrfWriter pw, final IProfil profil )
+  {
+    final String comment = profil.getComment();
+    final DataBlockHeader dbh = PrfWriter.createHeader( "KOM" );
+    final TextDataBlock db = new TextDataBlock( dbh );
+    
+    final StringReader stringReader = new StringReader(comment);
+    final LineNumberReader lineNumberReader = new LineNumberReader(stringReader);
+    
+    try
+    {
+      for ( String line = lineNumberReader.readLine();line != null;line = lineNumberReader.readLine())
+      {
+        db.addLine( "CC " + line );
+      }
+      if(db.getCoordCount() > 0 )
+      {
+        db.setThirdLine( "0  0  0  0  0  0  0  " + Integer.toString(db.getCoordCount())+ " 17" );
+        pw.addDataBlock( db );
+      }
+    }
+    catch( IOException e )
+    {
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "", 0, "Fehler beim schreiben des Kommentars", e ) );
+    }
   }
 
   private void writePoints( final PrfWriter pw, final IProfil profil )

@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -48,33 +50,39 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Text;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 
-
 /**
  * @author gernot
- * 
  */
 public class GelaendePanel extends AbstractProfilView
 {
+  protected Text m_comment;
+
   public GelaendePanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
     super( pem, viewdata );
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite, int)
+   * @see org.kalypso.model.wspm.ui.profil.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
+   *      int)
    */
   @Override
   protected Control doCreateControl( final Composite parent, final int style )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new GridLayout( ) );
-    
+    panel.setLayout( new GridLayout() );
+
     final Group editgroup = new Group( panel, SWT.NONE );
     editgroup.setText( "Editieren" );
     final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -104,11 +112,46 @@ public class GelaendePanel extends AbstractProfilView
         getViewData().setEditvert( vertbutton.getSelection() );
       }
     } );
-    
+    final Group cg = new Group( panel, SWT.None );
+    cg.setText( "Kommentar:" );
+    final GridData cgData = new GridData( SWT.FILL, SWT.FILL, true, true );
+
+    cg.setLayoutData( cgData );
+    cg.setLayout( new GridLayout() );
+
+    m_comment = new Text( cg, SWT.MULTI + SWT.H_SCROLL + SWT.V_SCROLL + SWT.BORDER );
+
+    m_comment.addFocusListener( new FocusAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
+       */
+      @Override
+      public void focusLost( FocusEvent e )
+      {
+
+        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true );
+        new ProfilOperationJob( operation ).schedule();
+      }
+    } );
+    m_comment.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_comment.setText( getProfil().getComment() );
     return panel;
   }
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
+    if( hint.isProfilPropertyChanged() )
+    {
+      final Control control = getControl();
+      if( control != null && !control.isDisposed() )
+        control.getDisplay().asyncExec( new Runnable()
+        {
+          public void run( )
+          {
+            m_comment.setText( getProfil().getComment() );
+          }
+        } );
+    }
   }
 }

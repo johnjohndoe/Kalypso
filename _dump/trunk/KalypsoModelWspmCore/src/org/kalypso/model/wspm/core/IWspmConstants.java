@@ -88,5 +88,7 @@ public interface IWspmConstants
 
   /** Constant for coordinate-system of profile rw/hw. For example, it will be set by the GML-Profile converter. */
   public static final String PROFIL_PROPERTY_CRS = "COORDINATE_SYSTEM";
+  
+  public static final String PROFIL_PROPERTY_COMMENT = NS_WSPMPROF + "_COMMENT";
 
 }

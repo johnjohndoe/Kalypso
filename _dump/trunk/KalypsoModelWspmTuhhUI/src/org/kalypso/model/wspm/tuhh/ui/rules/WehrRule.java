@@ -93,11 +93,11 @@ public class WehrRule extends AbstractValidatorRule
     final int index4 = points.indexOf( deviders[deviders.length - 1].getPoint() );
     if( index1 < index3 )
     {
-      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_WEHR, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) } );
+      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_WEHR, index3 ) } );
     }
     if( index2 > index4 )
     {
-      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( wehrDevider.length - 1, IWspmTuhhConstants.MARKER_TYP_WEHR, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) } );
+      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( wehrDevider.length - 1, IWspmTuhhConstants.MARKER_TYP_WEHR,index4) } );
     }
   }
 

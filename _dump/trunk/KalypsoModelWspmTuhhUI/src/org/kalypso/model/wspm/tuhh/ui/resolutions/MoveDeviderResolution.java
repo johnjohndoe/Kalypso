@@ -60,20 +60,20 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 
   final private String m_deviderTyp;
 
-  final private String m_destination;
+  final private int m_pointIndex;
 
   /**
-   * verschieben der Trennfläche auf die Trenner "Durchströmter Bereich"
+   * verschieben der Trennfläche auf den Profilpunkt IProfil.getPoints().get(index)
    * 
    * @param deviderTyp,deviderIndex
    *          devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
-  public MoveDeviderResolution( final int deviderIndex, final String deviderTyp, String destination )
+  public MoveDeviderResolution( final int deviderIndex, final String deviderTyp, int pointIndex )
   {
     super( "verschieben der Trennfläche in den Gültigkeitsbereich", null, null );
     m_deviderIndex = deviderIndex;
     m_deviderTyp = deviderTyp;
-    m_destination = destination;
+    m_pointIndex = pointIndex;
   }
 
   /**
@@ -83,33 +83,13 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
   @Override
   protected IProfilChange[] resolve( IProfil profil )
   {
-    final IProfilPointMarker[] deviders1 = profil.getPointMarkerFor(  m_deviderTyp );
-    final IProfilPointMarker devider1 = m_deviderIndex < deviders1.length ? deviders1[m_deviderIndex] : null;
-    if( devider1 == null )
+    final IProfilPointMarker[] markers = profil.getPointMarkerFor(  m_deviderTyp );
+    final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+    if( marker == null || m_pointIndex < 0 || m_pointIndex >= points.size())
       return null;
-    IProfilPoint point = null;
-    if( m_destination == null )
-    {
-      LinkedList<IProfilPoint> points = profil.getPoints();
-      if( !points.isEmpty() )
-      {
-        point = m_deviderIndex > 0 ? points.getLast() : points.getFirst();
-      }
-    }
-    else
-    {
-      final IProfilPointMarker[] deviders2 = profil.getPointMarkerFor( m_destination );
-      if( deviders2 != null )
-      {
-        final int deviderIndex2 = m_deviderIndex > 0 ? deviders2.length - 1 : 0;
-        final IProfilPointMarker devider2 = deviders2[deviderIndex2];
-        if( devider2 != null )
-        {
-          point = devider2.getPoint();
-        }
-      }
-    }
-    return new IProfilChange[] { new PointMarkerSetPoint( devider1, point ), new ActiveObjectEdit( profil, point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) };
+    final IProfilPoint point = points.get(m_pointIndex);
+    return new IProfilChange[] { new PointMarkerSetPoint( marker, point ), new ActiveObjectEdit( profil, point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) };
   }
 
 }
