@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelegate
 {
 
-  public StrokeArrowPaintDelegateLine( ARROW_TYPE arrowType, ARROW_ALIGNMENT arrowAlignment, Double arrowSize, Double strokeWidth )
+  public StrokeArrowPaintDelegateLine( final ARROW_TYPE arrowType, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final Double strokeWidth )
   {
     super( arrowType, arrowAlignment, arrowSize );
   }
@@ -69,25 +69,25 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
    *      java.awt.Graphics2D, org.kalypsodeegree.graphics.transformation.GeoTransform,
    *      org.kalypsodeegree.model.geometry.GM_Curve)
    */
-  public void paint( Graphics2D g2, GeoTransform projection, GM_Curve curve )
+  public void paint( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve )
   {
     try
     {
-      GM_Point[] points = calculatePoints( curve );
+      final GM_Point[] points = calculatePoints( curve );
 
-      IArrowGeometry arrow = AbstractArrowGeometry.getArrowGeometry( g2, projection, points );
+      final IArrowGeometry arrow = AbstractArrowGeometry.getArrowGeometry( g2, projection, points );
       arrow.paint( getSize() );
 
       // draw triangle (arrow)
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
 
   }
 
-  private GM_Point[] calculatePoints( GM_Curve curve ) throws GM_Exception
+  private GM_Point[] calculatePoints( final GM_Curve curve ) throws GM_Exception
   {
     switch( getAlignment() )
     {
@@ -104,40 +104,56 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
     return null;
   }
 
-  private GM_Point[] calculateStartPoints( GM_Curve curve ) throws GM_Exception
+  private GM_Point[] calculateStartPoints( final GM_Curve curve ) throws GM_Exception
   {
-    GM_LineString lineString = curve.getAsLineString();
-    GM_Position[] positions = lineString.getPositions();
+    final GM_LineString lineString = curve.getAsLineString();
+    final GM_Position[] positions = lineString.getPositions();
 
     if( positions.length < 2 )
-      throw (new IllegalStateException());
+      throw new IllegalStateException();
 
-    GM_Point a = GeometryFactory.createGM_Point( positions[0], curve.getCoordinateSystem() );
-    GM_Point b = GeometryFactory.createGM_Point( positions[1], curve.getCoordinateSystem() );
+    final GM_Point a = GeometryFactory.createGM_Point( positions[0], curve.getCoordinateSystem() );
+    GM_Point b = a;
+
+    /* point b must differ from point a */
+    int count = 1;
+    while( b.equals( a ) )
+    {
+      b = GeometryFactory.createGM_Point( positions[count], curve.getCoordinateSystem() );
+      count++;
+    }
 
     return new GM_Point[] { a, b };
 
   }
 
-  private GM_Point[] calculateEndPoints( GM_Curve curve ) throws GM_Exception
+  private GM_Point[] calculateEndPoints( final GM_Curve curve ) throws GM_Exception
   {
-    GM_LineString lineString = curve.getAsLineString();
-    GM_Position[] positions = lineString.getPositions();
+    final GM_LineString lineString = curve.getAsLineString();
+    final GM_Position[] positions = lineString.getPositions();
 
     if( positions.length < 2 )
-      throw (new IllegalStateException());
+      throw new IllegalStateException();
 
-    GM_Point a = GeometryFactory.createGM_Point( positions[positions.length - 1], curve.getCoordinateSystem() );
-    GM_Point b = GeometryFactory.createGM_Point( positions[positions.length - 2], curve.getCoordinateSystem() );
+    final GM_Point a = GeometryFactory.createGM_Point( positions[positions.length - 1], curve.getCoordinateSystem() );
+    GM_Point b = a;
+
+    /* point b must differ from point a! */
+    int count = 2;
+    while( b.equals( a ) )
+    {
+      b = GeometryFactory.createGM_Point( positions[positions.length - count], curve.getCoordinateSystem() );
+      count++;
+    }
 
     return new GM_Point[] { a, b };
   }
 
-  private GM_Point[] calculateCenterPoints( GM_Curve curve )
+  private GM_Point[] calculateCenterPoints( final GM_Curve curve )
   {
     // TODO JTSUtilis.pointOnPercent - getcenterpoint
 
-    throw (new NotImplementedException());
+    throw new NotImplementedException();
   }
 
 }
