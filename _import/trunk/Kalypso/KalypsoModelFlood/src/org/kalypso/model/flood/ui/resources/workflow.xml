@@ -41,7 +41,7 @@
 		<Name>Überschwemmungsgebiete anpassen</Name>
 	</TaskGroup>
 
-	<TaskGroup context="ProcessFloodModel"
+	<TaskGroup context="FloodMap" 
 		URI="org.kalypso.model.flood.ProcessFloodModel">
 		<Help><![CDATA[Startet das Prozessieren der Fließtiefen.]]></Help>
 		<Name>Fließtiefen generieren</Name>

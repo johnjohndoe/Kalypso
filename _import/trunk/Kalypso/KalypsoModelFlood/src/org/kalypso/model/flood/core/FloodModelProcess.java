@@ -147,13 +147,10 @@ public class FloodModelProcess
       GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", new NullProgressMonitor() );
 
       terrainGrid.dispose();
-
-      // TODO: save model
     }
 
     /* update resource folder */
     scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
-
   }
 
 }
