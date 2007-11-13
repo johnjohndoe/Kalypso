@@ -81,7 +81,7 @@
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Postprocessing">
 		<Help><![CDATA[Ergebnisauswertungen]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
-		<Task context="ExportRasterData"
+		<Task context="ExportRasterContext"
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__ExportRasterData">
 			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
 			<Name>Exportieren Rasterdaten</Name>
@@ -151,6 +151,22 @@
 							value="mapViewInputContext" />
 						<con:Parameter name="input"
 							value="maps/MainMap.gmt" />
+					</con:ExtensionContext>
+					<con:ExtensionContext
+						id="ExportRasterContext" parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="maps/MainMap.gmt" />
+						<con:ExtensionContext id="CoverageTheme"
+							parent="MapContext"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.opengis.net/gml}_Coverage" />
+						</con:ExtensionContext>
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>

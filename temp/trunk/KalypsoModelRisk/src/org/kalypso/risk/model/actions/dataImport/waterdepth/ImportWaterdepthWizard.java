@@ -53,6 +53,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -156,15 +157,16 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
             final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
             for( final AsciiRasterInfo asciiRasterInfo : rasterInfos )
             {
-              final String binFileName = asciiRasterInfo.getSourceFile().getName() + ".bin";
-              final String dstFileName = "models/raster/input/" + binFileName;
+              monitor.subTask( " HQ "+asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
+              final String binFileName = asciiRasterInfo.getSourceFile().getName() + ".bin"; //$NON-NLS-1$
+              final String dstFileName = "models/raster/input/" + binFileName; //$NON-NLS-1$
               final IFile dstRasterIFile = scenarioFolder.getFile( dstFileName );
               final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
               importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
               // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
               final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-              rangeSetFile.setFileName( "raster/input/" + binFileName );
-              rangeSetFile.setMimeType( "image/bin" );
+              rangeSetFile.setFileName( "raster/input/" + binFileName ); //$NON-NLS-1$
+              rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
               final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
               rangeSet.setFile( rangeSetFile );
 
@@ -186,12 +188,8 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               coverage.setRangeSet( rangeSet );
               coverage.setGridDomain( asciiRasterInfo.getGridDomain() );
 
-
-              // TODO create map layer
-              monitor.subTask( Messages.getString( "ImportWaterdepthWizard.10" ) ); //$NON-NLS-1$
-
               // remove themes that are showing invalid coverages
-              final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod();
+              final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod(); //$NON-NLS-1$
               final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
               final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
               for( int i = 0; i < childThemes.length; i++ )
@@ -202,29 +200,29 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
 
               final StyledLayerType layer = new StyledLayerType();
               layer.setName( layerName );
-              layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID()+"/coverageMember" );
-              layer.setLinktype( "gml" );
-              layer.setType( "simple" );
+              layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID()+"/coverageMember" ); //$NON-NLS-1$
+              layer.setLinktype( "gml" ); //$NON-NLS-1$
+              layer.setType( "simple" ); //$NON-NLS-1$
               layer.setVisible( true );
-              layer.setActuate( "onRequest" );
-              layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" );
+              layer.setActuate( "onRequest" ); //$NON-NLS-1$
+              layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$
               layer.setVisible( true );
               final Property layerPropertyDeletable = new Property();
               layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
               layerPropertyDeletable.setValue( "false" );
               final Property layerPropertyThemeInfoId = new Property();
               layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-              layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m" );
+              layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m" ); //$NON-NLS-1$
               final List<Property> layerPropertyList = layer.getProperty();
               layerPropertyList.add( layerPropertyDeletable );
               layerPropertyList.add( layerPropertyThemeInfoId );
               final List<Style> styleList = layer.getStyle();
               final Style style = new Style();
-              style.setLinktype( "sld" );
-              style.setStyle( "Kalypso style" );
-              style.setActuate( "onRequest" );
-              style.setHref( "../styles/WaterlevelCoverage.sld" );
-              style.setType( "simple" );
+              style.setLinktype( "sld" ); //$NON-NLS-1$
+              style.setStyle( "Kalypso style" ); //$NON-NLS-1$
+              style.setActuate( "onRequest" ); //$NON-NLS-1$
+              style.setHref( "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
+              style.setType( "simple" ); //$NON-NLS-1$
               styleList.add( style );
 
               parentKalypsoTheme.addLayer( layer );
@@ -232,7 +230,10 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               // fireModellEvent to redraw a map...
               workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getWrappedFeature(), new Feature[] { annualCoverageCollection.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             }
-            scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+            scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+            
+            // Undoing this operation is not possible because old raster files are deleted...
+            scenarioDataProvider.saveModel( new NullProgressMonitor() );
           }
           catch( final Exception e )
           {
@@ -262,7 +263,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "HQ" ) )
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "HQ" ) ) //$NON-NLS-1$
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
     return null;

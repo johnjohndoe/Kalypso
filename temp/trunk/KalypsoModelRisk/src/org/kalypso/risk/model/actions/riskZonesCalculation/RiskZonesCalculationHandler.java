@@ -50,7 +50,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
       StatusUtilities.createWarningStatus( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
       return false;
     }
-    final Dialog dialog = new MessageDialog( shell, "Rasterizing specific annual damage", null, "Do you want to calcualte risk zones?", MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 );
+    final Dialog dialog = new MessageDialog( shell, "Rasterizing risk zones", null, "Do you want to calcualte risk zones?", MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 );
     if( dialog.open() == 0 )
     {
       try
@@ -96,11 +96,11 @@ public class RiskZonesCalculationHandler extends AbstractHandler
                 final IGeoGrid inputGrid = GeoGridUtilities.toGrid( srcSpecificDamageCoverage );
                 final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection(),controlModel.getLanduseClassesList() );
                 // TODO: change name: better: use input name
-                final String outputFilePath = "raster/output/RiskZonesCoverage" + count + ".dat";
+                final String outputFilePath = "raster/output/RiskZonesCoverage" + count + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
 
-                final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
+                final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
                 final File file = new File( ifile.getRawLocation().toPortableString() );
-                GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
+                GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
                 inputGrid.dispose();
 
                 count++;
@@ -109,10 +109,13 @@ public class RiskZonesCalculationHandler extends AbstractHandler
                 workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { outputCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
               }
 
-              scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+              scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
               
               // statistics...
-              scenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) );
+              scenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+              
+              // Undoing this operation is not possible because old raster files are deleted...
+              scenarioDataProvider.saveModel( new NullProgressMonitor() );
             }
             catch( final Exception e )
             {

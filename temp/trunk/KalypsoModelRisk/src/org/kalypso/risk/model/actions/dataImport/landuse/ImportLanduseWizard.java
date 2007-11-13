@@ -42,8 +42,10 @@ package org.kalypso.risk.model.actions.dataImport.landuse;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -246,36 +248,10 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
 
             final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
-            final List shapeFeatureList = (List) shapeRootFeature.getProperty( new QName( "namespace", Messages.getString( "ImportLanduseWizard.3" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            final List shapeFeatureList = (List) shapeRootFeature.getProperty( new QName( "namespace", "featureMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
             final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = vectorDataModel.getLandusePolygonCollection();
             landusePolygonCollection.clear();
-
-            // create entries for landuse database
-            for( int i = 0; i < shapeFeatureList.size(); i++ )
-            {
-              final Feature shpFeature = (Feature) shapeFeatureList.get( i );
-              final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
-              if( !m_landuseTypeSet.contains( shpPropertyValue ) )
-                m_landuseTypeSet.add( shpPropertyValue );
-            }
-            m_landuseClassesList = controlModel.getLanduseClassesList();
-            // m_landuseClassesList.clear();
-
-            // load new landuse classes
-            for( final String landuseType : m_landuseTypeSet )
-            {
-              if( !controlModel.containsLanduseClass( landuseType ) )
-              {
-                final ILanduseClass landuseClass = controlModel.createNewLanduseClass();
-                landuseClass.setName( landuseType );
-                landuseClass.setColorStyle( getLanduseClassDefaultColor( landuseType ) );
-                landuseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
-                landuseClass.setDescription( "Created as value of imported landuse shape" );
-                for( final IAdministrationUnit administrationUnit : administrationUnits )
-                  controlModel.createNewAssetValueClass( landuseClass.getGmlID(), administrationUnit.getGmlID(), 0.0, "" );
-              }
-            }
 
             // implement the importing of the existing database or predefined values
             switch( selectedDatabaseOption )
@@ -284,7 +260,72 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                 break;
 
               case DB_IMPORT:
-                // TODO implement!
+                try
+                {
+                  final Map<String, String> landuseClassesGmlIDsMap = new HashMap<String, String>();
+                  final Map<String, String> damageFunctionsGmlIDsMap = new HashMap<String, String>();
+                  final Map<String, String> administrationUnitsGmlIDsMap = new HashMap<String, String>();
+                  final URL url = m_scenarioFolder.getProject().getParent().getRawLocation().append( "/" + externalProjectName + "/Basis/models/RasterizationControlModel.gml" ).toFile().toURL();
+                  final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, new UrlResolver(), null );
+                  final List<Feature> landuseClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
+                  final List<Feature> assetValueClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
+                  final List<Feature> damageFunctionsFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
+                  final List<Feature> administrationUnitsFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_ADMINISTRATION_UNIT_MEMBER );
+                  for( final Feature importedFeature : damageFunctionsFeatureList )
+                  {
+                    final IDamageFunction entry = (IDamageFunction) importedFeature.getAdapter( IDamageFunction.class );
+                    if( entry != null )
+                    {
+                      final IDamageFunction newDamageFunction = controlModel.createNewDamageFunction();
+                      newDamageFunction.setName( entry.getName() );
+                      newDamageFunction.setDescription( "[Import from " + externalProjectName + "] " + entry.getDescription() );
+                      newDamageFunction.setFunction( entry.getFunction() );
+                      damageFunctionsGmlIDsMap.put( entry.getGmlID(), newDamageFunction.getGmlID() );
+                    }
+                  }
+                  for( final Feature importedFeature : administrationUnitsFeatureList )
+                  {
+                    final IAdministrationUnit entry = (IAdministrationUnit) importedFeature.getAdapter( IAdministrationUnit.class );
+                    if( entry != null )
+                    {
+                      final String description = "[Import from " + externalProjectName + "] " + entry.getDescription();
+                      final IAdministrationUnit newAdministrationUnit = controlModel.createNewAdministrationUnit( entry.getName(), description );
+                      administrationUnitsGmlIDsMap.put( entry.getGmlID(), newAdministrationUnit.getGmlID() );
+                    }
+                  }
+                  for( final Feature importedFeature : landuseClassesFeatureList )
+                  {
+                    final ILanduseClass entry = (ILanduseClass) importedFeature.getAdapter( ILanduseClass.class );
+                    if( entry != null )
+                    {
+                      final ILanduseClass newLanduseClass = controlModel.createNewLanduseClass();
+                      newLanduseClass.setName( entry.getName() );
+                      newLanduseClass.setDescription( "[Import from " + externalProjectName + "] " + entry.getDescription() );
+                      newLanduseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
+                      newLanduseClass.setColorStyle( entry.getColorStyle() );
+                      final String damageFunctionGmlID = damageFunctionsGmlIDsMap.get( entry.getDamageFunctionGmlID());
+                      for( final IDamageFunction damageFunction : controlModel.getDamageFunctionsList() )
+                        if(damageFunction.getGmlID().equals( damageFunctionGmlID ))
+                          newLanduseClass.setDamageFunction( damageFunction );
+                      landuseClassesGmlIDsMap.put( entry.getGmlID(), newLanduseClass.getGmlID() );
+                    }
+                  }
+                  for( final Feature importedFeature : assetValueClassesFeatureList )
+                  {
+                    final IAssetValueClass entry = (IAssetValueClass) importedFeature.getAdapter( IAssetValueClass.class );
+                    if( entry != null )
+                    {
+                      final String landuseClassGmlID = landuseClassesGmlIDsMap.get( entry.getLanduseClassGmlID() );
+                      final String administrationUnitGmlID = administrationUnitsGmlIDsMap.get( entry.getAdministrationUnitGmlID() );
+                      final String description = "[Import from " + externalProjectName + "] " + entry.getDescription();
+                      controlModel.createNewAssetValueClass( landuseClassGmlID, administrationUnitGmlID, entry.getAssetValue(), description );
+                    }
+                  }
+                }
+                catch( final Exception e )
+                {
+                  e.printStackTrace();
+                }
                 break;
 
               case DB_USE_PREDEFINED:
@@ -367,6 +408,32 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                 break;
             }
 
+            // create entries for landuse database
+            for( int i = 0; i < shapeFeatureList.size(); i++ )
+            {
+              final Feature shpFeature = (Feature) shapeFeatureList.get( i );
+              final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
+              if( !m_landuseTypeSet.contains( shpPropertyValue ) )
+                m_landuseTypeSet.add( shpPropertyValue );
+            }
+            m_landuseClassesList = controlModel.getLanduseClassesList();
+            // m_landuseClassesList.clear();
+
+            // load new landuse classes
+            for( final String landuseType : m_landuseTypeSet )
+            {
+              if( !controlModel.containsLanduseClass( landuseType ) )
+              {
+                final ILanduseClass landuseClass = controlModel.createNewLanduseClass();
+                landuseClass.setName( landuseType );
+                landuseClass.setColorStyle( getLanduseClassDefaultColor( landuseType ) );
+                landuseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
+                landuseClass.setDescription( "Created as value of imported landuse shape" );
+                for( final IAdministrationUnit administrationUnit : administrationUnits )
+                  controlModel.createNewAssetValueClass( landuseClass.getGmlID(), administrationUnit.getGmlID(), 0.0, "" );
+              }
+            }
+
             // if there is no damage functions defined, define the default one
             if( controlModel.getDamageFunctionsList().size() == 0 )
             {
@@ -375,7 +442,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
               newDamageFunction.setFunction( "0.0" );
               newDamageFunction.setDescription( "Default damage function" );
             }
-            
+
             // TODO try to guess damage function if no function is linked to the landuse class
 
             szenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) );
@@ -453,7 +520,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
   private Feature getLanduseClassByName( final Feature feature, final IFolder projectFolder, final String className )
   {
-    final String linkedFeaturePath = "project:/" + projectFolder.getProjectRelativePath().toPortableString() + "/models/RasterizationControlModel.gml#";
+    final String linkedFeaturePath = "project:/" + projectFolder.getProjectRelativePath().toPortableString() + "/models/RasterizationControlModel.gml#"; //$NON-NLS-1$ //$NON-NLS-2$
     for( final Object object : m_landuseClassesList )
       if( object instanceof ILanduseClass )
       {
@@ -481,7 +548,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
           if( !nameList.get( 0 ).equals( landuseClassName ) )
             continue;
           final String value = featureMember.getProperty( PROP_VALUE ).toString();
-          final Pattern pattern = Pattern.compile( "#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})" );
+          final Pattern pattern = Pattern.compile( "#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})" ); //$NON-NLS-1$
           final Matcher matcher = pattern.matcher( value );
           if( matcher.matches() )
           {

@@ -133,15 +133,15 @@ public class ImportWaterdepthPage extends WizardPage
     m_tableViewer.setLayoutData( gridData );
 
     final TableColumn fileColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    fileColumn.setText( "Filename" ); //$NON-NLS-1$
+    fileColumn.setText( "Filename" );
     fileColumn.setWidth( 200 );
 
     final TableColumn annualityColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    annualityColumn.setText( "Period" ); //$NON-NLS-1$
+    annualityColumn.setText( "Period" );
     annualityColumn.setWidth( 50 );
 
     final TableColumn csColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    csColumn.setText( "CRS" ); //$NON-NLS-1$
+    csColumn.setText( "CRS" );
     csColumn.setWidth( 80 );
 
     m_tableViewer.setSize( 300, 250 );
@@ -314,7 +314,7 @@ public class ImportWaterdepthPage extends WizardPage
   private List<String> getFilenamesFromDialog( )
   {
     final FileDialog dialog = new FileDialog( getShell(), SWT.MULTI );
-    dialog.setFilterExtensions( new String[] { "*.asc" } );
+    dialog.setFilterExtensions( new String[] { "*.asc" } ); //$NON-NLS-1$
     dialog.setFilterNames( new String[] { "ASCII grid (*.asc)" } );
     dialog.open();
     final String[] fileNames = dialog.getFileNames();
@@ -350,7 +350,7 @@ public class ImportWaterdepthPage extends WizardPage
 
   private int guessReturnPeriodFromName( final String name )
   {
-    final Pattern pattern = Pattern.compile( "([^0-9]*)([0-9]+)([^0-9]*)" );
+    final Pattern pattern = Pattern.compile( "([^0-9]*)([0-9]+)([^0-9]*)" ); //$NON-NLS-1$
     final Matcher matcher = pattern.matcher( name );
     if( matcher.matches() )
       return Integer.parseInt( matcher.group( 2 ) );

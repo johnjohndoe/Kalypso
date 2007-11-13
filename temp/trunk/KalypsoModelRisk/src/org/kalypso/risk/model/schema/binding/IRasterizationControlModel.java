@@ -9,6 +9,8 @@ import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 
 public interface IRasterizationControlModel extends IModel
 {
+  public static final String MODEL_NAME = "RasterizationControlModel.gml";
+
   public static final double RISKZONE_URBANAREA_LOW = 1.0;
 
   public static final double RISKZONE_URBANAREA_MIDDLE = 2.0;

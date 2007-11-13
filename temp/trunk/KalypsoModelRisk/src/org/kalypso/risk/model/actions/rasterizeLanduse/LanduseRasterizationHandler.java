@@ -146,11 +146,11 @@ public class LanduseRasterizationHandler extends AbstractHandler
                 };
 
                 // TODO: change name: better: use input name
-                final String outputFilePath = "raster/output/LanduseCoverage" + count + ".dat";
+                final String outputFilePath = "raster/output/LanduseCoverage" + count + ".dat"; //$NON-NLS-1$
 
                 final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
                 final File file = new File( ifile.getRawLocation().toPortableString() );
-                GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
+                GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
                 inputGrid.dispose();
 
                 count++;
@@ -160,7 +160,7 @@ public class LanduseRasterizationHandler extends AbstractHandler
               // TODO: check if still ok
               workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getWrappedFeature(), new Feature[] { outputCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-              scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+              scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
             }
             catch( final Exception e )

@@ -3,6 +3,7 @@ package org.kalypso.risk.model.schema.binding;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
 {
@@ -63,6 +64,21 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   public void setTotalDamage( double value )
   {
     getFeature().setProperty( ILanduseClass.PROP_TOTAL_DAMAGE, value );
+  }
+
+  public String getDamageFunctionGmlID( )
+  {
+    final Object property = getFeature().getProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK );
+    if( property != null && property instanceof XLinkedFeature_Impl )
+      return ((XLinkedFeature_Impl) property).getFeatureId();
+    return "";
+  }
+
+  public void setDamageFunction( final IDamageFunction damageFunction )
+  {
+    final String xFeaturePath = IRasterizationControlModel.MODEL_NAME + "#" + damageFunction.getGmlID();
+    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( getFeature(), damageFunction.getWrappedFeature().getParentRelation(), damageFunction.getWrappedFeature().getFeatureType(), xFeaturePath, "", "", "", "", "" );
+    getFeature().setProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK, xFeature );
   }
 
 }

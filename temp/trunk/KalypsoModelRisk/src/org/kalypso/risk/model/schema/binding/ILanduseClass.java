@@ -17,6 +17,10 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
 
   public QName PROP_COLOR_STYLE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "colorStyle" );
 
+  public QName PROP_DAMAGE_FUNCTION_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionLink" );
+
+  public QName PROP_RISK_LANDUSE_CATEGORY_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseRiskTypeLink" );
+
   public QName PROP_MIN_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "minDamage" );
 
   public QName PROP_MAX_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "maxDamage" );
@@ -38,4 +42,8 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
   public double getMaxDamage( );
 
   public double getTotalDamage( );
+
+  public String getDamageFunctionGmlID( );
+
+  public void setDamageFunction( final IDamageFunction damageFunction );
 }

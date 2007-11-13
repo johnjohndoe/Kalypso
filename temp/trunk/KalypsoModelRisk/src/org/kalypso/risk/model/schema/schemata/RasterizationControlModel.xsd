@@ -121,7 +121,6 @@
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Min. damage [€/m²]</xs:label>
-								<xs:fractionDigits value="5"></xs:fractionDigits>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -132,7 +131,6 @@
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Max. damage [€/m²]</xs:label>
-								<xs:fractionDigits value="5"></xs:fractionDigits>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -143,7 +141,6 @@
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Total damage [€]</xs:label>
-								<xs:fractionDigits value="5"></xs:fractionDigits>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>

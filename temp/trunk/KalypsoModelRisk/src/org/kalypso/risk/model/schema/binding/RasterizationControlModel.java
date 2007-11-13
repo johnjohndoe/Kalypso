@@ -28,8 +28,6 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
 
   private final List<IAdministrationUnit> m_administrationUnits;
 
-  private static final String MODEL_NAME = "RasterizationControlModel.gml";
-
   public RasterizationControlModel( final Feature featureToBind )
   {
     super( featureToBind, IRasterizationControlModel.QNAME );
@@ -131,8 +129,8 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
     {
       final Feature feature = FeatureHelper.createFeatureForListProp( m_assetValueClassesFeatureList, IAssetValueClass.QNAME, -1 );
       final IAssetValueClass assetValueClass = (IAssetValueClass) feature.getAdapter( IAssetValueClass.class );
-      final String landusePath = MODEL_NAME + "#" + landuseClassGmlID;
-      final String administrationUnitPath = MODEL_NAME + "#" + administrationUnitGmlID;
+      final String landusePath = IRasterizationControlModel.MODEL_NAME + "#" + landuseClassGmlID;
+      final String administrationUnitPath = IRasterizationControlModel.MODEL_NAME + "#" + administrationUnitGmlID;
       Feature linkedLanduseClass = null;
       for( final ILanduseClass landuseClass : m_landuseClasses )
         if( landuseClass.getGmlID().equals( landuseClassGmlID ) )

@@ -168,12 +168,12 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                   };
 
                   // TODO: change count to better name...
-                  final String outputFilePath = "raster/output/specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod() + "_part" + count + ".bin";
+                  final String outputFilePath = "raster/output/specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod() + "_part" + count + ".bin"; //$NON-NLS-1$
 
-                  final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
+                  final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
                   final File file = new File( ifile.getRawLocation().toPortableString() );
 
-                  GeoGridUtilities.addCoverage( dstAnnualCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
+                  GeoGridUtilities.addCoverage( dstAnnualCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
 
                   inputGrid.dispose();
 
@@ -196,29 +196,29 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
 
                 final StyledLayerType layer = new StyledLayerType();
                 layer.setName( layerName );
-                layer.setFeaturePath( "#fid#" + dstAnnualCoverages.getWrappedFeature().getId() + "/coverageMember" );
-                layer.setLinktype( "gml" );
-                layer.setType( "simple" );
+                layer.setFeaturePath( "#fid#" + dstAnnualCoverages.getWrappedFeature().getId() + "/coverageMember" ); //$NON-NLS-1$
+                layer.setLinktype( "gml" ); //$NON-NLS-1$
+                layer.setType( "simple" ); //$NON-NLS-1$
                 layer.setVisible( true );
-                layer.setActuate( "onRequest" );
-                layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" );
+                layer.setActuate( "onRequest" ); //$NON-NLS-1$
+                layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
                 layer.setVisible( true );
                 final Property layerPropertyDeletable = new Property();
                 layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-                layerPropertyDeletable.setValue( "false" );
+                layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
                 final Property layerPropertyThemeInfoId = new Property();
                 layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-                layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Schadenspotential %.2f €/m²" );
+                layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Schadenspotential %.2f €/m²" ); //$NON-NLS-1$
                 final List<Property> layerPropertyList = layer.getProperty();
                 layerPropertyList.add( layerPropertyDeletable );
                 layerPropertyList.add( layerPropertyThemeInfoId );
                 final List<Style> styleList = layer.getStyle();
                 final Style style = new Style();
-                style.setLinktype( "sld" );
-                style.setStyle( "Kalypso style" );
-                style.setActuate( "onRequest" );
-                style.setHref( "../styles/SpecificDamagePotentialCoverage.sld" );
-                style.setType( "simple" );
+                style.setLinktype( "sld" ); //$NON-NLS-1$
+                style.setStyle( "Kalypso style" ); //$NON-NLS-1$
+                style.setActuate( "onRequest" ); //$NON-NLS-1$
+                style.setHref( "../styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
+                style.setType( "simple" ); //$NON-NLS-1$
                 styleList.add( style );
 
                 parentKalypsoTheme.addLayer( layer );
@@ -227,7 +227,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { dstAnnualCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
               }
 
-              scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+              scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
               // Undoing this operation is not possible because old raster files are deleted...
               scenarioDataProvider.saveModel( new NullProgressMonitor() );
@@ -240,8 +240,8 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
           }
         } );
 
-        final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" );
-        SLDHelper.exportRasterSymbolyzerSLD( sldFile, m_minDamageValue, m_maxDamageValue * 1.05, 20, new Color( 237, 80, 25 ), "Kalypso style", "Kalypso style", null );
+        final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
+        SLDHelper.exportRasterSymbolyzerSLD( sldFile, m_minDamageValue, m_maxDamageValue * 1.05, 20, new Color( 237, 80, 25 ), "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
         if( mapView != null )
           mapView.getMapPanel().invalidateMap();
@@ -260,7 +260,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "SpecificDamagePotential" ) )
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "SpecificDamagePotential" ) ) //$NON-NLS-1$
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
     return null;
