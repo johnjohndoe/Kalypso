@@ -41,7 +41,9 @@
 package org.kalypso.model.flood.core;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
@@ -52,7 +54,6 @@ import org.kalypso.model.flood.binding.IFloodExtrapolationPolygon;
 import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -65,14 +66,15 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 {
-
   private final IFeatureWrapperCollection<ITinReference> m_tins;
+
+  private final IFeatureWrapperCollection<IFloodPolygon> m_polygons;
+
+  private final Map<IFloodExtrapolationPolygon, Double> m_polygonWsps = new HashMap<IFloodExtrapolationPolygon, Double>();
 
   private BigDecimal m_min;
 
   private BigDecimal m_max;
-
-  private final IFeatureWrapperCollection<IFloodPolygon> m_polygons;
 
   public FloodDiffGrid( final IGeoGrid terrainGrid, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons )
   {
@@ -91,6 +93,19 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {
+    final double value = getValueInternal( x, y );
+    if( Double.isNaN( value ) )
+      return Double.NaN;
+
+    /* check min/max */
+    m_min = m_min.min( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+    m_max = m_max.max( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+
+    return value;
+  }
+
+  private double getValueInternal( final int x, final int y ) throws GeoGridException
+  {
     final double terrainValue = super.getValue( x, y );
 
     if( Double.isNaN( terrainValue ) )
@@ -99,40 +114,34 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     // get coordinate for raster cell x/y
     final Coordinate crd = GeoGridUtilities.calcCoordinateWithoutZ( this, x, y, terrainValue, null );
 
-    double depthValue = Double.NaN;
-
     /* get the wsp value */
     final double wspValue = getWspValue( crd );
-    if( Double.isNaN( wspValue ) )
-      return Double.NaN;
 
     /* check polygon stuff */
     // get the polygons
     final List<IFloodPolygon> polygons = getPolygons( crd );
-    if( polygons.size() > 0 )
+
+    // - if not clip (+): Double.NaN
+
+    /* - if clip (-): Double.NaN */
+    if( containsClipPolygons( polygons ) == true )
+      return Double.NaN;
+
+    if( !Double.isNaN( wspValue ) )
+      return wspValue - terrainValue;
+
+    /* - if extrapolation: getExtrapolationsvalue */
+    final IFloodExtrapolationPolygon extrapolPolygon = getExtrapolPolygons( polygons );
+    if( extrapolPolygon != null )
     {
-      // - if not clip (+): Double.NaN
-
-      /* - if clip (-): Double.NaN */
-      if( containsClipPolygons( polygons ) == true )
-        return Double.NaN;
-
-      /* - if extrapolation: getExtrapolationsvalue */
-      final IFloodExtrapolationPolygon extrapolPolygon = getExtrapolPolygons( polygons );
-      if( extrapolPolygon != null )
-      {
-        double extrapolValue = getExtrpolValue( extrapolPolygon );
-        depthValue = extrapolValue - terrainValue;
-      }
+      final double extrapolValue = getExtrapolValue( extrapolPolygon );
+      return extrapolValue - terrainValue;
     }
-    else
-      depthValue = wspValue - terrainValue;
 
-    /* check min/max */
-    m_min = m_min.min( new BigDecimal( depthValue ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-    m_max = m_max.max( new BigDecimal( depthValue ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+    if( Double.isNaN( wspValue ) )
+      return Double.NaN;
 
-    return depthValue;
+    return wspValue - terrainValue;
   }
 
   private double getWspValue( final Coordinate crd )
@@ -150,23 +159,25 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     return Double.NaN;
   }
 
-  private double getExtrpolValue( IFloodExtrapolationPolygon polygon )
+  private double getExtrapolValue( IFloodExtrapolationPolygon polygon )
   {
-    // TODO: get reference point
-    final GM_Object[] geometryProperties = polygon.getWrappedFeature().getGeometryProperties();
-    for( GM_Object object : geometryProperties )
-    {
-      if( object instanceof GM_Point )
-      {
-        final GM_Point point = (GM_Point) object;
-        final GM_Position position = point.getPosition();
-        final Coordinate crd = JTSAdapter.export( position );
+    // REMARK: hash for each polygon its wsp, to we do not need to recalculate it each time
+    if( m_polygonWsps.containsKey( polygon ) )
+      return m_polygonWsps.get( polygon );
 
-        // get wsp value
-        return getWspValue( crd );
-      }
-    }
-    return Double.NaN;
+    final GM_Point refPoint = polygon.getRefPoint();
+    if( refPoint == null )
+      return Double.NaN;
+
+    final GM_Position position = refPoint.getPosition();
+    final Coordinate crd = JTSAdapter.export( position );
+
+    // get wsp value
+    final double wspValue = getWspValue( crd );
+
+    m_polygonWsps.put( polygon, wspValue );
+
+    return wspValue;
   }
 
   private IFloodExtrapolationPolygon getExtrapolPolygons( List<IFloodPolygon> polygons )

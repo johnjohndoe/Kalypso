@@ -43,6 +43,7 @@ package org.kalypso.model.flood.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Thomas Jung
@@ -52,4 +53,6 @@ public interface IFloodExtrapolationPolygon extends IFloodPolygon
   public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodExtrapolationPolygon" );
 
   public static final QName QNAME_PROP_REFPOINT = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "referencePoint" );
+
+  GM_Point getRefPoint( );
 }

@@ -42,6 +42,7 @@ package org.kalypso.model.flood.core;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -138,7 +139,6 @@ public class FloodModelProcess
       final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons );
 
       /* set destination: => event folder/results */
-
       // generate unique name for grid file
       final File gridsPath = new File( eventFolder.toString(), "results" );
       final String uniqueFileName = FileUtilities.createNewUniqueFileName( "grid", ".ascbin", gridsPath );
@@ -153,8 +153,11 @@ public class FloodModelProcess
       final File file = destFile.getLocation().toFile();
 
       final String fileName = "../events/" + event.getDataPath() + "/results/" + file.getName();
+      ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", progress.newChild( 95 ) );
+      coverage.setName( "Flieﬂtiefen - " + terrainCoverage.getName() );
 
-      GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", progress.newChild( 95 ) );
+      final String desc = String.format( "erzeugt am: %1$te.%1$tm.%1$tY - %s", new Date(), terrainCoverage.getName() );
+      coverage.setDescription( desc );
 
       terrainGrid.dispose();
     }
