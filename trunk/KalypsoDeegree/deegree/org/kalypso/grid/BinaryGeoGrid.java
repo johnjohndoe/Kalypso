@@ -404,4 +404,22 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     m_min = min;
     m_max = max;
   }
+
+  /**
+   * @see org.kalypso.grid.IWriteableGeoGrid#setMax(java.math.BigDecimal)
+   */
+  public void setMax( BigDecimal max )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.grid.IWriteableGeoGrid#setMin(java.math.BigDecimal)
+   */
+  public void setMin( BigDecimal min )
+  {
+    // TODO Auto-generated method stub
+
+  }
 }

@@ -74,4 +74,5 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
   public IFeatureSelectionManager getSelectionManager( );
 
   public void paintInternal( IPaintInternalDelegate delegate ) throws CoreException;
+
 }

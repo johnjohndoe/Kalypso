@@ -42,9 +42,13 @@ package org.kalypso.ogc.gml;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.loader.IPooledObject;
+import org.kalypso.loader.LoaderException;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
@@ -191,5 +195,19 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
       return label;
 
     return label + " (wird geladen...)";
+  }
+
+  public void save( final IProgressMonitor monitor ) throws CoreException
+  {
+    try
+    {
+      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+      Object object = pool.getObject( m_styleKey );
+      pool.saveObject( object, monitor );
+    }
+    catch( LoaderException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 }
