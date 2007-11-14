@@ -20,6 +20,8 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
 
   private final FeatureList m_administrationUnitsFeatureList;
 
+  private final FeatureList m_riskZoneDefinitionsFeatureList;
+
   private final List<ILanduseClass> m_landuseClasses;
 
   private final List<IAssetValueClass> m_assetValueClasses;
@@ -27,6 +29,8 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
   private final List<IDamageFunction> m_damageFunctions;
 
   private final List<IAdministrationUnit> m_administrationUnits;
+
+  private final List<IRiskZoneDefinition> m_riskZoneDefinitions;
 
   public RasterizationControlModel( final Feature featureToBind )
   {
@@ -50,6 +54,11 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
     m_administrationUnits = new ArrayList<IAdministrationUnit>();
     for( final Object object : m_administrationUnitsFeatureList )
       m_administrationUnits.add( (IAdministrationUnit) ((Feature) object).getAdapter( IAdministrationUnit.class ) );
+
+    m_riskZoneDefinitionsFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_RISKZONE_DEFINITION_MEMBER );
+    m_riskZoneDefinitions = new ArrayList<IRiskZoneDefinition>();
+    for( final Object object : m_riskZoneDefinitionsFeatureList )
+      m_riskZoneDefinitions.add( (IRiskZoneDefinition) ((Feature) object).getAdapter( IRiskZoneDefinition.class ) );
   }
 
   public List<ILanduseClass> getLanduseClassesList( )
@@ -180,6 +189,11 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
   public List<IAdministrationUnit> getAdministrationUnits( )
   {
     return m_administrationUnits;
+  }
+
+  public List<IRiskZoneDefinition> getRiskZoneDefinitionsList( )
+  {
+    return m_riskZoneDefinitions;
   }
 
   public boolean containsLanduseClass( final String landuseClassName )

@@ -96,6 +96,9 @@
        <adapter
              type="org.kalypso.risk.model.schema.binding.IAdministrationUnit">
        </adapter>
+       <adapter
+             type="org.kalypso.risk.model.schema.binding.IRiskZoneDefinition">
+       </adapter>
     </factory>
  </extension>
  <extension
@@ -166,5 +169,16 @@
           class="org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler">
     </handler>
+    <handler
+          class="org.kalypso.risk.model.handlers.VisualizeDepthDataHandler"
+          commandId="org.kalypso.risk.model.handlers.VisualizeDepthDataHandler">
+    </handler>
+ </extension>
+ <extension
+       point="org.kalypso.core.themeInfo">
+    <themeInfo
+          class="org.kalypso.risk.plugin.RiskZonesThemeInfo"
+          id="org.kalypso.risk.plugin.RiskZonesThemeInfo">
+    </themeInfo>
  </extension>
 </plugin>

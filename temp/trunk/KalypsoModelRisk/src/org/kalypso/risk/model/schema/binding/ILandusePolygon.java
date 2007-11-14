@@ -42,4 +42,6 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public boolean contains( final GM_Position position );
 
+  public Boolean isUrbanLanduseType( );
+
 }

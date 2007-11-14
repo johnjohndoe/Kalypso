@@ -42,13 +42,11 @@
 				<Help><![CDATA[Landnutzung bearbeiten]]></Help>
 				<Name>Calculation values definition</Name>
 			</Task>
-			<!-- 
-			<Task context="RiskZonesDefinition"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesDefinition">
+			<Task context="RiskZonesPanel"
+				URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesPanel">
 				<Help><![CDATA[Risk zones definition]]></Help>
 				<Name>Risk zones definition</Name>
 			</Task>
-			 -->
 		</TaskGroup>
 	</TaskGroup>
 	<TaskGroup
@@ -82,7 +80,7 @@
 		<Help><![CDATA[Ergebnisauswertungen]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
 		<Task context="ExportRasterContext"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__ExportRasterData">
+			URI="org.kalypso.risk.model.handlers.VisualizeDepthDataHandler">
 			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
 			<Name>Exportieren Rasterdaten</Name>
 		</Task>
@@ -101,6 +99,14 @@
 						value="featureViewInputContext" />
 					<con:Parameter name="input"
 						value="templates/CalculationControlPanel.gft" />
+				</con:ExtensionContext>
+				<con:ExtensionContext id="RiskZonesPanel"
+					parent="FeatureView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type"
+						value="featureViewInputContext" />
+					<con:Parameter name="input"
+						value="templates/RiskZonesPanel.gft" />
 				</con:ExtensionContext>
 				<con:ExtensionContext id="StatisticsPanel"
 					parent="FeatureView"
@@ -156,17 +162,9 @@
 						id="ExportRasterContext" parent="MapContext"
 						handlerFactoryId="kalypsoContextHandlerFactory">
 						<con:Parameter name="type"
-							value="mapViewInputContext" />
+							value="themeContext" />
 						<con:Parameter name="input"
-							value="maps/MainMap.gmt" />
-						<con:ExtensionContext id="CoverageTheme"
-							parent="MapContext"
-							handlerFactoryId="kalypsoContextHandlerFactory">
-							<con:Parameter name="type"
-								value="themeContext" />
-							<con:Parameter name="input"
-								value="{http://www.opengis.net/gml}_Coverage" />
-						</con:ExtensionContext>
+							value="{http://www.opengis.net/gml}_Coverage" />
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>

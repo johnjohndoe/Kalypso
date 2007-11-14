@@ -94,7 +94,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
               for( final ICoverage srcSpecificDamageCoverage : baseCoverages )
               {
                 final IGeoGrid inputGrid = GeoGridUtilities.toGrid( srcSpecificDamageCoverage );
-                final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection(),controlModel.getLanduseClassesList() );
+                final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection(), controlModel.getLanduseClassesList(), controlModel.getRiskZoneDefinitionsList() );
                 // TODO: change name: better: use input name
                 final String outputFilePath = "raster/output/RiskZonesCoverage" + count + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -110,10 +110,10 @@ public class RiskZonesCalculationHandler extends AbstractHandler
               }
 
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-              
+
               // statistics...
               scenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-              
+
               // Undoing this operation is not possible because old raster files are deleted...
               scenarioDataProvider.saveModel( new NullProgressMonitor() );
             }

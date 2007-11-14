@@ -33,6 +33,8 @@ public interface IRasterizationControlModel extends IModel
 
   public static final QName PROPERTY_DAMAGE_FUNCTION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionMember" );
 
+  public static final QName PROPERTY_RISKZONE_DEFINITION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskZoneDefinitionMember" );
+
   public List<ILanduseClass> getLanduseClassesList( );
 
   public List<IAssetValueClass> getAssetValueClassesList( );
@@ -44,6 +46,8 @@ public interface IRasterizationControlModel extends IModel
   public ILanduseClass createNewLanduseClass( );
 
   public IDamageFunction createNewDamageFunction( );
+
+  public List<IRiskZoneDefinition> getRiskZoneDefinitionsList( );
 
   /**
    * Created new asset value class with the given values.

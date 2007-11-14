@@ -45,6 +45,7 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.services.LanduseStyleUpdateListener;
 
 /**
@@ -57,62 +58,31 @@ import org.kalypso.risk.model.services.LanduseStyleUpdateListener;
  */
 public class SzenarioController implements IScenarioDataListener
 {
-//  private IRasterizationControlModel m_rasterizationControlModel = null;
-//  
-//  private ILanduseModel m_landuseModel = null;
-//  
-//  private IRasterDataModel m_waterdepthCoverageModel = null;
-  
   private LanduseStyleUpdateListener m_landuseStyleUpdateListener = new LanduseStyleUpdateListener();
 
-//  private IFolder m_scenarioDataPath;
+  private IFolder m_scenarioDataPath = null;
 
   public SzenarioController( )
   {
-    ResourcesPlugin.getWorkspace().addResourceChangeListener( m_landuseStyleUpdateListener, IResourceChangeEvent.POST_CHANGE );
   }
 
   public synchronized void modelLoaded( final IModel model )
   {
-//    if( model instanceof IRasterizationControlModel )
-//      m_rasterizationControlModel = (IRasterizationControlModel) model;
-//
-//    if( model instanceof ILanduseModel )
-//      m_landuseModel = (ILanduseModel) model;
-//
-//    if( m_rasterizationControlModel != null && m_landuseModel != null )
-//    {
-//      m_landuseStyleUpdateListener = new LanduseStyleUpdateListener( m_discModel, m_terrainModel );
-//
-//      // register common listener to terrain/deisc modell
-////      m_rasterizationControlModel.getWrappedFeature().getWorkspace().addModellListener( m_landuseStyleUpdateListener );
-//      m_landuseModel.getWrappedFeature().getWorkspace().addModellListener( m_landuseStyleUpdateListener );
-//    }
-
-//    if( model instanceof ILanduseClassCollection )
-//    {
-//      final IFile roughnessDbFile = m_scenarioDataPath.getProject().getFile( LanduseStyleUpdateListener.ROUGHNESS_DATABASE_PATH );
-//      m_landuseStyleUpdateListener.startStyleUpdateJob( roughnessDbFile );
-//    }
+    if( m_scenarioDataPath == null )
+      return;
+    if( model instanceof IRasterizationControlModel )
+      m_landuseStyleUpdateListener.startStyleUpdateJob( m_scenarioDataPath.getFile( "/models/RasterizationControlModel.gml" ) );
 
     // maybe get status info from status-model
   }
 
   public synchronized void scenarioChanged( final IFolder scenarioDataPath )
   {
-//    m_scenarioDataPath = scenarioDataPath;
-
     // unregister any listeners
-//    if( m_discModel != null )
-//      m_discModel.getWrappedFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
-//    if( m_terrainModel != null )
-//      m_terrainModel.getWrappedFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
-//    if( m_roughnessAssignListener != null )
-//      m_roughnessAssignListener.dispose();
-//
-//    m_roughnessAssignListener = null;
-//    m_discModel = null;
-//    m_terrainModel = null;
+    ResourcesPlugin.getWorkspace().removeResourceChangeListener( m_landuseStyleUpdateListener );
+    m_scenarioDataPath = scenarioDataPath;
+    if( scenarioDataPath != null )
+      ResourcesPlugin.getWorkspace().addResourceChangeListener( m_landuseStyleUpdateListener, IResourceChangeEvent.POST_CHANGE );
 
     // maybe save status into dstatus model
   }

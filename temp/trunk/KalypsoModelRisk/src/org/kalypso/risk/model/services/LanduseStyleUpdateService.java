@@ -41,6 +41,7 @@
 package org.kalypso.risk.model.services;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -59,6 +60,8 @@ import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
+import org.kalypso.risk.plugin.RiskZonesThemeInfo;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
@@ -77,6 +80,8 @@ public class LanduseStyleUpdateService extends Job
 
   private final IFile m_landuseRasterSymbolyzerSldFile;
 
+  private final IFile m_riskZonesSymbolyzerSldFile;
+
   public LanduseStyleUpdateService( final IFile file )
   {
     super( "Aktualisere SLD Dienst" );
@@ -87,6 +92,7 @@ public class LanduseStyleUpdateService extends Job
     m_dbFile = file;
     m_landuseVectorSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" );
     m_landuseRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" );
+    m_riskZonesSymbolyzerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" );
   }
 
   /**
@@ -118,6 +124,15 @@ public class LanduseStyleUpdateService extends Job
       {
         SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor );
         SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolyzerSldFile, model.getLanduseClassesList(), null, null, monitor );
+      }
+      final List<IRiskZoneDefinition> riskZonesList = model.getRiskZoneDefinitionsList();
+      if( riskZonesList != null && riskZonesList.size() > 0 )
+      {
+        SLDHelper.exportRasterSymbolyzerSLD( m_riskZonesSymbolyzerSldFile, model.getRiskZoneDefinitionsList(), null, null, monitor );
+        final HashMap<Double, String> values = new HashMap<Double, String>();
+        for( final IRiskZoneDefinition riskZoneDefinition : riskZonesList )
+          values.put( new Double( riskZoneDefinition.getOrdinalNumber() ), riskZoneDefinition.getName() );
+        RiskZonesThemeInfo.updateZonesDefinition( values );
       }
       return Status.OK_STATUS;
     }

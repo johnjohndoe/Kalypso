@@ -73,6 +73,7 @@ import org.kalypso.grid.GeoGridException;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.template.types.StyledLayerType;
@@ -139,7 +140,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell );
+    final CascadingKalypsoTheme parentKalypsoTheme = getWaterdepthsCascadingTheme( mapModell );
     parentKalypsoTheme.setVisible( true );
     try
     {
@@ -258,7 +259,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     ascii2Binary.doConvert( monitor );
   }
 
-  private CascadingKalypsoTheme getCascadingTheme( final GisTemplateMapModell mapModell )
+  public static final CascadingKalypsoTheme getWaterdepthsCascadingTheme( final IMapModell mapModell )
   {
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )

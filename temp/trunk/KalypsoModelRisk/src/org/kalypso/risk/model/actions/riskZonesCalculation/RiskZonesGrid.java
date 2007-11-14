@@ -52,6 +52,7 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
+import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -71,13 +72,16 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final double m_cellSize;
 
-  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
+  private final List<IRiskZoneDefinition> m_riskZoneDefinitionsList;
+
+  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
     super( resultGrid );
     m_cellSize = Math.abs( resultGrid.getOffsetX().x - resultGrid.getOffsetY().x ) * Math.abs( resultGrid.getOffsetX().y - resultGrid.getOffsetY().y );
     m_annualCoverageCollection = annualCoverageCollection;
     m_landusePolygonCollection = landusePolygonCollection;
     m_landuseClassesList = landuseClassesList;
+    m_riskZoneDefinitionsList = riskZoneDefinitionsList;
     m_gridMap = new HashMap<String, List<IGeoGrid>>();
     for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
     {
@@ -117,8 +121,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       {
         if( polygon.contains( positionAt ) )
         {
+          polygon.getLanduseClassOrdinalNumber();
           fillStatistics( polygon, result );
-          return polygon.getRiskZone( result );
+          return getRiskZone( result, polygon.isUrbanLanduseType() );
         }
       }
     return Double.NaN;
@@ -151,6 +156,25 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
         return value;
     }
     return Double.NaN;
+  }
+
+  private double getRiskZone( final double damageValue, final Boolean isUrbanLanduseType )
+  {
+    if( isUrbanLanduseType == null )
+      return Double.NaN;
+    IRiskZoneDefinition selectedRiskZoneDefinition = null;
+    double minDifference = Double.MAX_VALUE;
+    for( final IRiskZoneDefinition riskZoneDefinition : m_riskZoneDefinitionsList )
+      if( isUrbanLanduseType.equals( riskZoneDefinition.isUrbanLanduseType() ) && damageValue >= riskZoneDefinition.getLowerBoundary() )
+      {
+        final double difference = damageValue - riskZoneDefinition.getLowerBoundary();
+        if( difference < minDifference )
+        {
+          minDifference = difference;
+          selectedRiskZoneDefinition = riskZoneDefinition;
+        }
+      }
+    return selectedRiskZoneDefinition != null ? selectedRiskZoneDefinition.getOrdinalNumber() : Double.NaN;
   }
 
 }

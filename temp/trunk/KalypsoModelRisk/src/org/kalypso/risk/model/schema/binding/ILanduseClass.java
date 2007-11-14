@@ -2,7 +2,6 @@ package org.kalypso.risk.model.schema.binding;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 
@@ -27,9 +26,7 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
 
   public QName PROP_TOTAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "totalDamage" );
 
-  void setColorStyle( final RGB rgb );
-
-  void setOrdinalNumber( final int value );
+  public void setOrdinalNumber( final int value );
 
   public void setMinDamage( final double value );
 

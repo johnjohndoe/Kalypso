@@ -18,9 +18,10 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   private final Boolean m_isUrbanLanduseType;
 
-  private double m_riskBorderLowMiddle = Double.NaN;
-
-  private double m_riskBorderMiddleHigh = Double.NaN;
+  //
+  // private double m_riskBorderLowMiddle = Double.NaN;
+  //
+  // private double m_riskBorderMiddleHigh = Double.NaN;
 
   public LandusePolygon( final Feature featureToBind )
   {
@@ -46,24 +47,24 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
         if( !m_damageFunction.parse() )
           throw new IllegalArgumentException( "Damage function not parsable: " + damageFunctionProp.toString() );
         m_assetValue = ((Double) assetValueProp).doubleValue();
-        try
-        {
-          if( m_isUrbanLanduseType != null )
-            if( m_isUrbanLanduseType )
-            {
-              m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
-              m_riskBorderMiddleHigh = 0.08 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
-            }
-            else
-            {
-              m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
-              m_riskBorderMiddleHigh = 0.03 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
-            }
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
+        // try
+        // {
+        // if( m_isUrbanLanduseType != null )
+        // if( m_isUrbanLanduseType )
+        // {
+        // m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
+        // m_riskBorderMiddleHigh = 0.08 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
+        // }
+        // else
+        // {
+        // m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
+        // m_riskBorderMiddleHigh = 0.03 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
+        // }
+        // }
+        // catch( Exception e )
+        // {
+        // e.printStackTrace();
+        // }
       }
     }
   }
@@ -93,6 +94,11 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     return m_landuseClassOrdinalNumber;
   }
 
+  public Boolean isUrbanLanduseType( )
+  {
+    return m_isUrbanLanduseType;
+  }
+
   public boolean contains( final GM_Position position )
   {
     return getFeature().getDefaultGeometryProperty().contains( position );
@@ -115,23 +121,25 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   public double getRiskZone( double damageValue )
   {
-    if( m_isUrbanLanduseType == null || Double.isNaN( damageValue ) )
-      return Double.NaN;
-    if( m_isUrbanLanduseType )
-    {
-      if( damageValue < m_riskBorderLowMiddle )
-        return IRasterizationControlModel.RISKZONE_URBANAREA_LOW;
-      if( damageValue < m_riskBorderMiddleHigh )
-        return IRasterizationControlModel.RISKZONE_URBANAREA_MIDDLE;
-      return IRasterizationControlModel.RISKZONE_URBANAREA_HIGH;
-    }
-    else
-    {
-      if( damageValue < m_riskBorderLowMiddle )
-        return IRasterizationControlModel.RISKZONE_NONURBANAREA_LOW;
-      if( damageValue < m_riskBorderMiddleHigh )
-        return IRasterizationControlModel.RISKZONE_NONURBANAREA_MIDDLE;
-      return IRasterizationControlModel.RISKZONE_NONURBANAREA_HIGH;
-    }
+    return 0.0;
+    // if( m_isUrbanLanduseType == null || Double.isNaN( damageValue ) )
+    // return Double.NaN;
+    // if( m_isUrbanLanduseType )
+    // {
+    // if( damageValue < m_riskBorderLowMiddle )
+    // return IRasterizationControlModel.RISKZONE_URBANAREA_LOW;
+    // if( damageValue < m_riskBorderMiddleHigh )
+    // return IRasterizationControlModel.RISKZONE_URBANAREA_MIDDLE;
+    // return IRasterizationControlModel.RISKZONE_URBANAREA_HIGH;
+    // }
+    // else
+    // {
+    // if( damageValue < m_riskBorderLowMiddle )
+    // return IRasterizationControlModel.RISKZONE_NONURBANAREA_LOW;
+    // if( damageValue < m_riskBorderMiddleHigh )
+    // return IRasterizationControlModel.RISKZONE_NONURBANAREA_MIDDLE;
+    // return IRasterizationControlModel.RISKZONE_NONURBANAREA_HIGH;
+    // }
   }
+
 }

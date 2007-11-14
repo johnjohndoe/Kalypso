@@ -24,12 +24,14 @@ import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.schema.binding.LanduseClass;
 import org.kalypso.risk.model.schema.binding.LandusePolygon;
 import org.kalypso.risk.model.schema.binding.LandusePolygonCollection;
 import org.kalypso.risk.model.schema.binding.RasterDataModel;
 import org.kalypso.risk.model.schema.binding.RasterizationControlModel;
+import org.kalypso.risk.model.schema.binding.RiskZoneDefinition;
 import org.kalypso.risk.model.schema.binding.VectorDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -144,6 +146,19 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IAdministrationUnit.class, cTor );
+
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+        if( featureQName.equals( IRiskZoneDefinition.QNAME ) )
+          return new RiskZoneDefinition( feature );
+        else
+          return null;
+      }
+    };
+    cMap.put( IRiskZoneDefinition.class, cTor );
 
     cTor = new AdapterConstructor()
     {

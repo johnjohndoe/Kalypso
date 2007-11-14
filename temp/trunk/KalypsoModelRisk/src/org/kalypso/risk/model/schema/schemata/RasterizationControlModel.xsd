@@ -27,11 +27,13 @@
 						minOccurs="0" maxOccurs="unbounded" />
 					<xs:element ref="krrcm:damageFunctionMember"
 						minOccurs="0" maxOccurs="unbounded" />
-					<xs:element ref="krrcm:administrationUnitMember"
-						minOccurs="0" maxOccurs="unbounded" />
 					<xs:element ref="krrcm:assetValueClassMember"
 						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="krrcm:administrationUnitMember"
+						minOccurs="0" maxOccurs="unbounded" />
 					<xs:element ref="krrcm:landuseRiskTypeMember"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="krrcm:riskZoneDefinitionMember"
 						minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:restriction>
@@ -273,7 +275,7 @@
 
 
 	<!-- =================================================================
-		assetValueClassMember property
+		administrationUnitMember property
 		================================================================== -->
 	<xs:element name="administrationUnitMember"
 		type="krrcm:AdministrationUnitPropertyType" />
@@ -328,7 +330,7 @@
 	</xs:complexType>
 
 	<!-- =================================================================
-		Landuse classes
+		LanduseRiskType
 		================================================================== -->
 	<xs:element name="LanduseRiskType" type="krrcm:LanduseRiskTypeType"
 		substitutionGroup="gml:_Feature">
@@ -358,6 +360,97 @@
 	</xs:complexType>
 
 
+	<!-- =================================================================
+		riskZoneDefinitionMember property
+		================================================================== -->
+	<xs:element name="riskZoneDefinitionMember"
+		type="krrcm:RiskZoneDefinitionPropertyType" />
+
+	<xs:complexType name="RiskZoneDefinitionPropertyType">
+		<xs:sequence>
+			<xs:element ref="krrcm:RiskZoneDefinition" minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!-- =================================================================
+		RiskZoneDefinition
+		================================================================== -->
+	<xs:element name="RiskZoneDefinition"
+		type="krrcm:RiskZoneDefinitionType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="RiskZoneDefinitionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="lowerBoundaryValue" type="xs:double"
+						default="0.0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Lower zone boundary value [€/m²/a]</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Lower zone boundary value [€/m²/a]</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="colorStyle" type="common:color">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Farbdarstellung</xs:label>
+								<xs:tooltip>
+									Farbdarstellung der
+									Rizikozone in der Karte
+								</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Color style</xs:label>
+								<xs:tooltip>
+									Color of risk zone in the map
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="zoneInternalNumber" type="xs:int"
+						default="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Ordinal number</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Ordinal number</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="isUrbanLanduseType" type="xs:boolean" default="false">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Urban area</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Urban area</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 	<!-- Link functions ======================================================== -->
 
