@@ -1185,6 +1185,12 @@
             id="org.kalypso.ogc.gml.map.ThemeInfoCommand"
             name="Quick-Info">
       </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.widgets.category"
+            description="Öffnet die Gliederung oder schließt sie, falls sie bereits geöffnet ist."
+            id="org.kalypso.ogc.gml.map.OpenOutlineCommand"
+            name="Gliederung öffnen/schließen">
+      </command>
       </extension>
  <extension
        point="org.eclipse.ui.viewActions">
@@ -1609,6 +1615,12 @@
               style="push"
               tooltip="Map screenshot">
         </command>
+        <command
+              commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand"
+              label="Gliederung öffnen/schließen"
+              style="push"
+              tooltip="Öffnet die Gliederung oder schließt sie, falls sie bereits geöffnet ist.">
+        </command>
      </menuContribution>
      <menuContribution
            locationURI="menu:org.kalypso.ui.views.outline?after=outlineExport">
@@ -1739,6 +1751,10 @@
     <image
           commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand"
           icon="icons/map/themeInfo.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand"
+          icon="icons/map/show_outline.gif">
     </image>
  </extension>
  <extension
@@ -2010,6 +2026,15 @@
                 value="org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget">
           </parameter>
        </class>
+       <enabledWhen>
+          <reference
+                definitionId="mapContext">
+          </reference>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler"
+          commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand">
        <enabledWhen>
           <reference
                 definitionId="mapContext">
