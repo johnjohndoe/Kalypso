@@ -209,6 +209,9 @@
                type="org.kalypso.model.flood.binding.IFloodModel">
          </adapter>
          <adapter
+               type="org.kalypso.model.flood.binding.IFloodPolygon">
+         </adapter>
+         <adapter
                type="org.kalypso.model.flood.binding.IFloodExtrapolationPolygon">
          </adapter>
          <adapter

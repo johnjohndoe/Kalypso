@@ -41,6 +41,7 @@
 package org.kalypso.model.flood.binding;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Thomas Jung
@@ -50,6 +51,14 @@ public class FloodExtrapolationPolygon extends AbstractFloodPolygon implements I
   public FloodExtrapolationPolygon( Feature featureToBind )
   {
     super( featureToBind, IFloodExtrapolationPolygon.QNAME );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.IFloodExtrapolationPolygon#getRefPoint()
+   */
+  public GM_Point getRefPoint( )
+  {
+    return getProperty( QNAME_PROP_REFPOINT, GM_Point.class );
   }
 
 }
