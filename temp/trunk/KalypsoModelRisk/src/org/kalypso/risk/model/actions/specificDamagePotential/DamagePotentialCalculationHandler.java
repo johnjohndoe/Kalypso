@@ -87,7 +87,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
           MessageDialog.openError( shell, "Error", "No HQ data is loaded. Damage potential cannot be calculated. Please load waterlevel raster data." );
           return null;
         }
-        final IVectorDataModel vectorDataModel = (IVectorDataModel) scenarioDataProvider.getModel( IVectorDataModel.class );
+        final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
         final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
         if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
         {

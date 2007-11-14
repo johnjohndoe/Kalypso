@@ -94,10 +94,10 @@ public class LanduseRasterizationHandler extends AbstractHandler
       {
         final ICoverageCollection inputCoverages = maxCoveragesCollection;
         final ICoverageCollection outputCoverages = model.getLanduseCoverage();
-        
+
         // remove existing (invalid) coverages from the model
         model.getRiskZonesCoverage().clear();
-        
+
         final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
         new ProgressMonitorDialog( shell ).run( true, false, new IRunnableWithProgress()
         {
@@ -106,11 +106,11 @@ public class LanduseRasterizationHandler extends AbstractHandler
             monitor.beginTask( "Rasterizing landuse vector data...", IProgressMonitor.UNKNOWN );
             try
             {
-              final IVectorDataModel vectorDataModel = (IVectorDataModel) scenarioDataProvider.getModel( IVectorDataModel.class );
+              final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
               final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorDataModel.getLandusePolygonCollection();
 
               // TODO: delete old landuse coverage (also the files!)
-              
+
               int count = 0;
               for( final ICoverage inputCoverage : inputCoverages )
               {
