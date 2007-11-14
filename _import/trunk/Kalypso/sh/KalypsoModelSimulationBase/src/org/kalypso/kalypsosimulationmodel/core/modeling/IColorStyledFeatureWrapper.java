@@ -49,6 +49,8 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface IColorStyledFeatureWrapper extends IFeatureWrapper2
 {
+  public void setColorStyle( final RGB rgb );
+
   public RGB getColorStyle( );
 
   public int getOrdinalNumber( );

@@ -309,4 +309,13 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
     return 0;
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper#setColorStyle(org.eclipse.swt.graphics.RGB)
+   */
+  public void setColorStyle( RGB rgb )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
 }
