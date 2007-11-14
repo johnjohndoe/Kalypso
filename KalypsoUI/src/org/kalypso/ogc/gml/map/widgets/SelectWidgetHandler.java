@@ -8,17 +8,12 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -27,8 +22,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
-import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 import org.osgi.framework.Bundle;
 
 /**
@@ -97,29 +90,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
     if( mapPanel != null && widget != null )
     {
-      final UIJob job = new UIJob( display, "Widget auswählen" )
-      {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          try
-          {
-            if( widget instanceof IWidgetWithOptions )
-            {
-              final MapWidgetView widgetView = (MapWidgetView) activePart.getSite().getPage().showView( MapWidgetView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
-              widgetView.setWidgetForPanel( mapPanel, (IWidgetWithOptions) widget );
-            }
-            else
-              mapPanel.getWidgetManager().setActualWidget( widget );
-          }
-          catch( PartInitException e )
-          {
-            return e.getStatus();
-          }
-
-          return Status.OK_STATUS;
-        }
-      };
+      final UIJob job = new ActivateWidgetJob( display, "Widget auswählen", widget, mapPanel, activePart );
       // Probably not necessary
       final AbstractMapPart abstractMapPart = (AbstractMapPart) activePart;
       job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );

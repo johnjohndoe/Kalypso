@@ -42,6 +42,7 @@ package org.kalypso.grid;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -257,7 +258,7 @@ public class GeoGridUtilities
    */
   public static ICoverage addCoverage( final ICoverageCollection coverages, final IGeoGrid grid, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Coverage wird erzeugt", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
     /* Create new grid file and copy all values */
     final int scale = 2;
@@ -271,6 +272,11 @@ public class GeoGridUtilities
       final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
 
       grid.getWalkingStrategy().walk( grid, walker, progress.newChild( 70 ) );
+
+      final BigDecimal min = grid.getMin();
+      final BigDecimal max = grid.getMax();
+      if( min != null && max != null )
+        outputGrid.setStatistically( min, max );
 
       outputGrid.dispose();
 

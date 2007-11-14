@@ -215,7 +215,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     gridDataMaxValueLabel.heightHint = 15;
 
     globalMaxValueLabel.setLayoutData( gridDataMaxValueLabel );
-    globalMaxValueLabel.setText( m_globalMax.toString() );
+    globalMaxValueLabel.setText( m_globalMax.setScale( 2, BigDecimal.ROUND_HALF_UP ).toString() );
     globalMaxValueLabel.setAlignment( SWT.RIGHT );
 
     final Label globalMinLabel = new Label( globalComposite, SWT.NONE );
@@ -227,7 +227,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     gridDataMinValueLabel.widthHint = 40;
 
     globalMinValueLabel.setLayoutData( gridDataMinValueLabel );
-    globalMinValueLabel.setText( m_globalMin.toString() );
+    globalMinValueLabel.setText( m_globalMin.setScale( 2, BigDecimal.ROUND_HALF_UP ).toString() );
     globalMinValueLabel.setAlignment( SWT.RIGHT );
 
     final Label checkStroke = new Label( globalComposite, SWT.NONE );

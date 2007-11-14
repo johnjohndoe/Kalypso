@@ -87,9 +87,12 @@ public class CoverageCollection extends FeatureWrapperCollection<ICoverage> impl
     coverage.setGridDomain( domain );
     coverage.setRangeSet( rangeSet );
 
+    coverage.getFeature().invalidEnvelope();
+
     return coverage;
   }
-  
+
+  // TOOD: still needed? else: remove
   public static void setCoverage( final RectifiedGridCoverage coverage, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
   {
     final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
