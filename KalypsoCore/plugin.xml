@@ -162,6 +162,10 @@
           class="org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo"
           id="org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo">
     </themeInfo>
+    <themeInfo
+          class="org.kalypso.ogc.gml.FeatureThemeInfo"
+          id="org.kalypso.ogc.gml.FeatureThemeInfo">
+    </themeInfo>
  </extension>
 
 </plugin>

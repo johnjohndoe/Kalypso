@@ -95,7 +95,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
     }
 
     /* If anything else fails, create a default delegate to avoid <code>null</code>-checks. */
-    m_delegate = new org.kalypso.ogc.gml.DefaultFeatureThemeInfo();
+    m_delegate = new org.kalypso.ogc.gml.FeatureThemeInfo();
     m_delegate.init( theme, props );
   }
 

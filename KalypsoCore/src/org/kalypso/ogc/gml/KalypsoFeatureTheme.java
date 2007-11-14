@@ -473,6 +473,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( defaultFeatureThemeInfo != null )
       return defaultFeatureThemeInfo;
 
-    return new DefaultFeatureThemeInfo( this, new Properties() );
+    return new FeatureThemeInfo( this, new Properties() );
   }
 }
