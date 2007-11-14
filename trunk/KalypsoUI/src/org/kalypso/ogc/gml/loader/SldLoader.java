@@ -46,14 +46,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.tools.ant.filters.StringInputStream;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.IKalypsoCoreConstants;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 
@@ -120,8 +126,61 @@ public class SldLoader extends AbstractLoader
   }
 
   @Override
-  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data )
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
-    System.out.print( "SLD-Loader Save method" );
+    if( data instanceof StyledLayerDescriptor )
+    {
+      IFile sldFile = null;
+      try
+      {
+        final StyledLayerDescriptor userStyle = (StyledLayerDescriptor) data;
+        final URL styleURL = m_urlResolver.resolveURL( context, source );
+
+        sldFile = ResourceUtilities.findFileFromURL( styleURL );
+
+        final String sldXML = userStyle.exportAsXML();
+        final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+
+        if( sldFile != null )
+        {
+          sldFile.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
+          sldFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), true, false, monitor );
+        }
+        else if( sldFile == null && styleURL.getProtocol().equals( "file" ) )
+        {
+          sldFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, monitor );
+        }
+        else
+          throw new LoaderException( "Die URL kann nicht beschrieben werden: " + styleURL );
+      }
+      catch( final MalformedURLException e )
+      {
+        e.printStackTrace();
+
+        throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n" + e.getLocalizedMessage(), e );
+      }
+      catch( final Throwable e )
+      {
+        e.printStackTrace();
+        throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
+      }
+      finally
+      {
+        /* delete all markers on the corresponding resource */
+        if( sldFile != null )
+        {
+          try
+          {
+            final IMarker[] markers = sldFile.findMarkers( source, false, IResource.DEPTH_ZERO );
+            for( final IMarker marker : markers )
+              marker.delete();
+          }
+          catch( final CoreException e )
+          {
+            KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+          }
+        }
+      }
+    }
   }
 }
