@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
- * @author jung
+ * @author Thomas Jung
  * 
  */
 public abstract class AbstractFloodPolygon extends AbstractFeatureBinder implements IFloodPolygon
@@ -56,4 +56,15 @@ public abstract class AbstractFloodPolygon extends AbstractFeatureBinder impleme
     super( featureToBind, qnameToBind );
   }
 
+  /**
+   * @see org.kalypso.model.flood.binding.IFloodPolygon#getEvent()
+   */
+  public IRunoffEvent getEvent( )
+  {
+    final Feature eventFeature = (Feature) getFeature().getProperty( QNAME_PROP_EVENT );
+    if( eventFeature == null )
+      return null;
+
+    return (IRunoffEvent) eventFeature.getAdapter( IRunoffEvent.class );
+  }
 }

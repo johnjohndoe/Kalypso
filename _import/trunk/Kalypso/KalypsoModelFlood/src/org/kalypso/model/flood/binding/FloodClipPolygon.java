@@ -41,12 +41,11 @@
 package org.kalypso.model.flood.binding;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Thomas Jung
  */
-public class FloodClipPolygon extends AbstractFeatureBinder implements IFloodClipPolygon
+public class FloodClipPolygon extends AbstractFloodPolygon implements IFloodClipPolygon
 {
   public FloodClipPolygon( Feature featureToBind )
   {

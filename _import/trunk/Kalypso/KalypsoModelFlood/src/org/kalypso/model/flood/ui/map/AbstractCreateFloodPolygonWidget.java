@@ -61,7 +61,7 @@ public abstract class AbstractCreateFloodPolygonWidget extends AbstractWidget
    * @param qname
    *            The qname of the feature to create
    * @param geomProperties
-   *            The properties of the feature which shalkl be editied (in the given order).
+   *            The properties of the feature which shall be edited (in the given order).
    */
   public AbstractCreateFloodPolygonWidget( final QName qname, final QName[] geomProperties )
   {

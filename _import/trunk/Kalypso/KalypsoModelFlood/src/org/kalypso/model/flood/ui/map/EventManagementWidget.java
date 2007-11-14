@@ -126,6 +126,7 @@ import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.ui.map.operations.AddEventOperation;
 import org.kalypso.model.flood.ui.map.operations.ImportTinOperation;
 import org.kalypso.model.flood.ui.map.operations.RemoveEventOperation;
+import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -826,7 +827,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final String eventName = dialog.getValue();
     final IFloodModel model = m_model;
     final IFolder eventsFolder = getEventsFolder();
-    final AbstractCascadingLayerTheme wspThemes = AddEventOperation.findWspTheme( getMapPanel().getMapModell() );
+    final AbstractCascadingLayerTheme wspThemes = FloodModelHelper.findWspTheme( getMapPanel().getMapModell() );
     Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
 
     final URL sldContent = getClass().getResource( "resources/wsp.sld" );
@@ -908,7 +909,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     if( m_treeSelection == null )
       return;
 
-    final AbstractCascadingLayerTheme wspThemes = AddEventOperation.findWspTheme( getMapPanel().getMapModell() );
+    final AbstractCascadingLayerTheme wspThemes = FloodModelHelper.findWspTheme( getMapPanel().getMapModell() );
 
     final ICoreRunnableWithProgress operation = new RemoveEventOperation( m_treeSelection, m_dataProvider, wspThemes );
 

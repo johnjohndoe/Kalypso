@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.model.flood.binding.IFloodModel;
+import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -82,7 +83,7 @@ public class FloodModelProcess
     m_events = events;
   }
 
-  public IStatus process( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus process( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "Berechne Flieﬂtiefen", m_events.length );
 
@@ -90,7 +91,8 @@ public class FloodModelProcess
     {
       try
       {
-        processEvent( event, progress.newChild( 1 ) );
+        progress.subTask( event.getName() );
+        processEvent( event, progress.newChild( 1, SubMonitor.SUPPRESS_NONE ) );
       }
       catch( final CoreException e )
       {
@@ -109,10 +111,14 @@ public class FloodModelProcess
 
   private void processEvent( final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Berechne Flieﬂtiefen", m_events.length );
 
     final ICoverageCollection terrainModel = m_model.getTerrainModel();
+    final SubMonitor progress = SubMonitor.convert( monitor, terrainModel.size() * 100 );
+    final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
 
+    // final SortedFloodPolygonMap sortedPolygons = FloodPolygonHelper.getSortedPolygonsForEvent( event, polygons );
+
+    /* check for existing result coverages */
     final ICoverageCollection resultCoverages = event.getResultCoverages();
 
     if( resultCoverages.size() != 0 )
@@ -124,9 +130,12 @@ public class FloodModelProcess
 
     for( final ICoverage terrainCoverage : terrainModel )
     {
+      progress.subTask( terrainCoverage.getName() );
+
       final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
       final IFeatureWrapperCollection<ITinReference> tins = event.getTins();
-      final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins );
+
+      final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons );
 
       /* set destination: => event folder/results */
 
@@ -137,14 +146,15 @@ public class FloodModelProcess
       // get results folder
       final IFolder destFolder = eventFolder.getFolder( "results" );
       if( destFolder.exists() == false )
-        destFolder.create( false, true, new SubProgressMonitor( monitor, 2 ) );
+        destFolder.create( false, true, new SubProgressMonitor( monitor, 5 ) );
 
       // get file
       final IFile destFile = destFolder.getFile( uniqueFileName );
       final File file = destFile.getLocation().toFile();
 
       final String fileName = "../events/" + event.getDataPath() + "/results/" + file.getName();
-      GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", new NullProgressMonitor() );
+
+      GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", progress.newChild( 95 ) );
 
       terrainGrid.dispose();
     }

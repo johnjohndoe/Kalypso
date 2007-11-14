@@ -2,61 +2,86 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.flood.binding;
+package org.kalypso.model.flood.util;
 
-import javax.xml.namespace.QName;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.model.flood.binding.IFloodPolygon;
 
 /**
- * @author Thomas Jung
+ * @author Thomas jung
  * 
  */
-public interface IFloodPolygon extends IFeatureWrapper2
+public class SortedFloodPolygonMap
 {
-  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "AbstractFloodPolygon" );
+  private final Map<Class< ? extends IFloodPolygon>, List<IFloodPolygon>> m_polygonMap = new HashMap<Class< ? extends IFloodPolygon>, List<IFloodPolygon>>();
 
-  public static final QName QNAME_PROP_AREA = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "areaMember" );
+  public void add( IFloodPolygon floodPolygon )
+  {
+    final Class< ? extends IFloodPolygon> key = floodPolygon.getClass();
+    if( m_polygonMap.containsKey( key ) )
+    {
+      List<IFloodPolygon> polygonList = m_polygonMap.get( key );
+      polygonList.add( floodPolygon );
 
-  public static final QName QNAME_PROP_EVENT = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "eventMember" );
+      m_polygonMap.put( key, polygonList );
+    }
+    else
+    {
+      List<IFloodPolygon> polygonList = new LinkedList<IFloodPolygon>();
+      polygonList.add( floodPolygon );
 
-  public IRunoffEvent getEvent( );
+      m_polygonMap.put( key, polygonList );
+    }
+  }
 
+  public IFloodPolygon[] get( final Class< ? extends IFloodPolygon> polygonClass )
+  {
+    if( !m_polygonMap.containsKey( polygonClass ) )
+      return null;
+    else
+    {
+      final List<IFloodPolygon> polygonList = m_polygonMap.get( polygonClass );
+      return polygonList.toArray( new IFloodPolygon[polygonList.size()] );
+    }
+  }
 }

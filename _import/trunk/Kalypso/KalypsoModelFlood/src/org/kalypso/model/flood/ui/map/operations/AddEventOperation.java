@@ -28,7 +28,6 @@ import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
@@ -221,22 +220,6 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
   public static String styleLocationForEvent( final IRunoffEvent event )
   {
     return "../events/" + event.getDataPath().toPortableString() + "/wsp.sld";
-  }
-
-  /**
-   * Finds the wsp cascading theme containing the event themes.
-   */
-  public static AbstractCascadingLayerTheme findWspTheme( final IMapModell mapModell )
-  {
-    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    for( final IKalypsoTheme kalypsoTheme : allThemes )
-    {
-      // REMARK: not nice, but not otherwise possible: use name to find the theme.
-      if( kalypsoTheme instanceof AbstractCascadingLayerTheme && kalypsoTheme.getName().equals( "Wasserspiegellagen" ) )
-        return (AbstractCascadingLayerTheme) kalypsoTheme;
-    }
-
-    return null;
   }
 
 }

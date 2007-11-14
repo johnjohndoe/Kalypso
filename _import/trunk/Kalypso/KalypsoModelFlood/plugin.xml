@@ -46,7 +46,7 @@
          </class>
       </handler>
       <handler
-            commandId="org.kalypso.model.flood.ImportDTMData">
+            commandId="org.kalypso.model.flood.ManageDTMData">
          <class
                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
             <parameter
@@ -183,6 +183,10 @@
       <handler
             class="org.kalypso.model.flood.handlers.ProcessFloodModelHandler"
             commandId="org.kalypso.model.flood.ProcessFloodModel">
+      </handler>
+      <handler
+            class="org.kalypso.model.flood.handlers.VisualizeDepthDataHandler"
+            commandId="org.kalypso.model.flood.VisualizeDepthData">
       </handler>
    </extension>
    <extension

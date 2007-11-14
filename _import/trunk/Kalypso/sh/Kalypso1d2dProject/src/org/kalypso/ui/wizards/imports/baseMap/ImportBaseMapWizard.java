@@ -59,6 +59,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -69,6 +72,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
@@ -392,9 +397,10 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       final File finalSrcDBase = srcFileDBase;
       final IFile finalDstDBase = dstFileDBase;
       final String coordinateSystem = m_PageImportShp.getCoordinateSystem();
-      getContainer().run( true, true, new IRunnableWithProgress()
+
+      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
-        public void run( final IProgressMonitor monitor )
+        public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
         {
           try
           {
@@ -405,32 +411,26 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
             copy( srcFileShape, dstFileShape, monitor );
             copy( finalSrcIndex, finalDstIndex, monitor );
             copy( finalSrcDBase, finalDstDBase, monitor );
-          }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
+
+            return Status.OK_STATUS;
           }
           catch( final IOException e )
           {
-            e.printStackTrace();
+            throw new InvocationTargetException( e );
           }
         }
-      } );
+      };
+
+      IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+      ErrorDialog.openError( getShell(), "", "", status );
+
+      if( !status.isOK() )
+        return false;
+
       final String layerName = m_PageImportShp.getSourceLocation().removeFileExtension().lastSegment();
       final String shpHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + m_PageImportShp.getSourceLocation().removeFileExtension().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$
       final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "shape", "featureMember", shpHref );
       mapView.postCommand( command, null );
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.printStackTrace();
-      return false;
-    }
-    catch( final InterruptedException e )
-    {
-      // User canceled, so stop but don’t close wizard.
-      e.printStackTrace();
-      return false;
     }
     catch( final Exception e )
     {
