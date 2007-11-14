@@ -57,20 +57,20 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author Gernot Belger
  */
-public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
+public class FeatureThemeInfo implements IKalypsoThemeInfo
 {
   private IKalypsoFeatureTheme m_theme = null;
 
   private String m_format;
 
-  private String m_geom;
+  private QName m_geom;
 
-  public DefaultFeatureThemeInfo( )
+  public FeatureThemeInfo( )
   {
     // empty
   }
 
-  public DefaultFeatureThemeInfo( final KalypsoFeatureTheme theme, final Properties props )
+  public FeatureThemeInfo( final KalypsoFeatureTheme theme, final Properties props )
   {
     init( theme, props );
   }
@@ -88,7 +88,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
 
     m_format = props.getProperty( "format" );
     final String geomStr = props.getProperty( "geometry" );
-    m_geom = geomStr == null ? null : geomStr.valueOf( geomStr );
+    m_geom = geomStr == null ? null : QName.valueOf( geomStr );
   }
 
   /**
@@ -139,7 +139,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
       feature = (Feature) foundFeatures.get( i );
       if( m_geom != null )
       {
-        final Object property = feature.getProperty( new QName( m_geom ) );
+        final Object property = feature.getProperty( m_geom );
         if( property instanceof GM_Object && ((GM_Object) property).contains( pos ) )
           break;
       }
