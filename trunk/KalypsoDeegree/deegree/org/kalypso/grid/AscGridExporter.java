@@ -141,8 +141,8 @@ public class AscGridExporter
     // CellSize: .asc only support quadratic, cartesian cells, so we just take xOffset.x
     destination.format( Locale.US, "ncols         %d%n", sizeX );
     destination.format( "nrows         %d%n", sizeY );
-    destination.format( "xllcorner     %.3f%n", boundingBox.getMinX() );
-    destination.format( "yllcorner     %.3f%n", boundingBox.getMaxY() );
+    destination.format( "xllcorner     %.3f%n", boundingBox.getMinX() ); // xllcorner
+    destination.format( "yllcorner     %.3f%n", boundingBox.getMinY() ); // yllcorner
     destination.format( "cellsize      " + m_valueFormat + "%n", cellsize );
     destination.format( "NODATA_value  " + m_valueFormat + "%n", m_noDataValue );
 
