@@ -177,6 +177,10 @@
           class="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler"
           commandId="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler">
     </handler>
+    <handler
+          class="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler"
+          commandId="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler">
+    </handler>
  </extension>
  <extension
        point="org.kalypso.core.themeInfo">
@@ -184,5 +188,11 @@
           class="org.kalypso.risk.plugin.RiskZonesThemeInfo"
           id="org.kalypso.risk.plugin.RiskZonesThemeInfo">
     </themeInfo>
+ </extension>
+ <extension
+       point="org.kalypso.core.catalogContribution">
+    <catalogContribution
+          class="org.kalypso.risk.model.schema.RiskModelCatalogContribution">
+    </catalogContribution>
  </extension>
 </plugin>

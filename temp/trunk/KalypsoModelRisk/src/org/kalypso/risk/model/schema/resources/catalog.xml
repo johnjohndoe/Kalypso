@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
+	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+	<!--
+		<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:FloodExtrapolationPolygon:sld:default" uri="FloodExtrapolationPolygon.sld" />
+	-->
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_risk_schemata_rasterDataModel:AnnualCoverage:featureview:default"
+		uri="AnnualCoverage.gft" />
+</catalog:catalog>
+

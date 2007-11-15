@@ -33,6 +33,11 @@
 				<Name>Import waterlevel data</Name>
 			</Task>
 			<Task context="CoveragesWidgetContext"
+				URI="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler">
+				<Help><![CDATA[Edit waterlevel raster data]]></Help>
+				<Name>Edit waterlevel anuality layers</Name>
+			</Task>
+			<Task context="CoveragesWidgetContext"
 				URI="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler">
 				<Help><![CDATA[Edit waterlevel raster data]]></Help>
 				<Name>Edit waterlevel raster data</Name>
@@ -87,7 +92,7 @@
 		<Task context="CoveragesWidgetContext"
 			URI="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler">
 			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
-			<Name>Exportieren Rasterdaten</Name>
+			<Name>Exportieren Risikozonen</Name>
 		</Task>
 	</TaskGroup>
 	<Perspectives>

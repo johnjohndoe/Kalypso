@@ -90,4 +90,12 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   {
     return m_taskExecutionAuthority;
   }
+
+  /**
+   * @return the m_imageProvider
+   */
+  public static PluginImageProvider getImageProvider( )
+  {
+    return getDefault().m_imageProvider;
+  }
 }

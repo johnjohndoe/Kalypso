@@ -61,6 +61,14 @@
 	<xs:element name="AnnualCoverageCollection"
 		type="krrdm:AnnualCoverageCollectionType"
 		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:name><![CDATA[Ereignis]]></xs:name>
+				<xs:label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</xs:label>
+				<xs:tooltip><![CDATA[Ereignis]]></xs:tooltip>
+				<xs:description><![CDATA[Ereignis]]></xs:description>
+			</xs:documentation>
+		</xs:annotation>
 	</xs:element>
 
 	<xs:complexType name="AnnualCoverageCollectionType">
@@ -86,6 +94,14 @@
 
 	<xs:element name="AnnualCoverage" type="krrdm:AnnualCoverageType"
 		substitutionGroup="cov:CoverageCollection">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:name><![CDATA[Ereignis]]></xs:name>
+				<xs:label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</xs:label>
+				<xs:tooltip><![CDATA[Ereignis]]></xs:tooltip>
+				<xs:description><![CDATA[Ereignis]]></xs:description>
+			</xs:documentation>
+		</xs:annotation>
 	</xs:element>
 
 	<xs:complexType name="AnnualCoverageType">

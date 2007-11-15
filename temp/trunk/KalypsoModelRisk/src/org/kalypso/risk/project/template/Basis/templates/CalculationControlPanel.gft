@@ -94,6 +94,7 @@
 			</gft:table>
 		</gft:group>
 		
+		<!-- 
 		<gft:group text="Administration units" style="0">
 			<gft:gridData horizontalSpan="1" minimumHeight="50"
 				horizontalAlignment="GridData.FILL"
@@ -116,6 +117,7 @@
 				</ns1:gistableview>
 			</gft:table>
 		</gft:group>
+		 -->
 
 	</gft:view>
 

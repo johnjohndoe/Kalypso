@@ -17,9 +17,10 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.risk.model.actions.dataImport.waterdepth.EventManagementWidget;
 import org.kalypso.ui.views.map.MapView;
 
-public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements IHandler
+public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implements IHandler
 {
 
   /**
@@ -54,7 +55,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
         mapModell.activateTheme( hqTheme );
     }
 
-    final CoverageManagementWidget widget = new CoverageManagementWidget( "Waterlevel data editing", "" );
+    final EventManagementWidget widget = new EventManagementWidget();
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
