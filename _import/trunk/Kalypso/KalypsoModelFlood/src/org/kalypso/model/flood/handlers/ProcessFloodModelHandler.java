@@ -54,13 +54,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
@@ -116,9 +112,33 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
         return null;
 
       /* ask user which events to process? */
-      final IRunoffEvent[] eventsToProcess = askUserForEvents( shell, events, dataProvider );
+      final IRunoffEvent[] eventsToProcess = FloodModelHelper.askUserForEvents( shell, events );
+
       if( eventsToProcess == null )
         return null;
+
+      // decision dialog for user, if he wants to overwrite existing data
+      final List<IRunoffEvent> eventListToProcess = new LinkedList<IRunoffEvent>();
+
+      for( int i = 0; i < eventsToProcess.length; i++ )
+      {
+        final IRunoffEvent runoffEvent = eventsToProcess[i];
+        final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
+
+        if( resultCoverages.size() != 0 )
+        {
+          if( MessageDialog.openQuestion( shell, "Fließtiefendaten für Ereignis " + runoffEvent.getName() + "bereits vorhanden", "Sollen vorhandene Daten überschrieben werden?" ) == true )
+          {
+            // clear existing results (gml and file and themes).
+            IStatus status = FloodModelHelper.removeResultCoverages( shell, dataProvider, resultCoverages );
+            if( status == Status.OK_STATUS )
+              eventListToProcess.add( runoffEvent );
+          }
+        }
+        else
+          eventListToProcess.add( runoffEvent );
+
+      }
 
       // check prerequisites
       // - event has at least 1 tin
@@ -153,63 +173,6 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
 
       throw new ExecutionException( e.getLocalizedMessage(), e );
     }
-  }
-
-  private IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureWrapperCollection<IRunoffEvent> events, final SzenarioDataProvider dataProvider )
-  {
-    final LabelProvider labelProvider = new LabelProvider()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
-      @Override
-      public String getText( Object element )
-      {
-        final IRunoffEvent event = (IRunoffEvent) element;
-        ICoverageCollection resultCoverages = event.getResultCoverages();
-        if( resultCoverages.size() > 0 )
-        {
-          return event.getName() + " (Ergebnisse vorhanden)";
-        }
-        else
-          return event.getName();
-      }
-    };
-
-    final ListSelectionDialog dialog = new ListSelectionDialog( shell, events, new ArrayContentProvider(), labelProvider, "Welche Ereignisse sollen verarbeitet werden?" );
-    dialog.setTitle( "Flood-Modeller" );
-
-    if( dialog.open() != Window.OK )
-      return null;
-
-    final Object[] eventsToProcess = dialog.getResult();
-
-    final List<IRunoffEvent> eventListToProcess = new LinkedList<IRunoffEvent>();
-
-    // decision dialog for user, if he wants to overwrite existing data
-    for( final Object element : eventsToProcess )
-    {
-      final IRunoffEvent event = (IRunoffEvent) element;
-      final ICoverageCollection resultCoverages = event.getResultCoverages();
-
-      if( resultCoverages.size() != 0 )
-      {
-        if( MessageDialog.openQuestion( shell, "Fließtiefendaten für Ereignis " + event.getName() + "bereits vorhanden", "Sollen vorhandene Daten überschrieben werden?" ) == true )
-        {
-          // clear existing results (gml and file and themes).
-          final IStatus status = FloodModelHelper.removeResultCoverages( shell, dataProvider, resultCoverages );
-          if( status == Status.OK_STATUS )
-            eventListToProcess.add( event );
-        }
-        else
-          return null;
-      }
-      else
-        eventListToProcess.add( event );
-
-    }
-
-    return eventListToProcess.toArray( new IRunoffEvent[eventListToProcess.size()] );
   }
 
   private IStatus runCalculation( final IFloodModel model, final IRunoffEvent[] eventsToProcess, final SzenarioDataProvider dataProvider, final AbstractCascadingLayerTheme wspTheme )

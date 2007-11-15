@@ -188,6 +188,10 @@
             class="org.kalypso.model.flood.handlers.VisualizeDepthDataHandler"
             commandId="org.kalypso.model.flood.VisualizeDepthData">
       </handler>
+      <handler
+            class="org.kalypso.model.flood.handlers.GenerateRiskModelHandler"
+            commandId="org.kalypso.model.flood.GenerateRiskModel">
+      </handler>
    </extension>
    <extension
          point="org.kalypso.afgui.scenarioData">

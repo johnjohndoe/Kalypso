@@ -112,6 +112,17 @@ public class ScenarioHelper
   }
 
   /**
+   * Retrieves the folder of the currently active scenario via the current evaluation context of the handler service.
+   */
+  public static SzenarioDataProvider getScenarioDataProvider( )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    return (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+  }
+
+  /**
    * Find the oldest parent (=root) of the given scenario.<br>
    * If the scenario has no parent, itself is returned-.
    */

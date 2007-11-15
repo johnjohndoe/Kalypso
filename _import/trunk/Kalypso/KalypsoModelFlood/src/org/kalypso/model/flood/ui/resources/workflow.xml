@@ -50,10 +50,14 @@
 	<TaskGroup URI="org.kalypso.model.flood.Postprocessing">
 		<Help><![CDATA[Ergebnisauswertung]]></Help>
 		<Name>Ergebnisauswertung</Name>
-		<Task context="EventTheme"
+		<Task context="FloodMap"
 			URI="org.kalypso.model.flood.VisualizeDepthData">
 			<Help><![CDATA[Hier können Sie sich die generierten Fließtiefen anzeigen und exportieren lassen.]]></Help>
 			<Name>Fließtiefen anzeigen</Name>
+		</Task>
+		<Task URI="org.kalypso.model.flood.GenerateRiskModel">
+			<Help><![CDATA[Hierüber können Sie mit den erzeugten Fließtiefen ein neues Risk Model anlegen.]]></Help>
+			<Name>Risk Modell erzeugen</Name>
 		</Task>
 	</TaskGroup>
 
@@ -61,35 +65,6 @@
 		<con:PerspectiveContext id="ContextFloodModelling"
 			perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
 			<!-- perspectiveId="org.kalypso.flood.perspective.Perspective"> -->
-
-			<con:ViewContext id="FeatureView"
-				partId="org.kalypso.ui.views.featuretemplateview"
-				parent="ContextFloodModelling">
-				<con:ExtensionContext id="LanduseDatabase"
-					parent="FeatureView"
-					handlerFactoryId="kalypsoContextHandlerFactory">
-					<con:Parameter name="type"
-						value="featureViewInputContext" />
-					<con:Parameter name="input"
-						value="templates/landuse.gft" />
-				</con:ExtensionContext>
-				<con:ExtensionContext id="AssetValuesDatabase"
-					parent="FeatureView"
-					handlerFactoryId="kalypsoContextHandlerFactory">
-					<con:Parameter name="type"
-						value="featureViewInputContext" />
-					<con:Parameter name="input"
-						value="templates/assetValues.gft" />
-				</con:ExtensionContext>
-				<con:ExtensionContext id="DamageFunctionsDefinition"
-					parent="FeatureView"
-					handlerFactoryId="kalypsoContextHandlerFactory">
-					<con:Parameter name="type"
-						value="featureViewInputContext" />
-					<con:Parameter name="input"
-						value="templates/damageFunctions.gft" />
-				</con:ExtensionContext>
-			</con:ViewContext>
 
 			<con:WorkbenchSiteContext id="MapContext"
 				parent="ContextFloodModelling">
@@ -124,15 +99,6 @@
 								value="themeContext" />
 							<con:Parameter name="input"
 								value="{http://www.opengis.net/gml}_Coverage" />
-						</con:ExtensionContext>
-						
-						<con:ExtensionContext id="EventTheme"
-							parent="FloodMap"
-							handlerFactoryId="kalypsoContextHandlerFactory">
-							<con:Parameter name="type"
-								value="themeContext" />
-							<con:Parameter name="input"
-								value="{org.kalypso.model.flood}RunoffEvent" />
 						</con:ExtensionContext>
 
 					</con:ExtensionContext>

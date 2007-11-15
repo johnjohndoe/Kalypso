@@ -185,11 +185,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     for( IFloodPolygon floodPolygon : polygons )
     {
       if( floodPolygon instanceof IFloodExtrapolationPolygon )
-      {
-        IFloodExtrapolationPolygon polygon = (IFloodExtrapolationPolygon) floodPolygon;
-
-        return polygon;
-      }
+        return (IFloodExtrapolationPolygon) floodPolygon;
     }
     return null;
   }

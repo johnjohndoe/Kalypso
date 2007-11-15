@@ -20,7 +20,7 @@
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="gml:description" tooltip="Beschreibung" style="SWT.MULTI | SWT.BORDER"
+	<gft:text editable="true" property="gml:description" tooltip="Beschreibung" style="SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL"
 		xmlns:gml="http://www.opengis.net/gml">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL"
 			heightHint="30" grabExcessHorizontalSpace="true" />

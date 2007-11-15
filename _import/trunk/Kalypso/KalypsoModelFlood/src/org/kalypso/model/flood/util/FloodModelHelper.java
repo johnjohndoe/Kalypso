@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.util;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -48,7 +49,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.ui.map.CoverageManagmentHelper;
@@ -67,6 +72,7 @@ import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -224,4 +230,52 @@ public class FloodModelHelper
     return null;
   }
 
+  /**
+   * shows a {@link ListSelectionDialog} in which the user can select {@link IRunoffEvent} for further processing
+   * 
+   * @param shell
+   * @param events
+   *            the RunoffEvents
+   * 
+   * @return a array of selected {@link IRunoffEvent}
+   */
+  public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureWrapperCollection<IRunoffEvent> events )
+  {
+    final LabelProvider labelProvider = new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( Object element )
+      {
+        final IRunoffEvent event = (IRunoffEvent) element;
+        ICoverageCollection resultCoverages = event.getResultCoverages();
+        if( resultCoverages.size() > 0 )
+        {
+          return event.getName() + " (Ergebnisse vorhanden)";
+        }
+        else
+          return event.getName();
+      }
+    };
+
+    final ListSelectionDialog dialog = new ListSelectionDialog( shell, events, new ArrayContentProvider(), labelProvider, "Welche Ereignisse sollen verarbeitet werden?" );
+    dialog.setTitle( "Flood-Modeller" );
+
+    if( dialog.open() != Window.OK )
+      return null;
+
+    Object[] selectedObjects = dialog.getResult();
+
+    List<IRunoffEvent> selectedEventList = new LinkedList<IRunoffEvent>();
+    for( Object object : selectedObjects )
+    {
+      if( object instanceof IRunoffEvent )
+      {
+        selectedEventList.add( (IRunoffEvent) object );
+      }
+    }
+    return selectedEventList.toArray( new IRunoffEvent[selectedEventList.size()] );
+  }
 }
