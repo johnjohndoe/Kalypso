@@ -60,6 +60,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
+import java.util.List;
+
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
@@ -187,6 +189,9 @@ public class PropertyName extends Expression_Impl
         return object;
       else if( object instanceof Boolean )
         return object.toString();
+      else if( object instanceof List )
+        return object;
+
       return FilterElementLabelProvider.toString( object );
     }
     catch( final GMLXPathException e )

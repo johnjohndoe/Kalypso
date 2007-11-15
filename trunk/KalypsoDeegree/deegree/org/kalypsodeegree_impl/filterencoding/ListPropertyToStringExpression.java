@@ -38,26 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.filterencoding;
+package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.List;
 
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypsodeegree.filterencoding.Expression;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * Instances of this interface represent implementations for the 'Function'-expression of the ogc:expression schema
- * (expr.xsd).
- * <p>
- * Implementations of functions can be registered via the XXXX extension-points of the KalypsoDeegree plug-in.
- * </p>
- * 
  * @author Gernot Belger
+ * @uathor Thomas Jung
  */
-public interface IFunctionExpression
+public class ListPropertyToStringExpression extends AbstractFunctionExpression
 {
-  public String getName( );
+  /**
+   * @see org.kalypsodeegree.filterencoding.IFunctionExpression#evaluate(org.kalypsodeegree.model.feature.Feature,
+   *      java.util.List)
+   */
+  public Object evaluate( final Feature feature, final List<Expression> args ) throws FilterEvaluationException
+  {
+    final Expression expression = args.get( 0 );
+    final Expression separatorExpr = args.get( 1 );
 
-  public String getLabel( );
+    final String separator = (String) separatorExpr.evaluate( feature );
 
-  public Object evaluate( final Feature feature, final List<Expression> args ) throws FilterEvaluationException;
+    final StringBuffer result = new StringBuffer();
+
+    final FeatureList list = (FeatureList) expression.evaluate( feature );
+
+    for( int i = 0; i < list.size(); i++ )
+    {
+      final Feature child = FeatureHelper.getFeature( feature.getWorkspace(), list.get( i ) );
+      if( child != null )
+      {
+        final String label = FeatureHelper.getAnnotationValue( child, IAnnotation.ANNO_LABEL );
+        result.append( label );
+        if( i != list.size() - 1 )
+          result.append( separator );
+      }
+    }
+
+    return result.toString();
+  }
+
 }
