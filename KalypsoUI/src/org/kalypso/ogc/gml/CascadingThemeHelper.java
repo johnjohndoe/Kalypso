@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -56,4 +57,22 @@ public class CascadingThemeHelper
 
     return visitor.getFoundThemes();
   }
+  
+  /**
+   * Finds Cascadimg theme with the given name from the map model. Searches only for instances of CascadingKalypsoTheme 
+   * @param mapModell
+   * @param themeName
+   * @return CascadingKalypsoTheme, or null if no theme with that name is found
+   */
+  public static final CascadingKalypsoTheme getNamedCascadingTheme( final IMapModell mapModell, final String themeName )
+  {
+    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+    for( final IKalypsoTheme kalypsoTheme : allThemes )
+    {
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( themeName ) )
+        return (CascadingKalypsoTheme) kalypsoTheme;
+    }
+    return null;
+  }
+
 }
