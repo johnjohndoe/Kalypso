@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -132,7 +132,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+      StatusUtilities.createWarningStatus( "Kartenansicht nicht geï¿½ffnet. Es kï¿½nnen keine Themen hinzugefï¿½gt werden." );
       return false;
     }
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
@@ -158,7 +158,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
             final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
             for( final AsciiRasterInfo asciiRasterInfo : rasterInfos )
             {
-              monitor.subTask( " HQ "+asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
+              monitor.subTask( " HQ " + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
               final String binFileName = asciiRasterInfo.getSourceFile().getName() + ".bin"; //$NON-NLS-1$
               final String dstFileName = "models/raster/input/" + binFileName; //$NON-NLS-1$
               final IFile dstRasterIFile = scenarioFolder.getFile( dstFileName );
@@ -178,7 +178,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
                   coveragesToRemove.add( existingAnnualCoverage );
               for( final IAnnualCoverageCollection coverageToRemove : coveragesToRemove )
                 waterdepthCoverageCollection.remove( coverageToRemove );
-              
+
               final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
               final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
               final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getWrappedFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
@@ -188,6 +188,8 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
               coverage.setRangeSet( rangeSet );
               coverage.setGridDomain( asciiRasterInfo.getGridDomain() );
+              coverage.setName( binFileName );
+              coverage.setDescription( "Imported from " + asciiRasterInfo.getSourceFile().getName() );
 
               // remove themes that are showing invalid coverages
               final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod(); //$NON-NLS-1$
@@ -201,7 +203,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
 
               final StyledLayerType layer = new StyledLayerType();
               layer.setName( layerName );
-              layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID()+"/coverageMember" ); //$NON-NLS-1$
+              layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember" ); //$NON-NLS-1$
               layer.setLinktype( "gml" ); //$NON-NLS-1$
               layer.setType( "simple" ); //$NON-NLS-1$
               layer.setVisible( true );
@@ -232,7 +234,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getWrappedFeature(), new Feature[] { annualCoverageCollection.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             }
             scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-            
+
             // Undoing this operation is not possible because old raster files are deleted...
             scenarioDataProvider.saveModel( new NullProgressMonitor() );
           }

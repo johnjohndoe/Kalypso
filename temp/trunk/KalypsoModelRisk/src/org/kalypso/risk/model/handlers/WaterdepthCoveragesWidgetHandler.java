@@ -19,14 +19,14 @@ import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard;
 import org.kalypso.ui.views.map.MapView;
 
-public class VisualizeDepthDataHandler extends AbstractHandler implements IHandler
+public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements IHandler
 {
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
 
     /* Get context */
@@ -37,12 +37,12 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( "Kartenansicht nicht geöffnet." );
+      throw new ExecutionException( "Kartenansicht nicht geï¿½ffnet." );
 
     final MapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim Öffnen der Karte" ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim Ã¶ffnen der Karte" ) )
       return null;
 
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -54,7 +54,9 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
         mapModell.activateTheme( hqTheme );
     }
 
-    CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget();
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget("Waterlevel data editing", "");
+//    coverageManagementWidget.setShowStyle( false );
+//    coverageManagementWidget.setShowAddRemoveButtons( false );
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();

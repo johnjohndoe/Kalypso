@@ -32,6 +32,11 @@
 				<Help><![CDATA[Import waterlevel data]]></Help>
 				<Name>Import waterlevel data</Name>
 			</Task>
+			<Task context="CoveragesWidgetContext"
+				URI="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler">
+				<Help><![CDATA[Edit waterlevel raster data]]></Help>
+				<Name>Edit waterlevel raster data</Name>
+			</Task>
 		</TaskGroup>
 		<TaskGroup
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__Databases">
@@ -79,8 +84,8 @@
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Postprocessing">
 		<Help><![CDATA[Ergebnisauswertungen]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
-		<Task context="ExportRasterContext"
-			URI="org.kalypso.risk.model.handlers.VisualizeDepthDataHandler">
+		<Task context="CoveragesWidgetContext"
+			URI="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler">
 			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
 			<Name>Exportieren Rasterdaten</Name>
 		</Task>
@@ -159,7 +164,7 @@
 							value="maps/MainMap.gmt" />
 					</con:ExtensionContext>
 					<con:ExtensionContext
-						id="ExportRasterContext" parent="MapContext"
+						id="CoveragesWidgetContext" parent="MapContext"
 						handlerFactoryId="kalypsoContextHandlerFactory">
 						<con:Parameter name="type"
 							value="themeContext" />

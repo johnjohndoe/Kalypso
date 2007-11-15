@@ -170,8 +170,8 @@
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler">
     </handler>
     <handler
-          class="org.kalypso.risk.model.handlers.VisualizeDepthDataHandler"
-          commandId="org.kalypso.risk.model.handlers.VisualizeDepthDataHandler">
+          class="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler"
+          commandId="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler">
     </handler>
  </extension>
  <extension
