@@ -1,4 +1,4 @@
- !     Last change:  WP   29 Aug 2007   11:47 am
+ !     Last change:  WP   14 Nov 2007    6:38 pm
  SUBROUTINE autoconverge(noc)
 
  USE blk10
@@ -10,7 +10,7 @@
  USE BLKSSTMOD
  USE PARAKalyps
  USE WBMMODS
- USE paraflow1dfe
+ USE Para1DPoly
 
  REAL,INTENT(IN)  :: noc
  !DIMENSION temp_speccc(3)
@@ -992,8 +992,7 @@
 
       else
 
-        WRITE(*,*)'ERROR WHILE USING AUTOCONVERGE',noc
-        stop
+        call ErrorMessageAndStop(4101, 0, 0.0, 0.0)
 
       endif
 

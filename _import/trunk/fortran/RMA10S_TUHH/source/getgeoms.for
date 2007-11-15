@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  WP   25 Oct 2007   10:37 am
+C     Last change:  WP   14 Nov 2007    5:28 pm
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -27,6 +27,7 @@ CIPK  LAST UPDATE OCT 1 1996
       USE BLKDRMOD
       USE BLKSUBMOD
       USE PARAMMOD
+      USE para1dpoly
       SAVE
 !NiS,jul06: Consistent data types for passing parameters
       INTEGER :: n, m, a, lt, dummy1, dummy2
@@ -329,7 +330,12 @@ CIPK JUN03
 
 !NiS,mar06: new option in if-block to enable the program to read 2D-geometry in Kalypso-2D-Format
        ELSEIF (IGEO ==2) then
-         call rdkalyps(n,m,a,lt,0)
+         call rdkalyps(n,m,a,lt,1,1,1,0)
+
+!         do i = 1, maxp
+!           WRITE(*,*) i, PolySplitsA(i)
+!         end do
+!         pause
 
   !NiS,apr06: adding this transformation like it is called after RDRM1 (see above)
          NCLL = NCL

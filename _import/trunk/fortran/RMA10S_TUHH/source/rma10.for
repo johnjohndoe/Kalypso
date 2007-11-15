@@ -1,4 +1,4 @@
-C     Last change:  WP   27 Sep 2007    4:34 pm
+C     Last change:  WP    9 Nov 2007    8:09 am
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -26,9 +26,6 @@ CIPK  NEW ROUTINE jULY 9 2001
 !NiS,apr06: add module for new Kalypso-2D-specific calculations
       USE PARAKalyps
 !-
-      !nis,feb07,testing: Writing whole matrix
-      USE ParaFlow1DFE
-      !-
 
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'

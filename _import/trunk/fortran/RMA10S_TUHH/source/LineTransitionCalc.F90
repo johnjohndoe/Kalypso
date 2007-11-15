@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Sep 2007   11:53 am
+!     Last change:  WP    9 Nov 2007    7:28 am
 subroutine TransVelDistribution
 
 !description
@@ -15,10 +15,11 @@ subroutine TransVelDistribution
 USE BLK10MOD
 USE BLKDRMOD
 USE PARAKalyps
-USE paraFlow1dFE
+USE Para1DPoly
 
 !nis,jan07: Variables for the 1D-2D transition line
-integer            :: TransLi, TransNo
+INTEGER            :: TransLi, TransNo
+INTEGER            :: PolyPos, findpolynom
 real               :: TransVel, CSArea, Discharge, localVel
 REAL (KIND = 8)    :: TransDep
 CHARACTER (LEN=26) :: filename_out
@@ -32,7 +33,7 @@ CHARACTER (LEN=26) :: filename_out
 !localVel  :: velocity at actual 2D node while processing the 2D part of the transition
 
 !teststat  :: iostat variable for testfile
-INTEGER            :: teststat
+INTEGER         :: teststat
 REAL (KIND = 8) :: Dh, dv
 
 !transitioncheck
@@ -134,9 +135,8 @@ transitionloop: do i = 1, MaxLT
       CSArea = (width(TransNo) + 0.5 * (ss1(TransNo) + ss2(TransNo))*TransDep) * TransDep
     !polynom-approach
     else
-      DO k = 0, 12
-        CSArea = CSArea + apoly(TransNo,k) * TransDep**(k)
-      ENDDO
+      PolyPos = findPolynom (PolyRangeA (TransNo, :), TransDep, PolySplitsA (TransNo))
+      CSArea  = calcPolynomial (apoly (PolyPos, TransNo, 0:12), TransDep)
     end if
 
     !Calculate discharge-value

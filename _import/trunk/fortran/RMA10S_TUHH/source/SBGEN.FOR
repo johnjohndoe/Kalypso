@@ -8,7 +8,7 @@ CIPK  LAST UPDATE SEP 4 2000 REVISED OUTPUT OF ERROR MESSAGES
 cipk  last update Feb 4 1998
 CIPK  LAST UPDATE DEC 16 1997
 CIPK  LAST UPDATE NOV 26 1997
-C     Last change:  WP   27 Aug 2007    5:19 pm
+C     Last change:  WP    8 Nov 2007    9:21 am
 CIPK  LAST UPDATED AUGUST 28 1995
       SUBROUTINE SBGEN(IBIN)
       USE BLK10MOD
@@ -16,7 +16,7 @@ CIPK  LAST UPDATED AUGUST 28 1995
       USE PARAMMOD
       USE BLKSBG
       !EFa Dec06, neues Modul für 1d-Teschke-ELemente
-      USE PARAFlow1dFE
+      USE Para1DPoly
       !EFa jun07, modul necessary for autoconverge
       USE parakalyps
       SAVE

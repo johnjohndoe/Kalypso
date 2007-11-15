@@ -1,4 +1,4 @@
-C     Last change:  WP   25 Oct 2007    8:55 am
+C     Last change:  WP    8 Nov 2007    9:22 am
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -11,9 +11,6 @@ CIPK  LAST UPDATE APR 30 1996
       USE BLK10MOD
       USE BLK11MOD
       USE BLKDRMOD
-      !EFa Jan07, neues Modul für Teschke-Elemente
-      USE PARAFlow1dFE
-      !-
       !EFa jun07, autoconverge
       USE parakalyps
       !-

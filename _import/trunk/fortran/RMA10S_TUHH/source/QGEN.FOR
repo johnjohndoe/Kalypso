@@ -1,4 +1,4 @@
-C     Last change:  WP   25 Oct 2007    9:05 am
+C     Last change:  WP    8 Nov 2007    9:20 am
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -16,7 +16,6 @@ cipk  last update feb 09 2001 allow for zero length cc lines
 !nis,nov06: Usage of ParaKalyps for Darcy-Subroutine
       USE ParaKalyps
 !-
-      USE PARAFlow1dFE !neues Modul für Teschke-1D-Elemente
       SAVE
 C-
 C-..... Generate specified total flow boundary conditions

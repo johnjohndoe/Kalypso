@@ -1,4 +1,4 @@
-C     Last change:  WP   25 Oct 2007   10:00 am
+C     Last change:  WP   14 Nov 2007    6:31 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -29,7 +29,7 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
 !NiS,apr06: add module for Kalypso-specific calculations
       USE PARAKalyps
       !EFa Nov06, neues Modul für Teschke-1D-Elemente
-      USE PARAFlow1dFE
+      USE PARA1DPoly
 !-
 
 
@@ -798,24 +798,26 @@ CIPK MAR01
 
       !EFa Nov06, allocating für Teschke-1D-Elemente
       !polynom coefficients
-      ALLOCATE(apoly(maxp,0:12))
-      ALLOCATE(qpoly(maxp,0:12))
-      ALLOCATE(alphad(maxp,0:3))
-      ALLOCATE(alphapk(maxp,0:12))
-      ALLOCATE(betad(maxp,0:3))
-      ALLOCATE(betapk(maxp,0:12))
-      !validty border between 4th order and 13th order polynoms for flow coefficient
-      ALLOCATE(alphah(maxp))
-      ALLOCATE(betah(maxp))
+      ALLOCATE (apoly      (1: MaxPolyA, 1: maxp, 0:12))
+      ALLOCATE (qpoly      (1: MaxPolyQ, 1: maxp, 0:12))
+      ALLOCATE (alphapoly  (1: MaxPolyB, 1: maxp, 0:12))
+      ALLOCATE (betapoly   (1: MaxPolyB, 1: maxp, 0:12))
+      WRITE(*,*) maxpolya, maxpolyq, maxpolyb
+      ALLOCATE (polyrangeA (1: maxp, 1: MaxPolyA))
+      ALLOCATE (polyrangeQ (1: maxp, 1: MaxPolyQ))
+      ALLOCATE (polyrangeB (1: maxp, 1: MaxPolyB))
+      ALLOCATE (polysplitsA (1: maxp))
+      ALLOCATE (polysplitsQ (1: maxp))
+      ALLOCATE (polysplitsB (1: maxp))
       !intersecting water depth for flow coefficient (e.g. Boussinesq)
-      ALLOCATE(hbordv(maxp))
+      ALLOCATE (hbordv(maxp))
       !validity range for polynoms
-      ALLOCATE(hhmin(maxp))
-      ALLOCATE(hhmax(maxp))
+      ALLOCATE (hhmin(maxp))
+      ALLOCATE (hhmax(maxp))
       !reference friction slope
-      ALLOCATE(qgef(maxp))
+      ALLOCATE (qgef(maxp))
       !flow kilometer of node
-      ALLOCATE(kmx(maxp))
+      ALLOCATE (kmx(maxp))
 
       !time dependent values
       ALLOCATE (hht(1:maxp), vvt(1:maxp))
@@ -826,18 +828,34 @@ CIPK MAR01
       ALLOCATE (dahdh(1:maxp))
       ALLOCATE (qh(1:maxp))
 
-      init1: DO i = 1, MaxP
+
+      DO i = 1, MaxP
         !polynom coefficients
-        innerinit1: DO j = 0, 12
-          apoly   (i,j) = 0.0
-          qpoly   (i,j) = 0.0
-          alphapk (i,j) = 0.0
-          betapk  (i,j) = 0.0
-        ENDDO innerinit1
-        innerinit2: DO j = 0, 3
-          alphad (i,j) = 0.0
-          betad  (i,j) = 0.0
-        ENDDO innerinit2
+        do p = 1, MaxPolyA
+          polyrangeA (i, p) = 0.0
+          DO j = 0, 12
+            apoly (p, i, j) = 0.0
+          enddo
+        enddo
+        do p = 1, MaxPolyQ
+          polyrangeQ (i, p) = 0.0
+          DO j = 0, 12
+            qpoly (p, i, j) = 0.0
+          enddo
+        enddo
+        do p = 1, MaxPolyB
+          polyrangeB (i, p) = 0.0
+          DO j = 0, 12
+            alphapoly (p, i, j) = 0.0
+            betapoly  (p, i, j) = 0.0
+          enddo
+        enddo
+      enddo
+
+      do i = 1, MaxP
+        polySplitsA (i) = 0
+        polySplitsQ (i) = 0
+        polySplitsB (i) = 0
         !validity range for polynoms
         hhmin(i)      = 0.0
         hhmax(i)      = 0.0
@@ -847,9 +865,6 @@ CIPK MAR01
         qgef(i)       = 0.0
         !intersecting water depth for flow coefficient (e.g. Boussinesq)
         hbordv(i)     = 0.0
-        !validty border between 4th order and 13th order polynoms for flow coefficient
-        alphah(i)     = 0.0
-        betah(i)      = 0.0
         !time dependent variables
         hht(i)        = 0.0
         vvt(i)        = 0.0
@@ -859,7 +874,7 @@ CIPK MAR01
         ah(i)         = 0.0
         dahdh(i)      = 0.0
         qh(i)         = 0.0
-      ENDDO init1
+      ENDDO
 
       !nis,jun07: Proforma initialization
       !roughness class

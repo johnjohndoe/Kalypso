@@ -1,3 +1,4 @@
+C     Last change:  WP   14 Nov 2007    6:41 pm
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
 cipk  LAST UPDATE JAN 19 2004 save data to a scratch file
 cipk  last update dec 9 2002 do not change direction
@@ -130,6 +131,8 @@ cipk JAN04 save data to a scratch file
           ENDDO
           GO TO 200
         ENDIF
+
+        !TODO, ErrorMessage
         IF(ID(1:7) .NE. 'ENDSTEP') THEN
           WRITE(*,*) 'NOT AT LINE TYPE -ENDSTEP-'
 	    WRITE(*,*) 'ID =',ID(1:8)

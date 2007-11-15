@@ -1,4 +1,4 @@
-C     Last change:  WP   24 Oct 2007    3:23 pm
+C     Last change:  WP    9 Nov 2007    9:14 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -16,7 +16,7 @@ cipk  last update Jan 21 97  add option for Smagorinksy in 2-D
       USE BLKSANMOD
       !nis,feb07,testing
       USE ParaKalyps
-      USE paraflow1dfe
+      USE Para1DPoly
       !-
       SAVE
 C
@@ -346,7 +346,7 @@ CIPK MAR05
                 ENDIF
               !use polynom approach
               ELSEIF (imat(n) == 89) THEN
-                CALL COEF1dFE(N,NRX)
+                CALL COEF1dPoly(N,NRX)
               ENDIF
 
 

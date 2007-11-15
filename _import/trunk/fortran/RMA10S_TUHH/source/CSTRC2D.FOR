@@ -1,4 +1,4 @@
-C     Last change:  WP   29 Aug 2007    3:44 pm
+C     Last change:  WP   14 Nov 2007    7:59 pm
 CIPK  NEWLY ADDED TO RMA10S FROM RMA2  JUNE 27 2005
 CIPK  LAST UPDATE JAN 11 2005 ALLOW FOR NEG HLOS IN OPTION 2
 CIPK  LAST UPDATE SEP 06 2004 ADD ERROR FILE
@@ -1114,13 +1114,9 @@ c
 CIPK SEP03 
 	      IF(WEC .LT. -9999.  .and.  NCTREF(IMAT(NN)) .eq. 0) THEN
 CIPK SEP04
-	        CLOSE(75)
-	        OPEN(75,file='ERROR.OUT')
-	        WRITE(*,*) 'ERROR   UNDEFINED LEVEE DATA FOR NODE',N1
-	        WRITE(*,*) 'EXECUTION TERMINATED'
-	        WRITE(75,*) 'ERROR   UNDEFINED LEVEE DATA FOR NODE',N1
-	        WRITE(75,*) 'EXECUTION TERMINATED'
-	        STOP
+                !ERROR - UNDEFINED LEVEE DATA FOR NODE
+                call ErrorMessageAndStop (1107, N1, cord(N1, 1),
+     +                                              cord(N1, 2))
             ENDIF
 ccc            write(69,*) 'wform element node',nn,n1,widem 
             IWTYP=N1

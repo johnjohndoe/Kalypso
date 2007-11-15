@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007    2:15 am
+C     Last change:  WP    8 Nov 2007    9:20 am
 CIPK  LAST UPDATE OCT 4 2002 ADD ICE THICKNESS TO OUTPUT
 CIPK  LAST UPDATE JAN 12 20010 CHANGE AME TO AME1
 CIPK  LAST UPDATE MAR 22 2000 ADD WSLL
@@ -12,7 +12,7 @@ cIPK  LAST UPDATE APR 27 1996
 !NiS,apr06: adding module for Kalypso-specific calculations
       USE PARAKalyps
       !EFa Dec06, neues Modul für 1d-Teschke-Elemente
-      USE PARAFlow1dFE
+      USE Para1DPoly
 !-
       SAVE
 C-
@@ -45,22 +45,6 @@ CIPK MAY02 ADD ICK=7
 cipk apr96
 ccc      WRITE(LOUT,6003) ICYC,TET,MAXN
       WRITE(LOUT,6015)
-!nis,may07
-!Add midside node for polynom approach
-!      !EFa Dec06, niedrigste Knotennummer für 1d-Teschke-Elemente ersetzten
-!      !nis,feb07: Allow for numbered FFF midsides
-!      !IF(lp.EQ.-9999)then
-!      !IF(lp < -1000)then
-!      !-
-!        lp=1
-!test
-!      WRITE(*,*) 'In output fuer polynom-umstellung'
-!      WRITE(*,*) lp
-!      pause
-!test-
-!      endif
-!Add midside node for polynom approach
-!-
       INT=(NP-LP)/2+1
 CCC      INTT=INT+LP-1
 C-

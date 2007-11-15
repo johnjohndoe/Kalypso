@@ -1,12 +1,9 @@
-C     Last change:  WP   29 Aug 2007   11:37 am
+C     Last change:  WP    8 Nov 2007    9:18 am
 cipk  last update feb 09 2001 allow for zero length cc lines
 CIPK  LAST UPDATE AUG 1 2000 ADD SLOPING ELEVATION SET
 CIPK  LAST UPDATE DEC 16 1997 
       SUBROUTINE HGEN(IBIN,J,HREQ,HREQ2,ISWTH,QQAL)
       USE BLK10MOD
-      !nis,feb07,testing
-      use paraflow1dfe
-      !-
 CIPK DEC97 calling sequence changed
       SAVE
 C-
@@ -86,13 +83,6 @@ CIPK AUG00  END CHANGES
         IF(ICYC .GT. 0) CALL BFORM(NA)
   300 CONTINUE
 
-      !nis,feb07,testing
-      !WRITE(*,*) 'Setze h-Randbedingung'
-      !WRITE(*,*) 'Knoten: ', na
-      !WRITE(*,*) spec(na,3)
-      !WRITE(*,*) nfix(na), nfix1(na)
-      !pause
-      !-
 c
 cipk dec97 add logic for HCN
 c

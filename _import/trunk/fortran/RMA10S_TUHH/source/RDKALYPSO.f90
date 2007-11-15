@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Sep 2007   12:59 pm
+!     Last change:  WP   15 Nov 2007   10:50 am
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -145,7 +145,7 @@ first_call: IF (ncall.le.0) THEN
     !checking continuity line assignments
     DO l = 1, nn
       !ERROR - zero entry in continuity line
-      IF (line (j, l) == 0) call ErrorMessageAndStop(1401, j, cord(line(j,1),1), cord(line(j,1),2))
+      IF (line (j, l) == 0) call ErrorMessageAndStop (1401, j, cord (line (j, 1), 1), cord (line (j, 1), 2))
 
     END DO
                                                                         
@@ -410,7 +410,7 @@ ConnectsOuter: DO n = 1, ne
         IF (icon (i, j) == l) CYCLE ConnectsInner
 
         !ERROR
-        if (j == maxc) call ErrorMessageAndStop(1501, i, cord(l, 1), cord(l, 2))
+        if (j == maxc) call ErrorMessageAndStop (1501, i, cord (l, 1), cord (l, 2))
 
       END DO GetConnection
       icon (i, j) = l
@@ -489,8 +489,10 @@ orderloop: DO
 
 ENDDO orderloop
 
-!ERROR
-IF (mpp.le.mpq) stop 6
+!ERROR - Reordering could not be fullfilled
+IF (mpp.le.mpq) then
+  call ErrorMessageAndStop (3501, 0, 0.0, 0.0)
+ENDIF
 
 DO n = 1, nepem
   iel (n) = msn (n)
@@ -828,7 +830,7 @@ END SUBROUTINE adjpt
 !-----------------------------------------------------------------------
 !nis,dec06: Adding TLcnt as counter for number of 1D-2D-Transition lines
 !SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,KSWIT)
-SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,KSWIT)
+SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt, PolySplitCountA, PolySplitCountQ, PolySplitCountB, TLcnt,KSWIT)
 !nis,feb07: Allow for counting the midside nodes of FFF elements
 !SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,FFFcnt,Addcnt,KSWIT)
 !-
@@ -880,7 +882,7 @@ SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,TLcnt,KSWIT)
       USE BLKDRMOD
       USE ParaKalyps    !new module for KALYPSO-specific globals and neighbourhood relations
       USE BLKSUBMOD     !for weir structures
-      USE ParaFlow1dFE  !Modul für Teschke-1D-Elemente
+      USE Para1DPoly  !Modul für Teschke-1D-Elemente
 !-
 
 !NiS,may06: Former variable declaration is sorted and the variables are described; new entered variables are EXPLICITLY pointed out
@@ -903,6 +905,7 @@ INTEGER                :: ncorn_temp
 !nis,dec06: Adding TLcnt
 INTEGER                :: arccnt,elcnt,nodecnt         !nominal arc-, element- and nodecounter, it shows maximum of real counter and maximum used ID
 INTEGER                :: TLcnt                        !nominal 1D-2D-Transitionline counter, it shows maximum of real counter and maximum used ID
+INTEGER                :: PolySplitCountA, PolySplitCountQ, polySplitCountB
       						       !the purpose is, not to generate errors with numerical gaps in defintion lists.
 
 !-
@@ -927,7 +930,7 @@ INTEGER                :: DefLine
 !In order of global conflicts id is renamed to id_local
 !CHARACTER(LEN=2)       :: id
 CHARACTER (LEN=2)      :: id_local                     !line data identifier for reading input/restart-file
-CHARACTER (LEN=120)    :: linie                        !temporary input space for reading input/restart-file
+CHARACTER (LEN=2400)    :: linie                        !temporary input space for reading input/restart-file
 CHARACTER (LEN=20)     :: inquiretest
 !LOGICAL                :: inquiretest
 
@@ -955,6 +958,7 @@ INTEGER                :: KSWIT                        !Switch for Run-option of
                                                        !  1:  read just the dimension informations about geometry
                                                        !  2:  read just the resart values
 
+INTEGER                :: linestat
 INTEGER                :: unit_nr                      !internal unit number, because this subroutine works as modell and restart data reader
 
 INTEGER                :: weircnt                      !LF Nov06 to count the weir elements
@@ -962,6 +966,7 @@ INTEGER                :: weircnt                      !LF Nov06 to count the we
 INTEGER                :: ConnNumber
 !-
 !NiS,mar06: the following common block has been replaced by global module called ParaKalyps
+
 
 
 !SR:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -1003,6 +1008,10 @@ istat =0
 nodecnt = 0
 arccnt  = 0
 elcnt   = 0
+PolySplitCountA = 0
+PolySplitCountQ = 0
+PolySplitCountB = 0
+
 !nis,dec06: adding TLcnt for 1D-2D-Transition-lines
 TLcnt   = 0
 !-
@@ -1053,16 +1062,6 @@ IF (KSWIT==0) THEN
 ENDIF
 
 ! LESESCHLEIFE -----------------------------------------------------------------
-
-!NiS,mar06: geometry file is open, opening is not necessary. Addionally the units are no more applicable for RMA10S
-!OPEN (12, FILE=modellein, FORM='formatted', STATUS='OLD', ACTION='READ', IOSTAT=istat)
-!if (istat /= 0) then
-!  write (*,200) istat
-!  stop
-!end if
-!200 format (1X, 'Opening data file failed. (IOSTAT =',I2,')',/ &
-!          & 1X, 'Stopping Program...')
-!-
 
 !NiS,apr06: chosing file unit
 !           for restart option unit = nb
@@ -1157,7 +1156,7 @@ reading: do
 
         else
           !ERROR
-          call ErrorMessageAndStop(1101, temparc(5), cord(temparc(1), 1), cord(temparc(1), 2))
+          call ErrorMessageAndStop (1101, temparc(5), cord(temparc(1), 1), cord(temparc(1), 2))
 
         ENDIF
       !NiS,mar06: Read ARC geometry informations
@@ -1166,7 +1165,7 @@ reading: do
         IF (i > arccnt) arccnt = i
 
         !ERROR - negative arc number
-        IF (i <= 0) call ErrorMessageAndStop(1301, i, 0.0, 0.0)
+        IF (i <= 0) call ErrorMessageAndStop (1301, i, 0.0, 0.0)
 
       ENDIF
     ENDIF
@@ -1177,72 +1176,124 @@ reading: do
         read (linie, '(a2,i10)') id_local, i
       else
         read (linie, '(a2,i10,2f20.7)') id_local, i, hhmin(i), hhmax(i)
-        !write (*,*) 'MM',i,hhmin(i),hhmax(i)
+        PolyRangeQ (i, 1) = hhmax (i)
+        PolyRangeA (i, 1) = hhmax (i)
       endif
     end if
 
+    !nis,nov07: new range line ID (polynom range PR)
+    !id_local  = 'PR'
+    !       i  = node-ID
+    !       j  = number of polynom splitting parts
+    !polyrange = maximum values
+    if (linie(1:3) .eq. 'PRA') then
+      IF (KSWIT == 1) then
+        read (linie, *) id_local, i, j
+        if (PolySplitCountA < j) PolySplitCountA = j
+      else
+        read (linie, *) id_local, i, polySplitsA(i), hhmin(i), (polyrangeA(i, k), k=1, polySplitsA(i))
+        hhmax(i) = polyrangeA (i, polySplitsA(i))
+      endif
+    end if
+    if (linie(1:3) .eq. 'PRQ') then
+      IF (KSWIT == 1) then
+        read (linie, *) id_local, i, j
+        if (PolySplitCountQ < j) PolySplitCountQ = j
+      else
+        read (linie, *) id_local, i, polySplitsQ(i), hhmin(i), (polyrangeQ(i, k), k=1, polySplitsQ(i))
+        hhmax(i) = polyrangeQ (i, polySplitsQ(i))
+      endif
+    end if
+    if (linie(1:3) .eq. 'PRB') then
+      IF (KSWIT == 1) then
+        read (linie, *) id_local, i, j
+        if (PolySplitCountB < j) PolySplitCountB = j
+      else
+        read (linie, *) id_local, i, polySplitsB(i), hhmin(i), (polyrangeB(i, k), k=1, polySplitsB(i))
+        hhmax(i) = polyrangeB (i, polySplitsB(i))
+        hbordv (i) = polyrangeB (i, 1)
+      endif
+    end if
+    !nis,nov07: new range line ID (polynom range PR)
+    !id_local  = 'AP '
+    !       i  = node-ID
+    !       j  = number of polynom splitting parts
+    if (linie(1:3) .eq. 'AP ') then
+      IF (KSWIT /= 1) then
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, j, (apoly(j, i, k), k = 0, 12)
+      endif
+    end if
+    if (linie(1:3) .eq. 'QP ') then
+      IF (KSWIT /= 1) then
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, j, qgef(i), (qpoly(j, i, k), k = 0, 12)
+      endif
+    end if
+    if (linie(1:3) .eq. 'ALP') then
+      IF (KSWIT /= 1) then
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, j, (alphapoly(j, i, k), k = 0, 12)
+      endif
+    end if
+    if (linie(1:3) .eq. 'BEP') then
+      IF (KSWIT /= 1) then
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, j, (betapoly(j, i, 0), k = 0, 12)
+      endif
+    end if
+
+    !nis,nov07: old way of defining area-polynomial
     !EFa Nov06, Flächenpolynom
     if (linie (1:3) .eq. 'AP1') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(i,j), j = 0, 4)
-        !write (*,*) 'AP1',i,(apoly(i,j), j=1,5)
+
+      IF (kswit == 1) THEN
+        if (PolysplitCountA == 0) PolySplitCountA = 1
+      ELSE
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(1, i, j), j = 0, 4)
+        polySplitsA (i) = 1
       endif
     end if
-
     if (linie (1:3) .eq. 'AP2') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(i,j), j = 5, 9)
-        !write (*,*) 'AP2',i,(apoly(i,j), j=6,10)
+      IF (KSWIT /= 1) then
+        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(1, i, j), j = 5, 9)
       endif
     end if
-
     if (linie (1:3) .eq. 'AP3') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,3f20.7)') id_local, i, (apoly(i,j), j = 10, 12)
-        !write (*,*) 'AP3',i,(apoly(i,j), j=11,13)
+      IF (KSWIT /= 1) then
+        read (linie, '(a3,i9,3f20.7)') id_local, i, (apoly(1, i, j), j = 10, 12)
       endif
     end if
 
+    !nis,nov07: old way of defining discharge-polynomial
     !EFa Nov06, Q(h)-Kurve
     if (linie (1:3) .eq. 'QP1') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
+      if (kswit == 1) then
+        if (PolysplitCountQ == 0) PolySplitCountQ = 1
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,qgef(i),(qpoly(i,j), j = 0, 3)
-        !write (*,*) 'QP1',i,qgef(i),(qpoly(i,j), j=1,4)
+        read (linie, '(a3,i9,5f20.7)') id_local, i, qgef(i),(qpoly(1, i, j), j = 0, 3)
+        polySplitsQ (i) = 1
       endif
     end if
-
     if (linie (1:3) .eq. 'QP2') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(qpoly(i,j), j = 4, 8)
-        !write (*,*) 'QP2',i,(qpoly(i,j), j=5,9)
+      IF (KSWIT /= 1) then
+        read (linie, '(a3,i9,5f20.7)') id_local, i, (qpoly(1, i, j), j = 4, 8)
+      endif
+    end if
+    if (linie (1:3) .eq. 'QP3') then
+      IF (KSWIT /= 1) then
+        read (linie, '(a3,i9,4f20.7)') id_local, i, (qpoly(1, i, j), j = 9, 12)
       endif
     end if
 
-    if (linie (1:3) .eq. 'QP3') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,4f20.7)') id_local, i,(qpoly(i,j), j = 9, 12)
-        !write (*,*) 'QP3',(qpoly(i,j), j=10,13)
-      endif
-    end if
 
     !EFa Nov06, h-Bordvoll
     if (linie(1:2) .eq. 'HB') then
       IF (KSWIT == 1) then
         read (linie,'(a2,i10)') id_local,i
       else
-        read (linie,'(a2,i10,f20.7)') id_local,i,hbordv(i)
+        read (linie,'(a2,i10,f20.7)') id_local, i, hbordv (i)
+        PolyRangeB(i, 1) = hbordv (i)
         !write (*,*) 'HB', i, hbordv(i)
       endif
     end if
@@ -1251,9 +1302,13 @@ reading: do
     if (linie (1:2) .eq. 'AD') then
       IF (KSWIT == 1) then
         read (linie, '(a2,i10)') id_local, i
+        if (PolysplitCountB == 0) PolySplitCountB = 3
       else
-        read (linie, '(a2,i10,5f20.7)') id_local, i,alphah(i),(alphad(i,j), j = 0, 3)
-        !write (*,*) 'AD',i,alphah(i),(alphad(i,j), j=1,4)
+        read (linie, '(a2,i10,5f20.7)') id_local, i, PolyRangeB(i, 2), (alphapoly (2, i, j), j = 0, 3)
+        !fill alphapoly (1,:,:)
+        if (PolysplitCountB == 0) PolySplitCountB = 1
+        alphapoly (1, i, 0) = 1.0
+        polySplitsB (i) = 3
       endif
     end if
 
@@ -1262,7 +1317,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(alphapk(i,j), j = 0, 4)
+        read (linie, '(a3,i9,5f20.7)') id_local, i, (alphapoly (3, i, j), j = 0, 4)
         !write (*,*) 'AK1',i,(alphapk(i,j), j=1,5)
       endif
     end if
@@ -1271,7 +1326,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(alphapk(i,j), j = 5, 9)
+        read (linie, '(a3,i9,5f20.7)') id_local, i, (alphapoly (3, i, j), j = 5, 9)
         !write (*,*) 'AK2',i,(alphapk(i,j), j=6,10)
       endif
     end if
@@ -1280,7 +1335,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,3f20.7)') id_local, i,(alphapk(i,j), j = 10, 12)
+        read (linie, '(a3,i9,3f20.7)') id_local, i, (alphapoly (3, i, j), j = 10, 12)
         !write (*,*) 'AK3',i,(alphapk(i,j), j=11,13)
       endif
     end if
@@ -1289,9 +1344,12 @@ reading: do
     if (linie (1:2) .eq. 'BD') then
       IF (KSWIT == 1) then
         read (linie, '(a2,i10)') id_local, i
+        if (PolysplitCountB == 0) PolySplitCountB = 3
       else
-        read (linie, '(a2,i10,5f20.7)') id_local, i,betah(i),(betad(i,j), j = 0, 3)
-        !write (*,*) 'BD',i,betah(i),(betad(i,j), j=1,4)
+        read (linie, '(a2,i10,5f20.7)') id_local, i, PolyRangeB(i, 2), (betapoly (2, i, j), j = 0, 3)
+        !fill alphapoly (1,:,:)
+        betapoly (1, i, 0) = 1.0
+        polySplitsB (i) = 3
       endif
     end if
 
@@ -1300,7 +1358,7 @@ reading: do
        IF (KSWIT == 1) then
          read (linie, '(a3,i9)') id_local, i
        else
-         read (linie, '(a3,i9,5f20.7)') id_local, i,(betapk(i,j), j = 0, 4)
+         read (linie, '(a3,i9,5f20.7)') id_local, i, (betapoly (3, i, j), j = 0, 4)
          !write (*,*) 'BK1',i,(betapk(i,j), j=1,5)
        endif
     end if
@@ -1309,7 +1367,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(betapk(i,j), j = 5, 9)
+        read (linie, '(a3,i9,5f20.7)') id_local, i, (betapoly (3, i, j), j = 5, 9)
         !write (*,*) 'BK2',i,(betapk(i,j), j=6,10)
       endif
     end if
@@ -1318,7 +1376,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,3f20.7)') id_local, i,(betapk(i,j), j = 10, 12)
+        read (linie, '(a3,i9,3f20.7)') id_local, i, (betapoly (3, i, j), j = 10, 12)
         !write (*,*) 'BK3',i,(betapk(i,j), j=11,13)
       endif
     end if
@@ -1338,16 +1396,16 @@ reading: do
         if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
           weircnt = weircnt + 1
           read (linie, '(a2,5i10)') id_local, i, imat(i), imato(i), nfixh(i), reweir(weircnt,1)
-!          write (*,*) id_local, i, imat(i), imato(i), nfixh(i), reweir(weircnt,1)
-          if (reweir(weircnt,1) .le. 0) then
-            write (*,*) 'starting node for the weir element ',i, ' is needed'
-            stop
-          endif
-          reweir(weircnt,2) = i
+
+          !ERROR - no starting node for weir element definition was found
+          if (reweir (weircnt, 1) <= 0) call ErrorMessageAndStop (1003, i, 0.0, 0.0)
+
+          reweir (weircnt, 2) = i
         end if
 !-
-        IF (i.gt.elcnt) elcnt = i
-        IF (i.le.0) stop 'Elementnummer.le.0'
+        IF (i > elcnt) elcnt = i
+
+        IF (i <= 0) call ErrorMessageAndStop (1004, i, 0.0, 0.0)
       ENDIF
     ENDIF
 
@@ -1364,7 +1422,9 @@ reading: do
         READ (linie, '(a2,9i10)') id_local, i, (nop(i, j), j=1, 8)
 
         IF (i > elcnt) elcnt = i
-        IF (i <= 0) stop 'Junction Elementnummer <= 0'
+
+        IF (i <= 0) call ErrorMessageAndStop (1005, i, 0.0, 0.0)
+
       ENDIF
     ENDIF
 
@@ -1478,15 +1538,8 @@ reading: do
       !cvva = 1
       !-
       READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      IF (i.gt.MaxP) stop 'i.gt.MaxP'
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-      !Stop program execution on negative NODE number
-      IF (i.le.0) stop 'Knotennummer.le.0'
-      !NiS,apr06: This command is not necessary, deactivated
-      ! restart als komplett vorhanden ansehen. Keine Teichloesung:
-      !nb = 62
-      !-
+      !ERROR - restart values can't be applied to node out of zero-maxp-Range
+      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
     ENDIF
 
 !    !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
@@ -1550,8 +1603,9 @@ reading: do
 
 ! TEST BLOCK FOR ERRORS ------------------------------------------------------------------------
 
-  ELSE !other values of KSWIT will generate an error
-    stop 'KSWIT has wrong value'
+  ELSE !other values of KSWIT will generate an error, this can't happen normally
+
+    call ErrorMessageAndStop (1006, kswit, 0.0, 0.0)
 
   ENDIF KSWITTEST 
 
@@ -1592,18 +1646,18 @@ endif
 
 !ENDBLOCK FOR THE CASE OF DIMENSION READING (KSWIT.eq.1) ----------------
 !NiS,mar06: leave subroutine, if FE-net dimensions are ascertained
-IF (KSWIT == 1) THEN                                                    !midside nodes that are not explicitly definied also require space
-  IF (midsidenode_max > nodecnt) THEN                                   !in the nodes' arrays. Problem is, that later on, when the not de-
-    WRITE(*,*)' There is an error with the midside nodes. The node: '   !fined midside nodes are generated, the ID-numbers of the nodes
-    WRITE(*,*)' ',midsidenode_max,' is defined in an arc but not in'    !are generated as sequential numbers based upon the original number of
-    WRITE(*,*)' the node list. Stop!'                                   !nodecnt. Therefore, the following run of this subroutine to place
-    STOP	                                                        !the geometry into the proper arrays has to find out the nodecnt
-  ENDIF                                                                 !again without the addition of arcs_without_midside. There are two
-  WRITE(*,*)' In RDKALYPS.Info: '                                       !problems with that. First the calculation time increases marginally
-  WRITE(*,*)' Kantenzahl: ',arccnt                                      !(that means it is not really a problem) and second the input dimensions
-  WRITE(*,*)' höchste definierte Knotennummer: ',nodecnt                !are installed twice so that there might be an error occurance. But
-  WRITE(*,*)' Kanten ohne midside: ', arcs_without_midside              !normally everything should work properly because the commands and the
-  nodecnt = nodecnt + arcs_without_midside                              !geometry won't change between the runs with KSWIT=1 and KSWIT=0.
+IF (KSWIT == 1) THEN
+
+  !ERROR - midside node ID was defined but it has no coordinates-definition. This is a problem, because the count of the nodes is then wrong
+  IF (midsidenode_max > nodecnt) call ErrorMessageAndStop (1108, midsidenode_max, 0.0, 0.0)
+
+  !INFORMATIONS
+  WRITE(*,*) '          In RDKALYPS.Info '
+  WRITE(*,*) '          **************** '
+  WRITE(*,*) '            number of arcs: ',arccnt
+  WRITE(*,*) '          hightest node ID: ',nodecnt
+  WRITE(*,*) ' arcs without midside node: ', arcs_without_midside
+  nodecnt = nodecnt + arcs_without_midside
 
   REWIND(IFILE)
   DEALLOCATE(arc)                                                       !the pro forma allocation of arc(i,j) is stopped
@@ -1639,7 +1693,6 @@ ENDIF
 !     - ELEM(j,2-4/5) Kantennummern
 !     mit j=Elementnummer
 
-
 !NiS,may06: every arc's element(s) will be saved in the elem-array, which shows after Loop-Execution the grouping of nodes belonging to an element.
 !           The stored values are: On the first place the number of nodes associated with the element and on the 2nd to 5th place the nodes (unsorted)
 !
@@ -1656,14 +1709,14 @@ DO i = 1, arccnt
 
     !1D (TRANSITION ELEMENTS AND NORMAL ELEMENTS)
     ELSE
+      !TODO: These checks are not 100 percent consistent
       j = arc(i,3)
       !Error, if the potential 1D-NODE is used, which means (elem(j,1).ne.0)
       IF (elem(j,1) /= 0) THEN
-        CLOSE(75)
-        OPEN (75, FILE = 'ERROR.DAT')
-        WRITE (75,9002) j
-        WRITE (* ,9002) j
-        STOP
+        !ERROR - 1D-element is used twice which is not possible
+        call ErrorMessageAndStop (1302, j, 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
+                                &          0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
+
       !assign identification for 1D-NODES (elem(j,1).eq.-1) for normal 1D-ELEMENTS and (elem(j,1).eq.-2) for 1D-2D-transition elements; remember
       !the ARC, that defines the 1D-ELEMENT for later NODE extraction
       ELSE
@@ -1686,27 +1739,22 @@ DO i = 1, arccnt
       j = arc (i, k)
       !Testing, whether placeholder has element informations
       IF (j.gt.0) then
-        !Testing whether element is already used as 1D-ELEMENT
-        IF (elem(j,1) == -1) THEN
-          CLOSE(75)!Fehler TO WRITE
-          OPEN (75, FILE = 'ERROR.DAT')
-          WRITE (75,9002) j
-          WRITE (* ,9002) j
-          STOP
-        ENDIF
+
+        !ERROR - element is used twice which is not possible
+        IF (elem (j, 1) == -1) call ErrorMessageAndStop (1302, j,                  &
+                             & 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
+                             & 0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
+
         !Testing, whether it is the first defining arc
         IF (elem (j, 1) .eq.0) elem (j, 1) = 1
         !Increase number of assigned ARCS to ELEMENT by increment =1
         elem (j, 1) = elem (j, 1) + 1
-        !Test whether to much ARCS are assigned to ELEMENT
-        IF (elem (j, 1) .gt.5) then
-          !Error if more than 4 ARCS are assigned to ELEMENT
-          CLOSE(75)
-          OPEN (75, FILE = 'ERROR.DAT')
-          WRITE (75,9001) j
-          WRITE (* ,9001) j
-          STOP
-        ENDIF
+
+        !ERROR - Element is defined with more than 4 arcs
+        IF (elem (j, 1) > 5) call ErrorMessageAndStop (1202, j,                      &
+                               & 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
+                               & 0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
+
         ! Dem Feld ELEM(j,2...5) wird die Nummer der Kante zugewiesen. (z.B.) ELEM(1000,2)=45
         elem (j, elem (j, 1) ) = i
       ENDIF
@@ -1716,8 +1764,6 @@ ENDDO
 !-
 
 !NiS,may06: For that no error message is disturbing while reading the code above, it is written at the end of the Loop
- 9001 format ('Element',i6,' mehr als 4 Kanten -> STOP')
- 9002 format ('ERROR - ELEMENT ', i6, ' IS USED TWICE! NOT POSSIBLE!',/ 'EXECUTION TERMINATED!')
  9003 format ('Just informational:',/' No elements assigned to ARC ',i6,/'DEAD ARC!')
 !-
 
@@ -1793,12 +1839,11 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
 
     !NiS,may06: With 1D-ELEMENTS error only occurs, if (jnum.eq.1 or .eq.2), because if (jnum.lt.0), it's an 1D-ELEMENT and (jnum.eq.0) was cycled.
     !IF (jnum.lt.3) THEN
-    IF (jnum.eq.1 .or. jnum.eq.2) THEN
-      !NiS,mar06: unit name changed; changed iout to Lout
-      WRITE (Lout,*)'Element ', i, ' weniger als 3 Kanten! -> STOP!'
-      WRITE (   *,*)'Element ', i, ' weniger als 3 Kanten! -> STOP!'
-      STOP
-    ENDIF
+
+    !ERROR - element has less than 3 arcs, which is not possible
+    IF (jnum == 1 .or. jnum == 2) call ErrorMessageAndStop (1203, i, 0.0, 0.0)
+
+
     ! erste Kante:                                                  !starting with the first arc, the element's nodes in anticlockwise direction
     l = 1                                                           !will be saved in a temporary array to write them later into the array nop.
 
@@ -1817,15 +1862,13 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
         mikno (1) = arc (elem (i, 2), 5)
       ENDIF
     ENDIF
+
+!TODO: Introduce modern do-loop
     ! weitere Kanten:                                       	    !The other two or three arcs defining the actual element i are analysed from
 2222   l = l + 1                                               	    !this point on. The jumpmark 2222 is somthing like a do loop.
     IF (l.gt.jnum) THEN                                       	    !The first if-case checks whether the actual arc l is the last one to define
-      IF (elkno (1) .ne. elkno (l) ) THEN                     	    !the actual element i. If so and the last node is not identical with the first
-        !NiS,mar06: unit name changed; changed iout to Lout         !one, the program will stop because the actual element is not defined properly.
-        WRITE (Lout,*) ' Element nicht rund. -> STOP!'
-        WRITE ( *  ,*) ' Element nicht rund. -> STOP!'
-        STOP
-      ENDIF
+      IF (elkno (1) .ne. elkno (l)) call ErrorMessageAndStop (1204, i, 0.0, 0.0)
+
       GOTO 2444
     END IF
     iakt = elkno (l)                                        	    !this is not necessary becaus elkno(l) can be used in the following if-construct
@@ -1847,46 +1890,45 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
         GOTO 2222
       END IF right
     END DO elem_arc
-    !NiS,mar06: unit name changed; changed iout to Lout
-    WRITE (Lout, 100) i        !error-message, if the elements has no closed border
-    WRITE ( * ,  100) i
-100 format (1X, 'Element Nr.: ', I5, ' nicht geschlossen! verknuepft! -> STOP!')
-    STOP
+
+
+    !ERROR - Element is not forming a linear ring
+    call errorMessageAndStop (1204, i, 0.0, 0.0)
+
   ! Element O.K.
 2444 CONTINUE                                                       !If everything is okay, the cornernodes will be entered in the nop-array
     ! => Eckknotennummern ins nop-feld eintragen -------------------!in every second position starting with the first. If defined yet the midside
     DO j = 1, jnum                                                  !nodes will be entered in every second position starting with the second slot
       nop (i, j * 2 - 1) = elkno (j)                                !of the nop-array.
     END DO
+
     ! => Mittseiten-knotennummern ins nop-feld eintragen -----------
     DO j = 1, jnum
       IF (mikno (j) .gt.0) then
-        IF (mikno (j) .gt.nodecnt) stop 'mikno(j).gt.nodecnt'       !If the actual midside node is greater than the nodecnt, it can't be defined
-        nop (i, j * 2) = mikno (j)                                  !in the node list, what is followed by an error message.
+
+        !ERROR - midside node ID is higher than maximum node ID; that doesn't work
+        IF (mikno (j) > nodecnt) call errorMessageAndStop (1109, mikno (j), 0.0, 0.0)
+
+        nop (i, j * 2) = mikno (j)
       ENDIF
     END DO
-    ! write(*,*)'Element',i,' Knoten:',(elkno(j),j=1,5)
 
     ! Kantenkreuzung,Verdrehung abfragen  --------------------------!the actual element is checked for crossing arcs or something else,
     crossing_outer: DO j = 1, jnum - 2                                !not congruent.
 
-      vekkant(1) = cord (nop (i,(j+1)*2-1),1)-cord(nop (i,j*2-1),1)
-      vekkant(2) = cord (nop (i,(j+1)*2-1),2)-cord(nop (i,j*2-1),2)
+      vekkant (1) = cord (nop (i, (j + 1) * 2 - 1), 1) - cord (nop (i, j * 2 - 1), 1)
+      vekkant (2) = cord (nop (i, (j + 1) * 2 - 1), 2) - cord (nop (i, j * 2 - 1), 2)
 
       crossing_inner: DO k = j + 2, jnum
 
-        vekpu1 (1) = cord(nop(i,k*2 - 1),1) - cord(nop(i,j*2-1),1)
-        vekpu1 (2) = cord(nop(i,k*2 - 1),2) - cord(nop(i,j*2-1),2)
+        vekpu1 (1) = cord (nop (i, k * 2 - 1), 1) - cord (nop (i, j * 2 - 1), 1)
+        vekpu1 (2) = cord (nop (i, k * 2 - 1), 2) - cord (nop (i, j * 2 - 1), 2)
         kreuz = vekkant (1) * vekpu1 (2) - vekkant (2) * vekpu1 (1)
+
         ! write(*,*)'Element ',i, 'kreuz(',j,',',k,')=',kreuz
-        IF (kreuz.le.0.0) then
-        !NiS,mar06: unit name changed; changed iout to Lout
-          WRITE (Lout, *) i
-          write (   *, *) i
-   101    format (1X, 'Element ', I5, 'verdreht, Kantenkreuzung, Ueberlappung o.ae.',/, &
-                & 1X, 'Korrektur des Netzes notwendig')
-          STOP
-        ENDIF
+        IF (kreuz <= 0.0) call ErrorMessageAndStop (1205, i, 0.5 * (cord (nop (i, 1), 1) + cord (nop (i, 3), 1)), &
+                                                                 & (cord (nop (i, 1), 2) + cord (nop (i, 3), 2)))
+
       END DO crossing_inner
     END DO crossing_outer
   ENDIF dimensionif
@@ -1895,7 +1937,7 @@ END DO all_elem
 !LF nov06 renumbering the nodes around weir elements
 if (weircnt .gt. 0) then
   do i = 1, weircnt
-    if (nop(reweir(i,2),1) .ne. reweir(i,1)) call reweir2dKALYPSO(i)
+    if (nop (reweir (i, 2), 1) .ne. reweir (i, 1)) call reweir2dKALYPSO (i)
   end do
 end if
 !-
@@ -2076,43 +2118,39 @@ DO i = 1, arccnt
   IF (arc(i,3) == arc(i,4) .and. arc(i,3) /= 0 .and. imat(arc(i,3)) < 900) THEN
 
     if (imat (arc (i,3)) == 89) then
-      do j = 0, 12
-        apoly   (nop (arc(i,3), 2), j) = 0.5 * (apoly   (arc(i,1), j) + apoly   (arc(i,2), j))
-        qpoly   (nop (arc(i,3), 2), j) = 0.5 * (qpoly   (arc(i,1), j) + qpoly   (arc(i,2), j))
-        alphapk (nop (arc(i,3), 2), j) = 0.5 * (alphapk (arc(i,1), j) + alphapk (arc(i,2), j))
-        betapk  (nop (arc(i,3), 2), j) = 0.5 * (betapk  (arc(i,1), j) + betapk  (arc(i,2), j))
-      end do
-      do j = 0, 3
-        alphad  (nop (arc(i,3), 2), j) = 0.5 * (alphad  (arc(i,1), j) + alphad  (arc(i,2), j))
-        betad   (nop (arc(i,3), 2), j) = 0.5 * (betad   (arc(i,1), j) + betad   (arc(i,2), j))
-      end do
-      hhmin  (nop (arc(i,3), 2)) = 0.5 * (hhmin  (arc(i,1)) + hhmin  (arc(i,2)))
-      hhmax  (nop (arc(i,3), 2)) = 0.5 * (hhmax  (arc(i,1)) + hhmax  (arc(i,2)))
-      hbordv (nop (arc(i,3), 2)) = 0.5 * (hbordv (arc(i,1)) + hbordv (arc(i,2)))
-      alphah (nop (arc(i,3), 2)) = 0.5 * (alphah (arc(i,1)) + alphah (arc(i,2)))
-      betah  (nop (arc(i,3), 2)) = 0.5 * (betah  (arc(i,1)) + betah  (arc(i,2)))
-
+!      do j = 0, 12
+!        apoly   (nop (arc(i,3), 2), j) = 0.5 * (apoly   (arc(i,1), j) + apoly   (arc(i,2), j))
+!        qpoly   (nop (arc(i,3), 2), j) = 0.5 * (qpoly   (arc(i,1), j) + qpoly   (arc(i,2), j))
+!        alphapk (nop (arc(i,3), 2), j) = 0.5 * (alphapk (arc(i,1), j) + alphapk (arc(i,2), j))
+!        betapk  (nop (arc(i,3), 2), j) = 0.5 * (betapk  (arc(i,1), j) + betapk  (arc(i,2), j))
+!      end do
+!      do j = 0, 3
+!        alphad  (nop (arc(i,3), 2), j) = 0.5 * (alphad  (arc(i,1), j) + alphad  (arc(i,2), j))
+!        betad   (nop (arc(i,3), 2), j) = 0.5 * (betad   (arc(i,1), j) + betad   (arc(i,2), j))
+!      end do
+!      hhmin  (nop (arc(i,3), 2)) = 0.5 * (hhmin  (arc(i,1)) + hhmin  (arc(i,2)))
+!      hhmax  (nop (arc(i,3), 2)) = 0.5 * (hhmax  (arc(i,1)) + hhmax  (arc(i,2)))
+!      hbordv (nop (arc(i,3), 2)) = 0.5 * (hbordv (arc(i,1)) + hbordv (arc(i,2)))
+!      alphah (nop (arc(i,3), 2)) = 0.5 * (alphah (arc(i,1)) + alphah (arc(i,2)))
+!      betah  (nop (arc(i,3), 2)) = 0.5 * (betah  (arc(i,1)) + betah  (arc(i,2)))
+!
     else
-      !error if one of the two corner nodes does not have cross sectional informations
-      IF (WIDTH (nop (arc(i,3), 1)) == 0 .or. WIDTH (nop (arc(i,3), 3)) == 0) THEN
-        CLOSE (75)
-        OPEN (75,FILE = 'ERROR.DAT')
-        WRITE (75,9004) nop(arc(i,3),1), nop(arc(i,3),3)
-9004    FORMAT ('ERROR - 1D-NODE ', I6, ' OR ', I6, ' HAS NO CROSS SECTIONAL INFORMATIONS.',/'EXECUTION OF PROGRAM TERMINATED!')
-        CLOSE (75)
-        STOP
-      ELSE
-        !Interpolate cross sectional informations for midside nodes, if necessary
-        !EFa Nov06, Korrektur der Knoten (2.Knoten wird zwischen dem 1. und 3. Knoten interpoliert)
-        IF(WIDTH (nop(arc(i,3),2)) .eq. 0) THEN
-          width (nop(arc(i,3),2)) = 0.5 * (width (nop(arc(i,3),1)) + width (nop(arc(i,3),3)))
-          ss1 (nop(arc(i,3),2))   = 0.5 * (ss1 (nop(arc(i,3),1))   + ss1 (nop(arc(i,3),3)))
-          ss2 (nop(arc(i,3),2))   = 0.5 * (ss2 (nop(arc(i,3),1))   + ss2 (nop(arc(i,3),3)))
-          wids (nop(arc(i,3),2))  = 0.5 * (wids (nop(arc(i,3),1))  + wids (nop(arc(i,3),3)))
-          widbs (nop(arc(i,3),2)) = 0.5 * (widbs (nop(arc(i,3),1)) + widbs (nop(arc(i,3),3)))
-          wss (nop(arc(i,3),2))   = 0.5 * (wss (nop(arc(i,3),1))   + wss (nop(arc(i,3),3)))
-        ENDIF
+
+      checkwidths: do j = 1, 3, 2
+        ND = nop (arc (i, 3), j)
+        !ERROR -  if one of the two corner nodes does not have cross sectional informations
+        IF (WIDTH (nd) == 0.0) CALL ErrorMessageAndStop (1103, nd, cord (nd, 1), cord (nd, 2))
+      end do checkwidths
+
+      IF (width (nop (arc (i, 3), 2)) == 0.0) THEN
+        width  (nop (arc (i, 3), 2)) = 0.5 * (width (nop (arc (i, 3), 1)) + width (nop (arc (i, 3), 3)))
+        ss1    (nop (arc (i, 3), 2)) = 0.5 * (ss1   (nop (arc (i, 3), 1)) + ss1   (nop (arc (i, 3), 3)))
+        ss2    (nop (arc (i, 3), 2)) = 0.5 * (ss2   (nop (arc (i, 3), 1)) + ss2   (nop (arc (i, 3), 3)))
+        wids   (nop (arc (i, 3), 2)) = 0.5 * (wids  (nop (arc (i, 3), 1)) + wids  (nop (arc (i, 3), 3)))
+        widbs  (nop (arc (i, 3), 2)) = 0.5 * (widbs (nop (arc (i, 3), 1)) + widbs (nop (arc (i, 3), 3)))
+        wss    (nop (arc (i, 3), 2)) = 0.5 * (wss   (nop (arc (i, 3), 1)) + wss   (nop (arc (i, 3), 3)))
       ENDIF
+
     ENDIF
   ENDIF
 ENDDO
@@ -2157,22 +2195,21 @@ ENDDO
 !WP 04.04.03 Anfang ---------------------------------
 !
 !   Aufrufen von NACH bei trad. GFEM (FEM = 0) nicht nötig
-      IF (fem.ne.0) then
+!      IF (fem.ne.0) then
 !SR -----------------------------------------------------
 !SR jetzt die Nachvermaschung zum CVFEM-Netz durchfuehren
 !NiS,mar06: unit name changed; changed iout to Lout
-      WRITE (Lout,104)
-      WRITE ( *  ,104)
-      104 format (1X, 'Nachvermaschung aufgerufen...')
-
+!      WRITE (Lout,104)
+!      WRITE ( *  ,104)
+!      104 format (1X, 'Nachvermaschung aufgerufen...')
 !SR Die Nachvermaschung muss auch dann aufgerufen werden, wenn bereits
 !SR nachvermascht wurde (Restart), denn es wird die Eckknotenanzahl
 !SR weitergegeben, die benoetigt wird, um den CVFehler auszugeben.
 !SR      if (nfixh(1)==0) then
 !SR Deshalb keine Beschraenkung auf die reine Teichloesungccc
-        CALL nach
+!        CALL nach
 !SRTest      end if
-      ENDIF
+!      ENDIF
 !SR
 !WP 04.04.03 Ende --------------------------------------
                                                                         
@@ -2185,25 +2222,14 @@ if (maxlt.ne.0) then
   elementturning: do i = 1, maxlt
 
     !if transition is dead, go to next one
-    if (TransLines(i,1).eq.0) CYCLE elementturning
+    if (TransLines (i, 1) == 0) CYCLE elementturning
 
     !test for correct order of nodes in transitioning element
     if (nop(TransLines(i,1),3) .ne. TransLines(i,3)) then
 
       !nis,jan07: Checking, whether node is defined in element on the other slot (slot 1)
-      if (nop(TransLines(i,1),1) .ne. TransLines(i,3)) then
-        WRITE(*,*) 'ERROR - The transitioning node is not defined in element'
-        WRITE(*,*) 'Problem occured in line ', i
-        WRITE(*,*) 'Check the defined transition node in TL-line with the two'
-        WRITE(*,*) 'corner nodes of the transitioning 1D-element'
-        WRITE(*,*) 'Program can not be executed'
-        WRITE(*,*) 'Nodes are: '
-        WRITE(*,*) nop(TransLines(i,1),1), nop(TransLines(i,1),3), TransLines(i,3)
-        WRITE(*,*) nop(61,1), nop(61,3), TransLines(i,3)
-        WRITE(*,*) TransLines(i,1)
-        WRITE(*,*) 'STOP'
-        stop
-      end if
+      if (nop (TransLines (i, 1), 1) /= TransLines (i, 3)) &
+     &  call ErrorMessageAndStop (1403, i, cord (nop (TransLines (i, 1), 3), 1), cord (nop (TransLines (i, 1), 3), 1))
 
     end if
   end do elementturning
@@ -2466,10 +2492,8 @@ BelongingElement: do i = 1, MaxE
 
     enddo throughPossibleEntries
 
-    !Error-message because node has too many elements connected
-    WRITE(*,*) 'ERROR - too many elements appending node ', nop(i, j)
-    WRITE(*,*) 'change model! - Program stopped'
-    stop
+    !ERROR - There are too many elements connected to one node
+    call ErrorMessageAndStop (1110, nop (i, j), cord (nop (i, j), 1), cord (nop (i, j), 2))
 
   end do throughNodes
 
@@ -2622,14 +2646,12 @@ END SUBROUTINE RDKALYPS
 ! Die Anweisung IMAT(NEWEL)=IMAT(I) muss bei GFEM immer durchlaufen werd
 ! bei CVFEM aber nur wenn CVFEM = 1 gilt:
 !                                                                       
-            IF (fem.eq.0) then
+!            IF (fem.eq.0) then
               imat (newel) = imat (i) 
-            ELSEIF (cvfe.eq.1) then 
+!            ELSEIF (cvfe.eq.1) then
 !SR Rauhigkeitsinformationen und Bearbeitungsreihenfolge fuer neues Elem
-              imat (newel) = imat (i) 
-!               imato(newel)=imato(i)                                   
-!               nfixh(newel)=newel                                      
-            ENDIF 
+!              imat (newel) = imat (i)
+!            ENDIF
 !                                                                       
 !WP 03.04.03 Ende                                                       
 !                                                                       

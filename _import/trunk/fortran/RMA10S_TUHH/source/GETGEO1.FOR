@@ -1,4 +1,4 @@
-C     Last change:  WP   25 Oct 2007   10:34 am
+C     Last change:  WP   14 Nov 2007    6:31 pm
 CNis  LAST UPDATE MAR  XX 2006 Adding capabilities for Kalypso-2D-network-files
 CIPK  LAST UPDATE JUNE 25 2005 RESET LOWER LIMIT
       SUBROUTINE GETGEO1
@@ -12,13 +12,18 @@ cipk aug05      INCLUDE 'BLK10.COM'
       CHARACTER*1000 HEADR
 
 !NiS,mar06: adding declaration of hand-over-parameters between subroutines
-      INTEGER :: n,m,a,LT
+      INTEGER :: n,m,a,LT, PA, PQ, PB
 !-
       MAXP=0
       MAXE = 0
 !NiS,may06: Initialize MaxA and MaxT for Kalypso-2D format input file
       MaxA = 0
       MaxT = 0
+!-
+!nis,nov07: introducing counter of polynomials per node
+      MaxPolyA = 1
+      MaxPolyQ = 1
+      MaxPolyB = 1
 !-
 
 !nis,nov06: Initialize MaxLT, the dimensioner for the number of Line transitions
@@ -55,12 +60,13 @@ cipk jun03 add RM1 input capabilities
 !Add midside node for polynom approach
           !NiS,mar06: Additional parameter 'A' in comparison to other read-subroutines; the parameter gives back the number of arcs
           !nis,feb07: Add the counter of midside nodes of Flow1DFE elements
-          call RDKALYPS(N,M,A,LT,1)
+          call RDKALYPS(N,M,A,PA, PQ, PB,LT,1)
           !call RDKALYPS(N,M,A,LT,FFFMS,AddMS,1)
           !-
           REWIND IFILE
           WRITE(*,*)' back from rdkalypso'
-          WRITE(*,*)' N,M,A,LT= ',N,', ',M,', ',A,', ', LT
+          WRITE(*,*)' N,M,A,PA,PQ,PB,LT= ',N,', ',M,', ',A,', ',
+     +                              PA, ', ', PQ,', ', PB,', ', LT
           GO TO 100
         end if
 !-
@@ -120,6 +126,9 @@ CIPK JUN05 SET LOWER LIMIT                              !provides the oportunity
           MAXA=A+1
           !nis,dec06: Adding 1D-2D-Transitionline-array counter
           MaxLT=LT
+          MaxPolyA = PA
+          MaxPolyQ = PQ
+          MaxPolyB = PB
           !-
           !nis,feb07: Adding counter of midside nodes of Flow1DFE elements
           !WRITE(*, *) 'No. of MS nodes of FFF-elts: '!, FFFMS,' + ',AddMS
@@ -128,6 +137,9 @@ CIPK JUN05 SET LOWER LIMIT                              !provides the oportunity
           MAXA=0
           !nis,dec06: Adding 1D-2D-Transitionline-array counter
           MaxLT=0
+          MaxPolyA = 1
+          MaxPolyQ = 1
+          MaxPolyB = 1
           !-
           !nis,feb07: Adding counter of midside nodes of Flow1DFE elements; dummy value zero
           !FFFMS = 0

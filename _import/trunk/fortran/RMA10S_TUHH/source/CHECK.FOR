@@ -1,4 +1,4 @@
-C     Last change:  NIS  15 Aug 2007    6:42 pm
+C     Last change:  WP   15 Nov 2007    3:52 pm
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -11,8 +11,8 @@ cipk  last update Jan 21 1998
       USE BLKDRMOD
       USE BLK11MOD
       !nis,feb07: Using module for polynomial approach
-      USE paraFlow1DFE
       USE ParaKalyps
+      USE Para1DPoly
       !-
       SAVE
 C-
@@ -34,6 +34,7 @@ cipk jul01 add line above
 !      REAL*8 WAITX,WAITT,WAITR
       REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
 !-
+      INTEGER :: PolyPos, findpolynom
 !nis,nov06: For line connections
       INTEGER :: linecheck, LineLength
 !-
@@ -146,6 +147,7 @@ CIPK OCT98 CONVERT TO F90
   117       CONTINUE
   123     CONTINUE
 CIPK JUL02 TEST FOR FAILURE TO FIND CONTINUITY LINE
+          !TODO: ErrorMessage
           IF(LINE(J,L+1) .EQ. 0) THEN
 CIPK SEP04
             IF(IERR .NE. 1) THEN
@@ -206,6 +208,7 @@ CIPK SEP04
       !-
 
 CIPK JUL02
+      !TODO: ErrorMessage
       IF(IERR .EQ. 1) THEN
         WRITE(*,*)
      +   'EXECUTION TERMINATED - FULL LIST OF ERRORS IN ERROR.OUT'
@@ -249,19 +252,23 @@ cipk feb01  skip out for zero lines
             !get check value
             testProd = 1.0
             testSum  = 0.0
+
+            PolyPos = findPolynom (polyRangeQ (NA, :),
+     +                             vel(3, NA), PolySplitsQ(na))
             !Testsum and Testproduct
             AddMultTest: do i = 0, 12
-              testSum  = testSum + qpoly(NA,i)
-              if (qpoly(NA,i) == 0) CYCLE AddMultTest
-              testProd = testProd * qpoly(NA,i)
+              testSum  = testSum + qpoly(PolyPos, NA, i)
+              if (qpoly(PolyPos, NA,i) == 0) CYCLE AddMultTest
+              testProd = testProd * qpoly(PolyPos, NA, i)
             end do AddMultTest
 
             !Proceed on nodes of polynomial approach
             if (testSum /= 0 .or. testProd /= 1) then
-              TempArea = 0.0
-              do i = 0, 12
-                TempArea = TempArea + apoly(NA,i) * vel(3,na)**(i)
-              end do
+
+              PolyPos = findPolynom (polyRangeA (NA, :), vel(3, NA),
+     +                               PolySplitsA (na))
+              TempArea = calcPolynomial (apoly(PolyPos, NA, 0:12),
+     +                                         vel(3, NA))
 
               SUMX = SQRT(vel(1,na)**2 + vel(2,NA)**2) * TempArea
 

@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  WP   26 Sep 2007   11:44 am
+C     Last change:  WP   14 Nov 2007    7:47 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -34,7 +34,7 @@ CIPK LAST UPDATED SEP 7 1995
       USE BLKSUBMOD
 !NiS,apr06: adding block for DARCY-WEISBACH friction
       USE PARAKalyps
-      USE PARAFlow1DFE
+      USE Para1DPoly
 !-
       SAVE
 
@@ -47,6 +47,7 @@ CIPK LAST UPDATED SEP 7 1995
 
 C
       INTEGER :: testoutput
+      INTEGER :: PolyPos, findpolynom
       REAL (KIND = 8) :: h, rhy
       REAL (KIND = 8) :: F
 
@@ -100,12 +101,13 @@ C  Test for width > 0
       !check, whether necessary informations are present
       IF ((WIDTH(N1) .LE. 0.0  .OR.  WIDTH(N3) .LE. 0.0) .and.
      +     imat(nn) < 901)  THEN
-        WRITE(*,*) ' WIDTH MISSING FOR NODES ', N1,N3
+
 CIPK SEP04 CREATE ERROR FILE
-        CLOSE(75)
-        OPEN(75,FILE='ERROR.OUT')
-        WRITE(75,*) ' WIDTH MISSING FOR NODES ', N1,N3
-        STOP  '  WIDTH MISSING FOR NODES '
+        !ERROR - WIDTH MISSING FOR NODES
+        call ErrorMessageAndStop(1103, NN,
+     +       0.5 * (cord (nop (nn, 1), 1) + cord (nop (nn, 3), 1)),
+     +       0.5 * (cord (nop (nn, 1), 2) + cord (nop (nn, 3), 2)))
+
       ELSEIF (imat(nn) > 903) then
         WRITE(*,*) 'Processing control structure'
         WRITE(*,*) 'Element: ', nn, '; Material: ', imat(nn)
@@ -1379,10 +1381,10 @@ c     WRITE(*,*) NN,NCN
      +      * R * XHT
         !using polynom approach
         ELSE
-          ah(n1) = 0.0
-          DO power = 0, 12
-            ah(n1) = ah(n1) + apoly(n1, power) * vel(3, n1)**power
-          ENDDO
+          PolyPos = findPolynom (PolyRangeA (n1,:), vel(3, n1),
+     +                           PolySplitsA (n1))
+          ah(n1) = calcPolynomial (apoly (PolyPos, n1, 0: 12),
+     +                                    vel(3, n1))
           !derivative over velocity
           ESTIFM(1, NA) = DIR(N1) * ah(n1) * xht
           !derivative over depth

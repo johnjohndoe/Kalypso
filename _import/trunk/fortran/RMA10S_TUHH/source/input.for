@@ -1,4 +1,4 @@
-C     Last change:  WP   25 Oct 2007    9:12 am
+C     Last change:  WP    9 Nov 2007    8:07 am
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -58,7 +58,7 @@ CIPK  LAST UPDATED SEP 19 1995
 !NiS,mar06: add the module Parammod because the occuring error while compiling is caused by a variable
 !           that is defined within that module (NLAYMX)
       USE Parammod
-      USE PARAFlow1dFE
+      USE Para1DPoly
 !-
       SAVE
 C-
@@ -357,7 +357,7 @@ cipk sep96 add to 3 lines below for ocean exchange percentantage and mixing
       READ(DLIN,5021) SALI,TEMPI,SEDI,UINP,VINP,prcnt,DMIX,beient
       write(*,*) 'read c4'
       !default values; what's that
-      if (beient == 0) then
+      if (beient /= 1 .and. beient /= 2) then
         beient = 0
       end if
       !testoutput
@@ -1951,7 +1951,7 @@ cipk dec00 allow for gate option
             CALL COEF1(N,0)
 CIPK NOV97
             CALL COEF1(N,3)
-          !EFa Nov06, Aufruf der coef1dFE-Subroutine für 1D-Teschke-Elemente
+          !EFa Nov06, Aufruf der coef1dPoly-Subroutine für 1D-Teschke-Elemente
           ELSEIF((IMAT(N) .LT. 900  .or.
 !nis,may07
 !add midside node for polynom approach
@@ -1963,8 +1963,8 @@ CIPK NOV97
 !add midside node for polynom approach
 !-
 
-            CALL COEF1dFE(N,0)
-            CALL COEF1dFE(N,3)
+            CALL COEF1dPoly (N,0)
+            CALL COEF1dPoly (N,3)
           ENDIF
         ENDIF
       ENDDO

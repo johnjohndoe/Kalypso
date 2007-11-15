@@ -1,4 +1,4 @@
-!     Last change:  WP    3 Sep 2007   12:47 pm
+!     Last change:  WP    8 Nov 2007   10:45 am
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -57,7 +57,7 @@ USE BLK11mod
 USE PARAKalyps
 USE BlkDRmod
 !EFa Dec06, neues Modul für 1d-Teschke-Elemente
-USE PARAFlow1dFE
+USE Para1DPoly
 USE ParaKalyps
 !-
 
@@ -428,30 +428,23 @@ write_nodes: DO i = 1, np
   END IF
 
   !EFa Dec06, weitere Daten einlesen für 1d-Teschke-Elemente
-  PolyApproach = 0
-  do j = 0, 12
-    if (apoly(i,j) /= 0.0) then
-      PolyApproach = 1
-    end if
-  end do
+  PolyApproach = 1
+  !if (MINVAL (apoly(1, i, :) /= 0.0 .or. MAXVAL (apoly(1, i, :) /= 0.0) PolyApproach = 1
 
-  if (PolyApproach.eq.1) then
+  if (PolyApproach == 1) then
     WRITE (IKALYPSOFM, 7020) i, hhmin(i),hhmax(i)
-    WRITE (IKALYPSOFM, 7021) i, (apoly(i,j), j = 0, 4)
-    WRITE (IKALYPSOFM, 7022) i, (apoly(i,j), j = 5, 9)
-    WRITE (IKALYPSOFM, 7023) i, (apoly(i,j), j = 10, 12)
-    WRITE (IKALYPSOFM, 7024) i, qgef(i), (qpoly(i,j), j = 0, 3)
-    WRITE (IKALYPSOFM, 7025) i, (qpoly(i,j), j = 4, 8)
-    WRITE (IKALYPSOFM, 7026) i, (qpoly(i,j), j = 9, 12)
-    WRITE (IKALYPSOFM, 7027) i, hbordv(i)
-    WRITE (IKALYPSOFM, 7028) i, alphah(i), (alphad(i,j), j = 0, 3)
-    WRITE (IKALYPSOFM, 7029) i, (alphapk(i,j), j = 0, 4)
-    WRITE (IKALYPSOFM, 7030) i, (alphapk(i,j), j = 5, 9)
-    WRITE (IKALYPSOFM, 7031) i, (alphapk(i,j), j = 10, 12)
-    WRITE (IKALYPSOFM, 7032) i, betah(i), (betad(i,j), j = 0, 3)
-    WRITE (IKALYPSOFM, 7033) i, (betapk(i,j), j = 0, 4)
-    WRITE (IKALYPSOFM, 7034) i, (betapk(i,j), j = 5, 9)
-    WRITE (IKALYPSOFM, 7035) i, (betapk(i,j), j = 10, 12)
+    WRITE (IKALYPSOFM, 7021) i, hbordv(i)
+
+    do j = 1, PolySplitsA(i)
+      WRITE (IKALYPSOFM, *) 'AP ', i, j, apoly(j, i, :)
+    end do
+    do j = 1, PolySplitsQ(i)
+      WRITE (IKALYPSOFM, *) 'QP ', i, j, qgef(i), qpoly(j, i, :)
+    end do
+    do j = 1, PolySplitsB(i)
+      WRITE (IKALYPSOFM, *) 'ALP', i, j, alphapoly(j, i, :)
+      WRITE (IKALYPSOFM, *) 'BEP', i, j, betapoly(j, i, :)
+    end do
   end if
 
 END DO write_nodes
@@ -567,43 +560,8 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  !min-max-range of waterstages for 1D-polynom
  7020 FORMAT ('MM', i10,2f20.7)
 
- !area polynom coeficients for 1D polynom approach
- 7021 FORMAT ('AP1', i9,5f20.7)
-
- !area polynom coeficients for 1D polynom approach
- 7022 FORMAT ('AP2', i9,5f20.7)
-
- !area polynom coeficients for 1D polynom approach
- 7023 FORMAT ('AP3', i9,3f20.7)
-
- !discharge polynom coeficients for 1D polynom approach
- 7024 FORMAT ('QP1', i9,5f20.7)
-
- !discharge polynom coeficients for 1D polynom approach
- 7025 FORMAT ('QP2', i9,5f20.7)
-
- !discharge polynom coeficients for 1D polynom approach
- 7026 FORMAT ('QP3', i9,4f20.7)
-
  !bord full elevation for polynom approach to divide flow coeficient polynoms
- 7027 FORMAT ('HB', i10,f20.7)
-
- !discharge polynom coeficients for 1D polynom approach
- 7028 FORMAT ('AD', i10,5f20.7)
-
- 7029 FORMAT ('AK1' ,i9,5f20.7)
-
- 7030 FORMAT ('AK2' ,i9,5f20.7)
-
- 7031 FORMAT ('AK3' ,i9,3f20.7)
-
- 7032 FORMAT ('BD', i10,5f20.7)
-
- 7033 FORMAT ('BK1' ,i9,5f20.7)
-
- 7034 FORMAT ('BK2' ,i9,5f20.7)
-
- 7035 FORMAT ('BK3' ,i9,3f20.7)
+ 7021 FORMAT ('HB', i10,f20.7)
 
  !NiS,may06: 1D-2D-Transition Element: Elementnumber, 1st node, midside node, 2nd node
  !(at same time midside of 2D-element arc), right corner node of 2D-element arc, left corner node of 2D-element arc

@@ -1,11 +1,11 @@
-C     Last change:  WP    2 Oct 2007    9:24 pm
+C     Last change:  WP   14 Nov 2007    8:00 pm
 cipk  last update nov 28 2006 allow for all 1-d control structure options
       SUBROUTINE CSTRC(NN)
       USE BLK10MOD
       USE BLKSUBMOD
       USE BLK11MOD
-      USE PARAFlow1dFE
-      
+      USE Para1DPoly
+
 C
 CIPK AUG05      INCLUDE 'BLK10.COM'
 C-
@@ -18,6 +18,8 @@ C-
 
 !NiS,jul06: Declaring waterlevel H for proper call of amf-subroutine
       REAL(KIND=8) :: WH1, WH2
+      INTEGER :: PolyPos(1:2), findpolynom
+      INTEGER :: NodA, NodB
 !-
 C-
 C...... Det up cutoff values
@@ -30,37 +32,39 @@ C-
       ENDIF
       NCN=NCORN(NN)
 
-      if (width(nop(nn,1))==0) then
-      !init A(h)
-      ah(nop(nn,1)) = 0.0
-      ah(nop(nn,3)) = 0.0
-      !init Q(h)
-      qh(nop(nn,1)) = 0.0
-      qh(nop(nn,3)) = 0.0
-      do k=0, 12
+      if (width(nop(nn,1)) == 0.0) then
+        !init Q(h)
+        qh(nop(nn,1)) = 0.0
+        qh(nop(nn,3)) = 0.0
+
+        PolyPos(1) = findPolynom (PolyRangeA (nop(nn, 1), :),
+     +               vel (3, nop(nn, 1)), PolySplitsA (nop(nn, 1)))
+        PolyPos(2) = findPolynom (PolyRangeA (nop(nn, 3), :),
+     +               vel (3, nop(nn, 3)), PolySplitsA (nop(nn, 1)))
+
         !A(h)
-        ah(nop(nn,1)) = ah(nop(nn,1)) + apoly(nop(nn,1),k) *
-     +                  vel(3,nop(nn,1))**(k)
-        ah(nop(nn,3)) = ah(nop(nn,3)) + apoly(nop(nn,3),k) *
-     +                  vel(3,nop(nn,3))**(k)
-      end do
-      !init dA(h)/dh
-      dahdh(nop(nn,1)) = 0.0
-      dahdh(nop(nn,3)) = 0.0
-      do k=1,12
+        ah(nop(nn,1))
+     +   = calcPolynomial
+     +       (apoly (PolyPos(1), nop(nn, 1), 0:12), vel(3, nop(nn,1)))
+        ah(nop(nn,3))
+     +   = calcPolynomial
+     +       (apoly (PolyPos(2), nop(nn, 3), 0:12), vel(3, nop(nn,3)))
+
         !dA(h)/dh
-        dahdh(nop(nn,1)) = dahdh(nop(nn,1)) + (k) * apoly(nop(nn,1),k) *
-     +                     vel(3,nop(nn,1))**(k-1)
-        dahdh(nop(nn,3)) = dahdh(nop(nn,3)) + (k) * apoly(nop(nn,3),k) *
-     +                     vel(3,nop(nn,3))**(k-1)
-      end do
+        dahdh(nop(nn,1))
+     +   = calcPolynomial1stDerivative
+     +       (apoly (PolyPos(1), nop(nn,1), 0:12), vel(3, nop(nn,1)))
+        dahdh(nop(nn,3))
+     +   = calcPolynomial1stDerivative
+     +       (apoly (PolyPos(2), nop(nn,3), 0:12), vel(3, nop(nn,3)))
       endif
 
 c     form ave velocity
       DO N=1,NCN
-        NA=NOP(NN,N)
-        IF(NA .GT. 0) THEN
-          U(N)=VEL(1,NA)*COS(ALFA(NA))+VEL(2,NA)*SIN(ALFA(NA))
+        NodA=NOP(NN,N)
+        IF(NodA .GT. 0) THEN
+          U(N) = VEL (1, NodA) * COS (ALFA (NodA)) +
+     +           VEL (2, NodA) * SIN (ALFA (NodA))
         ENDIF
       ENDDO
 
@@ -78,16 +82,15 @@ C-
       ENDIF
 
 c     skip mid-side in loop
-
       DO  KK=1,NCN,2
         N1=NOP(NN,KK)
         IF(N1 .NE. 0) THEN
-          NA=(KK-1)*NDF+1
+          NodA=(KK-1)*NDF+1
           !EFa Apr07, if-clause
           if (width(n1) == 0.0) then
-            estifm(1,na)=dir(n1)*ah(n1)
+            estifm(1,NodA)=dir(n1)*ah(n1)
           else
-            ESTIFM(1,NA)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))/2.
+            ESTIFM(1,NodA)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))/2.
      +      *VEL(3,N1))*VEL(3,N1)
           end if
           !-
@@ -96,16 +99,15 @@ c     skip mid-side in loop
           R=VEL(1,N1)*CX+VEL(2,N1)*SA
           !EFa Apr07,if-clause
           if (width(n1) == 0.0) then
-            estifm(1,na+2)=dir(n1)*dahdh(n1)*r
+            estifm(1,NodA+2)=dir(n1)*dahdh(n1)*r
           else
-            ESTIFM(1,NA+2)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))
+            ESTIFM(1,NodA+2)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))
      +      *VEL(3,N1))*R
           end if
           !-
-          F(1)=F(1)-ESTIFM(1,NA)*R
+          F(1)=F(1)-ESTIFM(1,NodA)*R
         ENDIF
       ENDDO
-
 
 c      allow for mid-side node
 c
@@ -129,12 +131,12 @@ C-
           N1=NOP(NN,KK)
           RY=VEL(1,N1)*COS(ALFA(N1))+VEL(2,N1)*SIN(ALFA(N1))
           TH1=HEL(  N1)+AO(N1)+RY**2/(2.*GRAV)
-          NA=(KK-1)*NDF+1
-          ESTIFM(NA,1)=RX/GRAV
-          ESTIFM(NA,3)=1.0
-          ESTIFM(NA,NA)=-RY/GRAV
-          ESTIFM(NA,NA+2)=-1.0
-          F(NA)=TH1-THN
+          NodA=(KK-1)*NDF+1
+          ESTIFM(NodA,1)=RX/GRAV
+          ESTIFM(NodA,3)=1.0
+          ESTIFM(NodA,NodA)=-RY/GRAV
+          ESTIFM(NodA,NodA+2)=-1.0
+          F(NodA)=TH1-THN
         ENDDO
 C
       ELSEIF(NJT(NM) .EQ. 2) THEN
@@ -159,7 +161,7 @@ CIPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
           RSWT2=1.
         ENDIF
 cipk nov06 revise
-        NA=2*NDF+1
+        NodA=2*NDF+1
         AWD1=WIDTH(N1)+(SS1(N1)+SS2(N1))/2.*VEL(3,N1)
         AWD2=WIDTH(N2)+(SS1(N2)+SS2(N2))/2.*VEL(3,N2)
         ACR1=AWD1*VEL(3,N1)
@@ -170,20 +172,20 @@ cipk nov06 revise
         HLOS=ABS(WS1-WS2)
         HLOS=HLOS-CJ(NM)
         HLD=SIGN(1.,WS1-WS2)
-        F(NA)=Q-AJ(NM)-BJ(NM)*HLD*HLOS**GAMJ(NM)
+        F(NodA)=Q-AJ(NM)-BJ(NM)*HLD*HLOS**GAMJ(NM)
         IF(HLOS .LT. HCUT)   HLOS=HCUT
-        ESTIFM(NA,1)=-(ACR1*RSWT1)/2.
-        ESTIFM(NA,NA)=-(ACR2*RSWT2)/2.
-        ESTIFM(NA,3)=BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.)
+        ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
+        ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
+        ESTIFM(NodA,3)=BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.)
      +               -RX1*RSWT1*AWD1/2.
-        ESTIFM(NA,NA+2)=-BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.)
+        ESTIFM(NodA,NodA+2)=-BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.)
      +               -RX2*RSWT2*AWD2/2.
 
 C       Set temp/sal equation for equality
 
-        F(NA+3)= VEL(ICK,N1)-VEL(ICK,N2)
-        ESTIFM(NA+3,4)=-1.
-        ESTIFM(NA+3,NA+3)=1.
+        F(NodA+3)= VEL(ICK,N1)-VEL(ICK,N2)
+        ESTIFM(NodA+3,4)=-1.
+        ESTIFM(NodA+3,NodA+3)=1.
 
 C-
       ELSEIF(NJT(NM) .EQ. 3) THEN
@@ -207,7 +209,7 @@ CIPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         ELSE
           RSWT2=1.
         ENDIF
-        NA=2*NDF+1
+        NodA=2*NDF+1
         AWD1=WIDTH(N1)+(SS1(N1)+SS2(N1))/2.*VEL(3,N1)
         AWD2=WIDTH(N2)+(SS1(N2)+SS2(N2))/2.*VEL(3,N2)
         ACR1=AWD1*VEL(3,N1)
@@ -217,25 +219,25 @@ CIPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         WS2=HEL(N2)+AO(N2)
         HLOS=WS1-WS2-CJ(NM)
         IF(HLOS .LT. 0.) THEN
-          F(NA)=Q
-          ESTIFM(NA,1)=-(ACR1*RSWT1)/2.
-          ESTIFM(NA,NA)=-(ACR2*RSWT2)/2.
+          F(NodA)=Q
+          ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
+          ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
 
         ELSE
-          F(NA)=Q-AJ(NM)-BJ(NM)*HLOS**GAMJ(NM)
+          F(NodA)=Q-AJ(NM)-BJ(NM)*HLOS**GAMJ(NM)
           IF(HLOS .LT. HCUT)   HLOS=HCUT
-          ESTIFM(NA,1)=-(ACR1*RSWT1)/2.
-          ESTIFM(NA,NA)=-(ACR2*RSWT2)/2.
-          ESTIFM(NA,3)=BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.)
+          ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
+          ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
+          ESTIFM(NodA,3)=BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.)
      +                 -RX1*RSWT1*AWD1/2.
-          ESTIFM(NA,NA+2)=-BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.)
+          ESTIFM(NodA,NodA+2)=-BJ(NM)*GAMJ(NM)*HLOS**(GAMJ(NM)-1.)
      +                 -RX2*RSWT2*AWD2/2.
 
 C       Set temp/sal equation for equality
 
-          F(NA+3)= VEL(ICK,N1)-VEL(ICK,N2)
-          ESTIFM(NA+3,4)=-1.
-          ESTIFM(NA+3,NA+3)=1.
+          F(NodA+3)= VEL(ICK,N1)-VEL(ICK,N2)
+          ESTIFM(NodA+3,4)=-1.
+          ESTIFM(NodA+3,NodA+3)=1.
 
         ENDIF
 C-
@@ -260,26 +262,26 @@ CIPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         ELSE
           RSWT2=1.
         ENDIF
-cipk nov06 revise NA
-        NA=2*NDF+1
+cipk nov06 revise NodA
+        NodA=2*NDF+1
         AWD1=WIDTH(N1)+(SS1(N1)+SS2(N1))/2.*VEL(3,N1)
         AWD2=WIDTH(N2)+(SS1(N2)+SS2(N2))/2.*VEL(3,N2)
         ACR1=AWD1*VEL(3,N1)
         ACR2=AWD2*VEL(3,N2)
         Q=(ACR1*RX1*RSWT1+ACR2*RX2*RSWT2)/2.
         WS1=HEL(N1)+AO(N1)-CJ(NM)
-        F(NA)=Q-AJ(NM)-BJ(NM)*WS1**GAMJ(NM)
-        ESTIFM(NA,1)=-(ACR1*RSWT1)/2.
-        ESTIFM(NA,NA)=-(ACR2*RSWT2)/2.
-        ESTIFM(NA,3)=BJ(NM)*GAMJ(NM)*WS1**(GAMJ(NM)-1.)
+        F(NodA)=Q-AJ(NM)-BJ(NM)*WS1**GAMJ(NM)
+        ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
+        ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
+        ESTIFM(NodA,3)=BJ(NM)*GAMJ(NM)*WS1**(GAMJ(NM)-1.)
      +                 -RX1*RSWT1*AWD1/2.
-        ESTIFM(NA,NA+2)=-RX2*RSWT2*AWD2/2.
+        ESTIFM(NodA,NodA+2)=-RX2*RSWT2*AWD2/2.
 C-
 C       Set temp/sal equation for equality
 
-        F(NA+3)= VEL(ICK,N1)-VEL(ICK,N2)
-        ESTIFM(NA+3,4)=-1.
-        ESTIFM(NA+3,NA+3)=1.
+        F(NodA+3)= VEL(ICK,N1)-VEL(ICK,N2)
+        ESTIFM(NodA+3,4)=-1.
+        ESTIFM(NodA+3,NodA+3)=1.
 
       ELSEIF(NJT(NM) .EQ. 5) THEN
 C-
@@ -302,8 +304,8 @@ CIPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         ELSE
           RSWT2=1.
         ENDIF
-cipk nov06 revise NA
-        NA=2*NDF+1
+cipk nov06 revise NodA
+        NodA=2*NDF+1
         AWD1=WIDTH(N1)+(SS1(N1)+SS2(N1))/2.*VEL(3,N1)
         AWD2=WIDTH(N2)+(SS1(N2)+SS2(N2))/2.*VEL(3,N2)
         ACR1=AWD1*VEL(3,N1)
@@ -314,21 +316,21 @@ cipk nov06 revise NA
         WS2=HEL(N2)+AO(N2)
         HLOS=WS1-WS2
         HLD=SIGN(1.,WS1-WS2)
-        F(NA)=HLOS-AJ(NM)-BJ(NM)*SQ*(ABS(Q))**GAMJ(NM)
-        ESTIFM(NA,1)=
+        F(NodA)=HLOS-AJ(NM)-BJ(NM)*SQ*(ABS(Q))**GAMJ(NM)
+        ESTIFM(NodA,1)=
      +    BJ(NM)*ACR1*RSWT1/2.*GAMJ(NM)*(ABS(Q))**(GAMJ(NM)-1.)
-        ESTIFM(NA,NA)=
+        ESTIFM(NodA,NodA)=
      +    BJ(NM)*ACR2*RSWT2/2.*GAMJ(NM)*(ABS(Q))**(GAMJ(NM)-1.)
-        ESTIFM(NA,3)=-1.
+        ESTIFM(NodA,3)=-1.
      +   +BJ(NM)*AWD1*RSWT1/2.*RX1*GAMJ(NM)*(ABS(Q))**(GAMJ(NM)-1.)
-        ESTIFM(NA,NA+2)=1.
+        ESTIFM(NodA,NodA+2)=1.
      +   +BJ(NM)*AWD2*RSWT2/2.*RX2*GAMJ(NM)*(ABS(Q))**(GAMJ(NM)-1.)
 C-
 C       Set temp/sal equation for equality
 
-        F(NA+3)= VEL(ICK,N1)-VEL(ICK,N2)
-        ESTIFM(NA+3,4)=-1.
-        ESTIFM(NA+3,NA+3)=1.
+        F(NodA+3)= VEL(ICK,N1)-VEL(ICK,N2)
+        ESTIFM(NodA+3,4)=-1.
+        ESTIFM(NodA+3,NodA+3)=1.
 
       ELSEIF(NJT(NM) .EQ. 6) THEN
 C-
@@ -355,8 +357,8 @@ CIPK NOV06  RESET TO NOP(NN,3) FROM NOP(NN,2)
         ELSE
           RSWT2=1.
         ENDIF
-cipk nov06 revise NA
-        NA=2*NDF+1
+cipk nov06 revise NodA
+        NodA=2*NDF+1
         AWD1=WIDTH(N1)+(SS1(N1)+SS2(N1))/2.*VEL(3,N1)
         AWD2=WIDTH(N2)+(SS1(N2)+SS2(N2))/2.*VEL(3,N2)
         ACR1=AWD1*VEL(3,N1)
@@ -369,44 +371,44 @@ cipk nov06 revise NA
 
 C    No Flow case
 
-          F(NA)=Q
-          ESTIFM(NA,1)=-(ACR1*RSWT1)/2.
-          ESTIFM(NA,NA)=-(ACR2*RSWT2)/2.
-          ESTIFM(NA,3)= -RX1*RSWT1*AWD1/2.
-          ESTIFM(NA,NA+2)=-RX2*RSWT2*AWD2/2.
-        ELSEIF(WS1 .GT. 0.  .AND.  WS2 .LE. 0.) THEN        
+          F(NodA)=Q
+          ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
+          ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
+          ESTIFM(NodA,3)= -RX1*RSWT1*AWD1/2.
+          ESTIFM(NodA,NodA+2)=-RX2*RSWT2*AWD2/2.
+        ELSEIF(WS1 .GT. 0.  .AND.  WS2 .LE. 0.) THEN
 
 C    Flow controlled from upstream N1
 
-          F(NA)=Q-AJ(NM)*WS1**GAMJ(NM)
-          ESTIFM(NA,1)=-(ACR1*RSWT1)/2.
-          ESTIFM(NA,NA)=-(ACR2*RSWT2)/2.
-          ESTIFM(NA,3)=AJ(NM)*GAMJ(NM)*WS1**(GAMJ(NM)-1.)
+          F(NodA)=Q-AJ(NM)*WS1**GAMJ(NM)
+          ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
+          ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
+          ESTIFM(NodA,3)=AJ(NM)*GAMJ(NM)*WS1**(GAMJ(NM)-1.)
      +                 -RX1*RSWT1*AWD1/2.
-          ESTIFM(NA,NA+2)=-RX2*RSWT2*AWD2/2.
+          ESTIFM(NodA,NodA+2)=-RX2*RSWT2*AWD2/2.
 
 C       Set temp/sal equation for equality
 
-          F(NA+3)= VEL(ICK,N1)-VEL(ICK,N2)
-          ESTIFM(NA+3,4)=-1.
-          ESTIFM(NA+3,NA+3)=1.
+          F(NodA+3)= VEL(ICK,N1)-VEL(ICK,N2)
+          ESTIFM(NodA+3,4)=-1.
+          ESTIFM(NodA+3,NodA+3)=1.
 
         ELSEIF(WS1 .LE. 0.  .AND.  WS2 .GT. 0.) THEN        
 
 C    Flow controlled from upstream N2
 
-          F(NA)=-Q-AJ(NM)*WS2**GAMJ(NM)
-          ESTIFM(NA,1)=+(ACR1*RSWT1)/2.
-          ESTIFM(NA,NA)=+(ACR2*RSWT2)/2.
-          ESTIFM(NA,3)=-AJ(NM)*GAMJ(NM)*WS2**(GAMJ(NM)-1.)
+          F(NodA)=-Q-AJ(NM)*WS2**GAMJ(NM)
+          ESTIFM(NodA,1)=+(ACR1*RSWT1)/2.
+          ESTIFM(NodA,NodA)=+(ACR2*RSWT2)/2.
+          ESTIFM(NodA,3)=-AJ(NM)*GAMJ(NM)*WS2**(GAMJ(NM)-1.)
      +                 +RX1*RSWT1*AWD1/2.
-          ESTIFM(NA,NA+2)=+RX2*RSWT2*AWD2/2.
+          ESTIFM(NodA,NodA+2)=+RX2*RSWT2*AWD2/2.
 
 C       Set temp/sal equation for equality
 
-          F(NA+3)= VEL(ICK,N1)-VEL(ICK,N2)
-          ESTIFM(NA+3,4)=-1.
-          ESTIFM(NA+3,NA+3)=1.
+          F(NodA+3)= VEL(ICK,N1)-VEL(ICK,N2)
+          ESTIFM(NodA+3,4)=-1.
+          ESTIFM(NodA+3,NodA+3)=1.
 
         ELSE
 
@@ -414,35 +416,35 @@ C    Flow controlled by H1-H2  Get new AJ
 
           IF(WS1 .GE. WS2) THEN
             AJN=AJ(NM)*(WS1-WS2)**(GAMJ(NM)-CJ(NM))
-            F(NA)=Q-AJN*(WS1-WS2)**CJ(NM)
-            ESTIFM(NA,1)=-(ACR1*RSWT1)/2.
-            ESTIFM(NA,NA)=-(ACR2*RSWT2)/2.
-            ESTIFM(NA,3)=+AJN*CJ(NM)*(WS1-WS2)**(CJ(NM)-1.)
+            F(NodA)=Q-AJN*(WS1-WS2)**CJ(NM)
+            ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
+            ESTIFM(NodA,NodA)=-(ACR2*RSWT2)/2.
+            ESTIFM(NodA,3)=+AJN*CJ(NM)*(WS1-WS2)**(CJ(NM)-1.)
      +                 -RX1*RSWT1*AWD1/2.
-            ESTIFM(NA,NA+2)=-AJN*CJ(NM)*(WS1-WS2)**(CJ(NM)-1.)
+            ESTIFM(NodA,NodA+2)=-AJN*CJ(NM)*(WS1-WS2)**(CJ(NM)-1.)
      +                 -RX2*RSWT2*AWD2/2.
 
 C       Set temp/sal equation for equality
 
-            F(NA+3)= VEL(ICK,N1)-VEL(ICK,N2)
-            ESTIFM(NA+3,4)=-1.
-            ESTIFM(NA+3,NA+3)=1.
+            F(NodA+3)= VEL(ICK,N1)-VEL(ICK,N2)
+            ESTIFM(NodA+3,4)=-1.
+            ESTIFM(NodA+3,NodA+3)=1.
 
           ELSE
             AJN=AJ(NM)*(WS2-WS1)**(GAMJ(NM)-CJ(NM))
-            F(NA)=-Q-AJN*(WS2-WS1)**CJ(NM)
-            ESTIFM(NA,1)=+(ACR1*RSWT1)/2.
-            ESTIFM(NA,NA)=+(ACR2*RSWT2)/2.
-            ESTIFM(NA,3)=+AJN*CJ(NM)*(WS2-WS1)**(CJ(NM)-1.)
+            F(NodA)=-Q-AJN*(WS2-WS1)**CJ(NM)
+            ESTIFM(NodA,1)=+(ACR1*RSWT1)/2.
+            ESTIFM(NodA,NodA)=+(ACR2*RSWT2)/2.
+            ESTIFM(NodA,3)=+AJN*CJ(NM)*(WS2-WS1)**(CJ(NM)-1.)
      +                 +RX1*RSWT1*AWD1/2.
-            ESTIFM(NA,NA+2)=+AJN*CJ(NM)*(WS2-WS1)**(CJ(NM)-1.)
+            ESTIFM(NodA,NodA+2)=+AJN*CJ(NM)*(WS2-WS1)**(CJ(NM)-1.)
      +                 +RX2*RSWT2*AWD2/2.
 
 C       Set temp/sal equation for equality
 
-            F(NA+3)= VEL(ICK,N1)-VEL(ICK,N2)
-            ESTIFM(NA+3,4)=-1.
-            ESTIFM(NA+3,NA+3)=1.
+            F(NodA+3)= VEL(ICK,N1)-VEL(ICK,N2)
+            ESTIFM(NodA+3,4)=-1.
+            ESTIFM(NodA+3,NodA+3)=1.
 
           ENDIF
         ENDIF
@@ -462,16 +464,16 @@ C      get nodal locations
 C
         N1=NOP(NN,1)
         N2=NOP(NN,3)
-cipk oct03  calculate overall embnakment width
+cipk oct03  calculate overall embankment width
         widem=sqrt((cord(n2,2)-cord(n1,2))**2+
      +                (cord(n2,1)-cord(n1,1))**2)
-        NA=1
-        NB=9
+        NodA = 1
+        NodB = 9
 
 CIPK JUN04          if(WSLL(n1) .gt. transel(n1)) go to 500
 cipk oct00
         if(isubm(n1) .eq. 2) go to 500
-     
+
 C      set sign for DH
 
         IF(VEL(3,N1) .GE. 0.) THEN
@@ -485,23 +487,21 @@ c      This is a corner node
 c
         IF(WSLL(N1) .LT. TRANSEL(N1)) THEN
 
-          if (width(n1)==0) then
-            Q=(U(1)*VEL(3,N1)+U(3)*VEL(3,N2))/2.
+          if (width(n1) == 0) then
+            Q = (U(1) * VEL(3, N1) + U(3) * VEL(3, N2)) / 2.
           else
-            Q=(U(1)*VEL(3,N1)+U(3)*VEL(3,N2))/2
+            Q = (U(1) * VEL(3, N1) + U(3) * VEL(3, N2)) / 2.
           end if
      
-          
-
 c
 c      Derivative with respect to u1 and u2
 c
-          if (width(n1)==0) then
-            ESTIFM(NB,NA)=-ah(n1)/2.
-            ESTIFM(NB,NB)=-ah(n2)/2.
+          if (width (n1) == 0.0) then
+            ESTIFM (NodB, NodA) = -ah(n1) / 2.
+            ESTIFM (NodB, NodB) = -ah(n2) / 2.
           else
-            ESTIFM(NB,NA)=-VEL(3,N1)/2.
-            ESTIFM(NB,NB)=-VEL(3,N2)/2.
+            ESTIFM (NodB, NodA) = -VEL(3, N1) / 2.
+            ESTIFM (NodB, NodB) = -VEL(3, N2) / 2.
           end if
 
 CIPK JAN06 ADD QFACT1
@@ -511,9 +511,9 @@ CIPK JAN06 ADD QFACT1
             CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET,QFACT1)
             IF(ISWTOF .EQ. 1) THEN
               Q1T=0.0
-              F(NB)=Q-Q1T
-C              ESTIFM(NB,NA+2)=ESTIFM(NB,NA+2)+1.E6
-C              ESTIFM(NB,NB+2)=ESTIFM(NB,NB+2)+1.E6
+              F(NodB)=Q-Q1T
+C              ESTIFM(NodB,NodA+2)=ESTIFM(NodB,NodA+2)+1.E6
+C              ESTIFM(NodB,NodB+2)=ESTIFM(NodB,NodB+2)+1.E6
               VEL(1,NOP(NN,1))=0.
               VEL(2,NOP(NN,1))=0.
               VEL(1,NOP(NN,2))=0.
@@ -531,11 +531,11 @@ c
 c      Derivative with respect to h1 and h2  (first term)
 c
           if (width(n1)==0) then
-            ESTIFM(NB,NA+2)=-U(1)*dahdh(n1)/2.
-            ESTIFM(NB,NB+2)=-U(3)*dahdh(n2)/2.
+            ESTIFM(NodB,NodA+2)=-U(1)*dahdh(n1)/2.
+            ESTIFM(NodB,NodB+2)=-U(3)*dahdh(n2)/2.
           else
-            ESTIFM(NB,NA+2)=-U(1)/2.
-            ESTIFM(NB,NB+2)=-U(3)/2.
+            ESTIFM(NodB,NodA+2)=-U(1)/2.
+            ESTIFM(NodB,NodB+2)=-U(3)/2.
           end if
 
 c
@@ -549,15 +549,13 @@ c
           WV2=SQRT(VEL(1,N2)**2+VEL(2,N2)**2)
           WEC=WHGT(N1)
           WLN=WLEN(N1)
+
           IF(WEC .LT. -9999.) THEN
 CIPK SEP04
-            CLOSE(75)
-            OPEN(75,file='ERROR.OUT')
-            WRITE(*,*) 'ERROR   UNDEFINED LEVEE DATA FOR NODE',N1
-            WRITE(*,*) 'EXECUTION TERMINATED'
-            WRITE(75,*) 'ERROR   UNDEFINED LEVEE DATA FOR NODE',N1
-            WRITE(75,*) 'EXECUTION TERMINATED'
-            STOP
+          !ERROR - UNDEFINED LEVEE DATA FOR NODE
+            call ErrorMessageAndStop (1107, N1, cord (N1, 1),
+     +                                          cord(N1, 2))
+
           ENDIF
 ccc   
 cipk oct03 add widem
@@ -568,14 +566,15 @@ CIPK JUN05
               CALL WFORM(Q1T,WH1/3.2808,WS1/3.2808,WV1/3.2808,WH2/3.2808
      +        ,WS2/3.2808,WV2/3.2808,WEC/3.2808,WLN/3.2808,ITP,IWTYP
      +        ,widem/3.2808)
-              Q1T=Q1T*10.7636
+              Q1T = Q1T * 10.7636
 CIPK JAN06
-              Q1T=Q1T*QFACT1
+              Q1T = Q1T * QFACT1
 CIPK JUN05
             ELSE
+
               CALL WTFORM(Q1T,NCTREF(IMAT(NN)),WS1,WS2)
 CIPK JAN06
-              Q1T=Q1T*QFACT1
+              Q1T = Q1T * QFACT1
             ENDIF
           ELSE
 CIPK JUN05
@@ -593,11 +592,12 @@ CIPK JAN06
 
             !nis,jun07: unit 175 leads to an error
             !WRITE(175,*) MAXN,Q1T,WS1,WS2,NCTREF(IMAT(NN))
-            WRITE(75,*) 'Wehr', MAXN,Q1T,WS1,WS2,NCTREF(IMAT(NN))
+            !WRITE(75, *) 'Wehr', MAXN, Q1T, WS1, WS2, NCTREF (IMAT (NN))
+            !WRITE(* , *) 'Wehr', MAXN, Q1T, WS1, WS2, NCTREF (IMAT (NN))
             !-
 
           ENDIF
-          F(NB)=Q-Q1T
+          F(NodB) = Q - Q1T
 cipk oct03 add widem
 cipk jul04
           IF(GRAV .GT. 30.) THEN
@@ -665,7 +665,7 @@ CIPK JAN06
             ENDIF
           ENDIF
           DQDH1=(Q1DH1-Q2DH1)/DH
-          ESTIFM(NB,NA+2)=ESTIFM(NB,NA+2)+DQDH1
+          ESTIFM(NodB,NodA+2)=ESTIFM(NodB,NodA+2)+DQDH1
 cipk oct03 add widem
 cipk jul04
           IF(GRAV .GT. 30.) THEN
@@ -736,7 +736,7 @@ CIPK JAN06
           ENDIF
 CIPK JUN04            DQDH2=(Q1DH2-Q1T)/DH
           DQDH2= (Q1DH2-Q2DH2)/DH
-          ESTIFM(NB,NB+2)=ESTIFM(NB,NB+2)+DQDH2
+          ESTIFM(NodB,NodB+2)=ESTIFM(NodB,NodB+2)+DQDH2
 
 
         ELSE
@@ -746,17 +746,17 @@ CIPK JUN04            DQDH2=(Q1DH2-Q1T)/DH
 cipk oct00
           if(isubm(n1) .eq. 2) go to 500
 
-          F(NB)=WS1-WS2-(U(1)+U(3))**2/20.
+          F(NodB)=WS1-WS2-(U(1)+U(3))**2/20.
 c
 c      Derivative with respect to u1 and u2
 c
-          ESTIFM(NB,NA)=(U(1)+U(3))/10.
-          ESTIFM(NB,NB)=(U(1)+U(3))/10.
+          ESTIFM(NodB,NodA)=(U(1)+U(3))/10.
+          ESTIFM(NodB,NodB)=(U(1)+U(3))/10.
 c
 c      Derivative with respect to h1 and h2  (first term)
 c
-          ESTIFM(NB,NA+2)=-1.
-          ESTIFM(NB,NB+2)=+1.
+          ESTIFM(NodB,NodA+2)=-1.
+          ESTIFM(NodB,NodB+2)=+1.
 
         ENDIF
   500   CONTINUE

@@ -1,11 +1,11 @@
-C     Last change:  K     6 May 2007    3:00 am
+C     Last change:  WP    8 Nov 2007   11:11 am
 cipk  last update sep 04 2004 add error message
 CIPK  LAST UPDATE DEC 10 2002 rearrange boundaries near the inflow level, reset magnitude
 cipk  last update feb 09 2001 allow for zero length cc lines
       SUBROUTINE QGENSPCL(IKEY,nl,J,QREQ,THET,QQAL)
       USE BLK10MOD
       USE BLK11MOD
-      USE PARAFlow1dFE !neues Modul für Teschke-1D-Elemente
+      USE Para1DPoly
       SAVE
 C-
 C-..... Generate specified total flow boundary conditions for 3-d layer

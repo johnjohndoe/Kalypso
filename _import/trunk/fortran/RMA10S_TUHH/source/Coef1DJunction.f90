@@ -1,4 +1,4 @@
-!Last change:  JAJ  29 Aug 2007    0:17 am
+!Last change:  WP    9 Nov 2007    7:27 am
 SUBROUTINE COEF1DJunction (NN,NTX)
 
 
@@ -9,7 +9,7 @@ USE BLKDRMOD
 USE BLKSSTMOD
 USE BLKSANMOD
 USE PARAKalyps
-USE paraflow1DFE
+USE Para1DPoly
 
 SAVE
 
@@ -20,6 +20,7 @@ INTEGER :: NTX, NN, ncnx, mc, iswt, nef
 INTEGER :: N1, MR, KK, NA, IMMT, NRX, NCON
 INTEGER :: i, j, k, n, m
 INTEGER :: IA, JA
+INTEGER :: PolyPos, findPolynom
 
 REAL (KIND = 8) :: SA, CX, R, XHT, dum2, aml
 REAL (KIND = 8) :: WSEL1, WSELX
@@ -105,10 +106,8 @@ checknodes: DO KK = 1, NCN
     ESTIFM(1, NA+2) = DIR(N1) * (WIDTH(N1) + (SS1(N1) + SS2(N1)) * VEL(3,N1)) * R * XHT
   !using polynom approach
   ELSE
-    ah(n1) = 0.0
-    DO power = 0, 12
-      ah(n1) = ah(n1) + apoly(n1, power) * vel(3, n1)**power
-    ENDDO
+    PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1), PolySplitsA (n1))
+    ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:12), vel (3, n1))
     !derivative over velocity
     ESTIFM(1, NA) = DIR(N1) * ah(n1) * xht
   ENDIF

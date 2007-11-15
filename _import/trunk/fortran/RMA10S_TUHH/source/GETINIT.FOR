@@ -1,4 +1,4 @@
-C     Last change:  WP   25 Sep 2007    1:29 pm
+C     Last change:  WP    9 Nov 2007    8:11 am
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -17,7 +17,7 @@ CIPK  LAST UPDATE MAY 1 1996
       USE BLKFTMOD
 !NiS,may06: Module for Kalypso-Use
       USE paraKALYPS
-      USE paraflow1dfe
+      USE Para1DPoly
 !-
       !********************** DJW 20/07/04
       USE WBMMODS
@@ -36,7 +36,7 @@ CIPK APR06
       DIMENSION TV(3),TVD(3)
 !NiS,apr06: adding variable for inquire statement and dummy for calling RDKALYPS to Restart
       CHARACTER(LEN=20)    :: inquiretest
-      INTEGER              :: dummy(4), j
+      INTEGER              :: dummy(7), j
 !-
 !NiS,jul06: Declaring variable types for proper call of amf
       REAL (KIND = 8)      :: VAAA, HTP, H, HS
@@ -63,7 +63,8 @@ C-
 
       RESTARTTEST: IF (inquiretest .eq. 'FORMATTED') THEN
         WRITE(*,*) ' Going to RDKALYPSO for restarting'
-        call RDKALYPS(dummy(1),dummy(2),dummy(3),dummy(4),2)
+        call RDKALYPS(dummy(1), dummy(2), dummy(3), dummy(4),
+     +                dummy(5), dummy(6), dummy(7), 2)
         npx = maxp-1
         ndx = 9
       ELSE
