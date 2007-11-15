@@ -173,6 +173,10 @@
           class="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler"
           commandId="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler">
     </handler>
+    <handler
+          class="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler"
+          commandId="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler">
+    </handler>
  </extension>
  <extension
        point="org.kalypso.core.themeInfo">

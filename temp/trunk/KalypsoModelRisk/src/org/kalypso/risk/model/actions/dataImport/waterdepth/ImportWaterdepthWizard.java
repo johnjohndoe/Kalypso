@@ -71,9 +71,9 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
+import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.template.types.StyledLayerType;
@@ -140,7 +140,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final CascadingKalypsoTheme parentKalypsoTheme = getWaterdepthsCascadingTheme( mapModell );
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQ" );
     parentKalypsoTheme.setVisible( true );
     try
     {
@@ -259,17 +259,6 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
   {
     final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2 );
     ascii2Binary.doConvert( monitor );
-  }
-
-  public static final CascadingKalypsoTheme getWaterdepthsCascadingTheme( final IMapModell mapModell )
-  {
-    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    for( final IKalypsoTheme kalypsoTheme : allThemes )
-    {
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "HQ" ) ) //$NON-NLS-1$
-        return (CascadingKalypsoTheme) kalypsoTheme;
-    }
-    return null;
   }
 
 }

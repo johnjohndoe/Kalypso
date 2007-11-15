@@ -11,12 +11,11 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard;
 import org.kalypso.ui.views.map.MapView;
 
 public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implements IHandler
@@ -48,13 +47,16 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
     {
-      // get "Wasserspiegellagen" cascading theme
-      final AbstractCascadingLayerTheme hqTheme = ImportWaterdepthWizard.getWaterdepthsCascadingTheme( mapModell );
-      if( hqTheme != null )
-        mapModell.activateTheme( hqTheme );
+      final IKalypsoTheme[] themes = mapModell.getAllThemes();
+      for( int i = 0; i < themes.length; i++ )
+        if( themes[i].getName().equals( "Risk zones (raster)" ) )
+        {
+          mapModell.activateTheme( themes[i] );
+          break;
+        }
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget("Waterlevel data editing", "");
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Raster data export", "" );
     coverageManagementWidget.setShowStyle( false );
     coverageManagementWidget.setShowAddRemoveButtons( false );
 

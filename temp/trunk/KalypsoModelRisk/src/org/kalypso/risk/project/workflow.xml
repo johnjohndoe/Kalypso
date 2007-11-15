@@ -85,7 +85,7 @@
 		<Help><![CDATA[Ergebnisauswertungen]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
 		<Task context="CoveragesWidgetContext"
-			URI="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler">
+			URI="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler">
 			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
 			<Name>Exportieren Rasterdaten</Name>
 		</Task>

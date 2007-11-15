@@ -1,6 +1,7 @@
 package org.kalypso.risk.model.actions.riskZonesCalculation;
 
 import java.io.File;
+import java.util.Date;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -47,7 +48,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+      StatusUtilities.createWarningStatus( "Kartenansicht nicht geï¿½ffnet. Es kï¿½nnen keine Themen hinzugefï¿½gt werden." );
       return false;
     }
     final Dialog dialog = new MessageDialog( shell, "Rasterizing risk zones", null, "Do you want to calcualte risk zones?", MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 );
@@ -100,9 +101,11 @@ public class RiskZonesCalculationHandler extends AbstractHandler
 
                 final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
                 final File file = new File( ifile.getRawLocation().toPortableString() );
-                GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
+                final ICoverage coverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
                 inputGrid.dispose();
 
+                coverage.setName( "RiskZonesCoverage_" + count );
+                coverage.setDescription( "Created on " + new Date().toString() );
                 count++;
 
                 // fireModellEvent to redraw a map...

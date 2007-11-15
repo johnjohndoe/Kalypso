@@ -12,11 +12,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard;
 import org.kalypso.ui.views.map.MapView;
 
 public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements IHandler
@@ -49,14 +49,14 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     if( mapModell != null )
     {
       // get "Wasserspiegellagen" cascading theme
-      final AbstractCascadingLayerTheme hqTheme = ImportWaterdepthWizard.getWaterdepthsCascadingTheme( mapModell );
+      final AbstractCascadingLayerTheme hqTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQ" );
       if( hqTheme != null )
         mapModell.activateTheme( hqTheme );
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget("Waterlevel data editing", "");
-//    coverageManagementWidget.setShowStyle( false );
-//    coverageManagementWidget.setShowAddRemoveButtons( false );
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Waterlevel data editing", "" );
+    // coverageManagementWidget.setShowStyle( false );
+    // coverageManagementWidget.setShowAddRemoveButtons( false );
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
