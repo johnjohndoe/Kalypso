@@ -47,6 +47,10 @@
             id="org.kalypso.model.wspm.tuhh.core.profile.pointPropertyproviderTUHH"
             profiletype="org.kalypso.model.wspm.tuhh.profiletype"
             provider="org.kalypso.model.wspm.tuhh.core.profile.PointPropertyProviderTUHH"/>
+      <pointPropertyProvider
+            id="KalypsoModelWspmCore.pointPropertyProvider"
+            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
+            provider="org.kalypso.model.wspm.core.profil.impl.points.PointPropertyProvider"/>
    </extension>
    <extension
          point="org.kalypso.model.wspm.core.profileObjectProvider">

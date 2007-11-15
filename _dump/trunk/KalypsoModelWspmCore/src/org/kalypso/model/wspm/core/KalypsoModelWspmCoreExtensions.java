@@ -282,8 +282,8 @@ public class KalypsoModelWspmCoreExtensions
     THE_PROPERTY_PROVIDER_MAP = new HashMap<String, List<IProfilPointPropertyProvider>>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] markerProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilPointPropertyProvider" );
-    for( final IConfigurationElement configurationElement : markerProvider )
+    final IConfigurationElement[] propertyProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilPointPropertyProvider" );
+    for( final IConfigurationElement configurationElement : propertyProvider )
     {
       try
       {

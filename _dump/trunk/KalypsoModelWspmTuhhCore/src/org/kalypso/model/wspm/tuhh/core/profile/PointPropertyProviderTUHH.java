@@ -72,7 +72,6 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
 
   private final IProfilPointProperty createPointProperty( final String property )
   {
-
     if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) )
       return new PointProperty( property, "Oberkante Brücke", 0.0001, new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE }, true, true );
     if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) )
