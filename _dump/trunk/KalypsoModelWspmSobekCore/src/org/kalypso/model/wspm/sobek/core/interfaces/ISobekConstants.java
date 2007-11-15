@@ -240,7 +240,7 @@ public class ISobekConstants
   public static final QName QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.P_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL );
 
   public static final String NS_SOBEK_STRUCTURES = "org.kalypso.model.wspm.sobek.structures";
-  
+
   public static final String P_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE = "SbkCompoundStructure";
 
   public static final QName QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE );
@@ -276,4 +276,21 @@ public class ISobekConstants
   public static final String P_HYDRAULIC_SBK_STRUCTURE_WEIR_LATERAL_CONTRACTION_COEFF = "lateralContractionCoeffCW";
 
   public static final QName QN_HYDRAULIC_SBK_STRUCTURE_WEIR_LATERAL_CONTRACTION_COEFF = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_WEIR_LATERAL_CONTRACTION_COEFF );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR = "SbkRiverWeir";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE = "SbkGeneralStructure";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE = "SbkDatabaseStructure";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE );
+
+  public static final String P_HYDRAULIC_SBK_STRUCTURE_PUMP = "SbkPump";
+
+  public static final QName QN_HYDRAULIC_SBK_STRUCTURE_PUMP = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_PUMP );
+
 }
