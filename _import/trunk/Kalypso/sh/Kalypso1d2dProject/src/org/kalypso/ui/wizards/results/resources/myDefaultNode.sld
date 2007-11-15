@@ -18,18 +18,14 @@
 					<Name>default</Name>
 					<Title>default</Title>
 					<Abstract>default</Abstract>
-					<MinScaleDenominator>0.0</MinScaleDenominator>
-					<MaxScaleDenominator>
-						1.7976931348623157E308
-					</MaxScaleDenominator>
 					<ogc:Filter>
-						<And>
-							<Not>
+						<ogc:And>
+							<ogc:Not>
 								<ogc:PropertyIsEqualTo>
 									<ogc:PropertyName>res1d2d:midside</ogc:PropertyName>
 									<ogc:Literal>true</ogc:Literal>
 								</ogc:PropertyIsEqualTo>
-							</Not>
+							</ogc:Not>
 							<ogc:PropertyIsGreaterThanOrEqualTo>
 								<ogc:PropertyName>res1d2d:velocityNorm</ogc:PropertyName>
 								<ogc:Literal>0.01</ogc:Literal>
@@ -38,8 +34,12 @@
 								<ogc:PropertyName>res1d2d:depth</ogc:PropertyName>
 								<ogc:Literal>0.01</ogc:Literal>
 							</ogc:PropertyIsGreaterThanOrEqualTo>
-						</And>
+						</ogc:And>
 					</ogc:Filter>
+					<MinScaleDenominator>0.0</MinScaleDenominator>
+					<MaxScaleDenominator>
+						1.7976931348623157E308
+					</MaxScaleDenominator>
 					<PointSymbolizer uom="meter">
 						<Graphic>
 							<Mark>

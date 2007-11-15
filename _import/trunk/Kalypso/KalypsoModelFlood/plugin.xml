@@ -306,4 +306,12 @@
          </description>
       </wizard>
    </extension>
+   <extension
+         point="org.kalypso.deegree.functionExpression">
+      <function
+            class="org.kalypso.model.flood.ui.map.EventFilterExpression"
+            label="Event Filter"
+            name="org.kalypso.model.flood.ui.map.EventFilterExpression">
+      </function>
+   </extension>
 </plugin>

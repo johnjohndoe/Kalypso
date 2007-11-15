@@ -43,28 +43,36 @@ package org.kalypso.model.flood.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Thomas Jung
+ * @author Gernot Belger
  * 
  */
 public abstract class AbstractFloodPolygon extends AbstractFeatureBinder implements IFloodPolygon
 {
-  public AbstractFloodPolygon( Feature featureToBind, QName qnameToBind )
+  private final FeatureWrapperCollection<IRunoffEvent> m_runoffEvents;
+
+  public AbstractFloodPolygon( final Feature featureToBind, final QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
+
+    m_runoffEvents = new FeatureWrapperCollection<IRunoffEvent>( featureToBind, IRunoffEvent.class, QNAME_PROP_EVENT );
   }
 
   /**
-   * @see org.kalypso.model.flood.binding.IFloodPolygon#getEvent()
+   * @see org.kalypso.model.flood.binding.IFloodPolygon#appliesToEvent(java.lang.String)
    */
-  public IRunoffEvent getEvent( )
+  public boolean appliesToEvent( final String eventId )
   {
-    final Feature eventFeature = (Feature) getFeature().getProperty( QNAME_PROP_EVENT );
-    if( eventFeature == null )
-      return null;
+    for( final IRunoffEvent event : m_runoffEvents )
+    {
+      if( eventId.equals( event.getWrappedFeature().getId() ) )
+        return true;
+    }
 
-    return (IRunoffEvent) eventFeature.getAdapter( IRunoffEvent.class );
+    return false;
   }
 }

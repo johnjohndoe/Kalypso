@@ -83,6 +83,19 @@ public abstract class AbstractCreateFloodPolygonWidget extends AbstractWidget
     reinit();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    /* Deselect all */
+    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+    selectionManager.clear();
+
+    super.finish();
+  }
+
   private void reinit( )
   {
     m_buildersToDraw.clear();
