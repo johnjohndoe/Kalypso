@@ -142,6 +142,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private void setDirty( )
   {
+
     invalidate( getFullExtent() );
   }
 
@@ -434,6 +435,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void styleChanged( final KalypsoUserStyle source )
   {
     setDirty();
+    fireStatusChanged();
   }
 
   public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
