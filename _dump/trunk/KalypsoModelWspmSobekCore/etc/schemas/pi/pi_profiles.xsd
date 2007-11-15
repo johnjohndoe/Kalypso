@@ -33,7 +33,7 @@
 					<documentation>date/time of the last event</documentation>
 				</annotation>
 			</element>
-			<element name="event" type="fews:ProfileEventComplexType" maxOccurs="unbounded">
+			<element name="event" type="fews:ProfileEventComplexType" minOccurs="0" maxOccurs="unbounded">
 				<annotation>
 					<documentation>Each profile can hold one or more events). A single profile just holds one event. A date and time attribute must be specified</documentation>
 				</annotation>
@@ -67,7 +67,7 @@
 				</annotation>
 			</element>
 		</sequence>
-		<attribute name="date" type="date" use="required"/>
-		<attribute name="time" type="time" use="required"/>
+		<attribute name="date" type="fews:dateType" use="required"/>
+		<attribute name="time" type="fews:timeType" use="required"/>
 	</complexType>
 </schema>

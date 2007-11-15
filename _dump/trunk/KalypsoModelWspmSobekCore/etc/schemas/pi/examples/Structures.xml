@@ -1,5 +1,7 @@
 <?xml version="1.0" standalone="no"?>
-<Structures xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="D:\data\PI\pi-schemas\pi_structures.xsd">
+<Structures xmlns="http://www.wldelft.nl/fews/PI"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.wldelft.nl/fews/PI ../Delft_PI.xsd">
 	<Structure>
 		<structureId>34</structureId>
 		<structureName/>

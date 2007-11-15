@@ -11,8 +11,8 @@
 	<xs:element name="structureName" type="xs:string"/>
 	<xs:element name="measurementStationId" type="xs:string"/>
 	<xs:element name="branchId" type="xs:string"/>
-	<xs:element name="y" type="xs:decimal"/>
-	<xs:element name="x" type="xs:decimal"/>
+	<xs:element name="y" type="xs:double"/>
+	<xs:element name="x" type="xs:double"/>
 	<xs:element name="StructureDefinitions">
 		<xs:complexType>
 			<xs:sequence>
