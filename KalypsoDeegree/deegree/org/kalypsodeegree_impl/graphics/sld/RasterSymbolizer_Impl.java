@@ -66,9 +66,15 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.LineAttributes;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
 
 /**
@@ -178,4 +184,31 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
 
     return null;
   }
+
+  @Override
+  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
+  {
+    final Rectangle clipping = gc.getClipping();
+
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+    gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
+    gc.setLineAttributes( new LineAttributes( 1 ) );
+
+    /* we draw 2 rects in the colors of the color map and a black rectangle around it */
+    final org.eclipse.swt.graphics.Color colorStart = new org.eclipse.swt.graphics.Color( gc.getDevice(), m_colors[0].getRed(), m_colors[0].getGreen(), m_colors[0].getBlue() );
+    gc.setBackground( colorStart );
+    gc.fillRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height / 2 );
+
+    final org.eclipse.swt.graphics.Color colorEnd = new org.eclipse.swt.graphics.Color( gc.getDevice(), m_colors[m_colors.length - 1].getRed(), m_colors[m_colors.length - 1].getGreen(), m_colors[m_colors.length - 1].getBlue() );
+    gc.setBackground( colorEnd );
+    gc.fillRectangle( clipping.x, clipping.height / 2, clipping.width - 1, clipping.height - 1 );
+
+    // the black border
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+    gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
+
+    colorStart.dispose();
+    colorEnd.dispose();
+  }
+
 }

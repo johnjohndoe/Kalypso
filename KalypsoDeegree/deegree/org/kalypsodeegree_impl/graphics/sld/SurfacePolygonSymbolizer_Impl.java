@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
@@ -98,22 +99,34 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
     if( colorMapEntries.length == 0 )
       return;
 
-    // the black border
-    final java.awt.Color startColor = colorMapEntries[0].getFill().getFill( null );
+    final Fill startFill = colorMapEntries[0].getFill();
+    final double startOpacity = startFill.getOpacity( null );
+    final java.awt.Color startColor = startFill.getFill( null );
+
     final Color fillColorStart = new Color( gc.getDevice(), startColor.getRed(), startColor.getGreen(), startColor.getBlue() );
-// gc.setForeground( color );
+
+    final int startAlpha = (int) (startOpacity * 255);
+    gc.setAlpha( startAlpha );
     gc.setBackground( fillColorStart );
     gc.fillRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height / 2 );
 
-    // the black border
-    final java.awt.Color endColor = colorMapEntries[colorMapEntries.length - 1].getFill().getFill( null );
+    final Fill endFill = colorMapEntries[colorMapEntries.length - 1].getFill();
+    final double endOpacity = endFill.getOpacity( null );
+    final java.awt.Color endColor = endFill.getFill( null );
+
     final Color fillColorEnd = new Color( gc.getDevice(), endColor.getRed(), endColor.getGreen(), endColor.getBlue() );
+
+    final int endAlpha = (int) (endOpacity * 255);
+    gc.setAlpha( endAlpha );
     gc.setBackground( fillColorEnd );
     gc.fillRectangle( clipping.x, clipping.height / 2, clipping.width - 1, clipping.height - 1 );
 
     // the black border
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
     gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
+
+    fillColorStart.dispose();
+    fillColorEnd.dispose();
   }
 
   /**

@@ -440,4 +440,5 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
     return super.getAdapter( adapter );
   }
+
 }

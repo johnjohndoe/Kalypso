@@ -108,7 +108,7 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  * 
  * @author Belger
  */
-public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, ICommandTarget, IKalypsoFeatureTheme, IPooledObject, IKalypsoSaveableTheme
+public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, ICommandTarget, IKalypsoFeatureTheme, IPooledObject, IKalypsoSaveableTheme, IKalypsoUserStyleListener
 {
   protected static final Logger LOGGER = Logger.getLogger( GisTemplateFeatureTheme.class.getName() );
 
@@ -447,6 +447,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void addStyle( final KalypsoUserStyle style )
   {
+    style.addStyleListener( this );
+
     if( m_theme != null )
       m_theme.addStyle( style );
   }
@@ -702,5 +704,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     if( m_theme != null )
       m_theme.setProperty( name, value );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.KalypsoUserStyle)
+   */
+  public void styleChanged( KalypsoUserStyle source )
+  {
+    fireStatusChanged();
   }
 }
