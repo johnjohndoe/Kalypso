@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
-import java.io.BufferedReader;
-import java.io.Reader;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -85,7 +85,7 @@ public class SldLoader extends AbstractLoader
   @Override
   protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
-    Reader reader = null;
+    InputStream is = null;
     try
     {
       monitor.beginTask( "Lade SLD", 1000 );
@@ -93,20 +93,18 @@ public class SldLoader extends AbstractLoader
       final URL url = m_urlResolver.resolveURL( context, source );
 
       // create reader via resolver in order to use the right encoding
-      reader = m_urlResolver.createReader( url );
-      final BufferedReader br = new BufferedReader( reader );
+      is = new BufferedInputStream( url.openStream() );
       final IUrlResolver2 resolver = new IUrlResolver2()
       {
-
         public URL resolveURL( final String href ) throws MalformedURLException
         {
           return UrlResolverSingleton.resolveUrl( url, href );
         }
-
       };
-      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, br );
 
-      reader.close();
+      final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, is );
+
+      is.close();
 
       final IResource resource = ResourceUtilities.findFileFromURL( url );
       if( resource != null )
@@ -121,7 +119,7 @@ public class SldLoader extends AbstractLoader
     }
     finally
     {
-      IOUtils.closeQuietly( reader );
+      IOUtils.closeQuietly( is );
     }
   }
 
@@ -138,17 +136,19 @@ public class SldLoader extends AbstractLoader
 
         sldFile = ResourceUtilities.findFileFromURL( styleURL );
 
+        final String charset = sldFile.getCharset();
+
         final String sldXML = userStyle.exportAsXML();
-        final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+        final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML;
 
         if( sldFile != null )
         {
           sldFile.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
-          sldFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), true, false, monitor );
+          sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
         }
         else if( sldFile == null && styleURL.getProtocol().equals( "file" ) )
         {
-          sldFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, monitor );
+          sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
         }
         else
           throw new LoaderException( "Die URL kann nicht beschrieben werden: " + styleURL );
