@@ -134,6 +134,66 @@
 		Special Sobek simple types (especially enumerations)
 		______________________________
 	-->
+	<simpleType name="sbkFlowDirectionInclNoneType">
+		<restriction base="string">
+			<enumeration value="Direction.Both">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>positiv und negativ</label>
+						<tooltip>positiv und negativ</tooltip>
+						<description>positiv und negativ</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>positive and negative</label>
+						<tooltip>positive and negative</tooltip>
+						<description>positive and negative</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Direction.Positive">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>positiv</label>
+						<tooltip>positiv</tooltip>
+						<description>positiv</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>positive</label>
+						<tooltip>positive</tooltip>
+						<description>positive</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Direction.Negative">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>negativ</label>
+						<tooltip>negativ</tooltip>
+						<description>negativ</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>negative</label>
+						<tooltip>negative</tooltip>
+						<description>negative</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Direction.None">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>keine</label>
+						<tooltip>keine</tooltip>
+						<description>keine</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>none</label>
+						<tooltip>none</tooltip>
+						<description>none</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
 	<simpleType name="sbkFlowDirectionType">
 		<restriction base="string">
 			<enumeration value="Direction.Both">
@@ -150,6 +210,38 @@
 					</documentation>
 				</annotation>
 			</enumeration>
+			<enumeration value="Direction.Positive">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>positiv</label>
+						<tooltip>positiv</tooltip>
+						<description>positiv</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>positive</label>
+						<tooltip>positive</tooltip>
+						<description>positive</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Direction.Negative">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>negativ</label>
+						<tooltip>negativ</tooltip>
+						<description>negativ</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>negative</label>
+						<tooltip>negative</tooltip>
+						<description>negative</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="sbkFlowDirectionPosAndNegType">
+		<restriction base="string">
 			<enumeration value="Direction.Positive">
 				<annotation>
 					<documentation xml:lang="de">
@@ -258,9 +350,41 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
+	<simpleType name="sbkReductionTypeType">
+		<restriction base="string">
+			<enumeration value="ReductionFactor.Constant">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>konstant</label>
+						<tooltip>konstant</tooltip>
+						<description>konstant</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>constant</label>
+						<tooltip>constant</tooltip>
+						<description>constant</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="ReductionFactor.Waterlevel">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Höhendifferenz [m]</label>
+						<tooltip>Höhendifferenz [m]</tooltip>
+						<description>Höhendifferenz [m]</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>Level Difference [m]</label>
+						<tooltip>Level Difference [m]</tooltip>
+						<description>Level Difference [m]</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
 	<simpleType name="sbkCrestShapeType">
-		<restriction base="double">
-			<enumeration value="0">
+		<restriction base="string">
+			<enumeration value="Sobek.Structures.RiverWeir.CrestShape.Broad">
 				<annotation>
 					<documentation xml:lang="de">
 						<label>breit</label>
@@ -274,7 +398,7 @@
 					</documentation>
 				</annotation>
 			</enumeration>
-			<enumeration value="1">
+			<enumeration value="Sobek.Structures.RiverWeir.CrestShape.Triangular">
 				<annotation>
 					<documentation xml:lang="de">
 						<label>dreieckig</label>
@@ -288,7 +412,7 @@
 					</documentation>
 				</annotation>
 			</enumeration>
-			<enumeration value="2">
+			<enumeration value="Sobek.Structures.RiverWeir.CrestShape.Round">
 				<annotation>
 					<documentation xml:lang="de">
 						<label>rund</label>
@@ -302,7 +426,7 @@
 					</documentation>
 				</annotation>
 			</enumeration>
-			<enumeration value="3">
+			<enumeration value="Sobek.Structures.RiverWeir.CrestShape.Sharp">
 				<annotation>
 					<documentation xml:lang="de">
 						<label>spitz</label>
@@ -313,6 +437,38 @@
 						<label>sharp</label>
 						<tooltip>sharp</tooltip>
 						<description>sharp</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="sbkRiverDatabaseStructSecondAxisType">
+		<restriction base="string">
+			<enumeration value="Sobek.RiverDatabaseStructure.SecondAxisValue.h2">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>h2</label>
+						<tooltip>h2</tooltip>
+						<description>h2</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>h2</label>
+						<tooltip>h2</tooltip>
+						<description>h2</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Sobek.RiverDatabaseStructure.SecondAxisValue.Deltah">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>delta h</label>
+						<tooltip>delta h</tooltip>
+						<description>delta h</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>delta h</label>
+						<tooltip>delta h</tooltip>
+						<description>delta h</description>
 					</documentation>
 				</annotation>
 			</enumeration>

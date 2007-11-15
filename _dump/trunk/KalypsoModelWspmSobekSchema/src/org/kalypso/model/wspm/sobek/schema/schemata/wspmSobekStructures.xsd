@@ -26,7 +26,7 @@
 	-->
 	<!--
 		Abstrakte Elemente für Structure-Nodes.
-	-->
+	--> 
 	<element name="AbstractSbkStructureNode" abstract="true" type="wspmSobekStructures:AbstractSbkStructureNodeType" substitutionGroup="wspmSobek:AbstractNetworkNode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -54,28 +54,30 @@
 	<element name="abstractSbkCompoundStructureNodeMember" type="wspmSobekStructures:AbstractSbkCompoundableStructureNodePropertyType">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>sbkCompoundStructureNodeMember</label>
-				<tooltip>sbkCompoundStructureNodeMember</tooltip>
-				<description>sbkCompoundStructureNodeMember</description>
+				<label>Enthaltene Bauwerke</label>
+				<tooltip>Enthaltene Bauwerke</tooltip>
+				<description>Enthaltene Bauwerke</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>sbkCompoundStructureNodeMember</label>
-				<tooltip>sbkCompoundStructureNodeMember</tooltip>
-				<description>sbkCompoundStructureNodeMember</description>
+				<label>Contained Structures</label>
+				<tooltip>Contained Structures</tooltip>
+				<description>Contained Structures</description>
 			</documentation>
 		</annotation>
 	</element>
 	<!--
 		Structure Nodes
 	-->
-	<element name="SbkCompoundStructureNode" type="wspmSobekStructures:SbkCompoundStructureNodeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+	<element name="SbkCompoundStructure" type="wspmSobekStructures:SbkCompoundStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Verbundbauwerk (Sbk)</name>
 				<label>Verbundbauwerk - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Verbundbauwerk</tooltip>
 				<description>Verbundbauwerk</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Compound Structure (Sbk)</name>
 				<label>Compound Structure - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Compound Structure</tooltip>
 				<description>Compound Structure</description>
@@ -85,11 +87,14 @@
 	<element name="SbkRiverWeir" type="wspmSobekStructures:SbkRiverWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Fluss-Wehr (Sbk)</name>
 				<label>Fluss-Wehr - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Fluss-Wehr</tooltip>
 				<description>Fluss-Wehr</description>
 			</documentation>
-			<documentation xml:lang="en"> Representation of Structure Sobek.RiverWeir <label>River Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
+			<documentation xml:lang="en"> Representation of Structure Sobek.RiverWeir 
+				<name>River Weir (Sbk)</name>
+				<label>River Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>River Weir</tooltip>
 				<description>River Weir</description>
 			</documentation>
@@ -98,11 +103,14 @@
 	<element name="SbkRiverAdvancedWeir" type="wspmSobekStructures:SbkRiverAdvancedWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Hochentwickeltes Fluss-Wehr (Sbk)</name>
 				<label>Hochentwickeltes Fluss-Wehr - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Hochentwickeltes Fluss-Wehr</tooltip>
 				<description>Hochentwickeltes Fluss-Wehr</description>
 			</documentation>
-			<documentation xml:lang="en">Representation of Structure Sobek.RiverAdvancedWeir <label>Advanced River Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
+			<documentation xml:lang="en">Representation of Structure Sobek.RiverAdvancedWeir 
+				<name>Advanced River Weir (Sbk)</name>
+				<label>Advanced River Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Advanced River Weir</tooltip>
 				<description>Advanced River Weir</description>
 			</documentation>
@@ -111,11 +119,13 @@
 	<element name="SbkGeneralStructure" type="wspmSobekStructures:SbkGeneralStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Generelles Bauwerk (Sbk)</name>
 				<label>Generelles Bauwerk - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Generelles Bauwerk</tooltip>
 				<description>Generelles Bauwerk</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>General Structure (Sbk)</name>
 				<label>General Structure - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>General Structure</tooltip>
 				<description>General Structure</description>
@@ -125,11 +135,13 @@
 	<element name="SbkRiverPump" type="wspmSobekStructures:SbkRiverPumpType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Fluss-Pumpe (Sbk)</name>
 				<label>Fluss-Pumpe - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Fluss-Pumpe</tooltip>
 				<description>Fluss-Pumpe</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>River Pump (Sbk)</name>
 				<label>River Pump - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>River Pump</tooltip>
 				<description>River Pump</description>
@@ -139,11 +151,13 @@
 	<element name="SbkDatabaseStructure" type="wspmSobekStructures:SbkDatabaseStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Datenbank-Bauwerk (Sbk)</name>
 				<label>Datenbank-Bauwerk - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Datenbank-Bauwerk</tooltip>
 				<description>Bauwerk, dessen Verhalten über eine Datenbank definiert wird</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Database Structure (Sbk)</name>
 				<label>Database Structure - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Database Structure</tooltip>
 				<description>Database Structure</description>
@@ -153,11 +167,13 @@
 	<element name="SbkWeir" type="wspmSobekStructures:SbkWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Wehr (Sbk)</name>
 				<label>Wehr - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Wehr</tooltip>
 				<description>SbkWeir</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Weir (Sbk)</name>
 				<label>Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Weir</tooltip>
 				<description>Weir</description>
@@ -167,11 +183,13 @@
 	<element name="SbkOrifice" type="wspmSobekStructures:SbkOrificeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Durchlass (Sbk)</name>
 				<label>Durchlass - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Durchlass</tooltip>
 				<description>Durchlass</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Orifice (Sbk)</name>
 				<label>Orifice - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Orifice</tooltip>
 				<description>Orifice</description>
@@ -181,11 +199,13 @@
 	<element name="SbkPump" type="wspmSobekStructures:SbkPumpType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Pumpe (Sbk)</name>
 				<label>Pumpe - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Pumpe</tooltip>
 				<description>Pumpe</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Pump (Sbk)</name>
 				<label>Pump - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Pump</tooltip>
 				<description>Pump</description>
@@ -195,11 +215,13 @@
 	<element name="SbkCulvert" type="wspmSobekStructures:SbkCulvertType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Düker (Sbk)</name>
 				<label>Düker - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Düker</tooltip>
 				<description>Düker</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Culvert (Sbk)</name>
 				<label>Culvert - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Culvert</tooltip>
 				<description>Culvert</description>
@@ -209,11 +231,13 @@
 	<element name="SbkUniversalWeir" type="wspmSobekStructures:SbkUniversalWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Universal-Wehr (Sbk)</name>
 				<label>Universal-Wehr - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Universal-Wehr</tooltip>
 				<description>Universal-Wehr</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Universal Weir (Sbk)</name>
 				<label>Universal Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Universal Weir</tooltip>
 				<description>Universal Weir</description>
@@ -223,11 +247,13 @@
 	<element name="SbkBridge" type="wspmSobekStructures:SbkBridgeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Brücke (Sbk)</name>
 				<label>Brücke - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Brücke</tooltip>
 				<description>Brücke</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Bridge (Sbk)</name>
 				<label>Bridge - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Bridge</tooltip>
 				<description>Bridge</description>
@@ -272,7 +298,7 @@
 	<!--
 		Structure Nodes
 	-->
-	<complexType name="SbkCompoundStructureNodeType">
+	<complexType name="SbkCompoundStructureType">
 		<complexContent>
 			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
 				<sequence>
@@ -313,7 +339,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="crestShape" type="wspmSobekCommon:sbkCrestShapeType" nillable="false" default="0">
+					<element name="crestShape" type="wspmSobekCommon:sbkCrestShapeType" nillable="false" default="Sobek.Structures.RiverWeir.CrestShape.Broad">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Überfallform</label>
@@ -777,22 +803,22 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="secondHeightRelative" type="long" nillable="false">
+					<element name="secondAxisValue" type="wspmSobekCommon:sbkRiverDatabaseStructSecondAxisType" default="Sobek.RiverDatabaseStructure.SecondAxisValue.h2" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>secondHeightRelative</label>
-								<tooltip>secondHeightRelative</tooltip>
-								<description>secondHeightRelative</description>
+								<label>secondAxisValue</label>
+								<tooltip>secondAxisValue</tooltip>
+								<description>secondAxisValue</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>secondHeightRelative</label>
-								<tooltip>secondHeightRelative</tooltip>
-								<description>secondHeightRelative</description>
+								<label>secondAxisValue</label>
+								<tooltip>secondAxisValue</tooltip>
+								<description>secondAxisValue</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="interpolationType" type="wspmSobekCommon:sbkRiverDatabaseStructInterpolationTypeType" nillable="false"
-						default="Sobek.RiverDatabaseStructure.InterpolationType.Lineair">
+						default="Sobek.RiverDatabaseStructure.InterpolationType.Linear">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Art der Interpolation</label>
@@ -898,7 +924,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="flowDirection" type="wspmSobekCommon:sbkFlowDirectionType" default="Direction.Both" nillable="false">
+					<element name="flowDirection" type="wspmSobekCommon:sbkFlowDirectionInclNoneType" default="Direction.Both" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Mögliche Fließrichtung</label>
@@ -927,7 +953,7 @@
 		<complexContent>
 			<extension base="wspmSobekStructures:AbstractSbkStructureNodeType">
 				<sequence>
-					<element name="flowDirection" type="wspmSobekCommon:sbkFlowDirectionType" default="Direction.Both" nillable="false">
+					<element name="flowDirection" type="wspmSobekCommon:sbkFlowDirectionPosAndNegType" default="Direction.Positive" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Mögliche Fließrichtung</label>
@@ -952,6 +978,20 @@
 								<label>Possible Flow Direction</label>
 								<tooltip>Possible Flow Direction</tooltip>
 								<description>Possible Flow Direction</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="reductionType" type="wspmSobekCommon:sbkReductionTypeType" default="ReductionFactor.Constant" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Steuerung des Durchflusses</label>
+								<tooltip>Steuerung des Durchflusses</tooltip>
+								<description>Steuerung des Durchflusses</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Reduction Factor Type</label>
+								<tooltip>Reduction Factor Type</tooltip>
+								<description>Reduction Factor Type</description>
 							</documentation>
 						</annotation>
 					</element>
