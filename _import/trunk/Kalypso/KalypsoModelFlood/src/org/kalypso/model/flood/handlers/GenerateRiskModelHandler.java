@@ -25,8 +25,10 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.util.FloodModelHelper;
+import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
@@ -70,7 +72,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       // ask user which events to process
       final IRunoffEvent[] selectedEvents = FloodModelHelper.askUserForEvents( shell, events );
 
-      if( selectedEvents.length == 0 )
+      if( selectedEvents == null || selectedEvents.length == 0 )
         return null;
 
       final IRunoffEvent[] eventsToProcess = checkEvents( selectedEvents, shell );
@@ -97,14 +99,26 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       /* The active scenario must have changed to the risk project. We can now acces risk project data. */
       final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IRasterDataModel rasterDataModel = riskDataProvider.getModel( IRasterDataModel.class );
-      // TODO: fill it, Dejan!
+      final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
+
+//      final Map<String, Integer> eventNameToAnnualityMap = new HashMap<String, Integer>();
+//      for( final IRunoffEvent runoffEvent : eventsToProcess )
+//        eventNameToAnnualityMap.put( runoffEvent.getName(), 0 );
+//      
+      
+      
+      
 
       /* --- demo code for accessing the depth grid coverage collections --- */
 
       // get the result coverage collections (depth grids) from the events
-      for( IRunoffEvent runoffEvent : eventsToProcess )
+      for( final IRunoffEvent runoffEvent : eventsToProcess )
       {
-        ICoverageCollection coverages = runoffEvent.getResultCoverages();
+        final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
+//        annualCoverageCollection.setReturnPeriod( eventNameToAnnualityMap.get( runoffEvent.getName() ) );
+        final ICoverageCollection coverages = runoffEvent.getResultCoverages();
+        for( final ICoverage coverage : coverages )
+          annualCoverageCollection.add( coverage );
 
         // TODO: dejan, copy/reference coverage into risk model for each event
       }
