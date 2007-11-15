@@ -104,6 +104,11 @@
             label="FeatureType-Name"
             name="org.kalypso.deeegree.functionExpression.featureTypeName">
       </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression"
+            label="ListPropert toString"
+            name="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression">
+      </function>
    </extension>
 
 </plugin>
