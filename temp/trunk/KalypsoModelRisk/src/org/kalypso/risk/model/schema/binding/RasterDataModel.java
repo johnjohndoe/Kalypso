@@ -42,6 +42,7 @@ public class RasterDataModel extends AbstractFeatureBinder implements IRasterDat
     return m_specificDamageCoverageCollection;
   }
 
+  // TODO: change name to Water-Depth! (everywhere...!)
   public IFeatureWrapperCollection<IAnnualCoverageCollection> getWaterlevelCoverageCollection( )
   {
     return m_waterlevelCoverageCollection;

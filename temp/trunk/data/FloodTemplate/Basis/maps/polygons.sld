@@ -21,11 +21,11 @@
 							<ogc:PropertyName>flood:connectorLine</ogc:PropertyName>
 						</Geometry>
 						<Stroke>
-							<CssParameter name="stroke">#000000</CssParameter>
+							<CssParameter name="stroke">#22ff22</CssParameter>
 							<CssParameter name="stroke-width">1.0</CssParameter>
 							<CssParameter name="stroke-linejoin">round</CssParameter>
 							<CssParameter name="stroke-opacity">1.0</CssParameter>
-							<CssParameter name="stroke-linecap">square</CssParameter>
+							<CssParameter name="stroke-linecap">round</CssParameter>
 						</Stroke>
 					</LineSymbolizer>
 				</Rule>
@@ -40,14 +40,14 @@
 						</Geometry>
 						<Fill>
 							<CssParameter name="fill-opacity">0.8</CssParameter>
-							<CssParameter name="fill">#008040</CssParameter>
+							<CssParameter name="fill">#55ff55</CssParameter>
 						</Fill>
 						<Stroke>
-							<CssParameter name="stroke">#000000</CssParameter>
+							<CssParameter name="stroke">#22ff22</CssParameter>
 							<CssParameter name="stroke-width">1.0</CssParameter>
-							<CssParameter name="stroke-linejoin">mitre</CssParameter>
+							<CssParameter name="stroke-linejoin">round</CssParameter>
 							<CssParameter name="stroke-opacity">1.0</CssParameter>
-							<CssParameter name="stroke-linecap">butt</CssParameter>
+							<CssParameter name="stroke-linecap">round</CssParameter>
 						</Stroke>
 					</PolygonSymbolizer>
 				</Rule>
@@ -68,11 +68,11 @@
 									<CssParameter name="fill">#0000ff</CssParameter>
 								</Fill>
 								<Stroke>
-									<CssParameter name="stroke">#000000</CssParameter>
+									<CssParameter name="stroke">#22ff22</CssParameter>
 									<CssParameter name="stroke-width">1.0</CssParameter>
 									<CssParameter name="stroke-linejoin">round</CssParameter>
 									<CssParameter name="stroke-opacity">1.0</CssParameter>
-									<CssParameter name="stroke-linecap">square</CssParameter>
+									<CssParameter name="stroke-linecap">round</CssParameter>
 								</Stroke>
 							</Mark>
 							<Opacity>1.0</Opacity>
@@ -100,14 +100,14 @@
 						</Geometry>
 						<Fill>
 							<CssParameter name="fill-opacity">0.8</CssParameter>
-							<CssParameter name="fill">#800040</CssParameter>
+							<CssParameter name="fill">#ff5555</CssParameter>
 						</Fill>
 						<Stroke>
-							<CssParameter name="stroke">#000000</CssParameter>
+							<CssParameter name="stroke">#ff2222</CssParameter>
 							<CssParameter name="stroke-width">1.0</CssParameter>
-							<CssParameter name="stroke-linejoin">mitre</CssParameter>
+							<CssParameter name="stroke-linejoin">round</CssParameter>
 							<CssParameter name="stroke-opacity">1.0</CssParameter>
-							<CssParameter name="stroke-linecap">butt</CssParameter>
+							<CssParameter name="stroke-linecap">round</CssParameter>
 						</Stroke>
 					</PolygonSymbolizer>
 				</Rule>
