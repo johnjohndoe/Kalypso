@@ -384,7 +384,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private void initalizeColorMapActions( final FormToolkit toolkit, final Composite parent )
   {
     // We are reusing images of KalypsoGmlUi here
-    final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
+    final ImageDescriptor generateID = KalypsoModelFloodPlugin.getImageProvider().getImageDescriptor( KalypsoModelFloodImages.DESCRIPTORS.EDIT_STYLES );
 
     createButton( toolkit, parent, new Action( "Generate ColorMap", generateID )
     {
