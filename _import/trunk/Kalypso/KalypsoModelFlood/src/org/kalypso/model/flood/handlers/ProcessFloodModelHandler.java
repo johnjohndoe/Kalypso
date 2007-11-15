@@ -127,13 +127,18 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       final IMapModell mapModell = mapPanel.getMapModell();
       final AbstractCascadingLayerTheme wspTheme = FloodModelHelper.findWspTheme( mapModell );
       final IStatus processResult = runCalculation( model, eventsToProcess, dataProvider, wspTheme );
-      ErrorDialog.openError( shell, "Flood-Modeller", "Flieﬂtiefen erzeugen", processResult );
+
+      if( processResult.isOK() )
+        MessageDialog.openInformation( shell, "Flood-Modeller", "Flieﬂtiefen wurden erfolgreich erzeugt." );
+      else
+        ErrorDialog.openError( shell, "Flood-Modeller", "Flieﬂtiefen erzeugen", processResult );
+
       if( processResult.isOK() )
       {
         // handle results if job is successful
 
         // add all themes to map
-        for( IRunoffEvent runoffEvent : eventsToProcess )
+        for( final IRunoffEvent runoffEvent : eventsToProcess )
         {
           final int index = FloodModelHelper.findWspTheme( runoffEvent, wspTheme );
           FloodModelHelper.addResultTheme( runoffEvent, wspTheme, index );
@@ -177,14 +182,14 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     if( dialog.open() != Window.OK )
       return null;
 
-    Object[] eventsToProcess = dialog.getResult();
+    final Object[] eventsToProcess = dialog.getResult();
 
     final List<IRunoffEvent> eventListToProcess = new LinkedList<IRunoffEvent>();
 
     // decision dialog for user, if he wants to overwrite existing data
-    for( int i = 0; i < eventsToProcess.length; i++ )
+    for( final Object element : eventsToProcess )
     {
-      final IRunoffEvent event = (IRunoffEvent) eventsToProcess[i];
+      final IRunoffEvent event = (IRunoffEvent) element;
       final ICoverageCollection resultCoverages = event.getResultCoverages();
 
       if( resultCoverages.size() != 0 )
@@ -192,7 +197,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
         if( MessageDialog.openQuestion( shell, "Flieﬂtiefendaten f¸r Ereignis " + event.getName() + "bereits vorhanden", "Sollen vorhandene Daten ¸berschrieben werden?" ) == true )
         {
           // clear existing results (gml and file and themes).
-          IStatus status = FloodModelHelper.removeResultCoverages( shell, dataProvider, resultCoverages );
+          final IStatus status = FloodModelHelper.removeResultCoverages( shell, dataProvider, resultCoverages );
           if( status == Status.OK_STATUS )
             eventListToProcess.add( event );
         }

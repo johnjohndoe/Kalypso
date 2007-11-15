@@ -26,7 +26,7 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
 
     /* Get context */
@@ -52,15 +52,14 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
       final AbstractCascadingLayerTheme wspTheme = FloodModelHelper.findWspTheme( mapModell );
       if( wspTheme != null )
         mapModell.activateTheme( wspTheme );
-
     }
 
-    CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget();
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Ergebniss verwalten", "Ergebnisse verwalten" );
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
 
-    ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", coverageManagementWidget, mapPanel, activePart );
+    final ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", coverageManagementWidget, mapPanel, activePart );
     job.schedule();
 
     return null;
