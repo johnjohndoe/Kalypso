@@ -21,17 +21,17 @@
 							<ogc:PropertyName>flood:connectorLine</ogc:PropertyName>
 						</Geometry>
 						<Stroke>
-							<CssParameter name="stroke">#22ff22</CssParameter>
+							<CssParameter name="stroke">#11aa11</CssParameter>
 							<CssParameter name="stroke-width">1.0</CssParameter>
 							<CssParameter name="stroke-linejoin">round</CssParameter>
 							<CssParameter name="stroke-opacity">1.0</CssParameter>
-							<CssParameter name="stroke-linecap">round</CssParameter>
+							<CssParameter name="stroke-linecap">square</CssParameter>
 						</Stroke>
 					</LineSymbolizer>
 				</Rule>
 				<Rule>
 					<Name>areaRule</Name>
-					<Title>Extrapolationsfläche</Title>
+					<Title>ExtrapolationsflÃ¤che</Title>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
 					<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 					<PolygonSymbolizer>
@@ -39,15 +39,15 @@
 							<ogc:PropertyName>flood:areaMember</ogc:PropertyName>
 						</Geometry>
 						<Fill>
-							<CssParameter name="fill-opacity">0.8</CssParameter>
-							<CssParameter name="fill">#55ff55</CssParameter>
+							<CssParameter name="fill-opacity">0.6</CssParameter>
+							<CssParameter name="fill">#88dd88</CssParameter>
 						</Fill>
 						<Stroke>
-							<CssParameter name="stroke">#22ff22</CssParameter>
+							<CssParameter name="stroke">#11aa11</CssParameter>
 							<CssParameter name="stroke-width">1.0</CssParameter>
-							<CssParameter name="stroke-linejoin">round</CssParameter>
+							<CssParameter name="stroke-linejoin">mitre</CssParameter>
 							<CssParameter name="stroke-opacity">1.0</CssParameter>
-							<CssParameter name="stroke-linecap">round</CssParameter>
+							<CssParameter name="stroke-linecap">butt</CssParameter>
 						</Stroke>
 					</PolygonSymbolizer>
 				</Rule>
@@ -65,14 +65,14 @@
 								<WellKnownName>triangle</WellKnownName>
 								<Fill>
 									<CssParameter name="fill-opacity">1.0</CssParameter>
-									<CssParameter name="fill">#0000ff</CssParameter>
+									<CssParameter name="fill">#3333ff</CssParameter>
 								</Fill>
 								<Stroke>
-									<CssParameter name="stroke">#22ff22</CssParameter>
+									<CssParameter name="stroke">#11aa11</CssParameter>
 									<CssParameter name="stroke-width">1.0</CssParameter>
 									<CssParameter name="stroke-linejoin">round</CssParameter>
 									<CssParameter name="stroke-opacity">1.0</CssParameter>
-									<CssParameter name="stroke-linecap">round</CssParameter>
+									<CssParameter name="stroke-linecap">square</CssParameter>
 								</Stroke>
 							</Mark>
 							<Opacity>1.0</Opacity>
@@ -99,15 +99,15 @@
 							<ogc:PropertyName>flood:areaMember</ogc:PropertyName>
 						</Geometry>
 						<Fill>
-							<CssParameter name="fill-opacity">0.8</CssParameter>
-							<CssParameter name="fill">#ff5555</CssParameter>
+							<CssParameter name="fill-opacity">0.6</CssParameter>
+							<CssParameter name="fill">#dd8888</CssParameter>
 						</Fill>
 						<Stroke>
-							<CssParameter name="stroke">#ff2222</CssParameter>
+							<CssParameter name="stroke">#aa1111</CssParameter>
 							<CssParameter name="stroke-width">1.0</CssParameter>
-							<CssParameter name="stroke-linejoin">round</CssParameter>
+							<CssParameter name="stroke-linejoin">mitre</CssParameter>
 							<CssParameter name="stroke-opacity">1.0</CssParameter>
-							<CssParameter name="stroke-linecap">round</CssParameter>
+							<CssParameter name="stroke-linecap">butt</CssParameter>
 						</Stroke>
 					</PolygonSymbolizer>
 				</Rule>
