@@ -61,13 +61,14 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ui.wizard.utils.ImportTrippleHelper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -89,7 +90,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
 
   private final IRiverProfileNetworkCollection m_networkModel;
 
-  private ImportProfilePage m_ProfilePage;
+  protected ImportProfilePage m_ProfilePage;
 
   private IRiverProfileNetwork m_network;
 
@@ -140,7 +141,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
 
           /* get file name from wizard */
           final File trippelFile = m_ProfilePage.getFile();
-          List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile );
+          List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
 
           monitor.worked( 1 );
 
