@@ -190,7 +190,7 @@ public class SLDHelper
           }
 
           final Transformer transformer = factory.newTransformer();
-          transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" ); //$NON-NLS-1$
+          transformer.setOutputProperty( OutputKeys.ENCODING, writer.getEncoding() ); //$NON-NLS-1$
           transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
 
           // transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
