@@ -10,7 +10,19 @@
   <body>
     <h1>Flood Modeller</h1>
     <div class="list">Allgemeine Informationen</div>
-	Modul zur Darstellung von Überschwemmungsflächen und Fließtiefen
+    <p align="justify">
+	Modul zur Ermittlung und Darstellung von Überschwemmungsflächen und Fließtiefen auf Basis mit
+	Kalypso1D2D berechneter Wasserspiegellagen. Für das Berechnen der Fließtiefen werden Geländerasterdaten 
+	im ESRI-ASCII-Gridformat unterstützt. Bei der Ermittlung wird an jedem vorliegenden Geländerasterpunkt
+	der Wasserstand aus den importierten Wasserspiegellagen abgelesen und mittels Differenzenbildung ein 
+	Fließtiefenwert für diese Rasterzelle ermittelt. <br/>
+	Als Resultat entstehen Fließtiefenraster mit denselben Rasterweiten und Zellgrößen wie die eingelesenen Geländeraster.
+	</p>
+	<p align="justify">
+	Der Benutzer hat die Möglichkeit mehrere Berechnungsergebnisse in Ereignissen zusammenzufassen, so dass es möglich ist, 
+	evtl. während der Berechnung getrennte Modellabschnitte gesamtheitlich prozessieren zu können. Ebenso dient die 
+	angelegte Ereignisstruktur als Vorlage für einen direkten Import der Fließtiefenrastersaten in den Risk Modeller.
+	</p>  
     <br/>
 
     <div class="list">Aktionen</div>

@@ -54,7 +54,7 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
         mapModell.activateTheme( wspTheme );
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Ergebniss verwalten", "Ergebnisse verwalten" );
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Ergebnisse verwalten", "Ergebnisse verwalten" );
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
