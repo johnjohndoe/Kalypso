@@ -10,12 +10,19 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public class FeatureNameLabelProvider extends GMLLabelProvider
 {
+  private final String m_nameNotSpecifiedString;
+
+  public FeatureNameLabelProvider( final String nameNotSpecifiedString )
+  {
+    m_nameNotSpecifiedString = nameNotSpecifiedString;
+  }
+
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element instanceof Feature )
     {
-      final Object object = ((Feature) element).getProperty( new QName( NS.GML3, "name" ) );
+      final Object object = ((Feature) element).getProperty( new QName( NS.GML3, "name" ) ); //$NON-NLS-1$
       String result = null;
       if( object instanceof List )
       {
@@ -26,7 +33,7 @@ public class FeatureNameLabelProvider extends GMLLabelProvider
         result = object.toString();
       if( result != null && result.trim().length() > 0 )
         return result;
-      return "<name not specified>";
+      return m_nameNotSpecifiedString;
     }
     else
       return super.getText( element );

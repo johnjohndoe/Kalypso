@@ -282,7 +282,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     final GMLContentProvider gmlcp = new GMLContentProvider( false );
     final IContentProvider cp = new StatusAndDelegateContentProvider( gmlcp );
-    final ILabelProvider lp = new StatusAndDelegateLabelProvider( new FeatureNameLabelProvider() );
+    final ILabelProvider lp = new StatusAndDelegateLabelProvider( new FeatureNameLabelProvider("<name not specified>") );
     final CoverageFilterViewerFilter coverageFilter = new CoverageFilterViewerFilter();
 
     viewer.setContentProvider( cp );
