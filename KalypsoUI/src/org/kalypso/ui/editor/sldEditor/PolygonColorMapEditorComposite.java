@@ -511,7 +511,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
       final BigDecimal maxDecimal = maxValue.setScale( 2, BigDecimal.ROUND_CEILING );
 
       final BigDecimal polygonStepWidth = stepWidth.setScale( 2, BigDecimal.ROUND_FLOOR );
-      final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
+      final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth, BigDecimal.ROUND_HALF_UP )).intValue();
 
       for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
       {

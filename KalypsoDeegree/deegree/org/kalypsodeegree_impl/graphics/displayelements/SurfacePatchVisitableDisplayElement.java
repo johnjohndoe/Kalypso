@@ -183,6 +183,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 
     try
     {
+      // TODO: give monitor to accept method and check for cancel!
       final ISurfacePatchVisitor<P> visitor = m_visitorFactory.createVisitor( g, projection, m_colorModel );
       m_surfacePatchVisitable.acceptSurfacePatches( projection.getSourceRect(), visitor );
     }

@@ -50,7 +50,7 @@
 	<classpathentry kind="lib" path="libs/jetspeed/torque-3.1.jar"/>
 	<classpathentry kind="lib" path="libs/jetspeed/turbine-2.2.jar"/>
 	<classpathentry kind="lib" path="libs/jetspeed/velocity-1.4.jar"/>
-	<classpathentry kind="lib" path="libs/jts/jts-1.8.jar"/>
+	<classpathentry kind="lib" path="libs/jts/jts-1.8.jar" sourcepath="/KalypsoDeegree/lib/jts/jts-1.8_src.zip"/>
 	<classpathentry kind="lib" path="libs/junit/junit.jar"/>
 	<classpathentry kind="lib" path="libs/log4j/log4j-1.2.9.jar"/>
 	<classpathentry kind="lib" path="libs/mail/activation.jar"/>
