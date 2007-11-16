@@ -865,7 +865,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
 
     /* Show dialog to user and import tins afterwards */
-    final ImportTinOperation operation = new ImportTinOperation( m_dataProvider, runoffEvent.getTins() );
+    final ImportTinOperation operation = new ImportTinOperation( m_dataProvider, runoffEvent.getTins(), getMapPanel() );
     final GmlSourceChooserWizard wizard = new GmlSourceChooserWizard( provider, operation );
     final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), getClass().getName() );
     wizard.setDialogSettings( dialogSettings );

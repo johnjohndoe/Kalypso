@@ -58,11 +58,15 @@ import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
 import org.kalypso.model.flood.ui.map.UpdateTinsOperation;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Handles the import of a tins.
@@ -77,10 +81,18 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
 
   private final SzenarioDataProvider m_provider;
 
-  public ImportTinOperation( final SzenarioDataProvider provider, final IFeatureWrapperCollection<ITinReference> tins )
+  private final MapPanel m_mapPanel;
+
+  /**
+   * @param mapPanel
+   *            After importing, the exctent of this mapPanel will be set to the bounding box of the imported tins. May
+   *            be <code>null</code>.
+   */
+  public ImportTinOperation( final SzenarioDataProvider provider, final IFeatureWrapperCollection<ITinReference> tins, final MapPanel mapPanel )
   {
     m_provider = provider;
     m_tins = tins;
+    m_mapPanel = mapPanel;
   }
 
   /**
@@ -133,6 +145,12 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
     progress.subTask( "importiere Daten" );
     final UpdateTinsOperation updateOp = new UpdateTinsOperation( tinRefs );
     updateOp.execute( progress.newChild( 60 ) );
+
+    /* Jumpt to imported tins */
+    final GM_Envelope envelope = FeatureHelper.getEnvelope( changedFeatures );
+    final GM_Envelope scaledBox = envelope == null ? null : GeometryUtilities.scaleEnvelope( envelope, 1.05 );
+    if( m_mapPanel != null && scaledBox != null )
+      m_mapPanel.setBoundingBox( scaledBox );
 
     return Status.OK_STATUS;
   }
