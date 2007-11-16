@@ -17,7 +17,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.risk.model.actions.dataImport.waterdepth.EventManagementWidget;
+import org.kalypso.risk.model.actions.manageWaterdepthCollections.EventManagementWidget;
 import org.kalypso.ui.views.map.MapView;
 
 public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implements IHandler

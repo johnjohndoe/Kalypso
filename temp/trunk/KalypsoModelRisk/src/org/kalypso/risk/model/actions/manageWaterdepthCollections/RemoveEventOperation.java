@@ -1,4 +1,4 @@
-package org.kalypso.risk.model.actions.dataImport.waterdepth;
+package org.kalypso.risk.model.actions.manageWaterdepthCollections;
 
 import java.lang.reflect.InvocationTargetException;
 

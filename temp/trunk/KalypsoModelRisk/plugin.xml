@@ -189,10 +189,4 @@
           id="org.kalypso.risk.plugin.RiskZonesThemeInfo">
     </themeInfo>
  </extension>
- <extension
-       point="org.kalypso.core.catalogContribution">
-    <catalogContribution
-          class="org.kalypso.risk.model.schema.RiskModelCatalogContribution">
-    </catalogContribution>
- </extension>
 </plugin>

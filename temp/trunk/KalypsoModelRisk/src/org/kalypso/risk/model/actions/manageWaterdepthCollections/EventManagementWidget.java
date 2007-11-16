@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestra?e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,10 +38,12 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.risk.model.actions.dataImport.waterdepth;
+package org.kalypso.risk.model.actions.manageWaterdepthCollections;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Assert;
@@ -79,13 +81,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -94,20 +94,14 @@ import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateLabelProvider
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
-import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
-import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
-import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -118,7 +112,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -138,9 +131,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   private Object[] m_treeSelection;
 
+  private final Map<String, Button> m_buttonsMap;
+
   public EventManagementWidget( )
   {
     super( "Ereignisse verwalten", "Ereignisse verwalten" );
+    m_buttonsMap = new HashMap<String, Button>();
   }
 
   /**
@@ -212,7 +208,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     // Basic Layout
 
-    /* Tree table + info pane */
     final Composite treePanel = toolkit.createComposite( panel, SWT.NONE );
     final GridLayout treePanelLayout = new GridLayout( 2, false );
     final GridData treePanelData = new GridData( SWT.FILL, SWT.FILL, true, false );
@@ -234,50 +229,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     treeButtonPanel.setLayout( treeButtonPanelLayout );
     treeButtonPanel.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
 
-    /* Info view */
-    final Group eventInfoGroup = new Group( panel, SWT.H_SCROLL );
-    eventInfoGroup.setLayout( new GridLayout() );
-    final GridData infoGroupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    eventInfoGroup.setLayoutData( infoGroupData );
-    toolkit.adapt( eventInfoGroup );
-    eventInfoGroup.setText( "Info" );
-
-    final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
-//    featureviewFactory.addView( getClass().getResource( "resources/event.gft" ) );
-//    featureviewFactory.addView( getClass().getResource( "resources/tinReference.gft" ) );
-    final FeatureComposite featureComposite = new FeatureComposite( null, null, featureviewFactory );
-    featureComposite.setFormToolkit( toolkit );
-    featureComposite.addChangeListener( new IFeatureChangeListener()
-    {
-      public void featureChanged( final ICommand changeCommand )
-      {
-        try
-        {
-          m_dataProvider.postCommand( IRasterDataModel.class, changeCommand );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
-
-      public void openFeatureRequested( final Feature feature, final IPropertyType pt )
-      {
-      }
-    } );
-
-    /* Color Map table */
-    final Composite colormapPanel = toolkit.createComposite( panel, SWT.NONE );
-    final GridLayout colormapPanelLayout = new GridLayout();
-    colormapPanelLayout.numColumns = 2;
-    colormapPanelLayout.makeColumnsEqualWidth = false;
-    colormapPanelLayout.marginWidth = 0;
-    colormapPanelLayout.marginHeight = 0;
-
-    colormapPanel.setLayout( colormapPanelLayout );
-    final GridData colormapPanelData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    colormapPanel.setLayoutData( colormapPanelData );
-
     /* Fill contents */
     initalizeEventViewer( m_eventViewer );
     initalizeTreeActions( toolkit, treeButtonPanel );
@@ -291,12 +242,22 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         m_treeSelection = selection.toArray();
 
-        featureComposite.disposeControl();
-
         if( m_treeSelection != null && m_treeSelection.length > 0 )
         {
-          featureComposite.setFeature( (Feature) m_treeSelection[0] );
-          featureComposite.createControl( eventInfoGroup, SWT.NONE );
+          if( m_treeSelection[0] instanceof Feature )
+          {
+            final Feature feature = (Feature) m_treeSelection[0];
+            if( feature.getAdapter( ICoverage.class ) != null )
+            {
+              m_buttonsMap.get( "ADD" ).setEnabled( false );
+              m_buttonsMap.get( "REMOVE" ).setEnabled( false );
+            }
+            if( feature.getAdapter( IAnnualCoverageCollection.class ) != null )
+            {
+              m_buttonsMap.get( "ADD" ).setEnabled( true );
+              m_buttonsMap.get( "REMOVE" ).setEnabled( true );
+            }
+          }
         }
 
         parent.layout( true, true );
@@ -321,7 +282,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     final GMLContentProvider gmlcp = new GMLContentProvider( false );
     final IContentProvider cp = new StatusAndDelegateContentProvider( gmlcp );
-    final ILabelProvider lp = new StatusAndDelegateLabelProvider( new GMLLabelProvider() );
+    final ILabelProvider lp = new StatusAndDelegateLabelProvider( new FeatureNameLabelProvider() );
     final CoverageFilterViewerFilter coverageFilter = new CoverageFilterViewerFilter();
 
     viewer.setContentProvider( cp );
@@ -375,18 +336,19 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         handleRemove( event );
       }
     };
-    removeAction.setDescription( "Ereignis/Wasserspiegel l�schen" );
+    removeAction.setDescription( "Ereignis/Wasserspiegel l?schen" );
 
-    createButton( toolkit, parent, addEventAction );
-    createButton( toolkit, parent, removeAction );
+    createButton( toolkit, parent, addEventAction, "ADD" );
+    createButton( toolkit, parent, removeAction, "REMOVE" );
   }
 
-  private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action )
+  private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action, final String key )
   {
     final Button button = toolkit.createButton( parent, null, SWT.PUSH );
     final Image image = action.getImageDescriptor().createImage( true );
     button.setImage( image );
     button.setToolTipText( action.getDescription() );
+    m_buttonsMap.put( key, button );
     button.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -412,27 +374,29 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     } );
   }
 
-  protected void handleJumpTo( )
-  {
-    if( m_treeSelection == null )
-      return;
-
-    final GM_Envelope envelope = envelopeForSelection();
-    if( envelope == null )
-      return;
-
-    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( envelope, 1.05 );
-    getMapPanel().setBoundingBox( scaledBox );
-  }
-
   protected void handleAddEvent( final Event event )
   {
     final IInputValidator inputValidator = new IInputValidator()
     {
-      public String isValid( String newText )
+      public String isValid( final String newText )
       {
         if( newText == null || newText.length() == 0 )
-          return "Name darf nicht leer sein";
+          return "Return period cannot be empty.";
+        try
+        {
+          final int i = Integer.parseInt( newText );
+          if( i <= 0 )
+            return "Return period cannot be zero or negative.";
+          for( final IAnnualCoverageCollection collection : m_model.getWaterlevelCoverageCollection() )
+            if( collection.getReturnPeriod() == i )
+              return "Flood event with this return period is already defined.";
+        }
+        catch( final NumberFormatException e )
+        {
+          return "Valid return period is a positive integer value.";
+        }
+        if( newText == null || newText.length() == 0 )
+          return "Return period cannot be empty.";
 
         return null;
       }
@@ -440,21 +404,21 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     // show input dialog
     final Shell shell = event.display.getActiveShell();
-    final InputDialog dialog = new InputDialog( shell, "Ereignis hinzuf�gen", "Bitte geben Sie den Namen des neuen Ereignis ein:", "", inputValidator );
+    final InputDialog dialog = new InputDialog( shell, "New flood event", "Please enter the return period of the flood event:", "", inputValidator );
     if( dialog.open() != Window.OK )
       return;
 
-    final String eventName = dialog.getValue();
+    final String eventName = "HQ " + dialog.getValue();
     final IRasterDataModel model = m_model;
     final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQ" );
     Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
 
-    final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, model, wspThemes, m_dataProvider );
+    final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
       KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, "Ereignis hinzuf�gen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
+    ErrorDialog.openError( shell, "Ereignis hinzuf?gen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
   }
 
   protected void handleRemove( final Event event )
@@ -471,7 +435,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
       KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, "Ereignis l�schen", "Fehler beim L�schen des Ereignisses", resultStatus );
+    ErrorDialog.openError( shell, "Ereignis l?schen", "Fehler beim L?schen des Ereignisses", resultStatus );
   }
 
   /**
@@ -529,28 +493,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     g.setColor( Color.RED );
     g.drawRect( x, y, width, height );
-  }
-
-  private GM_Envelope envelopeForSelection( )
-  {
-    if( m_treeSelection == null )
-      return null;
-
-    GM_Envelope result = null;
-
-    for( final Object selectedObject : m_treeSelection )
-    {
-      final GM_Envelope envelope = envelopeForSelected( selectedObject );
-      if( envelope != null )
-      {
-        if( result == null )
-          result = envelope;
-        else
-          result = result.getMerged( envelope );
-      }
-    }
-
-    return result;
   }
 
   private GM_Envelope envelopeForSelected( final Object selectedObject )

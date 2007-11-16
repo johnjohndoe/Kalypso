@@ -38,12 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.risk.model.actions.dataImport.waterdepth;
+package org.kalypso.risk.model.actions.manageWaterdepthCollections;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * filter for hiding the coverage data in flood modeller's event viewer. <br>
@@ -60,6 +61,8 @@ public class CoverageFilterViewerFilter extends ViewerFilter
     {
       Feature feature = (Feature) element;
       if( feature.getFeatureType().getQName().equals( IAnnualCoverageCollection.QNAME ) )
+        return true;
+      if( feature.getFeatureType().getQName().equals( RectifiedGridCoverage.QNAME ) )
         return true;
 
       return false;

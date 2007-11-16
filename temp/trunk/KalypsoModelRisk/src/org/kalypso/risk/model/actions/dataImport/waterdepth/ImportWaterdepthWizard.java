@@ -180,12 +180,13 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
                 waterdepthCoverageCollection.remove( coverageToRemove );
 
               final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
+              annualCoverageCollection.setName( "HQ " + asciiRasterInfo.getReturnPeriod() );
+              annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
               final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
               final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getWrappedFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
               final Feature coverageFeature = workspace.createFeature( annualCoverageCollection.getWrappedFeature(), parentRelation, rgcFeatureType );
               final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
               annualCoverageCollection.add( coverage );
-              annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
               coverage.setRangeSet( rangeSet );
               coverage.setGridDomain( asciiRasterInfo.getGridDomain() );
               coverage.setName( binFileName );

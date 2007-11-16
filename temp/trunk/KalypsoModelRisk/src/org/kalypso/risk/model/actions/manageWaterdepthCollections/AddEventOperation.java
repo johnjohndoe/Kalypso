@@ -1,10 +1,8 @@
-package org.kalypso.risk.model.actions.dataImport.waterdepth;
+package org.kalypso.risk.model.actions.manageWaterdepthCollections;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
@@ -26,7 +24,10 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -43,9 +44,12 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   private final SzenarioDataProvider m_provider;
 
-  public AddEventOperation( final String eventName, final IRasterDataModel model, final AbstractCascadingLayerTheme wspThemes, final SzenarioDataProvider provider )
+  private final int m_returnPeriod;
+
+  public AddEventOperation( final String eventName, final int returnPeriod, final IRasterDataModel model, final AbstractCascadingLayerTheme wspThemes, final SzenarioDataProvider provider )
   {
     m_eventName = eventName;
+    m_returnPeriod = returnPeriod;
     m_model = model;
     m_wspThemes = wspThemes;
     m_provider = provider;
@@ -59,15 +63,13 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
       /* Create a unique name */
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = m_model.getWaterlevelCoverageCollection();
-      final Set<String> names = new HashSet<String>();
-      for( final IAnnualCoverageCollection runoffEvent : waterlevelCoverageCollection )
-        names.add( runoffEvent.getName() );
 
       ProgressUtilities.worked( monitor, 1 );
 
       /* Add new feature */
       final IAnnualCoverageCollection newCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
       newCoverageCollection.setName( m_eventName );
+      newCoverageCollection.setReturnPeriod( m_returnPeriod );
 
       ProgressUtilities.worked( monitor, 1 );
 
@@ -86,9 +88,8 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       /*
        * Save model and map, as undo is not possible here and the user should not be able to 'verwerfen' the changes
        */
-      // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace,
-      // waterdepthCoverageCollection.getWrappedFeature(), new Feature[] { annualCoverageCollection.getWrappedFeature()
-      // }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      final GMLWorkspace workspace = m_model.getWrappedFeature().getWorkspace();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getWrappedFeature(), new Feature[] { newCoverageCollection.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       m_provider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       m_provider.saveModel( IRasterDataModel.class, new SubProgressMonitor( monitor, 1 ) );
       // TODO: save map. Necessary?
