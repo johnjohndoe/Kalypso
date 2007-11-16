@@ -386,7 +386,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     // We are reusing images of KalypsoGmlUi here
     final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.STYLE_EDIT );
 
-    createButton( toolkit, parent, new Action( "Generate ColorMap", generateID )
+    createButton( toolkit, parent, new Action( "Farbtabelle generieren", generateID )
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
