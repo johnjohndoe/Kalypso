@@ -43,6 +43,7 @@ package org.kalypso.risk.model.actions.manageWaterdepthCollections;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -94,6 +95,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateLabelProvider
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -102,6 +104,7 @@ import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
+import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -250,11 +253,13 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
             if( feature.getAdapter( ICoverage.class ) != null )
             {
               m_buttonsMap.get( "ADD" ).setEnabled( false );
+              m_buttonsMap.get( "CHANGE" ).setEnabled( false );
               m_buttonsMap.get( "REMOVE" ).setEnabled( false );
             }
             if( feature.getAdapter( IAnnualCoverageCollection.class ) != null )
             {
               m_buttonsMap.get( "ADD" ).setEnabled( true );
+              m_buttonsMap.get( "CHANGE" ).setEnabled( true );
               m_buttonsMap.get( "REMOVE" ).setEnabled( true );
             }
           }
@@ -282,7 +287,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     final GMLContentProvider gmlcp = new GMLContentProvider( false );
     final IContentProvider cp = new StatusAndDelegateContentProvider( gmlcp );
-    final ILabelProvider lp = new StatusAndDelegateLabelProvider( new FeatureNameLabelProvider("<name not specified>") );
+    final ILabelProvider lp = new StatusAndDelegateLabelProvider( new FeatureNameLabelProvider( "<name not specified>" ) );
     final CoverageFilterViewerFilter coverageFilter = new CoverageFilterViewerFilter();
 
     viewer.setContentProvider( cp );
@@ -310,7 +315,10 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     // We are reusing images of KalypsoGmlUi here
     final ImageDescriptor addEventID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
+    final ImageDescriptor changeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_JUMP );
     final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
+    final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
+    final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
 
     final Action addEventAction = new Action( "AddEvent", addEventID )
     {
@@ -325,6 +333,19 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     };
     addEventAction.setDescription( "Neues Ereignis" );
 
+    final Action changeAction = new Action( "Change", changeID )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+       */
+      @Override
+      public void runWithEvent( final Event event )
+      {
+        handleChange( event );
+      }
+    };
+    changeAction.setDescription( "Return period change" );
+
     final Action removeAction = new Action( "Remove", removeID )
     {
       /**
@@ -338,8 +359,37 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     };
     removeAction.setDescription( "Ereignis/Wasserspiegel l?schen" );
 
+    final Action moveUpAction = new Action( "Move Up", upID )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+       */
+      @Override
+      public void runWithEvent( Event event )
+      {
+        handleMove( event, -1 );
+      }
+    };
+    moveUpAction.setDescription( "Nach Oben verschieben" );
+
+    final Action moveDownAction = new Action( "Move Down", downID )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+       */
+      @Override
+      public void runWithEvent( Event event )
+      {
+        handleMove( event, 1 );
+      }
+    };
+    moveDownAction.setDescription( "Nach Unten verschieben" );
+
     createButton( toolkit, parent, addEventAction, "ADD" );
+    createButton( toolkit, parent, changeAction, "CHANGE" );
     createButton( toolkit, parent, removeAction, "REMOVE" );
+    createButton( toolkit, parent, moveUpAction, "MOVEUP" );
+    createButton( toolkit, parent, moveDownAction, "MOVEDOWN" );
   }
 
   private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action, final String key )
@@ -421,6 +471,52 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     ErrorDialog.openError( shell, "Ereignis hinzuf?gen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
   }
 
+  protected void handleChange( final Event event )
+  {
+    final IInputValidator inputValidator = new IInputValidator()
+    {
+      public String isValid( final String newText )
+      {
+        if( newText == null || newText.length() == 0 )
+          return "Return period cannot be empty.";
+        try
+        {
+          final int i = Integer.parseInt( newText );
+          if( i <= 0 )
+            return "Return period cannot be zero or negative.";
+          for( final IAnnualCoverageCollection collection : m_model.getWaterlevelCoverageCollection() )
+            if( collection.getReturnPeriod() == i )
+              return "Flood event with this return period is already defined.";
+        }
+        catch( final NumberFormatException e )
+        {
+          return "Valid return period is a positive integer value.";
+        }
+        if( newText == null || newText.length() == 0 )
+          return "Return period cannot be empty.";
+
+        return null;
+      }
+    };
+
+    // show input dialog
+    final Shell shell = event.display.getActiveShell();
+    final InputDialog dialog = new InputDialog( shell, "Change return period", "Please enter new return period of this flood event:", "", inputValidator );
+    if( dialog.open() != Window.OK )
+      return;
+
+    final IRasterDataModel model = m_model;
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQ" );
+    Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
+
+    final ICoreRunnableWithProgress operation = new ChangeAnnualityOperation( m_treeSelection[0], Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );
+
+    final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
+    if( !resultStatus.isOK() )
+      KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
+    ErrorDialog.openError( shell, "Ereignis hinzuf?gen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
+  }
+
   protected void handleRemove( final Event event )
   {
     if( m_treeSelection == null )
@@ -472,6 +568,40 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         final GM_Envelope envelope = envelopeForSelected( selectedObject );
         paintEnvelope( g, envelope );
       }
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  protected void handleMove( final Event event, final int step )
+  {
+    if( m_treeSelection == null )
+      return;
+
+    if( m_treeSelection.length != 1 )
+      return;
+
+    final Feature selectedFeature = (Feature) m_treeSelection[0];
+
+    final Feature parentFeature = selectedFeature.getParent();
+    final IPropertyType pt = selectedFeature.getParentRelation();
+
+    final List< ? > featureList = (List< ? >) parentFeature.getProperty( pt );
+    final int newIndex = featureList.indexOf( selectedFeature ) + step;
+    if( newIndex < 0 || newIndex >= featureList.size() )
+      return;
+
+    final MoveFeatureCommand command = new MoveFeatureCommand( parentFeature, pt, selectedFeature, step );
+
+    final SzenarioDataProvider sdProvider = m_dataProvider;
+    try
+    {
+      sdProvider.postCommand( IRasterDataModel.class, command );
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoRiskPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( event.display.getActiveShell(), "Reihenfolge ändern", "Fehler beim Ändern der Reihenfolge", status );
     }
   }
 
