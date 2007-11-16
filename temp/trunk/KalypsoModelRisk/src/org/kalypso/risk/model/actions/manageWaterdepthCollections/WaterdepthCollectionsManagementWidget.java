@@ -124,7 +124,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * 
  * @author Thomas Jung
  */
-public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
+public class WaterdepthCollectionsManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private TreeViewer m_eventViewer;
 
@@ -136,7 +136,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   private final Map<String, Button> m_buttonsMap;
 
-  public EventManagementWidget( )
+  public WaterdepthCollectionsManagementWidget( )
   {
     super( "Ereignisse verwalten", "Ereignisse verwalten" );
     m_buttonsMap = new HashMap<String, Button>();
@@ -287,7 +287,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     final GMLContentProvider gmlcp = new GMLContentProvider( false );
     final IContentProvider cp = new StatusAndDelegateContentProvider( gmlcp );
-    final ILabelProvider lp = new StatusAndDelegateLabelProvider( new FeatureNameLabelProvider( "<name not specified>" ) );
+    final ILabelProvider lp = new StatusAndDelegateLabelProvider( new FeatureNameLabelProvider() );
     final CoverageFilterViewerFilter coverageFilter = new CoverageFilterViewerFilter();
 
     viewer.setContentProvider( cp );
@@ -463,7 +463,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQ" );
     Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
 
-    final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );
+    final ICoreRunnableWithProgress operation = new AddCollectionOperation( eventName, Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
@@ -524,7 +524,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQ" );
 
-    final ICoreRunnableWithProgress operation = new RemoveEventOperation( m_treeSelection, m_dataProvider, wspThemes );
+    final ICoreRunnableWithProgress operation = new RemoveCollectionOperation( m_treeSelection, m_dataProvider, wspThemes );
 
     final Shell shell = event.display.getActiveShell();
 

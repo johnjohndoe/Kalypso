@@ -7,8 +7,8 @@
 	<Name>KalypsoRisk-Workflow</Name>
 	<Task context="ImportWaterdepthRasterContext"
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportLanduseShapeData">
-		<Help><![CDATA[Öffnen Map-view]]></Help>
-		<Name>Öffnen Map-view</Name>
+		<Help><![CDATA[Open the view with the loaded landuse data, waterlevel data, and the results of the processing]]></Help>
+		<Name>Open the map-view</Name>
 	</Task>
 	<TaskGroup
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Preprocessing">
@@ -29,33 +29,33 @@
 			</Task>
 			<Task context="ImportWaterdepthRasterWizard"
 				URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportWaterdepthRaster">
-				<Help><![CDATA[Import von Wassertiefe Daten]]></Help>
-				<Name>Import von Wassertiefe Daten</Name>
+				<Help><![CDATA[Import waterlevel data]]></Help>
+				<Name>Import waterlevel data</Name>
 			</Task>
 			<Task context="CoveragesWidgetContext"
 				URI="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler">
-				<Help><![CDATA[Bearbeiten von Ü-Daten für HQi]]></Help>
-				<Name>Bearbeiten von Ü-Daten für HQi</Name>
+				<Help><![CDATA[Edit waterlevel raster data]]></Help>
+				<Name>Edit waterlevel anuality layers</Name>
 			</Task>
 			<Task context="CoveragesWidgetContext"
 				URI="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler">
-				<Help><![CDATA[Bearbeiten von Ü-Rasterdaten]]></Help>
-				<Name>Bearbeiten von Ü-Rasterdaten</Name>
+				<Help><![CDATA[Edit waterlevel raster data]]></Help>
+				<Name>Edit waterlevel raster data</Name>
 			</Task>
 		</TaskGroup>
 		<TaskGroup
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__Databases">
-			<Help><![CDATA[Berechnungsparameter]]></Help>
-			<Name>Berechnungsparameter</Name>
+			<Help><![CDATA[Common data definition]]></Help>
+			<Name>Parameters definition</Name>
 			<Task context="CalculationControlPanel"
 				URI="http___www.tu-harburg.de_wb_kalypso_risk__CalculationControlPanel">
-				<Help><![CDATA[Bestimmung von Berechnungsparameter]]></Help>
-				<Name>Bestimmung von Berechnungsparameter</Name>
+				<Help><![CDATA[Landnutzung bearbeiten]]></Help>
+				<Name>Calculation values definition</Name>
 			</Task>
 			<Task context="RiskZonesPanel"
 				URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesPanel">
-				<Help><![CDATA[Risiko Zonierung]]></Help>
-				<Name>Risiko Zonierung</Name>
+				<Help><![CDATA[Risk zones definition]]></Help>
+				<Name>Risk zones definition</Name>
 			</Task>
 		</TaskGroup>
 	</TaskGroup>
@@ -89,11 +89,6 @@
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Postprocessing">
 		<Help><![CDATA[Ergebnisauswertungen]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
-		<Task context="CoveragesWidgetContext"
-			URI="org.kalypso.risk.model.handlers.ExportSpecificDamageCoveragesWidgetHandler">
-			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
-			<Name>Exportieren Schadenspotential (pro HQi)</Name>
-		</Task>
 		<Task context="CoveragesWidgetContext"
 			URI="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler">
 			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>

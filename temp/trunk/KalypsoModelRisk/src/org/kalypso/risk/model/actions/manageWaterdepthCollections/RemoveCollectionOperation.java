@@ -22,7 +22,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public final class RemoveEventOperation implements ICoreRunnableWithProgress
+public final class RemoveCollectionOperation implements ICoreRunnableWithProgress
 {
   private final Object[] m_treeSelection;
 
@@ -30,7 +30,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
 
   private final AbstractCascadingLayerTheme m_wspThemes;
 
-  public RemoveEventOperation( final Object[] treeSelection, final SzenarioDataProvider provider, final AbstractCascadingLayerTheme wspThemes )
+  public RemoveCollectionOperation( final Object[] treeSelection, final SzenarioDataProvider provider, final AbstractCascadingLayerTheme wspThemes )
   {
     m_treeSelection = treeSelection;
     m_provider = provider;

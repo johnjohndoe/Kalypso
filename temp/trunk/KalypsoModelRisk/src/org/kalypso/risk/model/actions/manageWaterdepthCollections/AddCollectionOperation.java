@@ -34,7 +34,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * @author Gernot Belger
  */
-public final class AddEventOperation implements ICoreRunnableWithProgress
+public final class AddCollectionOperation implements ICoreRunnableWithProgress
 {
   private final IRasterDataModel m_model;
 
@@ -46,7 +46,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   private final int m_returnPeriod;
 
-  public AddEventOperation( final String eventName, final int returnPeriod, final IRasterDataModel model, final AbstractCascadingLayerTheme wspThemes, final SzenarioDataProvider provider )
+  public AddCollectionOperation( final String eventName, final int returnPeriod, final IRasterDataModel model, final AbstractCascadingLayerTheme wspThemes, final SzenarioDataProvider provider )
   {
     m_eventName = eventName;
     m_returnPeriod = returnPeriod;
