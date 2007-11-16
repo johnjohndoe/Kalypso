@@ -9,12 +9,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.ui.map.EventManagementWidget;
+import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -24,6 +28,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Gernot Belger
@@ -32,7 +38,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
 {
   private final Object[] m_treeSelection;
 
-  private final SzenarioDataProvider m_provider;
+  protected final SzenarioDataProvider m_provider;
 
   private final AbstractCascadingLayerTheme m_wspThemes;
 
@@ -58,6 +64,19 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
           /* Delete themes from map */
           deleteThemes( m_wspThemes, runoffEvent );
 
+          /* Delete underlying grid files */
+          final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
+
+          final Display display = PlatformUI.getWorkbench().getDisplay();
+          display.asyncExec( new Runnable()
+          {
+            public void run( )
+            {
+              final Shell shell = display.getActiveShell();
+              FloodModelHelper.removeResultCoverages( shell, m_provider, resultCoverages );
+            }
+          } );
+
           /* Delete event folder */
           final IFolder eventFolder = EventManagementWidget.getEventFolder( runoffEvent );
           eventFolder.delete( true, new NullProgressMonitor() );
@@ -70,6 +89,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
         final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class );
 
         final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, featureToRemove );
+
         workspace.postCommand( command );
       }
 
@@ -105,12 +125,34 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
             final GisTemplateUserStyle pooledUserStyle = (GisTemplateUserStyle) userStyle;
             final PoolableObjectType poolKey = pooledUserStyle.getPoolKey();
 
-            final String styleLocationForEvent = AddEventOperation.styleLocationForEvent( event );
+            final String styleLocationForEventWsp = AddEventOperation.styleLocationForEventWsp( event );
 
-            if( poolKey.getLocation().equals( styleLocationForEvent ) )
+            if( poolKey.getLocation().equals( styleLocationForEventWsp ) )
             {
               wspThemes.removeTheme( kalypsoTheme );
               break;
+            }
+          }
+        }
+        // check for result coverages
+        FeatureList featureList = featureTheme.getFeatureList();
+        if( featureList != null )
+        {
+          for( Object object : featureList )
+          {
+            if( object instanceof Feature )
+            {
+              final Feature feature = (Feature) object;
+
+              // the papa papa of the coverage is the event
+              final Feature parent = feature.getParent().getParent();
+              if( parent != null )
+              {
+                if( parent.getId().equals( event.getGmlID() ) )
+                {
+                  wspThemes.removeTheme( kalypsoTheme );
+                }
+              }
             }
           }
         }

@@ -386,7 +386,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     // We are reusing images of KalypsoGmlUi here
     final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.STYLE_EDIT );
 
-    createButton( toolkit, parent, new Action( "Farbtabelle generieren", generateID )
+    Action action = new Action( "Farbtabelle anpassen", generateID )
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -396,7 +396,10 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       {
         handleGenerateColorMap( event );
       }
-    } );
+    };
+    action.setToolTipText( "Farbtabelle anpassen" );
+
+    createButton( toolkit, parent, action );
 
   }
 
@@ -910,10 +913,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       return;
 
     final AbstractCascadingLayerTheme wspThemes = FloodModelHelper.findWspTheme( getMapPanel().getMapModell() );
+    final Shell shell = event.display.getActiveShell();
 
     final ICoreRunnableWithProgress operation = new RemoveEventOperation( m_treeSelection, m_dataProvider, wspThemes );
-
-    final Shell shell = event.display.getActiveShell();
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )

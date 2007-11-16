@@ -166,7 +166,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       extrsStyle.setLinktype( "sld" );
       extrsStyle.setStyle( "extrapolationPolygonUserStyle" );
       extrsStyle.setActuate( "onRequest" );
-      extrsStyle.setHref( styleLocationForEvent( event ) );
+      extrsStyle.setHref( styleLocationForEventWsp( event ) );
       extrsStyle.setType( "simple" );
       styleList.add( extrsStyle );
 
@@ -174,7 +174,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       clipStyle.setLinktype( "sld" );
       clipStyle.setStyle( "clipPolygonUserStyle" );
       clipStyle.setActuate( "onRequest" );
-      clipStyle.setHref( styleLocationForEvent( event ) );
+      clipStyle.setHref( styleLocationForEventWsp( event ) );
       clipStyle.setType( "simple" );
       styleList.add( clipStyle );
 
@@ -209,7 +209,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       style.setLinktype( "sld" );
       style.setStyle( "wspUserStyle" );
       style.setActuate( "onRequest" );
-      style.setHref( styleLocationForEvent( event ) );
+      style.setHref( styleLocationForEventWsp( event ) );
       style.setType( "simple" );
       styleList.add( style );
 
@@ -217,7 +217,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     }
   }
 
-  public static String styleLocationForEvent( final IRunoffEvent event )
+  public static String styleLocationForEventWsp( final IRunoffEvent event )
   {
     return "../events/" + event.getDataPath().toPortableString() + "/wsp.sld";
   }
