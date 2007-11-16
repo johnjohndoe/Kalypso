@@ -104,7 +104,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
 
   public void setSourceFeaturePath( final GMLXPath path )
   {
-    setProperty( QNAME_PROP_SOURCE_PATH, path.toString() );
+    setProperty( QNAME_PROP_SOURCE_PATH, path == null ? null : path.toString() );
   }
 
   /**
@@ -203,6 +203,23 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
       return null;
 
     return (IRunoffEvent) parent.getAdapter( IRunoffEvent.class );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getSourceType()
+   */
+  public SOURCETYPE getSourceType( )
+  {
+    final String value = (String) getFeature().getProperty( QNAME_PROP_SOURCE_TYPE );
+    return SOURCETYPE.valueOf( value );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#setSourceType(org.kalypso.model.flood.binding.ITinReference.SOURCETYPE)
+   */
+  public void setSourceType( SOURCETYPE type )
+  {
+    getFeature().setProperty( QNAME_PROP_SOURCE_TYPE, type.name() );
   }
 
 }

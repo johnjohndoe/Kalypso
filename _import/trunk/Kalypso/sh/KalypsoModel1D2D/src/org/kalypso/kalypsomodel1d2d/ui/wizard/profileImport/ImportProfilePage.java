@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -101,7 +101,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   private File m_file;
 
   private String m_filePath;
-  
+
   private String m_crs;
 
   /**
@@ -110,7 +110,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   public ImportProfilePage( String pageName )
   {
     super( pageName );
-    setDescription( Messages.getString("ImportProfilePage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ImportProfilePage.0" ) ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -122,7 +122,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   public ImportProfilePage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( Messages.getString("ImportProfilePage.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ImportProfilePage.1" ) ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -146,14 +146,14 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     createFileGroup( m_topComposite );
 
     Label crsLabel = new Label( m_group, SWT.NONE );
-    crsLabel.setText( Messages.getString("ImportProfilePage.2") ); //$NON-NLS-1$
+    crsLabel.setText( Messages.getString( "ImportProfilePage.2" ) ); //$NON-NLS-1$
 
     m_checkCRS = new Combo( m_group, SWT.NONE );
 
     availableCoordinateSystems( m_checkCRS );
     try
     {
-      String defaultCS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+      String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem().getName();
       m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
     }
     catch( RemoteException e1 )
@@ -161,7 +161,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
       e1.printStackTrace();
     }
 
-    m_checkCRS.setToolTipText( Messages.getString("ImportProfilePage.3") ); //$NON-NLS-1$
+    m_checkCRS.setToolTipText( Messages.getString( "ImportProfilePage.3" ) ); //$NON-NLS-1$
     GridData data = new GridData( SWT.FILL, SWT.FILL, false, false );
     m_checkCRS.setLayoutData( data );
     m_checkCRS.addSelectionListener( this );
@@ -196,9 +196,9 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     topGroupData.horizontalAlignment = GridData.FILL;
     m_group.setLayout( topGroupLayout );
     m_group.setLayoutData( topGroupData );
-    m_group.setText( Messages.getString("ImportProfilePage.4") ); //$NON-NLS-1$
+    m_group.setText( Messages.getString( "ImportProfilePage.4" ) ); //$NON-NLS-1$
     m_sourceFileLabel = new Label( m_group, SWT.NONE );
-    m_sourceFileLabel.setText( Messages.getString("ImportProfilePage.5") ); //$NON-NLS-1$
+    m_sourceFileLabel.setText( Messages.getString( "ImportProfilePage.5" ) ); //$NON-NLS-1$
 
     // Set width of source path field
     GridData data0 = new GridData( GridData.FILL_HORIZONTAL );
@@ -210,7 +210,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_sourceFileText.addModifyListener( this );
 
     m_browseButton = new Button( m_group, SWT.PUSH );
-    m_browseButton.setText( Messages.getString("ImportProfilePage.6") ); //$NON-NLS-1$
+    m_browseButton.setText( Messages.getString( "ImportProfilePage.6" ) ); //$NON-NLS-1$
     m_browseButton.setLayoutData( new GridData( GridData.END ) );
     m_browseButton.addSelectionListener( this );
 
@@ -230,10 +230,10 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     }
     else
     {
-      setErrorMessage( Messages.getString("ImportProfilePage.7") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "ImportProfilePage.7" ) ); //$NON-NLS-1$
       pageComplete = false;
     }
-    
+
     // CoordinateSystem
     if( checkCRS( m_checkCRS.getText() ) )
     {
@@ -241,7 +241,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     }
     else
     {
-      setErrorMessage( Messages.getString("ImportProfilePage.8") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "ImportProfilePage.8" ) ); //$NON-NLS-1$
       pageComplete = false;
     }
 
@@ -263,7 +263,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
       {
         Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
         final FileDialog dialog = new FileDialog( shell, SWT.OPEN );
-        dialog.setText( Messages.getString("ImportProfilePage.9") ); //$NON-NLS-1$
+        dialog.setText( Messages.getString( "ImportProfilePage.9" ) ); //$NON-NLS-1$
         dialog.setFilterExtensions( new String[] { "*.txt", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
         dialog.open();
 

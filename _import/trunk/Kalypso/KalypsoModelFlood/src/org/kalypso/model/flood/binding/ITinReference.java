@@ -58,6 +58,43 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public interface ITinReference extends IFeatureWrapper2
 {
+  enum SOURCETYPE
+  {
+    gml
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "GML";
+      }
+    },
+    hmo
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "HMO-Datei";
+      }
+    },
+    shape
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "ESRI Shape-Datei";
+      }
+    }
+  }
+
   public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "TinReference" );
 
   public final static QName QNAME_PROP_MIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "min" );
@@ -69,6 +106,8 @@ public interface ITinReference extends IFeatureWrapper2
   public final static QName QNAME_PROP_SOURCE_PATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourcePath" );
 
   public final static QName QNAME_PROP_SOURCE_DATE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceDate" );
+
+  public final static QName QNAME_PROP_SOURCE_TYPE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceType" );
 
   public final static QName QNAME_PROP_TIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tin" );
 
@@ -88,11 +127,15 @@ public interface ITinReference extends IFeatureWrapper2
 
   public URL getSourceLocation( );
 
+  public SOURCETYPE getSourceType( );
+
   public void setSourceFeaturePath( final GMLXPath path );
 
   public GMLXPath getSourceFeaturePath( );
 
   public void setUpdateDate( Date date );
+
+  public void setSourceType( final SOURCETYPE type );
 
   public Date getUpdateDate( );
 

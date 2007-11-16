@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.ui.map;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,17 +56,29 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.model.flood.binding.ITinReference;
+import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
+import org.kalypsodeegree_impl.model.cs.Adapters;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.cs.CS_CoordinateSystem;
+
+import com.bce.gis.io.hmo.HMOReader;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * Updates the data of some tin-references. I.e. re-reads the original tin and copies the data into the reference.
@@ -112,45 +128,99 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
     /* read source data */
     monitor.subTask( "lade Eingangsdaten" );
+
     final URL sourceLocation = ref.getSourceLocation();
-    final GMLXPath sourcePath = ref.getSourceFeaturePath();
-
-    // REMARK 1: loads the source tin directly into memory.... will bring performance problems...
-    final GMLWorkspace sourceWorkspace = GmlSerializer.createGMLWorkspace( sourceLocation, null );
-
+    final SOURCETYPE sourceType = ref.getSourceType();
     final Date sourceDate = new Date();
 
-    final Object sourceObject = GMLXPathUtilities.query( sourcePath, sourceWorkspace );
-    if( sourceObject == null || !(sourceObject instanceof GM_TriangulatedSurface) )
-    {
-      final String msg = String.format( "Zielpfad (%s) referenziert kein GM_TriangulatedSurface: %s", sourcePath, sourceObject );
-      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
-    }
-
-    final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) sourceObject;
-
-    ProgressUtilities.worked( monitor, 33 );
-
-    /* update target data */
-    monitor.subTask( "kopiere Eingangsdaten" );
-    ref.setTin( null ); // reset tin to null before cloning the source in order to free some memory
-
-    // REMARK 2: cloning the complete tin will result in performance problems...
-    final GM_TriangulatedSurface clonedSurface = (GM_TriangulatedSurface) surface.clone();
-    ProgressUtilities.worked( monitor, 33 );
-
-    monitor.subTask( "aktualisiere Metadaten (min/max/...)" );
     final MinMaxSurfacePatchVisitor<GM_Triangle> minmaxVisitor = new MinMaxSurfacePatchVisitor<GM_Triangle>();
-    clonedSurface.acceptSurfacePatches( clonedSurface.getEnvelope(), minmaxVisitor );
+    String desc;
 
-    final String desc = String.format( "Daten importiert:%nHerkunft: %s # %s%nDatum: %3$te.%3$tm.%3$tY %3$tk:%3$tM", sourceLocation.toExternalForm(), sourcePath.toString(), sourceDate );
+    switch( sourceType )
+    {
+      case gml:
 
-    ref.setDescription( desc );
-    ref.setMin( minmaxVisitor.getMin() );
-    ref.setMax( minmaxVisitor.getMax() );
-    ref.setUpdateDate( sourceDate );
-    ref.setTin( clonedSurface );
+        final GMLXPath sourcePath = ref.getSourceFeaturePath();
 
+        // REMARK 1: loads the source tin directly into memory.... will bring performance problems...
+        final GMLWorkspace sourceWorkspace = GmlSerializer.createGMLWorkspace( sourceLocation, null );
+
+        final Object sourceObject = GMLXPathUtilities.query( sourcePath, sourceWorkspace );
+        if( sourceObject == null || !(sourceObject instanceof GM_TriangulatedSurface) )
+        {
+          final String msg = String.format( "Zielpfad (%s) referenziert kein GM_TriangulatedSurface: %s", sourcePath, sourceObject );
+          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+        }
+
+        final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) sourceObject;
+
+        ProgressUtilities.worked( monitor, 33 );
+
+        /* update target data */
+        monitor.subTask( "kopiere Eingangsdaten" );
+        ref.setTin( null ); // reset tin to null before cloning the source in order to free some memory
+
+        // REMARK 2: cloning the complete tin will result in performance problems...
+        final GM_TriangulatedSurface clonedSurface = (GM_TriangulatedSurface) surface.clone();
+        ProgressUtilities.worked( monitor, 33 );
+
+        monitor.subTask( "aktualisiere Metadaten (min/max/...)" );
+        clonedSurface.acceptSurfacePatches( clonedSurface.getEnvelope(), minmaxVisitor );
+
+        desc = String.format( "Daten importiert:%nHerkunft: %s # %s%nDatum: %3$te.%3$tm.%3$tY %3$tk:%3$tM", sourceLocation.toExternalForm(), sourcePath.toString(), sourceDate );
+
+        ref.setDescription( desc );
+        ref.setMin( minmaxVisitor.getMin() );
+        ref.setMax( minmaxVisitor.getMax() );
+        ref.setUpdateDate( sourceDate );
+        ref.setTin( clonedSurface );
+
+        break;
+
+      case hmo:
+
+        CS_CoordinateSystem crs = getCoordinateSytem( sourceLocation.getQuery() );
+        TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( crs );
+
+        final URL hmoLocation = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() );
+
+        final HMOReader hmoReader = new HMOReader( new GeometryFactory() );
+        final Reader r = new InputStreamReader( hmoLocation.openStream() );
+        final LinearRing[] rings = hmoReader.read( r );
+
+        for( LinearRing ring : rings )
+        {
+          final List<GM_Point> pointList = new LinkedList<GM_Point>();
+          for( int i = 0; i < ring.getNumPoints() - 1; i++ )
+          {
+            GM_Object object = JTSAdapter.wrap( ring.getPointN( i ) );
+
+            pointList.add( (GM_Point) object );
+          }
+          eater.add( pointList );
+        }
+
+        final GM_TriangulatedSurface gmSurface = eater.getSurface();
+
+        monitor.subTask( "aktualisiere Metadaten (min/max/...)" );
+
+        gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor );
+
+        desc = String.format( "Daten importiert:%nHerkunft: %s %nDatum: %2$te.%2$tm.%2$tY %2$tk:%2$tM", sourceLocation.toExternalForm(), sourceDate );
+
+        ref.setDescription( desc );
+        ref.setMin( minmaxVisitor.getMin() );
+        ref.setMax( minmaxVisitor.getMax() );
+        ref.setUpdateDate( sourceDate );
+        ref.setTin( gmSurface );
+
+        break;
+
+      case shape:
+        throw new UnsupportedOperationException( "FloodModeller: Wasserspiegelimport aus Shape-Dateien wird noch nicht unterstützt." );
+        // break;
+
+    }
     ProgressUtilities.worked( monitor, 33 );
 
     /* Fire modell event as feature was changed */
@@ -160,6 +230,12 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     workspace.fireModellEvent( event );
 
     monitor.done();
+  }
+
+  protected static CS_CoordinateSystem getCoordinateSytem( final String crsName )
+  {
+    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+    return Adapters.getDefault().export( csFac.getCSByName( crsName ) );
   }
 
 }

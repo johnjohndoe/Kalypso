@@ -56,6 +56,7 @@ import org.kalypso.core.gml.provider.IGmlSource;
 import org.kalypso.core.gml.provider.IGmlSourceRunnableWithProgress;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.ITinReference;
+import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
 import org.kalypso.model.flood.ui.map.UpdateTinsOperation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -111,6 +112,7 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
       tinRef.setDescription( source.getDescription() );
       tinRef.setSourceLocation( source.getLocation() );
       tinRef.setSourceFeaturePath( source.getPath() );
+      tinRef.setSourceType( typeForSource( source ) );
 
       tinRefs[i] = tinRef;
       changedFeatures[i] = tinRef.getWrappedFeature();
@@ -133,6 +135,22 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
     updateOp.execute( progress.newChild( 60 ) );
 
     return Status.OK_STATUS;
+  }
+
+  private SOURCETYPE typeForSource( IGmlSource source )
+  {
+    final String file = source.getLocation().getPath().toLowerCase();
+    if( file.endsWith( ".hmo" ) )
+      return SOURCETYPE.hmo;
+
+    if( file.endsWith( ".gml" ) )
+      return SOURCETYPE.gml;
+
+    if( file.endsWith( ".shp" ) )
+      return SOURCETYPE.shape;
+
+    // In doubt, probably its an gml
+    return SOURCETYPE.gml;
   }
 
   /**

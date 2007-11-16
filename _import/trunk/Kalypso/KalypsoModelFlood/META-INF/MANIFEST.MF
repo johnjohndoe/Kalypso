@@ -18,5 +18,6 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.model1d2d,
  org.kalypso.contribs.ogc31,
  org.eclipse.ui.forms,
+ org.kalypso.gml.processes,
  org.kalypso.risk
 Eclipse-LazyStart: true

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
-	xmlns:flood="org.kalypso.model.flood" xmlns:cov="org.kalypso.gml.common.coverage"
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:flood="org.kalypso.model.flood" xmlns:cov="org.kalypso.gml.common.coverage"
 	targetNamespace="org.kalypso.model.flood" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -25,8 +24,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="polygonMember" type="flood:FloodPolygonPropertyType" minOccurs="0"
-						maxOccurs="unbounded">
+					<element name="polygonMember" type="flood:FloodPolygonPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Polygon</label>
@@ -35,12 +33,8 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="eventMember" type="flood:RunoffEventPropertyType" minOccurs="0"
-						maxOccurs="unbounded">
-					</element>
-					<element name="coveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1"
-						maxOccurs="1">
-					</element>
+					<element name="eventMember" type="flood:RunoffEventPropertyType" minOccurs="0" maxOccurs="unbounded"></element>
+					<element name="coveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1"></element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -81,8 +75,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="tinMember" type="flood:TinReferencePropertyType" minOccurs="0"
-						maxOccurs="unbounded">
+					<element name="tinMember" type="flood:TinReferencePropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<name><![CDATA[Wasserspiegellagen]]></name>
@@ -91,8 +84,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="resultCoveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1"
-						maxOccurs="1">
+					<element name="resultCoveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1">
 						<annotation>
 							<documentation xml:lang="de">
 								<name><![CDATA[Fließtiefen]]></name>
@@ -181,6 +173,22 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="sourceType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label><![CDATA[Quelldateityp]]></label>
+								<tooltip><![CDATA[Datentyp der Quelldatei]]></tooltip>
+								<description><![CDATA[Datentyp der Quelldatei]]></description>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="gml"></enumeration>
+								<enumeration value="hmo"></enumeration>
+								<enumeration value="shape"></enumeration>
+							</restriction>
+						</simpleType>
+					</element>
 					<element name="tin" type="flood:TriangulatedSurfacePropertyType">
 						<annotation>
 							<documentation xml:lang="de">
@@ -207,8 +215,7 @@
 		</sequence>
 	</complexType>
 
-	<element name="AbstractFloodPolygon" type="flood:AbstractFloodPolygonType" abstract="true"
-		substitutionGroup="gml:_Feature">
+	<element name="AbstractFloodPolygon" type="flood:AbstractFloodPolygonType" abstract="true" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name><![CDATA[Polygon]]></name>
@@ -232,16 +239,13 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="eventMember" type="flood:RunoffEventReferencePropertyType" minOccurs="0"
-						maxOccurs="unbounded">
-					</element>
+					<element name="eventMember" type="flood:RunoffEventReferencePropertyType" minOccurs="0" maxOccurs="unbounded"></element>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 
-	<element name="FloodExtrapolationPolygon" type="flood:FloodExtrapolationPolygonType"
-		substitutionGroup="flood:AbstractFloodPolygon">
+	<element name="FloodExtrapolationPolygon" type="flood:FloodExtrapolationPolygonType" substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
 			<documentation xml:lang="de">
 				<name><![CDATA[Extrapolationspolygon]]></name>
@@ -255,8 +259,8 @@
 	<complexType name="FloodExtrapolationPolygonType">
 		<annotation>
 			<appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty kapp:functionId="org.kalypso.gmlschema.functionProperty.connectCentersByLine"
-					kapp:property="flood:connectorLine" kapp:isVirtual="true" kapp:valueType="gml:LineStringPropertyType">
+				<kapp:functionProperty kapp:functionId="org.kalypso.gmlschema.functionProperty.connectCentersByLine" kapp:property="flood:connectorLine" kapp:isVirtual="true"
+					kapp:valueType="gml:LineStringPropertyType">
 					<kapp:parameter>
 						<kapp:name>geometry1Property</kapp:name>
 						<kapp:value>{org.kalypso.model.flood}referencePoint</kapp:value>

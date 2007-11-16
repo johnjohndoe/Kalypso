@@ -61,6 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
+import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -71,11 +72,11 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 {
   private final GM_TriangulatedSurface m_surface;
 
-  private final ResultType.TYPE m_parameter;
+  private ResultType.TYPE m_parameter = null;
 
-  private final GMLWorkspace m_workspace;
+  private GMLWorkspace m_workspace = null;
 
-  private final File m_tinResultFile;
+  private File m_tinResultFile = null;
 
   public TriangulatedSurfaceTriangleEater( final File tinResultFile, final GMLWorkspace workspace, final GM_TriangulatedSurface surface, final ResultType.TYPE parameter )
   {
@@ -83,6 +84,11 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     m_parameter = parameter;
     m_workspace = workspace;
     m_tinResultFile = tinResultFile;
+  }
+
+  public TriangulatedSurfaceTriangleEater( CS_CoordinateSystem crs ) throws GM_Exception
+  {
+    m_surface = new GM_TriangulatedSurface_Impl( crs );
   }
 
   /**
@@ -219,7 +225,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
    */
   public void finished( )
   {
-    if( m_surface.size() == 0 )
+    if( m_surface.size() == 0 || m_tinResultFile == null || m_workspace == null )
       return;
 
     final String name = m_tinResultFile.getPath();
@@ -300,5 +306,10 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 
     if( gmTriangle != null )
       m_surface.add( gmTriangle );
+  }
+
+  public GM_TriangulatedSurface getSurface( )
+  {
+    return m_surface;
   }
 }

@@ -314,4 +314,15 @@
             name="org.kalypso.model.flood.ui.map.EventFilterExpression">
       </function>
    </extension>
+   <extension
+         point="org.kalypso.core.gmlSourceProvider">
+      <provider
+            class="org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider"
+            id="org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider"
+            label="Externe Datei (.hmo, .shp, .gml)">
+         <category
+               id="org.kalypso.core.tin.waterlevelDISABLED">
+         </category>
+      </provider>
+   </extension>
 </plugin>
