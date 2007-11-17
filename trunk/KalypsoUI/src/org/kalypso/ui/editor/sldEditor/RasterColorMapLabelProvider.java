@@ -40,69 +40,67 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.sldEditor;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
  * @author Thomas Jung
+ * @author Gernot Belger
  */
-public class RasterColorMapLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider
+public class RasterColorMapLabelProvider extends LabelProvider implements ITableLabelProvider
 {
   private final TableViewer m_viewer;
-
-  private final Map<java.awt.Color, Color> m_colorStorage = new HashMap<java.awt.Color, Color>();
 
   public RasterColorMapLabelProvider( final TableViewer viewer )
   {
     m_viewer = viewer;
-  }
 
-  /**
-   * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    for( Color color : m_colorStorage.values() )
+    viewer.getControl().addListener( SWT.PaintItem, new Listener()
     {
-      if( color != null )
-        color.dispose();
-    }
-    super.dispose();
+      /**
+       * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+       */
+      public void handleEvent( final Event event )
+      {
+        final Object element = event.item.getData();
+        paint( event, element );
+      }
+    } );
+
   }
 
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
-  public Image getColumnImage( Object element, int columnIndex )
+  public Image getColumnImage( final Object element, final int columnIndex )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
-  public String getColumnText( Object element, int columnIndex )
+  public String getColumnText( final Object element, final int columnIndex )
   {
     final ColorMapEntry entry = (ColorMapEntry) element;
 
-    RasterColorMapContentProvider.PROPS prop = RasterColorMapContentProvider.PROPS.values()[columnIndex];
+    final RasterColorMapContentProvider.PROPS prop = RasterColorMapContentProvider.PROPS.values()[columnIndex];
 
     switch( prop )
     {
 
       case quantity:
-        return Double.toString( entry.getQuantity() );
+        // TODO: fixed scale is not so nice... maybe calculate scale automatically from existing values
+        return String.format( "%.2f", entry.getQuantity() );
 
       case label:
         return entry.getLabel();
@@ -119,14 +117,14 @@ public class RasterColorMapLabelProvider extends LabelProvider implements ITable
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
   @Override
-  public boolean isLabelProperty( Object element, String property )
+  public boolean isLabelProperty( final Object element, final String property )
   {
     try
     {
       RasterColorMapContentProvider.PROPS.valueOf( property );
       return true;
     }
-    catch( RuntimeException e )
+    catch( final RuntimeException e )
     {
       e.printStackTrace();
       return false;
@@ -134,36 +132,27 @@ public class RasterColorMapLabelProvider extends LabelProvider implements ITable
 
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
-   */
-  public Color getBackground( Object element, int columnIndex )
+  protected void paint( final Event event, final Object element )
   {
-    final ColorMapEntry entry = (ColorMapEntry) element;
-
-    RasterColorMapContentProvider.PROPS prop = RasterColorMapContentProvider.PROPS.values()[columnIndex];
+    final Object property = m_viewer.getColumnProperties()[event.index];
+    final RasterColorMapContentProvider.PROPS prop = RasterColorMapContentProvider.PROPS.valueOf( property.toString() );
 
     switch( prop )
     {
       case quantity:
-        return null;
+        return;
 
       case label:
-        return null;
+        return;
 
       case color:
       {
-        java.awt.Color stroke = entry.getColor();
-        Color color = m_colorStorage.get( stroke );
-        if( color == null )
-        {
-          color = SWT_AWT_Utilities.getSWTFromAWT( stroke, m_viewer.getControl().getDisplay() );
+        final java.awt.Color stroke = ((ColorMapEntry) element).getColor();
+        final double opacity = ((ColorMapEntry) element).getOpacity();
 
-          // save the color in a Map in order to be able to dispose all created colors
-          m_colorStorage.put( stroke, color );
+        drawRect( event, stroke, opacity );
 
-        }
-        return color;
+        return;
       }
 
       default:
@@ -171,13 +160,21 @@ public class RasterColorMapLabelProvider extends LabelProvider implements ITable
     }
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
-   */
-  public Color getForeground( Object element, int columnIndex )
+  public void drawRect( final Event event, final java.awt.Color color, final double opacity )
   {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    final GC gc = event.gc;
 
+    final Color currentColor = gc.getBackground();
+    final int currentAlpha = gc.getAlpha();
+
+    final Color newColor = SWT_AWT_Utilities.getSWTFromAWT( color, m_viewer.getControl().getDisplay() );
+
+    gc.setBackground( newColor );
+    gc.setAlpha( (int) (opacity * 255) );
+
+    gc.fillRectangle( event.getBounds() );
+
+    gc.setBackground( currentColor );
+    gc.setAlpha( currentAlpha );
+  }
 }
