@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
-import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -57,18 +54,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * @author Gernot Belger
  */
-public class ThemeInfoWidget extends AbstractWidget
+public class ThemeInfoWidget extends AbstractThemeInfoWidget
 {
   private final ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
   {
@@ -78,17 +70,13 @@ public class ThemeInfoWidget extends AbstractWidget
     }
   };
 
-  private final List<IKalypsoTheme> m_themes = new ArrayList<IKalypsoTheme>();
-
-  private final ToolTipRenderer m_tooltipRenderer = new ToolTipRenderer();
-
-  private Point m_point = null;
-
   private ISelectionProvider m_selectionProvider = null;
 
   public ThemeInfoWidget( )
   {
     super( "Quick-Info", "Zeigt ortsbezogene Informationen zu den selektierten Themen an" );
+
+    setNoThemesTooltip( "<selektieren Sie Themen in der Gliederung>" );
   }
 
   public ThemeInfoWidget( final String name, final String toolTip )
@@ -143,72 +131,9 @@ public class ThemeInfoWidget extends AbstractWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
-  @Override
-  public void moved( final Point p )
-  {
-    if( getMapPanel() == null )
-      return;
-
-    m_point = p;
-
-    // May happen, if called from selection change
-    if( m_point == null )
-      return;
-
-    final GM_Point location = MapUtilities.transform( getMapPanel(), p );
-    final GM_Position position = location.getPosition();
-
-    final String info;
-    if( m_themes.size() == 0 )
-      info = "<selektieren Sie Themen in der Gliederung>";
-    else
-    {
-      final StringBuffer sb = new StringBuffer();
-      final Formatter formatter = new Formatter( sb );
-
-      final String headInfo = m_themes.size() == 1 ? "" : "'%s': ";
-
-      for( final IKalypsoTheme theme : m_themes )
-      {
-        formatter.format( headInfo, theme.getName() );
-
-        final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo) theme.getAdapter( IKalypsoThemeInfo.class );
-        if( themeInfo == null )
-          formatter.format( "keine Information" );
-        else
-          themeInfo.appendQuickInfo( formatter, position );
-
-        formatter.format( "%n" );
-      }
-
-      formatter.close();
-      info = sb.toString().trim();
-    }
-
-    final String tooltip = info.length() > 0 ? info : null;
-    m_tooltipRenderer.setTooltip( tooltip );
-
-    getMapPanel().repaint();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
-  @Override
-  public void paint( final Graphics g )
-  {
-    if( m_point == null )
-      return;
-
-    m_tooltipRenderer.paintToolTip( m_point, g, getMapPanel().getBounds() );
-  }
-
   protected void handleSelectionChanged( final ISelection selection )
   {
-    m_themes.clear();
+    final List<IKalypsoTheme> m_themes = new ArrayList<IKalypsoTheme>();
 
     final IStructuredSelection sel = (IStructuredSelection) selection;
     final Object[] selectedElements = sel.toArray();
@@ -218,8 +143,10 @@ public class ThemeInfoWidget extends AbstractWidget
         m_themes.add( (IKalypsoTheme) object );
     }
 
+    setThemes( m_themes.toArray( new IKalypsoTheme[m_themes.size()] ) );
+
     if( getMapPanel() != null )
-      moved( m_point );
+      moved( getCurrentPoint() );
   }
 
 }
