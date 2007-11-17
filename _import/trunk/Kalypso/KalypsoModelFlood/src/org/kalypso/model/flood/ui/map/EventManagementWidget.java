@@ -128,11 +128,13 @@ import org.kalypso.model.flood.ui.map.operations.ImportTinOperation;
 import org.kalypso.model.flood.ui.map.operations.RemoveEventOperation;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
@@ -167,6 +169,10 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
+  private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( "", "" )
+  {
+  };
+
   private TreeViewer m_eventViewer;
 
   protected SzenarioDataProvider m_dataProvider;
@@ -184,6 +190,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   public EventManagementWidget( )
   {
     super( "Ereignisse verwalten", "Ereignisse verwalten" );
+
+    m_infoWidget.setNoThemesTooltip( "<kein Ereignis ausgewählt>" );
   }
 
   /**
@@ -215,6 +223,19 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     {
       e.printStackTrace();
     }
+
+    m_infoWidget.activate( commandPoster, mapPanel );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    super.finish();
+
+    m_infoWidget.finish();
   }
 
   /**
@@ -352,7 +373,14 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
         featureComposite.disposeControl();
 
-        updateStylePanel( m_colorMapTableViewer );
+        final IRunoffEvent runoffEvent = getCurrentEvent();
+        final IKalypsoTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
+        if( runoffEventTheme == null )
+          m_infoWidget.setThemes( null );
+        else
+          m_infoWidget.setThemes( new IKalypsoTheme[] { runoffEventTheme } );
+
+        updateStylePanel( runoffEvent );
 
         if( m_treeSelection != null && m_treeSelection.length > 0 )
         {
@@ -386,7 +414,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     // We are reusing images of KalypsoGmlUi here
     final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.STYLE_EDIT );
 
-    Action action = new Action( "Farbtabelle anpassen", generateID )
+    final Action action = new Action( "Farbtabelle anpassen", generateID )
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -447,10 +475,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         {
           try
           {
-            final String sldXML = m_sld.exportAsXML();
-            final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+            final String charset = m_styleFile.getCharset();
 
-            m_styleFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, true, new NullProgressMonitor() );
+            final String sldXML = m_sld.exportAsXML();
+            final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML;
+
+            m_styleFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), false, true, new NullProgressMonitor() );
           }
           catch( final CoreException e )
           {
@@ -467,19 +497,18 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   /**
    * update the style panel with the {@link PolygonColorMap}
    */
-  protected void updateStylePanel( final TableViewer viewer )
+  protected void updateStylePanel( final IRunoffEvent event )
   {
-    final IRunoffEvent event = getCurrentEvent();
     if( event == null )
     {
-      viewer.setInput( StatusUtilities.createInfoStatus( "Keine Ereignis ausgewählt. Wählen Sie ein Ereignis in der ereignisliste, um die Darstellung zu editieren." ) );
+      m_colorMapTableViewer.setInput( StatusUtilities.createInfoStatus( "Keine Ereignis ausgewählt. Wählen Sie ein Ereignis in der ereignisliste, um die Darstellung zu editieren." ) );
       return;
     }
 
     m_styleFile = getSldFile( event );
     final PolygonColorMap colorMap = findColorMap();
 
-    viewer.setInput( colorMap );
+    m_colorMapTableViewer.setInput( colorMap );
   }
 
   private PolygonColorMap findColorMap( )
@@ -931,6 +960,17 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   }
 
   /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
+   */
+  @Override
+  public void moved( final java.awt.Point p )
+  {
+    super.moved( p );
+
+    m_infoWidget.moved( p );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
   @Override
@@ -938,30 +978,32 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     super.paint( g );
 
-    if( m_treeSelection == null )
-      return;
-
-    for( final Object selectedObject : m_treeSelection )
+    if( m_treeSelection != null )
     {
-      if( selectedObject instanceof Feature )
+      for( final Object selectedObject : m_treeSelection )
       {
-        final Object adaptedObject = adaptToKnownObject( selectedObject );
-
-        if( adaptedObject instanceof ITinReference )
-          paintEnvelope( g, ((ITinReference) adaptedObject).getWrappedFeature().getEnvelope() );
-        else if( adaptedObject instanceof IRunoffEvent )
+        if( selectedObject instanceof Feature )
         {
-          final IFeatureWrapperCollection<ITinReference> tins = ((IRunoffEvent) adaptedObject).getTins();
-          paintEnvelope( g, tins.getWrappedList().getBoundingBox() );
+          final Object adaptedObject = adaptToKnownObject( selectedObject );
 
-          for( final ITinReference tinReference : tins )
-            paintEnvelope( g, tinReference.getWrappedFeature().getEnvelope() );
+          if( adaptedObject instanceof ITinReference )
+            paintEnvelope( g, ((ITinReference) adaptedObject).getWrappedFeature().getEnvelope() );
+          else if( adaptedObject instanceof IRunoffEvent )
+          {
+            final IFeatureWrapperCollection<ITinReference> tins = ((IRunoffEvent) adaptedObject).getTins();
+            paintEnvelope( g, tins.getWrappedList().getBoundingBox() );
+
+            for( final ITinReference tinReference : tins )
+              paintEnvelope( g, tinReference.getWrappedFeature().getEnvelope() );
+          }
+
+          final GM_Envelope envelope = envelopeForSelected( selectedObject );
+          paintEnvelope( g, envelope );
         }
-
-        final GM_Envelope envelope = envelopeForSelected( selectedObject );
-        paintEnvelope( g, envelope );
       }
     }
+
+    m_infoWidget.paint( g );
   }
 
   private void paintEnvelope( final Graphics g, final GM_Envelope envelope )
