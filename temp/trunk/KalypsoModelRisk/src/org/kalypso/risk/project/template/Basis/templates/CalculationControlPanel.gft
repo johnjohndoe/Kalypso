@@ -94,31 +94,6 @@
 			</gft:table>
 		</gft:group>
 		
-		<!-- 
-		<gft:group text="Administration units" style="0">
-			<gft:gridData horizontalSpan="1" minimumHeight="50"
-				horizontalAlignment="GridData.FILL"
-				verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
-				grabExcessVerticalSpace="true" />
-			<gft:gridLayout numColumns="1" horizontalSpacing="5" />
-			<gft:table property="krrcm:administrationUnitMember"
-				style="SWT.NONE">
-				<gft:gridData verticalAlignment="GridData.FILL"
-					heightHint="50" grabExcessVerticalSpace="true"
-					grabExcessHorizontalSpace="true" />
-				<ns1:gistableview>
-					<ns1:layer>
-						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="name" width="350" />
-						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="description" width="200" />
-						<ns1:sort propertyName="name" />
-					</ns1:layer>
-				</ns1:gistableview>
-			</gft:table>
-		</gft:group>
-		 -->
-
 	</gft:view>
 
 

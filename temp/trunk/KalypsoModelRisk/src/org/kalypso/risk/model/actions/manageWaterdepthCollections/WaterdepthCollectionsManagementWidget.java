@@ -138,7 +138,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
 
   public WaterdepthCollectionsManagementWidget( )
   {
-    super( Messages.getString("WaterdepthCollectionsManagementWidget.0"), Messages.getString("WaterdepthCollectionsManagementWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "WaterdepthCollectionsManagementWidget.0" ), Messages.getString( "WaterdepthCollectionsManagementWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     m_buttonsMap = new HashMap<String, Button>();
   }
 
@@ -239,7 +239,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     /* Hook Events */
     m_eventViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -252,15 +252,15 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
             final Feature feature = (Feature) m_treeSelection[0];
             if( feature.getAdapter( ICoverage.class ) != null )
             {
-              m_buttonsMap.get( Messages.getString("WaterdepthCollectionsManagementWidget.3") ).setEnabled( false ); //$NON-NLS-1$
-              m_buttonsMap.get( Messages.getString("WaterdepthCollectionsManagementWidget.4") ).setEnabled( false ); //$NON-NLS-1$
-              m_buttonsMap.get( Messages.getString("WaterdepthCollectionsManagementWidget.5") ).setEnabled( false ); //$NON-NLS-1$
+              m_buttonsMap.get( "ADD" ).setEnabled( false ); //$NON-NLS-1$
+              m_buttonsMap.get( "CHANGE" ).setEnabled( false ); //$NON-NLS-1$
+              m_buttonsMap.get( "REMOVE" ).setEnabled( false ); //$NON-NLS-1$
             }
             if( feature.getAdapter( IAnnualCoverageCollection.class ) != null )
             {
-              m_buttonsMap.get( Messages.getString("WaterdepthCollectionsManagementWidget.6") ).setEnabled( true ); //$NON-NLS-1$
-              m_buttonsMap.get( Messages.getString("WaterdepthCollectionsManagementWidget.7") ).setEnabled( true ); //$NON-NLS-1$
-              m_buttonsMap.get( Messages.getString("WaterdepthCollectionsManagementWidget.8") ).setEnabled( true ); //$NON-NLS-1$
+              m_buttonsMap.get( "ADD" ).setEnabled( true ); //$NON-NLS-1$
+              m_buttonsMap.get( "CHANGE" ).setEnabled( true ); //$NON-NLS-1$
+              m_buttonsMap.get( "REMOVE" ).setEnabled( true ); //$NON-NLS-1$
             }
           }
         }
@@ -295,7 +295,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     viewer.addFilter( coverageFilter );
 
     if( m_model == null )
-      viewer.setInput( StatusUtilities.createErrorStatus( Messages.getString("WaterdepthCollectionsManagementWidget.9") ) ); //$NON-NLS-1$
+      viewer.setInput( StatusUtilities.createErrorStatus( Messages.getString( "WaterdepthCollectionsManagementWidget.9" ) ) ); //$NON-NLS-1$
     else
     {
       viewer.setInput( m_model.getWrappedFeature().getWorkspace() );
@@ -320,7 +320,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
 
-    final Action addEventAction = new Action( Messages.getString("WaterdepthCollectionsManagementWidget.56"), addEventID )  //$NON-NLS-1$
+    final Action addEventAction = new Action( Messages.getString( "WaterdepthCollectionsManagementWidget.56" ), addEventID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -331,9 +331,9 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         handleAddEvent( event );
       }
     };
-    addEventAction.setDescription( Messages.getString("WaterdepthCollectionsManagementWidget.11") ); //$NON-NLS-1$
+    addEventAction.setDescription( Messages.getString( "WaterdepthCollectionsManagementWidget.11" ) ); //$NON-NLS-1$
 
-    final Action changeAction = new Action( Messages.getString("WaterdepthCollectionsManagementWidget.12"), changeID ) //$NON-NLS-1$
+    final Action changeAction = new Action( Messages.getString( "WaterdepthCollectionsManagementWidget.12" ), changeID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -344,9 +344,9 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         handleChange( event );
       }
     };
-    changeAction.setDescription( Messages.getString("WaterdepthCollectionsManagementWidget.13") ); //$NON-NLS-1$
+    changeAction.setDescription( Messages.getString( "WaterdepthCollectionsManagementWidget.13" ) ); //$NON-NLS-1$
 
-    final Action removeAction = new Action( Messages.getString("WaterdepthCollectionsManagementWidget.14"), removeID ) //$NON-NLS-1$
+    final Action removeAction = new Action( Messages.getString( "WaterdepthCollectionsManagementWidget.14" ), removeID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -357,9 +357,9 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         handleRemove( event );
       }
     };
-    removeAction.setDescription( Messages.getString("WaterdepthCollectionsManagementWidget.15") ); //$NON-NLS-1$
+    removeAction.setDescription( Messages.getString( "WaterdepthCollectionsManagementWidget.15" ) ); //$NON-NLS-1$
 
-    final Action moveUpAction = new Action( Messages.getString("WaterdepthCollectionsManagementWidget.16"), upID ) //$NON-NLS-1$
+    final Action moveUpAction = new Action( Messages.getString( "WaterdepthCollectionsManagementWidget.16" ), upID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -370,9 +370,9 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         handleMove( event, -1 );
       }
     };
-    moveUpAction.setDescription( Messages.getString("WaterdepthCollectionsManagementWidget.17") ); //$NON-NLS-1$
+    moveUpAction.setDescription( Messages.getString( "WaterdepthCollectionsManagementWidget.17" ) ); //$NON-NLS-1$
 
-    final Action moveDownAction = new Action( Messages.getString("WaterdepthCollectionsManagementWidget.18"), downID ) //$NON-NLS-1$
+    final Action moveDownAction = new Action( Messages.getString( "WaterdepthCollectionsManagementWidget.18" ), downID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -383,13 +383,13 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         handleMove( event, 1 );
       }
     };
-    moveDownAction.setDescription( Messages.getString("WaterdepthCollectionsManagementWidget.19") ); //$NON-NLS-1$
+    moveDownAction.setDescription( Messages.getString( "WaterdepthCollectionsManagementWidget.19" ) ); //$NON-NLS-1$
 
-    createButton( toolkit, parent, addEventAction, "ADD" ); 
-    createButton( toolkit, parent, changeAction, "CHANGE" ); 
-    createButton( toolkit, parent, removeAction, "REMOVE" ); 
-    createButton( toolkit, parent, moveUpAction, "MOVEUP" ); 
-    createButton( toolkit, parent, moveDownAction, "MOVEDOWN" ); 
+    createButton( toolkit, parent, addEventAction, "ADD" );
+    createButton( toolkit, parent, changeAction, "CHANGE" );
+    createButton( toolkit, parent, removeAction, "REMOVE" );
+    createButton( toolkit, parent, moveUpAction, "MOVEUP" );
+    createButton( toolkit, parent, moveDownAction, "MOVEDOWN" );
   }
 
   private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action, final String key )
@@ -431,22 +431,22 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
       public String isValid( final String newText )
       {
         if( newText == null || newText.length() == 0 )
-          return Messages.getString("WaterdepthCollectionsManagementWidget.25"); //$NON-NLS-1$
+          return Messages.getString( "WaterdepthCollectionsManagementWidget.25" ); //$NON-NLS-1$
         try
         {
           final int i = Integer.parseInt( newText );
           if( i <= 0 )
-            return Messages.getString("WaterdepthCollectionsManagementWidget.26"); //$NON-NLS-1$
+            return Messages.getString( "WaterdepthCollectionsManagementWidget.26" ); //$NON-NLS-1$
           for( final IAnnualCoverageCollection collection : m_model.getWaterlevelCoverageCollection() )
             if( collection.getReturnPeriod() == i )
-              return Messages.getString("WaterdepthCollectionsManagementWidget.27"); //$NON-NLS-1$
+              return Messages.getString( "WaterdepthCollectionsManagementWidget.27" ); //$NON-NLS-1$
         }
         catch( final NumberFormatException e )
         {
-          return Messages.getString("WaterdepthCollectionsManagementWidget.28"); //$NON-NLS-1$
+          return Messages.getString( "WaterdepthCollectionsManagementWidget.28" ); //$NON-NLS-1$
         }
         if( newText == null || newText.length() == 0 )
-          return Messages.getString("WaterdepthCollectionsManagementWidget.29"); //$NON-NLS-1$
+          return Messages.getString( "WaterdepthCollectionsManagementWidget.29" ); //$NON-NLS-1$
 
         return null;
       }
@@ -454,21 +454,21 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
 
     // show input dialog
     final Shell shell = event.display.getActiveShell();
-    final InputDialog dialog = new InputDialog( shell, Messages.getString("WaterdepthCollectionsManagementWidget.30"), Messages.getString("WaterdepthCollectionsManagementWidget.31"), "", inputValidator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final InputDialog dialog = new InputDialog( shell, Messages.getString( "WaterdepthCollectionsManagementWidget.30" ), Messages.getString( "WaterdepthCollectionsManagementWidget.31" ), "", inputValidator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     if( dialog.open() != Window.OK )
       return;
 
-    final String eventName = Messages.getString("WaterdepthCollectionsManagementWidget.33") + dialog.getValue(); //$NON-NLS-1$
+    final String eventName = "HQ " + dialog.getValue(); //$NON-NLS-1$
     final IRasterDataModel model = m_model;
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), Messages.getString("WaterdepthCollectionsManagementWidget.34") ); //$NON-NLS-1$
-    Assert.isNotNull( wspThemes, Messages.getString("WaterdepthCollectionsManagementWidget.35") ); //$NON-NLS-1$
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQ" ); //$NON-NLS-1$
+    Assert.isNotNull( wspThemes, Messages.getString( "WaterdepthCollectionsManagementWidget.35" ) ); //$NON-NLS-1$
 
     final ICoreRunnableWithProgress operation = new AddCollectionOperation( eventName, Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
       KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, Messages.getString("WaterdepthCollectionsManagementWidget.36"), Messages.getString("WaterdepthCollectionsManagementWidget.37"), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, Messages.getString( "WaterdepthCollectionsManagementWidget.36" ), Messages.getString( "WaterdepthCollectionsManagementWidget.37" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected void handleChange( final Event event )
@@ -478,22 +478,22 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
       public String isValid( final String newText )
       {
         if( newText == null || newText.length() == 0 )
-          return Messages.getString("WaterdepthCollectionsManagementWidget.38"); //$NON-NLS-1$
+          return Messages.getString( "WaterdepthCollectionsManagementWidget.38" ); //$NON-NLS-1$
         try
         {
           final int i = Integer.parseInt( newText );
           if( i <= 0 )
-            return Messages.getString("WaterdepthCollectionsManagementWidget.39"); //$NON-NLS-1$
+            return Messages.getString( "WaterdepthCollectionsManagementWidget.39" ); //$NON-NLS-1$
           for( final IAnnualCoverageCollection collection : m_model.getWaterlevelCoverageCollection() )
             if( collection.getReturnPeriod() == i )
-              return Messages.getString("WaterdepthCollectionsManagementWidget.40"); //$NON-NLS-1$
+              return Messages.getString( "WaterdepthCollectionsManagementWidget.40" ); //$NON-NLS-1$
         }
         catch( final NumberFormatException e )
         {
-          return Messages.getString("WaterdepthCollectionsManagementWidget.41"); //$NON-NLS-1$
+          return Messages.getString( "WaterdepthCollectionsManagementWidget.41" ); //$NON-NLS-1$
         }
         if( newText == null || newText.length() == 0 )
-          return Messages.getString("WaterdepthCollectionsManagementWidget.42"); //$NON-NLS-1$
+          return Messages.getString( "WaterdepthCollectionsManagementWidget.42" ); //$NON-NLS-1$
 
         return null;
       }
@@ -501,20 +501,20 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
 
     // show input dialog
     final Shell shell = event.display.getActiveShell();
-    final InputDialog dialog = new InputDialog( shell, Messages.getString("WaterdepthCollectionsManagementWidget.43"), Messages.getString("WaterdepthCollectionsManagementWidget.44"), "", inputValidator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final InputDialog dialog = new InputDialog( shell, Messages.getString( "WaterdepthCollectionsManagementWidget.43" ), Messages.getString( "WaterdepthCollectionsManagementWidget.44" ), "", inputValidator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     if( dialog.open() != Window.OK )
       return;
 
     final IRasterDataModel model = m_model;
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), Messages.getString("WaterdepthCollectionsManagementWidget.46") ); //$NON-NLS-1$
-    Assert.isNotNull( wspThemes, Messages.getString("WaterdepthCollectionsManagementWidget.47") ); //$NON-NLS-1$
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), Messages.getString( "WaterdepthCollectionsManagementWidget.46" ) ); //$NON-NLS-1$
+    Assert.isNotNull( wspThemes, Messages.getString( "WaterdepthCollectionsManagementWidget.47" ) ); //$NON-NLS-1$
 
     final ICoreRunnableWithProgress operation = new ChangeAnnualityOperation( m_treeSelection[0], Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
       KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, Messages.getString("WaterdepthCollectionsManagementWidget.48"), Messages.getString("WaterdepthCollectionsManagementWidget.49"), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, Messages.getString( "WaterdepthCollectionsManagementWidget.48" ), Messages.getString( "WaterdepthCollectionsManagementWidget.49" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected void handleRemove( final Event event )
@@ -522,7 +522,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     if( m_treeSelection == null )
       return;
 
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), Messages.getString("WaterdepthCollectionsManagementWidget.50") ); //$NON-NLS-1$
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), Messages.getString( "WaterdepthCollectionsManagementWidget.50" ) ); //$NON-NLS-1$
 
     final ICoreRunnableWithProgress operation = new RemoveCollectionOperation( m_treeSelection, m_dataProvider, wspThemes );
 
@@ -531,7 +531,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
       KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, Messages.getString("WaterdepthCollectionsManagementWidget.51"), Messages.getString("WaterdepthCollectionsManagementWidget.52"), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, Messages.getString( "WaterdepthCollectionsManagementWidget.51" ), Messages.getString( "WaterdepthCollectionsManagementWidget.52" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -571,7 +571,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     }
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   protected void handleMove( final Event event, final int step )
   {
     if( m_treeSelection == null )
@@ -601,7 +601,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoRiskPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( event.display.getActiveShell(), Messages.getString("WaterdepthCollectionsManagementWidget.54"), Messages.getString("WaterdepthCollectionsManagementWidget.55"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( event.display.getActiveShell(), Messages.getString( "WaterdepthCollectionsManagementWidget.54" ), Messages.getString( "WaterdepthCollectionsManagementWidget.55" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
