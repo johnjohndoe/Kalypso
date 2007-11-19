@@ -149,7 +149,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     groupGridData.grabExcessVerticalSpace = true;
     group.setLayout( groupGridLayout );
     group.setLayoutData( groupGridData );
-    group.setText( " Database options " );
+    group.setText( Messages.getString("ImportLanduseWizardPage.14") ); //$NON-NLS-1$
 
     final GridData radioLayoutData = new GridData();
     radioLayoutData.horizontalSpan = 3;
@@ -161,14 +161,14 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     m_radioButtons = new Button[3];
     m_radioButtons[0] = new Button( group, SWT.RADIO );
     m_radioButtons[0].setSelection( true );
-    m_radioButtons[0].setText( "Create default parameter database" );
+    m_radioButtons[0].setText( Messages.getString("ImportLanduseWizardPage.15") ); //$NON-NLS-1$
     m_radioButtons[0].setLayoutData( radioLayoutData );
 
     m_radioButtons[1] = new Button( group, SWT.RADIO );
-    m_radioButtons[1].setText( "Import database from another project" );
+    m_radioButtons[1].setText( Messages.getString("ImportLanduseWizardPage.16") ); //$NON-NLS-1$
     m_radioButtons[1].setLayoutData( radioLayoutData );
     m_lblRadioSelection_1 = new Label( group, SWT.NONE );
-    m_lblRadioSelection_1.setText( "      Project name: " );
+    m_lblRadioSelection_1.setText( Messages.getString("ImportLanduseWizardPage.17") ); //$NON-NLS-1$
     m_lblRadioSelection_1.setEnabled( false );
     m_txtExternalProjectPath = new Text( group, SWT.BORDER );
     m_txtExternalProjectPath.setEnabled( false );
@@ -179,17 +179,17 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     btn_existingDatabaseBrowse.setEnabled( false );
 
     m_radioButtons[2] = new Button( group, SWT.RADIO );
-    m_radioButtons[2].setText( "Import predefined database entries" );
+    m_radioButtons[2].setText( Messages.getString("ImportLanduseWizardPage.18") ); //$NON-NLS-1$
     m_radioButtons[2].setLayoutData( radioLayoutData );
     m_lblRadioSelection_21 = new Label( group, SWT.NONE );
-    m_lblRadioSelection_21.setText( "      Damage functions: " );
+    m_lblRadioSelection_21.setText( Messages.getString("ImportLanduseWizardPage.19") ); //$NON-NLS-1$
     m_lblRadioSelection_21.setEnabled( false );
     m_cmbDamageFunctionsSources = new Combo( group, SWT.BORDER | SWT.READ_ONLY );
     m_cmbDamageFunctionsSources.setEnabled( false );
     m_cmbDamageFunctionsSources.setLayoutData( comboLayoutData );
 
     m_lblRadioSelection_22 = new Label( group, SWT.NONE );
-    m_lblRadioSelection_22.setText( "      Asset values: " );
+    m_lblRadioSelection_22.setText( Messages.getString("ImportLanduseWizardPage.20") ); //$NON-NLS-1$
     m_lblRadioSelection_22.setEnabled( false );
     m_cmbAssetValuesSources = new Combo( group, SWT.BORDER | SWT.READ_ONLY );
     m_cmbAssetValuesSources.setEnabled( false );
@@ -336,11 +336,11 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setInput( ResourcesPlugin.getWorkspace().getRoot().getProjects() );
     if( dialog.open() != Window.OK )
-      return "";
+      return ""; //$NON-NLS-1$
     final Object[] result = dialog.getResult();
     if( result.length > 0 )
       return ((IProject) result[0]).getName();
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

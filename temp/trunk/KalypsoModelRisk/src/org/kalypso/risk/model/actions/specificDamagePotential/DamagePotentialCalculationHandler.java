@@ -69,10 +69,10 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+      StatusUtilities.createWarningStatus( Messages.getString("DamagePotentialCalculationHandler.0") ); //$NON-NLS-1$
       return false;
     }
-    final Dialog dialog = new MessageDialog( shell, "Rasterizing specific annual damage", null, "Do you want to calcualte specific annual damage?", MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 );
+    final Dialog dialog = new MessageDialog( shell, Messages.getString("DamagePotentialCalculationHandler.1"), null, Messages.getString("DamagePotentialCalculationHandler.2"), MessageDialog.QUESTION, new String[] { Messages.getString("DamagePotentialCalculationHandler.3"), Messages.getString("DamagePotentialCalculationHandler.4") }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     if( dialog.open() == 0 )
     {
       try
@@ -84,14 +84,14 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
         final IRasterDataModel model = scenarioDataProvider.getModel( IRasterDataModel.class );
         if( model.getWaterlevelCoverageCollection().size() == 0 )
         {
-          MessageDialog.openError( shell, "Error", "No HQ data is loaded. Damage potential cannot be calculated. Please load waterlevel raster data." );
+          MessageDialog.openError( shell, Messages.getString("DamagePotentialCalculationHandler.5"), Messages.getString("DamagePotentialCalculationHandler.6") ); //$NON-NLS-1$ //$NON-NLS-2$
           return null;
         }
         final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
         final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
         if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
         {
-          MessageDialog.openError( shell, "Error", "No asset value classes are properly defined. Damage potential cannot be calculated. Please define asset value classes." );
+          MessageDialog.openError( shell, Messages.getString("DamagePotentialCalculationHandler.7"), Messages.getString("DamagePotentialCalculationHandler.8") ); //$NON-NLS-1$ //$NON-NLS-2$
           return null;
         }
         final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorDataModel.getLandusePolygonCollection();
@@ -103,12 +103,12 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
         {
           public void run( final IProgressMonitor monitor ) throws InterruptedException
           {
-            monitor.beginTask( "Rasterizing specific annual damage...", IProgressMonitor.UNKNOWN );
+            monitor.beginTask( Messages.getString("DamagePotentialCalculationHandler.9"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
             try
             {
               for( final IAnnualCoverageCollection srcAnnualCoverages : model.getWaterlevelCoverageCollection() )
               {
-                monitor.subTask( "Calculating specific annual damage for HQ " + srcAnnualCoverages.getReturnPeriod() );
+                monitor.subTask( Messages.getString("DamagePotentialCalculationHandler.10") + srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
 
                 final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
                 // TODO: check if still ok: propbably delete all underlying grids
@@ -168,7 +168,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                   };
 
                   // TODO: change count to better name...
-                  final String outputFilePath = "raster/output/specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod() + "_part" + count + ".bin"; //$NON-NLS-1$
+                  final String outputFilePath = "raster/output/specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod() + "_part" + count + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
                   final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
                   final File file = new File( ifile.getRawLocation().toPortableString() );
@@ -183,8 +183,8 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 dstAnnualCoverages.setReturnPeriod( srcAnnualCoverages.getReturnPeriod() );
 
                 // create map layer
-                monitor.subTask( Messages.getString( "ImportWaterdepthWizard.10" ) ); //$NON-NLS-1$
-                final String layerName = "Schadenspotential (HQ " + dstAnnualCoverages.getReturnPeriod() + ")";
+                monitor.subTask( "" ); //$NON-NLS-1$
+                final String layerName = Messages.getString("DamagePotentialCalculationHandler.13") + dstAnnualCoverages.getReturnPeriod() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                 // remove themes that are showing invalid coverages
                 final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
                 final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
@@ -196,7 +196,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
 
                 final StyledLayerType layer = new StyledLayerType();
                 layer.setName( layerName );
-                layer.setFeaturePath( "#fid#" + dstAnnualCoverages.getWrappedFeature().getId() + "/coverageMember" ); //$NON-NLS-1$
+                layer.setFeaturePath( "#fid#" + dstAnnualCoverages.getWrappedFeature().getId() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
                 layer.setLinktype( "gml" ); //$NON-NLS-1$
                 layer.setType( "simple" ); //$NON-NLS-1$
                 layer.setVisible( true );
@@ -208,7 +208,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
                 final Property layerPropertyThemeInfoId = new Property();
                 layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-                layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Schadenspotential %.2f €/m²" ); //$NON-NLS-1$
+                layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Schadenspotential %.2f ï¿½/mï¿½" ); //$NON-NLS-1$
                 final List<Property> layerPropertyList = layer.getProperty();
                 layerPropertyList.add( layerPropertyDeletable );
                 layerPropertyList.add( layerPropertyThemeInfoId );

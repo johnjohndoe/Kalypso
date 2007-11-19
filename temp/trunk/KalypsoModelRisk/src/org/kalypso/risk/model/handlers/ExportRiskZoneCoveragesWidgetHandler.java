@@ -36,12 +36,12 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( "Kartenansicht nicht ge�ffnet." );
+      throw new ExecutionException( Messages.getString("ExportRiskZoneCoveragesWidgetHandler.0") ); //$NON-NLS-1$
 
     final MapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim öffnen der Karte" ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("ExportRiskZoneCoveragesWidgetHandler.1"), Messages.getString("ExportRiskZoneCoveragesWidgetHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -49,21 +49,21 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     {
       final IKalypsoTheme[] themes = mapModell.getAllThemes();
       for( int i = 0; i < themes.length; i++ )
-        if( themes[i].getName().equals( "Risk zones (raster)" ) )
+        if( themes[i].getName().equals( "Risk zones (raster)" ) ) //$NON-NLS-1$
         {
           mapModell.activateTheme( themes[i] );
           break;
         }
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Raster data export", "" );
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString("ExportRiskZoneCoveragesWidgetHandler.3"), "" ); //$NON-NLS-1$ //$NON-NLS-2$
     coverageManagementWidget.setShowStyle( false );
     coverageManagementWidget.setShowAddRemoveButtons( false );
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
 
-    ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", coverageManagementWidget, mapPanel, activePart );
+    ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", coverageManagementWidget, mapPanel, activePart ); //$NON-NLS-1$
     job.schedule();
 
     return null;

@@ -88,7 +88,7 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
       if( kalypsoTheme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) kalypsoTheme;
-        if( featureTheme.getName().equals( "HQ " + event.getReturnPeriod() ) )
+        if( featureTheme.getName().equals( "HQ " + event.getReturnPeriod() ) ) //$NON-NLS-1$
         {
           themeToRemove = kalypsoTheme;
           break;

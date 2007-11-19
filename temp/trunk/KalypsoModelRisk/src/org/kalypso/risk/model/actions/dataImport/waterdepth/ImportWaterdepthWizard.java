@@ -132,7 +132,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( "Kartenansicht nicht ge�ffnet. Es k�nnen keine Themen hinzugef�gt werden." );
+      StatusUtilities.createWarningStatus( Messages.getString("ImportWaterdepthWizard.8") ); //$NON-NLS-1$
       return false;
     }
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
@@ -140,7 +140,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQ" );
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQ" ); //$NON-NLS-1$
     parentKalypsoTheme.setVisible( true );
     try
     {
@@ -180,7 +180,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
                 waterdepthCoverageCollection.remove( coverageToRemove );
 
               final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
-              annualCoverageCollection.setName( "HQ " + asciiRasterInfo.getReturnPeriod() );
+              annualCoverageCollection.setName( "HQ " + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
               annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
               final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
               final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getWrappedFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
@@ -190,7 +190,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               coverage.setRangeSet( rangeSet );
               coverage.setGridDomain( asciiRasterInfo.getGridDomain() );
               coverage.setName( binFileName );
-              coverage.setDescription( "Imported from " + asciiRasterInfo.getSourceFile().getName() );
+              coverage.setDescription( "Imported from " + asciiRasterInfo.getSourceFile().getName() ); //$NON-NLS-1$
 
               // remove themes that are showing invalid coverages
               final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod(); //$NON-NLS-1$
@@ -204,16 +204,16 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
 
               final StyledLayerType layer = new StyledLayerType();
               layer.setName( layerName );
-              layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember" ); //$NON-NLS-1$
+              layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
               layer.setLinktype( "gml" ); //$NON-NLS-1$
               layer.setType( "simple" ); //$NON-NLS-1$
               layer.setVisible( true );
               layer.setActuate( "onRequest" ); //$NON-NLS-1$
-              layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$
+              layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
               layer.setVisible( true );
               final Property layerPropertyDeletable = new Property();
               layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-              layerPropertyDeletable.setValue( "false" );
+              layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
               final Property layerPropertyThemeInfoId = new Property();
               layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
               layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m" ); //$NON-NLS-1$

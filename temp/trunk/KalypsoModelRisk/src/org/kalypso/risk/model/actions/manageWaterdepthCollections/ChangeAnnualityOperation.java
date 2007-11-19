@@ -43,10 +43,10 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( "Ereignis hinzuf?gen", 7 );
+      monitor.beginTask( Messages.getString("ChangeAnnualityOperation.0"), 7 ); //$NON-NLS-1$
       final int oldReturnPeriod = m_coverageCollection.getReturnPeriod();
       m_coverageCollection.setReturnPeriod( m_newReturnPeriod );
-      m_coverageCollection.setName( "HQ " + m_newReturnPeriod );
+      m_coverageCollection.setName( "HQ " + m_newReturnPeriod ); //$NON-NLS-1$
       updateTheme( m_wspThemes, oldReturnPeriod );
 
       final GMLWorkspace workspace = m_model.getWrappedFeature().getWorkspace();
@@ -73,9 +73,9 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
   {
     final IKalypsoTheme[] themes = parentKalypsoTheme.getAllThemes();
     for( int i = 0; i < themes.length; i++ )
-      if( themes[i].getName().equals( "HQ " + oldReturnPeriod ) )
+      if( themes[i].getName().equals( "HQ " + oldReturnPeriod ) ) //$NON-NLS-1$
       {
-        themes[i].setName( "HQ " + m_newReturnPeriod );
+        themes[i].setName( "HQ " + m_newReturnPeriod ); //$NON-NLS-1$
         break;
       }
   }

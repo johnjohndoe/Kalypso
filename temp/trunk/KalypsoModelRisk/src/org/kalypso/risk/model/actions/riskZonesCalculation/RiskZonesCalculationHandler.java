@@ -48,10 +48,10 @@ public class RiskZonesCalculationHandler extends AbstractHandler
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( "Kartenansicht nicht ge�ffnet. Es k�nnen keine Themen hinzugef�gt werden." );
+      StatusUtilities.createWarningStatus( Messages.getString("RiskZonesCalculationHandler.0") ); //$NON-NLS-1$
       return false;
     }
-    final Dialog dialog = new MessageDialog( shell, "Rasterizing risk zones", null, "Do you want to calcualte risk zones?", MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 );
+    final Dialog dialog = new MessageDialog( shell, Messages.getString("RiskZonesCalculationHandler.1"), null, Messages.getString("RiskZonesCalculationHandler.2"), MessageDialog.QUESTION, new String[] { Messages.getString("RiskZonesCalculationHandler.3"), Messages.getString("RiskZonesCalculationHandler.4") }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     if( dialog.open() == 0 )
     {
       try
@@ -65,7 +65,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
         final IVectorDataModel vectorModel = scenarioDataProvider.getModel( IVectorDataModel.class );
         if( rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
         {
-          MessageDialog.openError( shell, "Error", "Risk zones calculation cannot be started. Not enough specific damage potentials are calculated. To start risk zones calculation, al least two specific damage potentials should be available." );
+          MessageDialog.openError( shell, Messages.getString("RiskZonesCalculationHandler.5"), Messages.getString("RiskZonesCalculationHandler.6") ); //$NON-NLS-1$ //$NON-NLS-2$
           return null;
         }
         IAnnualCoverageCollection maxCoveragesCollection = null;
@@ -87,7 +87,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
         {
           public void run( final IProgressMonitor monitor ) throws InterruptedException
           {
-            monitor.beginTask( "Calculating risk zones", IProgressMonitor.UNKNOWN );
+            monitor.beginTask( Messages.getString("RiskZonesCalculationHandler.7"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
             try
             {
               final ICoverageCollection outputCoverages = rasterModel.getRiskZonesCoverage();
@@ -104,8 +104,8 @@ public class RiskZonesCalculationHandler extends AbstractHandler
                 final ICoverage coverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
                 inputGrid.dispose();
 
-                coverage.setName( "RiskZonesCoverage_" + count );
-                coverage.setDescription( "Created on " + new Date().toString() );
+                coverage.setName( "RiskZonesCoverage_" + count ); 
+                coverage.setDescription( Messages.getString("RiskZonesCalculationHandler.9") + new Date().toString() ); //$NON-NLS-1$
                 count++;
 
                 // fireModellEvent to redraw a map...

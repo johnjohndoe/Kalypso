@@ -64,13 +64,13 @@ public class LanduseRasterizationHandler extends AbstractHandler
     catch( CoreException e1 )
     {
       e1.printStackTrace();
-      MessageDialog.openError( shell, "Error", "Raster data model cannot be loaded." );
+      MessageDialog.openError( shell, Messages.getString("LanduseRasterizationHandler.0"), Messages.getString("LanduseRasterizationHandler.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
     if( model.getWaterlevelCoverageCollection().size() == 0 )
     {
-      MessageDialog.openError( shell, "Error", "No HQ data is loaded. Landuse rasterisation is still not possible. Please load waterlevel raster data." );
+      MessageDialog.openError( shell, Messages.getString("LanduseRasterizationHandler.2"), Messages.getString("LanduseRasterizationHandler.3") ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
@@ -85,9 +85,9 @@ public class LanduseRasterizationHandler extends AbstractHandler
       }
     }
 
-    final String dialogTitle = "Rasterize landuse";
-    final String dialogMessage = "Do you want to create landuse raster (base raster is HQ " + maxReturnPeriod + ")?";
-    final Dialog dialog = new MessageDialog( shell, dialogTitle, null, dialogMessage, MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 );
+    final String dialogTitle = Messages.getString("LanduseRasterizationHandler.4"); //$NON-NLS-1$
+    final String dialogMessage = Messages.getString("LanduseRasterizationHandler.5") + maxReturnPeriod + Messages.getString("LanduseRasterizationHandler.6"); //$NON-NLS-1$ //$NON-NLS-2$
+    final Dialog dialog = new MessageDialog( shell, dialogTitle, null, dialogMessage, MessageDialog.QUESTION, new String[] { Messages.getString("LanduseRasterizationHandler.7"), Messages.getString("LanduseRasterizationHandler.8") }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
     if( dialog.open() == 0 )
     {
       try
@@ -103,7 +103,7 @@ public class LanduseRasterizationHandler extends AbstractHandler
         {
           public void run( final IProgressMonitor monitor ) throws InterruptedException
           {
-            monitor.beginTask( "Rasterizing landuse vector data...", IProgressMonitor.UNKNOWN );
+            monitor.beginTask( Messages.getString("LanduseRasterizationHandler.9"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
             try
             {
               final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
@@ -146,9 +146,9 @@ public class LanduseRasterizationHandler extends AbstractHandler
                 };
 
                 // TODO: change name: better: use input name
-                final String outputFilePath = "raster/output/LanduseCoverage" + count + ".dat"; //$NON-NLS-1$
+                final String outputFilePath = "raster/output/LanduseCoverage" + count + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
 
-                final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
+                final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
                 final File file = new File( ifile.getRawLocation().toPortableString() );
                 GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
                 inputGrid.dispose();

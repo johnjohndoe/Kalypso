@@ -86,11 +86,11 @@ public class AsciiRasterInfo
     try
     {
       final String csName = m_coordinateSystem.getName();
-      return new String[] { m_rasterFile.getName(), getReturnPeriod() > 0 ? Integer.toString( getReturnPeriod() ) : "", csName };
+      return new String[] { m_rasterFile.getName(), getReturnPeriod() > 0 ? Integer.toString( getReturnPeriod() ) : "", csName }; //$NON-NLS-1$
     }
     catch( RemoteException e )
     {
-      return new String[] { m_rasterFile.getName(), getReturnPeriod() > 0 ? Integer.toString( getReturnPeriod() ) : "", "" };
+      return new String[] { m_rasterFile.getName(), getReturnPeriod() > 0 ? Integer.toString( getReturnPeriod() ) : "", "" }; //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -145,7 +145,7 @@ public class AsciiRasterInfo
     catch( RemoteException e )
     {
       e.printStackTrace();
-      return "null";
+      return "null"; //$NON-NLS-1$
     }
   }
 

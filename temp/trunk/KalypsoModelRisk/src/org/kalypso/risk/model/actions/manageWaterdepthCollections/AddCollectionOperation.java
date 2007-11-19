@@ -59,7 +59,7 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( "Ereignis hinzuf�gen", 7 );
+      monitor.beginTask( Messages.getString("AddCollectionOperation.0"), 7 ); //$NON-NLS-1$
 
       /* Create a unique name */
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = m_model.getWaterlevelCoverageCollection();
@@ -119,16 +119,16 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
     final String layerName = annualCoverageCollection.getName();
     final StyledLayerType layer = new StyledLayerType();
     layer.setName( layerName );
-    layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember" ); //$NON-NLS-1$
+    layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
     layer.setLinktype( "gml" ); //$NON-NLS-1$
     layer.setType( "simple" ); //$NON-NLS-1$
     layer.setVisible( true );
     layer.setActuate( "onRequest" ); //$NON-NLS-1$
-    layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$
+    layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
     layer.setVisible( true );
     final Property layerPropertyDeletable = new Property();
     layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-    layerPropertyDeletable.setValue( "false" );
+    layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
     final Property layerPropertyThemeInfoId = new Property();
     layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
     layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m" ); //$NON-NLS-1$

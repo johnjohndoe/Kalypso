@@ -116,7 +116,7 @@ public class ImportWaterdepthPage extends WizardPage
     group.setLayout( groupLayout );
     group.setLayoutData( infoCompositeGridData );
     group.layout();
-    group.setText( "Selected file info" );
+    group.setText( Messages.getString("ImportWaterdepthPage.12") ); //$NON-NLS-1$
 
     createControlInfoPart( group );
 
@@ -133,15 +133,15 @@ public class ImportWaterdepthPage extends WizardPage
     m_tableViewer.setLayoutData( gridData );
 
     final TableColumn fileColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    fileColumn.setText( "Filename" );
+    fileColumn.setText( Messages.getString("ImportWaterdepthPage.13") ); //$NON-NLS-1$
     fileColumn.setWidth( 200 );
 
     final TableColumn annualityColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    annualityColumn.setText( "Period" );
+    annualityColumn.setText( Messages.getString("ImportWaterdepthPage.14") ); //$NON-NLS-1$
     annualityColumn.setWidth( 50 );
 
     final TableColumn csColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    csColumn.setText( "CRS" );
+    csColumn.setText( Messages.getString("ImportWaterdepthPage.15") ); //$NON-NLS-1$
     csColumn.setWidth( 80 );
 
     m_tableViewer.setSize( 300, 250 );
@@ -199,7 +199,7 @@ public class ImportWaterdepthPage extends WizardPage
       }
     } );
     m_btnDeleteSelected = new Button( parent, SWT.PUSH );
-    m_btnDeleteSelected.setText( "Delete" );
+    m_btnDeleteSelected.setText( Messages.getString("ImportWaterdepthPage.16") ); //$NON-NLS-1$
     m_btnDeleteSelected.setEnabled( false );
     m_btnDeleteSelected.addSelectionListener( new SelectionListener()
     {
@@ -221,27 +221,27 @@ public class ImportWaterdepthPage extends WizardPage
   private void createControlInfoPart( final Composite parent )
   {
     final Label lbl1 = new Label( parent, SWT.NONE );
-    lbl1.setText( "Raster size:" );
+    lbl1.setText( Messages.getString("ImportWaterdepthPage.17") ); //$NON-NLS-1$
     m_fldRasterSize = new Text( parent, SWT.BORDER );
     m_fldRasterSize.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fldRasterSize.setEditable( false );
-    m_fldRasterSize.setText( "" );
+    m_fldRasterSize.setText( "" ); //$NON-NLS-1$
 
     final Label lbl2 = new Label( parent, SWT.NONE );
-    lbl2.setText( "Offset:" );
+    lbl2.setText( Messages.getString("ImportWaterdepthPage.19") ); //$NON-NLS-1$
     m_fldOffset = new Text( parent, SWT.BORDER );
     m_fldOffset.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fldOffset.setEditable( false );
-    m_fldOffset.setText( "" );
+    m_fldOffset.setText( "" ); //$NON-NLS-1$
 
     final Label lbl3 = new Label( parent, SWT.NONE );
-    lbl3.setText( "Cell size:" );
+    lbl3.setText( Messages.getString("ImportWaterdepthPage.21") ); //$NON-NLS-1$
     m_fldCellSize = new Text( parent, SWT.BORDER );
     m_fldCellSize.setEditable( false );
-    m_fldCellSize.setText( "" );
+    m_fldCellSize.setText( "" ); //$NON-NLS-1$
 
     final Label lbl4 = new Label( parent, SWT.NONE );
-    lbl4.setText( "Coord. system:" );
+    lbl4.setText( Messages.getString("ImportWaterdepthPage.23") ); //$NON-NLS-1$
     m_cmbCoordinateSystem = new Combo( parent, SWT.NONE );
     final String[] allCoordinateSystems = (new ConvenienceCSFactoryFull()).getKnownCS();
     m_cmbCoordinateSystem.setItems( allCoordinateSystems );
@@ -249,7 +249,7 @@ public class ImportWaterdepthPage extends WizardPage
     m_cmbCoordinateSystem.setEnabled( false );
     m_cmbCoordinateSystem.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void widgetSelected( SelectionEvent e )
       {
@@ -260,19 +260,19 @@ public class ImportWaterdepthPage extends WizardPage
         }
         else
         {
-          MessageDialog.openError( parent.getShell(), "CS cannot be set", "Selected coordinate system is not applicable." );
+          MessageDialog.openError( parent.getShell(), Messages.getString("ImportWaterdepthPage.25"), Messages.getString("ImportWaterdepthPage.26") ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );
 
     final Label lbl5 = new Label( parent, SWT.NONE );
-    lbl5.setText( "Return period:" );
+    lbl5.setText( Messages.getString("ImportWaterdepthPage.27") ); //$NON-NLS-1$
     m_fldReturnPeriod = new Spinner( parent, SWT.BORDER );
     m_fldReturnPeriod.setValues( 1, 1, 1000, 0, 1, 50 );
     m_fldReturnPeriod.setEnabled( false );
     m_fldReturnPeriod.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void widgetSelected( SelectionEvent e )
       {
@@ -288,9 +288,9 @@ public class ImportWaterdepthPage extends WizardPage
   {
     if( m_selectedRasterIndex < 0 || m_selectedRasterIndex >= m_rasterInfos.size() )
     {
-      m_fldRasterSize.setText( "" );
-      m_fldOffset.setText( "" );
-      m_fldCellSize.setText( "" );
+      m_fldRasterSize.setText( "" ); //$NON-NLS-1$
+      m_fldOffset.setText( "" ); //$NON-NLS-1$
+      m_fldCellSize.setText( "" ); //$NON-NLS-1$
       m_cmbCoordinateSystem.setEnabled( false );
       m_fldReturnPeriod.setEnabled( false );
       m_btnDeleteSelected.setEnabled( false );
@@ -299,9 +299,9 @@ public class ImportWaterdepthPage extends WizardPage
     {
       m_tableViewer.setSelection( m_selectedRasterIndex );
       final AsciiRasterInfo rasterInfo = m_rasterInfos.get( m_selectedRasterIndex );
-      m_fldRasterSize.setText( rasterInfo.getRasterSizeX() + " x " + rasterInfo.getRasterSizeY() );
-      m_fldOffset.setText( rasterInfo.getOffsetX() + ", " + rasterInfo.getOffsetY() );
-      m_fldCellSize.setText( rasterInfo.getCellSize() + "" );
+      m_fldRasterSize.setText( rasterInfo.getRasterSizeX() + " x " + rasterInfo.getRasterSizeY() ); //$NON-NLS-1$
+      m_fldOffset.setText( rasterInfo.getOffsetX() + ", " + rasterInfo.getOffsetY() ); //$NON-NLS-1$
+      m_fldCellSize.setText( rasterInfo.getCellSize() + "" ); //$NON-NLS-1$
       m_cmbCoordinateSystem.select( m_cmbCoordinateSystem.indexOf( rasterInfo.getCoordinateSystem() ) );
       m_fldReturnPeriod.setSelection( rasterInfo.getReturnPeriod() );
       m_cmbCoordinateSystem.setEnabled( true );
@@ -315,7 +315,7 @@ public class ImportWaterdepthPage extends WizardPage
   {
     final FileDialog dialog = new FileDialog( getShell(), SWT.MULTI );
     dialog.setFilterExtensions( new String[] { "*.asc" } ); //$NON-NLS-1$
-    dialog.setFilterNames( new String[] { "ASCII grid (*.asc)" } );
+    dialog.setFilterNames( new String[] { "ASCII grid (*.asc)" } ); //$NON-NLS-1$
     dialog.open();
     final String[] fileNames = dialog.getFileNames();
     final String filterPath = dialog.getFilterPath();

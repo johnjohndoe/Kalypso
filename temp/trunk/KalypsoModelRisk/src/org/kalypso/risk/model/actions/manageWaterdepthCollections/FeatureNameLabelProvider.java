@@ -11,7 +11,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 public class FeatureNameLabelProvider extends GMLLabelProvider
 {
-  private static final String NAME_NOT_DEFINED = "<name not defined>";
+  private static final String NAME_NOT_DEFINED = Messages.getString("FeatureNameLabelProvider.0"); //$NON-NLS-1$
 
   @Override
   public String getText( final Object element )
@@ -26,9 +26,9 @@ public class FeatureNameLabelProvider extends GMLLabelProvider
           name = NAME_NOT_DEFINED;
         final Integer returnPeriod = collection.getReturnPeriod();
         if( returnPeriod != null && returnPeriod > 0 )
-          name += " [" + returnPeriod.toString() + " year flood]";
+          name += " [" + returnPeriod.toString() + Messages.getString("FeatureNameLabelProvider.2"); //$NON-NLS-1$ //$NON-NLS-2$
         else
-          name += " [return period not specified]";
+          name += Messages.getString("FeatureNameLabelProvider.3"); //$NON-NLS-1$
         return name;
       }
       final ICoverage coverage = (ICoverage) ((Feature) element).getAdapter( ICoverage.class );
@@ -42,21 +42,21 @@ public class FeatureNameLabelProvider extends GMLLabelProvider
         else
           label.append( name );
         final RectifiedGridDomain gridDomain = ((RectifiedGridCoverage) coverage).getGridDomain();
-        label.append( " [" );
+        label.append( " [" ); //$NON-NLS-1$
         if( mimeType != null && mimeType.length() > 0 )
-          label.append( mimeType ).append( ", " );
-        label.append( gridDomain.getNumColumns() ).append( "x" ).append( gridDomain.getNumRows() );
-        label.append( ", " );
-        label.append( Math.abs( gridDomain.getOffsetX().getGeoX() - gridDomain.getOffsetX().getGeoY() ) ).append( "x" ).append( Math.abs( gridDomain.getOffsetY().getGeoX()
+          label.append( mimeType ).append( ", " ); //$NON-NLS-1$
+        label.append( gridDomain.getNumColumns() ).append( "x" ).append( gridDomain.getNumRows() ); //$NON-NLS-1$
+        label.append( ", " ); //$NON-NLS-1$
+        label.append( Math.abs( gridDomain.getOffsetX().getGeoX() - gridDomain.getOffsetX().getGeoY() ) ).append( "x" ).append( Math.abs( gridDomain.getOffsetY().getGeoX() //$NON-NLS-1$
             - gridDomain.getOffsetY().getGeoY() ) );
         try
         {
-          label.append( ", " ).append( gridDomain.getCoordinateSystem().getName() );
+          label.append( ", " ).append( gridDomain.getCoordinateSystem().getName() ); //$NON-NLS-1$
         }
         catch( RemoteException e )
         {
         }
-        label.append( "]" );
+        label.append( "]" ); //$NON-NLS-1$
         return label.toString();
       }
       return super.getText( element );
