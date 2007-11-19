@@ -56,8 +56,10 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
- * @author Stefan Kurzbach
+ * TODO: is this really the right place? Shouldn't it better be moved to the AfgUi plug-in which already does all
+ * ui-stuff for the workflow?
  * 
+ * @author Stefan Kurzbach
  */
 public class CaseTreeContentAdapter extends WorkbenchAdapter
 {

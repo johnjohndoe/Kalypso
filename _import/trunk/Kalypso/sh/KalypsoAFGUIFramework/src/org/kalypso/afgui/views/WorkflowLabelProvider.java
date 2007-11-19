@@ -62,7 +62,7 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
       return IMAGE_TASK;
     }
     else
-    {
+    {// TODO: that never happens!
       return IMAGE_GROUP;
     }
   }
@@ -122,7 +122,7 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
   {
     if( element instanceof Task )
     {
-      Task task = (Task) element;
+      final Task task = (Task) element;
       final Help help = task.getHelp();
       if( help == null )
         return null;

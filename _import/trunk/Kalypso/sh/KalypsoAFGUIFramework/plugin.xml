@@ -25,7 +25,7 @@
       <view
             allowMultiple="false"
             class="org.eclipse.ui.navigator.CommonNavigator"
-            icon="icons/tree.gif"
+            icon="icons/scenario_view.gif"
             id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"
             name="Szenarien">
       </view>
@@ -52,7 +52,6 @@
       <navigatorContent
             activeByDefault="true"
             contentProvider="org.kalypso.afgui.views.ScenarioContentProvider"
-            icon="icons/nuvola_select/ledblue.png"
             id="org.kalypso.afgui.content.scenarios"
             labelProvider="org.eclipse.ui.model.WorkbenchLabelProvider"
             name="Szenario"
@@ -171,15 +170,15 @@
          point="org.eclipse.ui.commandImages">
       <image
             commandId="org.kalypso.afgui.command.newproject"
-            icon="icons/newProject.gif">
+            icon="icons/project_add.gif">
       </image>
       <image
             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"
-            icon="icons/activate.gif">
+            icon="icons/scenario_activate.gif">
       </image>
       <image
             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"
-            icon="icons/nuvola_select/edit_add.png">
+            icon="icons/scenario_add.gif">
       </image>
    </extension>
    <extension
@@ -273,76 +272,15 @@
       </definition>
    </extension>
    
-   
-   <!--extension
+    <!-- perspectives-->
+	<extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Framework Base Perspective"
-            class="org.kalypso.afgui.Perspective"
-            id="KalypsoAFGUIFramework.perspective">
-      </perspective>
-      <perspective
-            name="Data Centric Perspective"
-            class="org.kalypso.afgui.DataCentricPerspective"
-            id="KalypsoAFGUIFramework.datacentricperspective">
-      </perspective>
-      
-      <perspective
-            name="Expert Perspective"
-            class="org.kalypso.afgui.ExpertPerspective"
-            id="KalypsoAFGUIFramework.Expert.perspective">
-      </perspective>
+            class="org.kalypso.afgui.perspective.Perspective"
+            icon="icons/kalypsoWorkflow.png"
+            id="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+            name="Kalypso Workflow">
+      </perspective>      
    </extension>
-   <extension
-         id="KalypsoAFGUIFramework_product"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="org.kalypso.afgui.AFGUIApplication"
-            name="GUI Framework Test"/>
-   </extension>
-   <extension
-         id="org.kalypso.afgui.views.WorkflowViews"
-         name="Workflow"
-         point="org.eclipse.ui.views">
-      <view
-            allowMultiple="false"
-            class="org.kalypso.afgui.views.WorkflowView"
-            id="org.kalypso.afgui.views.WorkflowView"
-            name="Workflow"/>
-      <view
-            class="org.kalypso.afgui.views.WorkflowHelpView"
-            id="org.kalypso.afgui.views.WorkflowHelpView"
-            name="WorkflowHelpView"/>
-      <view
-            class="org.kalypso.afgui.views.ModelDataView"
-            id="org.kalypso.afgui.views.ModelDataView"
-            name="Model Data View"/>
-   </extension -->
    
-   <!-- Project extensions -->
-   <!--extension
-      point="org.eclipse.core.resources.natures"
-      id="org.kalypso.pjt.Kalypso1D2DProjectNature"
-      name="Kalypso1D2DProjectNature">
-      <runtime>
-         <run class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
-      </runtime>
-   </extension>
-
-	<extension
-       point="org.eclipse.ui.newWizards">
-		<category
-            id="org.kalypso.wizard"
-            name="K1d2dPjt"
-            parentCategory="org.kalypso.ui.newwizards.kalypso"/>
-		<wizard name="Kalypso1D2DNewProjectWizard"
-		icon="icons/kalypso1d2d.png"
-		class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
-		project="true"
-		id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard">
-		<description>
-		Creates a new project
-		</description>
-		</wizard>
-	</extension -->
 </plugin>
