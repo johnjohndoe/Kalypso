@@ -182,6 +182,10 @@
           class="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler"
           commandId="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler">
     </handler>
+    <handler
+          class="org.kalypso.risk.model.handlers.ExportSpecificDamageCoveragesWidgetHandler"
+          commandId="org.kalypso.risk.model.handlers.ExportSpecificDamageCoveragesWidgetHandler">
+    </handler>
  </extension>
  <extension
        point="org.kalypso.core.themeInfo">
