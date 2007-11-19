@@ -47,7 +47,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -61,7 +60,6 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -135,8 +133,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private final ITriangleEater m_triangleEater;
 
   private final RMA10Calculation m_calculation;
-
-  private static final long PROCESS_TIMEOUT = 50000;
 
   private static final int WSP_EXTRAPOLATION_RANGE = 20;
 
@@ -639,16 +635,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       try
       {
         strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-        ConstraintDelaunayHelper.writePolyFile( strmPolyInput, breaklines, pwSimuLog );
+        ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, breaklines, pwSimuLog );
         strmPolyInput.close();
 
         // create command
         KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "create command" );
-        final StringBuffer cmd = createTriangleCommand( polyfile );
+        final StringBuffer cmd = ConstraintDelaunayHelper.createTriangleCommand( polyfile );
 
         // start Triangle
         KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "start Triangle" );
-        execTriangle( pwSimuLog, tempDir, cmd );
+        ConstraintDelaunayHelper.execTriangle( pwSimuLog, tempDir, cmd );
 
         // get the triangulation
         KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "get the triangulation" );
@@ -716,16 +712,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     try
     {
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-      ConstraintDelaunayHelper.writePolyFile( strmPolyInput, breaklines, pwSimuLog );
+      ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, breaklines, pwSimuLog );
       strmPolyInput.close();
 
       // create command
       KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "create command" );
-      final StringBuffer cmd = createTriangleCommand( polyfile );
+      final StringBuffer cmd = ConstraintDelaunayHelper.createTriangleCommand( polyfile );
 
       // start Triangle
       KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "start Triangle" );
-      execTriangle( pwSimuLog, tempDir, cmd );
+      ConstraintDelaunayHelper.execTriangle( pwSimuLog, tempDir, cmd );
 
       // get the triangulation
       KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "get the triangulation" );
@@ -895,69 +891,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
 
     m_triangleEater.add( nodes, true );
-  }
-
-  private void execTriangle( final PrintWriter pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
-  {
-    pwSimuLog.append( "Triangle.exe wird ausgeführt..." );
-
-    final long lTimeout = PROCESS_TIMEOUT;
-
-    final Process exec = Runtime.getRuntime().exec( cmd.toString(), null, tempDir );
-
-    final InputStream errorStream = exec.getErrorStream();
-    final InputStream inputStream = exec.getInputStream();
-
-    final StreamGobbler error = new StreamGobbler( errorStream, "ERROR_STREAM", KalypsoModel1D2DDebug.SIMULATIONRESULT );
-    final StreamGobbler input = new StreamGobbler( inputStream, "INPUT_STREAM", KalypsoModel1D2DDebug.SIMULATIONRESULT );
-
-    error.start();
-    input.start();
-
-    int timeRunning = 0;
-
-    /* It is running until the job has finished or the timeout of 5 minutes is reached. */
-    while( true )
-    {
-      try
-      {
-        exec.exitValue();
-        break;
-      }
-      catch( final RuntimeException e )
-      {
-        /* The process has not finished. */
-      }
-
-      if( timeRunning >= lTimeout )
-      {
-        exec.destroy();
-        throw new CoreException( StatusUtilities.createErrorStatus( "Es wurde das Timeout erreicht." ) );
-      }
-
-      /* Wait a few millisec, before continuing. */
-      Thread.sleep( 100 );
-      timeRunning = timeRunning + 100;
-    }
-  }
-
-  private StringBuffer createTriangleCommand( final File polyfile )
-  {
-    final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" );
-
-    final Double qualityMinAngle = 5.00;
-
-    if( qualityMinAngle != null )
-    {
-      // at this point no quality meshing because it produces interpolation errors end zero-value points
-
-      // cmd.append( "-q" );
-      // cmd.append( qualityMinAngle.doubleValue() );
-    }
-
-    cmd.append( ' ' );
-    cmd.append( polyfile.getName() );
-    return cmd;
   }
 
   private GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final CS_CoordinateSystem crs ) throws Exception, GM_Exception
