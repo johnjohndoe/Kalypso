@@ -49,8 +49,8 @@ import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.commands.ICommandService;
+import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.contribs.eclipse.ui.ide.application.IDEWorkbenchAdvisor;
-import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 import org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener;
 
 /**
