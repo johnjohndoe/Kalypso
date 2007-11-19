@@ -88,7 +88,7 @@ public class FloodModelHelper
    * 
    * @return index of the wsp theme or -1 if none is found
    */
-  public static int findWspTheme( IRunoffEvent runoffEvent, AbstractCascadingLayerTheme wspTheme )
+  public static int findWspTheme( final IRunoffEvent runoffEvent, final AbstractCascadingLayerTheme wspTheme )
   {
     final IKalypsoTheme[] themes = wspTheme.getAllThemes();
 
@@ -117,11 +117,11 @@ public class FloodModelHelper
   {
     final IKalypsoTheme[] themes = wspTheme.getAllThemes();
 
-    for( IKalypsoTheme theme : themes )
+    for( final IKalypsoTheme theme : themes )
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
         final QName name = featureList.getParentFeatureTypeProperty().getQName();
         if( name.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) )
@@ -135,7 +135,7 @@ public class FloodModelHelper
   /**
    * adds a coverage theme inside the cascading "wasserspiegellagen" theme for a given event at a given index
    */
-  public static void addResultTheme( IRunoffEvent event, AbstractCascadingLayerTheme theme, int index ) throws Exception
+  public static void addResultTheme( final IRunoffEvent event, final AbstractCascadingLayerTheme theme, final int index ) throws Exception
   {
     final StyledLayerType wspLayer = new StyledLayerType();
 
@@ -184,7 +184,7 @@ public class FloodModelHelper
     {
       final CommandableWorkspace workspace = dataProvider.getCommandableWorkSpace( IFloodModel.class );
 
-      for( ICoverage coverageToDelete : coverages )
+      for( final ICoverage coverageToDelete : coverages )
       {
         /* Delete underlying grid grid file */
         final IStatus status = CoverageManagmentHelper.deleteGridFile( coverageToDelete );
@@ -208,7 +208,7 @@ public class FloodModelHelper
       }
       return Status.OK_STATUS;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return StatusUtilities.statusFromThrowable( e, "Löschen von Raster-Daten fehlgeschlagen" );
     }
@@ -266,10 +266,10 @@ public class FloodModelHelper
     if( dialog.open() != Window.OK )
       return null;
 
-    Object[] selectedObjects = dialog.getResult();
+    final Object[] selectedObjects = dialog.getResult();
 
-    List<IRunoffEvent> selectedEventList = new LinkedList<IRunoffEvent>();
-    for( Object object : selectedObjects )
+    final List<IRunoffEvent> selectedEventList = new LinkedList<IRunoffEvent>();
+    for( final Object object : selectedObjects )
     {
       if( object instanceof IRunoffEvent )
       {
@@ -277,5 +277,20 @@ public class FloodModelHelper
       }
     }
     return selectedEventList.toArray( new IRunoffEvent[selectedEventList.size()] );
+  }
+
+  public static IKalypsoTheme findThemeForEvent( final IMapModell mapModell, final IRunoffEvent runoffEvent )
+  {
+    final AbstractCascadingLayerTheme wspThemes = FloodModelHelper.findWspTheme( mapModell );
+
+    if( runoffEvent == null || wspThemes == null )
+      return null;
+
+    final int index = findWspTheme( runoffEvent, wspThemes );
+
+    if( index == -1 )
+      return null;
+
+    return wspThemes.getAllThemes()[index];
   }
 }
