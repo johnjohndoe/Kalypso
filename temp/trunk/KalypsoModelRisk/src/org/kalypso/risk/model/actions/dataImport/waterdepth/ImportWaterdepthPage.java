@@ -7,11 +7,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -26,6 +28,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
@@ -166,8 +170,12 @@ public class ImportWaterdepthPage extends WizardPage
 
   private void createControlButtonsPart( final Composite parent )
   {
+    final ImageDescriptor addBtnID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
+    final ImageDescriptor removeBtnID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
+    
     m_btnAddNew = new Button( parent, SWT.PUSH );
-    m_btnAddNew.setText( Messages.getString( "ImportWaterdepthPage.11" ) ); //$NON-NLS-1$
+    m_btnAddNew.setImage( new Image( parent.getDisplay(), addBtnID.getImageData() ) );
+    m_btnAddNew.setToolTipText( Messages.getString( "ImportWaterdepthPage.11" ) ); //$NON-NLS-1$
     m_btnAddNew.addSelectionListener( new SelectionListener()
     {
       public void widgetDefaultSelected( final SelectionEvent e )
@@ -199,7 +207,8 @@ public class ImportWaterdepthPage extends WizardPage
       }
     } );
     m_btnDeleteSelected = new Button( parent, SWT.PUSH );
-    m_btnDeleteSelected.setText( Messages.getString("ImportWaterdepthPage.16") ); //$NON-NLS-1$
+    m_btnDeleteSelected.setImage( new Image( parent.getDisplay(), removeBtnID.getImageData() ) );
+    m_btnDeleteSelected.setToolTipText( Messages.getString("ImportWaterdepthPage.16") ); //$NON-NLS-1$
     m_btnDeleteSelected.setEnabled( false );
     m_btnDeleteSelected.addSelectionListener( new SelectionListener()
     {
