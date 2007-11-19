@@ -47,14 +47,9 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -99,7 +94,7 @@ public class EditorContextHandler extends AbstractHandler implements IHandler
         final IFile ifile = caseFolder.getFile( path );
         if( ifile != null )
         { // The file is in the workspace
-          input = new FileEditorInput(ifile);
+          input = new FileEditorInput( ifile );
         }
         if( input != null )
         {
@@ -108,7 +103,7 @@ public class EditorContextHandler extends AbstractHandler implements IHandler
       }
       catch( final PartInitException e )
       {
-        throw new ExecutionException( Messages.getString("EditorContextHandler.0") + m_editorId + Messages.getString("EditorContextHandler.1") + m_input, e ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new ExecutionException( Messages.getString( "EditorContextHandler.0" ) + m_editorId + Messages.getString( "EditorContextHandler.1" ) + m_input, e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       return Status.OK_STATUS;
     }

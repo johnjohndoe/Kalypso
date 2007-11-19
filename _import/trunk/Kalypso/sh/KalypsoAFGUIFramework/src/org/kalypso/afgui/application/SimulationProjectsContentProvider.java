@@ -38,11 +38,12 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.application;
+package org.kalypso.afgui.application;
 
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Formatter;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -50,27 +51,29 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.intro.config.IIntroContentProviderSite;
 import org.eclipse.ui.intro.config.IIntroXHTMLContentProvider;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.w3c.dom.DOMException;
+import org.kalypso.contribs.eclipse.ui.intro.config.DeleteProjectIntroAction;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+
 /**
  * @author Gernot Belger
+ * @author Stefan Kurzbach
  */
-public class SimulationProjectsContentProvider implements IIntroXHTMLContentProvider
+public abstract class SimulationProjectsContentProvider implements IIntroXHTMLContentProvider
 {
-  /**
-   * @author Stefan Kurzbach
-   */
   private final class WorkspaceChangeListener implements IResourceChangeListener
   {
     WorkspaceChangeListener( )
@@ -86,6 +89,11 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   private IIntroContentProviderSite m_site;
 
   private IResourceChangeListener m_resourceListener;
+
+  /**
+   * Override in order to determine which projects should be shown by this content provider.
+   */
+  protected abstract boolean appliesToProject( IProject project ) throws CoreException;
 
   /**
    * @see org.eclipse.ui.intro.config.IIntroContentProvider#init(org.eclipse.ui.intro.config.IIntroContentProviderSite)
@@ -115,80 +123,105 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
     final Document dom = parent.getOwnerDocument();
 
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
     if( m_resourceListener == null )
     {
       m_resourceListener = new WorkspaceChangeListener();
       workspace.addResourceChangeListener( m_resourceListener, IResourceChangeEvent.POST_CHANGE );
     }
+
     final IWorkspaceRoot root = workspace.getRoot();
     final IProject[] projects = root.getProjects();
+
+    /* Table Header */
+    final Element tableElement = dom.createElement( "table" );
+    parent.appendChild( tableElement );
+
+    /* Table Data */
     for( final IProject project : projects )
     {
+      if( !project.isOpen() )
+        continue; // ignore closed projects
+
       try
       {
-        if( Kalypso1D2DProjectNature.isOfThisNature( project ) )
-          addProjectLink( parent, dom, project );
+        if( appliesToProject( project ) )
+        {
+          final Element rowElement = dom.createElement( "tr" );
+          tableElement.appendChild( rowElement );
+
+          final Element openData = addTableData( rowElement );
+          final Element deleteData = addTableData( rowElement );
+
+          openData.appendChild( createOpenLink( dom, project ) );
+          deleteData.appendChild( createDeleteLink( dom, project ) );
+        }
       }
       catch( final Exception e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
-        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
       }
     }
   }
 
-  private void addProjectLink( final Element parent, final Document dom, final IProject project ) throws DOMException
+  private Element addTableData( final Element tableElement )
   {
-    final Element a = createOpenLink( dom, project );
-    parent.appendChild( a );
+    final Document dom = tableElement.getOwnerDocument();
 
-    final Element a2 = createDeleteLink( dom, project );
-    parent.appendChild( a2 );
+    final Element tdElement = dom.createElement( "td" );
+    tableElement.appendChild( tdElement );
 
-    final Element br = dom.createElement( "br" );  //$NON-NLS-1$
-    parent.appendChild( br );
+    return tdElement;
   }
 
   private Element createOpenLink( final Document dom, final IProject project )
   {
+    final CaseHandlingProjectNature currentNature = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentProject();
+    final IProject currentProject = currentNature == null ? null : currentNature.getProject();
+    final boolean isActive = project.equals( currentProject );
+
     final String pname = project.getName();
 
-    final Element a = dom.createElement( "a" );  //$NON-NLS-1$
-    a.setAttribute( "id", "projectLinkId_" + pname );   //$NON-NLS-1$ //$NON-NLS-2$
-    a.setAttribute( "class", "link" );   //$NON-NLS-1$ //$NON-NLS-2$
+    final Element a = dom.createElement( "a" ); //$NON-NLS-1$
+    a.setAttribute( "id", "projectLinkId_" + pname ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final StringBuffer href = new StringBuffer();
-    href.append( "http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.kalypso1d2d.pjt&class=org.kalypso.kalypso1d2d.pjt.application.Open1D2DProjectIntroAction" );  //$NON-NLS-1$
-    href.append( "&project=" );  //$NON-NLS-1$
-    href.append( pname );
+    if( isActive )
+      a.setAttribute( "class", "activeProjectLink" ); //$NON-NLS-1$ //$NON-NLS-2$
+    else
+      a.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    a.setAttribute( "href", href.toString() );  //$NON-NLS-1$
+    final Formatter href = new Formatter();
+    href.format( "http://org.eclipse.ui.intro/runAction?pluginId=%s&class=%s", PluginUtilities.id( KalypsoAFGUIFrameworkPlugin.getDefault() ), ActivateWorkflowProjectIntroAction.class.getName() ); //$NON-NLS-1$
+    href.format( "&project=%s", pname ); //$NON-NLS-1$
+
+    a.setAttribute( "href", href.toString() ); //$NON-NLS-1$
 
     final String baseUri = dom.getBaseURI();
-    String fileUri = "css/link_obj.gif";  //$NON-NLS-1$
+    String fileUri = "css/link_obj.gif"; //$NON-NLS-1$
     if( baseUri != null )
     {
       try
       {
         final URL baseUrl = new URL( baseUri );
-        final URL url = new URL( baseUrl, "css/link_obj.gif" );  //$NON-NLS-1$
+        final URL url = new URL( baseUrl, "css/link_obj.gif" ); //$NON-NLS-1$
         fileUri = url.toExternalForm();
       }
       catch( final MalformedURLException e )
       {
         e.printStackTrace();
-        fileUri = "css/link_obj.gif";  //$NON-NLS-1$
+        fileUri = "css/link_obj.gif"; //$NON-NLS-1$
       }
     }
 
-    final Element img = dom.createElement( "img" );  //$NON-NLS-1$
-    img.setAttribute( "class", "link" );   //$NON-NLS-1$ //$NON-NLS-2$
-    img.setAttribute( "border", "0" );   //$NON-NLS-1$ //$NON-NLS-2$
-    img.setAttribute( "src", fileUri );  //$NON-NLS-1$
-    img.setAttribute( Messages.getString("SimulationProjectsContentProvider.36"), pname + Messages.getString("SimulationProjectsContentProvider.37") );  //$NON-NLS-1$ //$NON-NLS-2$
+    final Element img = dom.createElement( "img" ); //$NON-NLS-1$
+    img.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
+    img.setAttribute( "border", "0" ); //$NON-NLS-1$ //$NON-NLS-2$
+    img.setAttribute( "src", fileUri ); //$NON-NLS-1$
+    img.setAttribute( "alt", pname + Messages.getString( "SimulationProjectsContentProvider.37" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     a.appendChild( img );
-    a.appendChild( dom.createTextNode( " " + pname ) );  //$NON-NLS-1$
+    a.appendChild( dom.createTextNode( " " + pname ) ); //$NON-NLS-1$
     return a;
   }
 
@@ -196,41 +229,40 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   {
     final String pname = project.getName();
 
-    final Element a = dom.createElement( "a" );  //$NON-NLS-1$
-    a.setAttribute( "id", "projectLinkId_" + pname );   //$NON-NLS-1$ //$NON-NLS-2$
-    a.setAttribute( "class", "link" );   //$NON-NLS-1$ //$NON-NLS-2$
+    final Element a = dom.createElement( "a" ); //$NON-NLS-1$
+    a.setAttribute( "id", "projectLinkId_" + pname ); //$NON-NLS-1$ //$NON-NLS-2$
+    a.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final StringBuffer href = new StringBuffer();
-    href.append( "http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.kalypso1d2d.pjt&class=org.kalypso.kalypso1d2d.pjt.application.Delete1D2DProjectIntroAction" );  //$NON-NLS-1$
-    href.append( "&project=" );  //$NON-NLS-1$
-    href.append( pname );
+    final Formatter href = new Formatter();
+    href.format( "http://org.eclipse.ui.intro/runAction?pluginId=%s&class=%s", EclipsePlatformContributionsPlugin.getID(), DeleteProjectIntroAction.class.getName() ); //$NON-NLS-1$
+    href.format( "&project=%s", pname ); //$NON-NLS-1$
 
-    a.setAttribute( "href", href.toString() );  //$NON-NLS-1$
+    a.setAttribute( "href", href.toString() ); //$NON-NLS-1$
 
     final String baseUri = dom.getBaseURI();
-    String fileUri = "css/redx.gif";  //$NON-NLS-1$
+    String fileUri = "css/redx.gif"; //$NON-NLS-1$
     if( baseUri != null )
     {
       try
       {
         final URL baseUrl = new URL( baseUri );
-        final URL url = new URL( baseUrl, "css/redx.gif" );  //$NON-NLS-1$
+        final URL url = new URL( baseUrl, "css/redx.gif" ); //$NON-NLS-1$
         fileUri = url.toExternalForm();
       }
       catch( final MalformedURLException e )
       {
         e.printStackTrace();
-        fileUri = "css/redx.gif";  //$NON-NLS-1$
+        fileUri = "css/redx.gif"; //$NON-NLS-1$
       }
     }
 
-    final Element img = dom.createElement( "img" );  //$NON-NLS-1$
-    img.setAttribute( "class", "link" );   //$NON-NLS-1$ //$NON-NLS-2$
-    img.setAttribute( "border", "0" );   //$NON-NLS-1$ //$NON-NLS-2$
-    img.setAttribute( "src", fileUri );  //$NON-NLS-1$
+    final Element img = dom.createElement( "img" ); //$NON-NLS-1$
+    img.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
+    img.setAttribute( "border", "0" ); //$NON-NLS-1$ //$NON-NLS-2$
+    img.setAttribute( "src", fileUri ); //$NON-NLS-1$
+    img.setAttribute( "alt", Messages.getString( "SimulationProjectsContentProvider.38" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     a.appendChild( img );
-    a.appendChild( dom.createTextNode( Messages.getString("SimulationProjectsContentProvider.38") ) ); //$NON-NLS-1$
     return a;
   }
 
@@ -256,8 +288,10 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
    */
   public void dispose( )
   {
-    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    workspace.removeResourceChangeListener( m_resourceListener );
+    if( m_resourceListener != null )
+    {
+      final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+      workspace.removeResourceChangeListener( m_resourceListener );
+    }
   }
-
 }

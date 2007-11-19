@@ -71,10 +71,6 @@
             name="ElevationWizard"
             project="false"/>
       	<wizard
-            class="org.kalypso.ui.wizards.results.ConfigureResultsWizard"
-            id="org.kalypso.ui.wizards.results.ConfigureResultsWizard"
-            	name="Result map handling"/>            
-      	<wizard
             class="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
             id="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
             name="Observation load"/>            
@@ -96,27 +92,10 @@
               class="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory"
               id="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory"/>
      </extension>
-	<!-- perspectives-->
-	<extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-            icon="icons/kalypso1d2d.png"
-            id="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-            name="Kalypso 1d2d">
-      </perspective>      
-   </extension>
    
    <extension
          name="Workflow Views"
          point="org.eclipse.ui.views">
-       <view
-             allowMultiple="false"
-             class="org.eclipse.ui.navigator.CommonNavigator"
-             icon="icons/tree.gif"
-             id="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator"
-             name="Ergebnisse">
-       </view>
        <view
              allowMultiple="false"
              class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
@@ -309,25 +288,6 @@
 	        </and>
          </filterExpression>
       </commonFilter>
-      <navigatorContent
-            activeByDefault="true"
-            contentProvider="org.kalypso.kalypso1d2d.pjt.views.contentprov.ResultNavigatorContentProvider"
-            id="org.kalypso.kalypso1d2d.pjt.navigator.ResultContent"
-            labelProvider="org.eclipse.ui.model.WorkbenchLabelProvider"
-            name="Ergebnisse"
-            priority="highest"
-            providesSaveables="false">
-         <enablement>
-            <or>
-               <adapt
-                     type="org.eclipse.core.resources.IWorkspaceRoot">
-               </adapt>
-               <instanceof
-                     value="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor">
-               </instanceof>
-            </or>
-         </enablement>
-      </navigatorContent>
       <commonFilter
             activeByDefault="false"
             description="Nur Ergebnisse des aktiven Szenarios anzeigen"
@@ -380,16 +340,6 @@
                commandId="org.kalypso.ui.command.repositoryExportAsFile">
          </command>
       </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester
-            class="org.kalypso.kalypso1d2d.pjt.views.contentprov.SimulationDescriptorTester"
-            id="org.kalypso.kalypso1d2d.pjt.views.contentprov.SimulationDescriptorTester"
-            namespace="org.kalypso.kalypso1d2d"
-            properties="activeCaseUri"
-            type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor">
-      </propertyTester>
    </extension>
    <extension
          point="de.renew.workflow.model.workflowSystem">

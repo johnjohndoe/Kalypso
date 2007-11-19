@@ -81,7 +81,7 @@ public class SimpleCaseManager extends AbstractCaseManager<Case> implements ICas
    * @see de.renew.workflow.connector.context.AbstractCaseManager#createCase(java.lang.String)
    */
   @Override
-  public Case createCase( final String name ) throws CoreException
+  public Case createCase( final String name )
   {
     final Case newCase = new de.renew.workflow.cases.ObjectFactory().createCase();
     final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), m_project.getName() ).replaceFirst( Pattern.quote( "${casePath}" ), name );
@@ -98,10 +98,10 @@ public class SimpleCaseManager extends AbstractCaseManager<Case> implements ICas
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void removeCase( final Case caze, final IProgressMonitor monitor ) throws CoreException
+  public void removeCase( final Case caze, final IProgressMonitor monitor )
   {
     internalRemoveCase( caze );
-    persist(monitor);
+    persist( null );
     fireCaseRemoved( caze );
   }
 

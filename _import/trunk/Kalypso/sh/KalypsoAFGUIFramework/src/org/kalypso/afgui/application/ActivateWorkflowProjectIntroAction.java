@@ -38,21 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.application;
+package org.kalypso.afgui.application;
 
 import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.actions.DeleteResourceAction;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.perspective.Perspective;
+import org.kalypso.afgui.scenarios.Scenario;
 
 /**
  * @author Gernot Belger
  */
-public class Delete1D2DProjectIntroAction implements IIntroAction
+public class ActivateWorkflowProjectIntroAction implements IIntroAction
 {
   /**
    * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
@@ -60,15 +69,35 @@ public class Delete1D2DProjectIntroAction implements IIntroAction
   public void run( final IIntroSite site, final Properties params )
   {
     /* Validate parameters */
-    final String projectName = params.getProperty( "project", null );  //$NON-NLS-1$
+    final String projectName = params.getProperty( "project", null ); //$NON-NLS-1$
 
     final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
-    if( !project.exists() )
+    if( !project.exists() || !project.isOpen() )
       return;
 
-    final DeleteResourceAction deleteResourceAction = new DeleteResourceAction( site.getShell() );
-    deleteResourceAction.selectionChanged( new StructuredSelection( project ) );
-    deleteResourceAction.run();
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+
+    // hide intro
+    final IIntroManager introManager = workbench.getIntroManager();
+    introManager.closeIntro( introManager.getIntro() );
+
+    try
+    {
+      final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+      final Scenario caze = nature.getCaseManager().getCases().get( 0 );
+      KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+
+      // TODO: is this a job for the workflow-view-context stuff? There should be one task in the workflow which gets
+      // activated on scenario-activation
+      workbench.showPerspective( Perspective.ID, workbench.getActiveWorkbenchWindow() );
+    }
+    catch( final CoreException e )
+    {
+      final Shell activeShell = workbench.getDisplay().getActiveShell();
+      final IStatus status = e.getStatus();
+      ErrorDialog.openError( activeShell, Messages.getString( "Open1D2DProjectIntroAction.1" ), Messages.getString( "Open1D2DProjectIntroAction.2" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+    }
   }
 
 }

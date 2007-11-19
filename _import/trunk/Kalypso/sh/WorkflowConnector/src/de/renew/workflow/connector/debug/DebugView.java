@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
 
-import de.renew.workflow.connector.IWorkflowConnector;
 import de.renew.workflow.connector.IWorklistChangeListener;
 import de.renew.workflow.connector.WorkflowConnector;
 
@@ -48,15 +47,15 @@ public class DebugView extends ViewPart implements IWorklistChangeListener
     layout.addColumnData( new ColumnWeightData( 20, 25, true ) );
     table.setLayout( layout );
 
-    TableColumn col1 = new TableColumn( table, SWT.CENTER );
+    final TableColumn col1 = new TableColumn( table, SWT.CENTER );
     col1.setText( "Task Name" );
-    TableColumn col2 = new TableColumn( table, SWT.CENTER );
+    final TableColumn col2 = new TableColumn( table, SWT.CENTER );
     col2.setText( "Task Class" );
-    TableColumn col3 = new TableColumn( table, SWT.CENTER );
+    final TableColumn col3 = new TableColumn( table, SWT.CENTER );
     col3.setText( "Task Settings" );
-    TableColumn col4 = new TableColumn( table, SWT.CENTER );
+    final TableColumn col4 = new TableColumn( table, SWT.CENTER );
     col4.setText( "Workitem Parameter" );
-    TableColumn col5 = new TableColumn( table, SWT.CENTER );
+    final TableColumn col5 = new TableColumn( table, SWT.CENTER );
     col5.setText( "Workitem Priority" );
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
@@ -71,7 +70,7 @@ public class DebugView extends ViewPart implements IWorklistChangeListener
     menuManager.addMenuListener( new IMenuListener()
     {
 
-      public void menuAboutToShow( IMenuManager manager )
+      public void menuAboutToShow( final IMenuManager manager )
       {
         // TODO Auto-generated method stub
 

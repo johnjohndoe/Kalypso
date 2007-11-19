@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,7 +37,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class Transformer implements ICoreRunnableWithProgress
 {
-  private DataContainer m_data;
+  private final DataContainer m_data;
 
   private boolean m_isDataPrepared = false;
 
@@ -46,15 +45,15 @@ public class Transformer implements ICoreRunnableWithProgress
 
   private final MapView m_mapView;
 
-  public Transformer( DataContainer data, MapView mapView )
+  public Transformer( final DataContainer data, final MapView mapView )
   {
     m_data = data;
     m_mapView = mapView;
   }
 
-  public IStatus execute( IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
-    boolean hasMonitor = monitor != null;
+    final boolean hasMonitor = monitor != null;
     try
     {
       if( hasMonitor )
@@ -74,7 +73,7 @@ public class Transformer implements ICoreRunnableWithProgress
         if( hasMonitor && monitor.isCanceled() )
           return Status.CANCEL_STATUS;
       }
-      catch( ClassCastException e )
+      catch( final ClassCastException e )
       {
         return new Status( Status.ERROR, KalypsoCorePlugin.getID(), Status.CANCEL, e.getMessage(), e );
         // monitor.setCanceled(true);
@@ -84,7 +83,7 @@ public class Transformer implements ICoreRunnableWithProgress
         monitor.done();
       // m_data.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return new Status( Status.ERROR, KalypsoCorePlugin.getID(), Status.CANCEL, e.getMessage(), e );
@@ -92,27 +91,28 @@ public class Transformer implements ICoreRunnableWithProgress
     return Status.OK_STATUS;
   }
 
-  private void createMapLayer( final IRoughnessLayer layer ) throws ExecutionException
+  private void createMapLayer( final IRoughnessLayer layer )
   {
-    
+
     // for the moment, we are working with two fixed layers...
-    
+
     return;
-//    final String source = m_data.getModel().getWrappedFeature().getWorkspace().getContext().toString();
-//    if( m_mapView != null )
-//    {
-//      final GisTemplateMapModell mapModell = (GisTemplateMapModell) m_mapView.getMapPanel().getMapModell();
-//      final StringBuffer featurePath = new StringBuffer( "#fid#" );
-//      featurePath.append( layer.getGmlID() ).append( "/roughnessLayerMember[RoughnessPolygon]" );
-//      
-//      final AddThemeCommand command = new AddThemeCommand( mapModell, layer.getName(), "gml", featurePath.toString(), source, "sld", "Roughness style", "project:/.metadata/roughness.sld","simple" );
-//      m_mapView.postCommand( command, null );
-//    }
-//    else
-//      throw new ExecutionException( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+    // final String source = m_data.getModel().getWrappedFeature().getWorkspace().getContext().toString();
+    // if( m_mapView != null )
+    // {
+    // final GisTemplateMapModell mapModell = (GisTemplateMapModell) m_mapView.getMapPanel().getMapModell();
+    // final StringBuffer featurePath = new StringBuffer( "#fid#" );
+    // featurePath.append( layer.getGmlID() ).append( "/roughnessLayerMember[RoughnessPolygon]" );
+    //      
+    // final AddThemeCommand command = new AddThemeCommand( mapModell, layer.getName(), "gml", featurePath.toString(),
+    // source, "sld", "Roughness style", "project:/.metadata/roughness.sld","simple" );
+    // m_mapView.postCommand( command, null );
+    // }
+    // else
+    // throw new ExecutionException( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
   }
 
-  public void prepare( boolean resetMap ) throws Exception
+  public void prepare( final boolean resetMap ) throws Exception
   {
     if( resetMap )
     {
@@ -139,11 +139,11 @@ public class Transformer implements ICoreRunnableWithProgress
         {
           final GM_MultiSurface multiSurface = (GM_MultiSurface) ((GM_MultiSurface) gm_Whatever).clone();
           final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
-          for( int k = 0; k < surfaces.length; k++ )
+          for( final GM_Surface< ? > element : surfaces )
           {
             final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
             m_NumberOfEntriesAdded++;
-            roughnessPolygon.setSurface( surfaces[k] );
+            roughnessPolygon.setSurface( element );
             m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
           }
         }
@@ -180,20 +180,20 @@ public class Transformer implements ICoreRunnableWithProgress
   {
     final GMLWorkspace shpWorkspace = GmlSerializer.createGMLWorkspace( m_data.getRoughnessDatabaseLocationURL(), null );
     final GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getWrappedFeature().getWorkspace();
-    for( String key : m_data.getRoughnessShapeStaticRelationMap().keySet() )
+    for( final String key : m_data.getRoughnessShapeStaticRelationMap().keySet() )
     {
       final Feature feature = myWorkspace.getFeature( key );
       final Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
       if( linkedFeature != null )
       {
-        final StringBuffer xlinkBuffer = new StringBuffer(50);
+        final StringBuffer xlinkBuffer = new StringBuffer( 50 );
         xlinkBuffer.append( "project:" ).append( m_data.getRoughnessDatabaseLocation() ).append( "#" ).append( linkedFeature.getId() ).trimToSize();
         final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), xlinkBuffer.toString(), "", "", "", "", "" );
         feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
       }
     }
     // use (dummy) command to make workspace dirty
-    SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
+    final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
     if( caseDataProvider != null )
     {
       caseDataProvider.postCommand( ITerrainModel.class, new AddRoughnessPolygonsCmd() );

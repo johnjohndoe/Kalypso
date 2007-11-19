@@ -38,34 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.application;
+package org.kalypso.kalypso1d2d.pjt;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.application.SimulationProjectsContentProvider;
 
 /**
- * @author schrage
- *
+ * @author Gernot Belger
  */
-public class Messages
+public class Kalypso1d2dProjectsContentProvider extends SimulationProjectsContentProvider
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypso1d2d.pjt.application.messages"; //$NON-NLS-1$
-
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
-
-  private Messages( )
+  /**
+   * @see org.kalypso.afgui.application.SimulationProjectsContentProvider#appliesToProject(org.eclipse.core.resources.IProject)
+   */
+  @Override
+  protected boolean appliesToProject( final IProject project ) throws CoreException
   {
+    return Kalypso1D2DProjectNature.isOfThisNature( project );
   }
 
-  public static String getString( String key )
-  {
-    try
-    {
-      return RESOURCE_BUNDLE.getString( key );
-    }
-    catch( MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-  }
 }

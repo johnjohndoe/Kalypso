@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.pjt.perspective;
+package org.kalypso.afgui.perspective;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -6,9 +6,8 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
 import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.afgui.views.WorkflowView;
+import org.kalypso.chart.ui.view.ChartView;
 import org.kalypso.featureview.views.FeatureView;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
-import org.kalypso.model.wspm.ui.view.chart.ChartView;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 import org.kalypso.ogc.sensor.view.DiagramViewPart;
 import org.kalypso.ogc.sensor.view.TableViewPart;
@@ -17,15 +16,17 @@ import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.ui.views.map.MapView;
 
-// TODO: move the perspective to the afgui stuff
 @SuppressWarnings("restriction")
 public class Perspective implements IPerspectiveFactory
 {
-  final static public String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective"; //$NON-NLS-1$
+  // REMARK: still using kalypso1d2d.pjt as namespace in order to ebnsure backwards compability.
+  // If this should ever be changed, make sure all workflow.xml's got updated as well.
+  public final static String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective"; //$NON-NLS-1$
 
-  public static final String SCENARIO_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.ScenarioView"; //$NON-NLS-1$
+  // REMARK: see #ID
+  public final static String SCENARIO_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.ScenarioView"; //$NON-NLS-1$
 
-  public static final String TIMESERIES_REPOSITORY_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView";
+  public final static String TIMESERIES_REPOSITORY_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView";
 
   public void createInitialLayout( final IPageLayout layout )
   {
@@ -80,6 +81,5 @@ public class Perspective implements IPerspectiveFactory
     // layout.getViewLayout( MapView.ID + ":*").setCloseable( false );
     layout.getViewLayout( MapView.ID ).setCloseable( false );
     layout.getViewLayout( MapView.ID ).setMoveable( false );
-    layout.addNewWizardShortcut( Kalypso1D2DNewProjectWizard.ID );
   }
 }

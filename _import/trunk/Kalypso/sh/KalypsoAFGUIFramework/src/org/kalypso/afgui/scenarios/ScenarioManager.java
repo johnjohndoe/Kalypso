@@ -10,17 +10,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.AbstractCaseManager;
-import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
- * This implementation of {@link ICaseManager} persists the scenario model data in the project workspace.
- * Information about the scenarios is kept in the project .metadata folder.
+ * This implementation of {@link ICaseManager} persists the scenario model data in the project workspace. Information
+ * about the scenarios is kept in the project .metadata folder.
  * 
  * @author Stefan Kurzbach
  */
@@ -28,7 +26,7 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
 {
   private static final Logger logger = Logger.getLogger( ScenarioManager.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );   //$NON-NLS-1$
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) ); //$NON-NLS-1$
 
   static
   {
@@ -56,10 +54,10 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
    * @see de.renew.workflow.connector.context.SimpleCaseManager#createCase(java.lang.String)
    */
   @Override
-  public Scenario createCase( final String name ) throws CoreException
+  public Scenario createCase( final String name )
   {
     final Scenario newScenario = new org.kalypso.afgui.scenarios.ObjectFactory().createScenario();
-    final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), m_project.getName() ).replaceFirst( Pattern.quote( "${casePath}" ), name );     //$NON-NLS-1$ //$NON-NLS-2$
+    final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), m_project.getName() ).replaceFirst( Pattern.quote( "${casePath}" ), name ); //$NON-NLS-1$ //$NON-NLS-2$
     newScenario.setURI( uri );
     newScenario.setName( name );
     internalAddCase( newScenario );
@@ -73,11 +71,11 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
    * @see org.kalypso.afgui.scenarios.IScenarioManager#deriveScenario(java.lang.String,
    *      org.kalypso.afgui.scenarios.Scenario)
    */
-  public Scenario deriveScenario( final String name, final Scenario parentScenario ) throws CoreException
+  public Scenario deriveScenario( final String name, final Scenario parentScenario )
   {
     final org.kalypso.afgui.scenarios.ObjectFactory of = new org.kalypso.afgui.scenarios.ObjectFactory();
     final Scenario newScenario = of.createScenario();
-    newScenario.setURI( parentScenario.getURI() + "/" + name );   //$NON-NLS-1$
+    newScenario.setURI( parentScenario.getURI() + "/" + name ); //$NON-NLS-1$
     newScenario.setName( name );
     newScenario.setParentScenario( parentScenario );
 
@@ -106,12 +104,12 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
     }
     try
     {
-      monitor.beginTask( Messages.getString("ScenarioManager.4"), 100 );  //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "ScenarioManager.4" ), 100 ); //$NON-NLS-1$
       final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
       // only remove if no derived scenarios
       if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ScenarioManager.5") ) );  //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ScenarioManager.5" ) ) ); //$NON-NLS-1$
       }
       final Scenario parentScenario = scenario.getParentScenario();
       if( parentScenario == null )
@@ -124,7 +122,7 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
         parentScenario.getDerivedScenarios().getScenarios().remove( scenario );
       }
       monitor.worked( 5 );
-      persist( new SubProgressMonitor( monitor, 15 ) );
+      persist( null );
     }
     finally
     {

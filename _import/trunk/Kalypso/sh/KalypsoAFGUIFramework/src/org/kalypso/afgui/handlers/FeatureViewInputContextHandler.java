@@ -45,13 +45,14 @@ public class FeatureViewInputContextHandler extends AbstractHandler implements I
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    // TODO: that is strange and probably bug-prone. Why not just use scenario-relative pathews for the .gft file?
     final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_featureViewInput );
     IFile file = null;
     if( folder != null && m_featureViewInput != null )

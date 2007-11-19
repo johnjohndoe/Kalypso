@@ -11,7 +11,6 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
@@ -104,9 +103,7 @@ public class WorkflowView extends ViewPart
 
             // project is not open or such
             m_workflowControl.setWorkflow( null );
-            StatusManager.getManager().handle(
-                e.getStatus(), StatusManager.SHOW
-                | StatusManager.LOG);
+            StatusManager.getManager().handle( e.getStatus(), StatusManager.SHOW | StatusManager.LOG );
           }
         }
         else

@@ -49,9 +49,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Random;
 
 import org.eclipse.core.resources.IFolder;
@@ -96,8 +94,6 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    */
   private IFolder modelFolder;
 
-  private static Map<String, String> fileNumbersMap = new HashMap<String, String>();
-
   private ITerrainModel terrainModel;
 
   // private String m_scenarioFolder;
@@ -125,10 +121,10 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    * @param selection
    *            the current object selection
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     initialSelection = selection;
-    Iterator selIterator = selection.iterator();
+    final Iterator selIterator = selection.iterator();
     terrainModel = (ITerrainModel) selIterator.next();
     modelFolder = (IFolder) selIterator.next();
     temFolder = (IFolder) selIterator.next();
@@ -157,7 +153,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
 
       getContainer().run( true, true, new IRunnableWithProgress()
       {
-        public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException, IllegalArgumentException
+        public void run( final IProgressMonitor monitor ) throws InvocationTargetException, IllegalArgumentException
         {
           try
           {
@@ -167,11 +163,11 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               temSys = new TerrainElevationModelSystem( ImportElevationWizard.this.terrainModel );
             }
 
-            GMLWorkspace workspace = temSys.getWrappedFeature().getWorkspace();
+            final GMLWorkspace workspace = temSys.getWrappedFeature().getWorkspace();
 
             // Decoding the White Spaces present in the File Paths.
-            File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
-            File temFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( temFolder.getLocationURI().toURL() ).getFile() ) );
+            final File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
+            final File temFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( temFolder.getLocationURI().toURL() ).getFile() ) );
             final File srcFileTif = getUTF_DecodedFile( sourcePath.toFile() );
 
             File dstFileTif = null;
@@ -192,13 +188,13 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             {
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
             }
-            ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-            ITerrainElevationModel tem = new NativeTerrainElevationModelWrapper( temSys, nativeTEMRelPath );
+            final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+            final ITerrainElevationModel tem = new NativeTerrainElevationModelWrapper( temSys, nativeTEMRelPath );
 
             // TODO introduce in the first page a name imput field and gets the
             // name from there
 
-            String name = dstFileTif.getName();
+            final String name = dstFileTif.getName();
             if( setFileName.compareTo( "" ) != 0 )
             {
               tem.setName( setFileName );
@@ -225,15 +221,15 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys.getWrappedFeature(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getParent(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
-            SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
+            final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
             caseDataProvider.postCommand( ITerrainModel.class, new AddTerrainelevationModelCmd() );
 
             caseDataProvider.saveModel( ITerrainModel.class, null );
 
-// pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
+            // pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
           }
 
-          catch( Exception e )
+          catch( final Exception e )
           {
             e.printStackTrace();
             throw new InvocationTargetException( e );
@@ -242,7 +238,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
       } );
 
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
       return false;
@@ -251,18 +247,18 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     return true;
   }
 
-  String getNewFileName( File folder, File srcFileTif )
+  String getNewFileName( final File folder, final File srcFileTif )
   {
-// int i = 1;
-// if (!fileNumbersMap.containsKey(srcFileTif.getName()))
-// fileNumbersMap.put( srcFileTif.getName(),i+"");
-// else
-// {
-// i = Integer.valueOf( fileNumbersMap.get( srcFileTif.getName() ) ).intValue();
-// fileNumbersMap.put( srcFileTif.getName(), (i++)+"");
-// }
-    Random generator = new Random( 126545 );
-    int key = generator.nextInt();
+    // int i = 1;
+    // if (!fileNumbersMap.containsKey(srcFileTif.getName()))
+    // fileNumbersMap.put( srcFileTif.getName(),i+"");
+    // else
+    // {
+    // i = Integer.valueOf( fileNumbersMap.get( srcFileTif.getName() ) ).intValue();
+    // fileNumbersMap.put( srcFileTif.getName(), (i++)+"");
+    // }
+    final Random generator = new Random( 126545 );
+    final int key = generator.nextInt();
     System.out.println( "key :" + key );
 
     if( new File( folder, getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif ).toString() ).exists() )
@@ -271,11 +267,11 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     return getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif );
   }
 
-  public static String getExtension( File f )
+  public static String getExtension( final File f )
   {
     String ext = null;
-    String s = f.getName();
-    int i = s.lastIndexOf( '.' );
+    final String s = f.getName();
+    final int i = s.lastIndexOf( '.' );
 
     if( i > 0 && i < s.length() - 1 )
     {
@@ -284,11 +280,11 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     return ext;
   }
 
-  public static String getFileNameNoExtension( File f )
+  public static String getFileNameNoExtension( final File f )
   {
     String ext = null;
-    String s = f.getName();
-    int i = s.lastIndexOf( '.' );
+    final String s = f.getName();
+    final int i = s.lastIndexOf( '.' );
 
     if( i > 0 && i < s.length() - 1 )
     {
@@ -297,7 +293,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     return ext;
   }
 
-  boolean copy( File src, File dst, IProgressMonitor monitor2 )
+  boolean copy( final File src, final File dst, final IProgressMonitor monitor2 )
   {
     InputStream in;
     OutputStream out;
@@ -321,9 +317,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
       }
       out = new FileOutputStream( dst );
 
-      byte[] buf = new byte[1024];
+      final byte[] buf = new byte[1024];
       int len;
-      int lens = ((int) src.length() / 1024 + 1);
+      final int lens = ((int) src.length() / 1024 + 1);
       monitor2.beginTask( "Copying..", lens );
       while( (len = in.read( buf )) > 0 )
       {
@@ -336,7 +332,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
       out.close();
       return true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return false;
@@ -366,7 +362,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     return new IPoolListener()
     {
 
-      public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
+      public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
       {
         // TODO Auto-generated method stub
 
@@ -378,13 +374,13 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
         return false;
       }
 
-      public void objectInvalid( IPoolableObjectType key, Object oldValue )
+      public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
       {
         // TODO Auto-generated method stub
 
       }
 
-      public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
+      public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
       {
         // TODO Auto-generated method stub
 
@@ -393,13 +389,13 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     };
   }
 
-  public File getUTF_DecodedFile( File file )
+  public File getUTF_DecodedFile( final File file )
   {
     try
     {
       return new File( URLDecoder.decode( file.toString(), "UTF-8" ) );
     }
-    catch( UnsupportedEncodingException e )
+    catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
     }

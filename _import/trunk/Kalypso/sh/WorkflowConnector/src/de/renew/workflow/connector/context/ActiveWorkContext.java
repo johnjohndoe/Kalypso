@@ -148,12 +148,13 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
 
       if( m_caseManager != null )
         m_caseManager.setCurrentCase( caseToActivate );
+
+      final CaseHandlingProjectNature currentProjectNature = m_currentProjectNature;
       PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
       {
-
         public void run( )
         {
-          fireActiveContextChanged( m_currentProjectNature, caseToActivate );
+          fireActiveContextChanged( currentProjectNature, caseToActivate );
         }
       } );
     }
@@ -191,7 +192,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
     m_activeContextChangeListeners.remove( l );
   }
 
-  private void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final T caze )
+  protected void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final T caze )
   {
     for( final IActiveContextChangeListener<T> l : m_activeContextChangeListeners )
     {
@@ -335,7 +336,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
               {
                 setCurrentProject( null );
               }
-              catch( CoreException e )
+              catch( final CoreException e )
               {
                 final Shell activeShell = display.getActiveShell();
                 final IStatus status = e.getStatus();

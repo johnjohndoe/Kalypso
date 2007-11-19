@@ -38,46 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector;
+package org.kalypso.afgui.application;
 
-import de.renew.workflow.cases.Case;
-import de.renew.workflow.connector.context.IActiveContextChangeListener;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * @author Stefan Kurzbach
+ * @author schrage
  * 
  */
-public interface IWorkflowConnector extends IActiveContextChangeListener<Case>
+public class Messages
 {
+  private static final String BUNDLE_NAME = "org.kalypso.afgui.application.messages"; //$NON-NLS-1$
 
-  public boolean isConnected( );
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
-  public void connect( );
+  private Messages( )
+  {
+  }
 
-  public void addWorklistChangeListener( final IWorklistChangeListener worklistChangeListener );
-
-  public void removeWorklistChangeListener( final IWorklistChangeListener worklistChangeListener );
-
-  /**
-   * Returns true if the work item with the id is currently available
-   */
-  public boolean canRequest( final String id );
-
-  public boolean isActive( final String id );
-
-  /**
-   * Requests a new WorkItem and confirms the active Activity, if there is one
-   */
-  public Object request( final String id );
-
-  /**
-   * Confirms an activity that was previously requested
-   */
-  public void confirm( final String id, final Object result );
-
-  /**
-   * Cancels an activity that was previously requested
-   */
-  public void cancel( final String id );
-
+  public static String getString( final String key )
+  {
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( final MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
+  }
 }

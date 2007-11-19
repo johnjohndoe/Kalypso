@@ -44,7 +44,6 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.HandlerEvent;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 
@@ -105,12 +104,13 @@ public abstract class AbstractWorkflowHandler extends AbstractHandler implements
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
+  @SuppressWarnings("unchecked")
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     if( data instanceof Map )
     {
-      Map map = (Map) data;
-      m_task = (String) map.get( TASK );
+      final Map<String, String> map = (Map<String, String>) data;
+      m_task = map.get( TASK );
     }
   }
 

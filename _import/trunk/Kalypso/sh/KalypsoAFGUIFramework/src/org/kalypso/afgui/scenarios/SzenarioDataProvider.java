@@ -6,6 +6,7 @@ package org.kalypso.afgui.scenarios;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +23,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -53,7 +55,6 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommandPoster
 {
-
   private static final class KeyPoolListener implements IPoolListener
   {
     private final IPoolableObjectType m_key;
@@ -134,6 +135,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   private final List<IScenarioDataListener> m_controller = new ArrayList<IScenarioDataListener>();
 
+  private IContainer m_scenarioFolder = null;
+
   private String m_dataSetScope;
 
   public void addScenarioDataListener( final IScenarioDataListener listener )
@@ -146,22 +149,31 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     m_controller.remove( listener );
   }
 
-  public void setCurrent( final IContainer szenarioFolder )
+  public synchronized void setCurrent( final IContainer scenarioFolder )
   {
-    if( szenarioFolder != null )
+    /* Nothing to do if scenario folder stays the same */
+    if( ObjectUtils.equals( m_scenarioFolder, scenarioFolder ) )
+      return;
+
+    /* Release current models && reset state */
+    reset();
+
+    if( scenarioFolder != null )
     {
-      final IProject project = szenarioFolder.getProject();
+      final IProject project = scenarioFolder.getProject();
       final ProjectScope projectScope = new ProjectScope( project );
-      m_dataSetScope = projectScope.getNode( "org.kalypso.afgui" ).get( "dataSetScope", "" );
+      final IEclipsePreferences afguiNode = projectScope.getNode( "org.kalypso.afgui" );
+      m_dataSetScope = afguiNode == null ? null : afguiNode.get( "dataSetScope", null );
     }
-    else
-    {
-      m_dataSetScope = null;
-    }
+    m_scenarioFolder = scenarioFolder;
 
-    fireScenarioDataFolderChanged( szenarioFolder );
+    fireScenarioDataFolderChanged( scenarioFolder );
 
-    final Job job = new Job( "" )
+    if( m_scenarioFolder == null || m_dataSetScope == null )
+      return;
+
+    final String dataSetScope = m_dataSetScope;
+    final Job job = new Job( "Initalizing data scope for current scenario" )
     {
       /**
        * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -172,16 +184,15 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         try
         {
           // TODO: do not do this! If something is out of sync, thats a bug!
-          if( szenarioFolder != null )
-            szenarioFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
+          scenarioFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
         }
         catch( final Throwable th )
         {
           th.printStackTrace();
         }
 
-        // TODO: this causes an exception no startup!
-        final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( m_dataSetScope );
+        // TODO: this causes an exception on startup!
+        final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( dataSetScope );
         if( locationMap != null )
         {
           for( final Map.Entry<Class< ? extends IModel>, String> entry : locationMap.entrySet() )
@@ -189,43 +200,64 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
             final Class< ? extends IModel> wrapperClass = entry.getKey();
             final String gmlLocation = entry.getValue();
 
-            resetKeyForProject( (IFolder) szenarioFolder, wrapperClass, gmlLocation );
+            resetKeyForProject( (IFolder) scenarioFolder, wrapperClass, gmlLocation );
           }
         }
         return Status.OK_STATUS;
       }
     };
-    if( szenarioFolder != null )
-      job.setRule( szenarioFolder.getProject() );
+
+    job.setRule( scenarioFolder.getProject() );
     job.schedule();
+  }
+
+  /**
+   * Releases all models and clears all cached data.
+   */
+  private void reset( )
+  {
+    m_scenarioFolder = null;
+    m_dataSetScope = null;
+
+    final Collection<KeyPoolListener> values = m_keyMap.values();
+    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    for( final KeyPoolListener key : values )
+    {
+      if( key != null )
+        pool.removePoolListener( key );
+    }
+    m_keyMap.clear();
   }
 
   private void fireScenarioDataFolderChanged( final IContainer szenarioFolder )
   {
     for( final IScenarioDataListener listener : m_controller )
-    {
       listener.scenarioChanged( (IFolder) szenarioFolder );
-    }
   }
 
+  // TODO: please comment!<br>
+  // TODO: probably that does not belong here, move to ScenarioHelper instead?
   public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
   {
     if( szenarioFolder == null )
       return null;
 
     if( szenarioFolder.getFile( new Path( modelFile ) ).exists() )
-    {
       return szenarioFolder;
-    }
+
     final IContainer parent = szenarioFolder.getParent();
     if( parent.getType() != IResource.PROJECT )
       return findModelContext( (IFolder) parent, modelFile );
-    else
-      return null;
 
+    return null;
   }
 
-  public void reloadModel( )
+  /**
+   * Reloads all models.
+   * 
+   * @see de.renew.workflow.connector.cases.ICaseDataProvider#reloadModel()
+   */
+  public synchronized void reloadModel( )
   {
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     for( final KeyPoolListener listener : m_keyMap.values() )
@@ -241,7 +273,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * @param szenarioFolder
    *            If <code>null</code>, just releases the existing key.
    */
-  protected synchronized void resetKeyForProject( final IFolder szenarioFolder, final Class< ? extends IModel> wrapperClass, final String gmlLocation )
+  /* protected */void resetKeyForProject( final IFolder szenarioFolder, final Class< ? extends IModel> wrapperClass, final String gmlLocation )
   {
     final IPoolableObjectType newKey = keyForLocation( szenarioFolder, gmlLocation );
 
@@ -274,7 +306,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     try
     {
       final URL szenarioURL = ResourceUtilities.createURL( szenarioFolder );
-      // final URL context = UrlResolverSingleton.resolveUrl( szenarioURL, gmlLocation );
       return new PoolableObjectType( "gml", gmlLocation, szenarioURL );
     }
     catch( final MalformedURLException e )
@@ -294,36 +325,16 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * </p>.
    */
   @SuppressWarnings("unchecked")
-  public <T extends IModel> T getModel( final Class<T> modelClass ) throws CoreException
+  public synchronized <T extends IModel> T getModel( final Class<T> modelClass ) throws CoreException
   {
-    final CommandableWorkspace workspace = getModelWorkspace( modelClass );
+    final CommandableWorkspace workspace = getCommandableWorkSpace( modelClass );
     return (T) workspace.getRootFeature().getAdapter( modelClass );
   }
 
-  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws Exception
+  public synchronized void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws Exception
   {
-    final CommandableWorkspace modelWorkspace = getModelWorkspace( wrapperClass );
+    final CommandableWorkspace modelWorkspace = getCommandableWorkSpace( wrapperClass );
     modelWorkspace.postCommand( command );
-  }
-
-  private synchronized CommandableWorkspace getModelWorkspace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
-  {
-    final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( m_dataSetScope );
-    if( locationMap == null || !locationMap.containsKey( wrapperClass ) )
-      throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + wrapperClass ); //$NON-NLS-1$
-
-    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-
-    final KeyPoolListener keyPoolListener = m_keyMap.get( wrapperClass );
-    if( keyPoolListener == null )
-      return null;
-
-    final IPoolableObjectType key = keyPoolListener.getKey();
-    if( key == null )
-      return null;
-
-    final CommandableWorkspace workspace = (CommandableWorkspace) pool.getObject( key );
-    return workspace;
   }
 
   public boolean isDirty( )
@@ -339,7 +350,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   /**
    * @see de.renew.workflow.cases.ICaseDataProvider#isDirty(java.lang.Class)
    */
-  public boolean isDirty( final Class< ? extends IModel> modelClass )
+  public synchronized boolean isDirty( final Class< ? extends IModel> modelClass )
   {
     final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
     if( keyPoolListener == null )
@@ -368,16 +379,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(java.lang.Class,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void saveModel( final Class< ? extends IModel> modelClass, IProgressMonitor monitor ) throws CoreException
+  public synchronized void saveModel( final Class< ? extends IModel> modelClass, final IProgressMonitor monitor ) throws CoreException
   {
-    if( monitor == null )
-    {
-      monitor = new NullProgressMonitor();
-    }
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "SzenarioDataProvider.14" ) + modelClass.getSimpleName() + Messages.getString( "SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
+
     try
     {
-      monitor.beginTask( Messages.getString( "SzenarioDataProvider.14" ) + modelClass.getSimpleName() + Messages.getString( "SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
-
       final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
       if( keyPoolListener == null )
         throw new IllegalArgumentException( "Unknown model: " + modelClass.getName() );
@@ -387,49 +394,54 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       {
         final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
         final KeyInfo infoForKey = pool.getInfoForKey( key );
-        monitor.worked( 10 );
+        progress.worked( 10 );
         if( infoForKey.isDirty() )
-        {
-          infoForKey.saveObject( new SubProgressMonitor( monitor, 100 ) );
-        }
+          infoForKey.saveObject( progress.newChild( 100 ) );
       }
     }
     catch( final LoaderException e )
     {
-      monitor.done();
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
     finally
     {
-      monitor.done();
+      progress.done();
     }
   }
 
-  public void saveModel( IProgressMonitor monitor ) throws CoreException
+  public void saveModel( final IProgressMonitor monitor ) throws CoreException
   {
-    if( monitor == null )
-    {
-      monitor = new NullProgressMonitor();
-    }
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "SzenarioDataProvider.16" ), m_keyMap.size() * 100 ); //$NON-NLS-1$
     try
     {
-      monitor.beginTask( Messages.getString( "SzenarioDataProvider.16" ), m_keyMap.size() * 100 ); //$NON-NLS-1$
       for( final Class< ? extends IModel> modelClass : m_keyMap.keySet() )
-      {
-        saveModel( modelClass, new SubProgressMonitor( monitor, 100 ) );
-      }
+        saveModel( modelClass, progress.newChild( 100 ) );
     }
     finally
     {
-      monitor.done();
+      progress.done();
     }
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#getCommandableWorkSpace(java.lang.Class)
    */
-  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
+  public synchronized CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
   {
-    return getModelWorkspace( wrapperClass );
+    final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( m_dataSetScope );
+    if( locationMap == null || !locationMap.containsKey( wrapperClass ) )
+      throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + wrapperClass ); //$NON-NLS-1$
+
+    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+
+    final KeyPoolListener keyPoolListener = m_keyMap.get( wrapperClass );
+    if( keyPoolListener == null )
+      return null;
+
+    final IPoolableObjectType key = keyPoolListener.getKey();
+    if( key == null )
+      return null;
+
+    return (CommandableWorkspace) pool.getObject( key );
   }
 }

@@ -196,10 +196,8 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
     return m_cases.getCases();
   }
 
-  /**
-   * 
-   */
-  public void persist( final IProgressMonitor monitor ) throws CoreException
+  public void persist( @SuppressWarnings("unused")
+  final IProgressMonitor monitor )
   {
     final Job job = new Job( "" )
     {
