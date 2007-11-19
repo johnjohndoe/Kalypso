@@ -124,6 +124,7 @@
  </extension>
  <extension
        point="org.kalypso.deegree.functionProperty">
+	<!-- @Dejan: TODO remove if no more needed?-->
     <function
           class="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
           id="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
