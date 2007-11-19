@@ -1,62 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Kalypso 1D/2D</title>
-    <link rel="stylesheet" href="css/shared.css" type="text/css"/>
-  </head>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Kalypso 1D/2D</title>
+<link rel="stylesheet" href="css/shared.css" type="text/css" />
+</head>
 
-  <body>
-    <h1>Kalypso Risiko</h1>
-    <div class="list">Allgemeine Informationen</div>
-        <p align="justify">
-		Das gekoppelte 1D-2D Modell ist ein hydrodynamisches Strömungsmodell, formuliert mit der Methode der
-		finiten Elemente. Es ermöglicht die Berechnung von stationären und instationären hydrodynamischen
-		Problemstellungen. Bei der Gebietsmodellierung können eindimensionale sowie zweidimensionale
-		Approximationsansätze verwendet und gebietsweise miteinander gekoppelt werden.
-		</p>
-		<p align="justify">
-		Das zweidimensionale Strömungsmodell wird über den Ansatz der zweidimensionalen, tiefengemittelten,
-		Reynolds-gemittelten Flachwassergleichungen formuliert. Im polynombasierten eindimensionalen Modell
-		werden die Saint-Venant-Gleichungen verwendet. Mit diesem Ansatz können auch komplexe Gewässerprofile
-		auf Basis einer stationär ungleichförmigen Spiegellinienberechnung berechnet werden, in der die
-		beschreibenden Polynome bestimmt werden.
- 		</p>
- 		<p align="justify">
-		Die Lösung in Kalypso1D2D erfolgt über eine Diskretisierung des Modellgebietes nach dem
-		Finite-Elemente-Verfahren mit der Methode der gewichteten Residuen nach Galerkin. Für die
-		Diskretisierung können unterschiedliche Elementformen verwendet werden:
-		</p>
-		<ul>
-		<li>Zweidimensionale Gebiete werden über planare Dreiecke oder Vierecke modelliert.</li>
-		<li>Eindimensionale Bereiche werden über rein lineare Elemente mit zwei Eckknoten für den
-		polynombasierten Berechnungsansatz modelliert.</li>
-		</ul>
-		<p align="justify">
-		Die Zeitabhängigkeit wird über ein modifiziertes Crank-Nicholson Verfahren abgebildet,
-		wobei das Newton-Raphson Verfahren verwendet wird.
-		</p>
-		<p align="justify">
-		Innovative Ansätze sind in den Bereichen Rauheitsmodellierung und Turbulenz enthalten. Die
-		Rauheitsmodellierung erfolgt über das Colebrook-White’sche Widerstandsgesetz und beinhalten
-		die Modellierung von Fliessverlusten infolge von überströmtem und durchströmtem Bewuchs.
-		Verschiedene Turbulenzmodelle sind bei der Simulation verfügbar: Ein konstantes
-		Wirbelviskositätsmodell, ein bodeninduziertes Turbulenz-Modell, der Prandtl’sche
-		Mischungswegansatz und das Smagorinsky Modell. Das hydrodynamische Model Kalypso1D2D berechnet
-		Wasserstände und horizontale Komponenten der Fliessgeschwindigkeiten sowohl für strömenden
-		als auch schiessenden Abfluss in offenen Gewässern.
- </p>
+<body>
+<h1>Kalypso Risiko</h1>
+	<div class="colorbox">
+		<h2>Allgemeine Informationen</h2>
+		<p><span class="titleImage"><img src="images/button_risk.gif" /></span>
+		Mit Kalypso-Riskio können Schadenspotentiale von Hochwasserereignissen
+		berechnet werden. Das Schadenspotential wird ausschließlich über
+		monetäre Werte beziffert. Diese können über mikroskalige oder
+		mesoskalige Ansätze erhoben werden. Über den jährlichen
+		Schadenserwartungswert können diese in Schadensrisiken transformiert und
+		schließlich als Schadens- oder Schadensrisikokarten dargestellt werden.</p>
+	</div>
 
-    <div class="list">Aktionen</div>
-    <a class="link"
-      href="http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&amp;class=org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction&amp;wizardId=org.kalypso.risk.project.KalypsoRiskProjectWizard"
-      id="newRiskProject">
-      <img class="link" border="0" src="css/kalypso16.gif" alt="Starte Modellierung"/>Neues Projekt erstellen...</a>
-      <br/>
+<div class="projectActions"><a class="newProject"
+	href="http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&amp;class=org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction&amp;wizardId=org.kalypso.risk.project.KalypsoRiskProjectWizard"
+	id="newRiskProject"> <img class="link"
+	src="css/kalypso16.gif" alt="Starte Modellierung" /><span>Neues
+Projekt erstellen...</span></a>
 
-    <div class="list">Vorhandene Projekte:</div>
-    <contentProvider id="RiskProjectsContentProvider" class="org.kalypso.risk.plugin.KalypsoModelRiskProjectsContentProvider" pluginId="org.kalypso.risk"/>
-    
-  </body>
+<h2>Vorhandene Projekte:</h2>
+<contentProvider id="RiskProjectsContentProvider"
+	class="org.kalypso.risk.plugin.KalypsoModelRiskProjectsContentProvider"
+	pluginId="org.kalypso.risk" /></div>
+
+</body>
 </html>
