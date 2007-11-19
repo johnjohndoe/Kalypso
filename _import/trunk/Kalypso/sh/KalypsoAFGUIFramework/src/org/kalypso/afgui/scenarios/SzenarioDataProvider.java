@@ -149,7 +149,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     m_controller.remove( listener );
   }
 
-  public synchronized void setCurrent( final IContainer scenarioFolder )
+  public void setCurrent( final IContainer scenarioFolder )
   {
     /* Nothing to do if scenario folder stays the same */
     if( ObjectUtils.equals( m_scenarioFolder, scenarioFolder ) )
@@ -191,16 +191,19 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
           th.printStackTrace();
         }
 
-        // TODO: this causes an exception on startup!
         final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( dataSetScope );
         if( locationMap != null )
         {
-          for( final Map.Entry<Class< ? extends IModel>, String> entry : locationMap.entrySet() )
+          synchronized( m_keyMap )
           {
-            final Class< ? extends IModel> wrapperClass = entry.getKey();
-            final String gmlLocation = entry.getValue();
+            // TODO: this causes an exception on startup!
+            for( final Map.Entry<Class< ? extends IModel>, String> entry : locationMap.entrySet() )
+            {
+              final Class< ? extends IModel> wrapperClass = entry.getKey();
+              final String gmlLocation = entry.getValue();
 
-            resetKeyForProject( (IFolder) scenarioFolder, wrapperClass, gmlLocation );
+              resetKeyForProject( (IFolder) scenarioFolder, wrapperClass, gmlLocation );
+            }
           }
         }
         return Status.OK_STATUS;
@@ -219,14 +222,20 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     m_scenarioFolder = null;
     m_dataSetScope = null;
 
-    final Collection<KeyPoolListener> values = m_keyMap.values();
+    KeyPoolListener[] keys;
+    synchronized( m_keyMap )
+    {
+      final Collection<KeyPoolListener> values = m_keyMap.values();
+      keys = values.toArray( new KeyPoolListener[values.size()] );
+      m_keyMap.clear();
+    }
+
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-    for( final KeyPoolListener key : values )
+    for( final KeyPoolListener key : keys )
     {
       if( key != null )
         pool.removePoolListener( key );
     }
-    m_keyMap.clear();
   }
 
   private void fireScenarioDataFolderChanged( final IContainer szenarioFolder )
@@ -257,10 +266,18 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * 
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#reloadModel()
    */
-  public synchronized void reloadModel( )
+  public void reloadModel( )
   {
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-    for( final KeyPoolListener listener : m_keyMap.values() )
+
+    final KeyPoolListener[] keys;
+    synchronized( m_keyMap )
+    {
+      final Collection<KeyPoolListener> values = m_keyMap.values();
+      keys = values.toArray( new KeyPoolListener[values.size()] );
+    }
+
+    for( final KeyPoolListener listener : keys )
     {
       final KeyInfo keyInfo = pool.getInfoForKey( listener.getKey() );
       keyInfo.reload();
@@ -325,13 +342,13 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * </p>.
    */
   @SuppressWarnings("unchecked")
-  public synchronized <T extends IModel> T getModel( final Class<T> modelClass ) throws CoreException
+  public <T extends IModel> T getModel( final Class<T> modelClass ) throws CoreException
   {
     final CommandableWorkspace workspace = getCommandableWorkSpace( modelClass );
     return (T) workspace.getRootFeature().getAdapter( modelClass );
   }
 
-  public synchronized void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws Exception
+  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws Exception
   {
     final CommandableWorkspace modelWorkspace = getCommandableWorkSpace( wrapperClass );
     modelWorkspace.postCommand( command );
@@ -350,13 +367,17 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   /**
    * @see de.renew.workflow.cases.ICaseDataProvider#isDirty(java.lang.Class)
    */
-  public synchronized boolean isDirty( final Class< ? extends IModel> modelClass )
+  public boolean isDirty( final Class< ? extends IModel> modelClass )
   {
-    final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
-    if( keyPoolListener == null )
+    final KeyPoolListener keyPoolListener;
+    synchronized( m_keyMap )
     {
-      return false;
+      keyPoolListener = m_keyMap.get( modelClass );
     }
+
+    if( keyPoolListener == null )
+      return false;
+
     final IPoolableObjectType key = keyPoolListener.getKey();
     if( key == null )
     {
@@ -379,13 +400,18 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(java.lang.Class,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public synchronized void saveModel( final Class< ? extends IModel> modelClass, final IProgressMonitor monitor ) throws CoreException
+  public void saveModel( final Class< ? extends IModel> modelClass, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "SzenarioDataProvider.14" ) + modelClass.getSimpleName() + Messages.getString( "SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
 
+    final KeyPoolListener keyPoolListener;
+    synchronized( m_keyMap )
+    {
+      keyPoolListener = m_keyMap.get( modelClass );
+    }
+
     try
     {
-      final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
       if( keyPoolListener == null )
         throw new IllegalArgumentException( "Unknown model: " + modelClass.getName() );
 
@@ -426,7 +452,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#getCommandableWorkSpace(java.lang.Class)
    */
-  public synchronized CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
+  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
   {
     final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( m_dataSetScope );
     if( locationMap == null || !locationMap.containsKey( wrapperClass ) )
@@ -434,7 +460,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
-    final KeyPoolListener keyPoolListener = m_keyMap.get( wrapperClass );
+    final KeyPoolListener keyPoolListener;
+    synchronized( m_keyMap )
+    {
+      keyPoolListener = m_keyMap.get( wrapperClass );
+    }
+
     if( keyPoolListener == null )
       return null;
 
