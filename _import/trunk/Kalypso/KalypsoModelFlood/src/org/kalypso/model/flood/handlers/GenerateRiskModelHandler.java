@@ -101,13 +101,10 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       final IRasterDataModel rasterDataModel = riskDataProvider.getModel( IRasterDataModel.class );
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
 
-//      final Map<String, Integer> eventNameToAnnualityMap = new HashMap<String, Integer>();
-//      for( final IRunoffEvent runoffEvent : eventsToProcess )
-//        eventNameToAnnualityMap.put( runoffEvent.getName(), 0 );
-//      
-      
-      
-      
+      // final Map<String, Integer> eventNameToAnnualityMap = new HashMap<String, Integer>();
+      // for( final IRunoffEvent runoffEvent : eventsToProcess )
+      // eventNameToAnnualityMap.put( runoffEvent.getName(), 0 );
+      //      
 
       /* --- demo code for accessing the depth grid coverage collections --- */
 
@@ -115,7 +112,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       for( final IRunoffEvent runoffEvent : eventsToProcess )
       {
         final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
-//        annualCoverageCollection.setReturnPeriod( eventNameToAnnualityMap.get( runoffEvent.getName() ) );
+        annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
         for( final ICoverage coverage : coverages )
           annualCoverageCollection.add( coverage );
