@@ -50,7 +50,7 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
     if( mapModell != null )
     {
       // get "Wasserspiegellagen" cascading theme
-      final AbstractCascadingLayerTheme hqTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQ" ); //$NON-NLS-1$
+      final AbstractCascadingLayerTheme hqTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQi" ); //$NON-NLS-1$
       if( hqTheme != null )
         mapModell.activateTheme( hqTheme );
     }

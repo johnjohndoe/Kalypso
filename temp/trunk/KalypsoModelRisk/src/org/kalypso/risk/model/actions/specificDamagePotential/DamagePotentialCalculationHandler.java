@@ -175,11 +175,10 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                   final File file = new File( ifile.getRawLocation().toPortableString() );
 
                   final ICoverage newCoverage = GeoGridUtilities.addCoverage( dstAnnualCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
-                  newCoverage.setName( "Schadenspotential HQ" + srcAnnualCoverages.getReturnPeriod() + " [" + count + "]" );
-                  newCoverage.setDescription( Messages.getString( "RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
+                  newCoverage.setName( Messages.getString("DamagePotentialCalculationHandler.14") + srcAnnualCoverages.getReturnPeriod() + " [" + count + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                  newCoverage.setDescription( Messages.getString("DamagePotentialCalculationHandler.17") + new Date().toString() ); //$NON-NLS-1$
 
                   inputGrid.dispose();
-
                   count++;
                 }
 
@@ -263,7 +262,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "SpecificDamagePotential" ) ) //$NON-NLS-1$
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( "Schadenspotentials" ) ) //$NON-NLS-1$
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
     return null;

@@ -140,7 +140,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQ" ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQi" ); //$NON-NLS-1$
     parentKalypsoTheme.setVisible( true );
     try
     {

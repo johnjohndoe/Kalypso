@@ -460,7 +460,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
 
     final String eventName = "HQ " + dialog.getValue(); //$NON-NLS-1$
     final IRasterDataModel model = m_model;
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQ" ); //$NON-NLS-1$
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQi" ); //$NON-NLS-1$
     Assert.isNotNull( wspThemes, Messages.getString( "WaterdepthCollectionsManagementWidget.35" ) ); //$NON-NLS-1$
 
     final ICoreRunnableWithProgress operation = new AddCollectionOperation( eventName, Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );

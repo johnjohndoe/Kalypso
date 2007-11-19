@@ -49,7 +49,7 @@ public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler 
     {
       final IKalypsoTheme[] themes = mapModell.getAllThemes();
       for( int i = 0; i < themes.length; i++ )
-        if( themes[i].getName().equals( "SpecificDamagePotential" ) ) //$NON-NLS-1$
+        if( themes[i].getName().equals( "Schadenspotentials" ) ) //$NON-NLS-1$
         {
           mapModell.activateTheme( themes[i] );
           break;
