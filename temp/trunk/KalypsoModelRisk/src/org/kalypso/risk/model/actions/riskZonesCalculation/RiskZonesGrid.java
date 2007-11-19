@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -122,6 +122,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
         if( polygon.contains( positionAt ) )
         {
           polygon.getLanduseClassOrdinalNumber();
+          polygon.updateStatisticsAverageAnnualDamage( result );
           fillStatistics( polygon, result );
           return getRiskZone( result, polygon.isUrbanLanduseType() );
         }
@@ -142,6 +143,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           landuseClass.setMaxDamage( result );
         final double totalDamage = landuseClass.getTotalDamage() + result * m_cellSize;
         landuseClass.setTotalDamage( totalDamage );
+        landuseClass.setAverageAnnualDamage( polygon.getStatisticsAverageAnnualDamage() );
       }
     }
   }

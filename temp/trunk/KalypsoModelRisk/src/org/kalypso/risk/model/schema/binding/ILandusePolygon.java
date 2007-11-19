@@ -44,4 +44,7 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public Boolean isUrbanLanduseType( );
 
+  public void updateStatisticsAverageAnnualDamage( final double value );
+
+  public double getStatisticsAverageAnnualDamage( );
 }

@@ -225,4 +225,25 @@ public class RasterizationControlModel extends AbstractFeatureBinder implements 
     return list;
   }
 
+  public void resetStatistics( )
+  {
+    for( final ILanduseClass landuseClass : m_landuseClasses )
+    {
+      landuseClass.setMinDamage( Double.MAX_VALUE );
+      landuseClass.setMaxDamage( Double.MIN_VALUE );
+      landuseClass.setAverageAnnualDamage( 0.0 );
+      landuseClass.setTotalDamage( 0.0 );
+    }
+  }
+
+  public void fixStatisticsForShowingToUser( )
+  {
+    for( final ILanduseClass landuseClass : m_landuseClasses )
+    {
+      if( landuseClass.getMaxDamage() < 0.0 )
+        landuseClass.setMaxDamage( 0.0 );
+      if( landuseClass.getMinDamage() > landuseClass.getMaxDamage() )
+        landuseClass.setMinDamage( 0.0 );
+    }
+  }
 }

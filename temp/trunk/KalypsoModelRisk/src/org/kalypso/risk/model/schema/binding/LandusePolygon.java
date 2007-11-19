@@ -8,6 +8,10 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 public class LandusePolygon extends AbstractFeatureBinder implements ILandusePolygon
 {
+  private long m_statisticsNumberOfRasterCells = 0;
+
+  private double m_statisticsAverageAnnualDamage = 0.0;
+
   private String m_styleType = null;
 
   private Integer m_landuseClassOrdinalNumber = null;
@@ -140,6 +144,18 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     // return IRasterizationControlModel.RISKZONE_NONURBANAREA_MIDDLE;
     // return IRasterizationControlModel.RISKZONE_NONURBANAREA_HIGH;
     // }
+  }
+
+  public void updateStatisticsAverageAnnualDamage( final double value )
+  {
+    m_statisticsAverageAnnualDamage = m_statisticsAverageAnnualDamage * m_statisticsNumberOfRasterCells + value;
+    m_statisticsNumberOfRasterCells++;
+    m_statisticsAverageAnnualDamage = m_statisticsAverageAnnualDamage / m_statisticsNumberOfRasterCells;
+  }
+
+  public double getStatisticsAverageAnnualDamage( )
+  {
+    return m_statisticsAverageAnnualDamage;
   }
 
 }

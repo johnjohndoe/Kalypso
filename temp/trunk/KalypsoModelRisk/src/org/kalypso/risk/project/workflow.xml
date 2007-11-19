@@ -79,16 +79,16 @@
 			<Help><![CDATA[Ausweisung des Hochwasserrisikos]]></Help>
 			<Name>Ausweisung des Hochwasserrisikos</Name>
 		</Task>
-		<Task context="StatisticsPanel"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__StatisticsPanel">
-			<Help><![CDATA[Statistische Auswertung]]></Help>
-			<Name>Statistische Auswertung</Name>
-		</Task>
 	</TaskGroup>
 	<TaskGroup
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Postprocessing">
 		<Help><![CDATA[Ergebnisauswertungen]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
+		<Task context="StatisticsPanel"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__StatisticsPanel">
+			<Help><![CDATA[Statistische Auswertung]]></Help>
+			<Name>Statistische Auswertung</Name>
+		</Task>
 		<Task context="CoveragesWidgetContext"
 			URI="org.kalypso.risk.model.handlers.ExportSpecificDamageCoveragesWidgetHandler">
 			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>

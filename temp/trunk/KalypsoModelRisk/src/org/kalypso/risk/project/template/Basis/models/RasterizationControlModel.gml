@@ -8,7 +8,6 @@
    <gml:name>Schleswig-Holstein</gml:name>
   </krrcm:AdministrationUnit>
  </krrcm:administrationUnitMember>
- <krrcm:assetValueClassMember/>
  <krrcm:landuseRiskTypeMember>
   <krrcm:LanduseRiskType gml:id="LanduseRiskType11946232986252">
    <gml:name>Freifläche</gml:name>
@@ -27,6 +26,7 @@
    <krrcm:lowerBoundaryValue>0.0</krrcm:lowerBoundaryValue>
    <krrcm:colorStyle>#ffff00</krrcm:colorStyle>
    <krrcm:zoneInternalNumber>1</krrcm:zoneInternalNumber>
+   <krrcm:isUrbanLanduseType>true</krrcm:isUrbanLanduseType>
   </krrcm:RiskZoneDefinition>
  </krrcm:riskZoneDefinitionMember>
  <krrcm:riskZoneDefinitionMember>
@@ -35,6 +35,7 @@
    <krrcm:lowerBoundaryValue>0.1</krrcm:lowerBoundaryValue>
    <krrcm:colorStyle>#ff8040</krrcm:colorStyle>
    <krrcm:zoneInternalNumber>2</krrcm:zoneInternalNumber>
+   <krrcm:isUrbanLanduseType>true</krrcm:isUrbanLanduseType>
   </krrcm:RiskZoneDefinition>
  </krrcm:riskZoneDefinitionMember>
  <krrcm:riskZoneDefinitionMember>
@@ -43,6 +44,7 @@
    <krrcm:lowerBoundaryValue>1.0</krrcm:lowerBoundaryValue>
    <krrcm:colorStyle>#ff0000</krrcm:colorStyle>
    <krrcm:zoneInternalNumber>3</krrcm:zoneInternalNumber>
+   <krrcm:isUrbanLanduseType>true</krrcm:isUrbanLanduseType>
   </krrcm:RiskZoneDefinition>
  </krrcm:riskZoneDefinitionMember>
  <krrcm:riskZoneDefinitionMember>
@@ -51,6 +53,7 @@
    <krrcm:lowerBoundaryValue>0.0</krrcm:lowerBoundaryValue>
    <krrcm:colorStyle>#8080ff</krrcm:colorStyle>
    <krrcm:zoneInternalNumber>4</krrcm:zoneInternalNumber>
+   <krrcm:isUrbanLanduseType>false</krrcm:isUrbanLanduseType>
   </krrcm:RiskZoneDefinition>
  </krrcm:riskZoneDefinitionMember>
  <krrcm:riskZoneDefinitionMember>
@@ -59,6 +62,7 @@
    <krrcm:lowerBoundaryValue>0.1</krrcm:lowerBoundaryValue>
    <krrcm:colorStyle>#8000ff</krrcm:colorStyle>
    <krrcm:zoneInternalNumber>5</krrcm:zoneInternalNumber>
+   <krrcm:isUrbanLanduseType>false</krrcm:isUrbanLanduseType>
   </krrcm:RiskZoneDefinition>
  </krrcm:riskZoneDefinitionMember>
  <krrcm:riskZoneDefinitionMember>
@@ -67,6 +71,7 @@
    <krrcm:lowerBoundaryValue>1.0</krrcm:lowerBoundaryValue>
    <krrcm:colorStyle>#400080</krrcm:colorStyle>
    <krrcm:zoneInternalNumber>6</krrcm:zoneInternalNumber>
+   <krrcm:isUrbanLanduseType>false</krrcm:isUrbanLanduseType>
   </krrcm:RiskZoneDefinition>
  </krrcm:riskZoneDefinitionMember>
  </krrcm:RasterizationControlModel>

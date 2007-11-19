@@ -79,4 +79,8 @@ public interface IRasterizationControlModel extends IModel
    */
   public List<String> getLanduseClassID( final String landuseClassName );
 
+  public void resetStatistics( );
+
+  public void fixStatisticsForShowingToUser( );
+
 }

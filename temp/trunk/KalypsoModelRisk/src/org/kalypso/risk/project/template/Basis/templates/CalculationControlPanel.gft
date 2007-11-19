@@ -82,8 +82,10 @@
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="landuseClassLink" width="150" />
+							<!-- 
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="administrationUnitLink" width="150" />
+							 -->
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="value" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"

@@ -80,6 +80,8 @@ public class RiskZonesCalculationHandler extends AbstractHandler
         }
         // remove existing (invalid) coverages from the model
         rasterModel.getRiskZonesCoverage().clear();
+        
+        controlModel.resetStatistics();
 
         final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
         final ICoverageCollection baseCoverages = maxCoveragesCollection;
@@ -115,6 +117,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
               // statistics...
+              controlModel.fixStatisticsForShowingToUser();
               scenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
               // Undoing this operation is not possible because old raster files are deleted...

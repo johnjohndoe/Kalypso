@@ -210,7 +210,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
                 final Property layerPropertyThemeInfoId = new Property();
                 layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-                layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Schadenspotential %.2f �/m�" ); //$NON-NLS-1$
+                layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Schadenspotential %.2f €/m²" ); //$NON-NLS-1$
                 final List<Property> layerPropertyList = layer.getProperty();
                 layerPropertyList.add( layerPropertyDeletable );
                 layerPropertyList.add( layerPropertyThemeInfoId );
