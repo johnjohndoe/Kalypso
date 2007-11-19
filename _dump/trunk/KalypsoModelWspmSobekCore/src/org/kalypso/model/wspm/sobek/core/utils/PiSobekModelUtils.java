@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.utils;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -128,10 +127,8 @@ public class PiSobekModelUtils
       if( !(null == super.put( key, value )) )
         throw new IllegalArgumentException( key + " is not unique in HashMap lookUpModelToPi." );
       if( !key.equals( value ) )
-      {
         if( !(null == super.put( value, key )) )
           throw new IllegalArgumentException( value + " is not unique in HashMap lookUpModelToPi." );
-      }
       return null;
     }
 
@@ -180,11 +177,8 @@ public class PiSobekModelUtils
     location.setY( node.getLocation().getY() );
 
     if( node instanceof IAbstractConnectionNode )
-    {
       if( node instanceof IConnectionNode )
-      {
         location.setLocationType( lookUpModelToPi.get( node.getType().toString() ) );
-      }
       else if( node instanceof ILinkageNode )
       {
         final LinkageNode ln = (LinkageNode) node;
@@ -200,7 +194,6 @@ public class PiSobekModelUtils
         final BoundaryNode bn = (BoundaryNode) node;
         location.setLocationType( lookUpModelToPi.get( bn.getBoundaryType().toString() ) );
       }
-    }
     return location;
   }
 
@@ -261,7 +254,7 @@ public class PiSobekModelUtils
     final IProfil profil = csNode.getProfile();
     final LinkedList<IProfilPoint> points = profil.getPoints();
 
-    for( IProfilPoint point : points )
+    for( final IProfilPoint point : points )
     {
       final CrossSectionXdataComplexType csData = factory.createCrossSectionXdataComplexType();
       csData.setCsy( point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) );
@@ -277,7 +270,7 @@ public class PiSobekModelUtils
     return piCrossSection;
   }
 
-  public Structure createStructureFromSbkStruct( ObjectFactory factory, ISbkStructure sbkStruct )
+  public Structure createStructureFromSbkStruct( final ObjectFactory factory, final ISbkStructure sbkStruct )
   {
     final Structure piStruct = new Structure();
     piStruct.setBranchId( sbkStruct.getLinkToBranch().getId() );
@@ -285,16 +278,17 @@ public class PiSobekModelUtils
     final String name = sbkStruct.getName();
     if( name != null )
       piStruct.setStructureName( name );
-    piStruct.setX( new BigDecimal( sbkStruct.getLocation().getX() ) );
-    piStruct.setY( new BigDecimal( sbkStruct.getLocation().getY() ) );
+
+    // FIXME
+    // piStruct.setX( new BigDecimal( sbkStruct.getLocation().getX() ) );
+    // piStruct.setY( new BigDecimal( sbkStruct.getLocation().getY() ) );
 
     final StructureDefinitions structureDefinitions = factory.createStructureDefinitions();
 
     final List<ISbkStructure> allStructs = new ArrayList<ISbkStructure>();
     // TODO aus CompoundStructure noch alle auslesen
     allStructs.add( sbkStruct );
-    for( ISbkStructure sbkStructure : allStructs )
-    {
+    for( final ISbkStructure sbkStructure : allStructs )
       if( sbkStructure instanceof SbkStructWeir )
       {
         final StructureDefinition structureDefinition = getStructureDefFromSbkWeir( factory, sbkStruct );
@@ -302,13 +296,12 @@ public class PiSobekModelUtils
       }
       else
         throw new NotImplementedException();
-    }
 
     piStruct.setStructureDefinitions( structureDefinitions );
     return piStruct;
   }
 
-  private StructureDefinition getStructureDefFromSbkWeir( ObjectFactory factory, ISbkStructure sbkStruct )
+  private StructureDefinition getStructureDefFromSbkWeir( final ObjectFactory factory, final ISbkStructure sbkStruct )
   {
     final ISbkStructWeir sbkWeir = (ISbkStructWeir) sbkStruct;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
@@ -356,7 +349,7 @@ public class PiSobekModelUtils
     return structureDefinition;
   }
 
-  public TimeSerieComplexType createTimeSeriesFromBNNodeAndLastfall( ObjectFactory factory, IBoundaryNode bnNode, ILastfall lastfall ) throws Exception
+  public TimeSerieComplexType createTimeSeriesFromBNNodeAndLastfall( final ObjectFactory factory, final IBoundaryNode bnNode, final ILastfall lastfall ) throws Exception
   {
     final TimeSerieComplexType piTimeSerie = factory.createTimeSerieComplexType();
 
@@ -412,7 +405,7 @@ public class PiSobekModelUtils
     else
       throw new NotImplementedException( "Boundary condition of type " + boundaryType + " can't be transferred by PI format yet." );
 
-    Iterator<IRecord> itrResult = tupleResult.iterator();
+    final Iterator<IRecord> itrResult = tupleResult.iterator();
     while( itrResult.hasNext() )
     {
       final IRecord record = itrResult.next();
