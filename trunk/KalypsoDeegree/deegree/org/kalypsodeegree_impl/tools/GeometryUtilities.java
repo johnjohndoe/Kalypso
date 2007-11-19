@@ -908,4 +908,5 @@ public class GeometryUtilities
 
     return 0;
   }
+
 }
