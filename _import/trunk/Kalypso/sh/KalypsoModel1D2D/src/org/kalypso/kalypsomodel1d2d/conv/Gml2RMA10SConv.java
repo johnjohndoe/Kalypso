@@ -159,7 +159,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( m_restart )
     {
       m_restartEater = new RestartEater();
-      
+
       // TODO: this prohibits using this calc-job in a server-client application
       // Always access data via the ISimulationDataProvider
       final IFolder scenarioFolder = Util.getScenarioFolder();
@@ -521,42 +521,28 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
           if( polyArea == null )
             continue; // TODO: only for debug purpose, throw exception instead
-
-          writePolynome( formatter, "AP1", nodeID, polyArea[0], 0, 5, null ); //$NON-NLS-1$
-          writePolynome( formatter, "AP2", nodeID, polyArea[0], 5, 10, null ); //$NON-NLS-1$
-          writePolynome( formatter, "AP3", nodeID, polyArea[0], 10, 13, null ); //$NON-NLS-1$
+          writePolynomialRanges( formatter, "PRA", nodeID, min, polyArea );
+          for( int j = 0; j < polyArea.length; j++ )
+          {
+            writeSplittedPolynomials( formatter, "AP ", nodeID, j, polyArea[j], null );
+          }
 
           final IPolynomial1D[] polyRunoff = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_RUNOFF );
-          writePolynome( formatter, "QP1", nodeID, polyRunoff[0], 0, 4, slope ); //$NON-NLS-1$
-          writePolynome( formatter, "QP2", nodeID, polyRunoff[0], 4, 9, null ); //$NON-NLS-1$
-          writePolynome( formatter, "QP3", nodeID, polyRunoff[0], 9, 13, null ); //$NON-NLS-1$
-
-          if( polyRunoff.length > 2 && polyArea.length > 2 )
+          writePolynomialRanges( formatter, "PRQ", nodeID, min, polyRunoff );
+          for( int j = 0; j < polyRunoff.length; j++ )
           {
-            formatter.format( "MH%10d%20.7f%20.7f%n", nodeID, polyRunoff[2].getRangeMin(), polyRunoff[2].getRangeMax() ); //$NON-NLS-1$
-            writePolynome( formatter, "QM", nodeID, polyArea[1], 0, 4, null ); //$NON-NLS-1$
-            writePolynome( formatter, "AM", nodeID, polyRunoff[1], 0, 4, null ); //$NON-NLS-1$
-            writePolynome( formatter, "QH", nodeID, polyArea[2], 0, 4, null ); //$NON-NLS-1$
-            writePolynome( formatter, "AH", nodeID, polyRunoff[2], 0, 4, null ); //$NON-NLS-1$
+            writeSplittedPolynomials( formatter, "QP ", nodeID, j, polyRunoff[j], slope );
           }
 
           final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_ALPHA );
-
           if( polyAlpha == null )
             throw new SimulationException( Messages.getString( "Gml2RMA10SConv.20" ) + station, null ); //$NON-NLS-1$
+          writePolynomialRanges( formatter, "PRB", nodeID, min, polyAlpha );
+          for( int j = 0; j < polyAlpha.length; j++ )
+          {
+            writeSplittedPolynomials( formatter, "ALP", nodeID, j, polyAlpha[j], null );
+          }
 
-          if( polyAlpha.length > 1 )
-          {
-            final double hBV = polyAlpha[1].getRangeMin(); // Bordvollhöhe ist gleich anfang des Übergangsbereich
-            formatter.format( "HB%10d%20.7f%n", nodeID, hBV ); //$NON-NLS-1$
-            writePolynome( formatter, "AD ", nodeID, polyAlpha[1], 0, 4, polyAlpha[1].getRangeMax() ); //$NON-NLS-1$
-          }
-          if( polyAlpha.length > 2 )
-          {
-            writePolynome( formatter, "AK1", nodeID, polyAlpha[2], 0, 5, null ); //$NON-NLS-1$
-            writePolynome( formatter, "AK2", nodeID, polyAlpha[2], 5, 10, null ); //$NON-NLS-1$
-            writePolynome( formatter, "AK3", nodeID, polyAlpha[2], 10, 13, null ); //$NON-NLS-1$
-          }
         }
         else
           throw new SimulationException( Messages.getString( "Gml2RMA10SConv.26" ) + relationship, null ); //$NON-NLS-1$
@@ -586,26 +572,55 @@ public class Gml2RMA10SConv implements INativeIDProvider
       writeRestartLines( formatter, nodeID, x, y );
   }
 
-  private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
+//  private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
+//  {
+//    formatter.format( "%3s%9d", kind, nodeID ); //$NON-NLS-1$
+//
+//    if( extraValue != null )
+//      formatter.format( "%20.7f", extraValue ); //$NON-NLS-1$
+//
+//    final double[] coefficients = poly.getCoefficients();
+//    for( int j = coeffStart; j < coeffStop; j++ )
+//    {
+//      final double coeff;
+//      if( j < coefficients.length )
+//        coeff = coefficients[j];
+//      else
+//        coeff = 0.0;
+//
+//      formatter.format( "%20.7f", coeff ); //$NON-NLS-1$
+//    }
+//
+//    formatter.format( "%n" ); //$NON-NLS-1$
+//  }
+
+  private void writeSplittedPolynomials( final Formatter formatter, final String kind, final int nodeID, final int polynomialNo, final IPolynomial1D poly, final Double extraValue )
   {
-    formatter.format( "%3s%9d", kind, nodeID ); //$NON-NLS-1$
+    formatter.format( "%3s%9d%3d", kind, nodeID, polynomialNo+1 ); //$NON-NLS-1$
 
     if( extraValue != null )
       formatter.format( "%20.7f", extraValue ); //$NON-NLS-1$
 
     final double[] coefficients = poly.getCoefficients();
-    for( int j = coeffStart; j < coeffStop; j++ )
+    for( int j = 0; j < coefficients.length; j++ )
     {
-      final double coeff;
-      if( j < coefficients.length )
-        coeff = coefficients[j];
-      else
-        coeff = 0.0;
+      double coeff = coefficients[j];
 
       formatter.format( "%20.7f", coeff ); //$NON-NLS-1$
     }
 
     formatter.format( "%n" ); //$NON-NLS-1$
+  }
+
+  private void writePolynomialRanges( final Formatter formatter, final String kind, final int nodeID, final double min, final IPolynomial1D[] poly )
+  {
+    formatter.format( "%3s%9d%3d%20.7f", kind, nodeID, poly.length, min );
+    for( int j = 0; j < poly.length; j++ )
+    {
+      formatter.format( "%20.7f", poly[j].getRangeMax() );
+    }
+    formatter.format( "%n" ); //$NON-NLS-1$
+
   }
 
   /**
