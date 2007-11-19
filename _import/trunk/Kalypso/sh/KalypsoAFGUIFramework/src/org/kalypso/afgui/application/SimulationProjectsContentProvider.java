@@ -187,9 +187,9 @@ public abstract class SimulationProjectsContentProvider implements IIntroXHTMLCo
     a.setAttribute( "id", "projectLinkId_" + pname ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( isActive )
-      a.setAttribute( "class", "activeProjectLink" ); //$NON-NLS-1$ //$NON-NLS-2$
+      a.setAttribute( "class", "projectTableLinkActive" ); //$NON-NLS-1$ //$NON-NLS-2$
     else
-      a.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
+      a.setAttribute( "class", "projectTableLink" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Formatter href = new Formatter();
     href.format( "http://org.eclipse.ui.intro/runAction?pluginId=%s&class=%s", PluginUtilities.id( KalypsoAFGUIFrameworkPlugin.getDefault() ), ActivateWorkflowProjectIntroAction.class.getName() ); //$NON-NLS-1$
@@ -215,13 +215,16 @@ public abstract class SimulationProjectsContentProvider implements IIntroXHTMLCo
     }
 
     final Element img = dom.createElement( "img" ); //$NON-NLS-1$
-    img.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
     img.setAttribute( "border", "0" ); //$NON-NLS-1$ //$NON-NLS-2$
     img.setAttribute( "src", fileUri ); //$NON-NLS-1$
     img.setAttribute( "alt", pname + Messages.getString( "SimulationProjectsContentProvider.37" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     a.appendChild( img );
-    a.appendChild( dom.createTextNode( " " + pname ) ); //$NON-NLS-1$
+
+    final Element span = dom.createElement( "span" );
+    a.appendChild( span );
+    span.appendChild( dom.createTextNode( pname ) );
+
     return a;
   }
 
@@ -231,7 +234,7 @@ public abstract class SimulationProjectsContentProvider implements IIntroXHTMLCo
 
     final Element a = dom.createElement( "a" ); //$NON-NLS-1$
     a.setAttribute( "id", "projectLinkId_" + pname ); //$NON-NLS-1$ //$NON-NLS-2$
-    a.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
+    a.setAttribute( "class", "projectTableLink" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Formatter href = new Formatter();
     href.format( "http://org.eclipse.ui.intro/runAction?pluginId=%s&class=%s", EclipsePlatformContributionsPlugin.getID(), DeleteProjectIntroAction.class.getName() ); //$NON-NLS-1$
@@ -257,7 +260,6 @@ public abstract class SimulationProjectsContentProvider implements IIntroXHTMLCo
     }
 
     final Element img = dom.createElement( "img" ); //$NON-NLS-1$
-    img.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
     img.setAttribute( "border", "0" ); //$NON-NLS-1$ //$NON-NLS-2$
     img.setAttribute( "src", fileUri ); //$NON-NLS-1$
     img.setAttribute( "alt", Messages.getString( "SimulationProjectsContentProvider.38" ) ); //$NON-NLS-1$ //$NON-NLS-2$

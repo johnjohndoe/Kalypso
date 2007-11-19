@@ -9,31 +9,32 @@
 
   <body>
     <h1>Flood Modeller</h1>
-    <div class="list">Allgemeine Informationen</div>
-    <p align="justify">
-	Modul zur Ermittlung und Darstellung von Überschwemmungsflächen und Fließtiefen auf Basis von Wasserspiegellagen aus Kalypso1D2D. 
-	Für das Berechnen der Fließtiefen werden Geländerasterdaten 
-	im ESRI-ASCII-Gridformat unterstützt. Bei der Ermittlung wird an jedem vorliegenden Geländerasterpunkt
-	der Wasserstand aus den importierten Wasserspiegellagen abgelesen und mittels Differenzenbildung ein 
-	Fließtiefenwert für diese Rasterzelle ermittelt. <br/>
-	Als Resultat entstehen Fließtiefenraster mit denselben Rasterweiten und Zellgrößen wie die eingelesenen Geländeraster.
-	</p>
-	<p align="justify">
-	Der Benutzer hat die Möglichkeit mehrere Berechnungsergebnisse in Ereignissen zusammenzufassen, so dass es möglich ist, 
-	evtl. während der Berechnung getrennte Modellabschnitte gesamtheitlich prozessieren zu können. Ebenso dient die 
-	Ereignisstruktur als Vorlage für eine direkte Übergabe der Fließtiefen an den Risk Modeller.
-	</p>  
-    <br/>
+    
+    <div class="colorbox">
+	    <h2>Allgemeine Informationen</h2>
+	    <p><span class="titleImage"><img src="images/button_flood.gif"/></span>
+		Modul zur Ermittlung und Darstellung von Überschwemmungsflächen und Fließtiefen auf Basis von Wasserspiegellagen aus Kalypso1D2D. 
+		Für das Berechnen der Fließtiefen werden Geländerasterdaten 
+		im ESRI-ASCII-Gridformat unterstützt. Bei der Ermittlung wird an jedem vorliegenden Geländerasterpunkt
+		der Wasserstand aus den importierten Wasserspiegellagen abgelesen und mittels Differenzenbildung ein 
+		Fließtiefenwert für diese Rasterzelle ermittelt. <br/>
+		Als Resultat entstehen Fließtiefenraster mit denselben Rasterweiten und Zellgrößen wie die eingelesenen Geländeraster.
+		</p>
+		<p>
+		Der Benutzer hat die Möglichkeit mehrere Berechnungsergebnisse in Ereignissen zusammenzufassen, so dass es möglich ist, 
+		evtl. während der Berechnung getrennte Modellabschnitte gesamtheitlich prozessieren zu können. Ebenso dient die 
+		Ereignisstruktur als Vorlage für eine direkte Übergabe der Fließtiefen an den Risk Modeller.
+		</p>
+	</div>  
 
-    <div class="list">Aktionen</div>
-    <a class="link"
-      href="http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&amp;class=org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction&amp;wizardId=org.kalypso.model.flood.ui.wizards.NewProjectWizard"
-      id="newFloodProject">
-      <img class="link" border="0" src="css/kalypso16.gif" alt="Starte Modellierung"/>Neues Projekt erstellen...</a>
-      <br />
-
-    <div class="list">Vorhandene Projekte:</div>
-    <contentProvider id="floodProjectsContentProvider" class="org.kalypso.model.flood.ui.intro.KalypsoModelFloodContentProvider" pluginId="org.kalypso.model.flood"/>
+	<div class="projectActions">
+	    <a class="newProject"
+	      href="http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&amp;class=org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction&amp;wizardId=org.kalypso.model.flood.ui.wizards.NewProjectWizard"
+	      id="newFloodProject"><img src="css/kalypso16.gif"/><span>Neues Projekt erstellen...</span></a>
+	
+	    <h2>Vorhandene Projekte:</h2>
+	    <contentProvider id="floodProjectsContentProvider" class="org.kalypso.model.flood.ui.intro.KalypsoModelFloodContentProvider" pluginId="org.kalypso.model.flood"/>
+    </div>
       
   </body>
 </html>
