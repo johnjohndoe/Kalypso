@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * @author Thomas Jung
@@ -58,5 +59,7 @@ public interface IFloodPolygon extends IFeatureWrapper2
   public static final QName QNAME_PROP_EVENT = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "eventMember" );
 
   public boolean appliesToEvent( String eventId );
+
+  public boolean contains( GM_Position pos );
 
 }

@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
@@ -75,4 +76,10 @@ public abstract class AbstractFloodPolygon extends AbstractFeatureBinder impleme
 
     return false;
   }
+  
+  public boolean contains( GM_Position crd )
+  {
+    return getFeature().getDefaultGeometryProperty().contains( crd );
+  }
+  
 }

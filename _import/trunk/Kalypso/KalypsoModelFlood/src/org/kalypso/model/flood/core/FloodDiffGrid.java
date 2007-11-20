@@ -42,6 +42,7 @@ package org.kalypso.model.flood.core;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -204,7 +205,17 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   {
     final GM_Position pos = JTSAdapter.wrap( crd );
 
-    final List<IFloodPolygon> polygonList = m_polygons.query( pos );
+    final List<IFloodPolygon> list = m_polygons.query( pos );
+    final List<IFloodPolygon> polygonList = new LinkedList<IFloodPolygon>();
+    
+    if( list == null || list.size() == 0 )
+      return polygonList;
+    else
+      for( final IFloodPolygon polygon : list )
+      {
+        if( polygon.contains( pos ) )
+          polygonList.add( polygon );
+      }
 
     return polygonList;
   }
