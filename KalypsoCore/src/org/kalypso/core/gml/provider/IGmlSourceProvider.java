@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * Implementors of the <code>org.kalypso.core.gmlSourceProvider</code> extension-points.<br>
- * Provide a generel way to provid {@link IGmlSource}s.
+ * Provide a general way to provide {@link IGmlSource}s.
  * 
  * @author Gernot Belger
  */
