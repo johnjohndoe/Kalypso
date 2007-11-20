@@ -44,10 +44,10 @@ import java.util.Collection;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -85,7 +85,7 @@ public class PointFeatureDialog implements IFeatureDialog
     if( point != null )
       dialog = new PointDialog( shell, point.getAsArray(), point.getCoordinateSystem() );
     else
-      dialog = new PointDialog( shell, new double[] { 0.0, 0.0 }, KalypsoGisPlugin.getDefault().getCoordinatesSystem() );
+      dialog = new PointDialog( shell, new double[] { 0.0, 0.0 }, KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
 
     final int open = dialog.open();
 
