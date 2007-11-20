@@ -131,6 +131,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
     {
       // everything else will be edited in a text field
       final Text editor = TemplateUtilitites.OF_FEATUREVIEW.createText();
+      
       editor.setStyle( "SWT.MULTI | SWT.BORDER" ); //$NON-NLS-1$
       editor.setEditable( true );
       editor.setProperty( qname );
