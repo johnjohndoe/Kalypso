@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
@@ -199,8 +200,8 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
       case hmo:
         final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null );
-        CS_CoordinateSystem crs = getCoordinateSytem( properties.getProperty( "srs" ) );
-        TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+        crs = getCoordinateSytem( properties.getProperty( "srs" ) );
+        eater = new TriangulatedSurfaceTriangleEater( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
 
         final GeoTransformer transformer = new GeoTransformer( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
 
