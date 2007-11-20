@@ -88,6 +88,15 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
           MessageDialog.openError( shell, Messages.getString( "DamagePotentialCalculationHandler.5" ), Messages.getString( "DamagePotentialCalculationHandler.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return null;
         }
+        for( final IAnnualCoverageCollection collection : model.getWaterlevelCoverageCollection() )
+        {
+          final Integer returnPeriod = collection.getReturnPeriod();
+          if( returnPeriod == null || returnPeriod <= 0 )
+          {
+            MessageDialog.openError( shell, Messages.getString( "DamagePotentialCalculationHandler.5" ), Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            return null;
+          }
+        }
         final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
         final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
         if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
@@ -175,8 +184,8 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                   final File file = new File( ifile.getRawLocation().toPortableString() );
 
                   final ICoverage newCoverage = GeoGridUtilities.addCoverage( dstAnnualCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
-                  newCoverage.setName( Messages.getString("DamagePotentialCalculationHandler.14") + srcAnnualCoverages.getReturnPeriod() + " [" + count + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                  newCoverage.setDescription( Messages.getString("DamagePotentialCalculationHandler.17") + new Date().toString() ); //$NON-NLS-1$
+                  newCoverage.setName( Messages.getString( "DamagePotentialCalculationHandler.14" ) + srcAnnualCoverages.getReturnPeriod() + " [" + count + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                  newCoverage.setDescription( Messages.getString( "DamagePotentialCalculationHandler.17" ) + new Date().toString() ); //$NON-NLS-1$
 
                   inputGrid.dispose();
                   count++;
