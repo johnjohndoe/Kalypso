@@ -59,7 +59,7 @@ import com.sun.media.jai.codec.SeekableStream;
  */
 public class GridFileVerifier
 {
-  private static final String[] validFileExtensions = new String[] { "tif", "tiff", "jpg", "jpeg", "asc", "dat", "png" };
+  private static final String[] validFileExtensions = new String[] { "tif", "tiff", "jpg", "jpeg", "asc", "dat", "png", "asg" };
 
   public enum RASTER_TYPE
   {
@@ -157,7 +157,7 @@ public class GridFileVerifier
       throw new IllegalStateException();
 
     // TODO: mke a real inspection of file
-    final String[] ascExtensions = new String[] { "asc", "dat" };
+    final String[] ascExtensions = new String[] { "asc", "dat", "asg" };
 
     final String file = urlImage.toString().toLowerCase();
     final int index = file.lastIndexOf( "." );

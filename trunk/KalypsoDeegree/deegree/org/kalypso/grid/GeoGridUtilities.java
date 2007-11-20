@@ -162,7 +162,7 @@ public class GeoGridUtilities
     if( mimeType.endsWith( "/bin" ) )
       return BinaryGeoGrid.openGrid( url, origin, offsetX, offsetY );
 
-    if( mimeType.endsWith( "/asc" ) )
+    if( mimeType.endsWith( "/asc" ) || mimeType.endsWith( "/asg" ) )
       return new AsciiRandomAccessGeoGrid( url, origin, offsetX, offsetY );
 
     if( mimeType.startsWith( "image" ) )
