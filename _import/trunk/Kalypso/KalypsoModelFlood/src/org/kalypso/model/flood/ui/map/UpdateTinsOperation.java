@@ -47,6 +47,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
@@ -61,7 +62,8 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
+import org.kalypso.contribs.java.util.PropertiesUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
@@ -82,6 +84,7 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
@@ -195,9 +198,11 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         break;
 
       case hmo:
+        final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null );
+        CS_CoordinateSystem crs = getCoordinateSytem( properties.getProperty( "srs" ) );
+        TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
 
-        crs = getCoordinateSytem( sourceLocation.getQuery() );
-        eater = new TriangulatedSurfaceTriangleEater( crs );
+        final GeoTransformer transformer = new GeoTransformer( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
 
         final URL hmoLocation = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() );
 
@@ -212,7 +217,10 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
           {
             GM_Object object = JTSAdapter.wrap( ring.getPointN( i ) );
 
-            pointList.add( (GM_Point) object );
+            final GM_Point point = (GM_Point) object;
+            point.setCoordinateSystem( crs );
+
+            pointList.add( (GM_Point) transformer.transform( point ) );
           }
           eater.add( pointList );
         }

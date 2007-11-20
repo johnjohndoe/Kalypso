@@ -161,7 +161,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
     Assert.isTrue( element == THE_ELEMENT );
 
     final File externalFile = m_file;
-    final String srs = "ESPG:31467"; // TODO: ask user for that
+    final String srs = "EPSG:31466"; // TODO: ask user for that
 
     if( externalFile == null || srs == null )
       return null;

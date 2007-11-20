@@ -321,7 +321,7 @@
             id="org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider"
             label="Externe Datei (.hmo, .shp, .gml)">
          <category
-               id="org.kalypso.core.tin.waterlevelDISABLED">
+               id="org.kalypso.core.tin.waterlevel">
          </category>
       </provider>
    </extension>
