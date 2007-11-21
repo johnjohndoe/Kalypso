@@ -71,7 +71,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.java.awt.ColorUtilities;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -178,7 +177,12 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     if( value > m_max )
       return null;
 
-    final int index = Math.abs( Arrays.binarySearch( m_values, value ) );
+    int index;
+    final int binarySearch = Arrays.binarySearch( m_values, value );
+    if( binarySearch > 0 )
+      index = binarySearch;
+    else
+      index = Math.abs( binarySearch ) - 1;
     if( index >= 0 && index < m_colors.length )
       return m_colors[index];
 
@@ -186,7 +190,7 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
   }
 
   @Override
-  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
+  public void paint( final GC gc, final Feature feature )
   {
     final Rectangle clipping = gc.getClipping();
 
