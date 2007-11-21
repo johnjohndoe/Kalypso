@@ -54,6 +54,7 @@ import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -220,6 +221,17 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   public void setSourceType( SOURCETYPE type )
   {
     getFeature().setProperty( QNAME_PROP_SOURCE_TYPE, type.name() );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.ITinReference#getTraingle(org.kalypsodeegree.model.geometry.GM_Position)
+   */
+  public GM_Triangle getTraingle( GM_Position pos )
+  {
+    final GM_TriangulatedSurface tin = getTin();
+
+    return tin.getTriangle( pos );
+
   }
 
 }

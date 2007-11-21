@@ -139,7 +139,7 @@ public class FloodModelHelper
   {
     final StyledLayerType wspLayer = new StyledLayerType();
 
-    wspLayer.setName( "Fliesstiefen (" + event.getName() + ")" );
+    wspLayer.setName( "Flieﬂtiefen (" + event.getName() + ")" );
     wspLayer.setFeaturePath( "#fid#" + event.getWrappedFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/"
         + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() );
     wspLayer.setLinktype( "gml" );

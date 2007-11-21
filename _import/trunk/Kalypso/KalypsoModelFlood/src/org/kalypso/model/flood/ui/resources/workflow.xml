@@ -53,7 +53,7 @@
 		<Task context="FloodMap"
 			URI="org.kalypso.model.flood.VisualizeDepthData">
 			<Help><![CDATA[Hier können Sie sich die generierten Fließtiefen anzeigen und exportieren lassen.]]></Help>
-			<Name>Fließtiefen anzeigen</Name>
+			<Name>Fließtiefen verwalten</Name>
 		</Task>
 		<Task URI="org.kalypso.model.flood.GenerateRiskModel">
 			<Help><![CDATA[Hierüber können Sie mit den erzeugten Fließtiefen ein neues Risk Model anlegen.]]></Help>

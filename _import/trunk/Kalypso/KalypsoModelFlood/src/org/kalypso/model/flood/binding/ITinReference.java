@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -156,5 +157,7 @@ public interface ITinReference extends IFeatureWrapper2
    * @return The paretn feature adapted to {@link IRunoffEvent}, ma be <code>null</code>.
    */
   public IRunoffEvent getRunoffEvent( );
+
+  public GM_Triangle getTraingle( final GM_Position pos );
 
 }
