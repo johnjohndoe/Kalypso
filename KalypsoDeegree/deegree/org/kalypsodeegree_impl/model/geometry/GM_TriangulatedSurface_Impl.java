@@ -573,4 +573,17 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
 
     return Double.NaN;
   }
+
+  public GM_Triangle getTriangle( final GM_Position position )
+  {
+    final Envelope searchEnv = new Envelope( position.getX(), position.getX(), position.getY(), position.getY() );
+    final List<GM_Triangle> query = m_index.query( searchEnv );
+    for( final GM_Triangle triangle : query )
+    {
+      if( triangle.contains( position ) )
+        return triangle;
+    }
+
+    return null;
+  }
 }

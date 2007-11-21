@@ -206,8 +206,6 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     }
 
     /* Read statistical data */
-
-    // ? values are not set ?!
     writeBigDecimal( m_min );
     writeBigDecimal( m_max );
   }
