@@ -74,4 +74,6 @@ public interface GM_TriangulatedSurface extends GM_Surface<GM_Triangle>
    *         no covering triangle was found.
    */
   public double getValue( GM_Position pos );
+
+  public GM_Triangle getTriangle( GM_Position pos );
 }

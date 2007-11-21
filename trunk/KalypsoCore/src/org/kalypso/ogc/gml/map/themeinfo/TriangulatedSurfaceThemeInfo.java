@@ -47,7 +47,6 @@ import java.util.Properties;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -58,7 +57,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -142,7 +140,8 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
       final Feature feature = FeatureHelper.getFeature( workspace, tinObject );
 
       final GM_TriangulatedSurface surface = findSurface( feature );
-
+      if( surface == null )
+        return;
       final double value = surface.getValue( pos );
       if( !Double.isNaN( value ) )
       {
