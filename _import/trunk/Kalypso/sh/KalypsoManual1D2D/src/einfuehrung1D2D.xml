@@ -3,7 +3,7 @@
   <title>Allgemeine Einführung HN-Modell Kalypso1D2D</title>
 
   <para>Das zweidimensionale Strömungsmodell wird über den Ansatz der
-  zweidimensionalen, tiefengemittelten, REYNOLDs-gemittelten
+  zweidimensionalen, tiefengemittelten, REYNOLDS-gemittelten
   Flachwassergleichungen formuliert. Im polynombasierten eindimensionalen
   Modell werden die SAINT-VENANT-Gleichungen verwendet. Mit diesem Ansatz
   können auch komplexe Gewässerprofile auf Basis einer stationär
@@ -38,11 +38,11 @@
     Auflistung aller verfügbarer Modelle. Hier ist das Kalypso1D2D Modell zu
     wählen.</para>
 
-    <para>Auf der Welcome Seite von Kalypso1D2D können Sie zunächst zwischen
-    den folgenden Aktionen wählen:<itemizedlist>
+    <para>Auf der Welcome Seite von Kalypso1D2D können Sie zwischen den
+    folgenden Aktionen wählen:<itemizedlist>
         <listitem>
           <para>Neues Projekt erstellen: Über diese Option kann ein neues
-          Projekt erstellt werden. Wählen Sie hierfür den Button
+          Projekt erstellt werden. Wählen Sie hierfür den Knopf
           <inlinemediaobject>
               <imageobject>
                 <imagedata fileref="img/1D2D/Icon_NeuesProjekt.png" />
@@ -52,18 +52,18 @@
 
         <listitem>
           <para>Vorhandene Projekte öffnen: Bereits vorhandene Projekte können
-          hier bearbeitet werden. Wählen Sie hierfür den Button
+          hier bearbeitet werden. Wählen Sie hierfür den Knopf
           <inlinemediaobject>
               <imageobject>
                 <imagedata fileref="img/1D2D/Icon_VorhandenesProjekt.png" />
               </imageobject>
-            </inlinemediaobject></para>
+            </inlinemediaobject> des Projektes, das Sie öffnen möchten.</para>
         </listitem>
 
         <listitem>
           <para>Vorhandene Projekte löschen: Über diese Option ist es möglich
           bereits vorhandene Projekte aus dem Workspace zu löschen. Wählen Sie
-          hierfür den Button <inlinemediaobject>
+          hierfür den Knopf <inlinemediaobject>
               <imageobject>
                 <imagedata fileref="img/1D2D/Icon_ProjektLoeschen.png" />
               </imageobject>
@@ -88,7 +88,7 @@
         <primary>Kalypso1D2D Perspektive</primary>
       </indexterm>
 
-      <para>Die Bearbeitung der Kalypso1D2D projekte erfolgt Einheitlich in
+      <para>Die Bearbeitung der Kalypso1D2D Projekte erfolgt einheitlich in
       der Kalypso1D2D Perspektive. Hauptelement der Perspektive ist die
       Workflowansicht, welche den Arbeitsablauf durch die Bereitstellung der
       zu bearbeitenden Aufgaben steuert. Neben der Workflowansicht ist die
@@ -129,7 +129,7 @@
 
         <orderedlist>
           <listitem>
-            <para>Preprozessing</para>
+            <para>Preprocessing</para>
 
             <itemizedlist>
               <listitem>
@@ -139,7 +139,7 @@
           </listitem>
 
           <listitem>
-            <para>Prozessing</para>
+            <para>Processing</para>
 
             <itemizedlist>
               <listitem>
@@ -153,7 +153,7 @@
           </listitem>
 
           <listitem>
-            <para>Postprozessing</para>
+            <para>Postprocessing</para>
 
             <itemizedlist>
               <listitem>
@@ -171,69 +171,123 @@
       </section>
 
       <section>
-        <title>Szenarien Ansicht</title>
+        <title>Ansicht "Szenarien"</title>
 
         <indexterm>
           <primary>Szenarien Ansicht</primary>
         </indexterm>
 
-        <para>Die Szenarien Ansicht ermöglicht den Wechsel der zu
-        bearbeitenden Szenarien und das Ableiten erweiterter Szenarien eines
-        Modelles.</para>
+        <para>Die Ansicht "Szenarien" ermöglicht den Wechsel der zu
+        bearbeitenden Szenarien sowie das Ableiten und Löschen erweiterter
+        Szenarien eines Modelles.</para>
 
-        <section>
-          <title>Szenario wechseln</title>
+        <para>Das aktivierte Basisszenario (blaue Kugel) wird in
+        Fettbuchstaben dargestellt. Dieses ist das ausgewählte Projekt, das
+        nun im Navigator geöffnet ist. Um die Funktionen der Ansicht
+        "Szenarien" sichtbar zu machen, müssen Sie ein Basisszenario markieren
+        indem Sie es mit dem linken Mauszeiger anklicken. Es erscheinen
+        Symbole, die in der folgenden Tabelle vorgestellt werden.</para>
 
-          <para>Unterhalb des Reiters im Aktivitätenfenster wird angezeigt
-          welches Szenario aktiviert ist. Bevor Sie damit beginnen können an
-          einem anderen Szenario/ Projekt zu arbeiten, muss dieses erst
-          aktiviert werden. Gehen Sie dafür in das Szenarienfenster und öffnen
-          Sie den Baum des gewünschten Projektes. Nun klicken Sie mit der
-          rechten Maustaste auf die Datei <filename>Basis</filename> (blaue
-          Kugel) und wählen aus dem Menü <guimenuitem>Szenario
-          aktivieren</guimenuitem>.</para>
+        <figure>
+          <title>Ansicht "Szenarien"</title>
 
           <mediaobject>
             <imageobject>
-              <imagedata align="center"
-                         fileref="img/1D2D/szenario_aktivieren.png" />
+              <imagedata fileref="img/1D2D/szenario_ansicht.png" />
             </imageobject>
           </mediaobject>
-        </section>
+        </figure>
 
-        <section>
-          <title>Szenario ableiten</title>
+        <table>
+          <title>Funktionen in der Szenarien Ansicht</title>
 
-          <para>Um verschiedene Recheneinstellung vorzunehmen ist es sinnvoll
-          vorher eine Kopie der alten Einstellungen beizubehalten. Man behält
-          also das Basismodell und ändert lediglich die Einstellungen an der
-          Kopie. Hierfür muss kein neues Projekt angelegt werden, sondern es
-          lässt sich einfach ein weiteres Szenario von dem Basisszenario
-          ableiten. Dabei ist zu beachten, dass das Basisszenario nicht
-          aktiviert sein darf, wenn man ein abgeleitetes Szenario
-          erstellt.</para>
+          <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+            <colspec colwidth="1*" />
 
-          <para>Um ein Szenario abzuleiten klicken Sie mit der rechten
-          Maustaste bei dem nicht aktivierten, gewünschten Szenario auf die
-          <filename>Basis</filename> Datei und wählen mit Menü
-          <guimenuitem>Szenario hinzufügen</guimenuitem>. Es öffnet sich der
-          zugehörige Assistent. Geben Sie ihrem neuen Simulations Modell einen
-          Namen und fügen Sie ggf. einen Kommentar ein. Wenn Sie den Button
-          <guibutton>Fertig stellen</guibutton> drücken, wird der Assistent
-          geschlossen und ein abgeleitetes Szenario erstellt.</para>
+            <colspec colwidth="2*" />
 
-          <para>Wenn Sie das abgeleitete Szenario wieder löschen möchten,
-          müssen Sie zunächst wieder ein anderes Szenario aktivieren. Klicken
-          Sie dann mit der rechten Maustaste auf das abgeleitete Szenario, das
-          Sie löschen möchten und wählen Sie <guimenuitem>Szenario
-          löschen</guimenuitem>.</para>
+            <colspec colwidth="5*" />
+
+            <tbody>
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/szenario_Icon_neuesprojekt.png"
+                                 width="" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Neues Projekt
+                erstellen</entry>
+
+                <entry align="left" valign="middle">Wenn Sie diesen Knopf
+                betätigen, öffnet sich der Assistent um ein neues Projekt zu
+                erstellen. (Siehe <xref
+                linkend="Kalypso1D2DNeuesProjekt" />)</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/szenario_Icon_loeschen.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Szenario löschen</entry>
+
+                <entry align="left" valign="middle">Wenn Sie diesen Knopf
+                betätigen wird das markierte Szenario gelöscht. Es können nur
+                nicht aktivierte Szenarien gelöscht werden.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/szenario_Icon_aktivieren.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left">Szenario aktivieren</entry>
+
+                <entry valign="middle">Wenn Sie diesen Buttton betätigen wird
+                das markierte Szenario aktiviert. Das aktivierte Szenario wird
+                in Fettbuchstaben dargestellt.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/szenario_Icon_hinzufuegen.png"
+                                 srccredit="" valign="middle" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Abgeleitetes Szenario
+                hinzufügen</entry>
+
+                <entry align="left" charoff="" valign="middle">Von
+                Basisszenarien können weitere Szenarien abgeleitet werden. Das
+                Basisszenario, von dem ein Szenario abgeleitet werden soll,
+                sollte nicht aktiviert sein. Markieren Sie das nicht
+                aktivierte Basiszszenario und klicken Sie anschließend auf den
+                Knopf. Es öffnet sich ein Assistent, in dem Sie einen Namen
+                eingeben müssen und gegebenenfalls eine Beschreibung.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <figure>
+          <title>Assistent zur Erstellung eines abgeleiteten Szenarios</title>
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/1D2D/szenario_hinzufügen.png" />
+              <imagedata fileref="img/1D2D/szenario_hinzufuegen.png"
+                         scale="95" />
             </imageobject>
           </mediaobject>
-        </section>
+        </figure>
       </section>
     </section>
 
@@ -248,10 +302,10 @@
       müssen Sie den Projektnamen und den Speicherort des anzulegenden
       Projektes definieren. Voreingestellt wird als Speicherort immer das
       festgelegte Arbeitsverzeichnis gewählt. Um einen anderen Speicherort
-      festzulegen, müssen Sie das Häckchen vor <guilabel>Use default
-      location</guilabel> entfernen und dann über den Button
+      festzulegen, müssen Sie das Häkchen vor <guilabel>Use default
+      location</guilabel> entfernen und dann über den Knopf
       <guibutton>Durchsuchen...</guibutton> das gewünschte Verzeichnis
-      auswählen. Der Assistent wird durch den Button <guibutton>Fertig
+      auswählen. Der Assistent wird durch den Knopf <guibutton>Fertig
       stellen</guibutton> abgeschlossen. Zugleich wird das neue Projekt
       angelegt und die 1D2D Perspektive (siehe <xref
       linkend="Kalypso1D2DPerspektive" />) geöffnet.</para>
@@ -310,40 +364,41 @@
       <guilabel>Also delete contents under ...</guilabel> . Um das Projekt aus
       der Kalypso Ansicht zu entfernen wählen Sie <guilabel>Do not delete
       contents</guilabel>. Um den Löschvorgang abzuschließen klicken Sie auf
-      den Button <guibutton>Yes</guibutton>. Wenn Sie den Löschvorgang
-      abbrechen wollen, klicken Sie auf den Button
+      den Knopf <guibutton>Yes</guibutton>. Wenn Sie den Löschvorgang
+      abbrechen wollen, klicken Sie auf den Knopf
       <guibutton>No</guibutton>.</para>
     </section>
 
     <section>
       <title>Arbeiten und Darstellung in der Karte</title>
 
-      <para>Karte wird automatisch geladen, bei bestimmten Schritten des
-      Workflows.</para>
+      <para>Die Karte mit den dazugehörigen Funktionalitäten wird bei der
+      Aktivierung eines Bearbeitungsschrittes des Workflows automatisch
+      geladen. In der folgenden Tabelle sind die Standardfunktionen der Karte
+      aufgelistet, die bei jedem Bearbeitungsschritt mit Karte zur Verfügung
+      stehen.</para>
 
-      <table align="center" id="symbolleiste im Profileditor wspm">
+      <table>
         <title>Die Grundfunktionen der Karte</title>
 
-        <tgroup align="center" cols="3">
-          <colspec align="left" colwidth="1*" />
+        <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+          <colspec colwidth="1*" />
 
-          <colspec align="left" />
+          <colspec colwidth="2*" />
 
-          <colspec align="left" />
+          <colspec colwidth="5*" />
 
           <tbody>
             <row>
-              <entry><figure>
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="img/1D2D/Icon_Karte_zoomen.png"
-                                 scale="110" valign="middle" />
-                    </imageobject>
-                  </mediaobject>
-                </figure></entry>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_zoomen.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
 
-              <entry valign="middle">Verkleinert einen gewählten
+              <entry align="left" valign="middle">Verkleinert einen gewählten
               Kartenausschnitt, hereinzoomen</entry>
 
               <entry align="left" valign="middle">Ausschnitt wählen (ziehe
@@ -351,105 +406,101 @@
             </row>
 
             <row>
-              <entry><figure>
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="img/1D2D/Icon_Karte_Hand.png"
-                                 scale="110" valign="middle" />
-                    </imageobject>
-                  </mediaobject>
-                </figure></entry>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Hand.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
 
-              <entry valign="middle">Verschieben</entry>
+              <entry align="left" valign="middle">Verschieben</entry>
 
               <entry valign="middle">Blatt anfassen und Bildausschnitt
               verschieben</entry>
             </row>
 
             <row>
-              <entry><figure>
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="img/1D2D/Icon_Karte_TINWerte.png"
-                                 scale="110" />
-                    </imageobject>
-                  </mediaobject>
-                </figure></entry>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_TINWerte.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
 
-              <entry valign="middle">TIN Werte anzeigen</entry>
+              <entry align="left" valign="middle">TIN Werte anzeigen</entry>
 
-              <entry valign="middle">Mauszeiger an gewünschte Stelle
-              halten</entry>
+              <entry align="left" valign="middle">Mauszeiger an gewünschte
+              Stelle halten</entry>
             </row>
 
             <row>
-              <entry><figure>
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="img/1D2D/Icon_Karte_herauszoomen.png"
-                                 scale="110" valign="middle" />
-                    </imageobject>
-                  </mediaobject>
-                </figure></entry>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_herauszoomen.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
 
-              <entry valign="middle"><para>Verkleinert den Kartenausschnitt,
-              herauszoomen</para></entry>
+              <entry align="left" valign="middle">Verkleinert den
+              Kartenausschnitt, herauszoomen</entry>
 
-              <entry>Button betätigen</entry>
+              <entry align="left" valign="middle">Wenn Sie diesen Knopf
+              betätigen wird aus der Mitte des Kartenausschnitts herausgezoomt
+              in vordefinierten Schritten.</entry>
             </row>
 
             <row>
-              <entry><figure>
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="img/1D2D/Icon_Karte_hereinzoomen.png"
-                                 scale="110" />
-                    </imageobject>
-                  </mediaobject>
-                </figure></entry>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_hereinzoomen.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
 
-              <entry valign="middle">Vergrößert den Kartenausschnitt,
-              hereinzoomen in die Mitte des Kartenausschnitts</entry>
+              <entry align="left" valign="middle">Vergrößert den
+              Kartenausschnitt, hereinzoomen in die Mitte des
+              Kartenausschnitts</entry>
 
-              <entry valign="middle">Button betätigen</entry>
+              <entry align="left" valign="middle">Wenn Sie diesen Knopf
+              betätigen wird in die Mitte des Kartenausschnitts hereingezoomt
+              in vordefinierten Schritten.</entry>
             </row>
 
             <row>
-              <entry><figure>
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="img/1D2D/Icon_Karte_Ausschnittverschieben.png"
-                                 scale="110" />
-                    </imageobject>
-                  </mediaobject>
-                </figure></entry>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Ausschnittverschieben.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
 
-              <entry valign="middle">Verschieben der Kartenansicht nach links,
-              unten, oben oder rechts</entry>
+              <entry align="left" valign="middle">Verschieben der
+              Kartenansicht nach links, unten, oben oder rechts</entry>
 
-              <entry valign="middle">Durch betätigen der Buttons verschiebt
-              sich der Kartenausschnitt in voreingestellten Schritten</entry>
+              <entry align="left" valign="middle">Durch betätigen der Knöpfe
+              verschiebt sich der Kartenausschnitt in voreingestellten
+              Schritten</entry>
             </row>
 
             <row>
-              <entry><figure>
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="img/1D2D/Icon_Karte_Gesamtansicht.png"
-                                 scale="110" />
-                    </imageobject>
-                  </mediaobject>
-                </figure></entry>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Gesamtansicht.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
 
-              <entry valign="middle">Maximieren der Kartenansicht</entry>
+              <entry align="left" valign="middle">Maximieren der
+              Kartenansicht</entry>
 
-              <entry valign="middle">Zeigt die gesamte Karte an</entry>
+              <entry align="left" valign="middle">Zeigt die gesamte Karte
+              an</entry>
             </row>
 
             <row>
@@ -459,10 +510,10 @@
                   </imageobject>
                 </mediaobject></entry>
 
-              <entry>Verschiebt den Kartenausschnitt auf das aktive
-              Kartenthema</entry>
+              <entry align="left" valign="middle">Verschiebt den
+              Kartenausschnitt auf das aktive Kartenthema</entry>
 
-              <entry>Button betätigen</entry>
+              <entry align="left" valign="middle">Knopf betätigen</entry>
             </row>
 
             <row>
@@ -472,14 +523,73 @@
                   </imageobject>
                 </mediaobject></entry>
 
-              <entry>Map screenshot</entry>
+              <entry align="left" valign="middle">Map screenshot</entry>
 
-              <entry>Diese Funktion macht ein Bild von dem aktuellen
-              Kartenausschnitt</entry>
+              <entry align="left" valign="middle">Diese Funktion macht ein
+              Bild von dem aktuellen Kartenausschnitt</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/Icon_Karte_Gliederung.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Gliederung der Karte
+              anzeigen/ ausblenden</entry>
+
+              <entry align="left" valign="middle">Wenn Sie diesen Knopf
+              drücken, wird entweder die Gliederung der Karte angezeigt oder
+              ausgeblendet.</entry>
             </row>
           </tbody>
         </tgroup>
       </table>
+
+      <section>
+        <title>Selektion von Elementen in der Karte</title>
+
+        <para>Für die Selektion von Elementen in der Karte gibt es generell
+        drei Optionen:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>ein einzelnes Element selektieren: Klicken Sie mit der
+            linken Maustaste in das Element.</para>
+          </listitem>
+
+          <listitem>
+            <para>mehrere Elemente selektieren mit einem Rechteck: Halten Sie
+            die linke Maustaste gedrückt und ziehen Sie ein Rechteck auf.
+            Umschließen Sie dabei alle Elemente, die gelöscht werden sollen,
+            denn es werden nur die Elemente selektiert, die komplett im
+            Rechteck liegen!</para>
+          </listitem>
+
+          <listitem>
+            <para>mehrere Elemente selektieren mit einem Polygon: Drücken Sie
+            die Shift-Taste und halten Sie diese während des gesamten Vorgangs
+            gedrückt. Klicken Sie nun mit der linken Maustaste auf die
+            Eckpunkte des Polygons und umschließen Sie alle Elemente, die
+            gelöscht werden sollen, denn es werden wiederum nur die Elemente
+            gelöscht, die komplett innerhalb des Polygons liegen! Sie beenden
+            ein Polygon mit einem Doppelklick.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Wenn Sie im ersten Schritt nicht alle gewünschten Elemente
+        selektiert haben, halten Sie die Strg-Taste gedrückt und setzen den
+        Selektiervorgang fort. Die alte Selektion wird dadurch nicht
+        aufgehoben.</para>
+
+        <para>Ein selektiertes Element lässt sich wieder deselektieren, indem
+        man es erneut markiert (hier muss wiederum die Strg-Taste während des
+        gesamten Vorgangs gedrückt gehalten werden, damit die Selektion nicht
+        komplett aufgehoben wird). Wenn Sie alle selektierten Elemente wieder
+        deselektieren möchten, drücken Sie einfach mit der linken Maustaste
+        auf einen beliebigen Punkt in der Karte.</para>
+      </section>
     </section>
   </section>
 
@@ -501,7 +611,7 @@
       </listitem>
 
       <listitem>
-        <para>Rauheit</para>
+        <para>Rauheiten</para>
       </listitem>
 
       <listitem>

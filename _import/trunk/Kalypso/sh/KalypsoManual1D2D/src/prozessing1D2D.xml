@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="Kalypso1D2DProzessing">
-  <title>Prozessing</title>
+  <title>Processing</title>
 
   <indexterm>
-    <primary>Prozessing Kalypso1D2D</primary>
+    <primary>Processing Kalypso1D2D</primary>
   </indexterm>
 
   <section id="Kalypso1D2DBerechnungseinstellungen">
@@ -13,33 +13,382 @@
       <primary>Berechnungseinstellungen Kalypso1D2D</primary>
     </indexterm>
 
-    <para></para>
+    <para>Um Berechnungseinstellungen vorzunehmen, öffnen Sie den Baum
+    <guimenuitem>Processing</guimenuitem>. Aktivieren Sie
+    <guimenuitem>Berechnungseinstellungen</guimenuitem> mit einem Doppelklick
+    und die zugehörige Feature View wird geöffnet. Im Folgenden werden die
+    verschiedenen Einstellungsmöglichkeiten erläutert. Dazu gehören:</para>
 
-    <table>
-      <title>Verfügbare Rechenkernversionen</title>
+    <itemizedlist>
+      <listitem>
+        <para>Control model general data,</para>
+      </listitem>
 
-      <tgroup align="center" cols="2">
-        <colspec align="left" colwidth="1*" />
+      <listitem>
+        <para>Allgemeines,</para>
+      </listitem>
 
-        <colspec align="left" />
+      <listitem>
+        <para>Berechnungssteuerung,</para>
+      </listitem>
 
-        <thead>
-          <row>
-            <entry>Versionsname</entry>
+      <listitem>
+        <para>Konvergenz,</para>
+      </listitem>
 
-            <entry>Stand</entry>
-          </row>
-        </thead>
+      <listitem>
+        <para>Anfangswerte,</para>
+      </listitem>
 
-        <tbody>
-          <row>
-            <entry>Version 3.5</entry>
+      <listitem>
+        <para>Marsh Parameter und</para>
+      </listitem>
 
-            <entry>Juli 2007</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
+      <listitem>
+        <para>Turbulenzmodell</para>
+      </listitem>
+    </itemizedlist>
+
+    <section id="Kalypso1D2DControlmodel">
+      <title>Control model general data</title>
+
+      <indexterm>
+        <primary>Control model general data</primary>
+      </indexterm>
+
+      <para>Im Preprocessing haben Sie verschiedene Berechnungseinheiten
+      festgelegt. Wählen Sie im Pull Down Menü von <guilabel>Select
+      model</guilabel> die Berechnungseinheit aus, deren Parameter Sie
+      bearbeiten möchten. Geben Sie anschließend unter <guilabel>Model
+      name</guilabel> einen Namen ein und ggf. eine Beschreibung unter
+      <guilabel>Model description</guilabel>.</para>
+
+      <figure>
+        <title>Einstellungsblock "Control model general data"</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_controlmodel.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="Kalypso1D2DAllgemeine_Einstellungen">
+      <title>Allgemeines</title>
+
+      <indexterm>
+        <primary>Allgemeine Berechnungseinstellungen</primary>
+      </indexterm>
+
+      <para>Bei den allgemeinen Einstellungen müssen Sie zunächst eine
+      Rechenkernversion auswählen. Hier muss immer "Neueste" eingestellt
+      werden (RMS10S-Version).</para>
+
+      <para>Wenn Sie möchten, dass der Bewuchs bei der Berechnung mit
+      berücksichtigt wird, dann setzen Sie ein Häkchen in das leere
+      Kästchen.</para>
+
+      <para>Die Angabe des Breitengrades wird zur Berechnung der Corioliskraft
+      benötigt.</para>
+
+      <figure>
+        <title>Einstellungsblock "Allgemeines"</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_allgemeines.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="Kalypso1D2DBerechnungssteuerung">
+      <title>Berechnungssteuerung</title>
+
+      <indexterm>
+        <primary>Berechnungssteuerung</primary>
+      </indexterm>
+
+      <para>Die Berechnungssteuerung dient zur Angabe der Randbedingungen und
+      Rechenschritte. Sie können sowohl stationär als auch instationär
+      rechnen, oder auch beide Rechenarten miteinander verbinden (die
+      stationäre Rechnung ist die Generierung einer Anfangslösung für die
+      instationäre Rechnung), indem Sie in den entsprechenden Kästchen Häkchen
+      setzen.</para>
+
+      <para>Geben Sie die Anzahl der maximal durchzuführenden Iterationen pro
+      Rechenschritt an und für die stationäre Berechnung zusätzlich den
+      Relaxationsfaktor für den Rechenschritt zur Dämpfung der
+      Startwertempfindlichkeit. Für die instationäre Rechnung müssen Sie
+      zunächst die Zeitschritte definieren. Betätigen Sie hierfür den Knopf
+      unterhalb der Tabelle der Zeitschrittvorgabe. Es öffnet sich ein
+      Assistent, der in der unteren Abbildung dargestellt ist. Hier wird auch
+      der Relaxationsfaktor für die instationäre Berechnung festgelegt.</para>
+
+      <para>Bei der Auswahl der Zeitschritte legen Sie die wirklich zu
+      rechnenden Zeitschritte fest. Die Werte, die als Randbedingungen
+      angewendet werden, werden dann aus den entsprechenden Zeitreihen (siehe
+      Preprocessing) interpoliert.</para>
+
+      <figure>
+        <title>Einstellungsblock "Berechnungssteuerung"</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_Berechnungssteuerung.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <figure>
+        <title>Assistent zur Zeitschrittdefinition</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_Berechnungssteuerung_zeitschr.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="Kalypso1D2DKonvergenz">
+      <title>Konvergenz</title>
+
+      <indexterm>
+        <primary>Berechnungseinstellungen zur Konvergenz</primary>
+      </indexterm>
+
+      <para>In diesem Block können Sie die Konvergenzkriterien auswählen. Im
+      iterativen Rechenprozess werden die Änderungen der Freiheitsgrade
+      betrachtet. Sobald die maximale Änderung den entsprechenden Grenzwert
+      unterschreitet wird die Rechnung als erfolgreich angesehen und
+      beendet.</para>
+
+      <para>Die Gleichungsdeaktivierung bewirkt, dass Gleichungen trotz noch
+      nicht eingetretener Konvergenz aus dem Gleichungssystem eliminiert
+      werden, wenn lokal keine Änderungen mehr zu sehen sind. Das
+      Deaktivierungskriterium ist ein relativer Wert und berechnet sich nach
+      der Formel: <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_Deaktivierungskriterium.png" />
+          </imageobject>
+        </inlinemediaobject></para>
+
+      <figure>
+        <title>Einstellungsblock "Konvergenz"</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_Konvergenz.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="Kalypso1D2DAnfangswerte">
+      <title>Anfangswerte</title>
+
+      <indexterm>
+        <primary>Berechnungseinstellungen zu den Anfangswerten</primary>
+      </indexterm>
+
+      <para>Bei der Aufgabenstellung handelt es sich um ein
+      Anfangs-Randwertproblem. Das heißt neben den Randbedingungen sind bei
+      instationären Rechnungen auch Anfangswerte anzugeben. Diese sollten im
+      Sinne des Strömungsgebietes eine sinnvolle Lösung sein. Um dies zu
+      erreichen können Sie entweder einen Restart machen und eine
+      Zusammenstellung vorangegangener Lösungen auswählen, aus denen vx, vy
+      und h an jeden Knoten geschrieben werden oder Sie können die Startlösung
+      spezifizieren:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Start vx und vy für 2D: 0 m/s</para>
+        </listitem>
+
+        <listitem>
+          <para>Startwert für 1D: wie Angabewert. Der Angabewert bezieht sich
+          auf die globale x-Achse (nach rechts positiv). Wenn ein
+          Anfangswinkel angegeben wird, wird die Geschwindigkeit auf die
+          Richtung projeziert.</para>
+        </listitem>
+
+        <listitem>
+          <para>Start h ist Starthöhe (Angabewert) - Sohlhöhe; Es kann sein,
+          dass Ihre Angabewerte manche Bereiche nur geringfügig mit Wasser
+          bedecken. Um dies zu verhindern wird die minimale Tiefe festgesetzt,
+          die den berechneten Wert überschreibt.</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure>
+        <title>Einstellungsblock "Anfangswerte"</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_Anfangswerte.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Haben Sie ein Häkchen in dem Kästchen für einen
+      <guilabel>Restart</guilabel> gesetzt, müssen Sie den Knopf in der selben
+      Zeile betätigen um eine Zusammenstellung vorangegangener Lösungen
+      auswählen zu können. Es öffnet sich ein Assistent, der in der folgenden
+      Abbildung dargestellt ist. Er enthält alle Ergebnisse aus
+      vorangegangenen Berechnungen. Setzen Sie ein Häkchen neben die
+      Berechnung, dessen Ergebnis Sie als Anfangswert verwenden möchten.
+      Betätigen Sie anschließend den Knopf <guibutton>Next</guibutton>, wenn
+      Sie zunächst eine Hierarchie festlegen müssen (siehe Beschreibung im
+      Assistenten) oder benutzen Sie direkt den Knopf
+      <guibutton>Finish</guibutton> um die Auswahl abzuschließen.</para>
+
+      <figure>
+        <title>Assistent zur Auswahl eines Anfangswertes aus vorherigen
+        Ergebnissen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_Anfangswerte_2.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <figure>
+        <title>Assistent zum Festlegen einer Hierarchie der Ergebnisse</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_Anfangswerte_3.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="Kalypso1D2DMarshparameter">
+      <title>Marsh Parameter</title>
+
+      <indexterm>
+        <primary>Berechnungseinstellungen zu den Marshparametern</primary>
+      </indexterm>
+
+      <para>Angaben zum Trockenfallalgorithmus:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Sollte die (virtuelle) Wassertiefe an einem Knoten unter die
+          Trockenfalltiefe fallen, dann wird dieser als trocken angesehen, die
+          Elemente an dem Knoten werden eliminiert und gegebenenfalls auch
+          andere dadurch betroffene Knoten.</para>
+        </listitem>
+
+        <listitem>
+          <para>Sollte der Benutzer den Marsh-Algorithmus verwenden, wird mit
+          virtuellen Tiefen gerechnet (daher die Klammer oben). Dieser
+          Algorithmus bewirkt, dass Wasser auch unterirdisch begrenzt fließen
+          kann. Die Parameter und die Funktionsweise für den Marsh-Algorithmus
+          werden im Theorieteil erklärt. Wenn der Marsh-Algorithmus
+          ausgeschaltet ist, werden nur die Fließtiefen über der Oberfläche
+          betrachtet.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Drei Einstellungsmöglichkeiten für den Marsh Algorithmus:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Default Werte nutzen: Deaktivierungstiefe, Übergangstiefe und
+          Porosität sind voreingestellt</para>
+        </listitem>
+
+        <listitem>
+          <para>Ohne Marsh</para>
+        </listitem>
+
+        <listitem>
+          <para>Eingabewerte nutzen: Deaktivierungstiefe, Übergangstiefe und
+          Porosität können manuell eingegeben werden</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure>
+        <title>Einstellungsblock "Marsh Parameter"</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_Marshparameter.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="Kalypso1D2DTurbulenzmodell">
+      <title>Turbulenzmodell</title>
+
+      <indexterm>
+        <primary>Berechnungseinstellungen zum Turbulenzmodell</primary>
+      </indexterm>
+
+      <para>Sie können zwischen folgenden Wirbelviskositätsansätzen
+      wählen:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>10 Konstante Wirbelviskosität</para>
+        </listitem>
+
+        <listitem>
+          <para>16 Smagorinsky mit sohlinduzierter Turbulenz</para>
+        </listitem>
+
+        <listitem>
+          <para>13 Smagorinsky Ansatz</para>
+        </listitem>
+
+        <listitem>
+          <para>02 Smagorinsky Ansatz (RMA)</para>
+        </listitem>
+
+        <listitem>
+          <para>00 Konstante Wirbelviskosität (RMA)</para>
+        </listitem>
+
+        <listitem>
+          <para>15 Prandtl'scher Mischungsweg mit sohlinduzierter
+          Turbulenz</para>
+        </listitem>
+
+        <listitem>
+          <para>11 Sohlinduzierte Turbulenz</para>
+        </listitem>
+
+        <listitem>
+          <para>14 Konstante Wirbelviskosität mit sohlinduzierter
+          Turbulenz</para>
+        </listitem>
+
+        <listitem>
+          <para>Prandtl'scher Mischungswegansatz (konst.)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Die weiteren Einstellungsmöglichkeiten richten sich nach dem
+      ausgewählten Wirbelviskositätsansatz. Wird z.B. ein Ansatz nach
+      Smagorinsky gewählt, muss der sogenannte Smagorinsky-Faktor angegeben
+      werden. Bei anderen Ansätzen, wie z.B. der Abbildung zu entnehmen,
+      erscheint das Kästchen grau und es ist keine Eingabe möglich.</para>
+
+      <figure>
+        <title>Einstellungsblock "Turbulenzmodell"</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechnungseinst_Turbulenzmodell.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
   </section>
 
   <section>
@@ -49,6 +398,75 @@
       <primary>Berechnung durchführen Kalypso1D2D</primary>
     </indexterm>
 
-    <para></para>
+    <para>In diesem letzten Schritt vor der Berechnung muss nun nur noch die
+    gewünschte Berechnungseinheit ausgewählt werden. Die Ansicht ähnelt der
+    aus dem Preprocessing zur Modellierung von Berechnungseinheiten, nur dass
+    hier keine Veränderungen mehr vorgenommen werden können. Es wird lediglich
+    noch einmal der Status der selektierten Berechnungseinheit zur Kontrolle
+    angezeigt.</para>
+
+    <figure>
+      <title>Ansicht zur Berechnungsdurchführung</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/1D2D/Berechn_durchf.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <table align="center" id="symbolleiste im Profileditor wspm">
+      <title>Funktionen der Karte zur Bearbeitung der Rauheitszonen</title>
+
+      <tgroup align="center" cols="3">
+        <colspec colwidth="1*" />
+
+        <colspec colwidth="2*" />
+
+        <colspec colwidth="5*" />
+
+        <tbody>
+          <row>
+            <entry><figure>
+                <mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Werkzeug_Berechneinh_max.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject>
+              </figure></entry>
+
+            <entry align="left" valign="middle">Berechnungseinheit
+            maximieren</entry>
+
+            <entry align="left" valign="middle">Markieren Sie zunächst eine
+            Berechnungseinheit in der Tabelle. Wenn Sie nun auf den Knopf
+            drücken, wird die ausgewählte Berechnungseinheit komplett in der
+            Karte dargestellt (Zoomfunktion).</entry>
+          </row>
+
+          <row>
+            <entry><figure>
+                <mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Berechn_durchf_icon.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject>
+              </figure></entry>
+
+            <entry align="left" valign="middle">Berechnung durchführen</entry>
+
+            <entry align="left" valign="middle">Bevor Sie diesen Knopf
+            drücken, müssen Sie zunächst eine Berechnungseinheit aus der
+            Tabelle selektieren. Die Berechnung wird dann mit den
+            Einstellungen aus dem vorherigen Bearbeitungsschritt für die
+            ausgewählte Berechnungseinheit durchgeführt.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
   </section>
 </chapter>
