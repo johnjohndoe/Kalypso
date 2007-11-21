@@ -54,7 +54,6 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.gml.provider.IGmlSource;
 import org.kalypso.core.gml.provider.IGmlSourceRunnableWithProgress;
-import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
 import org.kalypso.model.flood.ui.map.UpdateTinsOperation;
@@ -136,17 +135,15 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     final ModellEvent modelEvent = new FeatureStructureChangeModellEvent( workspace, parentFeature, changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
     workspace.fireModellEvent( modelEvent );
-
     /* Save data model */
-    progress.subTask( "speichere Datenmodell" );
-    m_provider.saveModel( IFloodModel.class, progress.newChild( 20 ) );
-
+    // progress.subTask( "speichere Datenmodell" );
+    // m_provider.saveModel( IFloodModel.class, progress.newChild( 20 ) );
     /* update tins */
     progress.subTask( "importiere Daten" );
-    final UpdateTinsOperation updateOp = new UpdateTinsOperation( tinRefs );
+    final UpdateTinsOperation updateOp = new UpdateTinsOperation( tinRefs, m_provider );
     updateOp.execute( progress.newChild( 60 ) );
 
-    /* Jumpt to imported tins */
+    /* Jump to imported tins */
     final GM_Envelope envelope = FeatureHelper.getEnvelope( changedFeatures );
     final GM_Envelope scaledBox = envelope == null ? null : GeometryUtilities.scaleEnvelope( envelope, 1.05 );
     if( m_mapPanel != null && scaledBox != null )

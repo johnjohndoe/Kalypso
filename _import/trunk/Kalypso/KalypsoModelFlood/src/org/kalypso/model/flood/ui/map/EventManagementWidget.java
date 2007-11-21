@@ -128,6 +128,8 @@ import org.kalypso.model.flood.ui.map.operations.ImportTinOperation;
 import org.kalypso.model.flood.ui.map.operations.RemoveEventOperation;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.GisTemplateUserStyle;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -142,6 +144,7 @@ import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapLabelProvider;
+import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.Rule;
@@ -150,6 +153,7 @@ import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -313,11 +317,13 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     featureComposite.setFormToolkit( toolkit );
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
         try
         {
           m_dataProvider.postCommand( IFloodModel.class, changeCommand );
+          updateThemeNames();
         }
         catch( final Exception e )
         {
@@ -782,7 +788,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     for( int i = 0; i < tinsToUpdate.length; i++ )
       tinsToUpdate[i] = (ITinReference) result[i];
 
-    final ICoreRunnableWithProgress operation = new UpdateTinsOperation( tinsToUpdate );
+    final ICoreRunnableWithProgress operation = new UpdateTinsOperation( tinsToUpdate, m_dataProvider );
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
@@ -1075,4 +1081,90 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     return feature.getAdapter( ITinReference.class );
   }
 
+  private void updateThemeNames( )
+  {
+    final AbstractCascadingLayerTheme wspThemes = FloodModelHelper.findWspTheme( getMapPanel().getMapModell() );
+    final IRunoffEvent event = getCurrentEvent();
+    final IKalypsoTheme[] allThemes = wspThemes.getAllThemes();
+    for( final IKalypsoTheme kalypsoTheme : allThemes )
+    {
+      if( kalypsoTheme instanceof IKalypsoFeatureTheme )
+      {
+        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) kalypsoTheme;
+        final UserStyle[] styles = featureTheme.getStyles();
+        for( final UserStyle userStyle : styles )
+        {
+          if( userStyle instanceof GisTemplateUserStyle )
+          {
+            final GisTemplateUserStyle pooledUserStyle = (GisTemplateUserStyle) userStyle;
+            final PoolableObjectType poolKey = pooledUserStyle.getPoolKey();
+
+            final String styleLocationForEventWsp = AddEventOperation.styleLocationForEventWsp( event );
+
+            if( poolKey.getLocation().equals( styleLocationForEventWsp ) )
+            {
+              final String name = kalypsoTheme.getName();
+
+              // HACK!
+
+              if( name.contains( "Wasserspiegel" ) )
+              {
+                kalypsoTheme.setName( "Wasserspiegel (" + event.getName() + ")" );
+                kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName()
+                    + ") %.2f NN+m" );
+              }
+              if( name.contains( "Fließtiefen" ) )
+              {
+                kalypsoTheme.setName( "Fließtiefen (" + event.getName() + ")" );
+                kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" );
+              }
+              if( name.contains( "Fliesstiefen" ) )
+              {
+                kalypsoTheme.setName( "Fließtiefen (" + event.getName() + ")" );
+                kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" );
+              }
+
+              if( name.contains( "Anpassungen" ) )
+                kalypsoTheme.setName( "Anpassungen (" + event.getName() + ")" );
+
+            }
+          }
+        }
+        // check for result coverages
+        FeatureList featureList = featureTheme.getFeatureList();
+        if( featureList != null )
+        {
+          for( Object object : featureList )
+          {
+            if( object instanceof Feature )
+            {
+              final Feature feature = (Feature) object;
+
+              // the papa papa of the coverage is the event
+              final Feature parent = feature.getParent().getParent();
+              if( parent != null )
+              {
+                if( parent.getId().equals( event.getGmlID() ) )
+                {
+                  final String name = kalypsoTheme.getName();
+
+                  // HACK!
+                  if( name.contains( "Fließtiefen" ) )
+                  {
+                    kalypsoTheme.setName( "Fließtiefen (" + event.getName() + ")" );
+                    kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" );
+                  }
+                  if( name.contains( "Fliesstiefen" ) )
+                  {
+                    kalypsoTheme.setName( "Fließtiefen (" + event.getName() + ")" );
+                    kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" );
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
