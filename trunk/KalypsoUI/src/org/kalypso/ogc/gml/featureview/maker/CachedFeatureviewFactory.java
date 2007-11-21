@@ -53,6 +53,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
@@ -113,10 +114,19 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
       return compabilityView;
     // REMARK end
 
+    
     /* else ask cache */
     if( m_cache.containsKey( qname ) )
       return m_cache.get( qname );
 
+    /* In order to allow substituion, we need to search inside the viewMap*/
+    for( Map.Entry<QName, FeatureviewType> viewEntry : m_viewMap.entrySet() )
+    {
+      final QName key = viewEntry.getKey();
+      if( GMLSchemaUtilities.substitutes( featureType, key ) )
+        return viewEntry.getValue();
+    }
+    
     FeatureviewType newView = null;
 
     /* Maybe the catalog has a view for this type. */
