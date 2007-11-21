@@ -57,6 +57,7 @@ import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -76,6 +77,8 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   private BigDecimal m_min;
 
   private BigDecimal m_max;
+
+  private GM_Triangle m_triangle;
 
   public FloodDiffGrid( final IGeoGrid terrainGrid, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons )
   {
@@ -152,11 +155,24 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     final List<ITinReference> tinsList = m_tins.query( pos );
     for( final ITinReference tinReference : tinsList )
     {
-      final double wspValue = tinReference.getValue( pos );
-      if( !Double.isNaN( wspValue ) )
-        return wspValue;
+      // we remember the last found triangle...
+      if( m_triangle != null && m_triangle.contains( pos ) == true )
+      {
+        final double wspValue = m_triangle.getValue( pos );
+        if( !Double.isNaN( wspValue ) )
+          return wspValue;
+      }
+      else
+      {
+        m_triangle = tinReference.getTraingle( pos );
+        if( m_triangle != null )
+        {
+          final double wspValue = m_triangle.getValue( pos );
+          if( !Double.isNaN( wspValue ) )
+            return wspValue;
+        }
+      }
     }
-
     return Double.NaN;
   }
 

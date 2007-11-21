@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.ui.map;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
@@ -51,14 +52,14 @@ import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -66,6 +67,7 @@ import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
+import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
@@ -76,10 +78,9 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
@@ -106,9 +107,12 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 {
   private final ITinReference[] m_tinReferences;
 
-  public UpdateTinsOperation( final ITinReference[] tinReferences )
+  private final SzenarioDataProvider m_provider;
+
+  public UpdateTinsOperation( final ITinReference[] tinReferences, final SzenarioDataProvider provider )
   {
     m_tinReferences = tinReferences;
+    m_provider = provider;
   }
 
   /**
@@ -139,7 +143,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
   }
 
   @SuppressWarnings("unchecked")
-  private void updateTinReference( final ITinReference ref, final SubMonitor monitor ) throws Exception
+  private IStatus updateTinReference( final ITinReference ref, final SubMonitor monitor ) throws Exception
   {
     monitor.beginTask( ref.getName(), 100 );
 
@@ -147,6 +151,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     monitor.subTask( "lade Eingangsdaten" );
 
     final URL sourceLocation = ref.getSourceLocation();
+    final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null );
     final SOURCETYPE sourceType = ref.getSourceType();
     final Date sourceDate = new Date();
 
@@ -199,7 +204,6 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         break;
 
       case hmo:
-        final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null );
         crs = getCoordinateSytem( properties.getProperty( "srs" ) );
         eater = new TriangulatedSurfaceTriangleEater( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
 
@@ -211,9 +215,12 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         final Reader r = new InputStreamReader( hmoLocation.openStream() );
         final LinearRing[] rings = hmoReader.read( r );
 
+        int count = 0;
         for( LinearRing ring : rings )
         {
+          count++;
           final List<GM_Point> pointList = new LinkedList<GM_Point>();
+          monitor.subTask( "lade Eingangsdaten... importiere Dreiecke: " + count + " / " + rings.length + "... " );
           for( int i = 0; i < ring.getNumPoints() - 1; i++ )
           {
             GM_Object object = JTSAdapter.wrap( ring.getPointN( i ) );
@@ -227,7 +234,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         }
 
         gmSurface = eater.getSurface();
-
+        ProgressUtilities.worked( monitor, 33 );
         monitor.subTask( "aktualisiere Metadaten (min/max/...)" );
 
         gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor );
@@ -245,16 +252,18 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
       case shape:
 
         // open shape
-        crs = getCoordinateSytem( sourceLocation.getQuery() );
+        crs = getCoordinateSytem( properties.getProperty( "srs" ) );
+
         eater = new TriangulatedSurfaceTriangleEater( crs );
 
         final URL shapeURL = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() );
-
-        final IFile file = ResourceUtilities.findFileFromURL( shapeURL );
-        final String absolutePath = file.getLocation().toFile().getAbsolutePath();
+        String file2 = shapeURL.getFile();
+        File file = new File( file2 );
+        // final IFile file = ResourceUtilities.findFileFromURL( shapeURL );
+        final String absolutePath = file.getAbsolutePath();
         final String shapeBase = FileUtilities.nameWithoutExtension( absolutePath );
 
-        // check shape type (at first only triangle polygonz are supported
+        // TODO:check shape type (at first only triangle polygonz are supported
 
         try
         {
@@ -266,23 +275,29 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
           GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryProperty();
           gmSurface = new GM_TriangulatedSurface_Impl( crs );
 
-          if( geom instanceof GM_Surface )
+          if( geom instanceof GM_MultiSurface )
           {
             // conversion
             // convert the gm_surfaces.exterior rings into gm.triangle
             for( Object object : lstMembers )
             {
-              if( object instanceof GM_Surface )
+              if( object instanceof Feature )
               {
-                GM_Surface<GM_SurfacePatch> polygonSurface = (GM_Surface<GM_SurfacePatch>) object;
-                GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, crs );
-
-                // add the triangles into the gm_triang_surfaces
-                for( int i = 0; i < triangles.length; i++ )
+                Feature feat = (Feature) object;
+                GM_Object[] geometryProperties = feat.getGeometryProperties();
+                if( geometryProperties[0] instanceof GM_MultiSurface )
                 {
-                  GM_Triangle triangle;
-                  triangle = triangles[i];
-                  gmSurface.add( triangle );
+                  GM_MultiSurface polygonSurface = (GM_MultiSurface) geometryProperties[0];
+                  GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, crs );
+
+                  // add the triangles into the gm_triang_surfaces
+                  for( int i = 0; i < triangles.length; i++ )
+                  {
+                    GM_Triangle triangle;
+                    triangle = triangles[i];
+                    gmSurface.add( triangle );
+                    monitor.subTask( "konvertiere Shapedaten... importierte Dreiecke: " + gmSurface.size() );
+                  }
                 }
               }
             }
@@ -303,10 +318,10 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         catch( GmlSerializeException e )
         {
           e.printStackTrace();
+          StatusUtilities.statusFromThrowable( e, "Wasserspiegelimport fehlgeschlagen." );
         }
 
-        throw new UnsupportedOperationException( "FloodModeller: Wasserspiegelimport aus Shape-Dateien wird noch nicht unterstützt." );
-        // break;
+        break;
 
     }
     ProgressUtilities.worked( monitor, 33 );
@@ -317,7 +332,11 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     final ModellEvent event = new FeaturesChangedModellEvent( workspace, new Feature[] { refFeature } );
     workspace.fireModellEvent( event );
 
+    /* post command in order to make the pool dirty */
+    m_provider.postCommand( IFloodModel.class, new EmptyCommand( "Get dirty!", false ) );
+
     monitor.done();
+    return Status.OK_STATUS;
   }
 
   protected static CS_CoordinateSystem getCoordinateSytem( final String crsName )
