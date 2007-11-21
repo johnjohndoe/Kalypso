@@ -19,7 +19,10 @@
 			<Name>Daten laden</Name>
 			<Task context="ImportBaseMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__MapLoad">
-				<Help>Einladen von Hintergrunddaten (Bilddateien, shape-Dateien, MapServer)</Help>
+				<Help>
+					Einladen von Hintergrunddaten (Bilddateien,
+					shape-Dateien, MapServer)
+				</Help>
 				<Name>Import von Hintergrunddaten</Name>
 			</Task>
 			<Task context="ImportLanduseShapeDataWizard"
@@ -32,12 +35,12 @@
 				<Help><![CDATA[Import von Wassertiefendaten (asc-Rasterdaten)]]></Help>
 				<Name>Import von Wassertiefendaten</Name>
 			</Task>
-			<Task context="CoveragesWidgetContext"
+			<Task context="MainMap"
 				URI="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler">
 				<Help><![CDATA[Bearbeiten von Überschwemmungsdaten für das Hochwasserereignis der Jährlichkeit i]]></Help>
 				<Name>Bearbeiten von Ü-Daten für HQi</Name>
 			</Task>
-			<Task context="CoveragesWidgetContext"
+			<Task context="MainMap"
 				URI="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler">
 				<Help><![CDATA[Bearbeiten von Ü-Rasterdaten]]></Help>
 				<Name>Bearbeiten von Ü-Rasterdaten</Name>
@@ -63,7 +66,8 @@
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Processing">
 		<Help><![CDATA[Processing: Rasterung und Berechnung]]></Help>
 		<Name>Processing: Rasterung und Berechnung</Name>
-		<Task type="ASYNCHRONOUS" context="ImportWaterdepthRasterContext"
+		<Task type="ASYNCHRONOUS"
+			context="ImportWaterdepthRasterContext"
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__LanduseRasterizationHandler">
 			<Help><![CDATA[Rasterung der Landnutzung]]></Help>
 			<Name>Rasterung der Landnutzung</Name>
@@ -74,7 +78,8 @@
 			<Help><![CDATA[Berechnung des Schadenspotentials]]></Help>
 			<Name>Berechnung des Schadenspotentials</Name>
 		</Task>
-		<Task type="ASYNCHRONOUS" context="ImportWaterdepthRasterContext"
+		<Task type="ASYNCHRONOUS"
+			context="ImportWaterdepthRasterContext"
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler">
 			<Help><![CDATA[Ausweisung des Hochwasserrisikos]]></Help>
 			<Name>Ausweisung des Hochwasserrisikos</Name>
@@ -89,12 +94,12 @@
 			<Help><![CDATA[Statistische Auswertung]]></Help>
 			<Name>Statistische Auswertung</Name>
 		</Task>
-		<Task context="CoveragesWidgetContext"
+		<Task context="MainMap"
 			URI="org.kalypso.risk.model.handlers.ExportSpecificDamageCoveragesWidgetHandler">
 			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
 			<Name>Exportieren des Schadenspotentials (je HQi)</Name>
 		</Task>
-		<Task context="CoveragesWidgetContext"
+		<Task context="MainMap"
 			URI="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler">
 			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
 			<Name>Exportieren der Risikozonen</Name>
@@ -173,13 +178,23 @@
 						<con:Parameter name="input"
 							value="maps/MainMap.gmt" />
 					</con:ExtensionContext>
-					<con:ExtensionContext
-						id="CoveragesWidgetContext" parent="MapContext"
+					<con:ExtensionContext id="MainMap"
+						parent="MapContext"
 						handlerFactoryId="kalypsoContextHandlerFactory">
 						<con:Parameter name="type"
-							value="themeContext" />
+							value="mapViewInputContext" />
 						<con:Parameter name="input"
-							value="{http://www.opengis.net/gml}_Coverage" />
+							value="maps/MainMap.gmt" />
+						<!-- 
+						<con:ExtensionContext
+							id="CoveragesWidgetContext" parent="MainMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.opengis.net/gml}_Coverage" />
+						</con:ExtensionContext>
+						 -->
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>
