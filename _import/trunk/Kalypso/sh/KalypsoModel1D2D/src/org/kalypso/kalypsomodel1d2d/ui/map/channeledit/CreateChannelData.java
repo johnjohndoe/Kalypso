@@ -963,6 +963,8 @@ public class CreateChannelData
   public void drawBankLine( final int segment, final int side, final Graphics g )
   {
     final MapPanel panel = m_widget.getPanel();
+    if( m_segmentList.size() < segment - 1 )
+      return;
     m_segmentList.get( segment - 1 ).paintBankLineLineString( panel, g, side, new Color( 20, 20, 255 ) );
   }
 

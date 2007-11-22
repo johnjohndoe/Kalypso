@@ -51,6 +51,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
@@ -74,9 +75,11 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
+import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -1140,8 +1143,10 @@ public class SegmentData
   /**
    * sets the intersection point (Point) of the profile (prof) for the specified bank side (side).
    */
-  public void setIntersPoint( final GM_Point gmpoint, final PROF prof, final WIDTHORDER widthorder, final double width )
+  public void setIntersPoint( final GM_Point gmpoint, final PROF prof, final WIDTHORDER widthorder, final double width ) throws Exception
   {
+    final GeoTransformer transformer = new GeoTransformer( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+
     for( int i = 0; i < m_intersPoints.size(); i++ )
     {
       final IntersPointData data = m_intersPoints.get( i );
@@ -1152,9 +1157,16 @@ public class SegmentData
         final Point oldPoint = data.getPoint();
 
         // TODO: here we have to create a point in the right coordinate system!!
-        final GeometryFactory factory = new GeometryFactory();
-        final Point point = factory.createPoint( new Coordinate( gmpoint.getX(), gmpoint.getY(), gmpoint.getZ() ) );
 
+        final GeometryFactory factory = new GeometryFactory();
+        Coordinate coordinate = new Coordinate( gmpoint.getX(), gmpoint.getY(), gmpoint.getZ() );
+        GM_Position position = JTSAdapter.wrap( coordinate );
+
+        GM_Point createGM_Point = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( position, gmpoint.getCoordinateSystem() );
+        GM_Point transform = (GM_Point) transformer.transform( createGM_Point );
+        Coordinate coordinate2 = new Coordinate( transform.getX(), transform.getY(), transform.getZ() );
+
+        final Point point = factory.createPoint( coordinate2 );
         data.setPoint( point );
         data.setWidth( width );
         if( point.distance( oldPoint ) > 0.01 )

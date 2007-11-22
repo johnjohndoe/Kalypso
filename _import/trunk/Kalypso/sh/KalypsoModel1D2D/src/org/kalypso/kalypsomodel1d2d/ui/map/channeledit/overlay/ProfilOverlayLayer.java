@@ -207,8 +207,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     {
       heigth = WspmProfileHelper.getHeigthPositionByWidth( width, origProfil );
       gmPoint = WspmProfileHelper.getGeoPosition( width, origProfil );
-      // String srsName = (String) m_profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
-      // geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
+      String srsName = (String) m_profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+      geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
       geoPoint = WspmGeometryUtilities.pointFromRrHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
     }
     catch( Exception e )
@@ -275,7 +275,12 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     {
       tmpProfil.addPoint( points.get( i ) );
     }
+    /* station */
     tmpProfil.setStation( m_profile.getStation() );
+
+    /* coordinate system */
+    String srsName = (String) m_profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+    tmpProfil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, srsName );
 
     return tmpProfil;
   }
@@ -447,8 +452,16 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
         {
           if( widthorder1 != null && widthorder2 != null )
           {
-            segment.setIntersPoint( point1, profNeighbour, widthorder1, width1 );
-            segment.setIntersPoint( point2, profNeighbour, widthorder2, width2 );
+            try
+            {
+              segment.setIntersPoint( point1, profNeighbour, widthorder1, width1 );
+              segment.setIntersPoint( point2, profNeighbour, widthorder2, width2 );
+            }
+            catch( Exception e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
           }
           segment.setNewIntersectedProfile( m_profile, profNeighbour );
           segment.updateProfileIntersection();
@@ -490,7 +503,15 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
         if( segment.getProfilDownOrg().getStation() == m_profile.getStation() || segment.getProfilUpOrg().getStation() == m_profile.getStation() )
         {
           if( widthorder != null )
-            segment.setIntersPoint( point, profNeighbour, widthorder, width );
+            try
+            {
+              segment.setIntersPoint( point, profNeighbour, widthorder, width );
+            }
+            catch( Exception e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
           segment.setNewIntersectedProfile( m_profile, profNeighbour );
           // segment.updateProfileIntersection();
         }
