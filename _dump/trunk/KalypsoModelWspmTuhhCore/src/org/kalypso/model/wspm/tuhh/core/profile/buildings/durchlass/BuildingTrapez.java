@@ -51,6 +51,6 @@ public class BuildingTrapez extends AbstractProfilDurchlass
 {
   public BuildingTrapez( )
   {
-    super( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ,"Trapez", Arrays.asList( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
+    super( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ,"Trapez", new String[]{ IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT },new String[]{"Bezugspunkt X","Bezugspunkt Y","Breite","Höhe","Steigung","Sohlgefälle","Rauheit"} );
   }
 }

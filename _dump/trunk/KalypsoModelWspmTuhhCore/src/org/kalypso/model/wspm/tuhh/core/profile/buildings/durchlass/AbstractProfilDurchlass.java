@@ -40,11 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
-import java.util.Collection;
+import java.util.HashMap;
 
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractBuilding;
-
 
 /**
  * @author kimwerner
@@ -52,21 +50,19 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractBuilding;
 public abstract class AbstractProfilDurchlass extends AbstractBuilding
 {
 
-  public AbstractProfilDurchlass(final String buildingTyp,final String name , Collection<String> properties )
+  final HashMap<String, String> m_labels = new HashMap<String, String>();
+
+  /**
+   * labels and properties must have the same order
+   */
+  public AbstractProfilDurchlass( final String buildingTyp, final String name, String[] properties, String[] labels )
   {
-    super( buildingTyp,name, properties );
+    super( buildingTyp, name, properties, labels );
+
   }
 
   public String[] getPointProperties( )
   {
     return new String[0];
   }
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getLabelFor(java.lang.String)
-   */
-  public String getLabelFor( String key )
-  {
-        return key.subSequence( IWspmTuhhConstants.BUILDING_PROPERTY.length(),key.length() ).toString();
-  }
-
 }

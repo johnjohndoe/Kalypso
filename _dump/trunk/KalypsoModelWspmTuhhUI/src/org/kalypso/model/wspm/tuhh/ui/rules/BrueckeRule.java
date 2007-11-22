@@ -89,24 +89,14 @@ public class BrueckeRule extends AbstractValidatorRule
           ok_h_l = lastPoint;
         if( ok_h_l != null && uk_h_l == null && (uk - h > delta) )
           uk_h_l = lastPoint;
-        if( ok_h_l != null && uk_h_l != null && ok_h_r == null )
+        if( ok_h_l != null && uk_h_l != null && uk_h_r == null && (Math.abs( uk - h ) < delta) )
         {
-
-          if( Math.abs( ok - h ) < delta )
-          {
-            ok_h_r = point;
-          }
-          else if( Math.abs( uk - h ) < delta )
-            uk_h_r = point;
-          else if( uk > ok - delta )
-          {
-            collector.createProfilMarker( true, "Brückenkanten schneiden sich", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
-          }
+          uk_h_r = point;
         }
-//        if( uk > ok - delta )
-//        {
-//          collector.createProfilMarker( true, "Brückenkanten schneiden sich", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
-//        }
+        if( ok_h_l != null && uk_h_l != null && uk_h_r != null && ok_h_r == null && (Math.abs( ok - h ) < delta) )
+        {
+          ok_h_r = point;
+        }
         if( (h - ok > delta) || (h - uk > delta) )
         {
           collector.createProfilMarker( true, "Brückenkanten unter Geländehöhe", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );

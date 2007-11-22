@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -54,7 +53,10 @@ public class BuildingBruecke extends AbstractProfilBuilding
 {
   public BuildingBruecke( )
   {
-    super( IWspmTuhhConstants.BUILDING_TYP_BRUECKE,"Brücke", Arrays.asList( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE } );
+    super( IWspmTuhhConstants.BUILDING_TYP_BRUECKE, "Brücke", new String[] { IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER,
+        IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT },
+        new String[] {"Breite","Unterwasser","Pfeilerformbeiwert","Rauheit"}, new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE,
+        IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE } );
   }
 
   /**

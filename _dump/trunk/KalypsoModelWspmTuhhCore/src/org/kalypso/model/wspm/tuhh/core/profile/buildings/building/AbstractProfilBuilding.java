@@ -55,9 +55,9 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
 
   private final String[] m_pointProperties;
 
-  public AbstractProfilBuilding( final String buildingTyp, final String name, final Collection<String> properties, final String[] pointProperties )
+  public AbstractProfilBuilding( final String buildingTyp, final String name, final String[] properties,final String[]labels, final String[] pointProperties )
   {
-    super( buildingTyp, name, properties );
+    super( buildingTyp, name, properties,labels );
 
     m_pointProperties = pointProperties == null ? new String[0] : pointProperties;
 
@@ -111,12 +111,4 @@ public abstract class AbstractProfilBuilding extends AbstractBuilding
   {
     return m_buildingValues.keySet().toArray( new String[0] );
   }
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getLabelFor(java.lang.String)
-   */
-  public String getLabelFor( String key )
-  {
-        return key.subSequence(IWspmTuhhConstants.BUILDING_PROPERTY.length(),key.length() ).toString();
-  }
-
-}
+ }

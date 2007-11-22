@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.ui.view.table.swt;
 
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Item;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -75,8 +73,8 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
   public boolean canModify( final Object element, final String property )
   {
     final IProfilEventManager pem = (IProfilEventManager) m_viewer.getInput();
-    
-    if( pem == null  )
+
+    if( pem == null )
       return false;
     return pem.getProfil().hasPointProperty( property );
   }
@@ -136,20 +134,6 @@ public class ProfilCellModifier implements ICellModifier, ICellEditorValidator
 
     return new Double( value.toString().replace( ',', '.' ) );
   }
-
-  // public static IProfilPointProperty propertyForID( final IProfil profil, final String idstr )
-  // {
-  // final IProfilPointProperty[] columnKeys = profil.getPointProperties();
-  // for( final IProfilPointProperty key : columnKeys )
-  // {
-  // final IProfilPointProperty pointProperty = key;
-  // final String id = pointProperty.toString();
-  // if( id.equals( idstr ) )
-  // return pointProperty;
-  // }
-  //
-  // return null;
-  // }
 
   public double getValueAsDouble( final Object element, final String property )
   {

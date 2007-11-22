@@ -38,20 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
-
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+package org.kalypso.model.wspm.core.profil;
 
 /**
  * @author kimwerner
  */
-public class BuildingMaul extends AbstractProfilDurchlass
+public interface IProfilPointPropertyProvider2 extends IProfilPointPropertyProvider
 {
-
-  public BuildingMaul( )
-  {
-    super( IWspmTuhhConstants.BUILDING_TYP_MAUL, "Maul", new String[]{IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT }, new String[] {
-        "Bezugspunkt X", "Bezugspunkt Y", "Höhe", "Breite", "Sohlgefälle", "Rauheit" } );
-  }
-
+  public Double createDoubleFor( final String pointPropertyId, final Object value );
 }

@@ -79,36 +79,16 @@ public class BuildingPanel extends AbstractProfilView
 
   private final IProfileObject m_building;
 
-  private String getLabel( final String property )
-  {
-    return m_building.getLabelFor( property );
-    // TODO: Kim return getLabelProvider.getCaptionFor(property);
-    // if( property == BUILDING_PROPERTY.BREITE )
-    // {
-    // final String buildigTyp = m_building.getTyp();
-    // if( buildigTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_EI ) == 0 )
-    // {
-    // return "grösster Durchmesser [m]";
-    // }
-    // else if( buildigTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) == 0 )
-    // {
-    // return "lange Seite [m]";
-    // }
-    // else if( buildigTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) == 0 )
-    // {
-    // return "Breite in Fließrichtung [m]";
-    // }
-    // else
-    // return property.toString();
-    // }
-    //return property;
-  }
-
   public BuildingPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
     super( pem, viewdata );
 
     m_building = getProfil().getProfileObject();
+  }
+
+  private String getLabel( final String property )
+  {
+    return m_building.getLabelFor( property );
   }
 
   /**

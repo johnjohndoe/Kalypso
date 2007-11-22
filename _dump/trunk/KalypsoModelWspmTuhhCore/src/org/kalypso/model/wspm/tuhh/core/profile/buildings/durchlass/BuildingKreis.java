@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
-import java.util.Arrays;
-
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
@@ -51,7 +49,8 @@ public class BuildingKreis extends AbstractProfilDurchlass
 {
   public BuildingKreis( )
   {
-    super( IWspmTuhhConstants.BUILDING_TYP_KREIS,"Kreis", Arrays.asList( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
+    super( IWspmTuhhConstants.BUILDING_TYP_KREIS, "Kreis", new String[] { IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y,
+        IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT }, new String[] { "Bezugspunkt X",
+        "Bezugspunkt Y", "Durchmesser", "Sohlgefälle", "Rauheit" } );
   }
-
 }

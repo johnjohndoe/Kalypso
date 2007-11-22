@@ -63,6 +63,8 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider2;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
@@ -341,12 +343,21 @@ public class ProfileFeatureFactory implements IWspmConstants
       {
         final String compId = component.getId();
         final Object value = record.getValue( component );
+        final IProfilPointPropertyProvider propertyProvider = profil.getPropertyProviderFor( compId );
 
-        if( profil.getPropertyProviderFor( compId ) != null )
+        if( propertyProvider != null )
         {
-          final Double doubleValue = value == null ? null : (Double) value;
+          Double doubleValue;
+          try
+          {
+            doubleValue = (Double) value;
+          }
+          catch( NumberFormatException e )
+          {
+            doubleValue = (propertyProvider instanceof IProfilPointPropertyProvider2) ? ((IProfilPointPropertyProvider2) propertyProvider).createDoubleFor( compId, value ) : Double.NaN;
+          }
           // should never be null, what to do in that case?
-          if( doubleValue == null )
+          if( doubleValue.isNaN() )
             throw new IllegalArgumentException( "Null value in profile km " + station );
           point.setValueFor( compId, doubleValue );
           continue;

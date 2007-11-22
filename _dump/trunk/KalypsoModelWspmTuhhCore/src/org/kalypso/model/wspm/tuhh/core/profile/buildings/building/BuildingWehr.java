@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -54,7 +53,8 @@ public class BuildingWehr extends AbstractProfilBuilding
 
   public BuildingWehr( )
   {
-    super( IWspmTuhhConstants.BUILDING_TYP_WEHR,"Wehr", Arrays.asList( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR } );
+    super( IWspmTuhhConstants.BUILDING_TYP_WEHR,"Wehr", new String[]{ IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT },
+        new String[]{"Wehrart","Formbeiwert"}, new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR } );
     m_buildingValues.put( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG );
   }
 

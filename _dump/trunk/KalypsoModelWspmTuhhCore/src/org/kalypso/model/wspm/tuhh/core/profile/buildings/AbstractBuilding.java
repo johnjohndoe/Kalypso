@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -51,19 +51,24 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
  */
 public abstract class AbstractBuilding implements IProfileObject
 {
-  
+
   private String m_name;
+
+  private final HashMap<String, String> m_labels = new HashMap<String, String>();
 
   protected final String m_buildingTyp;
 
   protected final Map<String, Object> m_buildingValues = new LinkedHashMap<String, Object>();
 
-  public AbstractBuilding( final String buildingTyp, final String name, final Collection<String> properties )
+  public AbstractBuilding( final String buildingTyp, final String name, final String[] properties, final String[] labels )
   {
     m_buildingTyp = buildingTyp;
     m_name = name;
-    for( final String property : properties )
-      m_buildingValues.put( property, new Double( 0.0 ) );
+    for( int i = 0; i < properties.length; i++ )
+    {
+      m_buildingValues.put( properties[i], new Double( 0.0 ) );
+      m_labels.put( properties[i], i < labels.length ? labels[i] : "" );
+    }
   }
 
   /**
@@ -124,5 +129,10 @@ public abstract class AbstractBuilding implements IProfileObject
     m_buildingValues.put( property, value );
 
     return oldValue;
+  }
+
+  public final String getLabelFor( final String profilBuildingProperty )
+  {
+    return m_labels.containsKey( profilBuildingProperty ) ? m_labels.get( profilBuildingProperty ) : "";
   }
 }

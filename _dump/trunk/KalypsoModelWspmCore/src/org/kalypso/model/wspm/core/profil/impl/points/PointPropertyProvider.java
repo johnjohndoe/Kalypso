@@ -45,12 +45,12 @@ import java.util.Map;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider2;
 
 /**
  * @author kimwerner
  */
-public class PointPropertyProvider implements IProfilPointPropertyProvider
+public class PointPropertyProvider implements IProfilPointPropertyProvider2
 {
   private final Map<String, IProfilPointProperty> m_properties = new HashMap<String, IProfilPointProperty>();
 
@@ -125,6 +125,15 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
   public boolean providesPointProperty( String pointPropertyId )
   {
     return m_properties.containsKey( pointPropertyId );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider2#createDoubleFor(java.lang.String, java.lang.Object)
+   */
+  public Double createDoubleFor( String pointPropertyId, Object value )
+  {
+    // TODO Auslesen einer Rauheiten-, oder Bewuchsklassendatei (z.B. 0.34 für Sträucher)
+    return Double.NaN;
   }
 
 }
