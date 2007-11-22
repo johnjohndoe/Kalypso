@@ -50,7 +50,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
- *
  */
 public class WspmGeometryUtilities
 {
@@ -86,22 +85,21 @@ public class WspmGeometryUtilities
   {
     final GM_Position position = GeometryFactory.createGM_Position( rw, hw, h );
 
-    /* If CRS is not know, we assume here that we have a GAUSS-KRUEGER crs in a profile. */
+    /* If CRS is not known, we assume here that we have a GAUSS-KRUEGER crs in a profile. */
     if( crsName == null )
       crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-    
+
     final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
 
     final GM_Point point = GeometryFactory.createGM_Point( position, crs );
     return (GM_Point) GEO_TRANSFORMER.transform( point );
   }
-  
+
   public static GM_Point pointFromPoint( final GM_Point inPoint, final String crsName ) throws Exception
   {
     final GM_Position position = inPoint.getPosition();
-   
-    return pointFromRwHw(position.getX(),position.getY(),position.getZ(), crsName);
-  }
 
+    return pointFromRwHw( position.getX(), position.getY(), position.getZ(), crsName );
+  }
 
 }

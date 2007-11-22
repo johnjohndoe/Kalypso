@@ -392,7 +392,7 @@ public class ProfilUtil
   }
 
   /**
-   * return a valid ProfilPoint if operation succeeds, othwerwise null
+   * return a valid ProfilPoint if operation succeeds, otherwise null
    * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IProfilPoints#addPoint(double, double)
    */
@@ -591,6 +591,7 @@ public class ProfilUtil
       if( rechtsWert > 0.0 || hochWert > 0.0 )
       {
         /* Memorize the point, because it has a geo reference. */
+
         geoReferencedPoints.add( point );
       }
       // else
@@ -611,7 +612,7 @@ public class ProfilUtil
       double z = georeferencedPoints.get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
-    
+
     final GM_Curve curve = GeometryFactory.createGM_Curve( pos, crs );
 
     return curve;

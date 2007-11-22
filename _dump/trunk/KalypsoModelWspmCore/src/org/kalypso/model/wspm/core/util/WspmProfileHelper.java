@@ -53,7 +53,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -61,9 +60,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Holger Albert, Thomas Jung TODO: merge / check this class with {@link ProfilUtil}
@@ -154,7 +151,7 @@ public class WspmProfileHelper
       double rechtsWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
       double hochWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
-      /* Geo-Projectino */
+      /* Geo-Projection */
       final GM_Point geoPointOne = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, crs );
       final GM_Point geoPointTwo = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, crs );
 
@@ -207,6 +204,8 @@ public class WspmProfileHelper
   {
     final LinkedList<IProfilPoint> geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
 
+    final String srsName = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+    CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
     /* If no or only one geo referenced points are found, return. */
     if( geoReferencedPoints.size() <= 1 )
       return null;
@@ -229,7 +228,7 @@ public class WspmProfileHelper
       double rechtsWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
       double hochWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
-      /* find the right segment with the neighbouring points */
+      /* find the right segment with the neighboring points */
       if( widthValueOne < width & widthValueTwo > width )
       {
         /* calculate the georeference */
@@ -239,45 +238,17 @@ public class WspmProfileHelper
         final double y = (deltaOne * (hochWertTwo - hochWertOne) / delta) + hochWertOne;
         final double z = (deltaOne * (heigthValueTwo - heigthValueOne) / delta) + heigthValueOne;
 
-        Coordinate geoCoord = new Coordinate( x, y, z );
-        GeometryFactory factory = new GeometryFactory();
-
-        Point point = factory.createPoint( geoCoord );
-        GM_Object object = JTSAdapter.wrap( point );
-
-        return (GM_Point) object;
+        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( x, y, z, crs );
       }
-      /* if the point is lying on the start point of the segemnt */
+      /* if the point is lying on the start point of the segment */
       else if( widthValueOne == width )
       {
-        /* calculate the georeference */
-        final double x = rechtsWertOne;
-        final double y = hochWertOne;
-        final double z = heigthValueOne;
-
-        Coordinate geoCoord = new Coordinate( x, y, z );
-        GeometryFactory factory = new GeometryFactory();
-
-        Point point = factory.createPoint( geoCoord );
-        GM_Object object = JTSAdapter.wrap( point );
-
-        return (GM_Point) object;
+        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, heigthValueOne, crs );
       }
-      /* if the point is lying on the end point of the segemnt */
+      /* if the point is lying on the end point of the segment */
       else if( widthValueTwo == width )
       {
-        /* calculate the georeference */
-        final double x = rechtsWertTwo;
-        final double y = hochWertTwo;
-        final double z = heigthValueTwo;
-
-        Coordinate geoCoord = new Coordinate( x, y, z );
-        GeometryFactory factory = new GeometryFactory();
-
-        Point point = factory.createPoint( geoCoord );
-        GM_Object object = JTSAdapter.wrap( point );
-
-        return (GM_Point) object;
+        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, heigthValueTwo, crs );
       }
     }
     return null;
@@ -465,6 +436,10 @@ public class WspmProfileHelper
 
     final LinkedList<IProfilPoint> profilPointList = profile.getPoints();
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
+
+    /* set the coordinate system */
+    CS_CoordinateSystem crs = (CS_CoordinateSystem) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+    tmpProfil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
 
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
