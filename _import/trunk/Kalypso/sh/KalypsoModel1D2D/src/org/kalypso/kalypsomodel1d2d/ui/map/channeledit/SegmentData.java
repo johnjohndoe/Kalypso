@@ -576,7 +576,7 @@ public class SegmentData
    * this method is used for intersecting the banklines (Linestrings)
    * 
    * @param linestring
-   *            input linestrin to be intersected
+   *            input linestring to be intersected
    * @param numIntersects
    *            number of intersections of the linestring
    */
@@ -1148,11 +1148,13 @@ public class SegmentData
 
       if( prof == data.getProf() & data.getWidthOrder() == widthorder )
       {
-        // store the old point to get the right banklne points
+        // store the old point to get the right bankline points
         final Point oldPoint = data.getPoint();
 
+        // TODO: here we have to create a point in the right coordinate system!!
         final GeometryFactory factory = new GeometryFactory();
         final Point point = factory.createPoint( new Coordinate( gmpoint.getX(), gmpoint.getY(), gmpoint.getZ() ) );
+
         data.setPoint( point );
         data.setWidth( width );
         if( point.distance( oldPoint ) > 0.01 )
@@ -1238,7 +1240,7 @@ public class SegmentData
   }
 
   /**
-   * manages the update of the profile data, after the intersected profiles were chaged by the chart view layer in the
+   * manages the update of the profile data, after the intersected profiles were changed by the chart view layer in the
    * gui. things to do: -update the intersection points -> will be done by the layer -update the intersected banklines
    * -update the profiles (-> croping, intersecting, elevation adjusting)
    */
@@ -1587,6 +1589,8 @@ public class SegmentData
    */
   private void updateBanklines( final Point oldPoint, final Point newPoint )
   {
+    // TODO: we have a problem with projected coords. check what has to be transformed (the new coord?). and do it!!
+
     // find the correct bankline
     Point point = m_bankLeftInters.getPointN( 0 );
 
