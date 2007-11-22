@@ -160,7 +160,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void end( )
   {
     /* extrapolate the water level into dry areas */
-    extrapolateWaterLevel( 0 ); // create the triangles for each element
+    // extrapolateWaterLevel( 0 );
+    // create the triangles for each element
     for( final ElementResult element : m_elemIndex.values() )
     {
       element.createCenterNode(); // split the element
