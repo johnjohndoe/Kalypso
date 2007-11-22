@@ -1,5 +1,6 @@
 package org.kalypso.model.flood.handlers;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,12 +23,17 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.model.schema.binding.IVectorDataModel;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -109,23 +115,29 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       /* --- demo code for accessing the depth grid coverage collections --- */
 
       // get the result coverage collections (depth grids) from the events
+      final List<Feature> createdFeatures = new ArrayList<Feature>();
       for( final IRunoffEvent runoffEvent : eventsToProcess )
       {
         final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
+        createdFeatures.add( annualCoverageCollection.getWrappedFeature() );
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
         for( final ICoverage coverage : coverages )
+        {
           annualCoverageCollection.add( coverage );
-
+        }
         // TODO: dejan, copy/reference coverage into risk model for each event
       }
 
       /* ------ */
 
       // TODO: maybe save other models?
+      final GMLWorkspace workspace = rasterDataModel.getWrappedFeature().getWorkspace();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getWrappedFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      riskDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
       riskDataProvider.saveModel( IRasterDataModel.class, new NullProgressMonitor() );
     }
-    catch( CoreException e )
+    catch( Exception e )
     {
       e.printStackTrace();
 
