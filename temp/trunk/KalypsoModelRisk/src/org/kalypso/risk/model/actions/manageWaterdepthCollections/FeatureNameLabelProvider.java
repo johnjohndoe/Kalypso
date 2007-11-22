@@ -49,13 +49,13 @@ public class FeatureNameLabelProvider extends GMLLabelProvider
         label.append( ", " ); //$NON-NLS-1$
         label.append( Math.abs( gridDomain.getOffsetX().getGeoX() - gridDomain.getOffsetX().getGeoY() ) ).append( "x" ).append( Math.abs( gridDomain.getOffsetY().getGeoX() //$NON-NLS-1$
             - gridDomain.getOffsetY().getGeoY() ) );
-        try
-        {
-          label.append( ", " ).append( gridDomain.getCoordinateSystem().getName() ); //$NON-NLS-1$
-        }
-        catch( RemoteException e )
-        {
-        }
+//        try
+//        {
+////          label.append( ", " ).append( gridDomain.getCoordinateSystem().getName() ); //$NON-NLS-1$
+//        }
+//        catch( RemoteException e )
+//        {
+//        }
         label.append( "]" ); //$NON-NLS-1$
         return label.toString();
       }
