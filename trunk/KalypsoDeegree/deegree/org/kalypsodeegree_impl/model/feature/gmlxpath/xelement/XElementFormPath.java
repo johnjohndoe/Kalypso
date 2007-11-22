@@ -70,19 +70,8 @@ public class XElementFormPath extends AbstractXElement
     final QName regularQname = QNameUtilities.createQName( condition, namespaceContext );
     if( "*".equals( condition ) )
       m_propName = QNAME_ALL;
-    else if( regularQname != null )
-    {
-      /* Try parse with namespaceContext */
-      m_propName = regularQname;
-    }
     else
-    {
-      /*
-       * Fallback: maybe it is formatted like {namespaceUri}localPart (which is not regular, but still recognized for
-       * backwards compability).
-       */
-      m_propName = QName.valueOf( condition );
-    }
+      m_propName = regularQname;
 
     if( m_propName == null )
       throw new IllegalArgumentException( "Could not parse qname: " + condition );
