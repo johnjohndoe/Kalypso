@@ -283,8 +283,13 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
       cnt += getCurveAt( i ).getNumberOfCurveSegments();
 
       final double[] pos = getCurveAt( i ).getCentroid().getAsArray();
-
-      for( int j = 0; j < dimSize; j++ )
+      
+      // pos.length is always 2, so we have ArrayIndexOutOfBoundsException always when dimSize > 2
+      // TODO consider this
+      
+      final int dimSize2 = Math.min( pos.length, dimSize );
+      for( int j = 0; j < dimSize2; j++ )
+//      for( int j = 0; j < dimSize; j++ )
       {
         cen[j] += pos[j];
       }
