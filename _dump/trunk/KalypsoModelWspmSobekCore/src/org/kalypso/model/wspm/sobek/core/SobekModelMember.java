@@ -82,7 +82,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
@@ -347,7 +346,7 @@ public final class SobekModelMember implements ISobekModelMember
         m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
 
         final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
-        final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/fileformats.xsd" );
+        final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/Delft_PI.xsd" );
         final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
         // TODO remove comment
 //        m.setSchema( schema );

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek"
-	xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekStructures="org.kalypso.model.wspm.sobek.structures" xmlns:wspmSobekProj="org.kalypso.model.wspm.sobek.project" targetNamespace="org.kalypso.model.wspm.sobek.project"
-	elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek" xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekStructures="org.kalypso.model.wspm.sobek.structures" xmlns:wspmSobekProj="org.kalypso.model.wspm.sobek.project" targetNamespace="org.kalypso.model.wspm.sobek.project" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -10,7 +8,6 @@
 	<import namespace="org.kalypso.model.wspm.sobek" schemaLocation="wspmSobek.xsd"/>
 	<import namespace="org.kalypso.model.wspm.sobek.common" schemaLocation="wspmSobekCommons.xsd"/>
 	<import namespace="org.kalypso.model.wspm.sobek.structures" schemaLocation="wspmSobekStructures.xsd"/>
-	
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
 	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- schema for WSPM projects -->
@@ -89,8 +86,8 @@
 				<sequence>
 					<element ref="wspmSobek:nodeMember" minOccurs="2" maxOccurs="unbounded"/>
 					<element ref="wspmSobek:branchMember" minOccurs="1" maxOccurs="unbounded"/>
-					<!-- hier kommen die Elemente, die mit den calculationPoints neu entstehen -->
-					<element ref="wspmSobek:calcLinkMember" minOccurs="1" maxOccurs="unbounded"/>
+					<!--  since it is not yet known how results will be organized, the calcLinks are commented out, it might also be necessary to add calcPoints explicitely
+					<element ref="wspmSobek:calcLinkMember" minOccurs="1" maxOccurs="unbounded"/>  -->
 					<element ref="wspmSobek:lastfallMember" minOccurs="1" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>

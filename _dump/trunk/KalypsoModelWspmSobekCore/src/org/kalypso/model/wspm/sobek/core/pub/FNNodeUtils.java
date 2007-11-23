@@ -58,6 +58,11 @@ import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 import org.kalypso.model.wspm.sobek.core.model.ConnectionNode;
 import org.kalypso.model.wspm.sobek.core.model.CrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
+import org.kalypso.model.wspm.sobek.core.model.SbkStructCompoundStructure;
+import org.kalypso.model.wspm.sobek.core.model.SbkStructDatabaseStructure;
+import org.kalypso.model.wspm.sobek.core.model.SbkStructGeneralStructure;
+import org.kalypso.model.wspm.sobek.core.model.SbkStructPump;
+import org.kalypso.model.wspm.sobek.core.model.SbkStructRiverWeir;
 import org.kalypso.model.wspm.sobek.core.model.SbkStructWeir;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -158,8 +163,18 @@ public class FNNodeUtils
       return new BoundaryNode( model, node );
     else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qname ) )
       return new CrossSectionNode( model, node );
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE.equals( qname ) )
+      return new SbkStructCompoundStructure( model, node );
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR.equals( qname ) )
+      return new SbkStructRiverWeir( model, node );
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE.equals( qname ) )
+      return new SbkStructGeneralStructure( model, node );
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE.equals( qname ) )
+      return new SbkStructDatabaseStructure( model, node );
     else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR.equals( qname ) )
       return new SbkStructWeir( model, node );
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP.equals( qname ) )
+      return new SbkStructPump( model, node );
 
     return new EmptyNodeImplementation( model, node );
   }

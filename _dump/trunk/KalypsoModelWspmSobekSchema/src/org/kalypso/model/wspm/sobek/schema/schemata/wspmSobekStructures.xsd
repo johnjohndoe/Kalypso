@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek"
-	xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekStructures="org.kalypso.model.wspm.sobek.structures" targetNamespace="org.kalypso.model.wspm.sobek.structures"
-	elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek" xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekStructures="org.kalypso.model.wspm.sobek.structures" targetNamespace="org.kalypso.model.wspm.sobek.structures" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -19,6 +17,62 @@
 	ELEMENTS
 	_________________________________________________________________________________________
 	-->
+	<element name="posReductionFactorsMember" type="wspmSobekCommon:TablePropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Reduction Factors (Flow)</label>
+				<tooltip>Reduction Factors (Flow)</tooltip>
+				<description>Reduction Factors (Flow)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Reduction Factors (Flow)</label>
+				<tooltip>Reduction Factors (Flow)</tooltip>
+				<description>Reduction Factors (Flow)</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="negReductionFactorsMember" type="wspmSobekCommon:TablePropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Reduction Factors (Reverse)</label>
+				<tooltip>Reduction Factors (Reverse)</tooltip>
+				<description>Reduction Factors (Reverse)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Reduction Factors (Reverse)</label>
+				<tooltip>Reduction Factors (Reverse)</tooltip>
+				<description>Reduction Factors (Reverse)</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="databaseMember" type="wspmSobekCommon:TablePropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>databaseMember</label>
+				<tooltip>databaseMember</tooltip>
+				<description>databaseMember</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>databaseMember</label>
+				<tooltip>databaseMember</tooltip>
+				<description>databaseMember</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="databaseUsageMember" type="wspmSobekCommon:TablePropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>databaseUsageMember</label>
+				<tooltip>databaseUsageMember</tooltip>
+				<description>databaseUsageMember</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>databaseUsageMember</label>
+				<tooltip>databaseUsageMember</tooltip>
+				<description>databaseUsageMember</description>
+			</documentation>
+		</annotation>
+	</element>
 	<!--
 		_________________________________________________________________________________________
 		NODE ELEMENTS
@@ -26,7 +80,7 @@
 	-->
 	<!--
 		Abstrakte Elemente für Structure-Nodes.
-	--> 
+	-->
 	<element name="AbstractSbkStructureNode" abstract="true" type="wspmSobekStructures:AbstractSbkStructureNodeType" substitutionGroup="wspmSobek:AbstractNetworkNode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -41,8 +95,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="AbstractSbkCompoundableStructureNode" abstract="true" type="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType"
-		substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+	<element name="AbstractSbkCompoundableStructureNode" abstract="true" type="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>AbstractSbkCompoundableStructureNode - ${property:org.kalypso.model.wspm.sobek#name}</label>
@@ -100,6 +153,7 @@
 			</documentation>
 		</annotation>
 	</element>
+	<!-- will be implemented later
 	<element name="SbkRiverAdvancedWeir" type="wspmSobekStructures:SbkRiverAdvancedWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -116,6 +170,7 @@
 			</documentation>
 		</annotation>
 	</element>
+	-->
 	<element name="SbkGeneralStructure" type="wspmSobekStructures:SbkGeneralStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -132,6 +187,7 @@
 			</documentation>
 		</annotation>
 	</element>
+	<!-- will be implemented later
 	<element name="SbkRiverPump" type="wspmSobekStructures:SbkRiverPumpType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -147,7 +203,8 @@
 				<description>River Pump</description>
 			</documentation>
 		</annotation>
-	</element>
+	</element> 
+	-->
 	<element name="SbkDatabaseStructure" type="wspmSobekStructures:SbkDatabaseStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -180,7 +237,8 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="SbkOrifice" type="wspmSobekStructures:SbkOrificeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+	<!-- will be implemented later
+		<element name="SbkOrifice" type="wspmSobekStructures:SbkOrificeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Durchlass (Sbk)</name>
@@ -196,6 +254,7 @@
 			</documentation>
 		</annotation>
 	</element>
+	-->
 	<element name="SbkPump" type="wspmSobekStructures:SbkPumpType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -212,7 +271,8 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="SbkCulvert" type="wspmSobekStructures:SbkCulvertType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
+	<!-- will be implemented later
+		<element name="SbkCulvert" type="wspmSobekStructures:SbkCulvertType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Düker (Sbk)</name>
@@ -228,6 +288,8 @@
 			</documentation>
 		</annotation>
 	</element>
+	-->
+	<!-- will be implemented later
 	<element name="SbkUniversalWeir" type="wspmSobekStructures:SbkUniversalWeirType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -244,6 +306,8 @@
 			</documentation>
 		</annotation>
 	</element>
+	-->
+	<!-- will be implemented later
 	<element name="SbkBridge" type="wspmSobekStructures:SbkBridgeType" substitutionGroup="wspmSobekStructures:AbstractSbkStructureNode">
 		<annotation>
 			<documentation xml:lang="de">
@@ -260,6 +324,7 @@
 			</documentation>
 		</annotation>
 	</element>
+	-->
 	<!-- 
 	_________________________________________________________________________________________
 	TYPES
@@ -381,7 +446,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="posReductionFactors" type="wspmSobekCommon:tableType" nillable="false">
+					<element ref="wspmSobekStructures:posReductionFactorsMember">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Reduction Factors (Flow)</label>
@@ -423,7 +488,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="negReductionFactors" type="wspmSobekCommon:tableType" nillable="false">
+					<element ref="wspmSobekStructures:negReductionFactorsMember">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Reduction Factors (Reverse)</label>
@@ -732,7 +797,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="negContractionCoeff" type="double" nillable="false" default="1.0">
+					<element name="negContractionCoefficient" type="double" nillable="false" default="1.0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>negContractionCoeff</label>
@@ -803,7 +868,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="secondAxisValue" type="wspmSobekCommon:sbkRiverDatabaseStructSecondAxisType" default="Sobek.RiverDatabaseStructure.SecondAxisValue.h2" nillable="false">
+					<element name="secondAxisValueType" type="wspmSobekCommon:sbkRiverDatabaseStructSecondAxisTypeType" default="Sobek.RiverDatabaseStructure.SecondAxisValue.h2" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>secondAxisValue</label>
@@ -817,8 +882,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="interpolationType" type="wspmSobekCommon:sbkRiverDatabaseStructInterpolationTypeType" nillable="false"
-						default="Sobek.RiverDatabaseStructure.InterpolationType.Linear">
+					<element name="interpolationType" type="wspmSobekCommon:sbkRiverDatabaseStructInterpolationTypeType" nillable="false" default="Sobek.RiverDatabaseStructure.InterpolationType.Linear">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Art der Interpolation</label>
@@ -832,7 +896,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="database" type="wspmSobekCommon:tableType">
+					<element ref="wspmSobekStructures:databaseMember">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>database</label>
@@ -846,7 +910,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="databaseUsage" type="wspmSobekCommon:tableType">
+					<element ref="wspmSobekStructures:databaseUsageMember">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>databaseUsage</label>

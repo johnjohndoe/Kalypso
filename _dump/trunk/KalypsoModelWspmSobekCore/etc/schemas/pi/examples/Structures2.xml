@@ -331,6 +331,7 @@
 					<parameter id="databaseUsage" type="table">
 						<table name="databaseUsage">
 							<info>
+								<interpolation type="Interpolation.Continuous" period="No">0</interpolation>
 								<Columns count="2">
 									<column type="double"/>
 									<column type="double"/>

@@ -41,27 +41,27 @@
 package org.kalypso.model.wspm.sobek.core.model;
 
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author thuel2
+ *
  */
-public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
+public class SbkStructDatabaseStructure extends SbkStructure implements ISbkStructDatabaseStructure
 {
-
-  public SbkStructWeir( final IModelMember model, final Feature node )
+  public SbkStructDatabaseStructure( final IModelMember model, final Feature node )
   {
     super( model, node );
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#getCrestHeight()
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getCrestHeight()
    */
-  public double getCrestWidth( )
+  public double getCrestHeight( )
   {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_WIDTH );
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_CREST_HEIGHT );
     if( property instanceof Double )
       return (((Double)property).doubleValue());
 
@@ -69,48 +69,34 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#getCrestLevel()
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getInterpolationType()
    */
-  public double getCrestLevel( )
-  {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_HEIGHT );
-    if( property instanceof Double )
-      return (((Double)property).doubleValue());
-
-    return Double.NaN;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#getDischargeCoeffCE()
-   */
-  public double getDischargeCoeffCE( )
-  {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_DISCHARGE_COEFF );
-    if( property instanceof Double )
-      return (((Double)property).doubleValue());
-
-    return Double.NaN;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#getFlowDirection()
-   */
-  public String getFlowDirection( )
+  public String getInterpolationType( )
   {
     // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
-    return (String)getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_FLOW_DIRECTION );
+    return (String)getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_INTERPOLATION_TYPE );
+
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#getLateralContractionCoeffCW()
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getNumOfGateValues()
    */
-  public double getLateralContractionCoeffCW( )
+  public double getNumOfGateValues( )
   {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_LATERAL_CONTRACTION_COEFF );
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_NUMBER_GATE_VALUES );
     if( property instanceof Double )
       return (((Double)property).doubleValue());
 
     return Double.NaN;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getSecondAxisValueType()
+   */
+  public String getSecondAxisValueType( )
+  {
+    // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
+    return (String)getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_SECOND_AXIS_VALUE_TYPE );
+
+  }
 }

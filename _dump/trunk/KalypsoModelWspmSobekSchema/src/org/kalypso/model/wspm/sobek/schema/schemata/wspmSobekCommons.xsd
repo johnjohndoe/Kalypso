@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobekCommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspm.sobek.common"
-	elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:om="http://www.opengis.net/om" xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" targetNamespace="org.kalypso.model.wspm.sobek.common" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
-	<!-- schema for WSPM = 'water surface profile model' -->
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- TODO: KALYPSO-Header einfügen -->
 	<!-- 
 	_________________________________________________________________________________________
@@ -129,11 +128,75 @@
 	<simpleType name="uniqueIdType">
 		<restriction base="string"> </restriction>
 	</simpleType>
+	<simpleType name="yesNoType">
+		<restriction base="string">
+			<enumeration value="Yes">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Ja</label>
+						<tooltip>Ja</tooltip>
+						<description>Ja</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>Yes</label>
+						<tooltip>Yes</tooltip>
+						<description>Yes</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="No">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Nein</label>
+						<tooltip>Nein</tooltip>
+						<description>Nein</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>No</label>
+						<tooltip>No</tooltip>
+						<description>No</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
 	<!-- 
 		______________________________
 		Special Sobek simple types (especially enumerations)
 		______________________________
 	-->
+	<simpleType name="sbkInterpolationTypeType">
+		<restriction base="string">
+			<enumeration value="Interpolation.Continuous">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>stufenlos</label>
+						<tooltip>stufenlos</tooltip>
+						<description>stufenlos</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>continuous</label>
+						<tooltip>continuous</tooltip>
+						<description>continuous</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Interpolation.Block">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>stückweise konstant</label>
+						<tooltip>stückweise konstant</tooltip>
+						<description>stückweise konstant</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>block</label>
+						<tooltip>block</tooltip>
+						<description>block</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
 	<simpleType name="sbkFlowDirectionInclNoneType">
 		<restriction base="string">
 			<enumeration value="Direction.Both">
@@ -142,12 +205,12 @@
 						<label>positiv und negativ</label>
 						<tooltip>positiv und negativ</tooltip>
 						<description>positiv und negativ</description>
-					</documentation>
+						</documentation>
 					<documentation xml:lang="en">
 						<label>positive and negative</label>
 						<tooltip>positive and negative</tooltip>
 						<description>positive and negative</description>
-					</documentation>
+						</documentation>
 				</annotation>
 			</enumeration>
 			<enumeration value="Direction.Positive">
@@ -156,12 +219,12 @@
 						<label>positiv</label>
 						<tooltip>positiv</tooltip>
 						<description>positiv</description>
-					</documentation>
+						</documentation>
 					<documentation xml:lang="en">
 						<label>positive</label>
 						<tooltip>positive</tooltip>
 						<description>positive</description>
-					</documentation>
+						</documentation>
 				</annotation>
 			</enumeration>
 			<enumeration value="Direction.Negative">
@@ -320,7 +383,7 @@
 	</simpleType>
 	<simpleType name="sbkRiverDatabaseStructInterpolationTypeType">
 		<restriction base="string">
-			<enumeration value="Sobek.RiverDatabaseStructure.InterpolationType.Lineair">
+			<enumeration value="Sobek.RiverDatabaseStructure.InterpolationType.Linear">
 				<annotation>
 					<documentation xml:lang="de">
 						<label>linear</label>
@@ -442,7 +505,7 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<simpleType name="sbkRiverDatabaseStructSecondAxisType">
+	<simpleType name="sbkRiverDatabaseStructSecondAxisTypeType">
 		<restriction base="string">
 			<enumeration value="Sobek.RiverDatabaseStructure.SecondAxisValue.h2">
 				<annotation>
@@ -522,14 +585,80 @@
 			-->
 		</restriction>
 	</simpleType>
+	<complexType name="TablePropertyType">
+		<sequence>
+			<element ref="wspmSobekCommon:Table"/>
+		</sequence>
+	</complexType>
+	<element name="Table" type="wspmSobekCommon:TableType" substitutionGroup="om:Observation">
+		<annotation>
+			<documentation xml:lang="de">
+			<label>Sbk Table</label>
+			<tooltip>Sbk Table</tooltip>
+			<description>Sbk Table</description>
+		</documentation>
+			<documentation xml:lang="en"> 
+			<label>Sbk Table</label>
+			<tooltip>Sbk Table</tooltip>
+			<description>Sbk Table</description>
+		</documentation>
+		</annotation>
+	</element>
+	<complexType name="TableType">
+		<complexContent>
+			<extension base="om:ObservationType">
+				<sequence>
+					<element name="interpolationType" type="wspmSobekCommon:sbkInterpolationTypeType" default="Interpolation.Continuous" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Art der Interpolation</label>
+								<tooltip>Art der Interpolation</tooltip>
+								<description>Art der Interpolation</description>
+							</documentation>
+							<documentation xml:lang="en"> 
+								<label>Type of interpolation</label>
+								<tooltip>Type of interpolation</tooltip>
+								<description>Type of interpolation</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="interpolationPeriod" type="wspmSobekCommon:yesNoType" default="No" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>period</label>
+								<tooltip>period</tooltip>
+								<description>period</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>period</label>
+								<tooltip>period</tooltip>
+								<description>period</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="interpolationValue" type="byte" default="0" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>value</label>
+								<tooltip>value</tooltip>
+								<description>value</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>value</label>
+								<tooltip>value</tooltip>
+								<description>value</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
 	<!-- 
 		______________________________
 		Very basic simple types
 		______________________________
 	-->
-	<simpleType name="tableType">
-		<restriction base="double"/>
-	</simpleType>
 	<simpleType name="notNegDoubleType">
 		<restriction base="double">
 			<minInclusive value="0"/>
