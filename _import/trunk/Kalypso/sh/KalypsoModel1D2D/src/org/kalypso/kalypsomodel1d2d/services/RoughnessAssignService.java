@@ -106,6 +106,7 @@ public class RoughnessAssignService extends Job
       final List<IFE1D2DElement> elementsInWorkarea = (m_workArea != null) ? m_model1d2d.getElements().query( m_workArea ) : m_model1d2d.getElements();
       final SubMonitor progress = SubMonitor.convert( monitor, "Roughness asigning", elementsInWorkarea.size() );
       ProgressUtilities.worked( progress, 0 );
+      m_changesDiscretisationModel.clear();
       for( final IFE1D2DElement element : elementsInWorkarea )
       {
         assignRoughness( monitor, element );
@@ -119,7 +120,6 @@ public class RoughnessAssignService extends Job
     finally
     {
       fireEvents();
-
       monitor.done();
     }
     return Status.OK_STATUS;
@@ -221,14 +221,13 @@ public class RoughnessAssignService extends Job
       for( final FeatureChange featureChange : changes )
         m_changesDiscretisationModel.add( featureChange );
     }
-    else
-      m_changesDiscretisationModel.clear();
   }
 
   private void fireEvents( )
   {
     if( m_changesDiscretisationModel.size() > 0 )
     {
+      System.out.println( "Roughensses updated" );
       final GMLWorkspace workspace = m_model1d2d.getWrappedFeature().getWorkspace();
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
