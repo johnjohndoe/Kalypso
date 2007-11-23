@@ -210,11 +210,16 @@ public class RoughnessAssignService extends Job
       }
     }
     boolean anyChanges = false;
-    anyChanges |= !element.getRoughnessClsID().equals( roughnessClsID );
-    anyChanges |= !element.getRoughnessStyle().equals( roughnessStyle );
-    anyChanges |= element.getRoughnessCorrectionKS() != null && element.getRoughnessCorrectionKS() != correctionParameterKS;
-    anyChanges |= element.getRoughnessCorrectionAxAy() != null && element.getRoughnessCorrectionAxAy() != correctionParameterAxAy;
-    anyChanges |= element.getRoughnessCorrectionDP() != null && element.getRoughnessCorrectionDP() != correctionParameterDP;
+    final String elementRoughnessClsID = element.getRoughnessClsID();
+    final String elementRoughnessStyle = element.getRoughnessStyle();
+    final Double elementRoughnessCorrectionKS = element.getRoughnessCorrectionKS();
+    final Double elementRoughnessCorrectionAxAy = element.getRoughnessCorrectionAxAy();
+    final Double elementRoughnessCorrectionDP = element.getRoughnessCorrectionDP();
+    anyChanges |= elementRoughnessClsID != null && elementRoughnessClsID.length() > 0 && !elementRoughnessClsID.equals( roughnessClsID );
+    anyChanges |= !elementRoughnessStyle.equals( roughnessStyle );
+    anyChanges |= elementRoughnessCorrectionKS != null && elementRoughnessCorrectionKS != correctionParameterKS;
+    anyChanges |= elementRoughnessCorrectionAxAy != null && elementRoughnessCorrectionAxAy != correctionParameterAxAy;
+    anyChanges |= elementRoughnessCorrectionDP != null && elementRoughnessCorrectionDP != correctionParameterDP;
     if( anyChanges )
     {
       final FeatureChange[] changes = element.assignRoughness( roughnessClsID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
@@ -227,7 +232,6 @@ public class RoughnessAssignService extends Job
   {
     if( m_changesDiscretisationModel.size() > 0 )
     {
-      System.out.println( "Roughensses updated" );
       final GMLWorkspace workspace = m_model1d2d.getWrappedFeature().getWorkspace();
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
