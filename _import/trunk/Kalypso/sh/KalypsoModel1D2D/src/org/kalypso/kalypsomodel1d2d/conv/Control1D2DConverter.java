@@ -147,7 +147,7 @@ public class Control1D2DConverter
     m_formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props ); //$NON-NLS-1$
 
     // C1
-    //m_formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
+    // m_formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
     m_formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 0, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
 
     // C2
@@ -284,7 +284,7 @@ public class Control1D2DConverter
     final String msg = Messages.getString( "Control1D2DConverter.33" ); //$NON-NLS-1$
 
     Double uRValSteady = controlModel.get_RelaxationsFactor();
-    if( uRValSteady == null || uRValSteady.isNaN() )
+    if( uRValSteady == null || uRValSteady.isNaN() || uRValSteady < 0.1 || uRValSteady > 1.0 )
       if( controlModel.isSteadySelected() )
         throw new SimulationException( Messages.getString( "Control1D2DConverter.34" ), null ); //$NON-NLS-1$
       else

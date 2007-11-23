@@ -41,10 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.font.LineMetrics;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
@@ -254,59 +252,43 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
       final GM_Point point = MapUtilities.transform( mapPanel, p );
       final double DELTA = MapUtilities.calculateWorldDistance( mapPanel, point, 10 );
       final IFE1D2DNode node = m_dataModel.getDiscretisationModel().findNode( point, DELTA );
-      double height = 0;
       GM_Point nodePoint = null;
-
+      
+      final StringBuffer tooltipText = new StringBuffer();
       if( node != null )
       {
         nodePoint = node.getPoint();
-
-        final StringBuffer nodeElevationText = new StringBuffer( 64 );
         if( nodePoint.getCoordinateDimension() <= 2 )
         {
-          nodeElevationText.append( Messages.getString( "ApplyElevationWidget.2" ) ); //$NON-NLS-1$
+          tooltipText.append( Messages.getString( "ApplyElevationWidget.2" ) ); //$NON-NLS-1$
         }
         else
         {
-          nodeElevationText.append( Messages.getString( "ApplyElevationWidget.3" ) ); //$NON-NLS-1$
-          nodeElevationText.append( String.format( "%.3f", nodePoint.getZ() ) ); //$NON-NLS-1$
-          nodeElevationText.append( " m" ); //$NON-NLS-1$
+          tooltipText.append( Messages.getString( "ApplyElevationWidget.3" ) ); //$NON-NLS-1$
+          tooltipText.append( String.format( "%.3f m", nodePoint.getZ() ) ); //$NON-NLS-1$
         }
-
-        // show info
-        m_tooltipRenderer.setTooltip( nodeElevationText.toString() );
-        m_tooltipRenderer.paintToolTip( p, g, getMapPanel().getBounds() );
-        final FontMetrics fontMetrics = g.getFontMetrics();
-        final LineMetrics lineMetrics = fontMetrics.getLineMetrics( nodeElevationText.toString(), g );
-        height = lineMetrics.getHeight() * 1.35;
+        tooltipText.append( "\n" );
       }
 
       if( nodePoint == null )
-      {
         nodePoint = MapUtilities.transform( mapPanel, p );
-      }
-      final StringBuffer modelEleText = new StringBuffer( 64 );
+
       final IElevationProvider elevationProvider = getElevationProvider();
       if( elevationProvider != null )
       {
         final double elevation = elevationProvider.getElevation( nodePoint );
         if( !Double.isNaN( elevation ) )
         {
-          modelEleText.append( Messages.getString( "ApplyElevationWidget.6" ) ); //$NON-NLS-1$
-          modelEleText.append( String.format( "%.3f", elevation ) ); //$NON-NLS-1$
-          modelEleText.append( " m" ); //$NON-NLS-1$
+          tooltipText.append( Messages.getString( "ApplyElevationWidget.6" ) ); //$NON-NLS-1$
+          tooltipText.append( String.format( "%.3f m", elevation ) ); //$NON-NLS-1$
         }
         else
-          modelEleText.append( Messages.getString( "ApplyElevationWidget.9" ) ); //$NON-NLS-1$
+          tooltipText.append( Messages.getString( "ApplyElevationWidget.9" ) ); //$NON-NLS-1$
       }
       else
-      {
-        modelEleText.append( Messages.getString( "ApplyElevationWidget.10" ) ); //$NON-NLS-1$
-      }
+        tooltipText.append( Messages.getString( "ApplyElevationWidget.10" ) ); //$NON-NLS-1$
 
-      final Point p2 = new Point();
-      p2.setLocation( (int) p.getX(), (int) (p.getY() + height) );
-      m_tooltipRenderer.setTooltip( modelEleText.toString() );
+      m_tooltipRenderer.setTooltip( tooltipText.toString() );
       m_tooltipRenderer.paintToolTip( p, g, getMapPanel().getBounds() );
       return;
     }

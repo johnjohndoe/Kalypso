@@ -124,7 +124,7 @@ public class RoughnessAssignListener implements ModellEventListener
     {
       final FeaturesChangedModellEvent event = (FeaturesChangedModellEvent) modellEvent;
       final Feature[] changedFeatures = event.getFeatures();
-      if( isRoughnessAssignNeeded( changedFeatures ) )
+      if( changedFeatures != null && isRoughnessAssignNeeded( changedFeatures ) )
         startJob( FeatureHelper.getEnvelope( changedFeatures ) );
     }
     else

@@ -576,15 +576,15 @@
 				verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
 				grabExcessVerticalSpace="true" />
 			<gft:gridLayout numColumns="4" horizontalSpacing="10" />
-			<gft:label text="Konvergenzschranke vx [-]" visible="true"
-				tooltip="Maximale Änderung der Geschwindigkeit in x-Richtung [-]"
+			<gft:label text="Konvergenzschranke vx [m/s]" visible="true"
+				tooltip="Maximale Änderung der Geschwindigkeit in x-Richtung [m/s]"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"
 					grabExcessHorizontalSpace="false" />
 			</gft:label>
 			<gft:text editable="true" property="c1d2d:CONV_1"
-				tooltip="Maximale Änderung der Geschwindigkeit in x-Richtung [-]"
+				tooltip="Maximale Änderung der Geschwindigkeit in x-Richtung [m/s]"
 				style="SWT.BORDER">
 				<gft:gridData horizontalSpan="1"
 					horizontalAlignment="GridData.FILL"
@@ -599,15 +599,15 @@
 				<gft:gridData horizontalAlignment="GridData.BEGINNING"
 					grabExcessHorizontalSpace="false" />
 			</gft:validatorlabel>
-			<gft:label text="Konvergenzschranke vy [-]" visible="true"
-				tooltip="Maximale Änderung der Geschwindigkeit in y-Richtung [-]"
+			<gft:label text="Konvergenzschranke vy [m/s]" visible="true"
+				tooltip="Maximale Änderung der Geschwindigkeit in y-Richtung [m/s]"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"
 					grabExcessHorizontalSpace="false" />
 			</gft:label>
 			<gft:text editable="true" property="c1d2d:CONV_2"
-				tooltip="Maximale Änderung der Geschwindigkeit in y-Richtung [-]"
+				tooltip="Maximale Änderung der Geschwindigkeit in y-Richtung [m/s]"
 				style="SWT.BORDER">
 				<gft:gridData horizontalSpan="1"
 					horizontalAlignment="GridData.FILL"
@@ -622,14 +622,14 @@
 				<gft:gridData horizontalAlignment="GridData.BEGINNING"
 					grabExcessHorizontalSpace="false" />
 			</gft:validatorlabel>
-			<gft:label text="Konvergenzschranke h [-]" visible="true"
-				tooltip="Maximale Änderung der Wassertiefe [-]" style="SWT.NONE">
+			<gft:label text="Konvergenzschranke h [m]" visible="true"
+				tooltip="Maximale Änderung der Wassertiefe [m]" style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"
 					grabExcessHorizontalSpace="false" />
 			</gft:label>
 			<gft:text editable="true" property="c1d2d:CONV_3"
-				tooltip="Maximale Änderung der Wassertiefe [-]"
+				tooltip="Maximale Änderung der Wassertiefe [m]"
 				style="SWT.BORDER">
 				<gft:gridData horizontalSpan="1"
 					horizontalAlignment="GridData.FILL"
@@ -761,8 +761,8 @@
 				</gft:enabledOperation>
 			</gft:extensioncontrol>
 
-			<gft:label text="Anfangswasserspiegel [-]" visible="true"
-				tooltip="Anfangswert des Wasserstandes ?ber jeden Knoten [m]"
+			<gft:label text="Anfangswasserspiegel [m]" visible="true"
+				tooltip="Anfangswert des Wasserstandes über jeden Knoten [m]"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"
@@ -1232,7 +1232,7 @@
 					grabExcessHorizontalSpace="false" />
 			</gft:validatorlabel>
 
-			<gft:label text="Wiederbenetzungstiefe [-]" visible="true"
+			<gft:label text="Wiederbenetzungstiefe [m]" visible="true"
 				tooltip="Wassertiefe bei welcher trockener Knoten wiederbenetzt wird [m]."
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"

@@ -221,6 +221,8 @@ public class RoughnessAssignService extends Job
       for( final FeatureChange featureChange : changes )
         m_changesDiscretisationModel.add( featureChange );
     }
+    else
+      m_changesDiscretisationModel.clear();
   }
 
   private void fireEvents( )

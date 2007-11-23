@@ -349,7 +349,6 @@
 						<xs:simpleType>
 							<xs:restriction base="xs:double">
 								<xs:minInclusive value="0.02" />
-								<xs:maxExclusive value="0.5" />
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
@@ -366,6 +365,12 @@
 								</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minInclusive value="0.02" />
+								<xs:maxExclusive value="0.5" />
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="_p_bottom" type="xs:double">
 						<xs:annotation>
@@ -495,11 +500,11 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>
-									Max. Anzahl Interationsschritte
+									Max. Anzahl Iterationsschritte
 									(stationär)
 								</xs:label>
 								<xs:tooltip>
-									Maximale Anzahl der Interationen für
+									Maximale Anzahl der Iterationen für
 									stationäre Berechnung
 								</xs:tooltip>
 							</xs:documentation>
@@ -526,11 +531,11 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>
-									Max. Anzahl Interationsschritte
+									Max. Anzahl Iterationsschritte
 									(instationär)
 								</xs:label>
 								<xs:tooltip>
-									Maximale Anzahl der Interationen für
+									Maximale Anzahl der Iterationen für
 									instationäre Berechnung.
 								</xs:tooltip>
 							</xs:documentation>
@@ -547,11 +552,11 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>
-									Konvergenzschranke vx [-]
+									Konvergenzschranke vx [m/s]
 								</xs:label>
 								<xs:tooltip>
 									Maximale Änderung der
-									Geschwindigkeit in x-Richtung [-]
+									Geschwindigkeit in x-Richtung [m/s]
 								</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
@@ -561,11 +566,11 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>
-									Konvergenzschranke vy [-]
+									Konvergenzschranke vy [m/s]
 								</xs:label>
 								<xs:tooltip>
 									Maximale Änderung der
-									Geschwindigkeit in y-Richtung [-]
+									Geschwindigkeit in y-Richtung [m/s]
 								</xs:tooltip>
 								<xs:tooltip />
 							</xs:documentation>
@@ -576,11 +581,11 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>
-									Konvergenzschranke h [-]
+									Konvergenzschranke h [m]
 								</xs:label>
 								<xs:tooltip>
 									Maximale Änderung der Wassertiefe
-									[-]
+									[m]
 								</xs:tooltip>
 								<xs:tooltip />
 							</xs:documentation>
@@ -737,7 +742,6 @@
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:double">
-								<xs:enumeration value="0.0" />
 								<xs:enumeration value="0.1" />
 								<xs:enumeration value="0.2" />
 								<xs:enumeration value="0.3" />
