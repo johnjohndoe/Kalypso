@@ -181,7 +181,12 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
     try
     {
-      return new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl( getInterpolation().getValue() ), clonedExteriorRing, clonedInterior, m_crs );
+      int value = GM_SurfaceInterpolation.NONE;
+      GM_SurfaceInterpolation interpolation = getInterpolation();
+      if( interpolation != null )
+        value = interpolation.getValue();
+
+      return new GM_Polygon_Impl( new GM_SurfaceInterpolation_Impl( value ), clonedExteriorRing, clonedInterior, m_crs );
     }
     catch( final GM_Exception e )
     {
