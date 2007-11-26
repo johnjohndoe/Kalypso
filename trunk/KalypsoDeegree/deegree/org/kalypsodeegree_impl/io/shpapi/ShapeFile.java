@@ -799,11 +799,17 @@ public class ShapeFile
         }
         else if( clazz == BigDecimal.class )
         {
-          vec.add( new Double( ((java.math.BigDecimal) value).doubleValue() ) );
+          if( value != null )
+            vec.add( new Double( ((java.math.BigDecimal) value).doubleValue() ) );
+          else
+            vec.add( null );
         }
         else if( clazz == BigInteger.class )
         {
-          vec.add( new Long( ((BigInteger) value).longValue() ) );
+          if( value != null )
+            vec.add( new Long( ((BigInteger) value).longValue() ) );
+          else
+            vec.add( null );
         }
       }
 
@@ -823,10 +829,9 @@ public class ShapeFile
       /* create a new SHP type entry in the specified shape type */
       /* convert feature geometry into output geometry */
       final ISHPGeometry shpGeom = getShapeGeometry( dataProvider.getGeometry( i ), dataProvider.getOutputShapeConstant() );
-
       if( shpGeom == null )
         throw new UnsupportedOperationException( "Data type (" + dataProvider.getGeometry( i ).toString() + ") cannot converted into the specified shape type ("
-            + ShapeConst.getShapeConstantAsString( dataProvider.getOutputShapeConstant() ) + ")" );
+            + ShapeConst.getShapeConstantAsString( dataProvider.getOutputShapeConstant() ) + ") or geometry is null." );
 
       final byte[] byteArray = shpGeom.writeShape();
       final int nbyte = shpGeom.size();
@@ -885,6 +890,9 @@ public class ShapeFile
   @SuppressWarnings("unchecked")
   private ISHPGeometry getShapeGeometry( GM_Object geom, byte outputShapeConstant )
   {
+    if( geom == null )
+      return null;
+
     switch( outputShapeConstant )
     {
       case ShapeConst.SHAPE_TYPE_NULL:
