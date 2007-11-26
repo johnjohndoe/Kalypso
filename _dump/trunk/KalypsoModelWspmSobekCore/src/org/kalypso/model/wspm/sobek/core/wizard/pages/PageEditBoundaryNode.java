@@ -58,7 +58,6 @@ import org.kalypso.util.swt.WizardFeatureTextBox;
  */
 public class PageEditBoundaryNode extends WizardPage
 {
-
   private final IBoundaryNode m_boundaryNode;
 
   private WizardFeatureTextBox m_description;

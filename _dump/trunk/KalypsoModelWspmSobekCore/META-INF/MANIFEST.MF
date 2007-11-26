@@ -62,6 +62,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.kalypso.ui,
  org.junit,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.kalypso.chart.framework,
+ org.kalypso.chart.ext.base,
+ org.kalypso.chart.ext.observation
 Bundle-Activator: org.kalypso.model.wspm.sobek.core.KalypsoModelWspmSobekCorePlugin
 Bundle-ClassPath: .
