@@ -44,28 +44,18 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.map.widgets.changers.SingleSelectionChanger;
-import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
-import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
-import org.kalypso.ogc.gml.map.widgets.mapfunctions.SelectFeaturesMapFunction;
-import org.kalypso.ogc.gml.map.widgets.providers.QNameFeaturesProvider;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -80,15 +70,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget
 
   protected FNSnapPainterCreateProfileNode m_snapPainter = null;
 
-  private GM_Point m_pos;
-
   private Point m_currentPoint;
-
-  private GM_Point m_snappedBranchPoint = null;
-
-  private RectangleSelector m_selector;
-
-  private final IRectangleMapFunction m_clickFunction = new SelectFeaturesMapFunction( SelectFeaturesMapFunction.DEFAULT_RADIUS, new QNameFeaturesProvider( ISobekConstants.QN_NOFDP_HYDRAULIC_PROFILE ), new SingleSelectionChanger( true ), KalypsoCorePlugin.getDefault().getSelectionManager() );
 
   public FNCreateCrossSectionNode( )
   {
@@ -99,12 +81,10 @@ public class FNCreateCrossSectionNode extends AbstractWidget
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-
         m_snapPainter = new FNSnapPainterCreateProfileNode( SobekModelMember.getModel() );
         return Status.OK_STATUS;
       }
     }.schedule();
-
   }
 
   /**
@@ -116,107 +96,8 @@ public class FNCreateCrossSectionNode extends AbstractWidget
   {
     super.activate( commandPoster, mapPanel );
 
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
-  @Override
-  public void dragged( final Point p )
-  {
-    if( m_selector != null )
-    {
-      m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
-      getMapPanel().setMessage( "Processing selection ..." );
-    }
-
-    final MapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaint();
-
-  }
-
-  private Feature getProfileFeature( final EasyFeatureWrapper[] features )
-  {
-    for( final EasyFeatureWrapper eft : features )
-    {
-      final Feature feature = eft.getFeature();
-
-      final QName ftName = feature.getFeatureType().getQName();
-      if( ISobekConstants.QN_NOFDP_HYDRAULIC_PROFILE.equals( ftName ) )
-        return feature;
-    }
-
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * leftClicked differs between two actions:<br>
-   * 1. snap branch profile point (m_snappedBranchPoint == null)<br>
-   * 2. select profile
-   */
-  @Override
-  public void leftClicked( final Point p )
-  {
-    m_pos = MapUtilities.transform( getMapPanel(), p );
-
-    // $ANALYSIS-IGNORE
-    try
-    {
-      // 1. snap branch profile point
-      if( m_snappedBranchPoint == null )
-      {
-        final GM_Point point = m_snapPainter.getSnapPoint( getMapPanel(), m_pos );
-        if( point != null )
-        {
-          m_snappedBranchPoint = point;
-
-          getMapPanel().setCursor( FNCreateCrossSectionNode.CURSOR_CROSSHAIR );
-          getMapPanel().setMessage( "select profile by drawing a rectangle with help of left mouse button..." );
-        }
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * draw rectangle to select profile
-   */
-  @Override
-  public void leftPressed( final Point p )
-  {
-    if( m_snappedBranchPoint != null )
-    {
-      m_selector = new RectangleSelector( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
-      getMapPanel().setMessage( "Starting selection of profile ..." );
-    }
-  }
-
-  /**
-   * rectangle includes an profile?!?
-   */
-  @Override
-  public void leftReleased( final Point p )
-  {
-    if( m_snappedBranchPoint != null && m_selector != null )
-    {
-      /* Set the end point. */
-      m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
-
-      // profile selected?!?
-      final IFeatureSelectionManager sm = KalypsoCorePlugin.getDefault().getSelectionManager();
-      m_clickFunction.execute( getMapPanel(), m_selector.getRectangle() );
-      final Feature profile = getProfileFeature( sm.getAllFeatures() );
-
-      if( profile != null )
-        performFinish( profile );
-
-    }
-
+    getMapPanel().setCursor( CURSOR_CROSSHAIR );
+    getMapPanel().setMessage( "select profile by drawing a rectangle with help of left mouse button..." );
   }
 
   /**
@@ -239,41 +120,44 @@ public class FNCreateCrossSectionNode extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-
-    if( m_selector != null )
-      m_selector.paint( g );
-
-    if( m_snappedBranchPoint == null )
-      if( m_snapPainter != null && m_currentPoint != null )
-      {
-        final Point point = m_snapPainter.paint( g, getMapPanel(), m_currentPoint );
-        if( point != null )
-          m_currentPoint = point;
-      }
+    if( m_snapPainter != null && m_currentPoint != null )
+    {
+      final Point point = m_snapPainter.paint( g, getMapPanel(), m_currentPoint );
+      if( point != null )
+        m_currentPoint = point;
+    }
   }
 
-  private void performFinish( final Feature profile )
+  /**
+   * rectangle includes an profile?!?
+   */
+  @Override
+  public void leftReleased( final Point p )
+  {
+    final GM_Point point = MapUtilities.transform( getMapPanel(), p );
+    final GM_Point snapPoint = m_snapPainter.getSnapPoint( getMapPanel(), point );
+    if( snapPoint != null )
+    {
+      final IBranch branch = m_snapPainter.getLastSnappedBranch();
+      final Feature crossSection = m_snapPainter.getLastSnappedCrossSection();
+
+      performFinish( branch, crossSection, snapPoint );
+    }
+  }
+
+  private void performFinish( final IBranch branch, final Feature crossSection, final GM_Point snapPoint )
   {
     try
     {
-
-      getMapPanel().setCursor( FNCreateCrossSectionNode.CURSOR_DEFAULT );
-
-      getMapPanel().setMessage( "" );
-
       final ISobekModelMember model = SobekModelMember.getModel();
 
-      FNGmlUtils.createProfileNode( model, m_snapPainter.getLastSnappedBranch(), m_snappedBranchPoint, profile );
+      FNGmlUtils.createProfileNode( model, branch, snapPoint, crossSection );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
 
-    m_snappedBranchPoint = null;
-    m_selector = null;
-
     super.finish();
   }
-
 }

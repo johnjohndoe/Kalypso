@@ -268,6 +268,7 @@ public final class SobekModelMember implements ISobekModelMember
     Object xmlElements;
     String sFleXml;
 
+    // $ANALYSIS-IGNORE
     if( !TARGET.eBoundaryConditions.equals( target ) )
     {
       if( TARGET.eLocations.equals( target ) )
@@ -349,7 +350,7 @@ public final class SobekModelMember implements ISobekModelMember
         final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/Delft_PI.xsd" );
         final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
         // TODO remove comment
-//        m.setSchema( schema );
+        // m.setSchema( schema );
 
         m.marshal( xmlElements, os );
 
@@ -394,10 +395,10 @@ public final class SobekModelMember implements ISobekModelMember
         }
         // marshall
         final String validatedLastfallName = FileUtilities.validateName( "calcCase_" + lastfall.getName(), "_" );
-        final File dirLastfall = new File( targetDir.getFile(), validatedLastfallName);
+        final File dirLastfall = new File( targetDir.getFile(), validatedLastfallName );
         if( !dirLastfall.exists() )
           FileUtils.forceMkdir( dirLastfall );
-        final File fleXml = new File(dirLastfall,sFleXml );
+        final File fleXml = new File( dirLastfall, sFleXml );
         final FileOutputStream os = new FileOutputStream( fleXml );
         final JAXBContext jc;
         try
@@ -446,7 +447,7 @@ public final class SobekModelMember implements ISobekModelMember
     final List<INode> connNodes = new ArrayList<INode>();
     for( final INode node : allNodes )
       if( (node instanceof IBoundaryNode) || (node instanceof IConnectionNode) || (node instanceof ILinkageNode) )
-        connNodes.add( (INode) node );
+        connNodes.add( node );
     return connNodes.toArray( new INode[] {} );
   }
 

@@ -50,15 +50,16 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallConditi
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControl;
-import org.kalypso.template.featureview.ColumnTypeDescriptor;
 
 /**
- * @author kuch
+ * Wizard page with table of time series observation
+ * 
+ * @author Dirk Kuch
  */
 public class PageEditTimeSeriesObservation extends WizardPage
 {
 
-  public static final String OBS_DATE = " urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE";
+  public static final String OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE";
 
   private final IBoundaryNodeLastfallCondition m_condition;
 
@@ -89,13 +90,17 @@ public class PageEditTimeSeriesObservation extends WizardPage
     final TupleResult tupleResult = myObs.getResult();
 
     // obsTable
-    final ColumnTypeDescriptor descriptor = new ColumnTypeDescriptor();
-    descriptor.setAlignment( new Integer( SWT.LEFT | SWT.READ_ONLY ).toString() );
-    descriptor.setComponent( PageEditTimeSeriesObservation.OBS_DATE );
+// final ColumnTypeDescriptor descriptor = new ColumnTypeDescriptor();
+// descriptor.setAlignment( new Integer( SWT.LEFT | SWT.READ_ONLY ).toString() );
+// descriptor.setComponent( PageEditTimeSeriesObservation.OBS_DATE );
+
+// final ComponentUiDateHandler dateHandler = new ComponentUiDateHandler( tupleResult,
+// PageEditTimeSeriesObservation.OBS_DATE );
 
     final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null );
-// control.setViewerFilter( new CDViewerFilter( combinations ) );
-    control.setColumnTypeDescriptor( new ColumnTypeDescriptor[] { descriptor } );
+// control.setComponentUiHandlers( new IComponentUiHandler[] { dateHandler } );
+
+    // control.setViewerFilter( new CDViewerFilter( combinations ) );
 
     final Control tblControl = control.createControl( body, SWT.BORDER );
     tblControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
