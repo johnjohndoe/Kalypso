@@ -58,7 +58,7 @@ public class NodeResultsHandlerTest extends TestCase
 {
   public void testLoadResults( ) throws Exception
   {
-    final File result2dFile = new File( "D:/Projekte/kalypso_dev/post-processing/performance_tests/large_2d_file/a4_ow_hq2.2d" );
+    final File result2dFile = new File( "D:/Projekte/kalypso_dev/visu/A0009.2d" );
     final File outputDir = FileUtilities.createNewTempDir( "bloed" );
 
     final File flowModelFile = new File( "D:/Projekte/kalypso_dev/post-processing/performance_tests/large_2d_file/flowModel.gml" );

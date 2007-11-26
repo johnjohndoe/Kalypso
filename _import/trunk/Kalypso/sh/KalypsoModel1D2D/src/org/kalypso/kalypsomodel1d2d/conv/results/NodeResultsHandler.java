@@ -160,7 +160,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void end( )
   {
     /* extrapolate the water level into dry areas */
-    // extrapolateWaterLevel( 0 );
+    extrapolateWaterLevel( 0 );
     // create the triangles for each element
     for( final ElementResult element : m_elemIndex.values() )
     {
@@ -187,7 +187,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       count = count + 1;
       System.out.println( "Anzahl zugewiesener Wasserspiegel: " + assigned );
-      System.out.println( "Anzahl Aufrufe extrpolateWaterLevel: " + count );
+      System.out.println( "Anzahl Aufrufe extrapolateWaterLevel: " + count );
       extrapolateWaterLevel( count );
     }
   }

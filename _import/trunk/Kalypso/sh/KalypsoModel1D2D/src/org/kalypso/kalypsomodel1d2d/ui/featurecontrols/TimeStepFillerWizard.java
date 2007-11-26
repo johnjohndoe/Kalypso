@@ -73,7 +73,7 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
 
   private TimeStepFillerWizardPage m_timeStepFillerWizardPage;
 
-  private Feature m_feature;
+  private final Feature m_feature;
 
   private IObservation<TupleResult> m_observation;
 

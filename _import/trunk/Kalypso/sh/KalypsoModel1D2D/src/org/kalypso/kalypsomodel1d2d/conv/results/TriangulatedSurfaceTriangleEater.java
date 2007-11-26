@@ -187,6 +187,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
             break;
           case DEPTH:
             z = nodes.get( i ).getDepth();
+            break;
 
           case TERRAIN:
             z = nodes.get( i ).getPoint().getZ();

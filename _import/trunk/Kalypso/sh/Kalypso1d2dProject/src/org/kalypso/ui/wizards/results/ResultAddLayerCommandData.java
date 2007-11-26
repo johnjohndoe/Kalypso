@@ -108,8 +108,8 @@ public class ResultAddLayerCommandData
   public void setSldFile( final IFile sldFile )
   {
     m_sldFile = sldFile;
-
-    updateStyleLocation();
+    if( m_sldFile != null )
+      updateStyleLocation();
   }
 
   private void updateStyleLocation( )
@@ -181,6 +181,7 @@ public class ResultAddLayerCommandData
     m_styleType = styleType;
     m_type = type;
 
+    // if( m_sldFile != null )
     updateStyleLocation();
   }
 

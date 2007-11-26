@@ -189,6 +189,8 @@ public class ElementResult
     double sumVxMid = 0;
     double sumVyMid = 0;
 
+    int cornerNum = 0;
+
     for( int i = 0; i < m_cornerNodes.size(); i++ )
     {
       /** location */
@@ -199,8 +201,12 @@ public class ElementResult
       sumYCoord = sumYCoord + p.getY();
       sumZCoord = sumZCoord + p.getZ();
 
-      sumWaterlevel = sumWaterlevel + node.getWaterlevel();
-      sumDepth = sumDepth + node.getDepth();
+      if( node.isWet() == true )
+      {
+        cornerNum++;
+        sumWaterlevel = sumWaterlevel + node.getWaterlevel();
+        sumDepth = sumDepth + node.getDepth();
+      }
       sumVxCorner = sumVxCorner + node.getVelocity().get( 0 );
       sumVyCorner = sumVyCorner + node.getVelocity().get( 1 );
     }
@@ -214,7 +220,10 @@ public class ElementResult
 
     /* interpolate the data */
     // water level
-    final double waterlevel = sumWaterlevel / m_cornerNodes.size();
+    // final double waterlevel = sumWaterlevel / m_cornerNodes.size();
+    if( cornerNum == 0 )
+      return;
+    final double waterlevel = sumWaterlevel / cornerNum;
     m_centerNode.setWaterlevel( waterlevel );
 
     // depth
@@ -372,6 +381,7 @@ public class ElementResult
     }
 
     /* same check for midside nodes */
+
     for( int i = 0; i < m_midsideNodes.size(); i++ )
     {
       final GMLNodeResult node = m_midsideNodes.get( i );
@@ -385,7 +395,11 @@ public class ElementResult
       GMLNodeResult nodeUp = arcResult.getNodeUp();
 
       NodeResultHelper.checkMidsideNodeData( nodeDown, nodeUp, node );
+
     }
+    /* and for the center element node */
+    if( m_centerNode != null )
+      interpolateCenterNode();
 
     return assigned;
   }

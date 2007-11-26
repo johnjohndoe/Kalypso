@@ -67,18 +67,17 @@ public class NodeResultHelper
     // TODO check what to do if some of the nodes is null
     // (in the moment exception is thrown...)
 
+    // TODO: handle velocity
+
     if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() <= 0 )
     {
       interpolateMidsideNodeData( nodeDown, nodeUp, midsideNode );
-      // midsideNode.setResultValues( 0, 0, 0, midsideNode.getPoint().getZ() - 1 );
       return;
     }
 
     if( nodeDown.getDepth() > 0 && nodeUp.getDepth() <= 0 )
     {
-
       assignMidsideNodeData( nodeDown, midsideNode ); // assignment leads into extrapolation of the water level!!
-      // interpolateMidsideNodeData( nodeDown, nodeUp, midsideNode );
       return;
     }
     if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() > 0 )
@@ -107,22 +106,36 @@ public class NodeResultHelper
   private static void interpolateMidsideNodeData( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GMLNodeResult midsideNode )
   {
     final List<Double> waterlevels = new LinkedList<Double>();
-    final List<Double> depths = new LinkedList<Double>();
 
     waterlevels.add( nodeDown.getWaterlevel() );
     waterlevels.add( nodeUp.getWaterlevel() );
 
-    depths.add( nodeDown.getDepth() );
-    depths.add( nodeUp.getDepth() );
-
     final double waterlevel = getMeanValue( waterlevels );
     midsideNode.setWaterlevel( waterlevel );
-    // midsideNode.setDepth( interpolate( depths ) );
+
     final double depth = waterlevel - midsideNode.getPoint().getZ();
     if( depth < 0 )
+    {
       midsideNode.setDepth( 0.0 );
+      midsideNode.setVelocity( 0.0 );
+    }
     else
+    {
       midsideNode.setDepth( depth );
+
+      // final List<Double> velocitiesX = new LinkedList<Double>();
+      // final List<Double> velocitiesY = new LinkedList<Double>();
+      //
+      // velocitiesX.add( nodeDown.getVelocity().get( 0 ) );
+      // velocitiesX.add( nodeUp.getVelocity().get( 0 ) );
+      // velocitiesY.add( nodeDown.getVelocity().get( 1 ) );
+      // velocitiesY.add( nodeUp.getVelocity().get( 1 ) );
+      //
+      // final double vx = getMeanValue( velocitiesX );
+      // final double vy = getMeanValue( velocitiesY );
+      //
+      // midsideNode.setVelocity( vx, vy );
+    }
   }
 
   private static double getMeanValue( final List<Double> values )
@@ -142,9 +155,19 @@ public class NodeResultHelper
 
     final double depth = waterlevel - midsideNode.getPoint().getZ();
     if( depth < 0 )
+    {
       midsideNode.setDepth( 0.0 );
+      midsideNode.setVelocity( 0.0 );
+    }
     else
+    {
       midsideNode.setDepth( depth );
+
+      final List<Double> velocities = new LinkedList<Double>();
+      velocities.add( node.getAbsoluteVelocity() );
+      velocities.add( 0.0 );
+      midsideNode.setVelocity( getMeanValue( velocities ) );
+    }
   }
 
 }

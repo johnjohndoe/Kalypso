@@ -50,8 +50,10 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -67,7 +69,6 @@ import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap_Impl;
@@ -122,7 +123,7 @@ public class ResultSldHelper
     return min + (currentClass * (max - min) / (numOfClasses - 1));
   }
 
-  public static void processStyle( final IFile styleFile, final String type, final BigDecimal minValue, final BigDecimal maxValue )
+  public static IStatus processStyle( final IFile styleFile, final String type, final BigDecimal minValue, final BigDecimal maxValue )
   {
     /* Read sld from template */
 
@@ -149,21 +150,12 @@ public class ResultSldHelper
         styleFile.create( new StringInputStream( sldXMLwithHeader ), false, new NullProgressMonitor() );
       }
     }
-    catch( IOException e )
+    catch( Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, "Ergebnisvisualisierung: Standard-Style konnte nicht erzeugt werden." );
     }
-    catch( XMLParsingException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    return Status.OK_STATUS;
 
   }
 
