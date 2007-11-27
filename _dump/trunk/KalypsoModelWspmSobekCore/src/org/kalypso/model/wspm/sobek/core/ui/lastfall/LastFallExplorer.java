@@ -167,6 +167,7 @@ public class LastFallExplorer
     /* edit */
     final ToolItem edit = new ToolItem( toolBar, SWT.NONE );
     final Image iEdit = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/edit.gif" ) );
+    edit.setToolTipText( "Edit selected tree item" );
     edit.setImage( iEdit );
     edit.setEnabled( false );
 
@@ -200,6 +201,7 @@ public class LastFallExplorer
     /* edit time series observation */
     final ToolItem editObs = new ToolItem( toolBar, SWT.NONE );
     final Image iEditObs = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/edit_ts_obs.gif" ) );
+    editObs.setToolTipText( "Edit condition time series observation" );
     editObs.setImage( iEditObs );
     editObs.setEnabled( false );
 
@@ -244,6 +246,7 @@ public class LastFallExplorer
     /* delete */
     final ToolItem delete = new ToolItem( toolBar, SWT.NONE );
     final Image iDelete = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/delete.gif" ) );
+    delete.setToolTipText( "Delete selected tree item" );
     delete.setImage( iDelete );
     delete.setEnabled( false );
 
