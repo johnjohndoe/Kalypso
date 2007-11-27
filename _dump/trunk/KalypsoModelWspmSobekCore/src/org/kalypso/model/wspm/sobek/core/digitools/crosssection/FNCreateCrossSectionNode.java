@@ -44,6 +44,7 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -57,6 +58,8 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -141,7 +144,15 @@ public class FNCreateCrossSectionNode extends AbstractWidget
       final IBranch branch = m_snapPainter.getLastSnappedBranch();
       final Feature crossSection = m_snapPainter.getLastSnappedCrossSection();
 
-      performFinish( branch, crossSection, snapPoint );
+      final GM_Curve geoBranch = (GM_Curve) branch.getFeature().getDefaultGeometryProperty();
+      final GM_Curve geoCrossSection = (GM_Curve) crossSection.getDefaultGeometryProperty();
+
+      final GM_Object intersection = geoBranch.intersection( geoCrossSection );
+
+      if( intersection instanceof GM_Point )
+        performFinish( branch, crossSection, (GM_Point) intersection );
+      else
+        throw (new NotImplementedException());
     }
   }
 
