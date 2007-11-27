@@ -112,22 +112,22 @@ public class FileSelectWizardPage extends WizardPage
     } );
     button.setText( "Browse" );
     final Label label_2 = new Label( container, SWT.NONE );
-    label_2.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING) );
+    label_2.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label_2.setText( " " );
     m_btnExportMiddleNodes = new Button( container, SWT.CHECK );
     m_btnExportMiddleNodes.setText( "Export middle nodes" );
     m_btnExportMiddleNodes.setSelection( true );
     final Label label_3 = new Label( container, SWT.NONE );
-    label_3.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING) );
+    label_3.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label_3.setText( " " );
 
     final Label label_4 = new Label( container, SWT.NONE );
-    label_4.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING) );
+    label_4.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label_4.setText( " " );
     m_btnExportRoughness = new Button( container, SWT.CHECK );
     m_btnExportRoughness.setText( "Export roughness data" );
     m_btnExportRoughness.setSelection( false );
-    
+
     GridData gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
     gd.widthHint = 75;
@@ -172,19 +172,32 @@ public class FileSelectWizardPage extends WizardPage
     dialog.setFilterExtensions( m_filenameFilters );
     if( path != "" )
       dialog.setFileName( path );
-    return dialog.open();
+    final String fileName = dialog.open();
+    final String[] filterExtensions = dialog.getFilterExtensions();
+    boolean regularExtension = false;
+    for( int i = 0; i < filterExtensions.length; i++ )
+      if( fileName.endsWith( filterExtensions[i].substring( 1 ) ) )
+      {
+        regularExtension = true;
+        break;
+      }
+    if( !regularExtension && filterExtensions.length == 1 )
+      return fileName + filterExtensions[0].substring( 1 );
+    return fileName;
   }
 
   public String getFilePath( )
   {
     return m_destinationFileField.getText().trim();
   }
-  
-  public boolean isSelectedExportMiddleNodes(){
+
+  public boolean isSelectedExportMiddleNodes( )
+  {
     return m_btnExportMiddleNodes.getSelection();
   }
-  
-  public boolean isSelectedExportRoughessData(){
+
+  public boolean isSelectedExportRoughessData( )
+  {
     return m_btnExportRoughness.getSelection();
   }
 }
