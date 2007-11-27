@@ -50,12 +50,12 @@
          <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
         </sweExt:SortedRecordDefinition>
        </om:resultDefinition>
-       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[2001-01-01T10%3A00%3A00.000%2B01%3A00 0.700
-2001-01-01T11%3A00%3A00.000%2B01%3A00 0.700
-2001-01-01T12%3A00%3A00.000%2B01%3A00 0.700
-2001-01-01T13%3A00%3A00.000%2B01%3A00 0.700
-2001-01-01T14%3A00%3A00.000%2B01%3A00 0.700
-2001-01-01T15%3A00%3A00.000%2B01%3A00 0.700
+       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[1 2001-01-01T10%3A00%3A00.000%2B01%3A00 0.700
+2 2001-01-01T11%3A00%3A00.000%2B01%3A00 0.700
+3 2001-01-01T12%3A00%3A00.000%2B01%3A00 0.700
+4 2001-01-01T13%3A00%3A00.000%2B01%3A00 0.700
+5 2001-01-01T14%3A00%3A00.000%2B01%3A00 0.700
+6 2001-01-01T15%3A00%3A00.000%2B01%3A00 0.700
 ]]></om:result>
       </c1d2d:TimestepsObservation>
      </c1d2d:timestepsMember>
