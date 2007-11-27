@@ -76,7 +76,7 @@ public class WizardGoogleExport extends Wizard implements INewWizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( "Google Earth TM export" );
+    setWindowTitle( "Google Earth (TM) export" );
 
     m_page = new PageGoogleExport( m_targetFile );
     addPage( m_page );
