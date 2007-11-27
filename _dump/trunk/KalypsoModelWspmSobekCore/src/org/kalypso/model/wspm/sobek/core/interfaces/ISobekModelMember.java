@@ -45,6 +45,7 @@ import java.net.URL;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import org.eclipse.core.resources.IProject;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
@@ -79,5 +80,7 @@ public interface ISobekModelMember extends IModelMember
    *            directory into which result is written
    */
   public void writePi( URL targetDir ) throws IOException, GM_Exception, DatatypeConfigurationException, Exception;
+
+  public IProject getMappedProject( );
 
 }

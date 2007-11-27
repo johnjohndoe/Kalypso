@@ -70,6 +70,7 @@ import nl.wldelft.fews.pi.LocationsComplexType.Location;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.resources.IProject;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
@@ -103,7 +104,7 @@ import org.xml.sax.SAXException;
  */
 public final class SobekModelMember implements ISobekModelMember
 {
-  private Feature m_modelMember;
+  private final Feature m_modelMember;
 
   private static ISobekModelMember m_model = null;
 
@@ -115,17 +116,15 @@ public final class SobekModelMember implements ISobekModelMember
   {
     m_workspace = workspace;
     m_reposContainer = reposContainer;
+
     if( modelMember == null )
       throw new IllegalStateException( "modelMember is null" );
 
     if( !ISobekConstants.QN_SOBEK_MODEL.equals( modelMember.getFeatureType().getQName() ) )
       throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL_MEMBER );
 
-    if( SobekModelMember.m_model == null )
-    {
-      m_modelMember = modelMember;
-      SobekModelMember.m_model = this;
-    }
+    m_modelMember = modelMember;
+    SobekModelMember.m_model = this;
   }
 
   public static ISobekModelMember getModel( )
@@ -144,10 +143,10 @@ public final class SobekModelMember implements ISobekModelMember
   public static ISobekModelMember getModel( final IWorkspaceInterface workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
   {
     if( SobekModelMember.m_model == null && modelMember != null )
-    {
       SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
-      return SobekModelMember.m_model;
-    }
+
+    if( m_model.getMappedProject() == null || !(m_model.getMappedProject().equals( workspace.getMappedProject() )) )
+      SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
 
     return SobekModelMember.m_model;
   }
@@ -516,5 +515,13 @@ public final class SobekModelMember implements ISobekModelMember
   public CommandableWorkspace getWorkspace( )
   {
     return m_workspace.getCommandableWorkspace();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#getMappedProject()
+   */
+  public IProject getMappedProject( )
+  {
+    return m_workspace.getMappedProject();
   }
 }

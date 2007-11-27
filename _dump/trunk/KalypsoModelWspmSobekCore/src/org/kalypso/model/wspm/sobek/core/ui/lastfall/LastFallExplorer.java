@@ -62,10 +62,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
@@ -114,21 +111,33 @@ public class LastFallExplorer
     final ILastfall[] lastfalls = m_modelBuilder.getLastfallMembers();
     viewer.setInput( lastfalls );
 
-    /* link - create new lastfall */
-    final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
+    viewer.expandAll();
+  }
 
-    final Image iAdd = new Image( body.getDisplay(), getClass().getResourceAsStream( "icons/add.gif" ) );
-    lnk.setImage( iAdd );
-    lnk.setText( "Create a new Calculation Case..." );
-    lnk.setToolTipText( "Create a new Calculation Case" );
+  private void getToolbar( final FormToolkit toolkit, final Composite header, final TreeViewer viewer )
+  {
 
-    lnk.addHyperlinkListener( new HyperlinkAdapter()
+    /* label */
+    final Label lLastfalls = toolkit.createLabel( header, "Calculation Cases:" );
+    lLastfalls.setFont( LastFallExplorer.fTextBold );
+
+    final ToolBar toolBar = new ToolBar( header, SWT.FLAT );
+    toolBar.setLayoutData( new GridData( GridData.END, GridData.FILL, true, false ) );
+    toolkit.adapt( toolBar );
+
+    /* create calculation case */
+    final ToolItem createCC = new ToolItem( toolBar, SWT.NONE );
+    final Image iAdd = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/add.gif" ) );
+    createCC.setImage( iAdd );
+    createCC.setToolTipText( "Create a new Calculation Case" );
+
+    createCC.addSelectionListener( new SelectionAdapter()
     {
       /**
-       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void linkActivated( final HyperlinkEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         final ILastfall lastfall = LastfallUtils.createEmptyLastfallFeature( m_modelBuilder );
 
@@ -151,19 +160,7 @@ public class LastFallExplorer
       }
     } );
 
-    viewer.expandAll();
-  }
-
-  private void getToolbar( final FormToolkit toolkit, final Composite header, final TreeViewer viewer )
-  {
-
-    /* label */
-    final Label lLastfalls = toolkit.createLabel( header, "Calculation Cases:" );
-    lLastfalls.setFont( LastFallExplorer.fTextBold );
-
-    final ToolBar toolBar = new ToolBar( header, SWT.FLAT );
-    toolBar.setLayoutData( new GridData( GridData.END, GridData.FILL, true, false ) );
-    toolkit.adapt( toolBar );
+    new ToolItem( toolBar, SWT.NONE );// spacer
 
     /* edit */
     final ToolItem edit = new ToolItem( toolBar, SWT.NONE );

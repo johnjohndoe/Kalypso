@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.eclipse.core.resources.IProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
@@ -48,4 +49,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 public interface IWorkspaceInterface
 {
   public CommandableWorkspace getCommandableWorkspace( );
+
+  public IProject getMappedProject( );
 }
