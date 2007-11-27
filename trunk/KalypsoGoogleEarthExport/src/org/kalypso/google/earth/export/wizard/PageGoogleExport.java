@@ -43,7 +43,7 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
     m_file = targetFile;
 
     setTitle( "Google Earth (TM) Export" );
-    setDescription( "Define a name and description for Google Earth (TM) and choose a export kmz-destination file." );
+    setDescription( "Define a name and description for Google Earth (TM) and choose a export KMZ-destination file." );
   }
 
   /**
@@ -128,14 +128,14 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
       @Override
       public String[] getFilterExtensions( )
       {
-        return new String[] { "kmz" };
+        return new String[] { "kmz", "KMZ" };
       }
 
       @Override
       public String[] getFilterNames( )
       {
 
-        return new String[] { "Google Earth (TM) kmz file" };
+        return new String[] { "Google Earth (TM) KMZ file" };
       }
     };
 
