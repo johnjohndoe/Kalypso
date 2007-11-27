@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.sobek.core.ui.lastfall;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
@@ -179,34 +181,19 @@ public class LastFallExplorer
         final TreeSelection selection = (TreeSelection) viewer.getSelection();
         final Object element = selection.getFirstElement();
 
-        if( element instanceof ILastfall )
-        {
-          final ILastfall lastfall = (ILastfall) element;
+        openEditWizard( selection, element );
+      }
+    } );
 
-          final IWorkbenchWizard wizard = new SobekWizardEditLastfall( lastfall );
-          wizard.init( PlatformUI.getWorkbench(), null );
+    viewer.addDoubleClickListener( new IDoubleClickListener()
+    {
 
-          final WizardDialog dialog = new WizardDialog( null, wizard );
-          dialog.open();
-        }
-        else if( element instanceof IBoundaryNode )
-        {
-          final TreePath[] path = selection.getPathsFor( element );
-          if( path.length != 1 )
-            throw new IllegalStateException( "Tree path is incorrect" );
+      public void doubleClick( final DoubleClickEvent event )
+      {
+        final TreeSelection selection = (TreeSelection) viewer.getSelection();
+        final Object element = selection.getFirstElement();
 
-          if( path[0].getSegmentCount() != 2 )
-            throw new IllegalStateException( "Segment count of tree path is incorrect" );
-
-          final ILastfall lastfall = (ILastfall) path[0].getFirstSegment();
-          final IBoundaryNode node = (IBoundaryNode) element;
-
-          final SobekWizardEditBoundaryCondition wizard = new SobekWizardEditBoundaryCondition( lastfall, node );
-          wizard.init( PlatformUI.getWorkbench(), null );
-
-          final WizardDialog dialog = new WizardDialog( null, wizard );
-          dialog.open();
-        }
+        openEditWizard( selection, element );
       }
     } );
 
@@ -350,5 +337,37 @@ public class LastFallExplorer
       }
     } );
 
+  }
+
+  protected void openEditWizard( final TreeSelection selection, final Object element )
+  {
+    if( element instanceof ILastfall )
+    {
+      final ILastfall lastfall = (ILastfall) element;
+
+      final IWorkbenchWizard wizard = new SobekWizardEditLastfall( lastfall );
+      wizard.init( PlatformUI.getWorkbench(), null );
+
+      final WizardDialog dialog = new WizardDialog( null, wizard );
+      dialog.open();
+    }
+    else if( element instanceof IBoundaryNode )
+    {
+      final TreePath[] path = selection.getPathsFor( element );
+      if( path.length != 1 )
+        throw new IllegalStateException( "Tree path is incorrect" );
+
+      if( path[0].getSegmentCount() != 2 )
+        throw new IllegalStateException( "Segment count of tree path is incorrect" );
+
+      final ILastfall lastfall = (ILastfall) path[0].getFirstSegment();
+      final IBoundaryNode node = (IBoundaryNode) element;
+
+      final SobekWizardEditBoundaryCondition wizard = new SobekWizardEditBoundaryCondition( lastfall, node );
+      wizard.init( PlatformUI.getWorkbench(), null );
+
+      final WizardDialog dialog = new WizardDialog( null, wizard );
+      dialog.open();
+    }
   }
 }

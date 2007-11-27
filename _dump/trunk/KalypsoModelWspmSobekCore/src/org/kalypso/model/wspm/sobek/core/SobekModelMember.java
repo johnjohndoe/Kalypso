@@ -145,7 +145,7 @@ public final class SobekModelMember implements ISobekModelMember
     if( SobekModelMember.m_model == null && modelMember != null )
       SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
 
-    if( m_model.getMappedProject() == null || !(m_model.getMappedProject().equals( workspace.getMappedProject() )) )
+    if( m_model.getMappedProject() == null || workspace != null && !(m_model.getMappedProject().equals( workspace.getMappedProject() )) )
       SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
 
     return SobekModelMember.m_model;
