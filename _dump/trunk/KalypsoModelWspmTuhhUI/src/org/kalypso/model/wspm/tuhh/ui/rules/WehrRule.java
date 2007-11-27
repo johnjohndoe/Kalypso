@@ -105,9 +105,9 @@ public class WehrRule extends AbstractValidatorRule
   {
 
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
-    final IProfileObject building = profil.getProfileObject();
+    final IProfileObject profileObject = profil.getProfileObject();
 
-    final Double beiwert = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+    final Double beiwert = (Double) profileObject.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
     IProfilPoint point = (beiwert == null || beiwert == 0.0) ? p : null;
 
     for( final IProfilPointMarker devider : deviders )
@@ -116,6 +116,14 @@ public class WehrRule extends AbstractValidatorRule
       if( value == 0.0 )
       {
         point = devider.getPoint();
+        break;
+      }
+    }
+    for( String property : profileObject.getObjectProperties() )
+    {
+      if( ((Double)profileObject.getValueFor( property )).isNaN() )
+      {
+        collector.createProfilMarker( true, "Parameter <" + profileObject.getLabelFor( property ) + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
         break;
       }
     }

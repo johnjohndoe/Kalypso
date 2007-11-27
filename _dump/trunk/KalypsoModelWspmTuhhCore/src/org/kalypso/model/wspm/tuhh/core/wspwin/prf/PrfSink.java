@@ -100,24 +100,25 @@ public class PrfSink implements IProfilSink
     if( p.getComment() != null )
       writeComment( pw, p );
   }
+
   private void writeComment( final PrfWriter pw, final IProfil profil )
   {
     final String comment = profil.getComment();
     final DataBlockHeader dbh = PrfWriter.createHeader( "KOM" );
     final TextDataBlock db = new TextDataBlock( dbh );
-    
-    final StringReader stringReader = new StringReader(comment);
-    final LineNumberReader lineNumberReader = new LineNumberReader(stringReader);
-    
+
+    final StringReader stringReader = new StringReader( comment );
+    final LineNumberReader lineNumberReader = new LineNumberReader( stringReader );
+
     try
     {
-      for ( String line = lineNumberReader.readLine();line != null;line = lineNumberReader.readLine())
+      for( String line = lineNumberReader.readLine(); line != null; line = lineNumberReader.readLine() )
       {
         db.addLine( "CC " + line );
       }
-      if(db.getCoordCount() > 0 )
+      if( db.getCoordCount() > 0 )
       {
-        db.setThirdLine( "0  0  0  0  0  0  0  " + Integer.toString(db.getCoordCount())+ " 17" );
+        db.setThirdLine( "0  0  0  0  0  0  0  " + Integer.toString( db.getCoordCount() ) + " 17" );
         pw.addDataBlock( db );
       }
     }
@@ -404,9 +405,10 @@ public class PrfSink implements IProfilSink
 
   private String getDoubleStr( final Object o )
   {
+
     try
     {
-      return String.format( Locale.US, " %12.4f", o );
+      return Double.valueOf( o.toString() ).isNaN() ? "       0.0000" : String.format( Locale.US, " %12.4f", o );
     }
     catch( Exception e )
     {

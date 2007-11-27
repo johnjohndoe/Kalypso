@@ -69,13 +69,13 @@ public class BewuchsRule extends AbstractValidatorRule
   {
     if( profil == null )
       return;
-    
-    
+
     final LinkedList<IProfilPoint> points = profil.getPoints();
     if( points == null )
       return;
-    if( !profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) )
+    if(profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR )||profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE)|| !profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ))
       return;
+    
     final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPoint leftP = (devider.length > 0) ? devider[0].getPoint() : null;
     final IProfilPoint rightP = (devider.length > 1) ? devider[devider.length - 1].getPoint() : null;
@@ -87,10 +87,12 @@ public class BewuchsRule extends AbstractValidatorRule
     final List<IProfilPoint> VorlandR = points.subList( rightIndex, points.size() );
     final List<IProfilPoint> Flussschl = points.subList( leftIndex, rightIndex );
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+    final boolean VorlandLhasValues = validateArea( collector, VorlandL, 0, pluginId );
+    final boolean VorlandRhasValues = validateArea( collector, VorlandR, 0, pluginId );
 
     try
     {
-      if( (validateArea( collector, VorlandL, 0, pluginId ) | validateArea( collector, VorlandR, rightIndex, pluginId )) && !Flussschl.isEmpty() )
+      if( VorlandLhasValues | VorlandRhasValues && !Flussschl.isEmpty() )
       {
         int i = leftIndex;
         for( IProfilPoint point : Flussschl )
@@ -98,15 +100,15 @@ public class BewuchsRule extends AbstractValidatorRule
           final double ax = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
           final double ay = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
           final double dp = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
-          if( ax + ay + dp != 0 )
-            collector.createProfilMarker( false, "Bewuchsparameter im Flußschlauch", "", i, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new DelBewuchsResolution() } );
+          if(  ax + ay + dp != 0 )
+            collector.createProfilMarker( false, "Bewuchsparameter im Flußschlauch werden ignoriert", "", i, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new DelBewuchsResolution() } );
           i++;
         }
         final int lastIndex = (leftIndex > 0) ? leftIndex - 1 : leftIndex;
-        if( points.get( lastIndex ).getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) == 0 )
-          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", lastIndex, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0 ) } );
-        if( rightP.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) == 0 )
-          collector.createProfilMarker( true, "Bewuchsparameter erforderlich", "", rightIndex, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( devider.length - 1 ) } );
+        if( VorlandLhasValues && points.get( lastIndex ).getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) == 0 )
+          collector.createProfilMarker( false, "Bewuchsparameter an Trennflächen überprüfen", "", lastIndex, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0 ) } );
+        if( VorlandRhasValues && rightP.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) == 0 )
+          collector.createProfilMarker( false, "Bewuchsparameter an Trennflächen überprüfen", "", rightIndex, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( devider.length - 1 ) } );
       }
     }
     catch( Exception e )

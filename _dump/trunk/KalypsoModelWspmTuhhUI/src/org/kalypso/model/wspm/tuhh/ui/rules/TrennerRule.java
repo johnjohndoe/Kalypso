@@ -48,9 +48,11 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.AbstractProfilDurchlass;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
@@ -75,7 +77,8 @@ public class TrennerRule extends AbstractValidatorRule
 
     if( db.length == 0 )
       collector.createProfilMarker( true, "keine durchströmten Bereiche vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) } );
-    if( tf.length == 0 )
+    final IProfileObject po = profil.getProfileObject();
+    if( tf.length == 0 && !(po!=null && po instanceof AbstractProfilDurchlass))
       collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, "", pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) } );
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );

@@ -123,6 +123,12 @@
               description="Rauheit"
               id="pasche.rauheit"
               type="org.kalypso.model.wspm.tuhh.profiletype"/>
+        <rule
+              class="org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule"
+              description="Durchlass"
+              id="pasche.durchlass"
+              type="org.kalypso.model.wspm.tuhh.profiletype">
+        </rule>
    </extension>
    <extension
          point="org.kalypso.core.catalogContribution">

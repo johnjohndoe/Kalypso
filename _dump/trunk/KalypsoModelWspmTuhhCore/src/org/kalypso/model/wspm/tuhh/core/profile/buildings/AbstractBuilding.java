@@ -66,7 +66,7 @@ public abstract class AbstractBuilding implements IProfileObject
     m_name = name;
     for( int i = 0; i < properties.length; i++ )
     {
-      m_buildingValues.put( properties[i], new Double( 0.0 ) );
+      m_buildingValues.put( properties[i], Double.NaN );
       m_labels.put( properties[i], i < labels.length ? labels[i] : "" );
     }
   }
