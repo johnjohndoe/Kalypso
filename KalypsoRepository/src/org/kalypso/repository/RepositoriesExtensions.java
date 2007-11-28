@@ -45,27 +45,21 @@ public class RepositoriesExtensions
     if( extensionPoint == null )
       return new RepositoryFactoryConfig[0];
 
-    final IExtension[] extensions = extensionPoint.getExtensions();
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
     final Vector items = new Vector();
 
-    for( int i = 0; i < extensions.length; i++ )
+    for( int j = 0; j < configurationElements.length; j++ )
     {
-      final IExtension extension = extensions[i];
-      final IConfigurationElement[] elements = extension.getConfigurationElements();
+      final IConfigurationElement element = configurationElements[j];
 
-      for( int j = 0; j < elements.length; j++ )
-      {
-        final IConfigurationElement element = elements[j];
+      final String name = element.getAttribute( ATT_NAME );
+      final String conf = element.getAttribute( ATT_CONF );
+      final boolean ro = Boolean.valueOf( element.getAttribute( ATT_RO ) ).booleanValue();
 
-        final String name = element.getAttribute( ATT_NAME );
-        final String conf = element.getAttribute( ATT_CONF );
-        final boolean ro = Boolean.valueOf( element.getAttribute( ATT_RO ) ).booleanValue();
+      final IRepositoryFactory factory = (IRepositoryFactory)element.createExecutableExtension( ATT_FACTORY );
 
-        final IRepositoryFactory factory = (IRepositoryFactory)element.createExecutableExtension( ATT_FACTORY );
-
-        items.add( new RepositoryFactoryConfig( factory, name, conf, ro ) );
-      }
+      items.add( new RepositoryFactoryConfig( factory, name, conf, ro ) );
     }
 
     return (RepositoryFactoryConfig[])items.toArray( new RepositoryFactoryConfig[items.size()] );

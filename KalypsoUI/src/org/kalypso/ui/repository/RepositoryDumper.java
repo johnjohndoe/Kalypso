@@ -42,16 +42,16 @@ package org.kalypso.ui.repository;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.ObservationCache;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -89,39 +89,20 @@ public class RepositoryDumper
   public static void dumpExtended( File directory, IRepository root, IProgressMonitor monitor )
       throws InterruptedException, RepositoryException
   {
-    StringWriter writer = null;
-    FileWriter structureWriter = null;
+    Writer structureWriter = null;
 
     try
     {
-      /* The content will be written to this writer. */
-      writer = new StringWriter();
-
-      /* Do the structure dump first. */
-      root.dumpStructure( writer, new NullProgressMonitor() );
-
-      /* Update monitor. */
-      monitor.worked( 100 );
-
-      /* Get the structure as string. */
-      String structure = writer.toString();
-
-      /* Close the writer. */
-      writer.close();
-
       /* Create the structure file. */
       File structureFile = new File( directory, "structure.txt" );
 
       /* The writer to save the file. */
-      structureWriter = new FileWriter( structureFile );
-      structureWriter.write( structure );
-      structureWriter.close();
-
-      /* Update monitor. */
-      monitor.worked( 100 );
+      structureWriter = new OutputStreamWriter( new FileOutputStream( structureFile ), "UTF-8" );
 
       /* Do the dump into the filesystem. */
-      dumpExtendedRecursive( directory, root, monitor );
+      dumpExtendedRecursive( directory, structureWriter, directory, root, monitor );
+
+      structureWriter.close();
 
       /* Update monitor. */
       monitor.worked( 800 );
@@ -136,13 +117,16 @@ public class RepositoryDumper
     }
     finally
     {
-      IOUtils.closeQuietly( writer );
       IOUtils.closeQuietly( structureWriter );
     }
   }
 
   /**
-   * Creates the dump structure in the file-system.
+   * Creates the dump structure in the file-system and into one structure file <br/>REMARK: this uses the file format
+   * which is compatible to the Kalypso-PSICompact-Fake implementation. So exported repositories can directly be
+   * included via that repository implementation.
+   * 
+   * @param structureWriter
    * 
    * @param directory
    *          The choosen directory.
@@ -151,8 +135,8 @@ public class RepositoryDumper
    * @throws InterruptedException
    * @throws RepositoryException
    */
-  private static void dumpExtendedRecursive( File directory, IRepositoryItem item, IProgressMonitor monitor )
-      throws InterruptedException, RepositoryException
+  private static void dumpExtendedRecursive( final File baseDirectory, final Writer structureWriter, File directory,
+      IRepositoryItem item, IProgressMonitor monitor ) throws InterruptedException, RepositoryException
   {
     /* If the user cancled the operation, abort. */
     if( monitor.isCanceled() )
@@ -165,32 +149,47 @@ public class RepositoryDumper
       /* The name will be used as filename. */
       String name = item.getName();
 
+      /* Write entry for structure file */
+      structureWriter.write( item.getIdentifier() );
+      structureWriter.write( ';' );
+
+      final IRepositoryItem[] items = item.getChildren();
+
       /* This is the directory, where the .zml is placed. */
-      File newDirectory = new File( directory, name );
+      final File newDirectory = new File( directory, name );
+      if( items != null && items.length > 0 )
+      {
+        /* Only create directory of that name, if children exist */
+        if( !newDirectory.mkdir() )
+          throw new RepositoryException( "Could not create the directory '" + newDirectory.getAbsolutePath() + "' ..." );
+      }
 
-      /* Create it. */
-      if( !newDirectory.mkdir() )
-        throw new RepositoryException( "Could not create the directory '" + newDirectory.getAbsolutePath() + "' ..." );
-
-      IObservation observation = ObservationCache.getInstance().getObservationFor( item );
+      final IObservation observation = ObservationCache.getInstance().getObservationFor( item );
       if( observation != null )
       {
+        final File zmlFile = new File( directory, name + ".zml" );
+
+        structureWriter.write( FileUtilities.getRelativePathTo( baseDirectory, zmlFile ) );
+        structureWriter.write( ';' );
+        structureWriter.write( observation.getName() );
+
         /* Dump if neccessary. */
         // DateRange dra = ObservationViewHelper.makeDateRange( item );
         // PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dra ) );
         // IObservation scaledObservation = provider.getObservation();
-        writer = new FileOutputStream( new File( newDirectory, newDirectory.getName() ) );
+        writer = new FileOutputStream( zmlFile );
         ObservationType observationType = ZmlFactory.createXML( observation, null );
         ZmlFactory.getMarshaller().marshal( observationType, writer );
         writer.close();
       }
 
-      IRepositoryItem[] items = item.getChildren();
+      structureWriter.write( "\n" );
+
       if( items == null )
         return;
 
       for( int i = 0; i < items.length; i++ )
-        dumpExtendedRecursive( newDirectory, items[i], monitor );
+        dumpExtendedRecursive( baseDirectory, structureWriter, newDirectory, items[i], monitor );
     }
     catch( IOException e )
     {
@@ -207,6 +206,8 @@ public class RepositoryDumper
     finally
     {
       IOUtils.closeQuietly( writer );
+
+      monitor.worked( 1 );
     }
   }
 }
