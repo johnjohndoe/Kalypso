@@ -406,7 +406,7 @@ public class Rule_Impl implements Rule, Marshallable
     }
     if( elseFilter )
     {
-      sb.append( "<ElseFilter/>" );
+      sb.append( "<ogc:ElseFilter/>" );
     }
     sb.append( "<MinScaleDenominator>" ).append( minScaleDenominator );
     sb.append( "</MinScaleDenominator>" );
