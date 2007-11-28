@@ -49,6 +49,7 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -110,21 +111,22 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
 
     final URL zipURl = m_projectTemplateZipLocation;
     final IProject project = getNewProject();
+    final String newName = project.getName();
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
         final SubMonitor progress = SubMonitor.convert( monitor, "Projektstruktur wird erzeugt", 50 );
-
         try
         {
           /* Unpack project from template */
           ZipUtilities.unzipToContainer( zipURl, project, progress.newChild( 40 ) );
           ProgressUtilities.worked( progress, 0 );
 
-          /* configure all natures of this project */
           final IProjectDescription description = project.getDescription();
+
+          /* configure all natures of this project */
           final String[] natureIds = description.getNatureIds();
 
           progress.setWorkRemaining( natureIds.length + 5 );
@@ -142,6 +144,10 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
           final Scenario caze = nature.getCaseManager().getCases().get( 0 );
           KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
           ProgressUtilities.worked( progress, 5 );
+
+          project.refreshLocal( 0, new NullProgressMonitor() );
+          description.setName( newName );
+          project.move( description, false, new NullProgressMonitor() );
         }
         catch( final CoreException t )
         {
