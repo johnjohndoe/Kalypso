@@ -44,8 +44,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
@@ -134,18 +132,28 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     final Feature edgeFeature = m_workspace.getFeature( edgeGmlID );
     final IFE1D2DNode node1 = getNode( node1ID );
     final IFE1D2DNode node2 = getNode( node2ID );
+    final IFE1D2DNode middleNode = getNode( middleNodeID );
+    if( node1 == null )
+      throw new RuntimeException( "Left node " + node1ID + " reffered by arc " + id + " doesn't exists." );
+    if( node2 == null )
+      throw new RuntimeException( "Right node " + node2ID + " reffered by arc " + id + " doesn't exists." );
+    if( middleNode == null )
+      throw new RuntimeException( "Middle node " + middleNodeID + " reffered by arc " + id + " doesn't exists." );
     if( edgeFeature != null )
       edge = (IFE1D2DEdge) edgeFeature.getAdapter( IFE1D2DEdge.class );
     else
     {
       edge = m_model.getEdges().addNew( IFE1D2DEdge.QNAME );
       m_createdFeatures.add( edge );
-      m_edgesNameConversionMap.put( id, edge.getGmlID() );
 
+      final String newEdgeGmlID = edge.getGmlID();
+      m_edgesNameConversionMap.put( id, newEdgeGmlID );
       edge.addNode( node1.getGmlID() );
       edge.addNode( node2.getGmlID() );
-      node1.addContainer( edge.getGmlID() );
-      node2.addContainer( edge.getGmlID() );
+      edge.setMiddleNode( middleNode );
+      node1.addContainer( newEdgeGmlID );
+      node2.addContainer( newEdgeGmlID );
+      middleNode.addContainer( newEdgeGmlID );
     }
     if( elementLeftID == elementRightID )
     {
@@ -240,7 +248,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
       // For the moment, we will assume that it is the same node
       m_nodesNameConversionMap.put( id, existingNode.getGmlID() );
-      Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, "Multiple nodes with the same coordinates found. " + existingNode.getPoint().toString() );
+      // Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, "Multiple nodes with the
+      // same coordinates found. " + existingNode.getPoint().toString() );
       return;
     }
     final IFE1D2DNode node = m_model.getNodes().addNew( IFE1D2DNode.QNAME, IFE1D2DNode.class );

@@ -195,9 +195,7 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     final Feature parentFeature = sampleFeature.getParent();
     final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
     if( model1d2d == null )
-    {
       throw new RuntimeException( "Could not found model1d2d" );
-    }
 
     try
     {

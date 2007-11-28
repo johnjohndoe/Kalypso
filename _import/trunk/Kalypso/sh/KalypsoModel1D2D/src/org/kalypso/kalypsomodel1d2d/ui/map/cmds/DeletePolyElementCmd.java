@@ -65,8 +65,6 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
 
   private final IPolyElement element2D;
 
-  private GM_Point[] elementPoints;
-
   private IFE1D2DComplexElement[] complexElements;
 
   public DeletePolyElementCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature element2DFeature )
@@ -99,8 +97,6 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     final String elementID = element2D.getGmlID();
 
     final List<IFE1D2DNode> nodes = element2D.getNodes();
-
-    elementPoints = makeElementPoints( nodes );
 
     complexElements = getElementComplexElement();
 
@@ -165,33 +161,6 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     final IFeatureWrapperCollection containers = element2D.getContainers();
     final IFE1D2DComplexElement[] cElements = (IFE1D2DComplexElement[]) containers.toArray( new IFE1D2DComplexElement[] {} );
     return cElements;
-  }
-
-  private GM_Point[] makeElementPoints( final List<IFE1D2DNode> nodes )
-  {
-    final int SIZE = nodes.size();
-    final GM_Point[] points = new GM_Point[SIZE];
-    GM_Position nodePos;
-    for( int i = SIZE - 1; i > 0; i-- )
-    {
-      final GM_Point point = nodes.get( i ).getPoint();
-      nodePos = point.getPosition();
-      final double[] xyz = nodePos.getAsArray();
-      final int dimension = xyz.length;// getDimension();
-      if( dimension == 2 )
-      {
-        points[i] = GeometryFactory.createGM_Point( xyz[0], xyz[1], point.getCoordinateSystem() );
-      }
-      else if( dimension == 3 )
-      {
-        points[i] = GeometryFactory.createGM_Point( xyz[0], xyz[1], xyz[2], point.getCoordinateSystem() );
-      }
-      else
-      {
-        throw new RuntimeException( "Unsupported gm point dimension:" + dimension + " " + nodePos );
-      }
-    }
-    return points;
   }
 
   /**

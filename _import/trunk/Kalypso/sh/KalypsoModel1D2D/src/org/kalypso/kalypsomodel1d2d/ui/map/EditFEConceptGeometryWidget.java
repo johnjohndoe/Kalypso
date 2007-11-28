@@ -41,11 +41,14 @@
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.GeometryRecalculator;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -55,6 +58,7 @@ import org.kalypso.ogc.gml.map.widgets.EditGeometryWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * {@link IWidget} that provide the mechnism for edition the geometrie of finite element concepts (Node, Edge, elements,
@@ -114,6 +118,23 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
   {
     invalidateLists();
     final Collection<Feature> list = super.perform();
+    for( final Feature feature : list )
+    {
+      final IFE1D2DElement element = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+      if( element != null )
+      {
+        final List<IFE1D2DNode> nodes = element.getNodes();
+        for( final IFE1D2DNode node : nodes )
+        {
+          final IFeatureWrapperCollection containers = node.getContainers();
+          for( final Object containerObject : containers )
+          {
+            if( containerObject instanceof IFE1D2DEdge )
+              ((IFE1D2DEdge) containerObject).recalculateMiddleNodePosition();
+          }
+        }
+      }
+    }
     final GeometryRecalculator recalculator = new GeometryRecalculator( list, m_flowRelationsTheme );
     recalculator.fireChanges();
     return list;

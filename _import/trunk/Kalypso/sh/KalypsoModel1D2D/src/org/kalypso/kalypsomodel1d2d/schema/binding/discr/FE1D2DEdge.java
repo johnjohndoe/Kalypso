@@ -163,23 +163,23 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getMiddleNode()
    */
-  public IFEMiddleNode getMiddleNode( )
+  public IFE1D2DNode getMiddleNode( )
   {
-    final Feature middleNodeFeature = (Feature) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE );
-    if( middleNodeFeature == null )
+    if( getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE ) != null )
     {
-      return null;
+      final Feature middleNodeFeature = FeatureHelper.getSubFeature( getFeature(), Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE );
+      if( middleNodeFeature == null )
+        return null;
+      else
+        return (IFE1D2DNode) middleNodeFeature.getAdapter( IFE1D2DNode.class );
     }
-    else
-    {
-      return (IFEMiddleNode) middleNodeFeature.getAdapter( IFEMiddleNode.class );
-    }
+    return null;
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setMiddleNode(org.kalypso.kalypsomodel1d2d.schema.binding.IFEMiddleNode)
    */
-  public void setMiddleNode( IFEMiddleNode middleNode )
+  public void setMiddleNode( final IFE1D2DNode middleNode )
   {
     String newMiddleNodeID = null;
     if( middleNode != null )
@@ -479,6 +479,25 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     final double y2 = positions[2].getY();
     final double vectorProduct = (x1 - x0) * (y2 - y1) - (y1 - y0) * (x2 - x1);
     return vectorProduct > 0.0 ? Orientation.ORIENTATION_LEFT : Orientation.ORIENTATION_RIGHT;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#recalculateMiddleNodePosition()
+   */
+  public void recalculateMiddleNodePosition( )
+  {
+    if( m_nodes.size() > 1 )
+    {
+      if( getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE ) != null )
+      {
+        final GM_Point pointN1 = m_nodes.get( 0 ).getPoint();
+        final GM_Point pointN2 = m_nodes.get( 1 ).getPoint();
+        final double x = (pointN1.getX() + pointN2.getX()) / 2;
+        final double y = (pointN1.getY() + pointN2.getY()) / 2;
+        final double z = (pointN1.getZ() + pointN2.getZ()) / 2;
+        getMiddleNode().setPoint( GeometryFactory.createGM_Point( x, y, z, pointN1.getCoordinateSystem() ) );
+      }
+    }
   }
 
 }

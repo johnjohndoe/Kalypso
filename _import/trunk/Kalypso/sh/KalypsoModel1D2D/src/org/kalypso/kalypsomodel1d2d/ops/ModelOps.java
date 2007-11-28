@@ -94,7 +94,7 @@ public class ModelOps
     final int EDGE_NUM = edges.size();
     if( !(EDGE_NUM == 3 || EDGE_NUM == 4) )
     {
-      throw new IllegalArgumentException( "2D element must have 3 or 4 element but number " + "of edges to set=" + EDGE_NUM );
+      throw new IllegalArgumentException( "2D element must have 3 or 4 edges; given number of edges is " + EDGE_NUM );
     }
 
     IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();

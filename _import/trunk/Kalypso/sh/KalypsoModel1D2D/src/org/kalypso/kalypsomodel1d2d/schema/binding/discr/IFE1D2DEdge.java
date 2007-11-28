@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge
 {
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" );
-  
+
   /**
    * To get the computed geometry of this edge as curve
    * 
@@ -141,7 +141,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    * 
    * @return the middle node of the edge
    */
-  public IFEMiddleNode getMiddleNode( );
+  public IFE1D2DNode getMiddleNode( );
 
   /**
    * Returns the middle node of this edge.
@@ -155,6 +155,8 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    */
   public GM_Point getMiddleNodePoint( );
 
+  public void recalculateMiddleNodePosition( );
+
   /**
    * Sets the middle node of this edge
    * 
@@ -162,7 +164,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    *            the new middle node of this edge. null is a legal value.
    * 
    */
-  public void setMiddleNode( IFEMiddleNode middleNode );
+  public void setMiddleNode( IFE1D2DNode middleNode );
 
   /**
    * To get the containers(typically elements) of this edge
@@ -179,9 +181,9 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    * @see #getNode(int)
    */
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
-  
-  public IFE1D2DElement getLeftElement();
-  
-  public IFE1D2DElement getRightElement();
-  
+
+  public IFE1D2DElement getLeftElement( );
+
+  public IFE1D2DElement getRightElement( );
+
 }

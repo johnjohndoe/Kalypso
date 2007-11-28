@@ -257,6 +257,7 @@ public class GeometryRecalculator
     final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
+      if( !m_flowRelationshipsModelChanges.isEmpty() )
       ((ICommandPoster) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       // ((ICommandPoster) modelProvider).postCommand( IOperationalModel.class, new EmptyCommand( "Get dirty!", false )
       // ); //$NON-NLS-1$

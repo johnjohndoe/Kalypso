@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
 import java.util.HashSet;
@@ -111,6 +112,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private final LinkedHashMap<String, Integer> m_edgesIDProvider = new LinkedHashMap<String, Integer>( 100000 );
 
   private final LinkedHashMap<String, Integer> m_linesIDProvider = new LinkedHashMap<String, Integer>();
+
+  private final HashSet<String> m_writtenNodesIDs = new HashSet<String>();
 
   private final BuildingIDProvider m_buildingIDProvider = new BuildingIDProvider();
 
@@ -464,7 +467,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
     final List<IFE1D2DNode> nodesInBBox = m_exportRequest ? nodes : nodes.query( m_calcUnitBBox );
-    for( final IFE1D2DNode node : nodesInBBox )
+    writeNodes( formatter, nodesInBBox );
+  }
+
+  private void writeNodes( final Formatter formatter, final List<IFE1D2DNode> nodes ) throws SimulationException
+  {
+    for( final IFE1D2DNode node : nodes )
     {
       // TODO: how is now checked if a node is inside the CalcUnit???
       // if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
@@ -480,6 +488,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
       // {
       // continue;
       // }
+
+      if( m_writtenNodesIDs.contains( node.getGmlID() ) )
+        continue;
+      m_writtenNodesIDs.add( node.getGmlID() );
 
       /* The node itself */
       final int nodeID = getConversionID( node );
@@ -572,31 +584,32 @@ public class Gml2RMA10SConv implements INativeIDProvider
       writeRestartLines( formatter, nodeID, x, y );
   }
 
-//  private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
-//  {
-//    formatter.format( "%3s%9d", kind, nodeID ); //$NON-NLS-1$
-//
-//    if( extraValue != null )
-//      formatter.format( "%20.7f", extraValue ); //$NON-NLS-1$
-//
-//    final double[] coefficients = poly.getCoefficients();
-//    for( int j = coeffStart; j < coeffStop; j++ )
-//    {
-//      final double coeff;
-//      if( j < coefficients.length )
-//        coeff = coefficients[j];
-//      else
-//        coeff = 0.0;
-//
-//      formatter.format( "%20.7f", coeff ); //$NON-NLS-1$
-//    }
-//
-//    formatter.format( "%n" ); //$NON-NLS-1$
-//  }
+  // private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D
+  // poly, final int coeffStart, final int coeffStop, final Double extraValue )
+  // {
+  // formatter.format( "%3s%9d", kind, nodeID ); //$NON-NLS-1$
+  //
+  // if( extraValue != null )
+  // formatter.format( "%20.7f", extraValue ); //$NON-NLS-1$
+  //
+  // final double[] coefficients = poly.getCoefficients();
+  // for( int j = coeffStart; j < coeffStop; j++ )
+  // {
+  // final double coeff;
+  // if( j < coefficients.length )
+  // coeff = coefficients[j];
+  // else
+  // coeff = 0.0;
+  //
+  // formatter.format( "%20.7f", coeff ); //$NON-NLS-1$
+  // }
+  //
+  // formatter.format( "%n" ); //$NON-NLS-1$
+  // }
 
   private void writeSplittedPolynomials( final Formatter formatter, final String kind, final int nodeID, final int polynomialNo, final IPolynomial1D poly, final Double extraValue )
   {
-    formatter.format( "%3s%9d%3d", kind, nodeID, polynomialNo+1 ); //$NON-NLS-1$
+    formatter.format( "%3s%9d%3d", kind, nodeID, polynomialNo + 1 ); //$NON-NLS-1$
 
     if( extraValue != null )
       formatter.format( "%20.7f", extraValue ); //$NON-NLS-1$
@@ -704,6 +717,16 @@ public class Gml2RMA10SConv implements INativeIDProvider
     for( final IFE1D2DEdge edge : edgeSet )
     {
       writeNodes( formatter, edge.getNodes() );
+      if( !m_exportRequest || (m_exportRequest && m_exportMiddleNode) )
+      {
+        final IFE1D2DNode middleNode = edge.getMiddleNode();
+        if( middleNode != null )
+        {
+          final List<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
+          list.add( middleNode );
+          writeNodes( formatter, list );
+        }
+      }
     }
 
     // write edges

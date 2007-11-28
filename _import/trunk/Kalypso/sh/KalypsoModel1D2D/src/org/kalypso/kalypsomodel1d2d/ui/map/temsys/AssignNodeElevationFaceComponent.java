@@ -165,7 +165,7 @@ public class AssignNodeElevationFaceComponent
       {
         if( FENodeLabelProvider.getElevationString( node ).equals( value ) )
         {
-          System.out.println( Messages.getString( "AssignNodeElevationFaceComponent.1" ) ); //$NON-NLS-1$
+//          System.out.println( Messages.getString( "AssignNodeElevationFaceComponent.1" ) ); //$NON-NLS-1$
           return;
         }
 

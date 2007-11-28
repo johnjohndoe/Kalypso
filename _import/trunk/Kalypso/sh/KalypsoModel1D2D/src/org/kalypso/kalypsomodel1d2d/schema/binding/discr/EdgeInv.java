@@ -303,7 +303,7 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getMiddleNode()
    */
-  public IFEMiddleNode getMiddleNode( )
+  public IFE1D2DNode getMiddleNode( )
   {
     return edge.getMiddleNode();
   }
@@ -311,7 +311,7 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setMiddleNode(org.kalypso.kalypsomodel1d2d.schema.binding.IFEMiddleNode)
    */
-  public void setMiddleNode( IFEMiddleNode middleNode )
+  public void setMiddleNode( IFE1D2DNode middleNode )
   {
     edge.setMiddleNode( middleNode );
   }
@@ -338,5 +338,13 @@ public class EdgeInv implements IEdgeInv
   public IFE1D2DElement getRightElement( )
   {
     throw new UnsupportedOperationException( "Function not supported" ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#recalculateMiddleNodePosition()
+   */
+  public void recalculateMiddleNodePosition( )
+  {
+//    edge.recalculateMiddleNodePosition();
   }
 }
