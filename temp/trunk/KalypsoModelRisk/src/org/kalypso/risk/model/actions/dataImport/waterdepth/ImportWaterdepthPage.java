@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
@@ -170,8 +171,8 @@ public class ImportWaterdepthPage extends WizardPage
 
   private void createControlButtonsPart( final Composite parent )
   {
-    final ImageDescriptor addBtnID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
-    final ImageDescriptor removeBtnID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
+    final ImageDescriptor addBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/HQ_add.gif" );
+    final ImageDescriptor removeBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/delete.gif" );
     
     m_btnAddNew = new Button( parent, SWT.PUSH );
     m_btnAddNew.setImage( new Image( parent.getDisplay(), addBtnID.getImageData() ) );

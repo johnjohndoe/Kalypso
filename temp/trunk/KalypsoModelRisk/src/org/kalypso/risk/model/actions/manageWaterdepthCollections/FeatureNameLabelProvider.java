@@ -1,7 +1,5 @@
 package org.kalypso.risk.model.actions.manageWaterdepthCollections;
 
-import java.rmi.RemoteException;
-
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
