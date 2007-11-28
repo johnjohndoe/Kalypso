@@ -133,6 +133,18 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   public static final String COLUMN_PROP_NAME = "columnName";
 
+  /**
+   * Label Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
+   * the shown list.
+   */
+  public static final String COLUMN_PROP_LABEL = "columnLabel";
+
+  /**
+   * Tooltip Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
+   * the shown list.
+   */
+  public static final String COLUMN_PROP_TOOLTIP = "columnTooltip";
+
   public static final String COLUMN_PROP_EDITABLE = "columnEditable";
 
   public static final String COLUMN_PROP_WIDTH = "columnWidth";
@@ -374,10 +386,9 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       m_sorter.setPropertyName( sort.getPropertyName() );
       m_sorter.setInverse( sort.isInverse() );
     }
+
     for( final Column ct : columnList )
-    {
-      addColumn( ct.getName(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
-    }
+      addColumn( ct.getName(), ct.getLabel(), ct.getTooltip(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
   }
 
   public IKalypsoFeatureTheme getTheme( )
@@ -396,7 +407,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       element.dispose();
   }
 
-  public void addColumn( final String propertyName, final boolean isEditable, final int width, final String alignment, final String format, final boolean bRefreshColumns )
+  public void addColumn( final String propertyName, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final boolean bRefreshColumns )
   {
     final Table table = getTable();
 
@@ -405,6 +416,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     tc.setAlignment( alignmentInt );
 
     tc.setData( COLUMN_PROP_NAME, propertyName );
+    tc.setData( COLUMN_PROP_LABEL, label );
+    tc.setData( COLUMN_PROP_TOOLTIP, tooltip );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
     // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
@@ -427,32 +440,62 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
 // System.out.println("");
     final String propertyName = (String) tc.getData( COLUMN_PROP_NAME );
+
+    final String label = (String) tc.getData( COLUMN_PROP_LABEL );
+    final String tooltip = (String) tc.getData( COLUMN_PROP_TOOLTIP );
+
     final String sortPropertyName = m_sorter.getPropertyName();
-    String text = propertyName;
-    String tooltip = null;
+
+    final String[] textAndTooltip = getLabelAndTooltip( label, tooltip, propertyName );
+
+    final String text;
+    if( propertyName.equals( sortPropertyName ) )
+      text = textAndTooltip[0] + " " + (m_sorter.isInverse() ? "\u00ab" : "\u00bb");
+    else
+      text = textAndTooltip[0];
+
+    final String tooltipText = textAndTooltip[1];
+
+    tc.setText( text );
+    tc.setData( TableColumnTooltipListener.TOOLTIP_PROPERTY, tooltipText );
+  }
+
+  private String[] getLabelAndTooltip( final String label, final String tooltip, final String propertyName )
+  {
+    final String[] result = new String[2];
+
+    result[0] = propertyName; // prepare for exception
+
     try
     {
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) getInput();
+
       final IFeatureType featureType = theme.getFeatureType();
+
       if( featureType != null )
       {
         final IPropertyType property = featureType.getProperty( propertyName );
 
         final IAnnotation annotation = AnnotationUtilities.getAnnotation( property );
-        text = annotation.getLabel();
-        tooltip = annotation.getTooltip();
+        result[0] = annotation.getLabel();
+        result[1] = annotation.getTooltip();
       }
+
+      if( label != null )
+        result[0] = label;
+
+      if( tooltip != null )
+        result[1] = tooltip;
     }
     catch( final Exception e )
     {
       // if data is not loaded yet, we provide the propertyname
       e.printStackTrace();
-    }
-    if( propertyName.equals( sortPropertyName ) )
-      text += " " + (m_sorter.isInverse() ? "\u00ab" : "\u00bb");
 
-    tc.setText( text );
-    tc.setData( TableColumnTooltipListener.TOOLTIP_PROPERTY, tooltip );
+      result[1] = e.toString();
+    }
+
+    return result;
   }
 
   private void checkColumns( )
@@ -753,6 +796,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final Column columnType = m_gistableviewFactory.createGistableviewLayerColumn();
 
       columnType.setName( tc.getData( COLUMN_PROP_NAME ).toString() );
+      columnType.setLabel( (String) tc.getData( COLUMN_PROP_LABEL ) );
+      columnType.setTooltip( (String) tc.getData( COLUMN_PROP_TOOLTIP ) );
       columnType.setEditable( ((Boolean) tc.getData( COLUMN_PROP_EDITABLE )).booleanValue() );
       columnType.setWidth( tc.getWidth() );
       columnType.setAlignment( "" + tc.getStyle() );
@@ -801,6 +846,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final Table table = getTable();
     final TableColumn[] columns = table.getColumns();
 
+    // TODO: exports the property name, not the current label; change this
     final String[] firstLine = new String[columns.length];
     for( int j = 0; j < columns.length; j++ )
       firstLine[j] = (String) columns[j].getData( COLUMN_PROP_NAME );
