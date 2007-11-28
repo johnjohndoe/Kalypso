@@ -83,7 +83,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
-  public IFeatureDialog createFeatureDialog( Feature feature, IPropertyType ftp )
+  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new NotImplementedFeatureDialog();
   }
@@ -123,7 +123,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
 
       return factory.createCombo( combo );
     }
-    
+
     // everything else will be edited in a text field
     final Text editor = factory.createText();
     editor.setStyle( "SWT.BORDER" );
@@ -136,9 +136,9 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
@@ -148,7 +148,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     if( Boolean.class == valueClass )
       return new BooleanModifier( vpt );
 
-    return new StringModifier( vpt );
+    return new StringModifier( vpt, format );
   }
 
   /**
@@ -178,10 +178,10 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object parseText( String text, String formatHint ) throws ParseException
+  public Object parseText( final String text, final String formatHint ) throws ParseException
   {
     // Standard is to use the parseType method from the corresponding marhsalling type handler
-    // In future, this should be directly implemented at this point 
+    // In future, this should be directly implemented at this point
     final IMarshallingTypeHandler marshallingHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( getTypeName() );
     return marshallingHandler.parseType( text );
   }

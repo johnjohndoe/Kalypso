@@ -75,13 +75,18 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
     return factory.createButton( button );
   }
 
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  /**
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
+   */
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     return new ButtonModifier( ftp, fcl );
   }
 
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element == null )
       return "";
@@ -111,10 +116,10 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object parseText( final String text, String formatHint ) throws ParseException
+  public Object parseText( final String text, final String formatHint ) throws ParseException
   {
     // Standard is to use the parseType method from the corresponding marhsalling type handler
-    // In future, this should be directly implemented at this point 
+    // In future, this should be directly implemented at this point
     final IMarshallingTypeHandler marshallingHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( getTypeName() );
     return marshallingHandler.parseType( text );
   }

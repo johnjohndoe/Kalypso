@@ -74,8 +74,8 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 
       final IGuiTypeHandler typeHandler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );
       if( typeHandler != null )
-        return typeHandler.createFeatureModifier( ftp, selectionManager, fcl );
-      return new StringModifier( vpt );
+        return typeHandler.createFeatureModifier( ftp, selectionManager, fcl, format );
+      return new StringModifier( vpt, format );
     }
     if( ftp instanceof IRelationType )
     {

@@ -75,7 +75,7 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
   private final XsdBaseTypeHandler m_handler;
 
-  public FileGuiTypeHandler( XsdBaseTypeHandler handler )
+  public FileGuiTypeHandler( final XsdBaseTypeHandler handler )
   {
     m_handler = handler;
   }
@@ -84,7 +84,7 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
    * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
-  public IFeatureDialog createFeatureDialog( Feature feature, IPropertyType ftp )
+  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new FileFeatureDialog( feature, (IValuePropertyType) ftp );
   }
@@ -93,7 +93,7 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
    * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureviewControl(org.kalypso.gmlschema.property.IPropertyType,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public JAXBElement< ? extends ControlType> createFeatureviewControl( IPropertyType property, ObjectFactory factory )
+  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final QName qname = property.getQName();
 
@@ -136,7 +136,7 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
   /**
    * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object parseText( String text, String formatHint )
+  public Object parseText( final String text, final String formatHint )
   {
     return m_handler.convertToJavaValue( text );
   }
@@ -145,7 +145,7 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     return m_handler.convertToXMLString( element );
   }
@@ -153,9 +153,9 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
-  public IFeatureModifier createFeatureModifier( IPropertyType ftp, IFeatureSelectionManager selectionManager, IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
@@ -165,7 +165,7 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
     if( Boolean.class == valueClass )
       return new BooleanModifier( vpt );
 
-    return new StringModifier( vpt );
+    return new StringModifier( vpt, format );
   }
 
   /**

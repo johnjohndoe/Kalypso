@@ -233,9 +233,9 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
@@ -247,7 +247,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
       return new ColorModifier( vpt );
     }
 
-    return new StringModifier( vpt );
+    return new StringModifier( vpt, format );
   }
 
   /**
