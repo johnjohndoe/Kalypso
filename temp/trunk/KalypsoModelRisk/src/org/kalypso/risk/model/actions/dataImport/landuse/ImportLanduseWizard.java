@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -57,10 +57,13 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -99,6 +102,8 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class ImportLanduseWizard extends Wizard implements INewWizard
 {
+  private final static int WARNING_MAX_LANDUSE_CLASSES_NUMBER = 50;
+
   protected static final int DB_UNDEFINED_SELECTION = -1;
 
   protected static final int DB_CREATE_NEW = 0;
@@ -220,7 +225,6 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     {
       getContainer().run( true, true, new IRunnableWithProgress()
       {
-
         public void run( final IProgressMonitor monitor ) throws InterruptedException
         {
           monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
@@ -237,6 +241,24 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             final QName shapeGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
             final QName shapeLandusePropertyName = new QName( "namespace", landuseProperty ); //$NON-NLS-1$
 
+            final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
+            
+            final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
+            final List shapeFeatureList = (List) shapeRootFeature.getProperty( new QName( "namespace", "featureMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            
+            // create entries for landuse database
+            for( int i = 0; i < shapeFeatureList.size(); i++ )
+            {
+              final Feature shpFeature = (Feature) shapeFeatureList.get( i );
+              final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
+              if( !m_landuseTypeSet.contains( shpPropertyValue ) )
+                m_landuseTypeSet.add( shpPropertyValue );
+            }
+            
+            if( m_landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
+              if(!isRightParameterUsed( landuseProperty ))
+                return;
+            
             monitor.subTask( Messages.getString( "ImportLanduseWizard.10" ) ); //$NON-NLS-1$
             final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class );
 
@@ -244,11 +266,6 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             final List<IAdministrationUnit> administrationUnits = controlModel.getAdministrationUnits();
             if( administrationUnits.size() == 0 )
               controlModel.createNewAdministrationUnit( "Default administration unit", "" );
-
-            final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
-
-            final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
-            final List shapeFeatureList = (List) shapeRootFeature.getProperty( new QName( "namespace", "featureMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
             final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = vectorDataModel.getLandusePolygonCollection();
             landusePolygonCollection.clear();
@@ -303,9 +320,9 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                       newLanduseClass.setDescription( "[Import from " + externalProjectName + "] " + entry.getDescription() );
                       newLanduseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
                       newLanduseClass.setColorStyle( entry.getColorStyle() );
-                      final String damageFunctionGmlID = damageFunctionsGmlIDsMap.get( entry.getDamageFunctionGmlID());
+                      final String damageFunctionGmlID = damageFunctionsGmlIDsMap.get( entry.getDamageFunctionGmlID() );
                       for( final IDamageFunction damageFunction : controlModel.getDamageFunctionsList() )
-                        if(damageFunction.getGmlID().equals( damageFunctionGmlID ))
+                        if( damageFunction.getGmlID().equals( damageFunctionGmlID ) )
                           newLanduseClass.setDamageFunction( damageFunction );
                       landuseClassesGmlIDsMap.put( entry.getGmlID(), newLanduseClass.getGmlID() );
                     }
@@ -408,14 +425,6 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                 break;
             }
 
-            // create entries for landuse database
-            for( int i = 0; i < shapeFeatureList.size(); i++ )
-            {
-              final Feature shpFeature = (Feature) shapeFeatureList.get( i );
-              final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
-              if( !m_landuseTypeSet.contains( shpPropertyValue ) )
-                m_landuseTypeSet.add( shpPropertyValue );
-            }
             m_landuseClassesList = controlModel.getLanduseClassesList();
             // m_landuseClassesList.clear();
 
@@ -502,6 +511,10 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
           }
           catch( final Exception e )
           {
+            if( e instanceof IllegalArgumentException )
+            {
+              throw new IllegalArgumentException( e.getLocalizedMessage() );
+            }
             e.printStackTrace();
             throw new InterruptedException( e.getLocalizedMessage() );
           }
@@ -511,6 +524,10 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     }
     catch( final Exception e )
     {
+      if( e instanceof IllegalArgumentException )
+      {
+        return false;
+      }
       ErrorDialog.openError( getShell(), Messages.getString( "ImportLanduseWizard.6" ), "", StatusUtilities.statusFromThrowable( e ) ); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
       return false;
@@ -533,6 +550,36 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         }
       }
     return null;
+  }
+
+  private boolean isRightParameterUsed( final String shapeLandusePropertyName )
+  {
+//    final IWorkbench workbench = PlatformUI.getWorkbench();
+//    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+//    final IEvaluationContext currentState = service.getCurrentState();
+//    final Shell shell = (Shell) currentState.getVariable( ISources.ACTIVE_SHELL_NAME );
+//    return MessageDialog.openQuestion( shell, "Question", "Large number of landuse classes detected.\nAre you sure that selected property [" + shapeLandusePropertyName
+//        + "] is landuse class property?" );
+
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    try
+    {
+      display.asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          final Shell shell = display.getActiveShell();
+          if( !MessageDialog.openQuestion( shell, "Question", "Large number of landuse classes detected.\nAre you sure that selected property [" + shapeLandusePropertyName
+              + "] is landuse class property?" ) )
+            throw new IllegalArgumentException();
+        }
+      } );
+      return true;
+    }
+    catch( final Exception e )
+    {
+      return false;
+    }
   }
 
   private RGB getLanduseClassDefaultColor( final String landuseClassName )
