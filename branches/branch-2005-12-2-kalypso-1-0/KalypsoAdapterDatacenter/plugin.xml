@@ -23,8 +23,6 @@
    </requires>
 
    <extension
-         id="org.kalypso.repository.factories"
-         name="DataCenter RepositoryFactories"
          point="org.kalypso.repository.factories">
       <repository
             factory="org.kalypso.dcadapter.DataCenterRepositoryFactory"

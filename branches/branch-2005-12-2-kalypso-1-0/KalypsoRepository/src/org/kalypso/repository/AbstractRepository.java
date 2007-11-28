@@ -229,7 +229,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * Dumps the contents of this item and all its children using recursion
    */
-  private void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent,
+  private static void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent,
       final IProgressMonitor monitor ) throws RepositoryException, InterruptedException
   {
     if( monitor.isCanceled() )

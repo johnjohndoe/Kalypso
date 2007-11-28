@@ -132,7 +132,7 @@ public class DumpExtendedAction extends AbstractObservationChooserAction impleme
        */
       public void run( IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Struktur exportieren", 1000 );
+        monitor.beginTask( "Struktur exportieren", IProgressMonitor.UNKNOWN );
 
         try
         {
