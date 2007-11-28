@@ -7,10 +7,10 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.psiadapter.PSICompactFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoryException;
 
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ObjectInfo;
+import de.psi.go.lhwz.PSICompact.ObjectMetaData;
 
 /**
  * A Repository Item from the PSICompact structure
@@ -33,15 +33,28 @@ public class PSICompactItem implements IRepositoryItem
 
   private final String m_obsName;
 
-  public PSICompactItem( final PSICompactItem parent, final String name, final String identifier,
-      final PSICompact.ObjectInfo info, final int valueType, final String obsName )
+  private final ObjectMetaData m_objectMetaData;
+
+  private final int m_arcType;
+
+  private final PSICompactRepository m_repository;
+
+  /**
+   * @param objectMetaData The object metadata as, got from {@link PSICompact#getObjectMetaData(java.lang.String)} for the <code>identifier</code>
+   * @param arcType One of the {@link PSICompact#ARC_DAY} constants.
+   */
+  public PSICompactItem( final PSICompactRepository repository, final PSICompactItem parent, final String name, final String identifier,
+      final PSICompact.ObjectInfo info, final int valueType, final String obsName, final ObjectMetaData objectMetaData, final int arcType )
   {
+    m_repository = repository;
     m_parent = parent;
     m_name = name;
     m_identifier = identifier;
     m_objectInfo = info;
     m_valueType = valueType;
     m_obsName = obsName;
+    m_objectMetaData = objectMetaData;
+    m_arcType = arcType;
 
     m_children = new Vector();
   }
@@ -98,10 +111,10 @@ public class PSICompactItem implements IRepositoryItem
   {
     try
     {
-      final boolean adaptable = PSICompactFactory.getConnection().getMeasureType( m_identifier ) != PSICompact.TYPE_UNDEF;
+      final boolean adaptable = PSICompactFactory.getConnection().getMeasureType( m_objectInfo.getId() ) != PSICompact.TYPE_UNDEF;
 
       if( adaptable && anotherClass == IObservation.class )
-        return new PSICompactObservationItem( m_obsName, m_identifier, m_objectInfo, m_valueType );
+        return new PSICompactObservationItem( m_obsName, m_identifier, m_objectInfo, m_valueType, m_objectMetaData, m_arcType );
     }
     catch( final Exception e )
     {
@@ -118,23 +131,14 @@ public class PSICompactItem implements IRepositoryItem
    */
   public IRepository getRepository()
   {
-    try
-    {
-      return PSICompactRepositoryFactory.getRepository();
-    }
-    catch( RepositoryException e )
-    {
-      e.printStackTrace();
-
-      throw new IllegalStateException( "Invalid repository. See previous stack trace for the RepositoryException" );
-    }
+      return m_repository;
   }
 
   /**
    * Returns
    * 
    * <pre>
-   * psicompact://psi...id
+   * psicompact://psi...id#ARCTYPE
    * </pre>
    * 
    * with psi...id being the id that is delivered from the PSICompact interface.
@@ -143,6 +147,6 @@ public class PSICompactItem implements IRepositoryItem
    */
   public String getIdentifier()
   {
-    return getRepository().getIdentifier() + m_identifier;
+    return PSICompactRepository.IDENTIFIER + m_identifier;
   }
 }

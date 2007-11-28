@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.kalypso.commons.conversion.units.IValueConverter;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -30,6 +31,7 @@ import org.kalypso.psiadapter.PSICompactFactory;
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ArchiveData;
+import de.psi.go.lhwz.PSICompact.ObjectMetaData;
 
 /**
  * Eine Observation aus PSICompact welche auch ein Repository Item ist.
@@ -65,33 +67,39 @@ public class PSICompactObservationItem implements IObservation
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
+  private final ObjectMetaData m_objectMetaData;
+
+  private final int m_arcType;
+
   /**
    * Constructor
    * 
    * @param valueType
    *          aus PSICompact Sicht (type 'measurement' or type 'value')
+   * @param metaData The object metadata as, got from {@link PSICompact#getObjectMetaData(java.lang.String)} for the <code>identifier</code>
+   * @param arcType One of the {@link PSICompact#ARC_DAY} constants.
    */
   public PSICompactObservationItem( final String name, final String id, final PSICompact.ObjectInfo info,
-      final int valueType ) throws ECommException
+      final int valueType, final ObjectMetaData metaData, final int arcType ) throws ECommException
   {
     m_name = name;
     m_identifier = id;
     m_objectInfo = info;
     m_valueType = valueType;
-
-    final PSICompact.ObjectMetaData psiMD = PSICompactFactory.getConnection().getObjectMetaData( m_objectInfo.getId() );
+    m_objectMetaData = metaData;
+    m_arcType = arcType;
 
     final PSICompact.WQParamSet[] psiWQ = PSICompactFactory.getConnection().getWQParams( m_objectInfo.getId() );
 
-    m_axes = prepareAxes( psiMD );
+    m_axes = prepareAxes();
 
-    m_metadata = prepareMetadata( psiMD, psiWQ );
+    m_metadata = prepareMetadata( psiWQ );
   }
 
   /**
    * @return axis list
    */
-  private IAxis[] prepareAxes( PSICompact.ObjectMetaData psiMD )
+  private IAxis[] prepareAxes()
   {
     final IAxis[] axes = new IAxis[3];
 
@@ -100,7 +108,7 @@ public class PSICompactObservationItem implements IObservation
         TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ), Date.class, true );
 
     // Wert (Einheit abfragen)
-    final int psiUnit = psiMD.getUnit();
+    final int psiUnit = m_objectMetaData.getUnit();
     final String type = measureTypeToString();
     final String unit = TimeserieUtils.getUnit( type );
 
@@ -119,39 +127,48 @@ public class PSICompactObservationItem implements IObservation
   /**
    * Helper für die Erzeugung der Metadaten
    */
-  private final MetadataList prepareMetadata( final PSICompact.ObjectMetaData psiMD, final PSICompact.WQParamSet[] psiWQ )
-      throws ECommException
+  private final MetadataList prepareMetadata( final PSICompact.WQParamSet[] psiWQ ) throws ECommException
   {
     final MetadataList metadata = new MetadataList();
 
     // TODO: 'name' of ObjectMetaData is never used, why?
-    
+
     metadata.put( ObservationConstants.MD_NAME, getName() );
     metadata.put( ObservationConstants.MD_DESCRIPTION, m_objectInfo.getDescription() );
     metadata.put( ObservationConstants.MD_ORIGIN, "PSICompact" );
 
-    if( psiMD != null )
+    if( m_objectMetaData != null )
     {
-      final String gkr = String.valueOf( psiMD.getRight() );
+      final String gkr = String.valueOf( m_objectMetaData.getRight() );
       metadata.put( TimeserieConstants.MD_GKR, gkr );
       metadata.put( TimeserieConstants.MD_COORDSYS, TimeserieUtils.getCoordinateSystemNameForGkr( gkr ) );
-      metadata.put( TimeserieConstants.MD_GKH, String.valueOf( psiMD.getHeight() ) );
+      metadata.put( TimeserieConstants.MD_GKH, String.valueOf( m_objectMetaData.getHeight() ) );
 
-      metadata.put( TimeserieConstants.MD_HOEHENANGABEART, psiMD.getLevelUnit() );
-      metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String.valueOf( psiMD.getLevel() ) );
-      metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String.valueOf( psiMD.getMapNo() ) );
+      metadata.put( TimeserieConstants.MD_HOEHENANGABEART, m_objectMetaData.getLevelUnit() );
+      metadata.put( TimeserieConstants.MD_PEGELNULLPUNKT, String.valueOf( m_objectMetaData.getLevel() ) );
+      metadata.put( TimeserieConstants.MD_MESSTISCHBLATT, String.valueOf( m_objectMetaData.getMapNo() ) );
 
       // Bug 80: only waterlevel-timeseries should have alarmlevels
       if( TimeserieConstants.TYPE_WATERLEVEL.equals( measureTypeToString() ) )
       {
-        metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_vc.convert( psiMD.getAlarm1() ) ) );
-        metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_vc.convert( psiMD.getAlarm2() ) ) );
-        metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_vc.convert( psiMD.getAlarm3() ) ) );
-        metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc.convert( psiMD.getAlarm4() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_vc.convert( m_objectMetaData.getAlarm1() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_vc.convert( m_objectMetaData.getAlarm2() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_vc.convert( m_objectMetaData.getAlarm3() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc.convert( m_objectMetaData.getAlarm4() ) ) );
       }
 
-      metadata.put( TimeserieConstants.MD_GEWAESSER, psiMD.getRiver() );
-      metadata.put( TimeserieConstants.MD_FLUSSGEBIET, psiMD.getRiversystem() );
+      final String unitLabel = PSICompactUtilitites.getLabelForUnit( m_objectMetaData.getUnit() );
+      metadata.put( "Einheit in PSI-Compact", unitLabel );
+      metadata.put( "Archivtyp", PSICompactUtilitites.getLabelForArcType( m_arcType ) );
+      final int[] archiveData = m_objectMetaData.getArchiveData();
+      final String[] archiveStrings = new String[archiveData.length];
+      for( int i = 0; i < archiveData.length; i++ )
+        archiveStrings[i] = PSICompactUtilitites.getLabelForArcType( archiveData[i] );
+      metadata.put( "vorhandene Archivetypen", Arrays.implode( archiveStrings, ", ", 0, archiveStrings.length - 1 ) );
+
+      
+      metadata.put( TimeserieConstants.MD_GEWAESSER, m_objectMetaData.getRiver() );
+      metadata.put( TimeserieConstants.MD_FLUSSGEBIET, m_objectMetaData.getRiversystem() );
     }
 
     try
@@ -275,7 +292,7 @@ public class PSICompactObservationItem implements IObservation
       m_to = dr.getTo();
 
       final PSICompact.ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
-          PSICompact.ARC_MIN15, m_from, m_to );
+          m_arcType, m_from, m_to );
 
       m_values = new PSICompactTuppleModel( data, getAxisList(), m_vc );
       return m_values;
@@ -300,8 +317,8 @@ public class PSICompactObservationItem implements IObservation
 
       try
       {
-        PSICompactFactory.getConnection().setArchiveData( m_objectInfo.getId(), PSICompact.ARC_MIN15,
-            data[0].getTimestamp(), data );
+        PSICompactFactory.getConnection()
+            .setArchiveData( m_objectInfo.getId(), m_arcType, data[0].getTimestamp(), data );
 
         // this observation has changed
         m_evtPrv.fireChangedEvent( null );
@@ -354,7 +371,7 @@ public class PSICompactObservationItem implements IObservation
     final IAxis[] axes = model.getAxisList();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
-    // REMARK: when Observation sget written to the server, it is ensured that exactly the known axes are written out.
+    // REMARK: when Observations get written to the server, it is ensured that exactly the known axes are written out.
     // this is done by comparing the target observation with the source observation and only copying what is needed.
     // In case of PSICompact, this means we will have exactly one axis, so no problem here...
     final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes, Number.class, true );
@@ -404,17 +421,6 @@ public class PSICompactObservationItem implements IObservation
       fullIntervalMap.put( date, archiveData );
     }
 
-    //    final InterpolationFilter filter = new InterpolationFilter( overwriteCalendarField, overwriteStep, true,
-    //        overwriteValue, PSICompact.STATUS_OK );
-    //    final SimpleObservation observation = new SimpleObservation( null, "", "", false, null, new MetadataList(), model
-    //        .getAxisList(), model );
-    //
-    //    filter.initFilter( null, observation, null );
-    //
-    //    final ITuppleModel newValues = filter.getValues( new ObservationRequest( begin, end ) );
-    //    final PSICompactTuppleModel newModel = PSICompactTuppleModel.copyModel( newValues, m_vc );
-    //    return newModel.getData();
-
     return (ArchiveData[])fullIntervalMap.values().toArray( new ArchiveData[fullIntervalMap.size()] );
   }
 
@@ -431,17 +437,22 @@ public class PSICompactObservationItem implements IObservation
    *          The constant status for all achive datas.
    * @param value
    *          The constant value for all archive datas.
+   * @throws SensorException
    */
-  private SortedMap createExtendedArchiveDataMap( final Date begin, final Date end, final int status, final double value )
+  private SortedMap createExtendedArchiveDataMap( final Date begin, final Date end, final int status, final double value ) throws SensorException
   {
-    /* Hard coded: we now the PSICompact is condifured to always be 15min times-series */
-    final int stepAmount = 15;
-    final int stepField = Calendar.MINUTE;
+    final int stepAmount = PSICompactUtilitites.arcTypeToCalendarAmount(m_arcType);
+    final int stepField = PSICompactUtilitites.arcTypeToCalendarField(m_arcType);
 
+    // TODO: how do we make sure that the start time fits to the PSICompact database raster of values?
     final Calendar stepper = Calendar.getInstance();
     stepper.setTime( begin );
 
     final SortedMap archiveDataMap = new TreeMap();
+
+    /* Make sure we do not get an endless loop */
+    if( !begin.before( end ) )
+      return archiveDataMap;
 
     while( true )
     {

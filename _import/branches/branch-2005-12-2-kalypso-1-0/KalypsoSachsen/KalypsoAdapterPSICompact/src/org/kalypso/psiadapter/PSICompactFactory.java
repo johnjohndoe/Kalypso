@@ -6,11 +6,11 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
+import de.psi.go.lhwz.PSICompactImpl;
 
 /**
  * The entry point to the PSICompact interface from PSI.
@@ -19,9 +19,14 @@ import de.psi.go.lhwz.PSICompact;
  */
 public final class PSICompactFactory
 {
-  private final static String CONFIG = "/org/kalypso/psiadapter/resources/config.ini";
+  /**
+   * System property which contains the location of the fake data. Must be an url. Normaly this points to the directory
+   * containing the 'structure.txt' file.<br/>
+   * ATTENTION: If this property is set, the fake implementation is used instead of the real PSICompact implementation!
+   */
+  private static final String SYSPROP_FAKE_LOCATION = "kalypso.psifake.location";
 
-  private static String PSI_CLASS = null;
+  private final static String CONFIG = "/org/kalypso/psiadapter/resources/config.ini";
 
   protected static PSICompact m_psiCompact = null;
 
@@ -98,14 +103,19 @@ public final class PSICompactFactory
         m_factoryProperties = new Properties();
         m_factoryProperties.load( stream );
 
-        // path of class which implements the PSICompact interface
-        PSI_CLASS = m_factoryProperties.getProperty( "PSI_CLASS", "de.psi.go.lhwz.PSICompactImpl" );
+        final String fakeLocation = System.getProperty( SYSPROP_FAKE_LOCATION, null );
+        if( fakeLocation == null )
+        {
+          System.out.println( "Fake location not set, using real PSICompact-implementation. Use the following System-property to use a fake implementation instead: " + SYSPROP_FAKE_LOCATION );
+          m_psiCompact = new PSICompactImpl();
+        }
+        else
+        {
+          System.out.println( "Fake location set. Using PSI-fake implementation on location: " + fakeLocation );
+          m_psiCompact = new PSICompactFakeImpl( fakeLocation );
+        }
 
-        m_psiCompact = (PSICompact)ClassUtilities.newInstance( PSI_CLASS, PSICompact.class, PSICompactFactory.class
-            .getClassLoader() );
-
-        // Wichtig! init() aufrufen damit die PSI-Schnittstelle sich
-        // initialisieren kann
+        // Wichtig! init() aufrufen damit die PSI-Schnittstelle sich initialisieren kann
         m_psiCompact.init();
       }
       catch( final Exception e )

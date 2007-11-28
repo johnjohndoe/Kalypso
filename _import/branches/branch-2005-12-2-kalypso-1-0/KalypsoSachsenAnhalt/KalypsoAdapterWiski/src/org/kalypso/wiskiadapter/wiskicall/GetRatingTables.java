@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.util.DoubleComparator;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 
 import de.kisters.wiski.webdataprovider.common.util.KiWWException;
 import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
@@ -28,17 +29,17 @@ import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
  */
 public class GetRatingTables implements IWiskiCall
 {
+  private final static Logger LOG = Logger.getLogger( GetRatingTables.class.getName() );
+
   private final Long m_id;
 
   private final Date m_validity;
 
-  private Number[] m_stage;
-
-  private Number[] m_flow;
-
   private final String m_wiskiObjectType;
 
-  private final static Logger LOG = Logger.getLogger( GetRatingTables.class.getName() );
+  private WQTable m_wqTable;
+
+  private final Date m_wqTableValidity;
 
   /**
    * Constructor
@@ -48,12 +49,15 @@ public class GetRatingTables implements IWiskiCall
    * @param validity
    * @param wiskiObjectType
    *          one of KiWWDataProviderInterface.OBJECT_*
+   * @param wqTableValidity
+   *          The validity for which the wq-Tabel will be created
    */
-  public GetRatingTables( final Long id, final Date validity, final String wiskiObjectType )
+  public GetRatingTables( final Long id, final Date validity, final String wiskiObjectType, final Date wqTableValidity )
   {
     m_id = id;
     m_validity = validity;
     m_wiskiObjectType = wiskiObjectType;
+    m_wqTableValidity = wqTableValidity;
   }
 
   public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
@@ -66,69 +70,72 @@ public class GetRatingTables implements IWiskiCall
     if( list.size() > 0 )
     {
       final HashMap table = (HashMap)list.getFirst();
-
-      final Number[] stage = (Number[])( (List)table.get( "curve_table_stage" ) ).toArray( new Number[0] );
-      final Number[] flow = (Number[])( (List)table.get( "curve_table_flow" ) ).toArray( new Number[0] );
-
-      if( stage.length != flow.length )
-        throw new IllegalStateException( "stage and flow arrays are not of the same length" );
-
-      // jetzt schlechte Werte (-777) herausfiltern
-      // wir testen auch ob flow immer stetig steigend ist
-      final List goodStage = new ArrayList( stage.length );
-      final List goodFlow = new ArrayList( stage.length );
-
-      final DoubleComparator dc = new DoubleComparator( 0.000001 );
-      final Double errValue = new Double( -777 );
-
-      Number stetigFlow = null;
-
-      StringBuffer buf = new StringBuffer();
-
-      for( int i = 0; i < flow.length; i++ )
-      {
-        if( dc.compare( errValue, stage[i] ) == 0 || dc.compare( errValue, flow[i] ) == 0 )
-        {
-          buf.append( "Ignoring Rating-Table Tuple #" + i + " [" + stage[i] + ", " + flow[i] + "]\n" );
-          continue;
-        }
-
-        if( stetigFlow != null && dc.compare( stetigFlow, flow[i] ) >= 0 )
-        {
-          buf.append( "Ignoring Rating-Table Tuple #" + i + " [" + stage[i] + ", " + flow[i]
-              + "] due to flyback (Rücksprung)\n" );
-          continue;
-        }
-
-        stetigFlow = flow[i];
-
-        goodStage.add( stage[i] );
-        goodFlow.add( flow[i] );
-      }
-
-      if( buf.length() > 0 )
-        LOG.info( "Rating-Table analysis found following warnings:\n" + buf.toString() );
-
-      m_stage = (Number[])goodStage.toArray( new Number[goodStage.size()] );
-      m_flow = (Number[])goodFlow.toArray( new Number[goodFlow.size()] );
-
-      if( m_stage.length != m_flow.length )
-        throw new IllegalArgumentException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
+      m_wqTable = convertTable( table, m_wqTableValidity );
     }
   }
 
-  public Number[] getStage()
+  /**
+   * Converts the wiski call into a wq-table
+   * 
+   * @throws IllegalStateException
+   * @throws IllegalArgumentException
+   */
+  private static WQTable convertTable( final HashMap table, final Date wqTableValidity ) throws IllegalStateException, IllegalArgumentException
   {
-    return m_stage;
+    final Number[] stage = (Number[])( (List)table.get( "curve_table_stage" ) ).toArray( new Number[0] );
+    final Number[] flow = (Number[])( (List)table.get( "curve_table_flow" ) ).toArray( new Number[0] );
+
+    if( stage.length != flow.length )
+      throw new IllegalStateException( "stage and flow arrays are not of the same length" );
+
+    // jetzt schlechte Werte (-777) herausfiltern
+    // wir testen auch ob flow immer stetig steigend ist
+    final List goodStage = new ArrayList( stage.length );
+    final List goodFlow = new ArrayList( stage.length );
+
+    final DoubleComparator dc = new DoubleComparator( 0.000001 );
+    final Double errValue = new Double( -777 );
+
+    Number stetigFlow = null;
+
+    StringBuffer buf = new StringBuffer();
+
+    for( int i = 0; i < flow.length; i++ )
+    {
+      if( dc.compare( errValue, stage[i] ) == 0 || dc.compare( errValue, flow[i] ) == 0 )
+      {
+        buf.append( "Ignoring Rating-Table Tuple #" + i + " [" + stage[i] + ", " + flow[i] + "]\n" );
+        continue;
+      }
+
+      if( stetigFlow != null && dc.compare( stetigFlow, flow[i] ) >= 0 )
+      {
+        buf.append( "Ignoring Rating-Table Tuple #" + i + " [" + stage[i] + ", " + flow[i]
+            + "] due to flyback (Rücksprung)\n" );
+        continue;
+      }
+
+      stetigFlow = flow[i];
+
+      goodStage.add( stage[i] );
+      goodFlow.add( flow[i] );
+    }
+
+    if( buf.length() > 0 )
+      LOG.info( "Rating-Table analysis found following warnings:\n" + buf.toString() );
+
+    final Number[] theStage = (Number[])goodStage.toArray( new Number[goodStage.size()] );
+    final Number[] theFlow = (Number[])goodFlow.toArray( new Number[goodFlow.size()] );
+
+    if( theStage.length != theFlow.length )
+      throw new IllegalArgumentException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
+
+    return new WQTable( wqTableValidity, theStage, theFlow );
   }
 
-  public Number[] getFlow()
+  /** Returns the fetched wqTable, or null if none was found. */
+  public WQTable getTable()
   {
-    return m_flow;
-  }
-
-  public boolean hasTable()
-  {
-    return m_stage != null;
+    return m_wqTable;
   }
 }

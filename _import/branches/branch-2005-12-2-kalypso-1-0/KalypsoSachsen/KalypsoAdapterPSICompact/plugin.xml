@@ -26,11 +26,8 @@
       <import plugin="org.kalypso.jwsdp"/>
    </requires>
    <extension
-         id="org.kalypso.repository.factories"
-         name="PSICompact Repository Factory"
          point="org.kalypso.repository.factories">
       <repository
-            conf=""
             name="PSICompact"
             factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"/>
    </extension>

@@ -198,24 +198,7 @@
         <ant antfile="${workspace}/KalypsoDWD/etc/ant/build.xml"
              target="build-filecopyservlet-war"
              inheritAll="false" />
-    </target>
-
-    <target name="psicompact-fake" depends="build-basic,build-UserService">
-        <echo message="Integrating the fake implementation of PSICompact" />
-        <delete file="${workspace}/KalypsoAdapterPSICompact/lib/PSICompact.jar" />
-        <ant antfile="${workspace}/KalypsoPSICompactImpl/build.xml"
-             target="deploy"
-             inheritall="false" />
-        <ant antfile="${workspace}/KalypsoAdapterPSICompact/etc/ant/build.xml"
-             target="deploy"
-             inheritall="false" />
-    </target>
-
-    <target name="psicompact-echte" depends="build-basic,build-UserService">
-        <echo message="Integrating the real implementation of PSICompact" />
-        <copy file="${project.path}/deployable-server/echte-psicompact/PSICompact.jar"
-              tofile="${workspace}/KalypsoAdapterPSICompact/lib/PSICompact.jar"
-              overwrite="true" />
+    	
         <ant antfile="${workspace}/KalypsoAdapterPSICompact/etc/ant/build.xml"
              target="deploy"
              inheritall="false" />
@@ -323,7 +306,7 @@
     </target>
     
     <target name="build-services-dev"
-            depends="psicompact-fake,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService, buildwar-DWDFileCopyServlet">
+            depends="build-basic,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService, buildwar-DWDFileCopyServlet">
         <echo message="Building all services" />
     </target>
 
@@ -432,7 +415,7 @@
     </target>
 
     <target name="redeploy-UserService"
-            depends="psicompact-fake,buildwar-UserService,deploy-allconf"
+            depends="buildwar-UserService,deploy-allconf"
             description="Redeploy service and configuration with PSI-Fake Implementation">
         <echo message="Redeploying User Service" />
         <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml"
@@ -446,7 +429,7 @@
 		dies ist aber so nicht garantiert...
 	--> 
     <target name="redeploy-ObsService"
-            depends="clean,psicompact-fake,buildwar-ObsService,deploy-allconf"
+            depends="clean,buildwar-ObsService,deploy-allconf"
             description="Redeploy service and configuration with PSI-Fake Implementation">
         <echo message="Redeploying Observation Service" />
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml"
@@ -457,7 +440,7 @@
     </target>
 
     <target name="redeploy-MetaDocService"
-            depends="psicompact-fake,buildwar-MetaDocService,deploy-allconf"
+            depends="buildwar-MetaDocService,deploy-allconf"
             description="Redeploy service and configuration with PSI-Fake Implementation">
         <echo message="Redeploying MetaDoc Service" />
         <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml"
@@ -468,7 +451,7 @@
     </target>
 
     <target name="redeploy-CalcService"
-            depends="psicompact-fake,buildwar-CalcService,deploy-allconf"
+            depends="buildwar-CalcService,deploy-allconf"
             description="Redeploy service and configuration with PSI-Fake Implementation">
         <echo message="Redeploying Calculation Service" />
         <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml"
@@ -488,7 +471,7 @@
     </target>
 
     <target name="build-services-lfug"
-            depends="psicompact-echte,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService, buildwar-DWDFileCopyServlet">
+            depends="build-basic,buildwar-CalcService,buildwar-MetaDocService,buildwar-ObsService,buildwar-UserService, buildwar-DWDFileCopyServlet">
         <echo message="Build for LFUG (using real PSICompact)" />
     </target>
 
@@ -500,7 +483,5 @@
             description="Deploy as File in the ${dist} dir for LFUG">
         <echo message="Copying the wars and all other stuff to ${dist} - Ready for sending to LFUG" />
     </target>
-
-  
   
 </project>

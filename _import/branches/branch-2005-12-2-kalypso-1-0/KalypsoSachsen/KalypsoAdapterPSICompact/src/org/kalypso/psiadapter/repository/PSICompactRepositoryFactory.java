@@ -27,9 +27,7 @@ import de.psi.go.lhwz.PSICompact.WQParamSet;
  */
 public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 {
-  private static PSICompactRepository m_psiCompactRep = null;
-
-  private final static Integer m_zero = new Integer( 0 );
+  private final static Integer ZERO = new Integer( 0 );
 
   /**
    * Does nothing.
@@ -46,25 +44,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
    */
   public IRepository createRepository() throws RepositoryException
   {
-    return getRepository();
-  }
-
-  /**
-   * Liefert den PSICompactRepository
-   * 
-   * @return repository
-   * 
-   * @throws RepositoryException
-   */
-  public final static PSICompactRepository getRepository() throws RepositoryException
-  {
-    if( m_psiCompactRep == null )
-    {
-      // PSICompact Repository is always in read/write mode
-      m_psiCompactRep = new PSICompactRepository( "PSICompact", false );
-    }
-
-    return m_psiCompactRep;
+    return new PSICompactRepository( "PSICompact", false );
   }
 
   /**
@@ -100,7 +80,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
         return Integer.valueOf( props.getProperty( "BM_" + "STATUS_UNDEF" ) );
 
       default:
-        return m_zero;
+        return ZERO;
     }
   }
 

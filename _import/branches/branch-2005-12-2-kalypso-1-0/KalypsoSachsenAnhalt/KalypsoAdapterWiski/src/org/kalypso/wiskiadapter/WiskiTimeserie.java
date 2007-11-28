@@ -525,7 +525,7 @@ public class WiskiTimeserie implements IObservation
     if( wqt == null )
     {
       // TODO: das macht keinen Sinn, weil fetchWQTableIntern nur noch über die Station sucht
-      // wenn aber die Station keine Schlüsselkurve hat, wird man hiier auch nichts mehr finden
+      // wenn aber die Station keine Schlüsselkurve hat, wird man hier auch nichts mehr finden
       LOG.info( "Trying to find WQ-Table with sibling for " + getName() );
 
       // 2. this failed, so next try is using sibling of other type
@@ -624,7 +624,7 @@ public class WiskiTimeserie implements IObservation
         + " type= " + type + " station-id= " + tsinfo.getWiskiStationId() + " tsinfo-id= "
         + tsinfo.getWiskiIdAsString() );
 
-    final GetRatingTables call = new GetRatingTables( Long.valueOf( tsinfo.getWiskiStationId() ), to, type );
+    final GetRatingTables call = new GetRatingTables( Long.valueOf( tsinfo.getWiskiStationId() ), to, type, from );
     try
     {
       rep.executeWiskiCall( call );
@@ -636,14 +636,7 @@ public class WiskiTimeserie implements IObservation
       return null;
     }
 
-    if( call.hasTable() )
-    {
-      final WQTable wqt = new WQTable( from, call.getStage(), call.getFlow() );
-
-      return wqt;
-    }
-
-    return null;
+    return call.getTable();
   }
 
   /**
