@@ -463,7 +463,20 @@
 					</element>
 					<element name="uniqueID" type="wspmSobekCommon:uniqueIdType"/>
 					<element name="riverLine" type="gml:LineStringPropertyType"/>
-					<element name="length" type="double"/>
+					<element name="length" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Länge [m]</label>
+								<tooltip>Länge [m]</tooltip>
+								<description>Länge [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Length [m]</label>
+								<tooltip>Length [m]</tooltip>
+								<description>Length [m]</description>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="upperConnectionNode" type="wspmSobek:ConnectionNodeLinkPropertyType"/>
 					<element name="lowerConnectionNode" type="wspmSobek:ConnectionNodeLinkPropertyType"/>
 				</sequence>
