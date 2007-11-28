@@ -135,7 +135,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       if( monitor.isCanceled() )
         return;
 
-      monitor.setMessage( "Generiere 2D Netz..." );
+      monitor.setMessage( "Generiere Finite Elemente Netz..." );
       converter2D.toRMA10sModel();
 
       /** convert control/resistance stuff... */

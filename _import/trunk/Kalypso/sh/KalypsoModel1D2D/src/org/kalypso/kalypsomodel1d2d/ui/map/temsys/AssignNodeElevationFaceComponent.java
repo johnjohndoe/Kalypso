@@ -562,32 +562,7 @@ public class AssignNodeElevationFaceComponent
     }
 
     nodeElevationViewer.addSelectionChangedListener( nodeSelectionListener );
-    // nodeElevationViewer.getControl().addFocusListener( focusListener );
     nodeElevationViewer.getTable().addMouseListener( mouseListener );
-    // nodeElevationViewer.getControl().addMouseListener( mouseListener );
-
-    // actualPointNum.addListener(SWT.Selection, new Listener() {
-    // public void handleEvent(Event e) {
-    // // sort column 2
-    // TableItem[] items = table.getItems();
-    // Collator collator = Collator.getInstance(Locale.getDefault());
-    // for (int i = 1; i < items.length; i++) {
-    // String value1 = items[i].getText(1);
-    // for (int j = 0; j < i; j++) {
-    // String value2 = items[j].getText(1);
-    // if (collator.compare(value1, value2) < 0) {
-    // String[] values = { items[i].getText(0),
-    // items[i].getText(1) };
-    // items[i].dispose();
-    // TableItem item = new TableItem(table, SWT.NONE, j);
-    // item.setText(values);
-    // items = table.getItems();
-    // break;
-    // }
-    // }
-    // }
-    // }
-    // });
 
     regionFormData = new FormData();
     regionFormData.left = new FormAttachment( table, 5 );
@@ -647,8 +622,6 @@ public class AssignNodeElevationFaceComponent
       }
 
     } );
-
-    // noElevationBtnAdapter =
 
     final TextCellEditor textCellEditor = new TextCellEditor( table );
     final TextCellEditor eleCellEditor = new TextCellEditor( table );

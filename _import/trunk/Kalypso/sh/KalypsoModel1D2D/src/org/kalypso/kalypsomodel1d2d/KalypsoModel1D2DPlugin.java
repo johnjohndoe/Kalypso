@@ -4,6 +4,7 @@
 package org.kalypso.kalypsomodel1d2d;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -13,6 +14,8 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
 {
   // The shared instance.
   private static KalypsoModel1D2DPlugin plugin;
+
+  private PluginImageProvider m_imageProvider;
 
   public KalypsoModel1D2DPlugin( )
   {
@@ -45,4 +48,10 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
   {
     return plugin;
   }
+
+  public static PluginImageProvider getImageProvider( )
+  {
+    return getDefault().m_imageProvider;
+  }
+
 }

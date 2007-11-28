@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * @author Gernot Belger
@@ -54,4 +55,6 @@ public interface IHydrograph extends IFeatureWrapper2
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "Hydrograph" );
 
   public static final QName QNAME_PROP_LOCATION = new QName( NS.GML3, "location" );
+
+  public GM_Object getLocation( );
 }

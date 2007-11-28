@@ -247,6 +247,20 @@
              class="org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler"
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__GenerateDifferenceResultView">
        </handler>  	     	     	     	     	     	     
+       <handler
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ManageResultHydrograph">
+          <class
+                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+             <parameter
+                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                   value="org.kalypso.kalypso1d2d.pjt.map.HydrographManagmentWidget">
+             </parameter>
+             <parameter
+                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+                   value="org.kalypso.kalypso1d2d.pjt">
+             </parameter>
+          </class>
+       </handler>  	     	     	     	     	     	     
 	</extension>
     
    <extension
