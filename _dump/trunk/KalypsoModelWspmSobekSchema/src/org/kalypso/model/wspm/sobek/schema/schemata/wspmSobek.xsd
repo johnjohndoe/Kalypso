@@ -691,9 +691,9 @@
 								<description>Anfang Zeitreihe</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Timeseries Begin</label>
-								<tooltip>Timeseries Begin</tooltip>
-								<description>Timeseries Begin</description>
+								<label>Time Series Begin</label>
+								<tooltip>Time Series Begin</tooltip>
+								<description>Time Series Begin</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -705,9 +705,9 @@
 								<description>Ende Zeitreihe</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Timeseries End</label>
-								<tooltip>Timeseries End</tooltip>
-								<description>Timeseries End</description>
+								<label>Time Series End</label>
+								<tooltip>Time Series End</tooltip>
+								<description>Time Series End</description>
 							</documentation>
 						</annotation>
 					</element>
