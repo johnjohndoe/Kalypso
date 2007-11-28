@@ -90,6 +90,15 @@ public class PageEditLastfall extends WizardPage
   {
     setPageComplete( false );
 
+    final Object layoutData = parent.getLayoutData();
+    if( layoutData instanceof GridData )
+    {
+      final GridData pLayout = (GridData) layoutData;
+      pLayout.widthHint = 500;
+      pLayout.heightHint = 300;
+      parent.layout();
+    }
+
     final Composite container = new Composite( parent, SWT.NULL );
     container.setLayout( new GridLayout( 2, false ) );
     setControl( container );
@@ -116,7 +125,7 @@ public class PageEditLastfall extends WizardPage
 
     final Group group = new Group( container, SWT.NONE );
     group.setLayout( new GridLayout( 2, false ) );
-    group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
+    group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 
     /* begin date */
     new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, "Start date", group );
@@ -150,7 +159,7 @@ public class PageEditLastfall extends WizardPage
     new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME, "Pre simulation time", group );
 
     m_pre = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME );
-    m_pre.draw( group, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER );
+    m_pre.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
 
     m_pre.addModifyListener( new Runnable()
     {
@@ -164,7 +173,7 @@ public class PageEditLastfall extends WizardPage
     new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP, "Simulation Timestep", group );
 
     m_timeStep = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP );
-    m_timeStep.draw( group, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER );
+    m_timeStep.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
 
     m_timeStep.addModifyListener( new Runnable()
     {
@@ -178,7 +187,7 @@ public class PageEditLastfall extends WizardPage
     new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER, "Simulation Timestep Multiplier", group );
 
     m_multiplier = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER );
-    m_multiplier.draw( group, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER );
+    m_multiplier.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
 
     m_multiplier.addModifyListener( new Runnable()
     {
@@ -205,7 +214,7 @@ public class PageEditLastfall extends WizardPage
     if( m_dateBegin.getDateTime() == null )
     {
       setMessage( null );
-      setErrorMessage( "Calculation case begin not defined" );
+      setErrorMessage( "Start of Simulation not defined" );
       setPageComplete( false );
 
       return;
@@ -214,7 +223,7 @@ public class PageEditLastfall extends WizardPage
     if( m_dateEnd.getDateTime() == null )
     {
       setMessage( null );
-      setErrorMessage( "Calculation case end not defined" );
+      setErrorMessage( "End of Simulation not defined" );
       setPageComplete( false );
 
       return;
@@ -223,7 +232,7 @@ public class PageEditLastfall extends WizardPage
     if( m_dateEnd.getDateTime().before( m_dateBegin.getDateTime() ) )
     {
       setMessage( null );
-      setErrorMessage( "Calculation case end date is earlier then beginning date" );
+      setErrorMessage( "End date is before simulation start date" );
       setPageComplete( false );
 
       return;
