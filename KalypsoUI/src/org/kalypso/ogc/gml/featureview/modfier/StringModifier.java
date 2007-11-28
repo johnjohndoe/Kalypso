@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +57,7 @@ import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class StringModifier implements IFeatureModifier
 {
@@ -67,37 +65,40 @@ public class StringModifier implements IFeatureModifier
 
   private final IGuiTypeHandler m_guiTypeHandler;
 
-  public StringModifier( final IValuePropertyType ftp )
+  private final String m_format;
+
+  public StringModifier( final IValuePropertyType ftp, final String format )
   {
     m_ftp = ftp;
+    m_format = format;
 
     // we need both registered type handler types
     final ITypeRegistry<IGuiTypeHandler> guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     m_guiTypeHandler = guiTypeRegistry.getTypeHandlerFor( m_ftp );
   }
 
-  public NumberFormat getNumberFormat( final IPropertyType ftp )
-  {
-    // HACK: TODO: either put this into the IGuiTypeHandler or
-    // maybe even in the appinfo of the schema
-    final String namespace = ftp.getQName().getNamespaceURI();
-    final String name = ftp.getQName().getLocalPart();
-    final DecimalFormat expFormat = new DecimalFormat( "0.000E0" ); //$NON-NLS-1$
-    // ##0.000E0
-    final NumberFormat normalFormat = NumberFormat.getInstance();
-
-    if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL //$NON-NLS-1$
-    {
-      if( "flaech".equals( name ) ) //$NON-NLS-1$
-        return expFormat;
-    }
-    if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope //$NON-NLS-1$
-    {
-      if( "m_perkm".equals( name ) || "area".equals( name ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        return expFormat;
-    }
-    return normalFormat;
-  }
+// public NumberFormat getNumberFormat( final IPropertyType ftp )
+// {
+// // HACK: TODO: either put this into the IGuiTypeHandler or
+// // maybe even in the appinfo of the schema
+// final String namespace = ftp.getQName().getNamespaceURI();
+// final String name = ftp.getQName().getLocalPart();
+// final DecimalFormat expFormat = new DecimalFormat( "0.000E0" ); //$NON-NLS-1$
+// // ##0.000E0
+// final NumberFormat normalFormat = NumberFormat.getInstance();
+//
+// if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL //$NON-NLS-1$
+// {
+// if( "flaech".equals( name ) ) //$NON-NLS-1$
+// return expFormat;
+// }
+// if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope //$NON-NLS-1$
+// {
+// if( "m_perkm".equals( name ) || "area".equals( name ) ) //$NON-NLS-1$ //$NON-NLS-2$
+// return expFormat;
+// }
+// return normalFormat;
+// }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
@@ -122,7 +123,7 @@ public class StringModifier implements IFeatureModifier
 
   /**
    * @param data
-   *          real property value
+   *            real property value
    */
   private String toText( final Object data )
   {
@@ -241,6 +242,11 @@ public class StringModifier implements IFeatureModifier
    */
   public String getLabel( final Feature f )
   {
+    final Object data = f.getProperty( m_ftp );
+
+    if( m_format != null && m_format.length() > 0 )
+      return String.format( m_format, data );
+
     final Object value = getValue( f );
 
     // HACK
@@ -258,7 +264,10 @@ public class StringModifier implements IFeatureModifier
     else
       result = value;
 
-    return result == null ? "" : result.toString(); //$NON-NLS-1$
+    if( result == null )
+      return ""; //$NON-NLS-1$
+
+    return result.toString();
   }
 
   /**

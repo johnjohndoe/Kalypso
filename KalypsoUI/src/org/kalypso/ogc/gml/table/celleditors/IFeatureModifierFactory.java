@@ -46,7 +46,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 
 /**
- * @author Belger
+ * @author Gernot Belger
  */
 public interface IFeatureModifierFactory
 {

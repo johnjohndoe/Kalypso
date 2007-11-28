@@ -151,19 +151,19 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
-    final Class valueClass = getValueClass();
+    final Class< ? > valueClass = getValueClass();
 
     if( Boolean.class == valueClass )
       return new BooleanModifier( vpt );
 
-    return new StringModifier( vpt );
+    return new StringModifier( vpt, format );
   }
 
   /**
@@ -200,10 +200,10 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     if( element == null )
       return "";
 
-    GM_Point point = (GM_Point) element;
-    GM_Position pos = point.getPosition();
+    final GM_Point point = (GM_Point) element;
+    final GM_Position pos = point.getPosition();
 
-    double[] dbl_values = pos.getAsArray();
+    final double[] dbl_values = pos.getAsArray();
 
     String result = "";
 
@@ -212,14 +212,14 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
       final CS_CoordinateSystem coordinateSystem = point.getCoordinateSystem();
       result = coordinateSystem == null ? "" : coordinateSystem.getName();
     }
-    catch( RemoteException e )
+    catch( final RemoteException e )
     {
       e.printStackTrace();
     }
 
-    for( int i = 0; i < dbl_values.length; i++ )
+    for( final double element2 : dbl_values )
     {
-      result = result + ";" + new Double( dbl_values[i] ).toString();
+      result = result + ";" + new Double( element2 ).toString();
     }
 
     return result;
@@ -228,7 +228,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object parseText( String text, String formatHint )
+  public Object parseText( final String text, final String formatHint )
   {
     final Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
 
@@ -237,7 +237,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     CS_CoordinateSystem crs = null;
 
     /* Werte anhand von ; trennen. */
-    String[] str_values = text.split( ";" );
+    final String[] str_values = text.split( ";" );
 
     double[] dbl_values = null;
 
@@ -245,7 +245,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     if( str_values.length > 1 )
     {
       /* Der erste Eintrag wird als das CS angenommen. */
-      CoordinateSystem cs = new ConvenienceCSFactoryFull().getCSByName( str_values[0] );
+      final CoordinateSystem cs = new ConvenienceCSFactoryFull().getCSByName( str_values[0] );
 
       /* Sollte es das CS nicht geben, stelle das Default CS ein. */
       if( cs != null )
@@ -278,7 +278,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     else
     {
       /* Falls es nur einen Wert gibt, wird er als CS angenommen. */
-      CoordinateSystem cs = new ConvenienceCSFactoryFull().getCSByName( str_values[0] );
+      final CoordinateSystem cs = new ConvenienceCSFactoryFull().getCSByName( str_values[0] );
 
       /* Sollte es das CS nicht geben, stelle das Default CS ein. */
       if( cs != null )
@@ -294,7 +294,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
 
     }
 
-    GM_Point point = GeometryFactory.createGM_Point( pos, crs );
+    final GM_Point point = GeometryFactory.createGM_Point( pos, crs );
 
     return point;
   }

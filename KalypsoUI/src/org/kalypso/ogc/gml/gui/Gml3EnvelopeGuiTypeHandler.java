@@ -142,9 +142,9 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
@@ -154,7 +154,7 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
     if( Boolean.class == valueClass )
       return new BooleanModifier( vpt );
 
-    return new StringModifier( vpt );
+    return new StringModifier( vpt, format );
   }
 
   /**
@@ -190,7 +190,7 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
     if( element == null )
       return "";
 
-    GM_Envelope envelope = (GM_Envelope) element;
+    final GM_Envelope envelope = (GM_Envelope) element;
 
     final String result = new Double( envelope.getMin().getX() ).toString() + ";" + new Double( envelope.getMin().getY() ).toString() + ";" + new Double( envelope.getMax().getX() ).toString() + ";"
         + new Double( envelope.getMax().getY() ).toString();
@@ -201,14 +201,14 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object parseText( String text, String formatHint )
+  public Object parseText( final String text, final String formatHint )
   {
     /* Erstellen des Envelopes. */
 
     /* Werte anhand von ; trennen. */
-    String[] str_values = text.split( ";" );
+    final String[] str_values = text.split( ";" );
 
-    Double[] dbl_values = new Double[4];
+    final Double[] dbl_values = new Double[4];
 
     /* Es muss vier Werte geben. */
     for( int i = 0; i < 4; i++ )

@@ -66,7 +66,7 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
 
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory );
 
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl );
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format );
 
   /**
    * Inverse operation to {@link ILabelProvider#getText(java.lang.Object)}. Must return an object of the type for which
@@ -75,10 +75,11 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
    * Parses a (human edited) text into an object of the type this handler is responsible for.
    * 
    * @param text
-   *          The text which gets parsed.
+   *            The text which gets parsed.
    * @param formatHint
-   *          Potentially a hint how to parse the text. It depends on the type handler what format hints are supported.
-   *          For example for the date-handler, DateFormat format string can be used. May be <code>null</code>.
+   *            Potentially a hint how to parse the text. It depends on the type handler what format hints are
+   *            supported. For example for the date-handler, DateFormat format string can be used. May be
+   *            <code>null</code>.
    */
   public Object parseText( final String text, final String formatHint ) throws ParseException;
 }
