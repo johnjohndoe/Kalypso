@@ -91,6 +91,8 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
@@ -201,6 +203,19 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( ITerrainModel.class, cTor );
     cMap.put( IModel.class, cTor );
+
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final IFeatureType featureType = feature.getFeatureType();
+        if( IRoughnessCls.QNAME.equals( featureType.getQName() ) )
+          return new RoughnessCls( feature );
+        else
+          return null;
+      }
+    };
+    cMap.put( IRoughnessCls.class, cTor );
 
     // IFE1D2DNode
     cTor = new AdapterConstructor()

@@ -1,6 +1,9 @@
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness;
 
 /**
  * Interface for klasses representing the roughness feature of the type wbr:Roughness
@@ -10,6 +13,8 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapp
  */
 public interface IRoughnessCls extends IColorStyledFeatureWrapper
 {
+  public static final QName QNAME = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "RoughnessCls" ); //$NON-NLS-1$
+
   public static enum RoughnessConfigConsistency
   {
     ILLEGAL_VALUE_KS,

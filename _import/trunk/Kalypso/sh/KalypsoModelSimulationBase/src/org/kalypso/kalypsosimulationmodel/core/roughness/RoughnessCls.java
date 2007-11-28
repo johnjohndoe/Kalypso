@@ -56,7 +56,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   public double getAxAy( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_AXAY, Double.NaN );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_AXAY, 0.0 );
   }
 
   /*
@@ -67,7 +67,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   public double getDp( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_DP, Double.NaN );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_DP, 0.0 );
   }
 
   /*
@@ -78,25 +78,25 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   public double getEddyXX( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, 500.0 );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, 2500.0 );
   }
 
   public double getEddyYX( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, 500.0 );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, 2500.0 );
   }
 
   public double getEddyXY( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, 500.0 );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, 2500.0 );
   }
 
   public double getEddyYY( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, 500.0 );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, 2500.0 );
   }
 
   /*
@@ -282,10 +282,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
     buf.append( "[name=" ).append( getName() ); //$NON-NLS-1$
     buf.append( ", axay=" ).append( getAxAy() ); //$NON-NLS-1$
     buf.append( ", dp=" ).append( getDp() ); //$NON-NLS-1$
-    buf.append( ", eddy_xx=" ).append( getEddyXX() ); //$NON-NLS-1$
-    buf.append( ", eddy_yx=" ).append( getEddyYX() ); //$NON-NLS-1$
-    buf.append( ", eddy_xy=" ).append( getEddyXY() ); //$NON-NLS-1$
-    buf.append( ", eddy_yy=" ).append( getEddyYY() ); //$NON-NLS-1$
     buf.append( ", ks=" ).append( getKs() ); //$NON-NLS-1$
     buf.append( ", marsh=" ).append( getMarsh() ); //$NON-NLS-1$
     buf.append( ']' );

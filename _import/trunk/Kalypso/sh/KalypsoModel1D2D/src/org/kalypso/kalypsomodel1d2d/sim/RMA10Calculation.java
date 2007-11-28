@@ -58,6 +58,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -173,63 +175,49 @@ public class RMA10Calculation
     return m_kalypso1D2DKernelPath;
   }
 
-  public Double[] getViskosity( final Feature roughnessFE )
+  public Double[] getViscosities( final Feature roughnessFE )
   {
     final Double[] result = new Double[4];
     final int iedsw = getControlModel().getIEDSW();
 
-    // turbulence combo (iedsw):
+    /*
+     * turbulence combo (iedsw), these values mean: constant eddy viscosity to be applied, but value has to come from
+     * the class or it will be the default value.
+     */
     if( iedsw == 0 || iedsw == 10 || iedsw == 13 )
     {
-      final double defaultValue = 2900.0;
-      result[0] = defaultValue;
-      result[1] = defaultValue;
-      result[2] = defaultValue;
-      result[3] = defaultValue;
-      // result[0] = getEddyXX( roughnessFE );
-      // result[1] = getEddyYX( roughnessFE );
-      // result[2] = getEddyXY( roughnessFE );
-      // result[3] = getEddyYY( roughnessFE );
+
+      /*
+       * (non-Javadoc) Get the default eddy value from the getEddy-method, too. There the information is given, whether
+       * it has some value or default should be applied. Furthermore value is changed to 2500.
+       */
+      final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFE.getAdapter( IRoughnessCls.class );
+      result[0] = roughnessCls.getEddyXX();
+      result[1] = roughnessCls.getEddyYX();
+      result[2] = roughnessCls.getEddyXY();
+      result[3] = roughnessCls.getEddyYY();
     }
     else
     {
-      // TODO: strange values, check again with Nico
-      // final double defaultValue = 0.4;
-      final double defaultValue = 2900.0;
+      /*
+       * (non-Javadoc) For usage of non-constant eddy-viscosity approaches, the value is 0.5
+       */
+      final double defaultValue = 0.5;
       result[0] = defaultValue;
       result[1] = defaultValue;
       result[2] = defaultValue;
       result[3] = defaultValue;
     }
     return result;
-    // return getcharactV( roughnessFE ); 0.4
   }
 
-  public Double getEddyXX( final Feature roughnessFE )
-  {
-    return FeatureHelper.getAsDouble( roughnessFE, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, 500.0 );
-  }
-
-  public Double getEddyYX( final Feature roughnessFE )
-  {
-    return FeatureHelper.getAsDouble( roughnessFE, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, 500.0 );
-  }
-
-  public Double getEddyXY( final Feature roughnessFE )
-  {
-    return FeatureHelper.getAsDouble( roughnessFE, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, 500.0 );
-  }
-
-  public Double getEddyYY( final Feature roughnessFE )
-  {
-    return FeatureHelper.getAsDouble( roughnessFE, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, 500.0 );
-  }
-
-  public Double getcharactV( final Feature roughnessFE )
-  {
-    return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV );
-  }
-
+/*
+ * not used at all; when it is used this function is available in roughnessCls
+ */
+// public Double getcharactV( final Feature roughnessFE )
+// {
+// return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV );
+// }
   public String getName( final Feature feature )
   {
     return (String) feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME );
@@ -240,19 +228,28 @@ public class RMA10Calculation
     return (List) m_roughnessRootWorkspace.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER );
   }
 
-  public Double getKs( final Feature roughnessFE )
+  public Double getKsValue( final Feature roughnessFE )
   {
-    return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS );
+    final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFE.getAdapter( IRoughnessCls.class );
+    if(roughnessCls == null)
+      throw new RuntimeException("Used feature is not a roughness class; no kS-value available.");
+    return roughnessCls.getKs();
   }
 
-  public Double getAxAy( final Feature roughnessFE )
+  public Double getAxAyValue( final Feature roughnessFE )
   {
-    return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY );
+    final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFE.getAdapter( IRoughnessCls.class );
+    if(roughnessCls == null)
+      throw new RuntimeException("Used feature is not a roughness class; no AxAy-value available.");
+    return roughnessCls.getAxAy();
   }
 
-  public Double getDp( final Feature roughnessFE )
+  public Double getDpValue( final Feature roughnessFE )
   {
-    return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP );
+    final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFE.getAdapter( IRoughnessCls.class );
+    if(roughnessCls == null)
+      throw new RuntimeException("Used feature is not a roughness class; no Dp-value available.");
+    return roughnessCls.getDp();
   }
 
   private void initializeInfos( )

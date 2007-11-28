@@ -110,6 +110,9 @@
          <adapter
                type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection">
          </adapter>
+         <adapter
+               type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls">
+         </adapter>
       </factory>
    </extension>
 

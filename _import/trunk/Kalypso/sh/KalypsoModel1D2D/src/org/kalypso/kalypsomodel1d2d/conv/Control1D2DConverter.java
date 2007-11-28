@@ -170,7 +170,7 @@ public class Control1D2DConverter
     m_formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", controlModel.getCONV_1(), controlModel.getCONV_2(), controlModel.getCONV_3(), 0.05, 0.05, controlModel.getIDRPT(), controlModel.getDRFACT() ); //$NON-NLS-1$
 
     // IOP line deleted because Nico said that it is an ugly, baaad line... :)
-    // (IOP has something to do with reordering, and this is not working properly with 1D-2D copling)
+    // (IOP has something to do with reordering, and this is not working properly with 1D-2D coupling)
     // formatter.format( "IOP%n" );
 
     // VEGETA
@@ -190,12 +190,11 @@ public class Control1D2DConverter
       final Feature roughnessCL = (Feature) elt;
       final int roughnessAsciiID = m_roughnessIDProvider.get( roughnessCL.getId() );
 
-      final Double[] eddy = m_calculation.getViskosity( roughnessCL );
-      // final double val = 2900.0;
+      final Double[] eddy = m_calculation.getViscosities( roughnessCL );
 
-      final Double ks = m_calculation.getKs( roughnessCL );
-      final Double axAy = m_calculation.getAxAy( roughnessCL );
-      final Double dp = m_calculation.getDp( roughnessCL );
+      final Double ks = m_calculation.getKsValue( roughnessCL );
+      final Double axAy = m_calculation.getAxAyValue( roughnessCL );
+      final Double dp = m_calculation.getDpValue( roughnessCL );
 
       if( ks == null )
         throw new SimulationException( Messages.getString( "Control1D2DConverter.7" ) + NamedFeatureHelper.getName( roughnessCL ), null ); //$NON-NLS-1$
