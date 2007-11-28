@@ -55,7 +55,9 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -63,11 +65,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.xml.NS;
@@ -143,6 +145,10 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   private List<Feature> m_predefinedDamageFunctionsCollection;
 
   private List<Feature> m_predefinedAssetValueClassesCollection;
+
+  private IStatus m_status = null;
+
+  private boolean m_wrongLanduseSelectedStatus = false;
 
   public ImportLanduseWizard( )
   {
@@ -242,10 +248,10 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             final QName shapeLandusePropertyName = new QName( "namespace", landuseProperty ); //$NON-NLS-1$
 
             final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
-            
+
             final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
             final List shapeFeatureList = (List) shapeRootFeature.getProperty( new QName( "namespace", "featureMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            
+
             // create entries for landuse database
             for( int i = 0; i < shapeFeatureList.size(); i++ )
             {
@@ -254,11 +260,25 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
               if( !m_landuseTypeSet.contains( shpPropertyValue ) )
                 m_landuseTypeSet.add( shpPropertyValue );
             }
-            
+
+            m_wrongLanduseSelectedStatus = false;
             if( m_landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
-              if(!isRightParameterUsed( landuseProperty ))
+            {
+              m_status = null;
+              isRightParameterUsed( landuseProperty );
+              synchronized( this )
+              {
+                while( m_status == null )
+                  wait( 100 );
+              }
+              if( Status.CANCEL_STATUS.equals( m_status ) )
+              {
+                m_wrongLanduseSelectedStatus = true;
+                m_landuseTypeSet.clear();
                 return;
-            
+              }
+            }
+
             monitor.subTask( Messages.getString( "ImportLanduseWizard.10" ) ); //$NON-NLS-1$
             final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class );
 
@@ -532,7 +552,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       e.printStackTrace();
       return false;
     }
-    return true;
+    return !m_wrongLanduseSelectedStatus;
   }
 
   private Feature getLanduseClassByName( final Feature feature, final IFolder projectFolder, final String className )
@@ -552,34 +572,24 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     return null;
   }
 
-  private boolean isRightParameterUsed( final String shapeLandusePropertyName )
+  private void isRightParameterUsed( final String shapeLandusePropertyName )
   {
-//    final IWorkbench workbench = PlatformUI.getWorkbench();
-//    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-//    final IEvaluationContext currentState = service.getCurrentState();
-//    final Shell shell = (Shell) currentState.getVariable( ISources.ACTIVE_SHELL_NAME );
-//    return MessageDialog.openQuestion( shell, "Question", "Large number of landuse classes detected.\nAre you sure that selected property [" + shapeLandusePropertyName
-//        + "] is landuse class property?" );
-
     final Display display = PlatformUI.getWorkbench().getDisplay();
-    try
+    final UIJob runnable = new UIJob( display, "proba" ) //$NON-NLS-1$
     {
-      display.asyncExec( new Runnable()
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        public void run( )
-        {
-          final Shell shell = display.getActiveShell();
-          if( !MessageDialog.openQuestion( shell, "Question", "Large number of landuse classes detected.\nAre you sure that selected property [" + shapeLandusePropertyName
-              + "] is landuse class property?" ) )
-            throw new IllegalArgumentException();
-        }
-      } );
-      return true;
-    }
-    catch( final Exception e )
-    {
-      return false;
-    }
+        if( MessageDialog.openQuestion( display.getActiveShell(), "Question", "Large number of landuse classes detected.\nAre you sure that selected property [" + shapeLandusePropertyName
+            + "] is landuse class property?" ) )
+          m_status = Status.OK_STATUS;
+        else
+          m_status = Status.CANCEL_STATUS;
+        return Status.OK_STATUS;
+      }
+    };
+    runnable.setUser( true );
+    runnable.schedule();
   }
 
   private RGB getLanduseClassDefaultColor( final String landuseClassName )
