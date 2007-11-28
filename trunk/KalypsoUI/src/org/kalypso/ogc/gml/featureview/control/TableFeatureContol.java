@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class TableFeatureContol extends AbstractFeatureControl implements ModellEventListener
 {
@@ -174,7 +174,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
         for( int i = 0; i < properties.length; i++ )
         {
           final IPropertyType ftp = properties[i];
-          m_viewer.addColumn( ftp.getQName().getLocalPart(), true, 100, "SWT.CENTER", null, i == properties.length - 1 ); //$NON-NLS-1$
+          m_viewer.addColumn( ftp.getQName().getLocalPart(), null, null, true, 100, "SWT.CENTER", null, i == properties.length - 1 ); //$NON-NLS-1$
         }
       }
     }
