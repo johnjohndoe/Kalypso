@@ -96,7 +96,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
 
   private MapPanel m_mapPanel;
 
-  private boolean m_intersectWithCurrentSelection;
+  private boolean m_appendToCurrentSelection;
 
   private PolygonGeometryBuilder m_polygonGeometryBuilder;
 
@@ -281,7 +281,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
   {
     final int keyCode = e.getKeyCode();
     if( KeyEvent.VK_CONTROL == keyCode )
-      m_intersectWithCurrentSelection = true;
+      m_appendToCurrentSelection = true;
     if( KeyEvent.VK_SHIFT == keyCode )
     {
       m_polygonSelectModus = true;
@@ -297,7 +297,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
   {
     final int keyCode = e.getKeyCode();
     if( KeyEvent.VK_CONTROL == keyCode )
-      m_intersectWithCurrentSelection = false;
+      m_appendToCurrentSelection = false;
     if( KeyEvent.VK_SHIFT == keyCode )
     {
       m_polygonSelectModus = false;
@@ -347,27 +347,21 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
     }
   }
 
-  private final void changeSelection( final List<EasyFeatureWrapper> selected )
+  private final void changeSelection( final List<EasyFeatureWrapper> newUserSelection )
   {
     final IFeatureSelectionManager selectionManager = m_mapPanel.getSelectionManager();
-    final Feature[] featuresToRemove;
-    if( m_intersectWithCurrentSelection )
+    if( m_appendToCurrentSelection )
     {
       final List<EasyFeatureWrapper> currentSelection = new ArrayList<EasyFeatureWrapper>( Arrays.asList( selectionManager.getAllFeatures() ) );
-      currentSelection.retainAll( selected );
-      selected.removeAll( currentSelection );
-      final int size = currentSelection.size();
-      featuresToRemove = new Feature[size];
-      for( int i = size - 1; i >= 0; i-- )
-        featuresToRemove[i] = currentSelection.get( i ).getFeature();
+      for( final EasyFeatureWrapper newlySelectedFeature : newUserSelection )
+        if( currentSelection.contains( newlySelectedFeature ) )
+          currentSelection.remove( newlySelectedFeature );
+        else
+          currentSelection.add( newlySelectedFeature );
+      selectionManager.setSelection( currentSelection.toArray( new EasyFeatureWrapper[0] ) );
     }
     else
-    {
-      selectionManager.clear();
-      featuresToRemove = new Feature[] {};
-    }
-    final EasyFeatureWrapper[] featuresToAdd = selected.toArray( new EasyFeatureWrapper[selected.size()] );
-    selectionManager.changeSelection( featuresToRemove, featuresToAdd );
+      selectionManager.setSelection( newUserSelection.toArray( new EasyFeatureWrapper[0] ) );
     selectionMade();
   }
 

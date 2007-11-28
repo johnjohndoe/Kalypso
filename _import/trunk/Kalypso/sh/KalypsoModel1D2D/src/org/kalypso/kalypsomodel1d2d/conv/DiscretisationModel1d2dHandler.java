@@ -127,18 +127,19 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
+    final boolean useMiddleNode = middleNodeID > 0;
     final String edgeGmlID = m_edgesNameConversionMap.get( id );
     final IFE1D2DEdge edge;
     final Feature edgeFeature = m_workspace.getFeature( edgeGmlID );
     final IFE1D2DNode node1 = getNode( node1ID );
     final IFE1D2DNode node2 = getNode( node2ID );
-    final IFE1D2DNode middleNode = getNode( middleNodeID );
+    final IFE1D2DNode middleNode = useMiddleNode ? getNode( middleNodeID ) : null;
     if( node1 == null )
       throw new RuntimeException( "Left node " + node1ID + " reffered by arc " + id + " doesn't exists." );
     if( node2 == null )
       throw new RuntimeException( "Right node " + node2ID + " reffered by arc " + id + " doesn't exists." );
-    if( middleNode == null )
-      throw new RuntimeException( "Middle node " + middleNodeID + " reffered by arc " + id + " doesn't exists." );
+    if( useMiddleNode && middleNode == null )
+      throw new RuntimeException( "Midside node " + middleNodeID + " reffered by arc " + id + " doesn't exists." );
     if( edgeFeature != null )
       edge = (IFE1D2DEdge) edgeFeature.getAdapter( IFE1D2DEdge.class );
     else
@@ -150,10 +151,12 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       m_edgesNameConversionMap.put( id, newEdgeGmlID );
       edge.addNode( node1.getGmlID() );
       edge.addNode( node2.getGmlID() );
-      edge.setMiddleNode( middleNode );
+      if( useMiddleNode )
+        edge.setMiddleNode( middleNode );
       node1.addContainer( newEdgeGmlID );
       node2.addContainer( newEdgeGmlID );
-      middleNode.addContainer( newEdgeGmlID );
+      if( useMiddleNode )
+        middleNode.addContainer( newEdgeGmlID );
     }
     if( elementLeftID == elementRightID )
     {
@@ -184,7 +187,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         invertedEdge.addContainer( elementRight.getGmlID() );
       }
     }
-    // TODO add middle node
   }
 
   private final IFE1D2DNode getNode( final Integer rmaID )

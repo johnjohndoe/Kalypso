@@ -60,7 +60,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -223,12 +222,12 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
    */
   public void setBoundaryPosition( final GM_Point boundaryPosition )
   {
-    this.m_boundaryPosition = boundaryPosition;
+    m_boundaryPosition = boundaryPosition;
   }
 
   public void setSelectionManager( final IFeatureSelectionManager selectionManager )
   {
-    this.m_selectionManager = selectionManager;
+    m_selectionManager = selectionManager;
   }
 
 }
