@@ -143,6 +143,8 @@
       Eclipse-Plugins (siehe <xref
       linkend="tbl_develop_K_Features_Plugins" />).</para>
 
+      <!--PROFILING ANFANG-->
+
       <table id="tbl_develop_K_Features_Plugins">
         <title>KALYPSO Features und Plugins</title>
 
@@ -322,7 +324,48 @@
 
               <entry>Plugin</entry>
 
-              <entry>Benutzerhandbuch für KALYPSO</entry>
+              <entry>Allgemeines Benutzerhandbuch für KALYPSO</entry>
+            </row>
+
+            <row>
+              <entry>KalypsoManualSachsen</entry>
+
+              <entry>Plugin</entry>
+
+              <entry>Benutzerhandbuch für KALYPSO Sachsen</entry>
+            </row>
+
+            <row>
+              <entry>KalypsoManualSachsenAnhalt</entry>
+
+              <entry>Plugin</entry>
+
+              <entry>Benutzerhandbuch für KALYPSO Sachsen-Anhalt</entry>
+            </row>
+
+            <row>
+              <entry>KalypsoTecdoc</entry>
+
+              <entry>Plugin</entry>
+
+              <entry>Allgemeine Technische Dokumentation für KALYPSO</entry>
+            </row>
+
+            <row>
+              <entry>KalypsoTecdocSachsen</entry>
+
+              <entry>Plugin</entry>
+
+              <entry>Technische Dokumentation für KALYPSO für Sachsen</entry>
+            </row>
+
+            <row>
+              <entry>KalypsoTecdocSachsenAnhalt</entry>
+
+              <entry>Plugin</entry>
+
+              <entry>Technische Dokumentation für KALYPSO für
+              Sachsen-Anhalt</entry>
             </row>
 
             <row vendor="sachsen-anhalt">
@@ -343,6 +386,8 @@
           </tbody>
         </tgroup>
       </table>
+
+      <!--PROFILING ENDE-->
     </section>
 
     <section id="kalypso-server">
@@ -466,11 +511,10 @@
 
               <entry>Plugin/Library</entry>
 
-              <entry>Integration des Vorhersagemodells für die Elbe und das 
-              Berechnungsmodells für die Zwischengebietszuflüsse der Elbe
-              in Form eines Plugins für die lokale Benutzung,
-              und in Form einer Library für die serverseitige
-              Benutzung.</entry>
+              <entry>Integration des Vorhersagemodells für die Elbe und das
+              Berechnungsmodells für die Zwischengebietszuflüsse der Elbe in
+              Form eines Plugins für die lokale Benutzung, und in Form einer
+              Library für die serverseitige Benutzung.</entry>
             </row>
 
             <row vendor="sachsen">
@@ -528,14 +572,15 @@
         <secondary>Konfigurationsmanagement</secondary>
       </indexterm>
 
-      <para vendor="sachsen-anhalt">Neben allgemeinen Code Konfigurationen werden spezielle
-      Konfigurationseinheiten für die Integration von KALYPSO in die Umgebung
-      der Hochwasservorhersagezentrale Sachsen-Anhalt benötigt. <xref
-      linkend="tbl_develop_Konfig_Plugins" /> listet diese Module auf.</para>
-      
-      <para vendor="sachsen">Neben allgemeinen Code Konfigurationen werden spezielle
-      Konfigurationseinheiten für die Integration von KALYPSO in die Umgebung
-      des Landeshochwasserzentrums Sachsen benötigt. <xref
+      <para vendor="sachsen-anhalt">Neben allgemeinen Code Konfigurationen
+      werden spezielle Konfigurationseinheiten für die Integration von KALYPSO
+      in die Umgebung der Hochwasservorhersagezentrale Sachsen-Anhalt
+      benötigt. <xref linkend="tbl_develop_Konfig_Plugins" /> listet diese
+      Module auf.</para>
+
+      <para vendor="sachsen">Neben allgemeinen Code Konfigurationen werden
+      spezielle Konfigurationseinheiten für die Integration von KALYPSO in die
+      Umgebung des Landeshochwasserzentrums Sachsen benötigt. <xref
       linkend="tbl_develop_Konfig_Plugins" /> listet diese Module auf.</para>
 
       <para><table id="tbl_develop_Konfig_Plugins">
@@ -574,6 +619,14 @@
                 <entry>Resource</entry>
 
                 <entry>Standard Buildframework von KALYPSO</entry>
+              </row>
+
+              <row>
+                <entry>KalypsoConfSachsen</entry>
+
+                <entry>Resource</entry>
+
+                <entry>Konfigurationsdateien und Server-Deploy</entry>
               </row>
 
               <row vendor="sachsen-anhalt">

@@ -103,22 +103,21 @@
 
     <para>PSI hat das Java-Interface <filename>PSICompact.java</filename>
     (siehe <filename>de.psi.go.lhwz.PSICompact</filename>) zur Verfügung
-    gestellt. Die Implementierungsklasse dieses Interface wird über
-    Java-Reflection instantiiert. Diese Flexibilität wurde geschaffen, um
-    andere mögliche Implementierungen des PSICompact-Interface integrieren zu
-    können, wie dies <abbrev>z. B.</abbrev> mit der
-    <filename>PSICompactImpl.java</filename> im Projekt
-    <filename>KalypsoPSICompactImpl</filename> der Fall ist.</para>
+    gestellt. Um die Schnittstellenimplementation ohne laufende Datenbank
+    testen zu können, wurde eine Pseudo-Implementation der Schnittstelle in
+    Form der Klasse
+    <filename>org.kalypso.psiadapter.PSICompactFakeImpl</filename> geschaffen.
+    Durch setzen der System-Property
+    <filename>kalypso.psifake.location</filename> auf ein Datenverzeichnis
+    wird diese Pseudo- Implementation aktiviert. Das gesetzte Datenverzeichnis
+    muss die Struktur und Daten der simulierten Datenbank in Form von
+    ZML-Dateien enthalten. Ist die System-Property nicht gesetzt, wird die
+    richtige Implementation der Schnittstelle aktiviert.</para>
 
     <para>In der Datei
-    <filename>org/kalypso/psiadapter/resources/config.ini</filename> sind
-    manche Einstellungen konfigurierbar, u.a. die Implementierungsklasse des
-    <filename>PSICompact.java</filename> Interface - die Eigenschaft
-    <emphasis>PSI_CLASS</emphasis> definiert, welche Klasse geladen werden
-    soll: <programlisting>PSI_CLASS=de.psi.go.lhwz.PSICompactImpl</programlisting></para>
-
-    <para>Die Einstellungen sind direkt in der Konfigurationsdatei
-    beschrieben.</para>
+    <filename>org/kalypso/psiadapter/resources/config.ini</filename> sind eine
+    Reihe von Einstellungen der Schnittstelle konfigurierbar, welche direkt in
+    der Konfigurationsdatei beschrieben sind.</para>
   </section>
 
   <section>
@@ -132,7 +131,7 @@
       <tertiary>Laufzeit</tertiary>
     </indexterm>
 
-    <para>Zur Laufzeit werden folgende Jars benötigt:</para>
+    <para>Zur Laufzeit werden folgende Bibliotheken benötigt:</para>
 
     <itemizedlist>
       <listitem>
@@ -140,7 +139,7 @@
       </listitem>
 
       <listitem>
-        <para><filename>OB.jar</filename> </para>
+        <para><filename>OB.jar</filename></para>
       </listitem>
     </itemizedlist>
 
@@ -164,13 +163,12 @@
       <tertiary>Zeitreihen</tertiary>
     </indexterm>
 
-    <para>Zur Zeit werden alle Werte aus dem Archivtyp
-    <emphasis>PSICompact.ARC_MIN15</emphasis> (15 Minuten-Archiv) geholt und
-    zurück geschrieben. </para>
+    <para>Prinzipiell können alle in PSICompact konfigurierten Stationen über
+    ihre jeweiligen Archivtypen abgerufen werden.</para>
 
     <para>Beim Zurückschreiben wird zuerst der Zeitreihencontainer mit dem
     Wert -1 beschrieben, um eventuell vorhandene Werte zu löschen. Dies
-    geschieht in der vollen 15min Auflösung für den zu schreibenden Zeitraum,
+    geschieht in der vollen Auflösung für den zu schreibenden Zeitraum,
     erweitert um die in den Variablen OVERWRITE_AMOUNT_BEFORE und
     OVERWRITE_AMOUNT_AFTER angegebenen Werte.</para>
 
