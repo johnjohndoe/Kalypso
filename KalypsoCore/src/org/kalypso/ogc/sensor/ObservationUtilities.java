@@ -44,6 +44,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,6 +58,7 @@ import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -653,6 +655,35 @@ public class ObservationUtilities
     final double v1 = ( (Double)tuppelModel.getElement( index, valueAxis ) ).doubleValue();
     final double v2 = ( (Double)tuppelModel.getElement( index + 1, valueAxis ) ).doubleValue();
     return MathUtils.interpolate( d1.getTime(), d2.getTime(), v1, v2, date.getTime() );
+  }
+
+  /**
+   * Request value from an observation , but buffers (i.e enlarges  the request it by a given amount.
+   * 
+   * @param dateRange
+   *          If <code>null</code>, request the values from the baseObservation with a <code>null</code> request.
+   * @throws SensorException
+   */
+  public static ITuppleModel requestBuffered( final IObservation baseObservation, final DateRange dateRange,
+      final int bufferField, final int bufferAmount ) throws SensorException
+  {
+
+    if( dateRange == null )
+      return baseObservation.getValues( null );
+
+    final Date from = dateRange.getFrom();
+    final Date to = dateRange.getTo();
+
+    final Calendar bufferedFrom = Calendar.getInstance();
+    bufferedFrom.setTime( from );
+    bufferedFrom.add( bufferField, -bufferAmount );
+
+    final Calendar bufferedTo = Calendar.getInstance();
+    bufferedTo.setTime( to );
+    bufferedTo.add( bufferField, bufferAmount );
+
+    final IRequest bufferedRequest = new ObservationRequest( bufferedFrom.getTime(), bufferedTo.getTime() );
+    return baseObservation.getValues( bufferedRequest );
   }
 
 }
