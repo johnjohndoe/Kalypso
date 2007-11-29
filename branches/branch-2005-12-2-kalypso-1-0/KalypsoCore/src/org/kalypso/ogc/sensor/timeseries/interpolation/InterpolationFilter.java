@@ -117,11 +117,15 @@ public class InterpolationFilter extends AbstractObservationFilter
    */
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
-    final ITuppleModel values = super.getValues( request );
+    final DateRange dr = request == null ? null : request.getDateRange();
 
-    DateRange dr = null;
-    if( request != null )
-      dr = request.getDateRange();
+    // BUGIFX: fixes the problem with the first value:
+    // the first value was always ignored, because the intervall
+    // filter cannot handle the first value of the source observation
+    // FIX: we just make the request a big bigger in order to get a new first value
+    // HACK: we always use DAY, so that work fine only up to timeseries of DAY-quality.
+    // Maybe there should be one day a mean to determine, which is the right amount.
+    final ITuppleModel values = ObservationUtilities.requestBuffered( getObservation(), dr, Calendar.DAY_OF_MONTH, 2 );
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( values.getAxisList(), Date.class );
     final IAxis[] valueAxes = ObservationUtilities.findAxesByClass( values.getAxisList(), Number.class );
@@ -227,7 +231,7 @@ public class InterpolationFilter extends AbstractObservationFilter
 
             final double valStart = v1[pos];
             final double valStop = v2[pos];
-            
+
             final long linearStart = d1.getTime();
             final long linearStop = d2.getTime();
 
