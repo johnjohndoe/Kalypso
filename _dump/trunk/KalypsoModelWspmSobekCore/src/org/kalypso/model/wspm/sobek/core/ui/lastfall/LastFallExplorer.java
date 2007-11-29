@@ -48,6 +48,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -68,12 +70,14 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.model.LastfallUtils;
 import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditBoundaryCondition;
 import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditLastfall;
 import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditTimeSeriesObservation;
 import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuch
@@ -83,6 +87,30 @@ public class LastFallExplorer
   static private final Font fTextBold = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD );
 
   protected final ISobekModelMember m_modelBuilder;
+
+  private static ViewerSorter m_sorter = new ViewerSorter()
+  {
+    /**
+     * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     *      java.lang.Object)
+     */
+    @Override
+    public int compare( final Viewer viewer, final Object e1, final Object e2 )
+    {
+      if( e1 instanceof Feature && e2 instanceof Feature )
+      {
+        final Feature f1 = (Feature) e1;
+        final Feature f2 = (Feature) e2;
+
+        final String n1 = FeatureUtils.getFeatureName( ISobekConstants.NS_SOBEK, f1 );
+        final String n2 = FeatureUtils.getFeatureName( ISobekConstants.NS_SOBEK, f2 );
+
+        return n1.compareTo( n2 );
+      }
+
+      return super.compare( viewer, e1, e2 );
+    }
+  };
 
   public LastFallExplorer( final ISobekModelMember modelBuilder )
   {
@@ -109,6 +137,7 @@ public class LastFallExplorer
     viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     viewer.setLabelProvider( new LastfallTreeLabelProvider() );
     viewer.setContentProvider( new LastfallTreeContentProvider() );
+    viewer.setSorter( m_sorter );
 
     final ILastfall[] lastfalls = m_modelBuilder.getLastfallMembers();
     viewer.setInput( lastfalls );
