@@ -238,7 +238,7 @@ public class FNGmlUtils
     final INode node = FNGmlUtils.createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
 
     /* link branch and profile */
-    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH, "#" + branch.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, "#" + branch.getFeature().getId() );
     FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, "#" + profile.getId() );
 
     node.getFeature().invalidEnvelope();

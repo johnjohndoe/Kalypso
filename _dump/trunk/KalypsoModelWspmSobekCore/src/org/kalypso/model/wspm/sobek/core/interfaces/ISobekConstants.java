@@ -61,8 +61,6 @@ public class ISobekConstants
 
   public static final String F_HYDRAULIC_CROSS_SECTION_NODE = "CrossSectionNode";
 
-  public static final String F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH = "linksToBranch";
-
   public static final String F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE = "linkedProfile";
 
   public static final String F_HYDRAULIC_DESCRIPTION = "description";
@@ -102,8 +100,6 @@ public class ISobekConstants
   public static final QName QN_HYDRAULIC_CONNECTION_NODE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_CONNECTION_NODE );
 
   public static final QName QN_HYDRAULIC_CROSS_SECTION_NODE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_CROSS_SECTION_NODE );
-
-  public static final QName QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH );
 
   public static final QName QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE );
 
@@ -252,10 +248,6 @@ public class ISobekConstants
   public static final String P_HYDRAULIC_SBK_STRUCTURE_WEIR = "SbkWeir";
 
   public static final QName QN_HYDRAULIC_SBK_STRUCTURE_WEIR = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_WEIR );
-
-  public static final String F_STRUCT_LINKS_TO_BRANCH = "linksToBranch";
-
-  public static final QName QN_STRUCT_LINKS_TO_BRANCH = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.F_STRUCT_LINKS_TO_BRANCH );
 
   public static final String P_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_HEIGHT = "crestHeight";
 
@@ -482,7 +474,7 @@ public class ISobekConstants
   public static final QName QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE_STRUCTURE_NODE_MEMBER = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.F_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE_STRUCTURE_NODE_MEMBER );
 
   public static final String NS_SOBEK_COMMON = "org.kalypso.model.wspm.sobek.common";
-  
+
   public static final String P_HYDRAULIC_SBK_STRUCTURE_TABLE_INTERPOLATION_PERIOD = "interpolationPeriod";
 
   public static final QName QN_HYDRAULIC_SBK_STRUCTURE_TABLE_INTERPOLATION_PERIOD = new QName( ISobekConstants.NS_SOBEK_COMMON, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_TABLE_INTERPOLATION_PERIOD );
@@ -494,6 +486,5 @@ public class ISobekConstants
   public static final String P_HYDRAULIC_SBK_STRUCTURE_TABLE_INTERPOLATION_TYPE = "interpolationType";
 
   public static final QName QN_HYDRAULIC_SBK_STRUCTURE_TABLE_INTERPOLATION_TYPE = new QName( ISobekConstants.NS_SOBEK_COMMON, ISobekConstants.P_HYDRAULIC_SBK_STRUCTURE_TABLE_INTERPOLATION_TYPE );
-
 
 }

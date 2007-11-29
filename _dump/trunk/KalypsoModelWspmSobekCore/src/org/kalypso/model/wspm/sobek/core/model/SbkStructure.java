@@ -87,7 +87,7 @@ public class SbkStructure extends AbstractNode implements ISbkStructure
    */
   public IBranch getLinkToBranch( )
   {
-    final Object objBranch = getFeature().getProperty( ISobekConstants.QN_STRUCT_LINKS_TO_BRANCH);
+    final Object objBranch = getFeature().getProperty( ISobekConstants.QN_LN_LINKS_TO_BRANCH );
     final Feature f;
     if( objBranch instanceof Feature )
       // this branch should never be reached according to the schema file
