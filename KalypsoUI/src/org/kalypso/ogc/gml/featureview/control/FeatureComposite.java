@@ -45,6 +45,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -629,7 +630,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       }
 
       final List<Entry> entryList = comboType.getEntry();
-      final Map<Object, String> comboEntries = new HashMap<Object, String>( entryList.size() );
+      final Map<Object, String> comboEntries = new LinkedHashMap<Object, String>( entryList.size() );
 
       if( ftp instanceof IValuePropertyType )
       {
