@@ -113,6 +113,12 @@
          <adapter
                type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls">
          </adapter>
+         <adapter
+               type="org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection">
+         </adapter>
+         <adapter
+               type="org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph">
+         </adapter>
       </factory>
    </extension>
 

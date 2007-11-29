@@ -45,7 +45,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -58,10 +57,10 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypso1d2d.pjt.map.MapUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.results.filters.NonMapDataResultViewerFilter;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -165,9 +164,10 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
 
       final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
+        @SuppressWarnings("synthetic-access")
         public IStatus execute( IProgressMonitor monitor )
         {
-          return addThemes( modell, results, factory, monitor );
+          return MapUtils.addThemes( modell, m_commandTarget, results, factory, monitor );
         }
       };
 
@@ -182,41 +182,4 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
 
   }
 
-  /**
-   * TODO: maybe move into helper class
-   */
-  @SuppressWarnings("deprecation")
-  protected IStatus addThemes( final IKalypsoLayerModell modell, final IResultMeta[] results, final IThemeConstructionFactory factory, final IProgressMonitor monitor )
-  {
-    monitor.beginTask( "Themen hinzufügen", results.length );
-
-    for( final IResultMeta resultMeta : results )
-    {
-      final IResultThemeConstructor themeCreator = factory.createThemeConstructor( resultMeta );
-      final ResultAddLayerCommandData[] datas = themeCreator.getThemeCommandData();
-      if( datas != null )
-      {
-        for( final ResultAddLayerCommandData data : datas )
-        {
-          if( modell != null )
-          {
-            final AddThemeCommand addThemeCommand = new AddThemeCommand( modell, data.getThemeName(), data.getResultType(), data.getFeaturePath(), data.getSource(), data.getStyleLinkType(), data.getStyle(), data.getStyleLocation(), data.getStyleType() );
-            addThemeCommand.addProperties( data.getProperties() );
-            m_commandTarget.postCommand( addThemeCommand, null );
-          }
-        }
-      }
-
-      // TODO:
-      // - create sub-themes for container results (also use filter for children)
-      // - ...
-
-      monitor.worked( 1 );
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
-    }
-
-    return Status.OK_STATUS;
-
-  }
 }

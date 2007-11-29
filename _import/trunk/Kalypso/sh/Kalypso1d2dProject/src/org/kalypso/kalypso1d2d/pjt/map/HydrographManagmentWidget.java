@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.map;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +90,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -101,6 +103,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard;
 import org.kalypsodeegree.model.feature.Feature;
@@ -111,6 +114,8 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -165,11 +170,21 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
   private final IMapModellListener m_mapModelListener = new MapModellAdapter()
   {
     /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
-    public void themeActivated( IMapModell source, IKalypsoTheme previouslyActive, IKalypsoTheme nowActive )
+    public void themeAdded( IMapModell source, IKalypsoTheme theme )
+    {
+      refreshThemeCombo();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     */
+    @Override
+    public void themeRemoved( IMapModell source, IKalypsoTheme theme, boolean lastVisibility )
     {
       refreshThemeCombo();
     }
@@ -180,6 +195,8 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
   private Button m_addHydrographCollectionButton;
 
   private Button m_removeHydrographCollectionButton;
+
+  private IWidget m_delegateWidget;
 
   public HydrographManagmentWidget( )
   {
@@ -352,15 +369,16 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       {
         final SelectCalcUnitForHydrographWizard addCalcUnitWizard = new SelectCalcUnitForHydrographWizard();
         addCalcUnitWizard.init( PlatformUI.getWorkbench(), new StructuredSelection() );
-
+        addCalcUnitWizard.setMapModel( (IKalypsoLayerModell) getMapPanel().getMapModell() );
         final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
         final IEvaluationContext context = handlerService.getCurrentState();
         final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
         final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, addCalcUnitWizard );
+
         if( wizardDialog2.open() == Window.OK )
         {
-
+          refreshThemeCombo();
         }
 
       }
@@ -493,6 +511,19 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     };
     addAction.setDescription( "Ganglinienort hinzufügen" );
 
+    final Action selectAction = new Action( "Select Hydrograph", removeID )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+       */
+      @Override
+      public void runWithEvent( final Event event )
+      {
+        handleHydrographSelected( event );
+      }
+    };
+    selectAction.setDescription( "Ganglinienort wählen" );
+
     final Action removeAction = new Action( "Remove Hydrograph", removeID )
     {
       /**
@@ -507,6 +538,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     removeAction.setDescription( "Ganglinienort löschen" );
 
     createButton( toolkit, parent, addAction );
+    createButton( toolkit, parent, selectAction );
     createButton( toolkit, parent, removeAction );
 
     final Action exportAction = new Action( "Export Hydrograph", exportID )
@@ -546,16 +578,25 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
   }
 
-  protected void handleHydrographRemoved( Event event )
+  protected void handleHydrographSelected( Event event )
   {
     // TODO Auto-generated method stub
 
   }
 
+  protected void handleHydrographRemoved( Event event )
+  {
+    // set widget
+    // RemoveHydrographWidget widget = new RemoveHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte entfernen",
+    // IHydrograph.QNAME, m_theme );
+    // setDelegate( widget );
+  }
+
   protected void handleHydrographAdded( Event event )
   {
-    // TODO Auto-generated method stub
-
+    // set widget
+    CreateHydrographWidget widget = new CreateHydrographWidget( "Ganglinienpunkte", "Punkte für Ganglinien hinzufügen", IHydrograph.QNAME, m_theme );
+    setDelegate( widget );
   }
 
   protected void handleHydrographJumpTo( )
@@ -566,11 +607,18 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     final GM_Object location = m_selectedHydrograph.getLocation();
 
     GM_Envelope scaledBox;
-    GM_Envelope envelope = null;
+    GM_Envelope envelope = GeometryUtilities.getEnvelope( location );
     if( location instanceof GM_Point )
     {
       GM_Point point = (GM_Point) location;
-      envelope = point.getEnvelope();
+      GM_Position position = point.getPosition();
+      final double newMaxX = position.getX() + 30;
+      final double newMinX = position.getX() - 30;
+      final double newMaxY = position.getY() + 30;
+      final double newMinY = position.getY() - 30;
+      GM_Position min = GeometryFactory.createGM_Position( newMinX, newMinY );
+      GM_Position max = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+      envelope = GeometryFactory.createGM_Envelope( min, max );
     }
     else if( location instanceof GM_Curve )
     {
@@ -580,7 +628,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
     if( envelope != null )
     {
-      scaledBox = GeometryUtilities.scaleEnvelope( envelope, 1.05 );
+      scaledBox = GeometryUtilities.scaleEnvelope( envelope, 1.1 );
       getMapPanel().setBoundingBox( scaledBox );
     }
   }
@@ -674,7 +722,6 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
     if( themesForCombo.size() > 0 )
     {
-
       final Control control = m_themeCombo.getControl();
       final ComboViewer themeCombo = m_themeCombo;
       control.getDisplay().asyncExec( new Runnable()
@@ -688,7 +735,6 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
           if( themesForCombo.size() > 0 )
             themeCombo.setSelection( new StructuredSelection( themesForCombo.get( 0 ) ) );
-
         }
       } );
     }
@@ -703,4 +749,54 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
+   */
+  @Override
+  public void moved( java.awt.Point p )
+  {
+    if( m_delegateWidget != null )
+      m_delegateWidget.moved( p );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
+   */
+  @Override
+  public void dragged( java.awt.Point p )
+  {
+    if( m_delegateWidget != null )
+      m_delegateWidget.dragged( p );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
+   */
+  @Override
+  public void leftClicked( java.awt.Point p )
+  {
+    if( m_delegateWidget != null )
+      m_delegateWidget.leftClicked( p );
+  }
+
+  private void setDelegate( final IWidget delegateWidget )
+  {
+    if( m_delegateWidget != null )
+      m_delegateWidget.finish();
+
+    m_delegateWidget = delegateWidget;
+
+    if( m_delegateWidget != null )
+      m_delegateWidget.activate( getCommandTarget(), getMapPanel() );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( Graphics g )
+  {
+    if( m_delegateWidget != null )
+      m_delegateWidget.paint( g );
+  }
 }

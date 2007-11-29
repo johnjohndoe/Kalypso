@@ -109,7 +109,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
   private IFile m_selectedResultFile;
 
-  public GenerateDifferenceResultTinWizard( IFolder scenarioFolder, final IScenarioResultMeta resultModel )
+  public GenerateDifferenceResultTinWizard( final IFolder scenarioFolder, final IScenarioResultMeta resultModel )
   {
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;

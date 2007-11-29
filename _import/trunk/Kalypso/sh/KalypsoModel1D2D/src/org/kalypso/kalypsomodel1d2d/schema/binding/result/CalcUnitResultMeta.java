@@ -49,8 +49,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -122,5 +124,43 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
       document.setMaxValue( maxValue );
 
     return document;
+  }
+
+  public boolean containsChildType( final DOCUMENTTYPE type )
+  {
+    final IFeatureWrapperCollection<IResultMeta> children = getChildren();
+    for( IResultMeta child : children )
+    {
+      if( child instanceof IDocumentResultMeta )
+      {
+        IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+        if( docResult.getDocumentType() == type )
+        {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta#getChild(org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE)
+   */
+  public IResultMeta getChild( DOCUMENTTYPE type )
+  {
+    final IFeatureWrapperCollection<IResultMeta> children = getChildren();
+    for( IResultMeta child : children )
+    {
+      if( child instanceof IDocumentResultMeta )
+      {
+        IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+        if( docResult.getDocumentType() == type )
+        {
+          return docResult;
+        }
+      }
+    }
+    return null;
+
   }
 }

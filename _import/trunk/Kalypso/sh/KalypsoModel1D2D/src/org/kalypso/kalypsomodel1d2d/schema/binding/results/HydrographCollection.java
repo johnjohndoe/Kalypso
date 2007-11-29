@@ -40,13 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Gernot Belger
+ * @author Thomas Jung
  */
 public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> implements IHydrographCollection
 {
@@ -58,6 +67,49 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
   public HydrographCollection( final Feature featureCol, final Class<IHydrograph> fwClass, final QName featureMemberProp )
   {
     super( featureCol, fwClass, featureMemberProp );
+  }
+
+  public IHydrograph findHydrograph( final GM_Position position, final double searchRectWidth )
+  {
+    final List<Feature> foundFeatures = findFeatures( position, searchRectWidth );
+    if( foundFeatures.isEmpty() )
+      return null;
+
+    double min = Double.MAX_VALUE;
+    IHydrograph nearest = null;
+    for( final Feature feature : foundFeatures )
+    {
+      final IHydrograph curNode = (IHydrograph) feature.getAdapter( IHydrograph.class );
+
+      GM_Object location = curNode.getLocation();
+      if( curNode instanceof GM_Point )
+      {
+        GM_Point point = (GM_Point) location;
+        final double curDist = position.getDistance( point.getPosition() );
+        if( min > curDist )
+        {
+          nearest = curNode;
+          min = curDist;
+        }
+      }
+    }
+    return nearest;
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<Feature> findFeatures( GM_Position position, double searchRectWidth )
+  {
+    final FeatureList nodeList = getWrappedList();
+    final double posX = position.getX();
+    final double posY = position.getY();
+    final double searchWidthHalf = searchRectWidth / 2;
+
+    final GM_Position minPos = GeometryFactory.createGM_Position( posX - searchWidthHalf, posY - searchWidthHalf );
+    final GM_Position maxPos = GeometryFactory.createGM_Position( posX + searchWidthHalf, posY + searchWidthHalf );
+    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
+
+    final List<Feature> foundFeatures = nodeList.query( reqEnvelope, null );
+    return foundFeatures;
   }
 
 }

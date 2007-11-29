@@ -38,23 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.results;
+package org.kalypso.kalypso1d2d.pjt.map;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * @author Gernot Belger
+ * @author Thomas Jung
  * 
  */
-public interface IHydrographCollection extends IFeatureWrapperCollection<IHydrograph>
+public class HydrographUtils
 {
-  public final static QName QNAME_PROP_HYDROGRAPH_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "hydrographMember" );
+  @SuppressWarnings("unchecked")
+  public static GM_Position getHydroPositionFromElement( final IFeatureWrapper2 modelElement )
+  {
+    try
+    {
+      /* Node: return its position */
+      final GM_Object geom;
+      if( modelElement instanceof IFE1D2DNode )
+        geom = ((IFE1D2DNode) modelElement).getPoint();
+      else
+        geom = null;
 
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "HydrographCollection" );
+      if( geom != null )
+        return geom.getCentroid().getPosition();
+    }
+    catch( final Throwable th )
+    {
+      th.printStackTrace();
+    }
 
-  public IHydrograph findHydrograph( final GM_Position position, final double searchRectWidth );
+    return null;
+  }
 }

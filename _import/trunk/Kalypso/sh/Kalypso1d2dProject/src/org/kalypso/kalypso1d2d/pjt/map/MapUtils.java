@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizards.imports.utils;
+package org.kalypso.kalypso1d2d.pjt.map;
 
 import java.awt.Color;
 import java.io.FileWriter;
@@ -9,14 +9,25 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Style;
+import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.wizards.imports.utils.StyleUtils;
+import org.kalypso.ui.wizards.results.IResultThemeConstructor;
+import org.kalypso.ui.wizards.results.IThemeConstructionFactory;
+import org.kalypso.ui.wizards.results.ResultAddLayerCommandData;
 
 /**
  * Utility class for creating GisMapView map files
@@ -131,4 +142,42 @@ public class MapUtils
         e.printStackTrace();
       }
   }
+
+  /**
+   * TODO: maybe move into helper class
+   */
+  @SuppressWarnings("deprecation")
+  public static IStatus addThemes( final IKalypsoLayerModell modell, final ICommandTarget commandTarget, final IResultMeta[] results, final IThemeConstructionFactory factory, final IProgressMonitor monitor )
+  {
+    monitor.beginTask( "Themen hinzufügen", results.length );
+
+    for( final IResultMeta resultMeta : results )
+    {
+      final IResultThemeConstructor themeCreator = factory.createThemeConstructor( resultMeta );
+      final ResultAddLayerCommandData[] datas = themeCreator.getThemeCommandData();
+      if( datas != null )
+      {
+        for( final ResultAddLayerCommandData data : datas )
+        {
+          if( modell != null )
+          {
+            final AddThemeCommand addThemeCommand = new AddThemeCommand( modell, data.getThemeName(), data.getResultType(), data.getFeaturePath(), data.getSource(), data.getStyleLinkType(), data.getStyle(), data.getStyleLocation(), data.getStyleType() );
+            addThemeCommand.addProperties( data.getProperties() );
+            commandTarget.postCommand( addThemeCommand, null );
+          }
+        }
+      }
+
+      // TODO:
+      // - create sub-themes for container results (also use filter for children)
+      // - ...
+
+      monitor.worked( 1 );
+      if( monitor.isCanceled() )
+        return Status.CANCEL_STATUS;
+    }
+    return Status.OK_STATUS;
+
+  }
+
 }

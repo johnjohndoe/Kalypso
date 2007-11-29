@@ -40,9 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -51,16 +65,33 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
+import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.results.filters.NonCalcUnitResultViewerFilter;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Thomas Jung
@@ -73,9 +104,11 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
 
   private IScenarioResultMeta m_resultModel;
 
-  private final IFolder m_scenarioFolder = null;
+  private IFolder m_scenarioFolder;
 
-  private final ICaseDataProvider<IModel> m_modelProvider = null;
+  private IKalypsoLayerModell m_mapModell;
+
+  private ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
   public SelectCalcUnitForHydrographWizard( )
   {
@@ -102,8 +135,164 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
   @Override
   public boolean performFinish( )
   {
-    // TODO Auto-generated method stub
-    return false;
+    /* collect all time step node results of the selected calc unit */
+
+    final SelectResultWizardPage page = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
+    final IResultMeta[] results = page.getSelectedResults();
+
+    // final List<IResultMeta> resultList = new LinkedList<IResultMeta>();
+
+    for( int i = 0; i < results.length; i++ )
+    {
+      final IResultMeta resultMeta = results[i];
+
+      IHydrographCollection newHydrograph;
+
+      if( resultMeta instanceof ICalcUnitResultMeta )
+      {
+
+        ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) resultMeta;
+        IDocumentResultMeta docResult;
+        // resultList.add( resultMeta );
+
+        try
+        {
+          // check, if a hydrograph was already created
+          if( !calcUnitResult.containsChildType( DOCUMENTTYPE.hydrograph ) )
+          {
+            /* create new hydrograph.gml */
+            Feature hydrographFeature = createNewHydrograph( calcUnitResult );
+            newHydrograph = (IHydrographCollection) hydrographFeature.getAdapter( IHydrographCollection.class );
+
+            // set a name
+            final String hydrographName = calcUnitResult.getName();
+            newHydrograph.setName( hydrographName );
+
+            /* create a resultMeta entry */
+            calcUnitResult.addDocument( "Ganglinien", "Ganglinien des Teilmodells", DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null );
+            IResultMeta child = calcUnitResult.getChild( DOCUMENTTYPE.hydrograph );
+            if( child == null )
+              return false;
+
+            docResult = (IDocumentResultMeta) child;
+
+            // check if hydrograph theme is already in the map
+            final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
+            for( IKalypsoTheme theme : allThemes )
+            {
+
+            }
+
+          }
+          else
+          {
+            IResultMeta child = calcUnitResult.getChild( DOCUMENTTYPE.hydrograph );
+            if( child == null )
+              return false;
+
+            docResult = (IDocumentResultMeta) child;
+            IPath docPath = docResult.getFullPath();
+            IFolder folder = m_scenarioFolder.getFolder( docPath );
+
+            final URL hydrographURL = ResourceUtilities.createURL( folder );
+            GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
+
+            final Feature hydrographFeature = w.getRootFeature();
+            newHydrograph = (IHydrographCollection) hydrographFeature.getAdapter( IHydrographCollection.class );
+
+          }
+
+          // add hydrograph theme to the map
+          addHydrographTheme( m_mapModell, newHydrograph, calcUnitResult );
+
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+          StatusUtilities.statusFromThrowable( e, "Fehler bei Ganglinienerzeugung" );
+          return false;
+        }
+      }
+    }
+    return true;
+
+  }
+
+  private Feature createNewHydrograph( ICalcUnitResultMeta calcUnitResult ) throws CoreException, InvocationTargetException, GmlSerializeException, IOException
+  {
+    // get a path
+    final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" );
+    final IFolder calcUnitFolder = m_scenarioFolder.getFolder( docPath );
+    if( !calcUnitFolder.exists() )
+      FolderUtilities.mkdirs( calcUnitFolder );
+
+    final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" );
+    final URL url = ResourceUtilities.createURL( gmlResultFile );
+
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IHydrographCollection.QNAME, url, null );
+    final Feature hydrographFeature = workspace.getRootFeature();
+    OutputStreamWriter writer = null;
+    try
+    {
+      writer = new OutputStreamWriter( new FileOutputStream( gmlResultFile.getLocation().toFile() ) );
+      GmlSerializer.serializeWorkspace( writer, workspace, "UTF-8" );
+      writer.close();
+
+      // refresh workspace
+      /* update resource folder */
+      gmlResultFile.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+
+      return hydrographFeature;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+  }
+
+  protected static void addHydrographTheme( IKalypsoLayerModell modell, final IHydrographCollection hydroCollection, ICalcUnitResultMeta calcResult ) throws Exception
+  {
+    { // Hydrograph
+      final StyledLayerType hydroLayer = new StyledLayerType();
+      String path = "../" + calcResult.getFullPath().toPortableString() + "/hydrograph/hydrograph.gml";
+
+      hydroLayer.setName( "Ganglinienpunkte (" + hydroCollection.getName() + ")" );
+      hydroLayer.setFeaturePath( "hydrographMember" );
+      hydroLayer.setLinktype( "gml" );
+      hydroLayer.setType( "simple" );
+      hydroLayer.setVisible( true );
+      hydroLayer.setActuate( "onRequest" );
+      hydroLayer.setHref( path );
+      hydroLayer.setVisible( true );
+      final Property layerPropertyDeletable = new Property();
+      layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
+      layerPropertyDeletable.setValue( "true" );
+
+      final Property layerPropertyThemeInfoId = new Property();
+      layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
+      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.HydrographThemeInfo?format=Ganglinienpunkt (" + hydroCollection.getName() + ") %.2f" );
+
+      final List<Property> layerPropertyList = hydroLayer.getProperty();
+      layerPropertyList.add( layerPropertyDeletable );
+      layerPropertyList.add( layerPropertyThemeInfoId );
+
+      final List<Style> styleList = hydroLayer.getStyle();
+      final Style style = new Style();
+      style.setLinktype( "sld" );
+      style.setStyle( "hydrographUserStyle" );
+      style.setActuate( "onRequest" );
+      style.setHref( styleLocationForHydrograph() );
+      style.setType( "simple" );
+      styleList.add( style );
+
+      modell.addLayer( hydroLayer );
+    }
+
+  }
+
+  private static String styleLocationForHydrograph( )
+  {
+    return "../styles/hydrograph/hydrograph.sld";
   }
 
   /**
@@ -120,8 +309,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
    */
   public void setMapModel( IKalypsoLayerModell modell )
   {
-    // TODO Auto-generated method stub
-
+    m_mapModell = modell;
   }
 
   /**
@@ -134,12 +322,12 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-
+    m_dataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      m_resultModel = m_dataProvider.getModel( IScenarioResultMeta.class );
     }
     catch( final CoreException e )
     {

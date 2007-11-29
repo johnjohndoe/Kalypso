@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
@@ -64,6 +65,14 @@ public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
       return null;
 
     return location;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph#setLocation(org.kalypsodeegree.model.geometry.GM_Point)
+   */
+  public void setLocation( GM_Point point )
+  {
+    getWrappedFeature().setProperty( QNAME_PROP_LOCATION, point );
   }
 
 }

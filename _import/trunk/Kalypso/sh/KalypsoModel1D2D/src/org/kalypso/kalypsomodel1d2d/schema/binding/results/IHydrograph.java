@@ -46,9 +46,11 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
+ * @author Thomas Jung
  */
 public interface IHydrograph extends IFeatureWrapper2
 {
@@ -57,4 +59,6 @@ public interface IHydrograph extends IFeatureWrapper2
   public static final QName QNAME_PROP_LOCATION = new QName( NS.GML3, "location" );
 
   public GM_Object getLocation( );
+
+  public void setLocation( GM_Point point );
 }

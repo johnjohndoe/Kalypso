@@ -81,4 +81,8 @@ public interface ICalcUnitResultMeta extends IResultMeta
 
   public IDocumentResultMeta addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue );
 
+  public boolean containsChildType( final DOCUMENTTYPE type );
+
+  public IResultMeta getChild( DOCUMENTTYPE hydrograph );
+
 }

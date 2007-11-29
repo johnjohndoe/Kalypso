@@ -56,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
@@ -74,6 +75,18 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class UtilMap
 {
+
+  /* predicate for kalypso feature themes */
+  private static final IKalypsoThemePredicate PREDICATE = new IKalypsoThemePredicate()
+  {
+    public boolean decide( IKalypsoTheme theme )
+    {
+      if( !(theme instanceof IKalypsoFeatureTheme) )
+        return false;
+
+      return true;
+    }
+  };
 
   /**
    * To get the map view. The view with the ID {@link MapView#ID} in the active workbench page is returned.
@@ -139,13 +152,24 @@ public class UtilMap
   {
     final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
     PlatformUI.getWorkbench().getDisplay().syncExec( waitForFeaturesLoading( mapModel ) );
-    final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
-    for( int i = 0; i < allThemes.length; i++ )
+
+    final IKalypsoTheme[] themes = mapModel.getAllThemes();
+
+    for( IKalypsoTheme theme : themes )
     {
-      final IKalypsoTheme kalypsoTheme = allThemes[i];
-      if( kalypsoTheme instanceof IKalypsoFeatureTheme )
-        result.add( (IKalypsoFeatureTheme) kalypsoTheme );
+      if( PREDICATE.decide( theme ) )
+        result.add( (IKalypsoFeatureTheme) theme );
+      else if( theme instanceof IMapModell )
+      {
+        final IKalypsoTheme[] allThemes = ((IMapModell) theme).getAllThemes();
+        for( final IKalypsoTheme kalypsoTheme : allThemes )
+        {
+          if( PREDICATE.decide( kalypsoTheme ) )
+            result.add( (IKalypsoFeatureTheme) kalypsoTheme );
+        }
+      }
     }
+
     return result;
   }
 
