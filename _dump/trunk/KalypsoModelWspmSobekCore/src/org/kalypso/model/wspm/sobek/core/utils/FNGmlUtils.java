@@ -240,5 +240,7 @@ public class FNGmlUtils
     /* link branch and profile */
     FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH, "#" + branch.getFeature().getId() );
     FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, "#" + profile.getId() );
+
+    node.getFeature().invalidEnvelope();
   }
 }

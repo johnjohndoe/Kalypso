@@ -161,7 +161,6 @@ public class FNCreateCrossSectionNode extends AbstractWidget
     try
     {
       final ISobekModelMember model = SobekModelMember.getModel();
-
       FNGmlUtils.createProfileNode( model, branch, snapPoint, crossSection );
     }
     catch( final Exception e )
