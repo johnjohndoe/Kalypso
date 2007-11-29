@@ -154,6 +154,7 @@ public class WorkspaceListenerBoundaryNodeWQRelation extends GmlWorkspaceListene
           {
             final String type = axis.getType();
             final BOUNDARY_TYPE boundaryType = node.getBoundaryType();
+            // $ANALYSIS-IGNORE
             if( boundaryType.toZmlString().equals( type ) )
             {
               delete = false;

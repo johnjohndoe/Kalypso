@@ -74,6 +74,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class FNGmlUtils
 {
+  // $ANALYSIS-IGNORE
   /**
    * @param curve
    *            geometry of branch

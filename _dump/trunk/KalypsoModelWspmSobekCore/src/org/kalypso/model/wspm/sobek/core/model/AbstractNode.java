@@ -120,6 +120,7 @@ public abstract class AbstractNode implements INode
     return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_STATION_NAME );
   }
 
+  // $ANALYSIS-IGNORE
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */

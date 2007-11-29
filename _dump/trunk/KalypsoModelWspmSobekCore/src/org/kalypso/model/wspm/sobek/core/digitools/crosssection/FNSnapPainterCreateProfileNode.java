@@ -195,6 +195,7 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
           m_lastSnappedCrossSection = profile.getKey();
 
           final Point point = MapUtilities.retransform( panel, pBranchSnap );
+          // $ANALYSIS-IGNORE
           g.drawRect( (int) point.getX() - 10, (int) point.getY() - 10, 20, 20 );
 
           return point;

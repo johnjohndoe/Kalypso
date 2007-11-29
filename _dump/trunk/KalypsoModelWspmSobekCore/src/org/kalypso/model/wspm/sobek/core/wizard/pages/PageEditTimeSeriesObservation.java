@@ -178,6 +178,7 @@ public class PageEditTimeSeriesObservation extends WizardPage
     {
       final QName qname = component.getValueTypeName();
 
+      // $ANALYSIS-IGNORE
       if( DATE_AXIS.equals( qname ) )
       {
         if( calendar != null )

@@ -140,6 +140,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       if( fLastfall == null )
         throw new IllegalStateException( "Calculation case is null" );
 
+      // $ANALYSIS-IGNORE
       if( lastfall.getFeature().equals( fLastfall ) )
         return new BoundaryNodeLastfallCondition( lastfall, this, member );
     }

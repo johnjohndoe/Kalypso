@@ -124,6 +124,7 @@ public class Branch implements IBranch
     FeatureUtils.deleteFeature( m_model.getWorkspace(), m_branch );
   }
 
+  // $ANALYSIS-IGNORE
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */

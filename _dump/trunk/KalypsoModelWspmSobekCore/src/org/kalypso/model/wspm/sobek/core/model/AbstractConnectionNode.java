@@ -159,6 +159,7 @@ public abstract class AbstractConnectionNode extends AbstractNode implements INo
             if( branch.getFeature().getId().equals( id ) )
               return branch.getFeature();
 
+          // $ANALYSIS-IGNORE
           return null;
         }
 

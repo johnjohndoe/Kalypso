@@ -211,6 +211,7 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
       if( ArrayUtils.contains( compare, type ) )
         if( !BOUNDARY_TYPE.eWQ.equals( boundary_type ) )
           return new IAxis[] { axis };
+        // $ANALYSIS-IGNORE
         else if( BOUNDARY_TYPE.eW.toZmlString().equals( type ) )
           myAxis[0] = axis;
         else if( BOUNDARY_TYPE.eQ.toZmlString().equals( type ) )
