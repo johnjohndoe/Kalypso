@@ -54,6 +54,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.vafada.swtcalendar.SWTCalendar;
+import org.vafada.swtcalendar.SWTCalendarEvent;
+import org.vafada.swtcalendar.SWTCalendarListener;
 
 /**
  * @author kuch
@@ -99,11 +102,11 @@ public class DateTimeDialog extends TitleAreaDialog
 
     composite.setLayoutData( data );
 
-    /* day */
-    final DateTime calendar = new DateTime( composite, SWT.CALENDAR );
-    calendar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
+    /* date */
+    final SWTCalendar calendar = new SWTCalendar( composite, SWT.FLAT );
+    calendar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
     if( m_preSettedDateTime != null )
-      preSetDateTime( m_preSettedDateTime, calendar );
+      calendar.setCalendar( m_preSettedDateTime );
 
     /* time of day */
     final Label lTime = new Label( composite, SWT.NONE );
@@ -115,13 +118,10 @@ public class DateTimeDialog extends TitleAreaDialog
       preSetDateTime( m_preSettedDateTime, time );
 
     /* listeners */
-    calendar.addSelectionListener( new SelectionAdapter()
+    calendar.addSWTCalendarListener( new SWTCalendarListener()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
+
+      public void dateChanged( final SWTCalendarEvent event )
       {
         setDateTime( calendar, time );
       }
@@ -154,11 +154,12 @@ public class DateTimeDialog extends TitleAreaDialog
     dateTime.setSeconds( calendar.get( Calendar.SECOND ) );
   }
 
-  protected void setDateTime( final DateTime calendar, final DateTime time )
+  protected void setDateTime( final SWTCalendar calendar, final DateTime time )
   {
-    final int day = calendar.getDay();
-    final int month = calendar.getMonth();
-    final int year = calendar.getYear();
+    final Calendar date = calendar.getCalendar();
+    final int day = date.get( Calendar.DAY_OF_MONTH );
+    final int month = date.get( Calendar.MONTH );
+    final int year = date.get( Calendar.YEAR );
 
     final int hours = time.getHours();
     final int minutes = time.getMinutes();

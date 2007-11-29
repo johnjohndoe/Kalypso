@@ -62,7 +62,7 @@ public class LastfallDateChooser
 {
   private final Set<Runnable> m_listener = new HashSet<Runnable>();
 
-  private GregorianCalendar m_calendar;
+  protected GregorianCalendar m_calendar;
 
   private Text m_text;
 
