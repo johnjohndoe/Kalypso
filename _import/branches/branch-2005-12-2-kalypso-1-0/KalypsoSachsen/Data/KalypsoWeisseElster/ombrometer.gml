@@ -11,10 +11,10 @@
       </Ort>
       <DWDID>42012</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420120"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420120#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9420120"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9420120#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/TS_Carlsfeld.zml"/>
@@ -34,10 +34,10 @@
       </Ort>
       <DWDID>43344</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433440"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433440#DAY"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433440"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433440#DAY"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/TS_Falkenstein.zml"/>
@@ -57,10 +57,10 @@
       </Ort>
       <DWDID>42006</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420060"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420060#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9420060"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9420060#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/TS_Muldenberg.zml"/>
@@ -80,10 +80,10 @@
       </Ort>
       <DWDID>43331</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433310"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433310#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433310"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433310#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/TS_Dröda.zml"/>
@@ -103,10 +103,10 @@
       </Ort>
       <DWDID>43436</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434360"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434360#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434360"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434360#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/TS_Windischleuba.zml"/>
@@ -126,10 +126,10 @@
       </Ort>
       <DWDID>43478</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434780"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434780#DAY"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434780"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434780#DAY"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/SP_Rötha.zml"/>
@@ -149,10 +149,10 @@
       </Ort>
       <DWDID>43499</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434990"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434990#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434990"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434990#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Borna_Speicher_Witznitz.zml"/>
@@ -172,10 +172,10 @@
       </Ort>
       <DWDID>41313</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...413130"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...413130#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9413130"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9413130#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Großbothen-Sermuth_Pumpwerk.zml"/>
@@ -195,10 +195,10 @@
       </Ort>
       <DWDID>43451</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434510"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434510#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434510"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434510#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Altmörbitz_Talsperre_Schömbach.zml"/>
@@ -218,10 +218,10 @@
       </Ort>
       <DWDID>43304</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433040"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433040#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433040"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433040#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Oelsnitz_Vogtl._Talsperre_Pirk.zml"/>
@@ -241,10 +241,10 @@
       </Ort>
       <DWDID>43338</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433380"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433380#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433380"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433380#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Pöhl-Jocketa_Talsperre.zml"/>
@@ -264,10 +264,10 @@
       </Ort>
       <DWDID>43336</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433360"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433360#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433360"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433360#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Werda_Talsperre_Geigenbach.zml"/>
@@ -287,10 +287,10 @@
       </Ort>
       <DWDID>43430</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434300"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434300#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434300"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434300#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Langenhessen_Koberbachtalsperre.zml"/>
@@ -310,10 +310,10 @@
       </Ort>
       <DWDID>42150</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...421500"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...421500#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9421500"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9421500#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Stollberg_Erzg._Talsperre.zml"/>
@@ -333,10 +333,10 @@
       </Ort>
       <DWDID>41644</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...416440"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...416440#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9416440"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9416440#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Brandis_Lysimeterstation.zml"/>
@@ -356,10 +356,10 @@
       </Ort>
       <DWDID>40013</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...400130"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...400130#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9400130"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9400130#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Klingenthal-Kamerun.zml"/>
@@ -379,10 +379,10 @@
       </Ort>
       <DWDID>41311</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...413110"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...413110#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9413110"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9413110#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Großbothen-Kleinbothen.zml"/>
@@ -402,10 +402,10 @@
       </Ort>
       <DWDID>41321</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...413210"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...413210#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9413210"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9413210#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Eilenburg.zml"/>
@@ -425,10 +425,10 @@
       </Ort>
       <DWDID>42013</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420130"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420130#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9420130"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9420130#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Carlsfeld.zml"/>
@@ -448,10 +448,10 @@
       </Ort>
       <DWDID>42030</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420300"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...420300#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9420300"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9420300#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Aue.zml"/>
@@ -471,10 +471,10 @@
       </Ort>
       <DWDID>42042</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...420420"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...420420#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9420420"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9420420#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Lichtentanne.zml"/>
@@ -494,10 +494,10 @@
       </Ort>
       <DWDID>42536</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...425360"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.4_MU.01OM...425360#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9425360"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.4_MU.01OM...9425360#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Schönwölkau-Brinnis.zml"/>
@@ -517,10 +517,10 @@
       </Ort>
       <DWDID>42544</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...425440"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...425440#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9425440"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9425440#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Leipzig_Flughafen.zml"/>
@@ -540,10 +540,10 @@
       </Ort>
       <DWDID>43019</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...430190"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...430190#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9430190"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9430190#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Hof_Stadt.zml"/>
@@ -563,10 +563,10 @@
       </Ort>
       <DWDID>43300</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433000"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433000#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433000"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433000#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Treuen.zml"/>
@@ -586,10 +586,10 @@
       </Ort>
       <DWDID>43301</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433010"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433010#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433010"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433010#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Elster_Bad-Sohl.zml"/>
@@ -609,10 +609,10 @@
       </Ort>
       <DWDID>43306</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433060"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433060#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433060"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433060#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Plauen.zml"/>
@@ -632,10 +632,10 @@
       </Ort>
       <DWDID>43316</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433160"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433160#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433160"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433160#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Gera-Leumnitz.zml"/>
@@ -655,10 +655,10 @@
       </Ort>
       <DWDID>43367</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433670"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433670#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433670"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433670#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Meuselwitz.zml"/>
@@ -678,10 +678,10 @@
       </Ort>
       <DWDID>43473</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434730"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434730#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434730"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434730#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Belgershain.zml"/>
@@ -701,10 +701,10 @@
       </Ort>
       <DWDID>42044</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...420440"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...420440#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9420440"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9420440#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Ponitz_Th.zml"/>
@@ -724,10 +724,10 @@
       </Ort>
       <DWDID>42140</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...421400"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...421400#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9421400"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9421400#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Leipzig-Holzhau..zml"/>
@@ -747,10 +747,10 @@
       </Ort>
       <DWDID>43006</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...430060"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...430060#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9430060"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9430060#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Hirschberg_Th.zml"/>
@@ -770,10 +770,10 @@
       </Ort>
       <DWDID>43156</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...431560"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...431560#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9431560"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9431560#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Schmieritz-W._Th.zml"/>
@@ -793,10 +793,10 @@
       </Ort>
       <DWDID>43173</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...431730"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...431730#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9431730"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9431730#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Bobeck_Th.zml"/>
@@ -816,10 +816,10 @@
       </Ort>
       <DWDID>43323</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433230"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433230#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433230"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433230#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Zeitz_S-A.zml"/>
@@ -839,10 +839,10 @@
       </Ort>
       <DWDID>43371</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433710"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...433710#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433710"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9433710#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Crossen-Nick._Th.zml"/>
@@ -862,10 +862,10 @@
       </Ort>
       <DWDID>43417</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434170"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...434170#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434170"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9434170#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Tegkwitz_Th.zml"/>
@@ -885,10 +885,10 @@
       </Ort>
       <DWDID>44224</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...442240"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...442240#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9442240"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9442240#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Osterfeld_S-A.zml"/>
@@ -908,10 +908,10 @@
       </Ort>
       <DWDID>43057</DWDID>
       <NRepository>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...430570"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.5_WE.01OM...430570#HOUR"/>
       </NRepository>
       <NRepository1>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9430570"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.5_WE.01OM...9430570#HOUR"/>
       </NRepository1>
       <N>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/Schleiz_Th.zml"/>
