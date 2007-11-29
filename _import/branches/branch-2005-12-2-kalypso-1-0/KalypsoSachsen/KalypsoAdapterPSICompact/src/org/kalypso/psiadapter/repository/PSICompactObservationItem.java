@@ -76,8 +76,11 @@ public class PSICompactObservationItem implements IObservation
    * 
    * @param valueType
    *          aus PSICompact Sicht (type 'measurement' or type 'value')
-   * @param metaData The object metadata as, got from {@link PSICompact#getObjectMetaData(java.lang.String)} for the <code>identifier</code>
-   * @param arcType One of the {@link PSICompact#ARC_DAY} constants.
+   * @param metaData
+   *          The object metadata as, got from {@link PSICompact#getObjectMetaData(java.lang.String)}for the
+   *          <code>identifier</code>
+   * @param arcType
+   *          One of the {@link PSICompact#ARC_DAY}constants.
    */
   public PSICompactObservationItem( final String name, final String id, final PSICompact.ObjectInfo info,
       final int valueType, final ObjectMetaData metaData, final int arcType ) throws ECommException
@@ -166,7 +169,6 @@ public class PSICompactObservationItem implements IObservation
         archiveStrings[i] = PSICompactUtilitites.getLabelForArcType( archiveData[i] );
       metadata.put( "vorhandene Archivetypen", Arrays.implode( archiveStrings, ", ", 0, archiveStrings.length - 1 ) );
 
-      
       metadata.put( TimeserieConstants.MD_GEWAESSER, m_objectMetaData.getRiver() );
       metadata.put( TimeserieConstants.MD_FLUSSGEBIET, m_objectMetaData.getRiversystem() );
     }
@@ -283,13 +285,16 @@ public class PSICompactObservationItem implements IObservation
     else
       dr = request.getDateRange();
 
-    if( m_values != null && dr.getFrom().compareTo( m_from ) == 0 && dr.getTo().compareTo( m_to ) == 0 )
+    final Date drFrom = dr.getFrom();
+    final Date drTo = dr.getTo();
+    
+    if( m_values != null && drFrom.compareTo( m_from ) == 0 && drTo.compareTo( m_to ) == 0 )
       return m_values;
 
     try
     {
-      m_from = dr.getFrom();
-      m_to = dr.getTo();
+      m_from = drFrom;
+      m_to = drTo;
 
       final PSICompact.ArchiveData[] data = PSICompactFactory.getConnection().getArchiveData( m_objectInfo.getId(),
           m_arcType, m_from, m_to );
@@ -439,10 +444,11 @@ public class PSICompactObservationItem implements IObservation
    *          The constant value for all archive datas.
    * @throws SensorException
    */
-  private SortedMap createExtendedArchiveDataMap( final Date begin, final Date end, final int status, final double value ) throws SensorException
+  private SortedMap createExtendedArchiveDataMap( final Date begin, final Date end, final int status, final double value )
+      throws SensorException
   {
-    final int stepAmount = PSICompactUtilitites.arcTypeToCalendarAmount(m_arcType);
-    final int stepField = PSICompactUtilitites.arcTypeToCalendarField(m_arcType);
+    final int stepAmount = PSICompactUtilitites.arcTypeToCalendarAmount( m_arcType );
+    final int stepField = PSICompactUtilitites.arcTypeToCalendarField( m_arcType );
 
     // TODO: how do we make sure that the start time fits to the PSICompact database raster of values?
     final Calendar stepper = Calendar.getInstance();
