@@ -43,6 +43,7 @@
        <gml:name>Zeitschritt Definition</gml:name>
        <om:resultDefinition xmlns:om="http://www.opengis.net/om">
         <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11885498675931">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
          <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
