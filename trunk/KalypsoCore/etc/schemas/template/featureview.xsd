@@ -130,6 +130,15 @@
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="fv:PropertyControlType">
+          <xs:sequence>
+            <xs:element name="format" type="xs:anyType" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>
+                  <p>The format for this textfield.</p>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
           <xs:attribute name="editable" type="xs:boolean" use="optional" default="true" />
         </xs:extension>
       </xs:complexContent>
@@ -277,6 +286,8 @@
           <xs:sequence>
             <xs:element ref="tv:gistableview" />
           </xs:sequence>
+          <xs:attribute name="showToolbar" type="xs:boolean" use="optional" default="false" />
+          <xs:attribute name="showContextMenu" type="xs:boolean" use="optional" default="true" />
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

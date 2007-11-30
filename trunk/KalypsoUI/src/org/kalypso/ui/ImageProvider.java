@@ -189,6 +189,8 @@ public class ImageProvider
 
   public static final ImageDescriptor IMAGE_FEATURE_NEW = ImageProvider.id( "icons/feature/gis_feature_neu.gif" );
 
+  public static final ImageDescriptor IMAGE_FEATURE_DELETE = ImageProvider.id( "icons/feature/gis_feature_delete.gif" );
+
   public static final ImageDescriptor IMAGE_FEATURE_LINKED = ImageProvider.id( "icons/feature/gis_feature_light.gif" );
 
   public static final ImageDescriptor IMAGE_FEATURE_RELATION_COMPOSITION = ImageProvider.id( "icons/feature/feature_link_composition.gif" );

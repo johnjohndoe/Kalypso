@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.typeHandler;
 
-
 /**
- * @author kuch
+ * Handler for double base types.
+ * 
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerDouble extends XsdBaseTypeHandler<Double>
 {
@@ -57,7 +58,7 @@ public class XsdBaseTypeHandlerDouble extends XsdBaseTypeHandler<Double>
   @Override
   public Double convertToJavaValue( final String xmlString )
   {
-    return Double.valueOf( xmlString );
+    return Double.valueOf( xmlString.replace( ",", "." ) );
   }
 
   /**

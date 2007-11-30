@@ -71,7 +71,7 @@ public class XsdDecimalGuiTypeHandler extends XsdBaseGuiTypeHandler
     if( element instanceof BigDecimal )
     {
       BigDecimal decimal = (BigDecimal) element;
-      return String.format( "%.2f", decimal.doubleValue() );
+      return String.format( "%.2f", decimal.doubleValue() ).replace( ",", "." );
     }
 
     return super.getText( element );
