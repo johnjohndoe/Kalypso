@@ -39,7 +39,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   {
     ORIENTATION_LEFT,
     ORIENTATION_RIGHT
-  };
+  }
 
   private static final Logger logger = Logger.getLogger( FE1D2DEdge.class.toString() );
 
@@ -320,15 +320,16 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    */
   public void setNode( int index, final IFE1D2DNode node ) throws IndexOutOfBoundsException
   {
+    m_nodes.getWrappedList().set( index, node.getGmlID() );
     m_nodes.set( index, node );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addNode(java.lang.String)
    */
-  public void addNode( String nodeID )
+  public void addNode( final String nodeID )
   {
-    FeatureList wrappedList = m_nodes.getWrappedList();
+    final FeatureList wrappedList = m_nodes.getWrappedList();
     wrappedList.add( nodeID );
 
     // changeing the nodes invalidates my geometry
@@ -501,10 +502,16 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
       {
         final GM_Point pointN1 = m_nodes.get( 0 ).getPoint();
         final GM_Point pointN2 = m_nodes.get( 1 ).getPoint();
+        final int coordinateDimension = Math.min( pointN1.getCoordinateDimension(), pointN2.getCoordinateDimension() );
         final double x = (pointN1.getX() + pointN2.getX()) / 2;
         final double y = (pointN1.getY() + pointN2.getY()) / 2;
-        final double z = (pointN1.getZ() + pointN2.getZ()) / 2;
-        getMiddleNode().setPoint( GeometryFactory.createGM_Point( x, y, z, pointN1.getCoordinateSystem() ) );
+        if( coordinateDimension > 2 )
+        {
+          final double z = (pointN1.getZ() + pointN2.getZ()) / 2;
+          getMiddleNode().setPoint( GeometryFactory.createGM_Point( x, y, z, pointN1.getCoordinateSystem() ) );
+        }
+        else
+          getMiddleNode().setPoint( GeometryFactory.createGM_Point( x, y, pointN1.getCoordinateSystem() ) );
       }
     }
   }

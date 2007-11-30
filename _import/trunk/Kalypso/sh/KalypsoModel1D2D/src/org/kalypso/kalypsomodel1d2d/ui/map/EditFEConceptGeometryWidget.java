@@ -102,7 +102,9 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
 
   private IFE1D2DNode m_snapNode = null;
 
-  private static final double SNAPPING_RADIUS = 0.5;
+  private IFE1D2DNode m_startNode;
+
+  private static final double SNAPPING_RADIUS = 0.1;
 
   public EditFEConceptGeometryWidget( )
   {
@@ -128,6 +130,17 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
   }
 
   /**
+   * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#leftPressed(java.awt.Point)
+   */
+  @Override
+  public void leftPressed( Point p )
+  {
+    final GM_Point currentPosition = MapUtilities.transform( m_mapPanel, p );
+    m_startNode = m_discModel.findNode( currentPosition, SNAPPING_RADIUS );
+    super.leftPressed( p );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#dragged(java.awt.Point)
    */
   @Override
@@ -139,12 +152,20 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
       return;
     }
     final GM_Point currentPosition = MapUtilities.transform( m_mapPanel, p );
-    final IFE1D2DNode snapNode = m_discModel.findNode( currentPosition, SNAPPING_RADIUS );
-    if( snapNode != null )
+    m_snapNode = m_discModel.findNode( currentPosition, SNAPPING_RADIUS );
+    if( m_snapNode != null )
     {
-      m_snapNode = snapNode;
-      final Point snappedPoint = MapUtilities.retransform( m_mapPanel, snapNode.getPoint() );
-      super.dragged( snappedPoint );
+      // avoid the start node and all middle nodes
+      if( !m_snapNode.equals( m_startNode ) && m_snapNode.getContainers().size() >= 2 )
+      {
+        final Point snappedPoint = MapUtilities.retransform( m_mapPanel, m_snapNode.getPoint() );
+        super.dragged( snappedPoint );
+      }
+      else
+      {
+        m_snapNode = null;
+        super.dragged( p );
+      }
     }
     else
       super.dragged( p );
@@ -178,6 +199,10 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
   @Override
   protected Collection<Feature> perform( )
   {
+    if( m_startNode == null )
+      return null;
+    if( m_snappingActive && m_snapNode != null && m_snapNode.equals( m_startNode ) )
+      return null;
     invalidateLists();
     final Collection<Feature> list = super.perform();
     for( final Feature feature : list )
@@ -188,9 +213,15 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
         final List<IFE1D2DNode> nodes = element.getNodes();
         for( final IFE1D2DNode node : nodes )
         {
-          if( m_snappingActive && m_snapNode != null && !m_snapNode.equals( node ) && node.getPoint().distance( m_snapNode.getPoint() ) <= SNAPPING_RADIUS)
+          if( node.equals( m_startNode ) && m_snappingActive && m_snapNode != null )
           {
-              m_discModel.replaceNode( node, m_snapNode );
+            m_discModel.replaceNode( node, m_snapNode );
+            final IFeatureWrapperCollection containers = m_snapNode.getContainers();
+            for( final Object containerObject : containers )
+            {
+              if( containerObject instanceof IFE1D2DEdge )
+                ((IFE1D2DEdge) containerObject).recalculateMiddleNodePosition();
+            }
           }
           else
           {
