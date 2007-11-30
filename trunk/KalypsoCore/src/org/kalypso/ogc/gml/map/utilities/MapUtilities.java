@@ -201,4 +201,5 @@ public class MapUtilities
 
     return MapUtilities.calculateWorldDistance( mapPanel, reference, distancePx );
   }
+
 }
