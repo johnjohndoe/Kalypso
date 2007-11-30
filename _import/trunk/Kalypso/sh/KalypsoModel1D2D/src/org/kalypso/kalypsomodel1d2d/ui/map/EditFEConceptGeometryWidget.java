@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,6 +63,7 @@ import org.kalypso.ogc.gml.map.widgets.EditGeometryWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -104,6 +106,8 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
 
   private IFE1D2DNode m_startNode;
 
+  private List<IFE1D2DNode> m_neighbourNodes = new ArrayList<IFE1D2DNode>();
+
   private static final double SNAPPING_RADIUS = 0.1;
 
   public EditFEConceptGeometryWidget( )
@@ -137,6 +141,37 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
   {
     final GM_Point currentPosition = MapUtilities.transform( m_mapPanel, p );
     m_startNode = m_discModel.findNode( currentPosition, SNAPPING_RADIUS );
+
+    // create the list of neighbour nodes to exclude from snapping into
+    // i.e. to prevent user to create zero-area polygons
+    m_neighbourNodes.clear();
+    if( m_startNode != null )
+    {
+      m_neighbourNodes.add( m_startNode );
+      final IFeatureWrapperCollection<IFeatureWrapper2> edgeContainers = m_startNode.getContainers();
+      for( final IFeatureWrapper2 edgeContainer : edgeContainers )
+      {
+        if( edgeContainer instanceof IFE1D2DEdge )
+        {
+          final IFE1D2DNode middleNode = ((IFE1D2DEdge) edgeContainer).getMiddleNode();
+          if( middleNode != null && !m_neighbourNodes.contains( middleNode ) )
+            m_neighbourNodes.add( middleNode );
+          final IFeatureWrapperCollection<IFeatureWrapper2> elementContainers = ((IFE1D2DEdge) edgeContainer).getContainers();
+          for( final IFeatureWrapper2 elementContainer : elementContainers )
+          {
+            if( elementContainer instanceof IFE1D2DElement )
+            {
+              final List<IFE1D2DNode> nodes = ((IFE1D2DElement) elementContainer).getNodes();
+              for( final IFE1D2DNode node : nodes )
+              {
+                if( !m_neighbourNodes.contains( node ) )
+                  m_neighbourNodes.add( node );
+              }
+            }
+          }
+        }
+      }
+    }
     super.leftPressed( p );
   }
 
@@ -155,8 +190,7 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
     m_snapNode = m_discModel.findNode( currentPosition, SNAPPING_RADIUS );
     if( m_snapNode != null )
     {
-      // avoid the start node and all middle nodes
-      if( !m_snapNode.equals( m_startNode ) && m_snapNode.getContainers().size() >= 2 )
+      if( isNodeSnappable() )
       {
         final Point snappedPoint = MapUtilities.retransform( m_mapPanel, m_snapNode.getPoint() );
         super.dragged( snappedPoint );
@@ -238,6 +272,19 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
     final GeometryRecalculator recalculator = new GeometryRecalculator( list, m_flowRelationsTheme );
     recalculator.fireChanges();
     return list;
+  }
+
+  private final boolean isNodeSnappable( )
+  {
+    if( m_snapNode == null )
+      return true;
+    // we don't want to snap to our neighbours
+    if( m_neighbourNodes.contains( m_snapNode ) )
+      return false;
+    // neither to some middle node
+    if( m_snapNode.getContainers().size() < 2 )
+      return false;
+    return true;
   }
 
   private final void invalidateLists( )
