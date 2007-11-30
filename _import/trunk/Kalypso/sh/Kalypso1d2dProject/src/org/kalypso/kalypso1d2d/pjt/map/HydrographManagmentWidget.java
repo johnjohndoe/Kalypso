@@ -580,16 +580,17 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
   protected void handleHydrographSelected( Event event )
   {
-    // TODO Auto-generated method stub
+    // set widget
+    SelectHydrographWidget widget = new SelectHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte selektieren", IHydrograph.QNAME, m_theme );
+    setDelegate( widget );
 
   }
 
   protected void handleHydrographRemoved( Event event )
   {
     // set widget
-    // RemoveHydrographWidget widget = new RemoveHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte entfernen",
-    // IHydrograph.QNAME, m_theme );
-    // setDelegate( widget );
+    RemoveHydrographWidget widget = new RemoveHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte entfernen", IHydrograph.QNAME, m_theme );
+    setDelegate( widget );
   }
 
   protected void handleHydrographAdded( Event event )
