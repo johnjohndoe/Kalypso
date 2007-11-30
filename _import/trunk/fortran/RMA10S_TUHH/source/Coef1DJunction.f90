@@ -1,4 +1,4 @@
-!Last change:  WP    9 Nov 2007    7:27 am
+!Last change:  WP   22 Nov 2007    8:34 pm
 SUBROUTINE COEF1DJunction (NN,NTX)
 
 
@@ -22,8 +22,10 @@ INTEGER :: i, j, k, n, m
 INTEGER :: IA, JA
 INTEGER :: PolyPos, findPolynom
 
-REAL (KIND = 8) :: SA, CX, R, XHT, dum2, aml
+REAL (KIND = 8) :: SA, CX, R, XHT
+real (kind = 4) :: dum2, aml
 REAL (KIND = 8) :: WSEL1, WSELX
+REAL (KIND = 8) :: calcpolynomial
 
 REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
 

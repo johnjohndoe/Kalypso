@@ -1,4 +1,4 @@
-!     Last change:  WP   15 Nov 2007   11:20 am
+!     Last change:  WP   28 Nov 2007   11:34 am
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -100,6 +100,14 @@ elseif (ErrorID == 1203) then
 elseif (ErrorID == 1204) then
   WRITE (ErrorUnit, 1204) ObjectID
   WRITE (        *, 1204) ObjectID
+
+elseif (ErrorID == 1205) then
+  WRITE (ErrorUnit, 1205) ObjectID
+  WRITE (        *, 1205) ObjectID
+
+elseif (ErrorID == 1206) then
+  WRITE (ErrorUnit, 1206)
+  WRITE (        *, 1206)
 
 elseif (ErrorID == 1301) then
   WRITE (ErrorUnit, 1301) ObjectID
@@ -211,6 +219,7 @@ end if
  1204 format (1x, 'ERROR - Element ', i5, " doesn't form a linear ring. Please "/ &
             & 1x, 'check the geometry!')
  1205 format (1x, 'ERROR - Element ', i5, ' is twisted. Rearrange the element!')
+ 1206 format (1x, 'ERROR - Too many transition elements', / 'Execution terminated!')
 
 !1300  Errors with arcs
 !****

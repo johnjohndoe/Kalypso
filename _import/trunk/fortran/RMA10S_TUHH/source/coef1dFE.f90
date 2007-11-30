@@ -1,4 +1,4 @@
-!Last change:  WP   14 Nov 2007    7:54 pm
+!Last change:  WP   22 Nov 2007    8:11 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -27,7 +27,7 @@ USE Para1DPoly
 SAVE
 
 !nis,aug07: for refactoring purposes
-REAL (KIND = 8) :: hs1, hd1, hsx, hdx, hs, hd
+REAL (KIND = 8) :: hs1, hd1, hsx, hdx, hs, hd, h
 REAL (KIND = 8) :: F
 
 !nis,feb07: Some definitions for internal use concerning the equation upsetting
@@ -42,9 +42,11 @@ REAL (KIND = 8) :: IntahRand
 REAL (KIND = 8) :: sbot
 
 REAL (KIND = 8) :: CalcPolynomial, CalcPolynomialIntegral, CalcPolynomial1stDerivative, CalcPolynomial2ndDerivative
+REAL (KIND = 8) :: speclocal
 
 INTEGER :: i, j, k, Pos
 INTEGER :: PPA, PPQ, PPB, findpolynom, PP(1:2)
+
 !new variables
 !BC-values
 REAL (KIND = 8) :: zsBC, dzsdhBC, fzsBC, dfzsdhBC
@@ -1347,8 +1349,10 @@ HBCAssign: DO L=1, NCN, 2
 
   IF(MOD(NFIX(N1)/100,10) .EQ. 2) THEN
 
+
+    speclocal = spec(n1, 3)
     !TODO: This should be replaced by a binary search
-    PPA = findPolynom (polyRangeA (n1, :), spec(n1, 3), PolySplitsA (n1))
+    PPA = findPolynom (polyRangeA (n1, :), speclocal, PolySplitsA (n1))
 
     !Do not apply differentiation by parts
     if (byparts == 1) then
@@ -1364,7 +1368,7 @@ HBCAssign: DO L=1, NCN, 2
       NA = (L-1) * ndf + 1
 
       !get required cross sectional flow area
-      ASoll = CalcPolynomial (apoly (PPA, n1, 0:12), spec(n1, 3))
+      ASoll = CalcPolynomial (apoly (PPA, n1, 0:12), speclocal)
 
       ppl   = grav * ASoll * rho* qfact(l)
       if (l == 1) ppl = -ppl
@@ -1383,7 +1387,7 @@ HBCAssign: DO L=1, NCN, 2
       NA = (L-1) * ndf + 1
 
       !find required cross sectional flow area
-      ASoll = CalcPolynomial (apoly (PPA, n1, 0:12), spec(n1, 3))
+      ASoll = CalcPolynomial (apoly (PPA, n1, 0:12), speclocal)
 
       ppl = grav * ASoll * rho * qfact(l)
 

@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP    8 Nov 2007    9:16 am
+C     Last change:  WP   22 Nov 2007    7:51 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -1022,20 +1022,6 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 
       !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
       ELSEIF (ORT(NR,5) < 0.0) THEN
-
-!nis,testing
-!        WRITE(*,'(a7,i5)') '  elt: ', nn
-!        WRITE(*,'(a7,2(1x,f7.4))')
-!     +        'cniku: ', cniku(nn), correctionKS(nn)
-!        WRITE(*,'(a7,2(1x,f7.4))')
-!     +        'durch: ', durchbaum(nn), correctionDp(nn)
-!        WRITE(*,'(a7,2(1x,f7.4))')
-!     +        ' abst: ', abst(nn), correctionAxAy(nn)
-!        pause
-!-
-
-
-
 
         !calculate lambda
         !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used

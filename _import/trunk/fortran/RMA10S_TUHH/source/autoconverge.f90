@@ -1,4 +1,4 @@
- !     Last change:  WP   14 Nov 2007    6:38 pm
+ !     Last change:  WP   22 Nov 2007    7:56 pm
  SUBROUTINE autoconverge(noc)
 
  USE blk10
@@ -992,7 +992,7 @@
 
       else
 
-        call ErrorMessageAndStop(4101, 0, 0.0, 0.0)
+        call ErrorMessageAndStop(4101, 0, 0.0D0, 0.0D0)
 
       endif
 

@@ -6,7 +6,7 @@ cipk  last update Mar 23 1998
 cipk  last update Nov 26 1997
 cipk  last update Oct 29 1996
 CIPK  LAST UPDATE OCT 16 1996
-C     Last change:  WP   20 Sep 2007    4:57 pm
+C     Last change:  WP   22 Nov 2007    8:28 pm
 cipk  last updated April 25 1996
 CIPK  LAST UPDATED SEP7 1995
       SUBROUTINE GETBC(IBIN)
@@ -77,7 +77,7 @@ CIPK SEP04 CREATE ERROR FILE
           !nis,sep07
           !ERROR - ERROR IN DYNAMIC BOUNDARY CONDITION FILES
           CALL ZVRS(1)
-          call ErrorMessageAndStop(1402, 0, 0.0, 0.0)
+          call ErrorMessageAndStop(1402, 0, 0.0d0, 0.0d0)
           !-
         ENDIF
       IBIN=IBUP

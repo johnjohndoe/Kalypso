@@ -1,4 +1,4 @@
-C     Last change:  WP   14 Nov 2007    8:00 pm
+C     Last change:  WP   22 Nov 2007    8:33 pm
 cipk  last update nov 28 2006 allow for all 1-d control structure options
       SUBROUTINE CSTRC(NN)
       USE BLK10MOD
@@ -17,7 +17,8 @@ C-
       DIMENSION U(8)
 
 !NiS,jul06: Declaring waterlevel H for proper call of amf-subroutine
-      REAL(KIND=8) :: WH1, WH2
+      REAL (KIND = 8) :: WH1, WH2
+      REAL (KIND = 8) :: calcPolynomial, calcPolynomial1stDerivative
       INTEGER :: PolyPos(1:2), findpolynom
       INTEGER :: NodA, NodB
 !-

@@ -1,4 +1,4 @@
-C     Last change:  WP   15 Nov 2007    3:52 pm
+C     Last change:  WP   22 Nov 2007    8:00 pm
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -33,6 +33,8 @@ cipk jul01 add line above
 !NiS,jul06: Adding WAITTH and WAITRH for consistency in common block defintion
 !      REAL*8 WAITX,WAITT,WAITR
       REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
+
+      REAL (kind = 8) :: TempArea, calcPolynomial
 !-
       INTEGER :: PolyPos, findpolynom
 !nis,nov06: For line connections

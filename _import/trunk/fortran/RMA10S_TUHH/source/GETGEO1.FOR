@@ -1,4 +1,4 @@
-C     Last change:  WP   14 Nov 2007    6:31 pm
+C     Last change:  WP   22 Nov 2007    8:28 pm
 CNis  LAST UPDATE MAR  XX 2006 Adding capabilities for Kalypso-2D-network-files
 CIPK  LAST UPDATE JUNE 25 2005 RESET LOWER LIMIT
       SUBROUTINE GETGEO1
@@ -101,9 +101,9 @@ cipk feb01 lahey version        READ (IFILE,ERR=63)
       !nis,sep07
       !ERROR - SUSPICIOUSLY LARGE NODE NUMBER OR ELEMENT NUMBER DETECTED
       IF(N .GT. 500000) then
-        call ErrorMessageAndStop(1102, N, 0.0, 0.0)
+        call ErrorMessageAndStop(1102, N, 0.0d0, 0.0d0)
       ELSEIF (M .GT. 500000) THEN
-        call ErrorMessageAndStop(1201, M, 0.0, 0.0)
+        call ErrorMessageAndStop(1201, M, 0.0d0, 0.0d0)
       endif
       !-
 

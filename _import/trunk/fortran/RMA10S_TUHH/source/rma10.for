@@ -1,4 +1,4 @@
-C     Last change:  WP    9 Nov 2007    8:09 am
+C     Last change:  WP   30 Nov 2007   11:43 am
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -47,6 +47,7 @@ cipk aug98 add character statement
       !-
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: VTM, HTP, VH, H, HS
+      CHARACTER (LEN = 96) :: outputFileName, inputFileName
 !-
 
 !nis,jan07: iostat variable for test writing purposes
@@ -473,7 +474,10 @@ CIPK NOV97      IF(NCONV .EQ. 1) GO TO 350
           IF (IKALYPSOFM /= 0) THEN
             WRITE(*,*)' Entering write_Kalypso',
      +                ' steady state, after Iteration = ',maxn
-            CALL write_KALYPSO
+            call generate2DFileName('stat', niti, 0, 0, maxn, modellaus,
+     +                                modellein, modellrst, ct, nb,
+     +                                outputFileName, inputFileName)
+            CALL write_KALYPSO (outputFileName, 'resu')
             WRITE(*,*)'back from write_kalypso'
           END IF
         ENDIF
@@ -569,7 +573,10 @@ CIPK MAR00
         MAXN = 0.
         WRITE(*,*)' Entering write_Kalypso',
      +            ' for STEADY STATE SOLUTION.'
-        call write_KALYPSO
+        call generate2DFileName('stat', niti, 0, 0, maxn, modellaus,
+     +                           modellein, modellrst, ct, nb,
+     +                           outputFileName, inputFileName)
+        CALL write_KALYPSO (outputFileName, 'resu')
         WRITE(*,*)'back from write_kalypso'
         MAXN = temp_maxn
       END IF
@@ -1077,6 +1084,9 @@ CIPK JAN97 END CHANGES
 
 
         CALL UPDATE
+        call FindMinMaxValues (MaxP)
+
+
 
       !EFa jul07, necessary for autoconverge
       if (exterr.eq.1.0) then
@@ -1180,7 +1190,10 @@ C      END OF ITERATION LOOP
             WRITE(*,*)' Entering write_Kalypso',
      +                ' dynamic at time step ', icyc+iaccyc-1,
      +                ' after Iteration = ',maxn
-              call write_KALYPSO
+            call generate2DFileName
+     +         ('inst', niti, icyc, iaccyc, maxn, modellaus, modellein,
+     +         modellrst, ct, nb, outputFileName, inputFileName)
+            CALL write_KALYPSO (outputFileName, 'resu')
             WRITE(*,*)'back from write_kalypso'
             ENDIF
           ENDIF
@@ -1335,8 +1348,20 @@ c      14   VSING subscript(7)  water column potential by node
               MAXN = 0.
               WRITE(*,*)' Entering write_Kalypso',
      +            ' after dynamic time step ', icyc+iaccyc-1
-              call write_KALYPSO
-              WRITE(*,*)'back from write_kalypso'
+              call generate2DFileName
+     +          ('inst', niti, icyc, iaccyc, maxn, modellaus, modellein,
+     +          modellrst, ct, nb, outputFileName, inputFileName)
+              CALL write_KALYPSO (outputFileName, 'resu')
+              WRITE (*,*)'back from write_kalypso'
+              !every timestep min and max result files are overwritten to have the last
+              call generate2DFileName
+     +          ('mini', 0, icyc, iaccyc, maxn, modellaus, modellein,
+     +          modellrst, ct, nb, outputFileName, inputFileName)
+              call write_Kalypso (outputFileName, 'mini')
+              call generate2DFileName
+     +          ('maxi', 0, icyc, iaccyc, maxn, modellaus, modellein,
+     +          modellrst, ct, nb, outputFileName, inputFileName)
+              call write_Kalypso (outputFileName, 'maxi')
             END IF
 !-
 CIPK AUG02
@@ -1586,3 +1611,37 @@ CIPK SEP02 ADD RESTART DATA FOR BED
 CIPK JUL01      STOP
       RETURN
       END
+
+
+!**************************************************
+      subroutine FindMinMaxValues(Points)
+      USE blk10mod
+      USE parakalyps
+
+      implicit none
+
+      INTEGER :: i
+      INTEGER, intent (IN) :: Points
+
+      do i = 1, Points
+        if (SQRT (vel(1,i)**2 + vel(2,i)**2) >
+     +            SQRT (maxvel(1,i)**2 + maxvel(2,i)**2)) then
+          maxvel (1, i) = vel (1, i)
+          maxvel (2, i) = vel (2, i)
+        end if
+        if (SQRT (vel(1,i)**2 + vel(2,i)**2) <
+     +            SQRT (minvel(1,i)**2 + minvel(2,i)**2)) then
+          minvel (1, i) = vel (1, i)
+          minvel (2, i) = vel (2, i)
+        end if
+        if (vel (3, i) > maxvel (3, i)) then
+          maxvel (3, i) = vel (3, i)
+          maxrausv (i) = rausv (3, i)
+        end if
+        if (vel (3, i) < minvel (3, i)) then
+          minvel (3, i) = vel (3, i)
+          minrausv (i) = rausv (3, i)
+        end if
+      end do
+
+      end subroutine

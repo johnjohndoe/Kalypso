@@ -1,4 +1,4 @@
-C     Last change:  WP   14 Nov 2007    6:31 pm
+C     Last change:  WP   28 Nov 2007    1:58 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -143,18 +143,6 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
 
 
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
-
-!nis,may07
-!Add midside node for polynom approach
-!      !nis,feb07: Calculate minimum node number for particular calculations with Flow1DFE elements
-!      if ((FFFMS+AddMS) /= 0) then
-!        minNoNu = (-1) * (1000 + FFFMS + AddMS)
-!      else
-!        minNoNu = 1
-!      end if
-!      !-
-!Add midside node for polynom approach
-!-
 
       ALLOCATE (CORDS(MAXP,3),NBC(MAXP,7),SPEC(MAXP,7),ITAB(MAXP),
      1              ALFA(MAXP),VOLD(7,MAXP),
@@ -966,6 +954,17 @@ CIPK MAR01
         end do
       end do
       !-
+
+      ALLOCATE (minvel (1:3, 1:maxp), maxvel (1:3, 1:maxp))
+      allocate (minrausv (1:MaxP), maxrausv (1:MaxP))
+      do i = 1, maxp
+        minrausv (i) = 100000.0d0
+        maxrausv (i) = 0.0d0
+        do j = 1, 3
+          maxvel (j, i) = 0.0d0
+          minvel (j, i) = 100000.0d0
+        end do
+      end do
 
       !EFa jul07, added istab for stage-flow boundaries (table)
       ALLOCATE(istab(maxp))

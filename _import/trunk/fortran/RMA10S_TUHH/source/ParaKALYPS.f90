@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Oct 2007    9:11 am
+!     Last change:  WP   28 Nov 2007    2:00 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -12,6 +12,7 @@ INTEGER   :: IVEGETATION
 !               from the main program RMA10, because the arrays are dependent on the network size.
 INTEGER 		  :: iauslp, iausnpm
 REAL(KIND=4), allocatable :: rausv(:,:), zeigma(:)
+REAL (KIND = 8), ALLOCATABLE :: minvel (:,:), maxvel (:,:), minrausv(:), maxrausv(:)
 !-
 
 !NiS,apr06:     arrays for neighbourhood relations.

@@ -1,4 +1,4 @@
-!     Last change:  WP   15 Nov 2007   10:50 am
+!     Last change:  WP   29 Nov 2007   11:49 am
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -491,7 +491,7 @@ ENDDO orderloop
 
 !ERROR - Reordering could not be fullfilled
 IF (mpp.le.mpq) then
-  call ErrorMessageAndStop (3501, 0, 0.0, 0.0)
+  call ErrorMessageAndStop (3501, 0, 0.0d0, 0.0d0)
 ENDIF
 
 DO n = 1, nepem
@@ -1092,7 +1092,7 @@ reading: do
   if (istat == -1) EXIT reading
 
   !ERROR - reading error
-  if (istat /= 0) call ErrorMessageAndStop(1001, unit_nr, 0.0, 0.0)
+  if (istat /= 0) call ErrorMessageAndStop(1001, unit_nr, 0.0d0, 0.0d0)
 
 !NiS,apr06: first half of reading-DO-LOOP enables to read geometry informations (KSWIT.eq.{0,1}), later the RESTART informations are enabled
 !           to be read (KSWIT.eq.2); some ID-lines are disabled, that are necessary for Kalypso-2D; against that some new ID-lines are added for
@@ -1132,7 +1132,7 @@ reading: do
         IF (i.gt.nodecnt) nodecnt = i
 
         !ERROR
-        IF (i <= 0) call ErrorMessageAndStop (1002, i, 0.0, 0.0)
+        IF (i <= 0) call ErrorMessageAndStop (1002, i, 0.0d0, 0.0d0)
 
       ENDIF
     ENDIF
@@ -1165,7 +1165,7 @@ reading: do
         IF (i > arccnt) arccnt = i
 
         !ERROR - negative arc number
-        IF (i <= 0) call ErrorMessageAndStop (1301, i, 0.0, 0.0)
+        IF (i <= 0) call ErrorMessageAndStop (1301, i, 0.0d0, 0.0d0)
 
       ENDIF
     ENDIF
@@ -1188,28 +1188,34 @@ reading: do
     !polyrange = maximum values
     if (linie(1:3) .eq. 'PRA') then
       IF (KSWIT == 1) then
-        read (linie, *) id_local, i, j
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, j
         if (PolySplitCountA < j) PolySplitCountA = j
       else
-        read (linie, *) id_local, i, polySplitsA(i), hhmin(i), (polyrangeA(i, k), k=1, polySplitsA(i))
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, polySplitsA(i), hhmin(i), (polyrangeA(i, k), k=1, polySplitsA(i))
         hhmax(i) = polyrangeA (i, polySplitsA(i))
       endif
     end if
     if (linie(1:3) .eq. 'PRQ') then
       IF (KSWIT == 1) then
-        read (linie, *) id_local, i, j
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, j
         if (PolySplitCountQ < j) PolySplitCountQ = j
       else
-        read (linie, *) id_local, i, polySplitsQ(i), hhmin(i), (polyrangeQ(i, k), k=1, polySplitsQ(i))
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, polySplitsQ(i), hhmin(i), (polyrangeQ(i, k), k=1, polySplitsQ(i))
         hhmax(i) = polyrangeQ (i, polySplitsQ(i))
       endif
     end if
     if (linie(1:3) .eq. 'PRB') then
       IF (KSWIT == 1) then
-        read (linie, *) id_local, i, j
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, j
         if (PolySplitCountB < j) PolySplitCountB = j
       else
-        read (linie, *) id_local, i, polySplitsB(i), hhmin(i), (polyrangeB(i, k), k=1, polySplitsB(i))
+        linestat = 0
+        read (linie, *, iostat = linestat) id_local, i, polySplitsB(i), hhmin(i), (polyrangeB(i, k), k=1, polySplitsB(i))
         hhmax(i) = polyrangeB (i, polySplitsB(i))
         hbordv (i) = polyrangeB (i, 1)
       endif
@@ -1398,14 +1404,14 @@ reading: do
           read (linie, '(a2,5i10)') id_local, i, imat(i), imato(i), nfixh(i), reweir(weircnt,1)
 
           !ERROR - no starting node for weir element definition was found
-          if (reweir (weircnt, 1) <= 0) call ErrorMessageAndStop (1003, i, 0.0, 0.0)
+          if (reweir (weircnt, 1) <= 0) call ErrorMessageAndStop (1003, i, 0.0d0, 0.0d0)
 
           reweir (weircnt, 2) = i
         end if
 !-
         IF (i > elcnt) elcnt = i
 
-        IF (i <= 0) call ErrorMessageAndStop (1004, i, 0.0, 0.0)
+        IF (i <= 0) call ErrorMessageAndStop (1004, i, 0.0d0, 0.0d0)
       ENDIF
     ENDIF
 
@@ -1423,7 +1429,7 @@ reading: do
 
         IF (i > elcnt) elcnt = i
 
-        IF (i <= 0) call ErrorMessageAndStop (1005, i, 0.0, 0.0)
+        IF (i <= 0) call ErrorMessageAndStop (1005, i, 0.0d0, 0.0d0)
 
       ENDIF
     ENDIF
@@ -1605,7 +1611,7 @@ reading: do
 
   ELSE !other values of KSWIT will generate an error, this can't happen normally
 
-    call ErrorMessageAndStop (1006, kswit, 0.0, 0.0)
+    call ErrorMessageAndStop (1006, kswit, 0.0d0, 0.0d0)
 
   ENDIF KSWITTEST 
 
@@ -1649,7 +1655,7 @@ endif
 IF (KSWIT == 1) THEN
 
   !ERROR - midside node ID was defined but it has no coordinates-definition. This is a problem, because the count of the nodes is then wrong
-  IF (midsidenode_max > nodecnt) call ErrorMessageAndStop (1108, midsidenode_max, 0.0, 0.0)
+  IF (midsidenode_max > nodecnt) call ErrorMessageAndStop (1108, midsidenode_max, 0.0d0, 0.0d0)
 
   !INFORMATIONS
   WRITE(*,*) '          In RDKALYPS.Info '
@@ -1841,7 +1847,7 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
     !IF (jnum.lt.3) THEN
 
     !ERROR - element has less than 3 arcs, which is not possible
-    IF (jnum == 1 .or. jnum == 2) call ErrorMessageAndStop (1203, i, 0.0, 0.0)
+    IF (jnum == 1 .or. jnum == 2) call ErrorMessageAndStop (1203, i, cord(arc (elem (i, 2), 5), 1) , cord(arc (elem (i, 2), 5), 2))
 
 
     ! erste Kante:                                                  !starting with the first arc, the element's nodes in anticlockwise direction
@@ -1867,7 +1873,7 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
     ! weitere Kanten:                                       	    !The other two or three arcs defining the actual element i are analysed from
 2222   l = l + 1                                               	    !this point on. The jumpmark 2222 is somthing like a do loop.
     IF (l.gt.jnum) THEN                                       	    !The first if-case checks whether the actual arc l is the last one to define
-      IF (elkno (1) .ne. elkno (l)) call ErrorMessageAndStop (1204, i, 0.0, 0.0)
+      IF (elkno (1) .ne. elkno (l)) call ErrorMessageAndStop (1204, i, 0.0d0, 0.0d0)
 
       GOTO 2444
     END IF
@@ -1893,7 +1899,7 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
 
 
     !ERROR - Element is not forming a linear ring
-    call errorMessageAndStop (1204, i, 0.0, 0.0)
+    call errorMessageAndStop (1204, i, 0.0d0, 0.0d0)
 
   ! Element O.K.
 2444 CONTINUE                                                       !If everything is okay, the cornernodes will be entered in the nop-array
@@ -1907,7 +1913,7 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
       IF (mikno (j) .gt.0) then
 
         !ERROR - midside node ID is higher than maximum node ID; that doesn't work
-        IF (mikno (j) > nodecnt) call errorMessageAndStop (1109, mikno (j), 0.0, 0.0)
+        IF (mikno (j) > nodecnt) call errorMessageAndStop (1109, mikno (j), 0.0d0, 0.0d0)
 
         nop (i, j * 2) = mikno (j)
       ENDIF

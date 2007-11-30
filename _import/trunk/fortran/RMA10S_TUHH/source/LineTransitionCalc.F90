@@ -1,4 +1,4 @@
-!     Last change:  WP    9 Nov 2007    7:28 am
+!     Last change:  WP   22 Nov 2007    8:32 pm
 subroutine TransVelDistribution
 
 !description
@@ -21,6 +21,7 @@ USE Para1DPoly
 INTEGER            :: TransLi, TransNo
 INTEGER            :: PolyPos, findpolynom
 real               :: TransVel, CSArea, Discharge, localVel
+REAL (KIND = 8)    :: calcPolynomial
 REAL (KIND = 8)    :: TransDep
 CHARACTER (LEN=26) :: filename_out
 

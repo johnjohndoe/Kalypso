@@ -1,4 +1,4 @@
-!     Last change:  WP    8 Nov 2007   10:45 am
+!     Last change:  WP   28 Nov 2007    2:40 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -35,7 +35,7 @@
 !
 
 !NiS,apr06: changed name for application in RMA10S; intent is to make it a meaningful name
-SUBROUTINE write_KALYPSO
+SUBROUTINE write_KALYPSO (nameout, resulttype)
 !-
 
 !
@@ -78,8 +78,8 @@ INTEGER              :: DefLine                        !Number of lines, that ne
 INTEGER              :: lile, Rest, Startnode, NoLines
 
 !NiS,apr06: changing length of variable, because the length of filenames in RMA10S is 96.
-!CHARACTER(LEN=80) :: nameout, namein
-CHARACTER(LEN=96)    :: nameout, namein
+CHARACTER (LEN = 96), INTENT (IN) :: nameout!, namein
+CHARACTER (LEN =  4), INTENT (IN) :: resulttype
 
 INTEGER              :: istat                          !Variable for I/O errors
 !NiS,apr06: Adding missing declarations for good programming practice:
@@ -105,9 +105,7 @@ ALLOCATE (Trans_nodes(MaxT,6))
 !NiS,may06: initializing the trans_els variable
 trans_els = 0
 
-nameout = ' '
-namein = ' '
-                                                                        
+
 !--------------- Umwandlung in Kantenstruktur --------------------------
                                                                         
 nodecnt = np
@@ -152,51 +150,22 @@ END DO
 
         !1D-ELEMENTS or 1D-2D-TRANSITION ELEMENTS
         IF (nnum .eq. 3 .or. nnum .eq. 5) THEN
-!nis,may07
-!Add midside node for polynom approach
-!          !midside node
+          !!midside node
           k = nop (nelem, 2)
-!          !no midside node assigned to arcmid yet:
-!
-!          !nis,feb07: Allow for numbered FFF midsides
-!          !IF (arcmid (k, 3) .eq. 0.and.k.NE.-9999) THEN
-!          IF (arcmid (k, 3) .eq. 0 .and. k > -1000) THEN
-!          !-
-            arcmid (k, 1) = nop (nelem, 1)
-            arcmid (k, 2) = nop (nelem, 3)
-            arcmid (k, 3) = nelem
-            arcmid (k, 4) = nelem
-!            arcmid (k, 5) = nop (nelem, 2)
-!          !EFa Dec06, Test der Fallunterscheidung
-!          !nis,feb07: Allow for numbered FFF midsides
-!          !ELSEIF (arcmid (nelem, 3) .eq. 0 .and. k.eq.-9999) then
-!          ELSEIF (arcmid (k, 3) .eq. 0 .and. k < -1000) then
-!          !-
-!            arcmid (k, 1) = nop (nelem, 1)
-!            arcmid (k, 2) = nop (nelem, 3)
-!            arcmid (k, 3) = nelem
-!            arcmid (k, 4) = nelem
-!            !nis,feb07: Enter the negative midside number
-!            !arcmid (nelem, 5) = -9999
-!            arcmid (k, 5) = k
-!            !-
-!          ENDIF
-!Add midside node for polynom approach
-!-
+
+          arcmid (k, 1) = nop (nelem, 1)
+          arcmid (k, 2) = nop (nelem, 3)
+          arcmid (k, 3) = nelem
+          arcmid (k, 4) = nelem
+
           !Save informations for 1D-2D-TRANSITION ELEMENTS
           IF (nnum .eq. 5) THEN
-            !NiS,may06: testing transition elements
-            !WRITE(*,*) ' Element ', nelem
-            !-
+
             trans_els = trans_els + 1
-            IF (trans_els .gt. maxp) THEN
-              CLOSE (75)
-              OPEN (75, FILE = 'ERROR.DAT')
-              WRITE (75,9001)
-              write (* ,9001)
-              9001 FORMAT('ERROR - TOO MANY TRANSITION ELEMENTS',/ 'PROGRAM EXECUTION STOPPED')
-              STOP
-            ENDIF
+
+            !ERROR - too many elements
+            IF (trans_els .gt. maxp) call ErrorMessageAndStop (1206, 0, 0.0D0, 0.0D0)
+
             Trans_nodes(trans_els, 1) = nelem
             DO i = 2,6
               Trans_nodes(trans_els, i) = nop(nelem,i-1)
@@ -254,12 +223,7 @@ END DO
 arccnt = 0
 
 !nis,may07
-!Add midside node for polynom approach
-!DO i = LPPoly, np
 DO i = 1, np
-!Add midside node for polynom approach
-!-
-
   IF (arcmid (i, 3) .ne.0) then
     arccnt = arccnt + 1
     DO j = 1, 4
@@ -267,91 +231,16 @@ DO i = 1, np
       !NiS,apr06: Changed arc to arc_tmp because of global conflict
       arc_tmp (arccnt, j) = arcmid (i, j)
     END DO
-
-!nis,may07
-!Add midside for polynom approach
-!    !Save midside node to ARC array
-!    !NiS,apr06: Changed arc to arc_tmp because of global conflict!
-!    !EFa Dec06, Fallunterscheidung für 1d-Teschke-Elemente
-!    !nis,feb07: Allow for numbered FFF midsides
-!    !if (arcmid(i,5).NE.-9999) then
-!    if (arcmid(i,5) > -1000) then
-!    !-
       arc_tmp (arccnt, 5) = i
-!    end if
-!Add midside node for polynom approach
-!-
-
   ENDIF
 END DO
 
-! -----------------------------------------------------------------------------------
-!NiS,may06: Creation of output/solution file names has a little bit changed in logic order,
-!           because there were some problems with steady state and results after iteration
-!           The old version is completly deleted, it can be read in the code of Kalypso-2D.
-      !after solution is converged or maximum number of iterations is reached
-      IF (maxn == 0) THEN
-
-        !for steady states
-        IF (icyc == 0) THEN
-          !output after steady state solution
-          WRITE (nameout,'(a,a1,a)') 'steady', '.', modellaus
-          IF (nb > 0) THEN
-            !Restart file information after restarted steady state solution
-            WRITE (namein,'(a)') modellrst
-          ELSE
-            !Restart file information after initial steady state solution
-            WRITE (namein,'(a)') 'none, new 2D-Calculation'
-          ENDIF
-
-        !for dynamic solutions after first time step
-        ELSEIF (icyc == 1 .and. iaccyc <= 1) THEN
-          !output for dynamic solutions after first time step
-          WRITE (nameout,'(a,i4.4,a1,a)') ct, icyc, '.', modellaus
-          !Restart file information after user specified restart
-          IF (niti == 0 .and. nb > 0) THEN
-            WRITE (namein,'(a)') modellrst
-          !No Restart, bloody new calculation; 'Teichlösung'
-          ELSEIF (niti == 0 .AND. nb == 0) THEN
-            WRITE (namein,'(a)') 'none, new 2D-Calculation'
-          !Starting from steady state solution, that was calculated before
-          ELSE
-            WRITE (namein,'(a,a1,a)') 'steady','.', modellaus
-          ENDIF
-
-        !for dynamic solution after first timestep run restarted later time step than first
-        ELSEIF (icyc == 1 .AND. iaccyc > 1) THEN
-          !output file
-          WRITE (nameout,'(a,i4.4,a1,a)') ct, icyc+iaccyc-1, '.', modellaus
-          !Restart file information
-          WRITE (namein, '(a)') modellein
-        !for dynamic solution after calculated time step, that is not the first in current run
-        ELSE
-          !output file
-          WRITE (namein,'(a,i4.4,a1,a)')  ct, icyc+iaccyc-2, '.', modellaus
-          !Starting from the solution of time step before
-          WRITE (nameout,'(a,i4.4,a1,a)') ct, icyc+iaccyc-1, '.', modellaus
-        ENDIF
-
-      !after iteration step, if wanted
-      ELSE
-        !input file name of output after iteration is not relevant
-        WRITE(namein,'(a)') 'no regular result file, just iteration output'
-        IF (icyc == 0) THEN
-          !output filename after iteration in steady loop
-          WRITE(nameout,'(a,i3.3,a1,a)') 'steady_Ite_', maxn, '.', modellaus
-        ELSE
-          !output filename after iteration in dynamic loop at time step (icyc)
-          WRITE(nameout,'(a,i4.4,a,i3.3,a1,a)') ct, icyc,'_Ite',maxn,'.', modellaus
-        ENDIF
-      ENDIF
-!-
 
 !NiS,apr06: Write informational the generated output name; Changed iout to Lout
-          WRITE ( * , * ) ' '
-          WRITE ( * , * ) 'Name der Modell-Ausgabedatei: ', nameout
-          WRITE (Lout, * ) ' '
-          WRITE (Lout, * ) 'Name der Modell-Ausgabedatei: ', nameout
+WRITE ( * , * ) ' '
+WRITE ( * , * ) 'Name der Modell-Ausgabedatei: ', TRIM(nameout)
+WRITE (Lout, * ) ' '
+WRITE (Lout, * ) 'Name der Modell-Ausgabedatei: ', TRIM(nameout)
 !-
 
 ! WRITING PART --------------------------------------------------------------------------
@@ -369,15 +258,13 @@ end if
 !WP 01.09.2004
 !WP string = '00'//title
 !WP WRITE (12, '(a80)') string
-
-
 !WP string = 'RS'//namein
 !WP WRITE (12, '(a80)') string
 !NiS,may06: Giving out the Geometryfile and Restartfile; the length of the filenames are maximum 50 digits
 !write (IKALYPSOFM, 7011) namein
 !7011 format ('RS', A80)
-write (IKALYPSOFM, 7011) modellein, modellrst
-7011 format ('RS', 2A40)
+!write (IKALYPSOFM, 7011) modellein, modellrst
+!7011 format ('RS', 2A40)
 !-
 
 !WP Problem with length of title-character (78 or 80 ?)
@@ -391,7 +278,9 @@ write (IKALYPSOFM, 7010) title
 
 ! Time + step counter
 !NiS,may06: nitsv in Kalypso-2D has the same meaning as icyc in RMA10S; changed nitsv to icyc
-WRITE (IKALYPSOFM, 7008) tet, icyc
+if (resultType == 'resu') then
+  WRITE (IKALYPSOFM, 7008) tet, icyc
+end if
 !-
 
 !NiS,apr06: writing RMA10S-date format
@@ -409,23 +298,35 @@ write_nodes: DO i = 1, np
   else
     WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), aour (i)
   endif
-  WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3) , rausv (3, i)
-  !NiS,may06: All degrees of freedom have to be written and read for restart
-  WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
-  !-
 
-  IF (tet.ne.0.0) then
-    WRITE (IKALYPSOFM, 7004) i, (vdot (j, i), j = 1, 3)
-    WRITE (IKALYPSOFM, 7005) i, (vold (j, i), j = 1, 3)
-    WRITE (IKALYPSOFM, 7006) i, (vdoto (j, i), j = 1, 3)
+  if (resultType == 'resu') THEN
+    WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3) , rausv (3, i)
+    !NiS,may06: All degrees of freedom have to be written and read for restart
+    WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
+    !-
+  ELSEIF ( resultType == 'mini') THEN
+    WRITE (IKALYPSOFM, 7003) i, (minvel (j, i), j = 1, 3) , minrausv (i)
+  ELSEIF (resultType == 'maxi') THEN
+    WRITE (IKALYPSOFM, 7003) i, (maxvel (j, i), j = 1, 3) , maxrausv (i)
   ENDIF
 
-  WRITE (IKALYPSOFM, 7007) i, ndry (i), hel (i), hol (i), hdet (i), hdot (i)
 
-  !NiS,may06: Write cross sectional node information, if present
-  IF (width (i) .ne. 0) THEN
-    WRITE (IKALYPSOFM, 7013) i, width(i), ss1(i), ss2(i), wids(i), widbs(i), wss(i)
-  END IF
+  !only for real results not for minmax-result-files
+!  if (resultType == 'resu') then
+    IF (tet.ne.0.0) then
+      WRITE (IKALYPSOFM, 7004) i, (vdot (j, i), j = 1, 3)
+      WRITE (IKALYPSOFM, 7005) i, (vold (j, i), j = 1, 3)
+      WRITE (IKALYPSOFM, 7006) i, (vdoto (j, i), j = 1, 3)
+    ENDIF
+
+    WRITE (IKALYPSOFM, 7007) i, ndry (i), hel (i), hol (i), hdet (i), hdot (i)
+
+    !NiS,may06: Write cross sectional node information, if present
+    IF (width (i) .ne. 0) THEN
+      WRITE (IKALYPSOFM, 7013) i, width(i), ss1(i), ss2(i), wids(i), widbs(i), wss(i)
+    END IF
+
+!  end if
 
   !EFa Dec06, weitere Daten einlesen für 1d-Teschke-Elemente
   PolyApproach = 1
@@ -470,7 +371,11 @@ write_elements: DO i = 1, ne
     if (CorrectionKS(i) /= 1.0 .or. CorrectionAxAy(i) /= 1.0 .or. CorrectionDp(i) /= 1.0) then
       WRITE (IKALYPSOFM, 7017) i, CorrectionKS(i), CorrectionAxAy(i), CorrectionDp(i)
     end if
-    WRITE (IKALYPSOFM, 7018) i, lambdaTot(i), lambdaKS(i), lambdaP(i), lambdaDunes(i)
+
+    !only for real results, not for minmax-results
+    if (resultType == 'resu') then
+      WRITE (IKALYPSOFM, 7018) i, lambdaTot(i), lambdaKS(i), lambdaP(i), lambdaDunes(i)
+    end if
   end if
 END do write_elements
 
@@ -584,4 +489,88 @@ RETURN
 
 END SUBROUTINE write_KALYPSO
 
+!**********************************************************
+
+
+SUBROUTINE Generate2DFileName (sort, niti_local, timeStep, startStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
+           &                   resultName, inputName)
+
+implicit none
+INTEGER, INTENT (IN) :: timeStep, startStep, iteration, restartUnit
+INTEGER, INTENT (IN) :: niti_local
+character (LEN = 96), INTENT (OUT) :: resultName, inputName
+CHARACTER (LEN = 32), INTENT (IN)  :: outsuffix, inname, rstname
+CHARACTER (LEN = 1), INTENT (IN)   :: prefix
+CHARACTER (LEN = 4), INTENT (IN)   :: sort
+
+! ------------------------------------------------------------------------------------------
+! NiS,may06: Creation of output/solution file names has a little bit changed in logic order,
+!            because there were some problems with steady state and results after iteration
+!            The old version is completly deleted, it can be read in the code of Kalypso-2D.
+      !after solution is converged or maximum number of iterations is reached
+if (sort == 'inst' .or. sort == 'stat') then
+  IF (iteration == 0) THEN
+
+    !for steady states
+    IF (timeStep == 0) THEN
+
+      !output after steady state solution
+      WRITE (resultName,'(a,a1,a)') 'steady', '.', outsuffix
+
+      !if restarting, then particular name is used, otherwise not
+      IF (restartUnit > 0) THEN
+        WRITE (inputName,'(a)') rstname
+      ELSE
+        WRITE (inputName,'(a)') 'none, new 2D-Calculation'
+      ENDIF
+
+    !for dynamic solutions after first time step
+    ELSEIF (timeStep == 1 .and. startStep <= 1) THEN
+      !output for dynamic solutions after first time step
+      WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep, '.', outsuffix
+      !Restart file information after user specified restart
+      IF (niti_local == 0 .and. restartUnit > 0) THEN
+        WRITE (inputName,'(a)') rstname
+        !No Restart, bloody new calculation; 'Teichlösung'
+      ELSEIF (niti_local == 0 .AND. restartUnit == 0) THEN
+        WRITE (inputName,'(a)') 'none, new 2D-Calculation'
+      !Starting from steady state solution, that was calculated before
+      ELSE
+        WRITE (inputName,'(a,a1,a)') 'steady','.', outsuffix
+      ENDIF
+
+    !for dynamic solution after first timestep run restarted later time step than first
+    ELSEIF (timeStep == 1 .AND. startStep > 1) THEN
+      !output file
+      WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep + startStep - 1, '.', outsuffix
+      !Restart file information
+      WRITE (inputName, '(a)') inname
+    !for dynamic solution after calculated time step, that is not the first in current run
+    ELSE
+      !output file
+      WRITE (inputName,'(a,i4.4,a1,a)')  prefix, timeStep + startStep - 2, '.', outsuffix
+      !Starting from the solution of time step before
+      WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep + startStep - 1, '.', outsuffix
+    ENDIF
+
+  !after iteration step, if wanted
+  ELSE
+    !input file name of output after iteration is not relevant
+    WRITE (inputName,'(a)') 'no regular result file, just iteration output'
+    IF (timeStep == 0) THEN
+      !output filename after iteration in steady loop
+      WRITE (resultName,'(a,i3.3,a1,a)') 'steady_Ite_', iteration, '.', outsuffix
+    ELSE
+      !output filename after iteration in dynamic loop at time step (timeStep)
+      WRITE (resultName,'(a,i4.4,a,i3.3,a1,a)') prefix, timeStep,'_Ite',iteration,'.', outsuffix
+    ENDIF
+  ENDIF
+!min-max- of time transient calculation
+ELSEIF (sort == 'mini' .or. sort == 'maxi') then
+  WRITE (resultName, '(a4,a1,a2)') sort, '.', outsuffix
+  WRITE (inputName, '(a)') 'min-max-file; no other information'
+ENDIF
+!-
+
+end subroutine
 
