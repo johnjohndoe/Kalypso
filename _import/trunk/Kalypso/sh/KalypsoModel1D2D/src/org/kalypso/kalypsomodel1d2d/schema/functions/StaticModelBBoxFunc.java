@@ -7,12 +7,12 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -59,7 +59,7 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
             CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
             if( crs == null )
               crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-            geometry = UtilMap.toGM_Curve( bbox, crs );
+            geometry = GeometryUtilities.toGM_Curve( bbox, crs );
 
             // GeometryFactory.createGM_Surface(bbox, crs );
             // TODO Patrice Complete

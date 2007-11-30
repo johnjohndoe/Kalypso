@@ -73,6 +73,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
@@ -99,6 +100,7 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -400,7 +402,13 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
+        final MapPanel mapPanel = getMapPanel();
+        if( mapPanel == null )
+          return;
 
+        IMapModell mapModell = mapPanel.getMapModell();
+        mapModell.removeTheme( m_theme );
+        refreshThemeCombo();
       }
     } );
 
@@ -435,8 +443,12 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
   {
     // remove listener
     if( m_theme != null )
-      m_theme.getWorkspace().removeModellListener( m_modellistener );
-
+    {
+      CommandableWorkspace workspace = m_theme.getWorkspace();
+      if( workspace == null )
+        return;
+      workspace.removeModellListener( m_modellistener );
+    }
     m_hydrographs = hydrographs;
     m_theme = theme;
 
@@ -494,6 +506,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
   private void initalizeHydrographActions( FormToolkit toolkit, Composite parent )
   {
     final ImageDescriptor addID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_ADD;
+    final ImageDescriptor selectID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_SELECT;
     final ImageDescriptor removeID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_REMOVE;
     final ImageDescriptor jumptoID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_JUMP_TO;
     final ImageDescriptor exportID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_EXPORT;
@@ -511,7 +524,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     };
     addAction.setDescription( "Ganglinienort hinzufügen" );
 
-    final Action selectAction = new Action( "Select Hydrograph", removeID )
+    final Action selectAction = new Action( "Select Hydrograph", selectID )
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -572,28 +585,32 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
   }
 
-  protected void handleHydrographExport( Event event )
+  protected void handleHydrographExport( @SuppressWarnings("unused")
+  Event event )
   {
     // TODO Auto-generated method stub
 
   }
 
-  protected void handleHydrographSelected( Event event )
+  protected void handleHydrographSelected( @SuppressWarnings("unused")
+  Event event )
   {
     // set widget
-    SelectHydrographWidget widget = new SelectHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte selektieren", IHydrograph.QNAME, m_theme );
+    EditHydrographWidget widget = new EditHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte selektieren", false, IHydrograph.QNAME_PROP_LOCATION, m_theme, this );
     setDelegate( widget );
 
   }
 
-  protected void handleHydrographRemoved( Event event )
+  protected void handleHydrographRemoved( @SuppressWarnings("unused")
+  Event event )
   {
     // set widget
-    RemoveHydrographWidget widget = new RemoveHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte entfernen", IHydrograph.QNAME, m_theme );
+    RemoveHydrographWidget widget = new RemoveHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte entfernen", false, IHydrograph.QNAME_PROP_LOCATION, m_theme );
     setDelegate( widget );
   }
 
-  protected void handleHydrographAdded( Event event )
+  protected void handleHydrographAdded( @SuppressWarnings("unused")
+  Event event )
   {
     // set widget
     CreateHydrographWidget widget = new CreateHydrographWidget( "Ganglinienpunkte", "Punkte für Ganglinien hinzufügen", IHydrograph.QNAME, m_theme );
@@ -799,5 +816,19 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
   {
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
+  }
+
+  public void setHydrographViewerSelection( final StructuredSelection selection )
+  {
+    final Display display = m_hydrographViewer.getControl().getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void run( )
+      {
+        if( selection != null && m_hydrographViewer != null )
+          m_hydrographViewer.setSelection( selection, true );
+      }
+    } );
   }
 }

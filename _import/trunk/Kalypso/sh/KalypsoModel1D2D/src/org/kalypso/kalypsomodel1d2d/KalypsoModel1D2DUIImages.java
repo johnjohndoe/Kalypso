@@ -73,6 +73,8 @@ public class KalypsoModel1D2DUIImages
 
   public static final ImageDescriptor ID_HYDROGRAPH_EDIT = id( "icons/elcl16/hydrograph_edit.gif" ); //$NON-NLS-1$
 
+  public static final ImageDescriptor ID_HYDROGRAPH_SELECT = id( "icons/elcl16/hydrograph_select.gif" ); //$NON-NLS-1$
+
   public static final ImageDescriptor ID_HYDROGRAPH_REMOVE = id( "icons/elcl16/hydrograph_delete.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor ID_HYDROGRAPH_JUMP_TO = id( "icons/elcl16/nav_go.gif" ); //$NON-NLS-1$

@@ -68,7 +68,7 @@ public class AbstractEditFeatureWidget extends AbstractSelectFeatureWidget
    *      org.kalypsodeegree.model.feature.Feature[])
    */
   @Override
-  protected void flowRelationGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
+  protected void featureGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
   {
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();

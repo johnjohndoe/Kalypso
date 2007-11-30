@@ -43,19 +43,25 @@ package org.kalypso.kalypso1d2d.pjt.map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.util.MapUtils;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Thomas Jung
  * 
  */
-public class RemoveHydrographWidget extends AbstractWidget
+public class RemoveHydrographWidget extends AbstractEditHydrographWidget
 {
-
-  public RemoveHydrographWidget( String name, String tooltip, QName qnameToCreate, IKalypsoFeatureTheme hydroTheme )
+  public RemoveHydrographWidget( final String name, final String toolTip, final boolean allowMultipleSelection, QName geomQName, final IKalypsoFeatureTheme theme )
   {
-    super( name, tooltip );
+    super( name, toolTip, allowMultipleSelection, geomQName, theme );
+  }
 
+  @Override
+  protected void featureGrabbed( CommandableWorkspace workspace, Feature[] selectedFeatures ) throws Exception
+  {
+    MapUtils.removeFeature( workspace, getMapPanel(), selectedFeatures );
   }
 
 }

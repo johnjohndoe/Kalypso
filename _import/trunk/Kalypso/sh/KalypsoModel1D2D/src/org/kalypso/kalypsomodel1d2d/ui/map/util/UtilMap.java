@@ -53,7 +53,6 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
@@ -61,11 +60,6 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Provides map oriented utility methods.
@@ -217,33 +211,4 @@ public class UtilMap
     return waitForFeatureLoadingOperation;
   }
 
-  /**
-   * Convert the given bounding box into a {@link GM_Curve}
-   */
-  public static final GM_Curve toGM_Curve( final GM_Envelope bBox, final CS_CoordinateSystem crs )
-  {
-    Assert.throwIAEOnNullParam( bBox, "bBox" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( crs, "crs" ); //$NON-NLS-1$
-
-    // System.out.println("getting shape:"+feature);
-    try
-    {
-      final GM_Position min = bBox.getMin();
-      final GM_Position max = bBox.getMax();
-
-      final double minx = min.getX();
-      final double miny = min.getY();
-
-      final double maxx = max.getX();
-      final double maxy = max.getY();
-
-      final double[] coords = new double[] { minx, miny, maxx, miny, maxx, maxy, minx, maxy, minx, miny, };
-      final GM_Curve curve = GeometryFactory.createGM_Curve( coords, 2, crs );
-      return curve;
-    }
-    catch( final Throwable e )
-    {
-      throw new RuntimeException( Messages.getString( "UtilMap.3" ), e ); //$NON-NLS-1$
-    }
-  }
 }

@@ -42,13 +42,8 @@ package org.kalypso.kalypsosimulationmodel.ui.map;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ogc.gml.util.MapUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -68,25 +63,8 @@ public abstract class AbstractDeleteFeatureWidget extends AbstractSelectFeatureW
    *      org.kalypsodeegree.model.feature.Feature[])
    */
   @Override
-  protected void flowRelationGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
+  protected void featureGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
   {
-    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Objekte löschen", "Selektierte Objekte werden gelöscht. Sind Sie sicher?" ) )
-      return;
-
-    /* Select the feature */
-    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-
-    final CompositeCommand compositeCommand = new CompositeCommand( "Objekte löschen" );
-    for( final Feature featureToRemove : selectedFeatures )
-    {
-      selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );
-
-      final Feature parent = featureToRemove.getParent();
-      final IRelationType parentRelation = featureToRemove.getParentRelation();
-      final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parent, parentRelation, featureToRemove );
-      compositeCommand.addCommand( command );
-    }
-
-    workspace.postCommand( compositeCommand );
+    MapUtils.removeFeature( workspace, getMapPanel(), selectedFeatures );
   }
 }

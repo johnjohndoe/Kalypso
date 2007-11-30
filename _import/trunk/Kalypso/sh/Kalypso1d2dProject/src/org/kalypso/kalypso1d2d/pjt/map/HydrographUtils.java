@@ -40,10 +40,44 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.map;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
+import org.kalypso.template.types.StyledLayerType.Style;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Thomas Jung
@@ -72,5 +106,128 @@ public class HydrographUtils
     }
 
     return null;
+  }
+
+  public static IHydrographCollection createHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, InvocationTargetException, GmlSerializeException, IOException
+  {
+    /* create new hydrograph.gml */
+    final Feature hydrographFeature = createNewHydrograph( calcUnitResult, scenarioFolder );
+    final IHydrographCollection newHydrograph = (IHydrographCollection) hydrographFeature.getAdapter( IHydrographCollection.class );
+
+    // set a name
+    final String hydrographName = calcUnitResult.getName();
+    newHydrograph.setName( hydrographName );
+
+    /* create a resultMeta entry */
+    // delete the prior entry
+    IDocumentResultMeta resultMeta = (IDocumentResultMeta) calcUnitResult.getChild( DOCUMENTTYPE.hydrograph );
+    if( resultMeta != null )
+      calcUnitResult.removeChild( resultMeta );
+
+    calcUnitResult.addDocument( "Ganglinien", "Ganglinien des Teilmodells", DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null );
+
+    return newHydrograph;
+  }
+
+  public static IHydrographCollection getHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws MalformedURLException, Exception
+  {
+    IDocumentResultMeta docResult;
+    final IResultMeta child = calcUnitResult.getChild( DOCUMENTTYPE.hydrograph );
+    if( child != null )
+    {
+      // get the hydrograph
+      docResult = (IDocumentResultMeta) child;
+      IPath docPath = docResult.getFullPath();
+      IFolder folder = scenarioFolder.getFolder( docPath );
+      if( !folder.getFile( docPath ).exists() )
+      {
+        // delete non-valid result meta entry
+        calcUnitResult.removeChild( docResult );
+        return null;
+      }
+      final URL hydrographURL = ResourceUtilities.createURL( folder );
+
+      GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
+
+      final Feature hydroFeature = w.getRootFeature();
+      return (IHydrographCollection) hydroFeature.getAdapter( IHydrographCollection.class );
+    }
+    return null;
+  }
+
+  public static Feature createNewHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, InvocationTargetException, GmlSerializeException, IOException
+  {
+    // get a path
+    final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" );
+    final IFolder calcUnitFolder = scenarioFolder.getFolder( docPath );
+    if( !calcUnitFolder.exists() )
+      FolderUtilities.mkdirs( calcUnitFolder );
+
+    final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" );
+    final URL url = ResourceUtilities.createURL( gmlResultFile );
+
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IHydrographCollection.QNAME, url, null );
+    final Feature hydrographFeature = workspace.getRootFeature();
+    OutputStreamWriter writer = null;
+    try
+    {
+      writer = new OutputStreamWriter( new FileOutputStream( gmlResultFile.getLocation().toFile() ) );
+      GmlSerializer.serializeWorkspace( writer, workspace, "UTF-8" );
+      writer.close();
+
+      // refresh workspace
+      /* update resource folder */
+      gmlResultFile.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+
+      return hydrographFeature;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+  }
+
+  public static void addHydrographTheme( IKalypsoLayerModell modell, final IHydrographCollection hydroCollection, ICalcUnitResultMeta calcResult ) throws Exception
+  {
+    { // Hydrograph
+      final StyledLayerType hydroLayer = new StyledLayerType();
+      String path = "../" + calcResult.getFullPath().toPortableString() + "/hydrograph/hydrograph.gml";
+
+      hydroLayer.setName( "Ganglinienpunkte (" + hydroCollection.getName() + ")" );
+      hydroLayer.setFeaturePath( "hydrographMember" );
+      hydroLayer.setLinktype( "gml" );
+      hydroLayer.setType( "simple" );
+      hydroLayer.setVisible( true );
+      hydroLayer.setActuate( "onRequest" );
+      hydroLayer.setHref( path );
+      hydroLayer.setVisible( true );
+      final Property layerPropertyDeletable = new Property();
+      layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
+      layerPropertyDeletable.setValue( "true" );
+
+      final Property layerPropertyThemeInfoId = new Property();
+      layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
+      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.HydrographThemeInfo?format=Ganglinienpunkt (" + hydroCollection.getName() + ") %.2f" );
+
+      final List<Property> layerPropertyList = hydroLayer.getProperty();
+      layerPropertyList.add( layerPropertyDeletable );
+      layerPropertyList.add( layerPropertyThemeInfoId );
+
+      final List<Style> styleList = hydroLayer.getStyle();
+      final Style style = new Style();
+      style.setLinktype( "sld" );
+      style.setStyle( "hydrographUserStyle" );
+      style.setActuate( "onRequest" );
+      style.setHref( styleLocationForHydrograph() );
+      style.setType( "simple" );
+      styleList.add( style );
+
+      modell.addLayer( hydroLayer );
+    }
+  }
+
+  private static String styleLocationForHydrograph( )
+  {
+    return "../styles/hydrograph/hydrograph.sld";
   }
 }

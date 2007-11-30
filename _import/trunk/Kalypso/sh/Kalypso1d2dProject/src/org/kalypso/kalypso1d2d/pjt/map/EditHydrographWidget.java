@@ -42,18 +42,36 @@ package org.kalypso.kalypso1d2d.pjt.map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Thomas Jung
  * 
  */
-public class SelectHydrographWidget extends AbstractWidget
+public class EditHydrographWidget extends AbstractEditHydrographWidget
 {
-  public SelectHydrographWidget( String name, String tooltip, QName qnameToCreate, IKalypsoFeatureTheme hydroTheme )
+
+  private final HydrographManagmentWidget m_widget;
+
+  public EditHydrographWidget( final String name, final String toolTip, final boolean allowMultipleSelection, QName geomQName, final IKalypsoFeatureTheme theme, final HydrographManagmentWidget hydrographWidget )
   {
-    super( name, tooltip );
+    super( name, toolTip, allowMultipleSelection, geomQName, theme );
+    m_widget = hydrographWidget;
   }
 
+  @Override
+  protected void featureGrabbed( CommandableWorkspace workspace, Feature[] selectedFeatures ) throws Exception
+  {
+    if( selectedFeatures == null )
+      return;
+
+    IHydrograph selectedHydrograph = (IHydrograph) selectedFeatures[0].getAdapter( IHydrograph.class );
+
+    if( selectedHydrograph != null )
+      m_widget.setHydrographViewerSelection( new StructuredSelection( selectedHydrograph ) );
+  }
 }
