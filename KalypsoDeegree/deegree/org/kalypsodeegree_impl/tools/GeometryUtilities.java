@@ -909,4 +909,30 @@ public class GeometryUtilities
     return 0;
   }
 
+  /**
+   * Convert the given bounding box into a {@link GM_Curve}
+   */
+  public static final GM_Curve toGM_Curve( final GM_Envelope bBox, final CS_CoordinateSystem crs )
+  {
+    try
+    {
+      final GM_Position min = bBox.getMin();
+      final GM_Position max = bBox.getMax();
+
+      final double minx = min.getX();
+      final double miny = min.getY();
+
+      final double maxx = max.getX();
+      final double maxy = max.getY();
+
+      final double[] coords = new double[] { minx, miny, maxx, miny, maxx, maxy, minx, maxy, minx, miny, };
+      final GM_Curve curve = GeometryFactory.createGM_Curve( coords, 2, crs );
+      return curve;
+    }
+    catch( final Throwable e )
+    {
+      throw new RuntimeException( "error while creating a curve", e ); //$NON-NLS-1$
+    }
+  }
+
 }
