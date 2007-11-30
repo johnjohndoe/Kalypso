@@ -135,7 +135,7 @@ public class StringModifier implements IFeatureModifier
     // we normally only want to edit the first entry.
     if( data instanceof List )
     {
-      final List list = (List) data;
+      final List< ? > list = (List< ? >) data;
       if( list.isEmpty() )
         return ""; //$NON-NLS-1$
 
@@ -253,7 +253,7 @@ public class StringModifier implements IFeatureModifier
     final Object result;
     if( value instanceof List )
     {
-      final List list = (List) value;
+      final List< ? > list = (List< ? >) value;
       if( (list).size() == 0 )
         result = null;
       else if( (list).size() == 1 )

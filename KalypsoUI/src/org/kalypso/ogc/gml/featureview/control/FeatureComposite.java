@@ -520,7 +520,15 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Text editorType = (Text) controlType;
 
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final TextFeatureControl tfc = new TextFeatureControl( feature, vpt );
+
+      final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
+
+      Object objFormat = editorType.getFormat();
+      String format = null;
+      if( objFormat instanceof String )
+        format = (String) objFormat;
+
+      final TextFeatureControl tfc = new TextFeatureControl( feature, vpt, format, plugin.createFeatureTypeCellEditorFactory(), this, m_selectionManager );
 
       final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
       tfc.setEditable( editorType.isEditable() );
@@ -749,9 +757,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof Table )
     {
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final TableFeatureContol fc = new TableFeatureContol( ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
+      final Table tableType = (Table) controlType;
 
-      final Gistableview gistableview = ((Table) controlType).getGistableview();
+      final TableFeatureContol fc = new TableFeatureContol( ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this, tableType.isShowToolbar(), tableType.isShowContextMenu() );
+
+      final Gistableview gistableview = tableType.getGistableview();
       if( gistableview != null )
       {
         fc.setTableTemplate( gistableview );

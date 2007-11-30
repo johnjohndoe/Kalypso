@@ -57,8 +57,10 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -78,11 +80,12 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   private final IFeatureModifier m_modifier;
 
-  public TextFeatureControl( final Feature feature, final IValuePropertyType ftp )
+  public TextFeatureControl( final Feature feature, final IValuePropertyType ftp, final String format, final IFeatureModifierFactory factory, final IFeatureChangeListener fcl, final IFeatureSelectionManager manager )
   {
     super( feature, ftp );
 
-    m_modifier = new StringModifier( ftp, "%s" );
+//    m_modifier = new StringModifier( ftp, "%s" );
+    m_modifier = factory.createFeatureModifier( ftp, format, manager, fcl );
   }
 
   /**

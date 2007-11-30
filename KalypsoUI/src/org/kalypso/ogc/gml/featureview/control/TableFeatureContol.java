@@ -2,18 +2,29 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -23,15 +34,23 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.actions.TableFeatureControlUtils;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ResourcePool;
@@ -49,21 +68,27 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 {
   private final IFeatureModifierFactory m_factory;
 
-  private LayerTableViewer m_viewer;
+  protected LayerTableViewer m_viewer;
 
-  private KalypsoFeatureTheme m_kft;
+  protected KalypsoFeatureTheme m_kft;
 
   private final JobExclusiveCommandTarget m_target;
 
   protected Collection<ModifyListener> m_listeners = new ArrayList<ModifyListener>();
 
-  private final IFeatureSelectionManager m_selectionManager;
+  protected final IFeatureSelectionManager m_selectionManager;
 
   private final IFeatureChangeListener m_fcl;
 
   private Gistableview m_tableView;
 
-  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  private final boolean m_showToolbar;
+
+  private final boolean m_showContextMenu;
+
+  private ToolBarManager m_toolbarManager;
+
+  public TableFeatureContol( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final boolean showToolbar, final boolean showContextMenu )
   {
     super( ftp );
 
@@ -71,6 +96,9 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     m_selectionManager = selectionManager;
     m_fcl = fcl;
     m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
+    m_showToolbar = showToolbar;
+    m_showContextMenu = showContextMenu;
+    m_toolbarManager = null;
   }
 
   /**
@@ -78,34 +106,180 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   public Control createControl( final Composite parent, final int style )
   {
-    m_viewer = new LayerTableViewer( parent, SWT.NONE, m_target, m_factory, m_selectionManager, m_fcl );
+    /* Create a new Composite for the toolbar. */
+    Composite client = new Composite( parent, style );
+    if( m_showToolbar )
+      client.setLayout( new GridLayout( 2, false ) );
+    else
+      client.setLayout( new GridLayout( 1, false ) );
 
+    /* Create the layer table viewer. */
+    m_viewer = new LayerTableViewer( client, SWT.NONE, m_target, m_factory, m_selectionManager, m_fcl );
+    m_viewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    /* Set the feature. */
     setFeature( getFeature() );
 
-    /**/
-    final MenuManager menuManager = new MenuManager();
-    menuManager.setRemoveAllWhenShown( true );
-    menuManager.addMenuListener( new IMenuListener()
+    /* If wanted, add a toolbar. */
+    if( m_showToolbar )
     {
-      public void menuAboutToShow( final IMenuManager manager )
-      {
-        manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
-        manager.add( new Separator() );
-        // mgr.add(selectAllAction);
-      }
-    } );
+      /* Create the toolbar manager. */
+      m_toolbarManager = new ToolBarManager( SWT.VERTICAL );
 
-    final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-    final IWorkbenchPart activeEditor = activePage.getActivePart();
-    if( activeEditor != null )
-    {
-      m_viewer.setMenu( menuManager );
-      // TODO check if we can register the menu more global, even when we have
-      // no active editor
-      activeEditor.getSite().registerContextMenu( menuManager, m_viewer );
+      /* IAction for adding a feature. */
+      IAction addAction = new Action( "Neues Feature", ImageProvider.IMAGE_FEATURE_NEW )
+      {
+        /**
+         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+         */
+        @Override
+        public void runWithEvent( Event event )
+        {
+          if( checkMaxCount() == false )
+          {
+            Shell shell = event.display.getActiveShell();
+            MessageDialog.openInformation( shell, "Neues Feature", "Die maximale erlaubte Anzahl der Features ist bereits erreicht." );
+            return;
+          }
+
+          /* Get the needed properties. */
+          Feature parentFeature = getFeature();
+          IRelationType parentRelation = (IRelationType) getFeatureTypeProperty();
+          CommandableWorkspace workspace = m_kft.getWorkspace();
+
+          AddFeatureCommand command = new AddFeatureCommand( workspace, parentRelation.getTargetFeatureType(), parentFeature, parentRelation, -1, null, null, 0 );
+          fireFeatureChange( command );
+        }
+
+        /**
+         * This function checks, if more features can be added.
+         * 
+         * @return True, if so.
+         */
+        private boolean checkMaxCount( )
+        {
+          int maxOccurs = -1;
+          int size = -1;
+
+          /* Get the needed properties. */
+          Feature parentFeature = getFeature();
+          IRelationType parentRelation = (IRelationType) getFeatureTypeProperty();
+
+          maxOccurs = parentRelation.getMaxOccurs();
+          if( parentFeature instanceof List )
+          {
+            size = ((List< ? >) parentFeature).size();
+            if( maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
+              return true;
+            else if( maxOccurs < size )
+              return false;
+          }
+
+          return true;
+        }
+      };
+
+      /* Add the new Item. */
+      m_toolbarManager.add( addAction );
+
+      /* IAction for removing a feature. */
+      IAction removeAction = new Action( "Features Löschen", ImageProvider.IMAGE_FEATURE_DELETE )
+      {
+        /**
+         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+         */
+        @Override
+        public void runWithEvent( Event event )
+        {
+          if( canDelete() == false )
+          {
+            Shell shell = event.display.getActiveShell();
+            MessageDialog.openInformation( shell, "Features Löschen", "Es sind keine Features zum Löschen ausgewählt." );
+            return;
+          }
+
+          /* Get the shell. */
+          Shell shell = event.display.getActiveShell();
+
+          /* Get the current selection. */
+          ISelection selection = m_viewer.getSelection();
+          if( selection == null || !(selection instanceof IFeatureSelection) )
+            return;
+
+          /* Get all selected features. */
+          EasyFeatureWrapper[] allFeatures = ((IFeatureSelection) selection).getAllFeatures();
+
+          /* Build the delete command. */
+          DeleteFeatureCommand command = TableFeatureControlUtils.deleteFeaturesFromSelection( allFeatures, shell );
+          if( command != null )
+          {
+            /* Execute the command. */
+            fireFeatureChange( command );
+
+            /* Reset the selection. */
+            m_viewer.setSelection( new StructuredSelection() );
+          }
+        }
+
+        /**
+         * This function checks, if there are features, which can be deleted.
+         * 
+         * @return True, if so.
+         */
+        public boolean canDelete( )
+        {
+          ISelection selection = m_viewer.getSelection();
+          if( selection == null )
+            return false;
+
+          if( !(selection instanceof IFeatureSelection) )
+            return false;
+
+          int featureCount = FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection );
+          if( featureCount > 0 )
+            return true;
+
+          return false;
+        }
+      };
+
+      /* Add the new Item. */
+      m_toolbarManager.add( removeAction );
+
+      /* Create the toolbar. */
+      ToolBar toolbar = m_toolbarManager.createControl( client );
+      toolbar.setLayoutData( new GridData( GridData.CENTER, GridData.BEGINNING, false, true ) );
     }
-    return m_viewer.getControl();
+
+    /* Only show the context menu, if it is wanted to be shown. */
+    if( m_showContextMenu )
+    {
+      /* Need a menu manager for the context menu. */
+      MenuManager menuManager = new MenuManager();
+      menuManager.setRemoveAllWhenShown( true );
+      menuManager.addMenuListener( new IMenuListener()
+      {
+        public void menuAboutToShow( final IMenuManager manager )
+        {
+          manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
+          manager.add( new Separator() );
+        }
+      } );
+
+      IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+      IWorkbenchPart activeEditor = activePage.getActivePart();
+      if( activeEditor != null )
+      {
+        /* Set the context menu. */
+        m_viewer.setMenu( menuManager );
+
+        /* TODO Check if we can register the menu more global, even when we have no active editor. */
+        activeEditor.getSite().registerContextMenu( menuManager, m_viewer );
+      }
+    }
+
+    return client;
   }
 
   /**
@@ -147,7 +321,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     if( m_viewer != null && workspace != null && feature != null )
     {
       final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( feature );
-      final String ftpName = getFeatureTypeProperty().getName();
+      final String ftpName = getFeatureTypeProperty().getQName().getLocalPart();
       final FeaturePath featurePath = new FeaturePath( parentFeaturePath, ftpName );
 
       final CommandableWorkspace c_workspace = findCommandableWorkspace( workspace );

@@ -215,4 +215,14 @@ public abstract class AbstractValueControlMaker implements IControlMaker
    *            the grid data object, which should be used.
    */
   protected abstract JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType pt, final GridDataType griddata ) throws AbortCreationException;
+
+  /**
+   * This function returns true, if the validator label should be added.
+   * 
+   * @return True, if the validator label should be added.
+   */
+  protected boolean isAddValidator( )
+  {
+    return m_addValidator;
+  }
 }
