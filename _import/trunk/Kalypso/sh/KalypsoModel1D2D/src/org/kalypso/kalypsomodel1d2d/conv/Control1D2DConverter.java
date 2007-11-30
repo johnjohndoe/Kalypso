@@ -143,7 +143,7 @@ public class Control1D2DConverter
 
     // // C0
     final Object[] c0Props = new Object[] { 0, controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
-        getTimeInPercentage( calendarForFirstTimeStep ), controlModel.getIEDSW(), controlModel.getTBFACT(), controlModel.getTBMIN(), 0 };
+        getTimeInPercentage( calendarForFirstTimeStep ), controlModel.getIEDSW(), controlModel.getTBFACT(), controlModel.getTBMIN(), 1 };
     m_formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props ); //$NON-NLS-1$
 
     // C1
@@ -368,6 +368,8 @@ public class Control1D2DConverter
     // order is important, first QC than HC
     formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
 
     for( final Map.Entry<Integer, IBuildingFlowRelation> buildingData : m_buildingProvider.getBuildingData().entrySet() )
     {
@@ -389,7 +391,7 @@ public class Control1D2DConverter
       formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", buildingID, buildingKind, 0.0, 0.0, 0.0, 0.0, direction ); //$NON-NLS-1$
     }
 
-    // add other conti lines types as well (buildingss)?
+    // add other conti lines types as well (buildings)?
     formatter.format( "ENDSTEP %s%n", message ); //$NON-NLS-1$
   }
 
@@ -399,7 +401,7 @@ public class Control1D2DConverter
     final List<IBoundaryCondition> boundaryConditions = m_calculation.getBoundaryConditions();
     for( final IBoundaryCondition boundaryCondition : boundaryConditions )
     {
-      if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
+      if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D) || boundaryCondition.getTypeByLocation().equals(IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
       {
         int ordinal = m_nativeIDProvider.getConversionID( boundaryCondition.getParentElementID() );
         final double stepValue;
@@ -426,6 +428,10 @@ public class Control1D2DConverter
           else if( bcType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) )
           {
             formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 0.000, 20.000 ); //$NON-NLS-1$
+          }
+          else if( bcType.equals(Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D) || bcType.equals(Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D))
+          {
+            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, 0, stepValue, 0.0, 0.0, 20.000); //$NON-NLS-1$
           }
         }
       }
