@@ -109,4 +109,5 @@ public interface IFE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE
    * @return the recalculated geometry of this element
    */
   public FeatureChange[] assignRoughness( String roughnessID, Double correctionParameterKS, Double correctionParameterAxAy, Double correctionParameterDP, String roughnessStyle );
+
 }

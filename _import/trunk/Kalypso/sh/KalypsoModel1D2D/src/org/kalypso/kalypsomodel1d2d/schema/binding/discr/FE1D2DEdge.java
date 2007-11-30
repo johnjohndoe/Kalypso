@@ -315,6 +315,15 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   }
 
   /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#setNode(int,
+   *      org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode)
+   */
+  public void setNode( int index, final IFE1D2DNode node ) throws IndexOutOfBoundsException
+  {
+    m_nodes.set( index, node );
+  }
+
+  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addNode(java.lang.String)
    */
   public void addNode( String nodeID )

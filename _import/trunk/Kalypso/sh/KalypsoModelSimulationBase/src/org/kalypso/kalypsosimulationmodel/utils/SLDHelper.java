@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -118,7 +118,7 @@ public class SLDHelper
 
   private static final Color DEFAULT_STROKECOLOR = Color.BLACK;
 
-  private static final double DEFAULT_STROKEWIDTH = 0.5;
+  private static final double DEFAULT_STROKEWIDTH = 1.0;
 
   private static final String ELSEFILTER_NAME = "undefinierterStilID";
 
@@ -132,9 +132,9 @@ public class SLDHelper
 
   private static final double ELSEFILTER_STROKEOPACITY = 1.0;
 
-  private static final double ELSEFILTER_STROKEWIDTH = 2.0;
+  private static final double ELSEFILTER_STROKEWIDTH = 1.5;
 
-  private static final float[] ELSEFILTER_DASHARRAY = new float[] { 2, 5 };
+  private static final float[] ELSEFILTER_DASHARRAY = new float[] { 2, 3.5f };
 
   public static void exportPolygonSymbolyzerSLD( final IFile sldFile, final List< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
   {
@@ -289,6 +289,18 @@ public class SLDHelper
   {
     final FeatureTypeStyle style = new FeatureTypeStyle_Impl();
 
+    // creating the ElseFilter rule
+    final Stroke defaultRuleStroke = StyleFactory.createStroke( ELSEFILTER_STROKECOLOR, ELSEFILTER_STROKEWIDTH, ELSEFILTER_STROKEOPACITY );
+    defaultRuleStroke.setDashArray( ELSEFILTER_DASHARRAY );
+    final Fill defaultRuleFill = StyleFactory.createFill( ELSEFILTER_FILLCOLOR, ELSEFILTER_FILLOPACITY );
+    final PolygonSymbolizer defaultRuleSymbolizer = StyleFactory.createPolygonSymbolizer( defaultRuleStroke, defaultRuleFill, new PropertyName( geometryProperty ) );
+    final Rule defaultRule = StyleFactory.createRule( defaultRuleSymbolizer );
+    defaultRule.setElseFilter( true );
+    defaultRule.setName( ELSEFILTER_NAME );
+    defaultRule.setTitle( ELSEFILTER_TITLE );
+    defaultRule.setAbstract( ELSEFILTER_TITLE );
+    style.addRule( defaultRule );
+
     // adding rules for every member
     for( final Object styledFeatureObject : collection )
     {
@@ -338,18 +350,6 @@ public class SLDHelper
     labelRule.setTitle( LABEL_RULE_NAME );
     labelRule.setAbstract( LABEL_RULE_NAME );
     style.addRule( labelRule );
-
-    // adding default rule
-    final Stroke defaultRuleStroke = StyleFactory.createStroke( ELSEFILTER_STROKECOLOR, ELSEFILTER_STROKEWIDTH, ELSEFILTER_STROKEOPACITY );
-    defaultRuleStroke.setDashArray( ELSEFILTER_DASHARRAY );
-    final Fill defaultRuleFill = StyleFactory.createFill( ELSEFILTER_FILLCOLOR, ELSEFILTER_FILLOPACITY );
-    final PolygonSymbolizer defaultRuleSymbolizer = StyleFactory.createPolygonSymbolizer( defaultRuleStroke, defaultRuleFill, new PropertyName( geometryProperty ) );
-    final Rule defaultRule = StyleFactory.createRule( defaultRuleSymbolizer );
-    defaultRule.setElseFilter( true );
-    defaultRule.setName( ELSEFILTER_NAME );
-    defaultRule.setTitle( ELSEFILTER_TITLE );
-    defaultRule.setAbstract( ELSEFILTER_TITLE );
-    style.addRule( defaultRule );
 
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
     final Style[] styles = new Style[] { new UserStyle_Impl( styleName, styleTitle, null, false, featureTypeStyles ) };

@@ -98,8 +98,9 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    *             <ul>
    * @see #getNodes()
    */
-  public ET getNode( int index ) throws IndexOutOfBoundsException;
+  public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException;
 
+  public void setNode( int index, IFE1D2DNode node ) throws IndexOutOfBoundsException;
   /**
    * Add a node to this edge.
    * 

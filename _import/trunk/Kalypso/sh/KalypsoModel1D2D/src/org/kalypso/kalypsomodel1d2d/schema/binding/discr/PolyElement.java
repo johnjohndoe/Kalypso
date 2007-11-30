@@ -380,4 +380,5 @@ public class PolyElement extends Element2D implements IPolyElement
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
   }
+
 }

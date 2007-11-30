@@ -222,10 +222,19 @@ public class EdgeInv implements IEdgeInv
   public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException
   {
     if( index > 1 )
-    {
       throw new IndexOutOfBoundsException( "index=" + index ); //$NON-NLS-1$
-    }
     return edge.getNode( 1 - index );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#setNode(int,
+   *      org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode)
+   */
+  public void setNode( int index, final IFE1D2DNode node ) throws IndexOutOfBoundsException
+  {
+    if( index > 1 )
+      throw new IndexOutOfBoundsException( "index=" + index ); //$NON-NLS-1$
+    edge.setNode( 1 - index, node );
   }
 
   /**
@@ -345,6 +354,6 @@ public class EdgeInv implements IEdgeInv
    */
   public void recalculateMiddleNodePosition( )
   {
-//    edge.recalculateMiddleNodePosition();
+    // edge.recalculateMiddleNodePosition();
   }
 }
