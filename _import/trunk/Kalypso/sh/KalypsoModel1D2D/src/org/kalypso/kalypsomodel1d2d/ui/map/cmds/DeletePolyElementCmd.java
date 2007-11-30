@@ -44,15 +44,11 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Command For deleting element
@@ -63,14 +59,12 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
 {
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  private final IPolyElement element2D;
-
-  private IFE1D2DComplexElement[] complexElements;
+  private final IPolyElement m_element2D;
 
   public DeletePolyElementCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature element2DFeature )
   {
     m_model1d2d = model1d2d;
-    this.element2D = (IPolyElement) element2DFeature.getAdapter( IPolyElement.class );
+    m_element2D = (IPolyElement) element2DFeature.getAdapter( IPolyElement.class );
   }
 
   /**
@@ -94,73 +88,34 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    final String elementID = element2D.getGmlID();
-
-    final List<IFE1D2DNode> nodes = element2D.getNodes();
-
-    complexElements = getElementComplexElement();
-
-    final IFE1D2DEdge edges[] = makeElementEdges();
-
-    deleteElement( elementID, edges, complexElements );
-
-    deleteEdges( edges, elementID );
-  }
-
-  private void deleteEdges( final IFE1D2DEdge[] edges, final String elementID )
-  {
+    final String elementID = m_element2D.getGmlID();
     final RemoveEdgeWithoutContainerOrInvCmd remEdgeCmd = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
-    for( final IFE1D2DEdge edge : edges )
-    {
-      try
-      {
-        remEdgeCmd.setEdgeToDel( edge );
-        remEdgeCmd.process();
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
-  }
 
-  private void deleteElement( final String elementID, final IFE1D2DEdge[] edges, final IFE1D2DComplexElement[] complexElements )
-  {
     // delete link to complex elements
-    for( final IFE1D2DComplexElement complexElement : complexElements )
-    {
+    final List<IFE1D2DComplexElement> parentComplexElements = m_element2D.getContainers();
+    for( final IFE1D2DComplexElement complexElement : parentComplexElements )
       complexElement.getElements().remove( elementID );
-    }
 
-    // delete link to edges
+    // delete link to edges and the edges itself (with the nodes)
+    final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_element2D.getEdges();
     for( final IFE1D2DEdge edge : edges )
     {
       final IFeatureWrapperCollection containers = edge.getContainers();
-      boolean isRemoved = containers.remove( elementID );
-      // TODO Patrice find a better way to do this, may be try delete again
-      if( !isRemoved && containers.contains( elementID ) )
+      while( containers.contains( elementID ) )
+        containers.remove( elementID );
+      remEdgeCmd.setEdgeToDel( edge );
+      try
       {
-        throw new RuntimeException( "Could not remove element as edge container" );
+        remEdgeCmd.process();
+      }
+      catch( Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
     }
-
     // delete element from model
-    m_model1d2d.getElements().remove( element2D );
-
-  }
-
-  private IFE1D2DEdge[] makeElementEdges( )
-  {
-    final IFeatureWrapperCollection edges = element2D.getEdges();
-    final IFE1D2DEdge[] edgeArray = (IFE1D2DEdge[]) edges.toArray( new IFE1D2DEdge[] {} );
-    return edgeArray;
-  }
-
-  private IFE1D2DComplexElement[] getElementComplexElement( )
-  {
-    final IFeatureWrapperCollection containers = element2D.getContainers();
-    final IFE1D2DComplexElement[] cElements = (IFE1D2DComplexElement[]) containers.toArray( new IFE1D2DComplexElement[] {} );
-    return cElements;
+    m_model1d2d.getElements().remove( m_element2D );
   }
 
   /**
@@ -184,7 +139,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { element2D };
+    return new IFeatureWrapper2[] { m_element2D };
   }
 
   /**

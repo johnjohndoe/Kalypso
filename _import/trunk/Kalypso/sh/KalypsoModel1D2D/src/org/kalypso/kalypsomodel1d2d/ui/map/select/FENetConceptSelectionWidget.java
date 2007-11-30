@@ -488,9 +488,13 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
     for( final Object object : roughSelection )
       if( object instanceof Feature )
       {
-        final Geometry featureGeometry = JTSAdapter.export( ((Feature) object).getDefaultGeometryProperty() );
-        if( polygonGeometry.contains( featureGeometry ) )
-          fineSelection.add( object );
+        final GM_Object defaultGeometryProperty = ((Feature) object).getDefaultGeometryProperty();
+        if( defaultGeometryProperty != null )
+        {
+          final Geometry featureGeometry = JTSAdapter.export( defaultGeometryProperty );
+          if( polygonGeometry.contains( featureGeometry ) )
+            fineSelection.add( object );
+        }
       }
     return packForSelectionManager( fineSelection );
   }

@@ -48,8 +48,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Command to remove an edge without container and inverted edge
@@ -92,9 +90,8 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
    */
   public void process( ) throws Exception
   {
-    if( !m_edgeToDelete.getContainers().isEmpty() )
-      return;
-
+//    if( !m_edgeToDelete.getContainers().isEmpty() )
+//      return;
     final List<IFE1D2DNode> nodesInvolved = new ArrayList<IFE1D2DNode>();
 
     if( m_edgeToDelete instanceof IEdgeInv )
@@ -107,7 +104,7 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
       final List<IFE1D2DNode> nodes = inverted.getNodes();
       nodesInvolved.addAll( nodes );
       final IFE1D2DNode middleNode = inverted.getMiddleNode();
-      if(middleNode!=null)
+      if( middleNode != null )
         nodesInvolved.add( middleNode );
       for( final IFE1D2DNode node : nodesInvolved )
         node.getContainers().getWrappedList().remove( edgeID );
@@ -135,7 +132,7 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
           final List<IFE1D2DNode> nodes = inverted.getNodes();
           nodesInvolved.addAll( nodes );
           final IFE1D2DNode middleNode = inverted.getMiddleNode();
-          if(middleNode!=null)
+          if( middleNode != null )
             nodesInvolved.add( middleNode );
           for( final IFE1D2DNode node : nodesInvolved )
             node.getContainers().getWrappedList().remove( edgeID );
@@ -149,7 +146,7 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
         final List<IFE1D2DNode> nodes = m_edgeToDelete.getNodes();
         nodesInvolved.addAll( nodes );
         final IFE1D2DNode middleNode = m_edgeToDelete.getMiddleNode();
-        if(middleNode!=null)
+        if( middleNode != null )
           nodesInvolved.add( middleNode );
         for( final IFE1D2DNode node : nodesInvolved )
           node.getContainers().getWrappedList().remove( edgeID );
@@ -159,12 +156,15 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
     }
     for( final IFE1D2DNode node : nodesInvolved )
       if( node.getContainers().isEmpty() )
+      {
         m_model1d2d.getNodes().remove( node );
+        m_model1d2d.getNodes().removeAllRefs( node );
+      }
   }
 
   public void setEdgeToDel( IFE1D2DEdge edgeToDel )
   {
-    this.m_edgeToDelete = edgeToDel;
+    m_edgeToDelete = edgeToDel;
   }
 
   public IFE1D2DEdge getEdgeToDel( )
