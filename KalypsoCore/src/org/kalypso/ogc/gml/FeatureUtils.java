@@ -99,10 +99,7 @@ public class FeatureUtils
     if( f == null )
       return;
 
-    final Feature parent = f.getParent();
-    final IRelationType rel = f.getParentRelation();
-
-    final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parent, rel, f );
+    final DeleteFeatureCommand command = new DeleteFeatureCommand( f );
     workspace.postCommand( command );
   }
 
