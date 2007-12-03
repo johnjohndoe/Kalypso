@@ -1,4 +1,4 @@
-!     Last change:  MD   30 Mar 2007    3:56 pm
+!     Last change:  MD   20 Nov 2007    2:23 pm
 !--------------------------------------------------------------------------
 ! This code, gwehr.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,7 +38,7 @@
 ! Research Associate
 !***********************************************************************
 
-SUBROUTINE g_wehr (hr, ifehl1, auew, huew, wl, hwmin)
+SUBROUTINE g_wehr (hr, ifehl1, auew, huew, wb, hwmin)
 
 !***********************************************************************
 !**                                                                     
@@ -78,7 +78,7 @@ SUBROUTINE g_wehr (hr, ifehl1, auew, huew, wl, hwmin)
 !**   nwf     --      Anzahl der Polygonpunkte                          
 !**   nwfd    --      Anzahl der Wehrfelder                             
 !**   nwp     --      Anzahl der Wehrpunkte                             
-!**   wl      --      L‰nge des Wehres in Flieﬂrichtung                 
+!**   wb      --      Breite des Wehres quer zur Flieﬂrichtung
 !**   xko     --      Schnittpunktkoordinate in z-Richtung Oberkante    
 !**   xl      --      Schnittpunktkoordinate in x-Richtung links        
 !**   xmax    --      maximale x-Koordinate                             
@@ -112,8 +112,10 @@ REAL xtrw (maxw), htrw (maxw)
 
 INTEGER ianfw (maxw), iendw (maxw)
 
-COMMON / wehr / xokw, hokw, nokw, iwmin, hokwmin, iwehr, xtrw,    &
-              & htrw, nwfd, iendw, ianfw
+! COMMON-Block /WEHR/ ---------------------------------------------------------
+COMMON / wehr / xokw, hokw, nokw, iwmin, hokwmin, iwehr, xtrw, htrw, nwfd, iendw, ianfw
+! -----------------------------------------------------------------------------
+
 
 REAL xl (maxkla), hl (maxkla)
 
@@ -129,8 +131,7 @@ COMMON / xr2yr2 / xr2 (mpts, max2), hr2 (mpts, max2), mr2 (max2), kr2
 
 ! common-block Uebergabegroessen der Geometrieberechnung:
 
-REAL auew (maxw), huew (maxw), wl (maxw), hwmin (maxw)                  
-
+REAL auew (maxw), huew (maxw), hwmin (maxw), wb (maxw)
 ! ------------------------------------------------------------------
 ! PROGRAMMBEGINN
 ! ------------------------------------------------------------------
@@ -144,7 +145,7 @@ gen = 0.0001
 hmin = hokwmin - 5.  ! ?????????????????????
 
 !**   SCHREIBEN IN KONTROLLFILE
-write (UNIT_OUT_LOG, '(''   j  huew    auew     wl     hwmin  '')')
+write (UNIT_OUT_LOG, '(''   j  huew    auew     wb     hwmin  '')')
 
 !JK   START DO-SCHLEIFE-------------------------------------------------
 !JK   FUER ALLE WEHRFELDER?? (nwfd)
@@ -152,7 +153,7 @@ DO 1000 j = 1, nwfd
 
   auew (j) = 0.0
   huew (j) = 0.0
-  wl (j) = 0.0
+  wb (j) = 0.0
   hwmin (j) = 10000.
 
   !  ******************************************************************
@@ -278,17 +279,17 @@ DO 1000 j = 1, nwfd
       IF (hl (i2) .lt.hwmin (j) ) hwmin (j) = hl (i2)
     END DO
 
-    wl (j) = wl (j) + xmax - xmin
+    wb (j) = wb (j) + xmax - xmin
 
   40 END DO
 
-  IF (wl (j) .gt.0.0001) then
-    huew (j) = auew (j) / wl (j)
+  IF (wb (j) .gt.0.0001) then
+    huew (j) = auew (j) / wb (j)
   ELSE
     huew (j) = 0.0
   ENDIF
 
-  write (UNIT_OUT_LOG, '(i4,4f8.4)') j, huew (j) , auew (j), wl (j) , hwmin (j)
+  write (UNIT_OUT_LOG, '(i4,4f8.4)') j, huew (j) , auew (j), wb (j) , hwmin (j)
 
   !JK   ENDE DO-SCHLEIFE ------------------------------------------
 1000 END DO

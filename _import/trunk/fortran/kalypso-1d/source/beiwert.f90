@@ -1,4 +1,4 @@
-!     Last change:  MD   26 Apr 2007    2:52 pm
+!     Last change:  MD   20 Nov 2007    2:25 pm
 !--------------------------------------------------------------------------
 ! This code, beiwert.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -82,7 +82,7 @@ SUBROUTINE beiwert (huew, ii, wh, h_v, h_uw_w, iueart, cq, cm)
 !**   huew    --      Überfallhöhe = OW-Wasserhoehe - WehrkronenHöhe
 !**   h_uw     --     Wasserspiegelhöhe im Unterwasser (INPUT)
 !**   iueart  --      Art des Überfalls am Wehr                         
-!**   lw      --      Länge des Wehres in Fließrichtung
+!**   wl      --      Länge des Wehres in Fließrichtung
 !**   phi     --      Parameter zur Berechnung des Überfallbeiwertes    
 !**                   für rundkronige Wehre nach Knapp                  
 !**   Wehre                                                             
@@ -109,11 +109,12 @@ USE DIM_VARIABLEN
 USE IO_UNITS
 USE KONSTANTEN
 
-CHARACTER(LEN=2) :: wart
 
-REAL :: beiw (maxw), rkw (maxw), lw (maxw)
-
-COMMON / wehr2 / beiw, rkw, lw, wart
+! COMMON-Block /WEHR2/ --------------------------------------------------------
+REAL 		:: beiw (maxw), rkw (maxw), wl (maxw), wb (maxw)
+CHARACTER(LEN=2):: wart                         ! = 'bk', 'rk', 'bw', 'sk'
+COMMON / wehr2 / beiw, rkw, wl, wart, wb
+! -----------------------------------------------------------------------------
 
 
 !**   ------------------------------------------------------------------
@@ -227,11 +228,11 @@ ELSEIF (wart.eq.'rk') then
   cq = (sqrt (2.*g)) *phi *(1.+phi) *((1.-beta)**0.5) / ((1. -(beta*phi2)) **(3./2.)) * phi1
 
 
-ELSE  !HW breitkroniges Wehr
+ELSEIF (wart.eq.'bk') then  !HW breitkroniges Wehr
 
   !HW Empirische Formel nach Knapp, S. 297
   !MD berichtigt am 01.08.2006
-  cq = 1.8 * ( ((huew + h_v )/ lw (ii)) ** 0.0544)
+  cq = 1.8 * ( ((huew + h_v)/ wl(ii)) ** 0.0544)
   !cq = 1.8 * (huew / lw (ii) ) **0.0544
 
   !HW Grenzwert für den Überfallbeiwert eines breitkronigen Wehre
