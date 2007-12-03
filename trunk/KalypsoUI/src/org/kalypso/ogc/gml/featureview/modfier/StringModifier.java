@@ -77,29 +77,6 @@ public class StringModifier implements IFeatureModifier
     m_guiTypeHandler = guiTypeRegistry.getTypeHandlerFor( m_ftp );
   }
 
-// public NumberFormat getNumberFormat( final IPropertyType ftp )
-// {
-// // HACK: TODO: either put this into the IGuiTypeHandler or
-// // maybe even in the appinfo of the schema
-// final String namespace = ftp.getQName().getNamespaceURI();
-// final String name = ftp.getQName().getLocalPart();
-// final DecimalFormat expFormat = new DecimalFormat( "0.000E0" ); //$NON-NLS-1$
-// // ##0.000E0
-// final NumberFormat normalFormat = NumberFormat.getInstance();
-//
-// if( "http://www.tuhh.de/kalypsoNA".equals( namespace ) ) // NAMODELL //$NON-NLS-1$
-// {
-// if( "flaech".equals( name ) ) //$NON-NLS-1$
-// return expFormat;
-// }
-// if( "http://www.tuhh.de/hydrotop".equals( namespace ) ) // NAMODELL-Hydrotope //$NON-NLS-1$
-// {
-// if( "m_perkm".equals( name ) || "area".equals( name ) ) //$NON-NLS-1$ //$NON-NLS-2$
-// return expFormat;
-// }
-// return normalFormat;
-// }
-
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */

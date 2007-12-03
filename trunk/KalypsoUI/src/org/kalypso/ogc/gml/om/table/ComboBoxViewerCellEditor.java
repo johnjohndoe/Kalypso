@@ -157,12 +157,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
     if( selection instanceof StructuredSelection )
     {
       final StructuredSelection sel = (StructuredSelection) selection;
-      final Object element = sel.getFirstElement();
-
-      if( element instanceof String )
-      {
-        return element;
-      }
+      return sel.getFirstElement();
     }
 
     return null;

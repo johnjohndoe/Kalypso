@@ -51,7 +51,6 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -65,20 +64,22 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
  */
 public class DeleteFeatureCommand implements ICommand
 {
-  private final EasyFeatureWrapper[] m_wrappers;
-
-  private final Map<EasyFeatureWrapper, Integer> m_listIndexMap = new HashMap<EasyFeatureWrapper, Integer>();
+  private final Map<Feature, Integer> m_listIndexMap = new HashMap<Feature, Integer>();
 
   final List<RemoveBrokenLinksCommand> m_removeBrokenLinksCommands = new ArrayList<RemoveBrokenLinksCommand>();
 
-  public DeleteFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentProp, final Feature featureToDelete )
+  private Feature[] m_featuresToDelete;
+
+  public DeleteFeatureCommand( final Feature featureToDelete )
   {
-    this( new EasyFeatureWrapper[] { new EasyFeatureWrapper( workspace, featureToDelete, parentFeature, parentProp ) } );
+    m_featuresToDelete = new Feature[]{ featureToDelete };
   }
 
   public DeleteFeatureCommand( final EasyFeatureWrapper[] wrappers )
   {
-    m_wrappers = wrappers;
+    m_featuresToDelete =  new Feature[wrappers.length];
+    for( int i = 0; i < wrappers.length; i++ )
+      m_featuresToDelete[i] =  wrappers[i].getFeature();
   }
 
   /**
@@ -112,19 +113,18 @@ public class DeleteFeatureCommand implements ICommand
   {
     final Map<Feature, List<Feature>> parentMap = new HashMap<Feature, List<Feature>>();
 
-    for( final EasyFeatureWrapper wrapper : m_wrappers )
+    for( final Feature featureToAdd : m_featuresToDelete )
     {
-      final CommandableWorkspace workspace = wrapper.getWorkspace();
-      final Feature parentFeature = wrapper.getParentFeature();
-      final IRelationType rt = wrapper.getParentFeatureProperty();
-      final Feature featureToAdd = wrapper.getFeature();
+      final GMLWorkspace workspace = featureToAdd.getWorkspace();
+      final Feature parentFeature = featureToAdd.getParent();
+      final IRelationType rt = featureToAdd.getParentRelation();
 
       if( workspace.contains( featureToAdd ) )
         continue;
 
       if( rt.isList() )
       {
-        final int index = (m_listIndexMap.get( wrapper )).intValue();
+        final int index = (m_listIndexMap.get( featureToAdd )).intValue();
         workspace.addFeatureAsComposition( parentFeature, rt, index, featureToAdd );
       }
       else
@@ -169,21 +169,20 @@ public class DeleteFeatureCommand implements ICommand
     // collect event information
     final Map<Feature, List<Feature>> parentMap = new HashMap<Feature, List<Feature>>();
     
-    for( final EasyFeatureWrapper wrapper : m_wrappers )
+    for( final Feature featureToRemove : m_featuresToDelete )
     {
-      final CommandableWorkspace workspace = wrapper.getWorkspace();
+      final GMLWorkspace workspace = featureToRemove.getWorkspace();
       touchedWorkspaces.add( workspace );
-      final Feature parentFeature = wrapper.getParentFeature();
-      final IRelationType rt = wrapper.getParentFeatureProperty();
-      final Feature featureToRemove = wrapper.getFeature();
+      final Feature parentFeature = featureToRemove.getParent();
+      final IRelationType rt = featureToRemove.getParentRelation();
       if( !workspace.contains( featureToRemove ) )
         continue; // was already removed
 
       if( rt.isList() )
       {
         final Object prop = parentFeature.getProperty( rt );
-        final List list = (List) prop;
-        m_listIndexMap.put( wrapper, new Integer( list.indexOf( featureToRemove ) ) );
+        final List<?> list = (List<?>) prop;
+        m_listIndexMap.put( featureToRemove, new Integer( list.indexOf( featureToRemove ) ) );
       }
       // remove the feature
       workspace.removeLinkedAsCompositionFeature( parentFeature, rt, featureToRemove );
@@ -243,7 +242,7 @@ public class DeleteFeatureCommand implements ICommand
           final IRelationType linkftp = (IRelationType) ftps[j];
           if( linkftp.isList() )
           {
-            final List propList = (List) f.getProperty( linkftp );
+            final List<?> propList = (List<?>) f.getProperty( linkftp );
             // important: count down not up
             for( int k = propList.size() - 1; k >= 0; k-- )
             {

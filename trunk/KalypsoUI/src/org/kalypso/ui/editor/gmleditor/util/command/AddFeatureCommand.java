@@ -52,6 +52,7 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -69,7 +70,7 @@ public class AddFeatureCommand implements ICommand
 
   private Feature m_newFeature = null;
 
-  private final CommandableWorkspace m_workspace;
+  private final GMLWorkspace m_workspace;
 
   /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
   private final Map<IPropertyType, Object> m_props;
@@ -88,7 +89,10 @@ public class AddFeatureCommand implements ICommand
 
   private final boolean m_doAddOnProcess;
 
-  public AddFeatureCommand( final CommandableWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
+  /**
+   * @param If dropSelection is true, the workspace must be a {@link CommandableWorkspace}.
+   */
+  public AddFeatureCommand( final GMLWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -106,7 +110,7 @@ public class AddFeatureCommand implements ICommand
    * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
    * created feature is provided from outside.
    */
-  public AddFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager )
+  public AddFeatureCommand( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager )
   {
     this( workspace, parentFeature, propertyName, pos, newFeature, selectionManager, true, true );
   }
@@ -115,7 +119,7 @@ public class AddFeatureCommand implements ICommand
    * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
    * created feature is provided from outside.
    */
-  public AddFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager, final boolean doFireEvents )
+  public AddFeatureCommand( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager, final boolean doFireEvents )
   {
     this( workspace, parentFeature, propertyName, pos, newFeature, selectionManager, doFireEvents, true );
   }
@@ -128,7 +132,7 @@ public class AddFeatureCommand implements ICommand
    *          If false, the new feature will NOT be added/set to the given relation (propertyName). This is necessary if
    *          the feature was already added before.
    */
-  public AddFeatureCommand( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager, final boolean doFireEvents, final boolean doAddOnProcess )
+  public AddFeatureCommand( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int pos, final Feature newFeature, final IFeatureSelectionManager selectionManager, final boolean doFireEvents, final boolean doAddOnProcess )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
@@ -174,8 +178,8 @@ public class AddFeatureCommand implements ICommand
     if( m_doFireEvents )
       m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-    if( m_selectionManager != null && m_dropSelection == true )
-      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
+    if( m_selectionManager != null && m_dropSelection == true && m_workspace instanceof CommandableWorkspace )
+      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature, m_parentFeature, m_propName ) } );
   }
 
   /**
@@ -196,7 +200,7 @@ public class AddFeatureCommand implements ICommand
 
     if( m_propName.isList() )
     {
-      final List list = (List) m_parentFeature.getProperty( m_propName );
+      final List<?> list = (List<?>) m_parentFeature.getProperty( m_propName );
       list.remove( m_newFeature );
     }
     else

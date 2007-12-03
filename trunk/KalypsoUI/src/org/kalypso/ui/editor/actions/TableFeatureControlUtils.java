@@ -56,11 +56,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.FindLinkedFeatureVisitor;
 
@@ -96,7 +96,7 @@ public class TableFeatureControlUtils
 
       /* Work with the first workspace, normally all features in this context should live in the same workspace. */
       /* Furthermore, it is not relevant, in which workspace the command is processed. */
-      CommandableWorkspace workspace = allFeatures[0].getWorkspace();
+      GMLWorkspace workspace = allFeatures[0].getWorkspace();
 
       /* Find features with links to the removed features and display a warning message. */
       FindLinkedFeatureVisitor visitor = new FindLinkedFeatureVisitor( gmlIds );

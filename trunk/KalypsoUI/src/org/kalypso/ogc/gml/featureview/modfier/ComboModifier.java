@@ -40,44 +40,43 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
-import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
+import org.kalypso.ogc.gml.om.table.ComboBoxViewerCellEditor;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
- * A modifier which handles feature-relations: shows a combo-box as cell-editor.
+ * A modifier which handles feature-value-properties which are enumerations: shows a combo-box as cell-editor.
  * 
  * @author Gernot Belger
  */
-public class ComboBoxModifier implements IFeatureModifier
+public class ComboModifier implements IFeatureModifier
 {
-  private static final String NO_LINK_STRING = "<kein Link>";
+  private static final String NO_LINK_STRING = "<kein Wert>";
 
-  private final List<Object> m_entries = new ArrayList<Object>();
+  private final Map<Object, String> m_comboEntries;
 
-  private final ComboBoxCellEditor m_comboBoxCellEditor = new ComboBoxCellEditor();
+  private final IValuePropertyType m_vpt;
 
-  private final IRelationType m_rt;
+  private ComboBoxViewerCellEditor m_comboBoxCellEditor;
 
   private Feature m_feature;
 
-  public ComboBoxModifier( final IRelationType ftp )
+  public ComboModifier( final IValuePropertyType ftp )
   {
-    m_rt = ftp;
-    m_comboBoxCellEditor.setStyle( SWT.READ_ONLY | SWT.DROP_DOWN );
+    m_vpt = ftp;
+
+    m_comboEntries = PropertyUtils.createComboEntries( m_vpt );
   }
 
   /**
@@ -85,47 +84,7 @@ public class ComboBoxModifier implements IFeatureModifier
    */
   public Object getValue( final Feature f )
   {
-    m_feature = f;
-    m_entries.clear();
-
-    final List<String> labels = new ArrayList<String>();
-
-    if( !m_rt.isInlineAble() && m_rt.isLinkAble() )
-    {
-      /* Null entry to delete link if this is allowed */
-      if( m_rt.isNillable() )
-      {
-        m_entries.add( null );
-        labels.add( NO_LINK_STRING );
-      }
-
-      /* Find all substituting features. */
-      final Feature feature = getFeature();
-
-      final GMLWorkspace workspace = feature.getWorkspace();
-
-      final Feature[] features = ComboFeatureControl.collectReferencableFeatures( workspace, m_feature, m_rt );
-
-      final GMLLabelProvider labelProvider = new GMLLabelProvider();
-
-      for( final Feature foundFeature : features )
-      {
-        if( foundFeature instanceof XLinkedFeature_Impl )
-        {
-          m_entries.add( foundFeature );
-        }
-        else
-        {
-          m_entries.add( foundFeature.getId() );
-        }
-
-        labels.add( labelProvider.getText( foundFeature ) );
-      }
-    }
-    m_comboBoxCellEditor.setItems( labels.toArray( new String[labels.size()] ) );
-
-    final Object property = f.getProperty( m_rt );
-    return m_entries.indexOf( property );
+    return f.getProperty( m_vpt );
   }
 
   /**
@@ -134,11 +93,7 @@ public class ComboBoxModifier implements IFeatureModifier
    */
   public Object parseInput( final Feature f, final Object value )
   {
-    final int counter = ((Integer) value).intValue();
-    if( counter >= 0 )
-      return m_entries.get( counter );
-    else //TODO: catch -1 and return null feature, is this correct?
-      return null;
+    return value;
   }
 
   /**
@@ -146,7 +101,25 @@ public class ComboBoxModifier implements IFeatureModifier
    */
   public CellEditor createCellEditor( final Composite parent )
   {
-    m_comboBoxCellEditor.create( parent );
+    final Map<Object, String> comboEntries = m_comboEntries;
+
+    final ArrayContentProvider cp = new ArrayContentProvider();
+    final LabelProvider lp = new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( final Object element )
+      {
+        return comboEntries.get( element );
+      }
+    };
+
+    final Object[] input = m_comboEntries.keySet().toArray( new Object[m_comboEntries.keySet().size()] );
+
+    m_comboBoxCellEditor = new ComboBoxViewerCellEditor( cp, lp, input, parent, SWT.READ_ONLY | SWT.DROP_DOWN );
+
     return m_comboBoxCellEditor;
   }
 
@@ -168,7 +141,7 @@ public class ComboBoxModifier implements IFeatureModifier
    */
   public IPropertyType getFeatureTypeProperty( )
   {
-    return m_rt;
+    return m_vpt;
   }
 
   /**
@@ -180,12 +153,11 @@ public class ComboBoxModifier implements IFeatureModifier
     // besser: abhängig vom IPropertyType etwas machen
     final IPropertyType ftp = getFeatureTypeProperty();
     final Object fprop = f.getProperty( ftp );
-    if( fprop != null )
-    {
-      return fprop.toString();
-    }
-    else
+
+    if( fprop == null )
       return NO_LINK_STRING;
+
+    return m_comboEntries.get( fprop );
   }
 
   /**
