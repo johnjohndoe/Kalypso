@@ -1262,3 +1262,29 @@ Kalypso 2.0.5       17. August 2007
      Die Parameter alpha_t und beta_w liegen in einem neuen Modul.
 
                                                            Wolf Plöger, 17.08.2007 
+
+
+Kalypso 2.0.5.2      3. Dezember 2007
+-------------------------------------
+1.)  Korrekturen und Erneuerungen fuer die Wehrroutine: w_ber, beiwert, g_wehr 
+    A.) Einheitliche Benennung für alle Wehrarten in allen betroffenen Routinen:
+        wl = Wehrlänge (in Fließrichtung)
+        wb = Wehrbreite (senkrecht zur Fließrichtung)
+        wh = Wehrhöhe (Höhe in [m])
+        Betrifft Übergabe an g_wehr von w_ber aus.
+    B.) Bugfix fuer Sicherung der letzten Werte in w_ber bei "keiner Konvergenz in der Engergiehoehen
+        Iteration": Werte h_v_opt und q_wehr_opt wurden nie belegt.
+    C.) Veränderung fuer die neue Energiehoehenschaetzung im OW des Wehres mit:
+        he = (he + hea_q + he_q)/ 3. 
+    D.) Neue Berechnungsformel für Überströmen: Beim Überströmen wird ein sogenannter Anstroemverlust 
+        ueber den Verlust-Beiwert K_verlust berücksichtigt.
+        K_verlust = (benetzter Umfang OW² * angeströmte Wehrfläche im OW * cw) / (benetzte Gesamtfläche im OW)²
+        So stellt sich ein glatterer Übergang zwischen vollkommenem bzw. unvollkommenem Überfall 
+        und Überströmen ein. Wird der Verlust-Beiwert kleiner eins, wird die ursprüngliche Gleichung 
+        ohne Verlust-Beiwert angesetzt.
+        
+2.)  Entkopplung der Berechnungsvarainte konstantes Reibungsgefälle zwischen den Profilen. Es werden keine
+     Startwerte mehr aus dem Unterwasser vorgegeben.
+     Betroffene Routinen: wspber, wspanf, station, verluste, eb2ks
+
+                                                           Monika Donner, 03.12.2007  

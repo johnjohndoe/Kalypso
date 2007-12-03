@@ -398,4 +398,20 @@ Kalypso 2.0.5       17. August 2007
      zu größeren Fließwiderständen und damit zu höheren Wasserspiegeln!
 
                                                            Wolf Plöger, 17.08.2007 
+
+Kalypso 2.0.5.2      3. Dezember 2007
+-------------------------------------
+1.)  Korrekturen und Erneuerungen fuer die Wehrroutine: w_ber, beiwert, g_wehr:       
+     Bugfix fuer Sicherung der letzten Werte in w_ber bei "keiner Konvergenz in der Engergiehoehen
+     Iteration". Veränderung fuer die neue Energiehoehenschaetzung im OW des Wehres.
+     Neue Berechnungsformel für Überströmen: Beim Überströmen wird ein sogenannter Anstroemverlust 
+     ueber den Verlust-Beiwert K_verlust berücksichtigt. So stellt sich ein glatterer Übergang zwischen 
+     vollkommenem bzw. unvollkommenem Überfall und Überströmen ein. Wird der Verlust-Beiwert kleiner eins, 
+     wird die ursprüngliche Gleichung ohne Verlust-Beiwert angesetzt.
+        
+2.)  Entkopplung der Berechnungsvarainte konstantes Reibungsgefälle zwischen den Profilen. Es werden keine
+     Startwerte mehr aus dem Unterwasser vorgegeben.
+     Betroffene Routinen: wspber, wspanf, station, verluste, eb2ks
+
+                                                           Monika Donner, 03.12.2007  
                                                           
