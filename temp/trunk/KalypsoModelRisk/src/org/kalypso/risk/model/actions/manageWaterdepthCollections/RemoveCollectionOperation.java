@@ -9,7 +9,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -54,12 +53,8 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
         }
 
         /* Delete coverage from collection */
-        final Feature parentFeature = featureToRemove.getParent();
-        final IRelationType pt = featureToRemove.getParentRelation();
-
+        final DeleteFeatureCommand command = new DeleteFeatureCommand( featureToRemove );
         final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IRasterDataModel.class );
-
-        final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, featureToRemove );
         workspace.postCommand( command );
       }
 
