@@ -47,7 +47,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -101,9 +100,7 @@ public class MapUtils
     {
       selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );
 
-      final Feature parent = featureToRemove.getParent();
-      final IRelationType parentRelation = featureToRemove.getParentRelation();
-      final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parent, parentRelation, featureToRemove );
+      final DeleteFeatureCommand command = new DeleteFeatureCommand( featureToRemove );
       compositeCommand.addCommand( command );
     }
 
