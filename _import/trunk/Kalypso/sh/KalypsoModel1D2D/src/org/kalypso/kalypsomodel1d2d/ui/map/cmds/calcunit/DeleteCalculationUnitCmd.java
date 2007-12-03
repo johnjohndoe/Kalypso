@@ -296,7 +296,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     if( !(propType instanceof IRelationType) )
       return;
     final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( controlModel1D2D.getWrappedFeature().getWorkspace() );
-    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( cmdWorkspace, parentFeature, (IRelationType) propType, controlModel1D2D.getWrappedFeature() );
+    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( controlModel1D2D.getWrappedFeature() );
     try
     {
       cmdWorkspace.postCommand( delControlCmd );
