@@ -151,13 +151,13 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
       for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
       {
         final Date date = (Date) model.getElement( cntFrom, dateAxis );
-        if( m_wizardPageZmlChooser.getFromDate().before( date ) )
+        if( m_wizardPageZmlChooser.getFromDate().before( date ) ||  m_wizardPageZmlChooser.getFromDate().equals( date ))
           break;
       }
       for( cntTo = cntFrom; cntTo < model.getCount(); cntTo++ )
       {
         final Date date = (Date) model.getElement( cntTo, dateAxis );
-        if( m_wizardPageZmlChooser.getToDate().before( date ) )
+        if( m_wizardPageZmlChooser.getToDate().before( date ))
         {
           cntTo--;
           break;

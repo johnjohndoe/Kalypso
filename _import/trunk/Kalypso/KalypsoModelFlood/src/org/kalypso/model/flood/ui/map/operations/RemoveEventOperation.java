@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.ui.map.EventManagementWidget;
@@ -83,12 +82,12 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
         }
 
         /* Delete coverage from collection */
-        final Feature parentFeature = featureToRemove.getParent();
-        final IRelationType pt = featureToRemove.getParentRelation();
+//        final Feature parentFeature = featureToRemove.getParent();
+//        final IRelationType pt = featureToRemove.getParentRelation();
 
         final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class );
 
-        final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, featureToRemove );
+        final DeleteFeatureCommand command = new DeleteFeatureCommand( featureToRemove );
 
         workspace.postCommand( command );
       }
