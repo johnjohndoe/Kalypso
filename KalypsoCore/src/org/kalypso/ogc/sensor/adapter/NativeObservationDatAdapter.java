@@ -76,7 +76,7 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
   // 02.01.1971 07:30:00 0
   // 03.01.1971 07:30:00 0
 
-  public static Pattern m_datPattern = Pattern.compile( "([0-9]{2}\\.[0-9]{2}\\.[0-9]{4}\\s+[0-9]{2}:[0-9]{2}:[0-9]{2}).+?([0-9\\.]+)" );
+  public static Pattern m_datPattern = Pattern.compile( "([0-9]{2}\\.[0-9]{2}\\.[0-9]{4}\\s+[0-9]{2}:[0-9]{2}:[0-9]{2}).+?(-??[0-9\\.]+)" );
 
   private String m_title;
 
@@ -101,7 +101,7 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
   {
     final MetadataList metaDataList = new MetadataList();
 //  TODO: allgemein setzten im Import dialog!
-    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
+    TimeZone timeZone = TimeZone.getTimeZone( "UTC" );
     m_grapDateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
@@ -122,9 +122,9 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
     final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
 
-    // ignorw first row
+    // ignore first row (not data here, by DAT format)
     reader.readLine();
-
+    
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )

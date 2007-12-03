@@ -308,7 +308,7 @@ public class ZmlFactory
           value = md.getData().replaceAll( XMLUtilities.CDATA_BEGIN_REGEX, "" ).replaceAll( XMLUtilities.CDATA_END_REGEX, "" );
         else
           value = "";
-        if( md.getName().equals( TimeserieConstants.MD_TIMEZONE ) )
+        if( md.getName().equals( TimeserieConstants.MD_TIMEZONE ) && md.getValue().length()>0)
           timeZone = TimeZone.getTimeZone( md.getValue() );
         metadata.put( md.getName(), value );
       }
@@ -485,7 +485,7 @@ public class ZmlFactory
         if( mdKey.equals( TimeserieConstants.MD_TIMEZONE ) )
         {
           timeZonePresent = true;
-          mdValue = timezone.getID(); // override with our timezone
+//          mdValue = timezone.getID(); // override with our timezone
         }
 
         // TRICKY: if this looks like an xml-string then pack it
