@@ -58,7 +58,6 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.ui.map.CoverageManagmentHelper;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
@@ -193,11 +192,11 @@ public class FloodModelHelper
         if( status == Status.OK_STATUS )
         {
           /* Delete coverage from collection */
-          final Feature parentFeature = resultCoverages.getWrappedFeature();
-          final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+//          final Feature parentFeature = resultCoverages.getWrappedFeature();
+//          final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
           final Feature coverageFeature = coverageToDelete.getWrappedFeature();
 
-          final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parentFeature, pt, coverageFeature );
+          final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
           workspace.postCommand( command );
 
           /* save the model */
