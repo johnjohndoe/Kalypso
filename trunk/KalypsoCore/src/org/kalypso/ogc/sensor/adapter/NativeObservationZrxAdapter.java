@@ -108,8 +108,11 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     final MetadataList metaDataList = new MetadataList();
     metaDataList.put( ObservationConstants.MD_ORIGIN, source.getAbsolutePath() );
     // TODO: allgemein setzten im Import dialog!
-    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
+    TimeZone timeZone = TimeZone.getTimeZone( "UTC" );
+// TimeZone timeZone = TimeZone.getDefault( );
+ metaDataList.put( TimeserieConstants.MD_TIMEZONE, "" );
     m_zrxDateFormat.setTimeZone( timeZone );
+    m_zrxDateFormatSec.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
     ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
