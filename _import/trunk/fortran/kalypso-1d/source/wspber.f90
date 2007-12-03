@@ -1,4 +1,4 @@
-!     Last change:  MD   15 Aug 2007    9:42 am
+!     Last change:  MD   28 Nov 2007    5:45 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -2189,9 +2189,13 @@ Hauptschleife: DO i = 1, maxger
 
       !**   str = abstand zwischen 2 Profilen?
       str = (stat (nprof) - stat (nprof - 1) ) * 1000.
+
       !**   Berechnung Anfangswasserspiegel nach Vorgabe von wsanf:
       hgrenz = 0.
-      strbr = str
+
+      !MD neu**  strbr = str
+      strbr = 0.   !MD neu**
+
       wsanf = -1 * GEFAELLE
 
       CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &

@@ -1,4 +1,4 @@
-!     Last change:  MD    7 Aug 2007    9:47 am
+!     Last change:  MD   28 Nov 2007    6:58 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -325,11 +325,13 @@ it2max = 4
 itere2 = 0
 
 
-IF (itere1.le.1 .and. nstat.gt.1) then
+IF (itere1.le.1 .and. nstat.gt.1 .and. BERECHNUNGSMODUS/='REIB_KONST') then   !MD neu**
   isenen = q_alt * q_alt / rg_alt / rg_alt
 ELSEIF (itere1.le.1.and.nstat.le.1) then
   isenen = 0.001
 ELSEIF (nstat.eq.1) then
+  isenen = q * q / rg / rg
+ELSEIF (nstat.gt.1 .and. BERECHNUNGSMODUS=='REIB_KONST') then   !MD neu**
   isenen = q * q / rg / rg
 ELSEIF (itere1.gt.1) then
   IF (REIBUNGSVERLUST == 'GEOMET') THEN

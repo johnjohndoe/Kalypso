@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    5:24 pm
+!     Last change:  MD   28 Nov 2007    6:59 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -332,6 +332,9 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   IF (nprof.eq.1.or.istat.eq.1) then
     hvst = 0.
 
+  ELSEIF (nprof.gt.1.and. BERECHNUNGSMODUS=='REIB_KONST') then  !MD neu**
+    hvst = 0.
+
   ELSE
 
     hv_uw = hv1
@@ -500,7 +503,13 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     rgm = 10000
 
   ELSEIF (nprof.eq.1.or.istat.eq.1) then
+    IF (rg.gt.1.e-06) then
+      rgm = q / rg * q / rg
+    ELSE
+      rgm = 0.001
+    ENDIF
 
+  ELSEIF (nprof.gt.1.and. BERECHNUNGSMODUS == 'REIB_KONST') then  !MD neu**
     IF (rg.gt.1.e-06) then
       rgm = q / rg * q / rg
     ELSE
@@ -552,11 +561,12 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   else  ! MD  fuer Reibungsgefaelle = konstant
     horts = 0.0
-    IF (nprof.ne.1.and.istat.ne.1) then
-      vu = sqrt (hv1 * 2 * 9.81)
-      vo = sqrt (hv * 2 * 9.81)
-      heins = (vu - vo) * (vu - vo) / (2 * 9.81)
-    ENDIF
+   ! IF (nprof.gt.1) then   !MD neu**
+      !vu = sqrt (hv1 * 2 * 9.81)
+      !vo = sqrt (hv * 2 * 9.81)
+      !heins = (vu - vo) * (vu - vo) / (2 * 9.81)
+
+    !ENDIF
   end if
 
 

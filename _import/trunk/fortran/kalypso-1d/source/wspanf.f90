@@ -1,4 +1,4 @@
-!     Last change:  MD    7 Aug 2007   12:17 pm
+!     Last change:  MD   28 Nov 2007    6:58 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -81,6 +81,7 @@ SUBROUTINE wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE IO_UNITS
+USE MOD_INI
 
 implicit none
 
@@ -215,6 +216,12 @@ IF (nprof.eq.1.or.strbr.ne.0.) then
                                                                         
   CALL grnzh (q, indmax, hgrenz, xi, hi, s)
 
+ELSEIF (nprof.gt.1 .and. BERECHNUNGSMODUS == 'REIB_KONST') then  !MD neu**
+  write (UNIT_OUT_LOG, 2000) hmin
+  2000 format (/1X, 'Aufruf von GRNZH in WSPANF mit   hmin = ', F8.3)
+
+  CALL grnzh (q, indmax, hgrenz, xi, hi, s)
+
 ENDIF
 
 100 CONTINUE
@@ -230,15 +237,16 @@ IF (wsanf.lt.0.) then
   !UT    Erstes profil, DANN str = 100
   IF (nprof.eq.1) then
     str = 100.
-  ELSEIF (nprof.ne.1) then   !MD neu fuer Reibungsgefaelle
-    str = strbr
+  ELSEIF (nprof.gt.1 .and. BERECHNUNGSMODUS == 'REIB_KONST') then !MD neu fuer Reibungsgefaelle
+   !MD neu** str = strbr
+    str = 100.
 
    !MD  NEU NEU NEU
-    ws1 = wsp (nprof - 1)
-    hv1 = hv
-    rg1 = rg
-    vmp1 = vmp (nprof - 1)
-    fges1 = fges
+   !MD neu** ws1 = wsp (nprof - 1)
+   !MD neu** hv1 = hv
+   !MD neu** rg1 = rg
+   !MD neu** vmp1 = vmp (nprof - 1)
+   !MD neu** fges1 = fges
   Endif
 
   CALL station (wsanf, nprof, hgrenz, q, hr, hv, rg, indmax, hvst, &

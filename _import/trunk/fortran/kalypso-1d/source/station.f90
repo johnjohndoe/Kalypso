@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    5:38 pm
+!     Last change:  MD   28 Nov 2007    5:57 pm
 !--------------------------------------------------------------------------
 ! This code, station.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -234,6 +234,8 @@ horts = 0.
 
 IF (nprof.eq.1) then
   q1 = 0.
+ELSEIF (nprof.gt.1 .and. BERECHNUNGSMODUS == 'REIB_KONST') then  !MD neu**
+  q1 = 0.
 ELSE
   q1 = q
 ENDIF
@@ -296,8 +298,10 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   dx = 0.02
   !     anfangswasserspiegel:
-  IF (nprof.gt.1) then
+  IF (nprof.gt.1 .and. BERECHNUNGSMODUS /= 'REIB_KONST') then      !MD neu**
     hr = ws1 - str * sgef
+  ELSEIF (nprof.gt.1 .and. BERECHNUNGSMODUS == 'REIB_KONST') then  !MD neu**
+    hr = hgrenz + 0.2
   ELSE
     hr = hgrenz + 0.2
   ENDIF
