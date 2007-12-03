@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -92,30 +91,27 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        if (MessageDialog.openConfirm( parent.getShell(), "Delete confirmation", "Do you really want to delete current model?" ))
+        if( MessageDialog.openConfirm( parent.getShell(), "Delete confirmation", "Do you really want to delete current model?" ) )
         {
           final Feature parentFeature = getFeature();
           final Object property = parentFeature.getProperty( getFeatureTypeProperty() );
-          if( property instanceof XLinkedFeature_Impl  )
+          if( property instanceof XLinkedFeature_Impl )
           {
-            final CommandableWorkspace commandableWorkspace = new CommandableWorkspace(parentFeature.getWorkspace());
+            final CommandableWorkspace commandableWorkspace = new CommandableWorkspace( parentFeature.getWorkspace() );
             final Feature fLinked = ((XLinkedFeature_Impl) property).getFeature();
-            
+
             /**
-             * XLinkedFeature_Impl's method getFeature will not return the instance from the collection
-             * (GM_envelope is null), so it cannot be removed by DeleteFeatureCommand;
-             * That's why we are getting feature from CommandableWorkspace 
+             * XLinkedFeature_Impl's method getFeature will not return the instance from the collection (GM_envelope is
+             * null), so it cannot be removed by DeleteFeatureCommand; That's why we are getting feature from
+             * CommandableWorkspace
              */
-            
+
             final Feature f = commandableWorkspace.getFeature( fLinked.getId() );
-//            final ICommandManager commandManager = new DefaultCommandManager();
-//            final Feature f = (XLinkedFeature_Impl) property;
-            final IRelationType relationType = f.getParentRelation();
-            final DeleteFeatureCommand command = new DeleteFeatureCommand(commandableWorkspace, parentFeature, relationType, f);
+            final DeleteFeatureCommand command = new DeleteFeatureCommand( f );
             try
             {
               commandableWorkspace.postCommand( command );
-//              commandManager.postCommand( command );
+              // commandManager.postCommand( command );
             }
             catch( Exception e1 )
             {
@@ -124,8 +120,8 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
             }
           }
         }
-//        for( FeatureChange change : changes );
-//          fireFeatureChange( change );
+        // for( FeatureChange change : changes );
+        // fireFeatureChange( change );
       }
     } );
     return m_button;
