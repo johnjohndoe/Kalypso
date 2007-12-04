@@ -46,6 +46,8 @@ import java.net.URL;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -139,15 +141,24 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
             ProgressUtilities.worked( progress, 1 );
           }
 
-          /* Also activate new project */
-          final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-          final Scenario caze = nature.getCaseManager().getCases().get( 0 );
-          KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+          final IWorkspaceRunnable action = new IWorkspaceRunnable()
+          {
+            /**
+             * @see org.eclipse.core.resources.IWorkspaceRunnable#run(org.eclipse.core.runtime.IProgressMonitor)
+             */
+            public void run( final IProgressMonitor subMonitor ) throws CoreException
+            {
+              /* Also activate new project */
+              final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+              final Scenario caze = nature.getCaseManager().getCases().get( 0 );
+              KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+              project.refreshLocal( 0, subMonitor );
+              description.setName( newName );
+              project.move( description, false, subMonitor );
+            }
+          };
+          project.getWorkspace().run( action, project, IWorkspace.AVOID_UPDATE, monitor );
           ProgressUtilities.worked( progress, 5 );
-
-          project.refreshLocal( 0, new NullProgressMonitor() );
-          description.setName( newName );
-          project.move( description, false, new NullProgressMonitor() );
         }
         catch( final CoreException t )
         {
@@ -178,5 +189,4 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
     // So the wizard must be closed now
     return true;
   }
-
 }
