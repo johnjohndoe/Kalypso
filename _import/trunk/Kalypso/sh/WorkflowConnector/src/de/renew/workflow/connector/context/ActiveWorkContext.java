@@ -17,17 +17,14 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
@@ -218,31 +215,10 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
     }
     else
     {
-      final Job job = new Job( "Szenario aktivieren" )
-      {
-        /**
-         * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-         */
-        @SuppressWarnings("synthetic-access")
-        @Override
-        protected IStatus run( IProgressMonitor monitor )
-        {
-          try
-          {
-            ensureProject( caze );
-          }
-          catch( final CoreException e )
-          {
-            return e.getStatus();
-          }
-          if( m_caseManager != null )
-            m_caseManager.setCurrentCase( caze );
-          fireActiveContextChanged( m_currentProjectNature, caze );
-          return Status.OK_STATUS;
-        }
-      };
-      job.setRule( ResourcesPlugin.getWorkspace().getRoot() );
-      job.schedule();
+      ensureProject( caze );
+      if( m_caseManager != null )
+        m_caseManager.setCurrentCase( caze );
+      fireActiveContextChanged( m_currentProjectNature, caze );
     }
   }
 
@@ -251,35 +227,30 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
    */
   private void ensureProject( final T caze ) throws CoreException
   {
-    if( caze == null )
-      setCurrentProject( null );
-    else
-    {
-      final IProject project = getProject( caze );
-      if( project.exists() )
-      {
-        // open a closed project, should we do this?
-        project.open( null );
-        setCurrentProject( (CaseHandlingProjectNature) project.getNature( m_natureID ) );
-      }
-      else
-      {
-        throw new CoreException( new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + project.getName() + " für den Case " + caze.getName() + " existiert nicht." ) );
-      }
-    }
-  }
-
-  private IProject getProject( final T caze ) throws CoreException
-  {
     try
     {
-      final URI uri = new URI( caze.getURI() );
-      final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( uri.getAuthority() );
-      return project;
+      if( caze == null )
+        setCurrentProject( null );
+      else
+      {
+        final URI uri = new URI( caze.getURI() );
+        final String projectName = uri.getAuthority();
+        final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
+        if( project.exists() )
+        {
+          // open a closed project, should we do this?
+          project.open( null );
+          setCurrentProject( (CaseHandlingProjectNature) project.getNature( m_natureID ) );
+        }
+        else
+        {
+          throw new CoreException( new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + projectName + " für den Case " + caze.getName() + " existiert nicht." ) );
+        }
+      }
     }
     catch( final URISyntaxException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      e.printStackTrace();
     }
   }
 

@@ -46,22 +46,18 @@ import java.net.URL;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 
@@ -115,9 +111,10 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
     final IProject project = getNewProject();
     final String newName = project.getName();
 
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( project.getWorkspace().getRoot() )
     {
-      public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+      @Override
+      public void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
         final SubMonitor progress = SubMonitor.convert( monitor, "Projektstruktur wird erzeugt", 50 );
         try
@@ -141,24 +138,14 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
             ProgressUtilities.worked( progress, 1 );
           }
 
-          final IWorkspaceRunnable action = new IWorkspaceRunnable()
-          {
-            /**
-             * @see org.eclipse.core.resources.IWorkspaceRunnable#run(org.eclipse.core.runtime.IProgressMonitor)
-             */
-            public void run( final IProgressMonitor subMonitor ) throws CoreException
-            {
-              /* Also activate new project */
-              final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-              final Scenario caze = nature.getCaseManager().getCases().get( 0 );
-              KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
-              project.refreshLocal( 0, subMonitor );
-              description.setName( newName );
-              project.move( description, false, subMonitor );
-            }
-          };
-          project.getWorkspace().run( action, project, IWorkspace.AVOID_UPDATE, monitor );
           ProgressUtilities.worked( progress, 5 );
+          /* Also activate new project */
+          final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+          final Scenario caze = nature.getCaseManager().getCases().get( 0 );
+          KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+          project.refreshLocal( 0, monitor );
+          description.setName( newName );
+          project.move( description, false, monitor );
         }
         catch( final CoreException t )
         {
@@ -176,8 +163,6 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
 
           throw new InvocationTargetException( t );
         }
-
-        return Status.OK_STATUS;
       }
     };
 
