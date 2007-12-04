@@ -791,7 +791,7 @@ public class GeometryUtilities
       if( geom != null )
       {
         final double curDist = point.distance( geom );
-        if( min > curDist && curDist < grabDistance )
+        if( min > curDist && curDist <= grabDistance )
         {
           nearest = feature;
           min = curDist;
