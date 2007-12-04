@@ -83,6 +83,8 @@ public interface ICalcUnitResultMeta extends IResultMeta
 
   public boolean containsChildType( final DOCUMENTTYPE type );
 
-  public IResultMeta getChild( DOCUMENTTYPE hydrograph );
+  public IDocumentResultMeta getDocument( DOCUMENTTYPE hydrograph );
+
+  public IDocumentResultMeta[] getDocuments( DOCUMENTTYPE hydrograph );
 
 }

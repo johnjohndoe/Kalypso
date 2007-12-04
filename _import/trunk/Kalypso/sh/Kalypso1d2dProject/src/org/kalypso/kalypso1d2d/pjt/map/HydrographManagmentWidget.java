@@ -41,12 +41,26 @@
 package org.kalypso.kalypso1d2d.pjt.map;
 
 import java.awt.Graphics;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -81,15 +95,27 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
+import org.kalypso.loader.LoaderException;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -105,11 +131,16 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -119,6 +150,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * A widget with option pane, which allows the user to create, edit and delete hydrographs for 1d2d result files.<BR>
@@ -163,6 +196,15 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     }
   };
 
+  private final Runnable m_refreshHydrographViewerRunnable = new Runnable()
+  {
+    @SuppressWarnings("synthetic-access")
+    public void run( )
+    {
+      ViewerUtilities.refresh( m_hydrographViewer, true );
+    }
+  };
+
   private ListViewer m_hydrographViewer;
 
   private IKalypsoFeatureTheme m_theme;
@@ -179,16 +221,24 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     public void themeAdded( IMapModell source, IKalypsoTheme theme )
     {
       refreshThemeCombo();
+      refreshControl();
     }
 
     /**
      * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
      *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
      */
+    @SuppressWarnings("synthetic-access")
     @Override
     public void themeRemoved( IMapModell source, IKalypsoTheme theme, boolean lastVisibility )
     {
+      /* check if the current theme has been removed */
+      if( theme.equals( m_theme ) )
+      {
+        setHydrographs( null, null );
+      }
       refreshThemeCombo();
+      refreshControl();
     }
   };
 
@@ -196,7 +246,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
   private Button m_addHydrographCollectionButton;
 
-  private Button m_removeHydrographCollectionButton;
+  private Button m_processHydrographCollectionButton;
 
   private IWidget m_delegateWidget;
 
@@ -260,7 +310,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
     /* Theme selection combo + add / remove calc unit hydrograph theme buttons */
     final Composite themeSelectionPanel = toolkit.createComposite( panel, SWT.NONE );
-    themeSelectionPanel.setLayout( new GridLayout( 4, false ) );
+    themeSelectionPanel.setLayout( new GridLayout( 5, false ) );
     themeSelectionPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toolkit.createLabel( themeSelectionPanel, "Teilmodell: ", SWT.NONE );
     m_themeCombo = new ComboViewer( themeSelectionPanel, SWT.READ_ONLY | SWT.DROP_DOWN );
@@ -270,6 +320,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     // buttons
     createAddCalcUnitButtonControl( themeSelectionPanel, toolkit );
     createRemoveCalcUnitButtonControl( themeSelectionPanel, toolkit );
+    createProcessHydrographButtonControl( themeSelectionPanel, toolkit );
 
     /* Hydrograph table + info pane */
     final Composite hydrographPanel = toolkit.createComposite( panel, SWT.NONE );
@@ -296,7 +347,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     /* Info view */
     final Group hydrographInfoGroup = new Group( panel, SWT.H_SCROLL );
     hydrographInfoGroup.setLayout( new GridLayout() );
-    final GridData infoGroupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    final GridData infoGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     hydrographInfoGroup.setLayoutData( infoGroupData );
     toolkit.adapt( hydrographInfoGroup );
     hydrographInfoGroup.setText( "Info" );
@@ -380,9 +431,9 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
         if( wizardDialog2.open() == Window.OK )
         {
+          // m_hydrographs = addCalcUnitWizard.getHydrograph();
           refreshThemeCombo();
         }
-
       }
     } );
 
@@ -390,13 +441,13 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
   private void createRemoveCalcUnitButtonControl( Composite parent, FormToolkit toolkit )
   {
-    m_removeHydrographCollectionButton = toolkit.createButton( parent, null, SWT.PUSH );
-    m_removeHydrographCollectionButton.setToolTipText( "Klicken Sie hier, um das aktuelle Teilmodell inkl. Ganglinien zu entfernen." );
+    m_processHydrographCollectionButton = toolkit.createButton( parent, null, SWT.PUSH );
+    m_processHydrographCollectionButton.setToolTipText( "Klicken Sie hier, um das aktuelle Teilmodell inkl. Ganglinien zu entfernen." );
 
     final ImageDescriptor removeID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_COLLECTION_REMOVE;
-    m_removeHydrographCollectionButton.setImage( removeID.createImage() );
+    m_processHydrographCollectionButton.setImage( removeID.createImage() );
 
-    m_removeHydrographCollectionButton.addSelectionListener( new SelectionAdapter()
+    m_processHydrographCollectionButton.addSelectionListener( new SelectionAdapter()
     {
       @SuppressWarnings("synthetic-access")
       @Override
@@ -408,9 +459,79 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
         IMapModell mapModell = mapPanel.getMapModell();
         mapModell.removeTheme( m_theme );
-        refreshThemeCombo();
       }
     } );
+
+  }
+
+  private void createProcessHydrographButtonControl( Composite parent, FormToolkit toolkit )
+  {
+    m_processHydrographCollectionButton = toolkit.createButton( parent, null, SWT.PUSH );
+    m_processHydrographCollectionButton.setToolTipText( "Klicken Sie hier, um anhand der Berechnungsergebnisse des Teilmodells die Ganglinien zu erzeugen." );
+
+    final ImageDescriptor processID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_COLLECTION_PROCESS;
+    m_processHydrographCollectionButton.setImage( processID.createImage() );
+
+    m_processHydrographCollectionButton.addSelectionListener( new SelectionAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( final SelectionEvent event )
+      {
+        handleprocessHydrograph();
+      }
+    } );
+
+  }
+
+  protected void handleprocessHydrograph( )
+  {
+
+    // save the model
+    final Runnable refreshRunnable = m_refreshHydrographViewerRunnable;
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      @SuppressWarnings("synthetic-access")
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+      {
+
+        m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
+
+        try
+        {
+          /* save the model */
+          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+          final CommandableWorkspace workspace = m_theme.getWorkspace();
+          pool.saveObject( workspace, new NullProgressMonitor() );
+
+          return Status.OK_STATUS;
+        }
+        catch( final LoaderException e )
+        {
+          e.printStackTrace();
+
+          throw new InvocationTargetException( e );
+        }
+      }
+    };
+
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+    ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), "Ganglinien erstellen", "Fehler.", status );
+
+    /* get the current calc unit results */
+    final Map<IPath, Date> results = m_hydrographs.getResults();
+
+    /* get the scenario folder */
+    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+
+    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+
+    processHydrographs( m_hydrographs, results, scenarioFolder );
+
+    /* get the node results of that calc unit */
+
+    /* process them */
 
   }
 
@@ -448,6 +569,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       if( workspace == null )
         return;
       workspace.removeModellListener( m_modellistener );
+      m_theme = null;
     }
     m_hydrographs = hydrographs;
     m_theme = theme;
@@ -462,7 +584,6 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       m_infoWidget.setThemes( new IKalypsoTheme[] { m_theme } );
 
     // updateStylePanel();
-
     final ListViewer hydrgraphViewer = m_hydrographViewer;
     if( hydrgraphViewer != null && !hydrgraphViewer.getControl().isDisposed() )
     {
@@ -483,6 +604,36 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
   protected void handleListSelectionChanged( Composite parent, ScrolledComposite sc, Composite panel, Group hydrographInfoGroup, FeatureComposite featureComposite, SelectionChangedEvent event )
   {
+    final Runnable refreshRunnable = m_refreshHydrographViewerRunnable;
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      @SuppressWarnings("synthetic-access")
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+      {
+
+        m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
+
+        try
+        {
+          /* save the model */
+          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+          final CommandableWorkspace workspace = m_theme.getWorkspace();
+          pool.saveObject( workspace, new NullProgressMonitor() );
+
+          return Status.OK_STATUS;
+        }
+        catch( final LoaderException e )
+        {
+          e.printStackTrace();
+
+          throw new InvocationTargetException( e );
+        }
+      }
+    };
+
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+    ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), "Ganglinien erstellen", "Fehler.", status );
+
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
     m_selectedHydrograph = (IHydrograph) selection.getFirstElement();
 
@@ -598,7 +749,6 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     // set widget
     EditHydrographWidget widget = new EditHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte selektieren", false, IHydrograph.QNAME_PROP_LOCATION, m_theme, this );
     setDelegate( widget );
-
   }
 
   protected void handleHydrographRemoved( @SuppressWarnings("unused")
@@ -716,7 +866,9 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
   protected void refreshThemeCombo( )
   {
     if( m_themeCombo == null || m_themeCombo.getControl().isDisposed() )
+    {
       return;
+    }
 
     /* get the map */
     final MapPanel mapPanel = getMapPanel();
@@ -738,7 +890,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       }
     }
 
-    if( themesForCombo.size() > 0 )
+    if( themesForCombo.size() >= 0 )
     {
       final Control control = m_themeCombo.getControl();
       final ComboViewer themeCombo = m_themeCombo;
@@ -750,7 +902,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
             return; // may be disposed meanwhile
 
           themeCombo.setInput( themesForCombo );
-
+          themeCombo.refresh();
           if( themesForCombo.size() > 0 )
             themeCombo.setSelection( new StructuredSelection( themesForCombo.get( 0 ) ) );
         }
@@ -830,5 +982,104 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
           m_hydrographViewer.setSelection( selection, true );
       }
     } );
+  }
+
+  protected void processHydrographs( final IHydrographCollection hydrographs, final Map<IPath, Date> results, final IFolder scenarioFolder )
+  {
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      public IStatus execute( final IProgressMonitor monitor )
+      {
+        try
+        {
+          /* get the hydrograph locations and observations */
+          final List<GM_Point> pointList = new LinkedList<GM_Point>();
+          for( IHydrograph hydrograph : hydrographs )
+          {
+            GM_Object location = hydrograph.getLocation();
+            if( location instanceof GM_Point )
+            {
+              final GM_Point point = (GM_Point) location;
+              pointList.add( point );
+              Feature wrappedFeature = hydrograph.getWrappedFeature();
+              IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( wrappedFeature );
+              TupleResult tuples = obs.getResult();
+              final IComponent[] components = tuples.getComponents();
+
+              // final IComponent dateComp = ComponentUtilities.findComponentByID( components,
+              // IHydrographConstants.LS_COMPONENT_STATION );
+              // final IComponent thalComp = ComponentUtilities.findComponentByID( components,
+              // IHydrographConstants.LS_COMPONENT_GROUND );
+              // final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components,
+              // IHydrographConstants.LS_COMPONENT_WATERLEVEL );
+              // final IComponent depthComp = ComponentUtilities.findComponentByID( components,
+              // IHydrographConstants.LS_COMPONENT_DEPTH );
+              // final IComponent velocityComp = ComponentUtilities.findComponentByID( components,
+              // IHydrographConstants.LS_COMPONENT_VELOCITY );
+              // final IComponent slopeComp = ComponentUtilities.findComponentByID( components,
+              // IHydrographConstants.LS_COMPONENT_SLOPE );
+              // final IComponent dischargeComp = ComponentUtilities.findComponentByID( components,
+              // IHydrographConstants.LS_COMPONENT_RUNOFF );
+
+            }
+          }
+
+          final Set<Entry<IPath, Date>> entrySet = results.entrySet();
+          for( Entry<IPath, Date> entry : entrySet )
+          {
+            /* get the observation */
+
+            /* get the date for which this result is valid */
+            final Date date = entry.getValue();
+
+            /* get the node result gml */
+            final IFolder folder = scenarioFolder.getFolder( entry.getKey() );
+
+            final URL hydrographURL = ResourceUtilities.createURL( folder );
+            final GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
+
+            final Feature feature = w.getRootFeature();
+            final INodeResultCollection nodeResultCollection = (INodeResultCollection) feature.getAdapter( INodeResultCollection.class );
+
+            final FeatureList list = nodeResultCollection.getWrappedList();
+
+            for( GM_Point point : pointList )
+            {
+              /* find the nearest node */
+              Feature nearestFeature = GeometryUtilities.findNearestFeature( point, 0.0, list, GMLNodeResult.QNAME_PROP_LOCATION );
+              if( nearestFeature != null )
+              {
+                /* get the data of that node */
+                final INodeResult nodeResult = (INodeResult) nearestFeature.getAdapter( INodeResult.class );
+                final double depth = nodeResult.getDepth();
+                final double waterlevel = nodeResult.getWaterlevel();
+                final double absoluteVelocity = nodeResult.getAbsoluteVelocity();
+                final List<Double> velocity = nodeResult.getVelocity();
+
+                /* add the data to the observation */
+                // final IRecord newRecord = tuples.createRecord();
+                // newRecord.setValue( waterlevelComp, waterlevel );
+                // newRecord.setValue( depthComp, depth );
+                // newRecord.setValue( slopeComp, slope );
+                // newRecord.setValue( velocityComp, velocity );
+                // if( discharge != null )
+                // newRecord.setValue( dischargeComp, discharge );
+                // tuples.add( newRecord );
+              }
+            }
+          }
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+          return StatusUtilities.statusFromThrowable( e, "Fehler während des Ergbnisauslesens." );
+        }
+        return Status.OK_STATUS;
+      }
+    };
+
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+    ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), "Ergebnisse auslesen", "Fehler.", status );
+
   }
 }

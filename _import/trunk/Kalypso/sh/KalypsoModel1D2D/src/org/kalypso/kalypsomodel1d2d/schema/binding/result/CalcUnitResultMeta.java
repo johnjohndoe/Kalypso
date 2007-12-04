@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -146,7 +148,7 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta#getChild(org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE)
    */
-  public IResultMeta getChild( DOCUMENTTYPE type )
+  public IDocumentResultMeta getDocument( DOCUMENTTYPE type )
   {
     final IFeatureWrapperCollection<IResultMeta> children = getChildren();
     for( IResultMeta child : children )
@@ -162,5 +164,50 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
     }
     return null;
 
+  }
+
+  /**
+   * returns all document children of the calc unit with specified type
+   */
+  public IDocumentResultMeta[] getDocuments( DOCUMENTTYPE documenttype )
+  {
+    List<IResultMeta> documentList = new LinkedList<IResultMeta>();
+
+    /* get all Node Documents */
+    IFeatureWrapperCollection<IResultMeta> calcUnitChildren = getChildren();
+
+    for( IResultMeta calcUnitChild : calcUnitChildren )
+    {
+      if( calcUnitChild instanceof IStepResultMeta )
+      {
+        IStepResultMeta stepResult = (IStepResultMeta) calcUnitChild;
+
+        IFeatureWrapperCollection<IResultMeta> StepChildren = stepResult.getChildren();
+        for( IResultMeta StepChild : StepChildren )
+        {
+          if( StepChild instanceof IDocumentResultMeta )
+          {
+            IDocumentResultMeta documentResult = (IDocumentResultMeta) StepChild;
+            DOCUMENTTYPE docType = documentResult.getDocumentType();
+
+            if( docType.equals( documenttype ) )
+            {
+              documentList.add( documentResult );
+            }
+          }
+        }
+      }
+      else if( calcUnitChild instanceof IDocumentResultMeta )
+      {
+        IDocumentResultMeta documentResult = (IDocumentResultMeta) calcUnitChild;
+        DOCUMENTTYPE docType = documentResult.getDocumentType();
+
+        if( docType.equals( documenttype ) )
+        {
+          documentList.add( documentResult );
+        }
+      }
+    }
+    return documentList.toArray( new IDocumentResultMeta[documentList.size()] );
   }
 }

@@ -40,9 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -59,8 +68,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.results.filters.NonCalcUnitResultViewerFilter;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -123,25 +135,24 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
       if( resultMeta instanceof ICalcUnitResultMeta )
       {
 
-        ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) resultMeta;
-
+        final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) resultMeta;
         try
         {
           /* gml handling */
 
-          // check, if a hydrograph was already created
-          IHydrographCollection newHydrograph = HydrographUtils.getHydrograph( calcUnitResult, m_scenarioFolder );
-
-          if( newHydrograph == null )
+          IHydrographCollection hydrograph = HydrographUtils.getHydrograph( calcUnitResult, m_scenarioFolder );
+          if( hydrograph == null )
           {
-            newHydrograph = HydrographUtils.createHydrograph( calcUnitResult, m_scenarioFolder );
+            hydrograph = HydrographUtils.createHydrograph( calcUnitResult, m_scenarioFolder );
           }
 
-          /* map handling */
+          /* save the feature */
+          saveModel( calcUnitResult, hydrograph );
 
+          /* map handling */
           // add hydrograph theme to the map
-          if( newHydrograph != null )
-            HydrographUtils.addHydrographTheme( m_mapModell, newHydrograph, calcUnitResult );
+          if( hydrograph != null )
+            HydrographUtils.addHydrographTheme( m_mapModell, hydrograph, calcUnitResult );
 
         }
         catch( Exception e )
@@ -154,6 +165,33 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
     }
     return true;
 
+  }
+
+  private void saveModel( final ICalcUnitResultMeta calcUnitResult, IFeatureWrapper2 hydrograph ) throws GmlSerializeException, CoreException, IOException
+  {
+    // get a path
+    final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" );
+    final IFolder calcUnitFolder = m_scenarioFolder.getFolder( docPath );
+
+    final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" );
+
+    final Feature feature = hydrograph.getWrappedFeature();
+    OutputStreamWriter writer = null;
+    try
+    {
+      writer = new OutputStreamWriter( new FileOutputStream( gmlResultFile.getLocation().toFile() ) );
+      GmlSerializer.serializeWorkspace( writer, feature.getWorkspace(), "UTF-8" );
+      writer.close();
+
+      // refresh workspace
+      /* update resource folder */
+      gmlResultFile.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
   }
 
   /**

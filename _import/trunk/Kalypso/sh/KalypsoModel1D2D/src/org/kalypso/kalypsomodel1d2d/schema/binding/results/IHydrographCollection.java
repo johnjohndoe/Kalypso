@@ -40,21 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
+import java.util.Date;
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IPath;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * @author Gernot Belger
+ * @author Thomas Jung
  * 
  */
 public interface IHydrographCollection extends IFeatureWrapperCollection<IHydrograph>
 {
   public final static QName QNAME_PROP_HYDROGRAPH_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "hydrographMember" );
 
+  public final static QName QNAME_PROP_RESULT_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "resultMember" );
+
+  public final static QName QNAME_PROP_RESULT_ENTRY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "HydrographResultType" );
+
+  public final static QName QNAME_PROP_RESULT_MEMBER_PATH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "path" );
+
+  public final static QName QNAME_PROP_RESULT_MEMBER_DATE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" );
+
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "HydrographCollection" );
 
   public IHydrograph findHydrograph( final GM_Position position, final double searchRectWidth );
+
+  /**
+   * sets the paths to the result files that have to be processed
+   */
+  public void setResults( final Map<IPath, Date> resultMap ) throws Exception;
+
+  public Map<IPath, Date> getResults( );
 }

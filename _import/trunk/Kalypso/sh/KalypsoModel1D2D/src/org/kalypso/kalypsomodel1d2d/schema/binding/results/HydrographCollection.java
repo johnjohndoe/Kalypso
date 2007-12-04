@@ -40,12 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -59,6 +71,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> implements IHydrographCollection
 {
+
   public HydrographCollection( final Feature featureCol )
   {
     this( featureCol, IHydrograph.class, IHydrographCollection.QNAME_PROP_HYDROGRAPH_MEMBER );
@@ -112,4 +125,55 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
     return foundFeatures;
   }
 
+  public Map<IPath, Date> getResults( )
+  {
+    final Feature feature = getFeature();
+    FeatureList resultFeatures = (FeatureList) feature.getProperty( QNAME_PROP_RESULT_MEMBER );
+
+    if( resultFeatures == null )
+      return null;
+
+    final Map<IPath, Date> resultList = new HashMap<IPath, Date>();
+
+    for( final Object object : resultFeatures )
+    {
+      Feature resultFeature = (Feature) object;
+      if( resultFeature == null )
+        return null;
+      String pathString = (String) resultFeature.getProperty( QNAME_PROP_RESULT_MEMBER_PATH );
+      IPath path = Path.fromPortableString( pathString );
+      Date date = DateUtilities.toDate( (XMLGregorianCalendar) resultFeature.getProperty( QNAME_PROP_RESULT_MEMBER_DATE ) );
+      resultList.put( path, date );
+    }
+
+    return resultList;
+  }
+
+  public void setResults( final Map<IPath, Date> resultMap ) throws Exception
+  {
+    final GMLWorkspace workspace = getFeature().getWorkspace();
+
+    final IRelationType relation = (IRelationType) getFeature().getFeatureType().getProperty( QNAME_PROP_RESULT_MEMBER );
+    final IFeatureType featureType = relation.getTargetFeatureType();
+
+    final Set<Entry<IPath, Date>> entrySet = resultMap.entrySet();
+
+    for( Entry<IPath, Date> entry : entrySet )
+    {
+      final IPath path = entry.getKey();
+      final String pathString = path.toPortableString();
+
+      final Date date = entry.getValue();
+      final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
+
+      /* Create the feature. */
+      final Feature feature = workspace.createFeature( getFeature(), relation, featureType );
+
+      /* set the values */
+      feature.setProperty( QNAME_PROP_RESULT_MEMBER_PATH, pathString );
+      feature.setProperty( QNAME_PROP_RESULT_MEMBER_DATE, gregorianCalendar );
+
+      workspace.addFeatureAsComposition( getFeature(), relation, 0, feature );
+    }
+  }
 }

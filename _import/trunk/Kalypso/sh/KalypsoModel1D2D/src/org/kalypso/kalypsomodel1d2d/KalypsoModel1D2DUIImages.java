@@ -81,11 +81,11 @@ public class KalypsoModel1D2DUIImages
 
   public static final ImageDescriptor ID_HYDROGRAPH_EXPORT = id( "icons/elcl16/hydrograph_export.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor ID_HYDROGRAPH_PROCESS = id( "icons/elcl16/hydro_process.gif" ); //$NON-NLS-1$
-
   public static final ImageDescriptor ID_HYDROGRAPH_COLLECTION_ADD = id( "icons/elcl16/add.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor ID_HYDROGRAPH_COLLECTION_REMOVE = id( "icons/elcl16/remove.gif" ); //$NON-NLS-1$
+
+  public static final ImageDescriptor ID_HYDROGRAPH_COLLECTION_PROCESS = id( "icons/elcl16/hydro_process.gif" ); //$NON-NLS-1$
 
   private KalypsoModel1D2DUIImages( )
   {

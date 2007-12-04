@@ -130,6 +130,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
       return;
 
     final FeatureList featureList = m_hydroTheme.getFeatureList();
+
     final Feature parentFeature = featureList.getParentFeature();
     m_hydrographCollection = (IHydrographCollection) parentFeature.getAdapter( IHydrographCollection.class );
   }

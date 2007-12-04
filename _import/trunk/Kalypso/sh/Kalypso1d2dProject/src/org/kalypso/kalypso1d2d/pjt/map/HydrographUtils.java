@@ -46,7 +46,10 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
@@ -62,6 +65,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -108,7 +112,7 @@ public class HydrographUtils
     return null;
   }
 
-  public static IHydrographCollection createHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, InvocationTargetException, GmlSerializeException, IOException
+  public static IHydrographCollection createHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws Exception
   {
     /* create new hydrograph.gml */
     final Feature hydrographFeature = createNewHydrograph( calcUnitResult, scenarioFolder );
@@ -118,28 +122,52 @@ public class HydrographUtils
     final String hydrographName = calcUnitResult.getName();
     newHydrograph.setName( hydrographName );
 
+    setResultPaths( newHydrograph, calcUnitResult, DOCUMENTTYPE.nodes );
+
     /* create a resultMeta entry */
     // delete the prior entry
-    IDocumentResultMeta resultMeta = (IDocumentResultMeta) calcUnitResult.getChild( DOCUMENTTYPE.hydrograph );
+    IDocumentResultMeta resultMeta = calcUnitResult.getDocument( DOCUMENTTYPE.hydrograph );
     if( resultMeta != null )
       calcUnitResult.removeChild( resultMeta );
 
-    calcUnitResult.addDocument( "Ganglinien", "Ganglinien des Teilmodells", DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null );
+    calcUnitResult.addDocument( "Ganglinien", "Ganglinien des Teilmodells " + calcUnitResult.getName(), DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null );
 
     return newHydrograph;
+  }
+
+  private static void setResultPaths( IHydrographCollection newHydrograph, ICalcUnitResultMeta calcUnitResult, DOCUMENTTYPE documenttype ) throws Exception
+  {
+    IDocumentResultMeta[] documents = calcUnitResult.getDocuments( documenttype );
+
+    Map<IPath, Date> resultMap = new HashMap<IPath, Date>();
+
+    for( IDocumentResultMeta documentResultMeta : documents )
+    {
+      IResultMeta parent = documentResultMeta.getParent();
+      if( parent instanceof IStepResultMeta )
+      {
+        IStepResultMeta stepResult = (IStepResultMeta) parent;
+        resultMap.put( documentResultMeta.getFullPath(), stepResult.getStepTime() );
+      }
+    }
+
+    newHydrograph.setResults( resultMap );
   }
 
   public static IHydrographCollection getHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws MalformedURLException, Exception
   {
     IDocumentResultMeta docResult;
-    final IResultMeta child = calcUnitResult.getChild( DOCUMENTTYPE.hydrograph );
+    final IResultMeta child = calcUnitResult.getDocument( DOCUMENTTYPE.hydrograph );
     if( child != null )
     {
+
       // get the hydrograph
       docResult = (IDocumentResultMeta) child;
       IPath docPath = docResult.getFullPath();
       IFolder folder = scenarioFolder.getFolder( docPath );
-      if( !folder.getFile( docPath ).exists() )
+
+      IFile file = folder.getFile( "" );
+      if( !file.exists() )
       {
         // delete non-valid result meta entry
         calcUnitResult.removeChild( docResult );
