@@ -53,13 +53,14 @@ public interface IWspmDictionaryConstants
 
   public static final String LS_COMPONENT_WATERLEVEL = LS_COMPONENT_URN + "#LengthSectionWaterlevel";
 
-// public static final String LS_COMPONENT_DEPTH = LS_COMPONENT_URN + "#LengthSectionDepth";
+  public static final String LS_COMPONENT_DEPTH = LS_COMPONENT_URN + "#LengthSectionDepth";
 
   public static final String LS_COMPONENT_VELOCITY = LS_COMPONENT_URN + "#LengthSection_v_m";
 
-// public static final String LS_COMPONENT_SLOPE = LS_COMPONENT_URN + "#LengthSectionSlope";
+  public static final String LS_COMPONENT_SLOPE = LS_COMPONENT_URN + "#LengthSectionSlope";
 
   public static final String LS_COMPONENT_RUNOFF = LS_COMPONENT_URN + "#LengthSectionRunOff";
 
   public static final String LS_COMPONENT_TYPE = LS_COMPONENT_URN + "#LengthSectionProfileType";
+
 }
