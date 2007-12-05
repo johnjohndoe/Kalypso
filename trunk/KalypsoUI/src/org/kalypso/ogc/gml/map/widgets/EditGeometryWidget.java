@@ -125,6 +125,7 @@ public class EditGeometryWidget extends AbstractWidget
     // valid envelope with handles
     final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
     final JMSelector selector = new JMSelector();
+
     // final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null );
     final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
     final List<Object> features = selector.select( envelope, featureListVisible, false );
@@ -134,7 +135,6 @@ public class EditGeometryWidget extends AbstractWidget
     final MapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaint();
-
   }
 
   /**
@@ -169,6 +169,16 @@ public class EditGeometryWidget extends AbstractWidget
     if( panel != null )
       panel.repaint();
 
+  }
+
+  public void resetDragging( )
+  {
+    m_startPoint = null;
+    m_dragPoint = null;
+    m_editHandles = null;
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
+      panel.repaint();
   }
 
   /**
