@@ -11,29 +11,21 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
  */
-public class CreateFE2DElementWidget extends AbstractWidget
+public class CreateFE2DElementWidget extends SnapToGeometryWidget
 {
-  private Point m_currentPoint = null;
-
   private ElementGeometryBuilder m_builder = null;
 
   private IKalypsoFeatureTheme m_nodeTheme;
-
-  private IFEDiscretisationModel1d2d m_discModel = null;
-
-  private final int m_radius = 20;
 
   public CreateFE2DElementWidget( )
   {
@@ -70,15 +62,6 @@ public class CreateFE2DElementWidget extends AbstractWidget
     m_discModel = UtilMap.findFEModelTheme( mapModell );
   }
 
-  @Override
-  public void moved( final Point p )
-  {
-    m_currentPoint = p;
-    final MapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaint();
-  }
-
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
@@ -89,22 +72,22 @@ public class CreateFE2DElementWidget extends AbstractWidget
     {
       /* snap to next node */
       // TODO: exclude already found nodes?
-      final MapPanel mapPanel = getMapPanel();
-      final GM_Point currentPosition = MapUtilities.transform( mapPanel, p );
-      final double snapDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPosition, m_radius );
-      final IFE1D2DNode snapNode = m_discModel.findNode( currentPosition, snapDistance );
-
       final ICommand command;
+      final IFE1D2DNode snapNode = getSnapNode();
       if( snapNode != null )
         command = m_builder.addNode( snapNode );
       else
+      {
+        final MapPanel mapPanel = getMapPanel();
+        final GM_Point currentPosition = MapUtilities.transform( mapPanel, p );
         command = m_builder.addNode( currentPosition );
+      }
       if( command != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
         reinit();
       }
-      mapPanel.repaint();
+      mapRepaint();
     }
     catch( final Exception e )
     {
@@ -145,8 +128,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    final Point currentPoint = m_currentPoint;
-
+    final Point currentPoint = getCurrentMapPoint();
     if( currentPoint != null )
     {
       if( m_builder != null )
@@ -161,10 +143,11 @@ public class CreateFE2DElementWidget extends AbstractWidget
   @Override
   public void keyTyped( final KeyEvent e )
   {
+    super.keyTyped( e );
     if( KeyEvent.VK_ESCAPE == e.getKeyChar() )
     {
-      this.reinit();
-      getMapPanel().repaint();
+      reinit();
+      mapRepaint();
     }
   }
 }

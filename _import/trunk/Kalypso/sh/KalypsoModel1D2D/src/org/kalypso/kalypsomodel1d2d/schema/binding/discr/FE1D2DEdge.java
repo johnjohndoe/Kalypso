@@ -292,7 +292,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#removeContainerAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
-  public boolean removeContainerAsRef( IFE1D2DElement containerToRemove )
+  public boolean removeContainerAsRef( final IFE1D2DElement containerToRemove )
   {
     Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" ); //$NON-NLS-1$
     final String id = containerToRemove.getGmlID();
@@ -321,7 +321,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   public void setNode( int index, final IFE1D2DNode node ) throws IndexOutOfBoundsException
   {
     m_nodes.getWrappedList().set( index, node.getGmlID() );
-    m_nodes.set( index, node );
+//    m_nodes.set( index, node );
   }
 
   /**

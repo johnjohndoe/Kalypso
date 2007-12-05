@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
-import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -52,20 +50,15 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.map.widgets.EditGeometryWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * {@link IWidget} that provide the mechnism for edition the geometrie of finite element concepts (Node, Edge, elements,
@@ -82,7 +75,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Dejan Antanaskovic
  * 
  */
-public class EditFEConceptGeometryWidget extends EditGeometryWidget
+public class EditFEConceptGeometryWidget extends SnapToGeometryWidget
 {
   private IKalypsoFeatureTheme m_nodeTheme;
 
@@ -95,20 +88,6 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
   private IKalypsoFeatureTheme m_flowRelationsTheme;
 
   private IMapModell m_mapModell;
-
-  private IFEDiscretisationModel1d2d m_discModel;
-
-  private MapPanel m_mapPanel;
-
-  private boolean m_snappingActive = true;
-
-  private IFE1D2DNode m_snapNode = null;
-
-  private IFE1D2DNode m_startNode;
-
-  private List<IFE1D2DNode> m_neighbourNodes = new ArrayList<IFE1D2DNode>();
-
-  private static final double SNAPPING_RADIUS = 0.1;
 
   public EditFEConceptGeometryWidget( )
   {
@@ -123,8 +102,7 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-    m_mapPanel = mapPanel;
-    m_mapModell = m_mapPanel.getMapModell();
+    m_mapModell = mapPanel.getMapModell();
     m_nodeTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     m_polyElementTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
     m_edgeTheme = UtilMap.findEditableTheme( m_mapModell, IFE1D2DEdge.QNAME );
@@ -134,157 +112,59 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#leftPressed(java.awt.Point)
-   */
-  @Override
-  public void leftPressed( Point p )
-  {
-    final GM_Point currentPosition = MapUtilities.transform( m_mapPanel, p );
-    m_startNode = m_discModel.findNode( currentPosition, SNAPPING_RADIUS );
-
-    // create the list of neighbour nodes to exclude from snapping into
-    // i.e. to prevent user to create zero-area polygons
-    m_neighbourNodes.clear();
-    if( m_startNode != null )
-    {
-      m_neighbourNodes.add( m_startNode );
-      final IFeatureWrapperCollection<IFeatureWrapper2> edgeContainers = m_startNode.getContainers();
-      for( final IFeatureWrapper2 edgeContainer : edgeContainers )
-      {
-        if( edgeContainer instanceof IFE1D2DEdge )
-        {
-          final IFE1D2DNode middleNode = ((IFE1D2DEdge) edgeContainer).getMiddleNode();
-          if( middleNode != null && !m_neighbourNodes.contains( middleNode ) )
-            m_neighbourNodes.add( middleNode );
-          final IFeatureWrapperCollection<IFeatureWrapper2> elementContainers = ((IFE1D2DEdge) edgeContainer).getContainers();
-          for( final IFeatureWrapper2 elementContainer : elementContainers )
-          {
-            if( elementContainer instanceof IFE1D2DElement )
-            {
-              final List<IFE1D2DNode> nodes = ((IFE1D2DElement) elementContainer).getNodes();
-              for( final IFE1D2DNode node : nodes )
-              {
-                if( !m_neighbourNodes.contains( node ) )
-                  m_neighbourNodes.add( node );
-              }
-            }
-          }
-        }
-      }
-    }
-    super.leftPressed( p );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#dragged(java.awt.Point)
-   */
-  @Override
-  public void dragged( final Point p )
-  {
-    if( !m_snappingActive )
-    {
-      super.dragged( p );
-      return;
-    }
-    final GM_Point currentPosition = MapUtilities.transform( m_mapPanel, p );
-    m_snapNode = m_discModel.findNode( currentPosition, SNAPPING_RADIUS );
-    if( m_snapNode != null )
-    {
-      if( isNodeSnappable() )
-      {
-        final Point snappedPoint = MapUtilities.retransform( m_mapPanel, m_snapNode.getPoint() );
-        super.dragged( snappedPoint );
-      }
-      else
-      {
-        m_snapNode = null;
-        super.dragged( p );
-      }
-    }
-    else
-      super.dragged( p );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyPressed( final KeyEvent e )
-  {
-    if( e.getKeyCode() == KeyEvent.VK_SHIFT )
-      m_snappingActive = false;
-    super.keyPressed( e );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyReleased( final KeyEvent e )
-  {
-    if( e.getKeyCode() == KeyEvent.VK_SHIFT )
-      m_snappingActive = true;
-    super.keyReleased( e );
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#perform()
    */
   @Override
   protected Collection<Feature> perform( )
   {
-    if( m_startNode == null )
+    final IFE1D2DNode startNode = getStartNode();
+    final IFE1D2DNode snapNode = getSnapNode();
+    if( startNode == null )
+    {
+      mapRepaint();
       return null;
-    if( m_snappingActive && m_snapNode != null && m_snapNode.equals( m_startNode ) )
+    }
+    if( isSnappingActive() && snapNode != null && snapNode.equals( startNode ) )
       return null;
     invalidateLists();
     final Collection<Feature> list = super.perform();
-    for( final Feature feature : list )
+    if( list != null )
     {
-      final IFE1D2DElement element = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
-      if( element != null )
+      for( final Feature feature : list )
       {
-        final List<IFE1D2DNode> nodes = element.getNodes();
-        for( final IFE1D2DNode node : nodes )
+        final IFE1D2DElement element = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+        if( element != null )
         {
-          if( node.equals( m_startNode ) && m_snappingActive && m_snapNode != null )
+          final List<IFE1D2DNode> nodes = element.getNodes();
+          for( final IFE1D2DNode node : nodes )
           {
-            m_discModel.replaceNode( node, m_snapNode );
-            final IFeatureWrapperCollection containers = m_snapNode.getContainers();
-            for( final Object containerObject : containers )
+            if( node.equals( startNode ) && isSnappingActive() && snapNode != null )
             {
-              if( containerObject instanceof IFE1D2DEdge )
-                ((IFE1D2DEdge) containerObject).recalculateMiddleNodePosition();
+              m_discModel.replaceNode( node, snapNode );
+              final IFeatureWrapperCollection containers = snapNode.getContainers();
+              for( final Object containerObject : containers )
+              {
+                if( containerObject instanceof IFE1D2DEdge )
+                  ((IFE1D2DEdge) containerObject).recalculateMiddleNodePosition();
+              }
             }
-          }
-          else
-          {
-            final IFeatureWrapperCollection containers = node.getContainers();
-            for( final Object containerObject : containers )
+            else
             {
-              if( containerObject instanceof IFE1D2DEdge )
-                ((IFE1D2DEdge) containerObject).recalculateMiddleNodePosition();
+              final IFeatureWrapperCollection containers = node.getContainers();
+              for( final Object containerObject : containers )
+              {
+                if( containerObject instanceof IFE1D2DEdge )
+                  ((IFE1D2DEdge) containerObject).recalculateMiddleNodePosition();
+              }
             }
           }
         }
       }
+      final GeometryRecalculator recalculator = new GeometryRecalculator( list, m_flowRelationsTheme );
+      recalculator.fireChanges();
     }
-    final GeometryRecalculator recalculator = new GeometryRecalculator( list, m_flowRelationsTheme );
-    recalculator.fireChanges();
+    mapRepaint();
     return list;
-  }
-
-  private final boolean isNodeSnappable( )
-  {
-    if( m_snapNode == null )
-      return true;
-    // we don't want to snap to our neighbours
-    if( m_neighbourNodes.contains( m_snapNode ) )
-      return false;
-    // neither to some middle node
-    if( m_snapNode.getContainers().size() < 2 )
-      return false;
-    return true;
   }
 
   private final void invalidateLists( )
@@ -301,5 +181,17 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget
         }
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.SnapToGeometryWidget#keyPressed(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyPressed( final KeyEvent e )
+  {
+    if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
+      resetDragging();
+    else
+      super.keyPressed( e );
   }
 }
