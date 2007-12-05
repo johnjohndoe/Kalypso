@@ -59,15 +59,12 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * {@link IWidget} that provide the mechnism for edition the geometrie of finite element concepts (Node, Edge, elements,
- * and Complex elements) This class decorate the {@link EditGeometryWidget} with the capability to :
+ * Widget that provides the snapping mechanism for editing the geometry of finite element:
  * <ul>
- * <li/>find all feature affected by a geometric change in the edited fe concepts; <li/>invalidate the envelops of the
- * found feature <li/> and fire feature change event holding the affected feature
+ * <li>Snapping to the nearest node in the snapping radius is the default behavior. 
+ * <li>Snapping will not occur if SHIFT button is pressed during the operation. 
+ * <li>Pressing the ESC button cancels the current operation 
  * </ul>
- * 
- * This widget rely on the assumtion that the map to edit has layer holding feture with the QName
- * {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
  * 
  * @author Dejan Antanaskovic
  * 
