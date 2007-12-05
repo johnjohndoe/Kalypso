@@ -42,7 +42,7 @@
         category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
         class="org.kalypso.risk.project.KalypsoRiskProjectWizard"
         finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-        icon="icons/pencil.gif"
+        icon="icons/risk_project.gif"
         id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
         name="Kalypso Risk Model"
         project="true">
@@ -50,13 +50,13 @@
 		</wizard>
 		<wizard
             class="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
-            icon="icons/pencil.gif"
+            icon="icons/risk_project.gif"
             id="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
             name="ImportLanduseShape"
             project="false"/>
   <wizard
         class="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
-        icon="icons/pencil.gif"
+        icon="icons/risk_project.gif"
         id="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
         name="ImportWaterlevelRaster"
         project="false">

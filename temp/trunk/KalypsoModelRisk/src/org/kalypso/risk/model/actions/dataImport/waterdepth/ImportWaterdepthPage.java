@@ -171,8 +171,8 @@ public class ImportWaterdepthPage extends WizardPage
 
   private void createControlButtonsPart( final Composite parent )
   {
-    final ImageDescriptor addBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/HQ_add.gif" );
-    final ImageDescriptor removeBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/delete.gif" );
+    final ImageDescriptor addBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_add.gif" );
+    final ImageDescriptor removeBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" );
     
     m_btnAddNew = new Button( parent, SWT.PUSH );
     m_btnAddNew.setImage( new Image( parent.getDisplay(), addBtnID.getImageData() ) );

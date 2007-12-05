@@ -314,9 +314,9 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
   private void initalizeTreeActions( final FormToolkit toolkit, final Composite parent )
   {
     // We are reusing images of KalypsoGmlUi here
-    final ImageDescriptor addEventID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/HQ_add.gif" );
-    final ImageDescriptor changeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_JUMP );
-    final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
+    final ImageDescriptor addEventID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_add.gif" );
+    final ImageDescriptor changeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_change_annuality.gif" );
+    final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" );
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
 
