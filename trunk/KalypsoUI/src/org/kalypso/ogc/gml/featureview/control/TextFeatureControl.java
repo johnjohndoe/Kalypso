@@ -84,7 +84,7 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   {
     super( feature, ftp );
 
-//    m_modifier = new StringModifier( ftp, "%s" );
+// m_modifier = new StringModifier( ftp, "%s" );
     m_modifier = factory.createFeatureModifier( ftp, format, manager, fcl );
   }
 
@@ -177,7 +177,11 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
       // compare with old to prevent loop
       final String newText = toString();
       final String oldText = m_text.getText();
-      if( newText.compareTo( oldText ) != 0 )
+
+      // what if the value is null???
+      if( newText != null && oldText == null )
+        m_text.setText( newText );
+      else if( newText != null && oldText != null && newText.compareTo( oldText ) != 0 )
         m_text.setText( newText );
     }
 
