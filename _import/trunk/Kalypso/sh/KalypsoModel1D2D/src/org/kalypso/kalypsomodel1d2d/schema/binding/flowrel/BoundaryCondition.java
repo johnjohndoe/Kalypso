@@ -61,6 +61,8 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public class BoundaryCondition extends FlowRelationship implements IBoundaryCondition
 {
+  private IObservation<TupleResult> m_observation;
+
   public BoundaryCondition( final Feature featureToBind )
   {
     super( featureToBind, IBoundaryCondition.QNAME );
@@ -108,6 +110,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   public void setObservation( final IObservation<TupleResult> obs )
   {
     ObservationFeatureFactory.toFeature( obs, getTimeserieFeature() );
+    m_observation = null;
   }
 
   /**
@@ -115,7 +118,10 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
    */
   public IObservation<TupleResult> getObservation( )
   {
-    return ObservationFeatureFactory.toObservation( getTimeserieFeature() );
+    // for big timeseries this operation is verrrry slow, and function is called several times, so a bit of cache-ing..
+    if( m_observation == null )
+      m_observation = ObservationFeatureFactory.toObservation( getTimeserieFeature() );
+    return m_observation;
   }
 
   /**
