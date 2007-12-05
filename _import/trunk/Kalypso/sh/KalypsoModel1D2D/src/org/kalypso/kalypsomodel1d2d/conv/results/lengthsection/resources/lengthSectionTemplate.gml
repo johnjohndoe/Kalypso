@@ -13,6 +13,7 @@
   <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11897777681390">
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff"/>
+   <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m"/>
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"/>
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
    <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>

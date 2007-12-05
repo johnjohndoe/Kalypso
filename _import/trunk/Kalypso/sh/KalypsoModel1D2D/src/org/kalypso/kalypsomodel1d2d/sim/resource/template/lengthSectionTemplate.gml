@@ -31,6 +31,8 @@
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff"/>
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"/>
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff"/>
         </swe:RecordDefinition>
     </om:resultDefinition>
     <om:result></om:result>

@@ -522,12 +522,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // discharge
     // Q = v x A
     // A = A(y) //get it from the polynomials
+
+    // TODO: possibly this is wrong because the real discharge is calculated during calculation(?)
     final BigDecimal area = getCrossSectionArea( teschkeRelation, depth );
 
     BigDecimal discharge = null;
     if( area != null )
     {
-      discharge = velocity.multiply( area );
+      discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      nodeResult.setDischarge( discharge.doubleValue() );
     }
 
     // markers for Trennflächen / Bordvollpunkte u.ä.
@@ -538,22 +541,21 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final IComponent stationComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_STATION );
     final IComponent thalComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_GROUND );
     final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL );
+    final IComponent velocityComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
+    final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
     // final IComponent depthComp = ComponentUtilities.findComponentByID( components,
     // IWspmDictionaryConstants.LS_COMPONENT_DEPTH );
-    // final IComponent velocityComp = ComponentUtilities.findComponentByID( components,
-    // IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
     // final IComponent slopeComp = ComponentUtilities.findComponentByID( components,
     // IWspmDictionaryConstants.LS_COMPONENT_SLOPE );
-    final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
 
     final IRecord newRecord = tuples.createRecord();
 
     newRecord.setValue( stationComp, station );
     newRecord.setValue( thalComp, thalweg );
     newRecord.setValue( waterlevelComp, waterlevel );
+    newRecord.setValue( velocityComp, velocity );
     // newRecord.setValue( depthComp, depth );
     // newRecord.setValue( slopeComp, slope );
-    // newRecord.setValue( velocityComp, velocity );
     if( discharge != null )
       newRecord.setValue( dischargeComp, discharge );
 

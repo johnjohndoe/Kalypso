@@ -149,6 +149,18 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="discharge" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Abfluss</xs:label>
+								<xs:description><![CDATA[nur für 1d Knoten-Elemente verfügbar.]]></xs:description>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Discharge</xs:label>
+								<xs:description><![CDATA[only for 1d elements.]]></xs:description>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="midside" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
