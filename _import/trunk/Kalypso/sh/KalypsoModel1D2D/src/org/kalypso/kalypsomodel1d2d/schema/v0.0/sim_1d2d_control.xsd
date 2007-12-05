@@ -734,7 +734,7 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="_steadyBC">
+					<xs:element name="_steadyBC" default="0.5">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Relaxationsfaktor</xs:label>
