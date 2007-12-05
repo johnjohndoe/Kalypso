@@ -7,6 +7,8 @@
 		<Layers>
 			<LayerRef ref="gridLayer" />
 			<LayerRef ref="wsp" />
+			<LayerRef ref="runoff" />
+			<LayerRef ref="velocity" />
 			<LayerRef ref="soil" />
 		</Layers>
 	</Chart>
@@ -77,6 +79,29 @@
 		</Mapper>
 		<Style>
 			<StyleRef ref="runoffStyle" />
+		</Style>
+
+	</Layer>
+	<Layer id="velocity" visible="true">
+		<Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
+			<Parameters>
+				<Parameter value="lengthSection.gml" name="href" />
+				<Parameter value="" name="gxlpath" />
+				<Parameter value="LengthSectionResult" name="observationId" />
+				<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
+				<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" name="targetComponentId" />
+			</Parameters>
+		</Provider>
+
+		<Title>Geschwindigkeit</Title>
+		<Description></Description>
+
+		<Mapper>
+			<DomainAxisRef ref="Station_Axis" />
+			<TargetAxisRef ref="MS_Axis" />
+		</Mapper>
+		<Style>
+			<StyleRef ref="veloStyle" />
 		</Style>
 
 	</Layer>
@@ -220,6 +245,16 @@
 		<RendererRef ref="NumberAxisRenderer" />
 	</Axis>
 
+	<Axis id="MS_Axis">
+		<Provider epid="org.kalypso.chart.ext.axis.provider.Number"></Provider>
+		<Label>Geschwindigkeit [m/s]</Label>
+		<Direction>POSITIVE</Direction>
+		<Position>RIGHT</Position>
+		<MinVal>-5.0</MinVal>
+		<MaxVal>10.0</MaxVal>
+		<RendererRef ref="NumberAxisRenderer" />
+	</Axis>
+
 
 	<AxisRenderer id="NumberAxisRenderer">
 		<Provider epid="org.kalypso.chart.ext.axisrenderer.provider.Number">
@@ -243,9 +278,6 @@
 		</Provider>
 	</AxisRenderer>
 
-
-
-
 	<Style id="wspStyle">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
 			<Parameters>
@@ -264,6 +296,18 @@
 				<Parameter value="2" name="lineWidth" />
 				<Parameter value="SOLID" name="lineStyle" />
 				<Parameter value="#ff0000" name="lineColor" />
+			</Parameters>
+		</Provider>
+		<StyleID></StyleID>
+		<Type>LINE</Type>
+	</Style>
+
+	<Style id="veloStyle">
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
+			<Parameters>
+				<Parameter value="2" name="lineWidth" />
+				<Parameter value="SOLID" name="lineStyle" />
+				<Parameter value="#ffff00" name="lineColor" />
 			</Parameters>
 		</Provider>
 		<StyleID></StyleID>

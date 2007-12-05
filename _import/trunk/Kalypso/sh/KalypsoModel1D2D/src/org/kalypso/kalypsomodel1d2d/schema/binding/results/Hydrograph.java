@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -73,6 +77,41 @@ public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
   public void setLocation( GM_Point point )
   {
     getWrappedFeature().setProperty( QNAME_PROP_LOCATION, point );
+  }
+
+  public IObservation<TupleResult> initializeObservation( final String domainComponentUrn, final String valueComponentUrn )
+  {
+    final Feature obsFeature = getFeature();
+
+    // if( domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals(
+    // Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
+    // getFeature().setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) );
+    // else
+    // getFeature().setProperty( QNAME_P_DIRECTION, null );
+
+    final String[] componentUrns = new String[] { domainComponentUrn, valueComponentUrn };
+    final IComponent[] components = new IComponent[componentUrns.length];
+
+    for( int i = 0; i < components.length; i++ )
+      components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
+
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
+
+    final TupleResult result = obs.getResult();
+    for( final IComponent component : components )
+      result.addComponent( component );
+
+    return obs;
+  }
+
+  public void setObservation( final IObservation<TupleResult> obs )
+  {
+    ObservationFeatureFactory.toFeature( obs, getFeature() );
+  }
+
+  public IObservation<TupleResult> getObservation( )
+  {
+    return ObservationFeatureFactory.toObservation( getFeature() );
   }
 
 }

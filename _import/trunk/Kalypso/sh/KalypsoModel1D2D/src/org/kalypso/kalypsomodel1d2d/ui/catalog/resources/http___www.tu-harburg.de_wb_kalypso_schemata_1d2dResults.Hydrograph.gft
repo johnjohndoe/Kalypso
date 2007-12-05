@@ -4,7 +4,6 @@
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="4" />
 
-	
 	<gft:label text="Name" visible="true" tooltip="Name" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
@@ -18,12 +17,6 @@
 	<gft:text editable="true" property="gml:description" tooltip="Beschreibung" style="SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="3" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
 	</gft:text>
-
-
-
-
-
-
 
 	<gft:tupleResult property="om:result" tooltip="Ganglinie" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION">
 		<gft:visibleOperation>

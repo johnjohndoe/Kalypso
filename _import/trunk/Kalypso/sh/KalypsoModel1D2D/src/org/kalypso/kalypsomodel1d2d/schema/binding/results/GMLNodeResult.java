@@ -79,6 +79,8 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
   private static final QName QNAME_PROP_VELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velocity" );
 
+  private static final QName QNAME_PROP_DISCHARGE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "discharge" );
+
   private static final QName QNAME_PROP_MIDSIDE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "midside" );
 
   private static final QName QNAME_PROP_DRY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "dry" );
@@ -208,7 +210,6 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   public void setVelocity( final List<Double> velocity )
   {
     getFeature().setProperty( QNAME_PROP_VELOCITY, velocity );
-
   }
 
   /**
@@ -280,7 +281,6 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   public void setVirtualDepth( final double virtualDepth )
   {
     getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDepth ) );
-
   }
 
   public void setVelocity( double velo )
@@ -297,5 +297,21 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     velocity.add( vx );
     velocity.add( vy );
     setVelocity( velocity );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDischarge()
+   */
+  public double getDischarge( )
+  {
+    return (Double) getFeature().getProperty( QNAME_PROP_DISCHARGE );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDischarge(double)
+   */
+  public void setDischarge( double discharge )
+  {
+    getFeature().setProperty( QNAME_PROP_DISCHARGE, new Double( discharge ) );
   }
 }

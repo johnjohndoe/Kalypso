@@ -95,4 +95,8 @@ public interface INodeResult extends IFeatureWrapper2
 
   public int getDry( );
 
+  public abstract double getDischarge( );
+
+  public abstract void setDischarge( final double discharge );
+
 }
