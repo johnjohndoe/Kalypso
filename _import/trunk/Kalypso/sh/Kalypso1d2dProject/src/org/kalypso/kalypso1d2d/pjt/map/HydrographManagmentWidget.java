@@ -42,14 +42,10 @@ package org.kalypso.kalypso1d2d.pjt.map;
 
 import java.awt.Graphics;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
@@ -98,24 +94,17 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.loader.LoaderException;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -131,8 +120,6 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -140,7 +127,6 @@ import org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -478,13 +464,14 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       @Override
       public void widgetSelected( final SelectionEvent event )
       {
-        handleprocessHydrograph();
+        saveModell();
+        handleprocessHydrograph( event );
       }
     } );
 
   }
 
-  protected void handleprocessHydrograph( )
+  protected void saveModell( )
   {
 
     // save the model
@@ -518,21 +505,27 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), "Ganglinien erstellen", "Fehler.", status );
 
+  }
+
+  protected void handleprocessHydrograph( final SelectionEvent event )
+  {
+    final Shell shell = event.display.getActiveShell();
+
     /* get the current calc unit results */
     final Map<IPath, Date> results = m_hydrographs.getResults();
 
     /* get the scenario folder */
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-    processHydrographs( m_hydrographs, results, scenarioFolder );
+    /* process */
+    final ICoreRunnableWithProgress processOperation = new HydrographProcessResultsOperation( m_hydrographs, results, scenarioFolder );
 
-    /* get the node results of that calc unit */
-
-    /* process them */
-
+    final IStatus resultStatus = ProgressUtilities.busyCursorWhile( processOperation );
+    if( !resultStatus.isOK() )
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( resultStatus );
+    ErrorDialog.openError( shell, "Daten für Ganglinien auslesen", "Fehler beim Auslesen", resultStatus );
   }
 
   private void initializeThemeCombo( )
@@ -982,104 +975,5 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
           m_hydrographViewer.setSelection( selection, true );
       }
     } );
-  }
-
-  protected void processHydrographs( final IHydrographCollection hydrographs, final Map<IPath, Date> results, final IFolder scenarioFolder )
-  {
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      public IStatus execute( final IProgressMonitor monitor )
-      {
-        try
-        {
-          /* get the hydrograph locations and observations */
-          final List<GM_Point> pointList = new LinkedList<GM_Point>();
-          for( IHydrograph hydrograph : hydrographs )
-          {
-            GM_Object location = hydrograph.getLocation();
-            if( location instanceof GM_Point )
-            {
-              final GM_Point point = (GM_Point) location;
-              pointList.add( point );
-              Feature wrappedFeature = hydrograph.getWrappedFeature();
-              IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( wrappedFeature );
-              TupleResult tuples = obs.getResult();
-              final IComponent[] components = tuples.getComponents();
-
-              // final IComponent dateComp = ComponentUtilities.findComponentByID( components,
-              // IHydrographConstants.LS_COMPONENT_STATION );
-              // final IComponent thalComp = ComponentUtilities.findComponentByID( components,
-              // IHydrographConstants.LS_COMPONENT_GROUND );
-              // final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components,
-              // IHydrographConstants.LS_COMPONENT_WATERLEVEL );
-              // final IComponent depthComp = ComponentUtilities.findComponentByID( components,
-              // IHydrographConstants.LS_COMPONENT_DEPTH );
-              // final IComponent velocityComp = ComponentUtilities.findComponentByID( components,
-              // IHydrographConstants.LS_COMPONENT_VELOCITY );
-              // final IComponent slopeComp = ComponentUtilities.findComponentByID( components,
-              // IHydrographConstants.LS_COMPONENT_SLOPE );
-              // final IComponent dischargeComp = ComponentUtilities.findComponentByID( components,
-              // IHydrographConstants.LS_COMPONENT_RUNOFF );
-
-            }
-          }
-
-          final Set<Entry<IPath, Date>> entrySet = results.entrySet();
-          for( Entry<IPath, Date> entry : entrySet )
-          {
-            /* get the observation */
-
-            /* get the date for which this result is valid */
-            final Date date = entry.getValue();
-
-            /* get the node result gml */
-            final IFolder folder = scenarioFolder.getFolder( entry.getKey() );
-
-            final URL hydrographURL = ResourceUtilities.createURL( folder );
-            final GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
-
-            final Feature feature = w.getRootFeature();
-            final INodeResultCollection nodeResultCollection = (INodeResultCollection) feature.getAdapter( INodeResultCollection.class );
-
-            final FeatureList list = nodeResultCollection.getWrappedList();
-
-            for( GM_Point point : pointList )
-            {
-              /* find the nearest node */
-              Feature nearestFeature = GeometryUtilities.findNearestFeature( point, 0.0, list, GMLNodeResult.QNAME_PROP_LOCATION );
-              if( nearestFeature != null )
-              {
-                /* get the data of that node */
-                final INodeResult nodeResult = (INodeResult) nearestFeature.getAdapter( INodeResult.class );
-                final double depth = nodeResult.getDepth();
-                final double waterlevel = nodeResult.getWaterlevel();
-                final double absoluteVelocity = nodeResult.getAbsoluteVelocity();
-                final List<Double> velocity = nodeResult.getVelocity();
-
-                /* add the data to the observation */
-                // final IRecord newRecord = tuples.createRecord();
-                // newRecord.setValue( waterlevelComp, waterlevel );
-                // newRecord.setValue( depthComp, depth );
-                // newRecord.setValue( slopeComp, slope );
-                // newRecord.setValue( velocityComp, velocity );
-                // if( discharge != null )
-                // newRecord.setValue( dischargeComp, discharge );
-                // tuples.add( newRecord );
-              }
-            }
-          }
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-          return StatusUtilities.statusFromThrowable( e, "Fehler während des Ergbnisauslesens." );
-        }
-        return Status.OK_STATUS;
-      }
-    };
-
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), "Ergebnisse auslesen", "Fehler.", status );
-
   }
 }

@@ -114,6 +114,15 @@ public class SelectLengthSectionWizard extends Wizard
       return false;
     }
 
+    for( IResultMeta result : results )
+    {
+      if( !(result instanceof IDocumentResultMeta) )
+      {
+        MessageDialog.openInformation( getShell(), "Sie haben ein falsches Element selektiert", "In Ihrer Selektion befindet sich ein Datensatz, der kein Länggschnitt ist. Bitte wählen Sie nur Längsschnittdaten aus." );
+        return false;
+      }
+    }
+
     /* Start */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
