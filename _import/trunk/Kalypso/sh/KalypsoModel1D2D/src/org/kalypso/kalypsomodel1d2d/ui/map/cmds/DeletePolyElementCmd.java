@@ -47,6 +47,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
@@ -100,7 +101,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_element2D.getEdges();
     for( final IFE1D2DEdge edge : edges )
     {
-      final IFeatureWrapperCollection containers = edge.getContainers();
+      final FeatureList containers = edge.getContainers().getWrappedList();
       while( containers.contains( elementID ) )
         containers.remove( elementID );
       remEdgeCmd.setEdgeToDel( edge );

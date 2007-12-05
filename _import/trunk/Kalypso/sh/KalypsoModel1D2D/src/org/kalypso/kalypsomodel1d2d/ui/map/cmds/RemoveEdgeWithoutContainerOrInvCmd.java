@@ -90,8 +90,8 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
    */
   public void process( ) throws Exception
   {
-//    if( !m_edgeToDelete.getContainers().isEmpty() )
-//      return;
+    if( !m_edgeToDelete.getContainers().isEmpty() )
+      return;
     final List<IFE1D2DNode> nodesInvolved = new ArrayList<IFE1D2DNode>();
 
     if( m_edgeToDelete instanceof IEdgeInv )

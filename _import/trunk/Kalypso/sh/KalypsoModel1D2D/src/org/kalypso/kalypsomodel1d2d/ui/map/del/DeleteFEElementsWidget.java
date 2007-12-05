@@ -71,9 +71,9 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
       e.printStackTrace();
     }
     // TODO: check if this repaint is necessary for the widget
-    final MapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaint();
+//    final MapPanel panel = getMapPanel();
+//    if( panel != null )
+//      panel.repaint();
 
   }
 
@@ -181,9 +181,7 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
     final EasyFeatureWrapper[] selected = selectionManager.getAllFeatures();
     if( selected.length == 0 )
-    {
       return;
-    }
 
     if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Objekte löschen", "Selektierte Objekte werden gelöscht. Sind Sie sicher?" ) )
       return;
