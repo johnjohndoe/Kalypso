@@ -65,5 +65,5 @@ public interface Kalypso1D2DDictConstants
 
   public static final String DICT_COMPONENT_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Depth";
 
-  public static final String DICT_COMPONENT_VEOCITY = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Velocity";
+  public static final String DICT_COMPONENT_VELOCITY = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Velocity";
 }

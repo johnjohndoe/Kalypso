@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.ksp.org/chart/factory"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.ksp.org/chart/factory ../../kalypso_workspace_dev_3.3/ChartFactory/etc/binding/schema/ChartConfiguration.xsd">
@@ -40,7 +40,7 @@
 			</Parameters>
 		</Provider>
 		<Title>Abflusspolynome</Title>
-		<Description>Abflusspolynome abhängig vom Wasserspiegel</Description>
+		<Description>Abflusspolynome abhÃ¤ngig vom Wasserspiegel</Description>
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="runoff_Axis" />
@@ -64,7 +64,7 @@
 			</Parameters>
 		</Provider>
 		<Title>Abfluss</Title>
-		<Description>Abfluss abhängig vom Wasserspiegel</Description>
+		<Description>Abfluss abhÃ¤ngig vom Wasserspiegel</Description>
 
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
@@ -102,7 +102,7 @@
 	</Layer>
 	<Axis id="runoff_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-		<Label>Abfluss [m³/s]</Label>
+		<Label>Abfluss [mÂ³/s]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
 		<MinVal>5.0</MinVal>
@@ -111,7 +111,7 @@
 	</Axis>
 	<Axis id="runoffDelta_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-		<Label>Abfluss-Delta [m³/s]</Label>
+		<Label>Abfluss-Delta [mÂ³/s]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
 		<MinVal>5.0</MinVal>
@@ -149,8 +149,8 @@
 	</Style>
 
 	<Chart id="areaChart">
-		<Title>Fläche</Title>
-		<Description>Flächenwerte der Berechnung</Description>
+		<Title>FlÃ¤che</Title>
+		<Description>FlÃ¤chenwerte der Berechnung</Description>
 		<Layers>
 			<LayerRef ref="areaPolynomeLayer" />
 			<LayerRef ref="areaLayer" />
@@ -166,8 +166,8 @@
 					value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonArea" />
 			</Parameters>
 		</Provider>
-		<Title>Flächenpolynome</Title>
-		<Description>Flächenpolynome abhängig vom Wasserspiegel</Description>
+		<Title>FlÃ¤chenpolynome</Title>
+		<Description>FlÃ¤chenpolynome abhÃ¤ngig vom Wasserspiegel</Description>
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="area_Axis" />
@@ -190,8 +190,8 @@
 					value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
 			</Parameters>
 		</Provider>
-		<Title>Fläche</Title>
-		<Description>Fläche abhängig vom Wasserspiegel</Description>
+		<Title>FlÃ¤che</Title>
+		<Description>FlÃ¤che abhÃ¤ngig vom Wasserspiegel</Description>
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="area_Axis" />
@@ -214,8 +214,8 @@
 					value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" />
 			</Parameters>
 		</Provider>
-		<Title>Flächen-Delta</Title>
-		<Description>Flächen Differenzen bei der Polynomerstellung</Description>
+		<Title>FlÃ¤chen-Delta</Title>
+		<Description>FlÃ¤chen Differenzen bei der Polynomerstellung</Description>
 		<!-- TODO: show Histogramm instead -->
 
 		<Mapper>
@@ -229,7 +229,7 @@
 	</Layer>
 	<Axis id="area_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-		<Label>Fläche [m²]</Label>
+		<Label>FlÃ¤che [mÂ²]</Label>
 
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
@@ -239,7 +239,7 @@
 	</Axis>
 	<Axis id="areaDelta_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-		<Label>Fläche-Delta [m³/s]</Label>
+		<Label>FlÃ¤che-Delta [mÂ³/s]</Label>
 
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
@@ -298,7 +298,7 @@
 			</Parameters>
 		</Provider>
 		<Title>Alpha-Polynome</Title>
-		<Description>Alpha-Polynome abhängig vom Wasserspiegel</Description>
+		<Description>Alpha-Polynome abhÃ¤ngig vom Wasserspiegel</Description>
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="alpha_Axis" />
@@ -322,7 +322,7 @@
 			</Parameters>
 		</Provider>
 		<Title>Alpha</Title>
-		<Description>Alpha abhängig vom Wasserspiegel</Description>
+		<Description>Alpha abhÃ¤ngig vom Wasserspiegel</Description>
 
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />

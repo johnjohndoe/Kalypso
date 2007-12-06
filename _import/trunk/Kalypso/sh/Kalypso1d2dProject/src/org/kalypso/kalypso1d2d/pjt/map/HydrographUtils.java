@@ -46,6 +46,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,9 +69,14 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.types.StyledLayerType;
@@ -147,7 +153,10 @@ public class HydrographUtils
       if( parent instanceof IStepResultMeta )
       {
         IStepResultMeta stepResult = (IStepResultMeta) parent;
-        resultMap.put( documentResultMeta.getFullPath(), stepResult.getStepTime() );
+
+        /* ignore steady and min / max results */
+        if( stepResult.getStepType() == IStepResultMeta.STEPTYPE.unsteady )
+          resultMap.put( documentResultMeta.getFullPath(), stepResult.getStepTime() );
       }
     }
 
@@ -185,7 +194,7 @@ public class HydrographUtils
 
   public static Feature createNewHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, InvocationTargetException, GmlSerializeException, IOException
   {
-    // get a path
+    /* get a path */
     final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" );
     final IFolder calcUnitFolder = scenarioFolder.getFolder( docPath );
     if( !calcUnitFolder.exists() )
@@ -196,6 +205,7 @@ public class HydrographUtils
 
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IHydrographCollection.QNAME, url, null );
     final Feature hydrographFeature = workspace.getRootFeature();
+
     OutputStreamWriter writer = null;
     try
     {
@@ -213,6 +223,34 @@ public class HydrographUtils
     {
       IOUtils.closeQuietly( writer );
     }
+  }
+
+  public static void setHydrographComponents( final Feature feature )
+  {
+    final List<String> componentUrnList = new ArrayList<String>();
+
+    /* define hydrograph observation components */
+    componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+    componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+    componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_DEPTH );
+    componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY );
+    componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+
+    String[] componentUrns = componentUrnList.toArray( new String[componentUrnList.size()] );
+
+    /* create the components */
+    final IComponent[] components = new IComponent[componentUrns.length];
+
+    for( int i = 0; i < components.length; i++ )
+      components[i] = ObservationFeatureFactory.createDictionaryComponent( feature, componentUrns[i] );
+
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
+
+    /* set to the results */
+    final TupleResult result = obs.getResult();
+    for( final IComponent component : components )
+      result.addComponent( component );
+
   }
 
   public static void addHydrographTheme( IKalypsoLayerModell modell, final IHydrographCollection hydroCollection, ICalcUnitResultMeta calcResult ) throws Exception

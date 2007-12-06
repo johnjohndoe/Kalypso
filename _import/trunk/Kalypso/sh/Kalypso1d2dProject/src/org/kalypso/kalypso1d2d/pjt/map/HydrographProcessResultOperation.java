@@ -42,10 +42,11 @@ package org.kalypso.kalypso1d2d.pjt.map;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -77,6 +78,8 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+
 /**
  * @author Thomas Jung
  * 
@@ -104,69 +107,63 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
     try
     {
       final Set<Entry<IPath, Date>> entrySet = m_resultMap.entrySet();
+
+      final Map<GM_Point, IObservation<TupleResult>> obsMap = new HashMap<GM_Point, IObservation<TupleResult>>();
+
+      for( IHydrograph hydrograph : m_hydrographs )
+      {
+
+        GM_Object location = hydrograph.getLocation();
+        if( location instanceof GM_Point )
+        {
+          final GM_Point point = (GM_Point) location;
+          Feature wrappedFeature = hydrograph.getWrappedFeature();
+          IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( wrappedFeature );
+
+          /* clear existing results */
+          TupleResult result = obs.getResult();
+          result.clear();
+          obs.setResult( result );
+
+          obsMap.put( point, obs );
+        }
+      }
+
       for( Entry<IPath, Date> entry : entrySet )
       {
         /* get the observation */
 
         /* get the date for which this result is valid */
         final Date date = entry.getValue();
+        final GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime( date );
 
         /* get the node result gml */
         final IFolder folder = m_scenarioFolder.getFolder( entry.getKey() );
 
-        final URL hydrographURL = ResourceUtilities.createURL( folder );
-        final GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
+        final URL resultURL = ResourceUtilities.createURL( folder );
+        final GMLWorkspace w = GmlSerializer.createGMLWorkspace( resultURL, null );
 
         final Feature feature = w.getRootFeature();
         final INodeResultCollection nodeResultCollection = (INodeResultCollection) feature.getAdapter( INodeResultCollection.class );
 
-        final FeatureList list = nodeResultCollection.getWrappedList();
+        final FeatureList nodeList = nodeResultCollection.getWrappedList();
 
         /* get the hydrograph locations and observations */
-        final List<GM_Point> pointList = new LinkedList<GM_Point>();
         for( IHydrograph hydrograph : m_hydrographs )
         {
           GM_Object location = hydrograph.getLocation();
           if( location instanceof GM_Point )
           {
             final GM_Point point = (GM_Point) location;
-            pointList.add( point );
-            Feature wrappedFeature = hydrograph.getWrappedFeature();
-            IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( wrappedFeature );
-            TupleResult tuples = obs.getResult();
-            final IComponent[] components = tuples.getComponents();
 
-            final IComponent dateComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-            final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-            final IComponent depthComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DEPTH );
-            final IComponent velocityComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_VEOCITY );
-            final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-
-            /* find the nearest node */
-            Feature nearestFeature = GeometryUtilities.findNearestFeature( point, 0.0, list, GMLNodeResult.QNAME_PROP_LOCATION );
-            if( nearestFeature != null )
-            {
-              /* get the data of that node */
-              final INodeResult nodeResult = (INodeResult) nearestFeature.getAdapter( INodeResult.class );
-              final double depth = nodeResult.getDepth();
-              final double waterlevel = nodeResult.getWaterlevel();
-              final double discharge = nodeResult.getDischarge();
-              final double absoluteVelocity = nodeResult.getAbsoluteVelocity();
-              final List<Double> velocity = nodeResult.getVelocity();
-
-              /* add the data to the observation */
-              final IRecord newRecord = tuples.createRecord();
-
-              newRecord.setValue( waterlevelComp, waterlevel );
-              newRecord.setValue( depthComp, depth );
-              newRecord.setValue( velocityComp, velocity );
-              newRecord.setValue( dischargeComp, discharge );
-
-              tuples.add( newRecord );
-            }
+            addResult( obsMap, calendar, nodeList, point );
           }
         }
       }
+
+      saveToHydrographFeature( obsMap );
+
       return Status.OK_STATUS;
     }
     catch( final IOException e )
@@ -183,4 +180,60 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
     }
   }
 
+  private void addResult( final Map<GM_Point, IObservation<TupleResult>> obsMap, final GregorianCalendar calendar, final FeatureList nodeList, final GM_Point point )
+  {
+    IObservation<TupleResult> o = obsMap.get( point );
+    TupleResult tuples = o.getResult();
+
+    final IComponent[] components = tuples.getComponents();
+
+    final IComponent dateComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+    final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+    final IComponent depthComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DEPTH );
+    final IComponent velocityComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY );
+    final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+
+    tuples.setSortComponents( new IComponent[] { dateComp } );
+
+    /* find the nearest node */
+    Feature nearestFeature = GeometryUtilities.findNearestFeature( point, 0.0, nodeList, GMLNodeResult.QNAME_PROP_LOCATION );
+    if( nearestFeature != null )
+    {
+      /* get the data of that node */
+      final INodeResult nodeResult = (INodeResult) nearestFeature.getAdapter( INodeResult.class );
+      final double depth = nodeResult.getDepth();
+      final double waterlevel = nodeResult.getWaterlevel();
+      final double discharge = nodeResult.getDischarge();
+      final double absoluteVelocity = nodeResult.getAbsoluteVelocity();
+
+      /* add the data to the observation */
+      final IRecord newRecord = tuples.createRecord();
+
+      newRecord.setValue( dateComp, new XMLGregorianCalendarImpl( calendar ) );
+      newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+
+      tuples.add( newRecord );
+      o.setResult( tuples );
+    }
+  }
+
+  private void saveToHydrographFeature( final Map<GM_Point, IObservation<TupleResult>> obsMap )
+  {
+    /* save the obs in the feature */
+    for( IHydrograph hydrograph : m_hydrographs )
+    {
+      final GM_Object location = hydrograph.getLocation();
+      final Feature feature = hydrograph.getWrappedFeature();
+      if( location instanceof GM_Point )
+      {
+        final GM_Point point = (GM_Point) location;
+
+        IObservation<TupleResult> o = obsMap.get( point );
+        ObservationFeatureFactory.toFeature( o, feature );
+      }
+    }
+  }
 }

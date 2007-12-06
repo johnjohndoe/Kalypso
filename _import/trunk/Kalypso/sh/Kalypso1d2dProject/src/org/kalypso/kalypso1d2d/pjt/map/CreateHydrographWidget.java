@@ -70,9 +70,14 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
   {
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IHydrograph.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
+
+    /* set the observation components */
+    HydrographUtils.setHydrographComponents( newFeature );
+
     final IHydrograph hydrograph = (IHydrograph) newFeature.getAdapter( IHydrograph.class );
     hydrograph.setName( "Ganglinienpunkt" );
     hydrograph.setDescription( "Ganglinienpunkt für Teilmodell" );
+
     return hydrograph;
   }
 

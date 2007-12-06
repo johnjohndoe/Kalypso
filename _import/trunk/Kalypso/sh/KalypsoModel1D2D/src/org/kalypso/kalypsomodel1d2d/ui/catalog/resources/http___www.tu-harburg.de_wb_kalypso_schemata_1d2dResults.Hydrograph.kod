@@ -8,11 +8,12 @@
 		<Layers>
 			<LayerRef ref="wspLayer" />
 			<LayerRef ref="dischargeLayer" />
+			<LayerRef ref="velocityLayer" />
 		</Layers>
 	</Chart>
 
 	<Layer visible="true" id="wspLayer">
-		<Provider epid="org.kalypso.layerprovider.TupleResultLayerProvider">
+		<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
 			<Parameters>
 				<Parameter name="featureKey" value="hydrographFeatureKey" />
 				<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
@@ -29,31 +30,48 @@
 			<StyleRef ref="wspLineStyle" />
 			<StyleRef ref="wspPointStyle" />
 		</Style>
-
 	</Layer>
 
-
-	<Layer visible="true" name="dischargeLayer">
-		<Provider epid="org.kalypso.layerprovider.TupleResultLayerProvider">
-			<parameters>
+	<Layer visible="true" id="dischargeLayer">
+		<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+			<Parameters>
 				<Parameter name="featureKey" value="hydrographFeatureKey" />
 				<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
 				<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
-			</parameters>
+			</Parameters>
 		</Provider>
 		<title>Abfluss</title>
 		<description>Abflussganglinie</description>
 		<Mapper>
 			<DomainAxisRef ref="timeAxis" />
-			<ValueAxisRef ref="m3sAxis" />
+			<TargetAxisRef ref="m3sAxis" />
 		</Mapper>
-		<style>
+		<Style>
 			<StyleRef ref="dischargeLineStyle" />
 			<StyleRef ref="dischargePointStyle" />
-		</style>
+		</Style>
 	</Layer>
 
-	<!-- TODO: velocity layer -->
+	<Layer visible="true" id="velocityLayer">
+		<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+			<Parameters>
+				<Parameter name="featureKey" value="hydrographFeatureKey" />
+				<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+				<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Velocity" />
+			</Parameters>
+		</Provider>
+		<title>Geschwindigkeit</title>
+		<description>Geschwindigkeitsganglinie</description>
+		<Mapper>
+			<DomainAxisRef ref="timeAxis" />
+			<TargetAxisRef ref="msAxis" />
+		</Mapper>
+		<Style>
+			<StyleRef ref="velocityLineStyle" />
+			<StyleRef ref="velocityPointStyle" />
+		</Style>
+	</Layer>
+
 	<!-- TODO: depth layer -->
 	<!-- TODO: sohlschubspannung layer -->
 	<!-- TODO: other layers ? -->
@@ -74,6 +92,15 @@
 		<Position>RIGHT</Position>
 		<MinVal>5.0</MinVal>
 		<MaxVal>10.0</MaxVal>
+		<RendererRef ref="NumberAxisRenderer" />
+	</Axis>
+	<Axis id="msAxis">
+		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
+		<Label>Geschwindigkeit [m/s]</Label>
+		<Direction>POSITIVE</Direction>
+		<Position>RIGHT</Position>
+		<MinVal>0.0</MinVal>
+		<MaxVal>5.0</MaxVal>
 		<RendererRef ref="NumberAxisRenderer" />
 	</Axis>
 	<Axis id="timeAxis">
@@ -118,13 +145,10 @@
 			<parameters>
 				<Parameter value="2" name="lineWidth" />
 				<Parameter value="SOLID" name="lineStyle" />
-				<Parameter value="#000000" name="lineColor" />
+				<Parameter value="#0000aa" name="lineColor" />
 			</parameters>
 		</Provider>
 	</Style>
-	<StyleID></StyleID>
-	<Type>LINE</Type>
-
 
 	<Style id="wspPointStyle">
 		<styleID></styleID>
@@ -134,8 +158,8 @@
 				<Parameter name="pointWidth" value="8" />
 				<Parameter name="pointHeight" value="8" />
 				<Parameter name="borderWidth" value="1" />
-				<Parameter name="fillColor" value="#ff0000" />
-				<Parameter name="borderColor" value="#000000" />
+				<Parameter name="fillColor" value="#000055" />
+				<Parameter name="borderColor" value="#0000aa" />
 				<Parameter name="alpha" value="255" />
 			</parameters>
 		</Provider>
@@ -146,12 +170,13 @@
 		<type>LINE</type>
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
 			<parameters>
-				<Parameter name="lineWidth" value="2" />
-				<Parameter name="lineStyle" value="SOLID" />
-				<Parameter name="lineColor" value="#00ff00" />
+				<Parameter value="2" name="lineWidth" />
+				<Parameter value="SOLID" name="lineStyle" />
+				<Parameter value="#0000aa" name="lineColor" />
 			</parameters>
 		</Provider>
 	</Style>
+
 	<Style id="dischargePointStyle">
 		<styleID></styleID>
 		<type>POINT</type>
@@ -160,8 +185,35 @@
 				<Parameter name="pointWidth" value="8" />
 				<Parameter name="pointHeight" value="8" />
 				<Parameter name="borderWidth" value="1" />
-				<Parameter name="fillColor" value="#00ff00" />
-				<Parameter name="borderColor" value="#000000" />
+				<Parameter name="fillColor" value="#000055" />
+				<Parameter name="borderColor" value="#0000aa" />
+				<Parameter name="alpha" value="255" />
+			</parameters>
+		</Provider>
+	</Style>
+
+	<Style id="velocityLineStyle">
+		<styleID></styleID>
+		<type>LINE</type>
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
+			<parameters>
+				<Parameter value="2" name="lineWidth" />
+				<Parameter value="SOLID" name="lineStyle" />
+				<Parameter value="#0000aa" name="lineColor" />
+			</parameters>
+		</Provider>
+	</Style>
+
+	<Style id="velocityPointStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
+			<parameters>
+				<Parameter name="pointWidth" value="8" />
+				<Parameter name="pointHeight" value="8" />
+				<Parameter name="borderWidth" value="1" />
+				<Parameter name="fillColor" value="#000055" />
+				<Parameter name="borderColor" value="#0000aa" />
 				<Parameter name="alpha" value="255" />
 			</parameters>
 		</Provider>

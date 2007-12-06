@@ -135,6 +135,12 @@ public class ResultManager implements Runnable
 
   private boolean m_init = false;
 
+  private final List<String> m_ignoredFilenames = new ArrayList<String>();
+  {
+    m_ignoredFilenames.add( "mini.2d" );
+    m_ignoredFilenames.add( "maxi.2d" );
+  }
+
   @SuppressWarnings("unchecked")
   public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final Date startTime ) throws InvocationTargetException
   {
@@ -185,7 +191,11 @@ public class ResultManager implements Runnable
     final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
     for( final File file : existing2dFiles )
     {
-      if( !m_found2dFiles.contains( file ) )
+      /*
+       * check for already processed files and for min / max files (they have to processed at the end of the
+       * calculation)
+       */
+      if( !m_found2dFiles.contains( file ) && !m_ignoredFilenames.contains( file.getName() ) )
         addResultFile( file );
     }
   }
@@ -291,8 +301,14 @@ public class ResultManager implements Runnable
     if( !m_init )
       return;
 
-    /* Process all remaining .2d files. */
-    run();
+    /* Process all remaining .2d files. Now including min and max files */
+    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+    for( final File file : existing2dFiles )
+    {
+      /* check for already processed files */
+      if( !m_found2dFiles.contains( file ) )
+        addResultFile( file );
+    }
 
     /* We need to wait until all result process jobs have finished. */
     final IStatus resultProcessingStatus = waitForResultProcessing();

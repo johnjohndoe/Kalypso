@@ -122,7 +122,6 @@ public class ProcessResultsJob extends Job
     m_parameters = parameter;
     m_timeStepNr = timeStepNr;
     m_stepResultMeta = unitResultMeta.addStepResult();
-
   }
 
   /**
@@ -419,21 +418,28 @@ public class ProcessResultsJob extends Job
 
   private static void addToResultDB( final IStepResultMeta stepResultMeta, final int timeStepNum, final File outputDir, final Date time )
   {
-    // TODO: retrieve timezone from central plugin preferences
+    // TODO: retrieve time zone from central plugin preferences
     final DateFormat dateFormatter = DateFormat.getDateTimeInstance();
 
-    if( outputDir.getName().equals( "steady" ) )
+    if( outputDir.getName().equals( "steady" ) && timeStepNum == -1 )
     {
       stepResultMeta.setName( "stationär" );
       stepResultMeta.setDescription( "stationärer Rechenlauf" );
       stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.steady );
     }
-    else
+    else if( timeStepNum != -1 )
     {
       final String dateString = dateFormatter.format( time );
       stepResultMeta.setName( String.format( "Zeitschritt %s (%s)", timeStepNum, dateString ) );
       stepResultMeta.setDescription( "instationärer Rechenlauf zum Zeitpunkt: " + dateString );
       stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.unsteady );
+    }
+    else
+    {
+      // final String dateString = dateFormatter.format( time );
+      stepResultMeta.setName( "Maximalwerte" );
+      stepResultMeta.setDescription( "Maximalwerte des intationären Rechnelaufs" );
+      stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.maximum );
     }
 
     stepResultMeta.setStepTime( time );

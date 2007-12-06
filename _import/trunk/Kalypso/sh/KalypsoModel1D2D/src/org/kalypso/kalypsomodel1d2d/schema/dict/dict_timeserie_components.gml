@@ -114,7 +114,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Discharge">
 			<gml:description>Abfluss [m³/s]</gml:description>
-			<gml:name>Q [m³/s]</gml:name>
+			<gml:name>Abfluss [m³/s]</gml:name>
 			<swe:property xlink:href="#phenomenonDischarge" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -128,9 +128,41 @@
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="Velocity">
+			<gml:description>Geschwindigkeit [m/s]</gml:description>
+			<gml:name>Geeschwindigkeit [m/s]</gml:name>
+			<swe:property xlink:href="#phenomenonVelocity" />
+			<swe:representation>
+				<swe:SimpleType>
+					<st:restriction base="decimal">
+						<st:fractionDigits value="4" />
+					</st:restriction>
+					<gml:unitOfMeasure uom="dict_uom.xml#m_s" />
+				</swe:SimpleType>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="Depth">
+			<gml:description>Fließtiefe [m]</gml:description>
+			<gml:name>Fließtiefe [m]</gml:name>
+			<swe:property xlink:href="#phenomenonDepth" />
+			<swe:representation>
+				<swe:SimpleType>
+					<st:restriction base="decimal">
+						<st:fractionDigits value="4" />
+					</st:restriction>
+					<gml:unitOfMeasure uom="dict_uom.xml#m" />
+				</swe:SimpleType>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge1D">
 			<gml:description>spezifischer Abfluss [m³/s/m²]</gml:description>
-			<gml:name>q [m³/s/m²]</gml:name>
+			<gml:name>Abfluss [m³/s/m²]</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge1D" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -143,12 +175,10 @@
 		</swe:ItemDefinition>
 	</gml:dictionaryEntry>
 
-
-
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge2D">
 			<gml:description>spezifischer Abfluss [m³/s/m]</gml:description>
-			<gml:name>q [m³/s/m]</gml:name>
+			<gml:name>Abfluss [m³/s/m]</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge2D" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -187,6 +217,20 @@
 		<swe:Phenomenon gml:id="phenomenonDischarge">
 			<gml:description>Abfluss [m³/s]</gml:description>
 			<gml:name>Abfluss [m³/s]</gml:name>
+		</swe:Phenomenon>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
+		<swe:Phenomenon gml:id="phenomenonVelocity">
+			<gml:description>Geschwindigkeit [m/s]</gml:description>
+			<gml:name>Geschwindigkeit [m/s</gml:name>
+		</swe:Phenomenon>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
+		<swe:Phenomenon gml:id="phenomenonDepth">
+			<gml:description>Fließtiefe [m]</gml:description>
+			<gml:name>Fließtiefe [m]</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 

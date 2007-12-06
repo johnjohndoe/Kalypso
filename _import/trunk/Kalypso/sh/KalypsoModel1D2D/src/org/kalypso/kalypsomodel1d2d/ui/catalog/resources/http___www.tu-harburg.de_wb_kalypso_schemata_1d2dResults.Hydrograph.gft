@@ -18,7 +18,7 @@
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="3" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
 	</gft:text>
 
-	<gft:tupleResult property="om:result" tooltip="Ganglinie" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION">
+	<gft:tupleResult editable="false" property="om:result" tooltip="Ganglinie" style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION">
 		<gft:visibleOperation>
 			<ogc:Not>
 				<ogc:PropertyIsNull>
@@ -63,26 +63,5 @@
 		<gft:param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Hydrograph:default" />
 		<gft:param name="featureKeyName" value="hydrographFeatureKey" />
 	</gft:extensioncontrol>
-
-	<!-- TODO: introduce action-button feature control -->
-	<gft:extensioncontrol property="om:result" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
-		<gft:visibleOperation>
-			<ogc:PropertyIsNull>
-				<ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
-			</ogc:PropertyIsNull>
-		</gft:visibleOperation>
-		<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true">
-			<gft:excludeOperation>
-				<ogc:Not>
-					<ogc:PropertyIsNull>
-						<ogc:PropertyName>om:resultDefinition</ogc:PropertyName>
-					</ogc:PropertyIsNull>
-				</ogc:Not>
-			</gft:excludeOperation>
-		</gft:gridData>
-		<gft:param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Hydrograph:default" />
-		<gft:param name="featureKeyName" value="hydrographFeatureKey" />
-	</gft:extensioncontrol>
-
 
 </gft:featureview>

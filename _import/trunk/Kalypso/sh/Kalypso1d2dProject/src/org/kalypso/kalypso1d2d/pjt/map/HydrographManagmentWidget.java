@@ -526,6 +526,9 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     if( !resultStatus.isOK() )
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( resultStatus );
     ErrorDialog.openError( shell, "Daten für Ganglinien auslesen", "Fehler beim Auslesen", resultStatus );
+
+    saveModell();
+
   }
 
   private void initializeThemeCombo( )
@@ -850,7 +853,11 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
   public void disposeControl( )
   {
     if( m_theme != null && m_modellistener != null )
-      m_theme.getWorkspace().removeModellListener( m_modellistener );
+    {
+      CommandableWorkspace workspace = m_theme.getWorkspace();
+      if( workspace != null )
+        workspace.removeModellListener( m_modellistener );
+    }
   }
 
   /**
