@@ -315,8 +315,8 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
   {
     // We are reusing images of KalypsoGmlUi here
     final ImageDescriptor addEventID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_add.gif" );
-    final ImageDescriptor changeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_change_annuality.gif" );
-    final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" );
+    final ImageDescriptor changeID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_change_annuality.gif" );
+    final ImageDescriptor removeID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" );
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
 
@@ -522,16 +522,19 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     if( m_treeSelection == null )
       return;
 
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), Messages.getString( "WaterdepthCollectionsManagementWidget.50" ) ); //$NON-NLS-1$
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQi" ); //$NON-NLS-1$
 
-    final ICoreRunnableWithProgress operation = new RemoveCollectionOperation( m_treeSelection, m_dataProvider, wspThemes );
+    if( wspThemes != null )
+    {
+      final ICoreRunnableWithProgress operation = new RemoveCollectionOperation( m_treeSelection, m_dataProvider, wspThemes );
 
-    final Shell shell = event.display.getActiveShell();
+      final Shell shell = event.display.getActiveShell();
 
-    final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
-    if( !resultStatus.isOK() )
-      KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, Messages.getString( "WaterdepthCollectionsManagementWidget.51" ), Messages.getString( "WaterdepthCollectionsManagementWidget.52" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
+      if( !resultStatus.isOK() )
+        KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
+      ErrorDialog.openError( shell, Messages.getString( "WaterdepthCollectionsManagementWidget.51" ), Messages.getString( "WaterdepthCollectionsManagementWidget.52" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
   }
 
   /**
