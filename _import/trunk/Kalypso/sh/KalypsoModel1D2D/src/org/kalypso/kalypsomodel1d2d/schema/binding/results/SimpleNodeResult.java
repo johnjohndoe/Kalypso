@@ -295,10 +295,10 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDischarge()
    */
-  public double getDischarge( )
+  public Double getDischarge( )
   {
     // TODO Auto-generated method stub
-    return 0;
+    return null;
   }
 
   /**

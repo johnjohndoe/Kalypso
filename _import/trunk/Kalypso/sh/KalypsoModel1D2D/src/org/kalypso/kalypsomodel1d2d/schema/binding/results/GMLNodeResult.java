@@ -302,9 +302,9 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDischarge()
    */
-  public double getDischarge( )
+  public Double getDischarge( )
   {
-    return (Double) getFeature().getProperty( QNAME_PROP_DISCHARGE );
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_DISCHARGE );
   }
 
   /**
@@ -312,6 +312,6 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    */
   public void setDischarge( double discharge )
   {
-    getFeature().setProperty( QNAME_PROP_DISCHARGE, new Double( discharge ) );
+    getFeature().setProperty( GMLNodeResult.QNAME_PROP_DISCHARGE, new Double( discharge ) );
   }
 }

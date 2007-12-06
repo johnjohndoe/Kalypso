@@ -56,8 +56,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
@@ -107,7 +109,9 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
     try
     {
       final Set<Entry<IPath, Date>> entrySet = m_resultMap.entrySet();
-
+      
+      final SubMonitor progress = SubMonitor.convert( monitor,  "Ergebnisse für Ganglinien auslesen", entrySet.size() );
+      
       final Map<GM_Point, IObservation<TupleResult>> obsMap = new HashMap<GM_Point, IObservation<TupleResult>>();
 
       for( IHydrograph hydrograph : m_hydrographs )
@@ -128,13 +132,20 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
           obsMap.put( point, obs );
         }
       }
+      
 
+      int count = 0;
+      final int resultSize = entrySet.size();
+      
       for( Entry<IPath, Date> entry : entrySet )
       {
-        /* get the observation */
-
-        /* get the date for which this result is valid */
         final Date date = entry.getValue();
+        count ++;
+        progress.subTask( "Zeitschritt (" + count + "/" + resultSize+ ") - lese Ergbnisdatei..." );
+        
+        /* get the observation */
+        
+        /* get the date for which this result is valid */
         final GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime( date );
 
@@ -149,21 +160,27 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
 
         final FeatureList nodeList = nodeResultCollection.getWrappedList();
 
+        int hyd = 0;
+        
         /* get the hydrograph locations and observations */
         for( IHydrograph hydrograph : m_hydrographs )
         {
+          hyd++;
+          
           GM_Object location = hydrograph.getLocation();
           if( location instanceof GM_Point )
           {
             final GM_Point point = (GM_Point) location;
-
+            
+            progress.subTask( "Zeitschritt (" + count + "/" + resultSize+ "), " + date.toString() + " - weise Ergebnis zu ("+ hyd+"/"+m_hydrographs.size()+ "..." );
             addResult( obsMap, calendar, nodeList, point );
           }
         }
+        ProgressUtilities.worked( progress, 1 );
       }
 
       saveToHydrographFeature( obsMap );
-
+      
       return Status.OK_STATUS;
     }
     catch( final IOException e )
@@ -203,7 +220,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       final INodeResult nodeResult = (INodeResult) nearestFeature.getAdapter( INodeResult.class );
       final double depth = nodeResult.getDepth();
       final double waterlevel = nodeResult.getWaterlevel();
-      final double discharge = nodeResult.getDischarge();
+      final Double discharge = nodeResult.getDischarge();
       final double absoluteVelocity = nodeResult.getAbsoluteVelocity();
 
       /* add the data to the observation */
@@ -213,8 +230,13 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-
+      if(discharge != null)
+      {
+        newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      }
+      else
+        newRecord.setValue( dischargeComp, new BigDecimal( 0.0 ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      
       tuples.add( newRecord );
       o.setResult( tuples );
     }
