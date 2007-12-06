@@ -122,7 +122,7 @@ public class PrfSink implements IProfilSink
         pw.addDataBlock( db );
       }
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "", 0, "Fehler beim schreiben des Kommentars", e ) );
     }
@@ -161,7 +161,7 @@ public class PrfSink implements IProfilSink
       {
         dbr.getY()[0] = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "", 0, "Fehler beim schreiben der Rauheitswerte für " + building.getName() + ".", e ) );
       }
@@ -182,7 +182,7 @@ public class PrfSink implements IProfilSink
         Xs[index] = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
         Ys[index] = profil.hasPointProperty( prop ) ? point.getValueFor( prop ) : 0.0;
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         Xs[index] = 0;
         Ys[index] = 0;
@@ -209,77 +209,59 @@ public class PrfSink implements IProfilSink
 
   private void writeDevider( final PrfWriter pw, final IProfil profil )
   {
-
-    final IProfilPointMarker[] trennf = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( trennf.length > 0 )
-    {
-      final DataBlockHeader dbht = PrfWriter.createHeader( "TRENNF" );
-      final CoordDataBlock dbt = new CoordDataBlock( dbht );
-      final double[] xs = new double[trennf.length];
-      final double[] ys = new double[trennf.length];
-      int index = 0;
-      for( IProfilPointMarker devider : trennf )
-      {
-        final IProfilPoint point = devider.getPoint();
-        try
-        {
-          xs[index] = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-        }
-        catch( Exception e )
-        {
-          KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Die Positionen der Trennflächen konnten nicht geschrieben werden.", e ) );
-        }
-
-        boolean isBoeschung = devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG ) == null ? false
-            : (Boolean) devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG );
-        switch( index )
-        {
-          case 0:
-            ys[0] = isBoeschung ? 3.0 : 1.0;
-            break;
-          case 1:
-            ys[1] = isBoeschung ? 4.0 : 2.0;
-            break;
-          default:
-            ys[index] = 0.0;
-        }
-        index++;
-      }
-      dbt.setCoords( xs, ys );
-      pw.addDataBlock( dbt );
-    }
+    writeDeviderTyp( pw, "TRENNF", profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     writeDeviderTyp( pw, "BOR", profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
     writeDeviderTyp( pw, "DUR", profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
     writeDeviderTyp( pw, "TRENNL", profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
   }
 
-  private void writeDeviderTyp( final PrfWriter pw, final String key, IProfilPointMarker[] deviders )
+  private void writeDeviderTyp( final PrfWriter pw, final String key, final IProfilPointMarker[] deviders )
   {
+    if( deviders == null || deviders.length == 0 )
+      return;
 
-    if( deviders != null && deviders.length > 0 )
+    final CoordDataBlock dbw = new CoordDataBlock( PrfWriter.createHeader( key ) );
+    final double[] xs = new double[deviders.length];
+    final double[] ys = new double[deviders.length];
+
+    for( int i = 0; i < deviders.length; i++ )
     {
-      final DataBlockHeader dbhw = PrfWriter.createHeader( key );
-      final CoordDataBlock dbw = new CoordDataBlock( dbhw );
-      final double[] xs = new double[deviders.length];
-      final double[] ys = new double[deviders.length];
-      int index = 0;
-      for( IProfilPointMarker devider : deviders )
+      final IProfilPointMarker devider = deviders[i];
+      final IProfilPoint point = devider.getPoint();
+
+      try
       {
-        final IProfilPoint point = devider.getPoint();
-        try
-        {
-          xs[index] = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-          ys[index] = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-        }
-        catch( Exception e )
-        {
-          KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Die Positionen der " + devider.getMarkerId().toString() + " konnten nicht geschrieben werden.", e ) );
-        }
-        index++;
+        xs[i] = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+        ys[i] = getDeviderYValue( devider, i );
       }
-      dbw.setCoords( xs, ys );
-      pw.addDataBlock( dbw );
+      catch( final Exception e )
+      {
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Die Positionen der " + devider.getMarkerId().toString() + " konnten nicht geschrieben werden.", e ) );
+      }
     }
+    dbw.setCoords( xs, ys );
+    pw.addDataBlock( dbw );
+  }
+
+  /**
+   * Get coodinate y value: depends on type of marker.
+   */
+  private double getDeviderYValue( final IProfilPointMarker devider, final int index )
+  {
+    final String markerId = devider.getMarkerId();
+
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) )
+    {
+      final boolean isBoeschung = devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG ) == null ? false
+          : (Boolean) devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG );
+      final int offset = isBoeschung ? 3 : 1;
+      return offset + index;
+    }
+
+    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId ) )
+      return (index + 1);
+
+    return devider.getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
   }
 
   private void writeBuilding( final PrfWriter pw, final IProfil profil )
@@ -321,7 +303,7 @@ public class PrfSink implements IProfilSink
         final StringBuffer secLine = new StringBuffer( toDataBlockKey( wehrart ) );
         secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ) );
         final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
-        for( IProfilPointMarker devider : deviders )
+        for( final IProfilPointMarker devider : deviders )
         {
           secLine.append( String.format( Locale.US, " %12.4f", devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT ) ) );
         }
@@ -410,7 +392,7 @@ public class PrfSink implements IProfilSink
     {
       return Double.valueOf( o.toString() ).isNaN() ? "       0.0000" : String.format( Locale.US, " %12.4f", o );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return "       0.0000";
     }
@@ -444,7 +426,7 @@ public class PrfSink implements IProfilSink
       if( metaData == null )
         metaData = new HashMap<Integer, String[]>();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       metaData = new HashMap<Integer, String[]>();
     }
