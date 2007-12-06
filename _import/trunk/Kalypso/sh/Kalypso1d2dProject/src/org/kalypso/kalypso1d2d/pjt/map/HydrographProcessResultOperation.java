@@ -81,7 +81,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author Thomas Jung
  * 
  */
-public final class HydrographProcessResultsOperation2 implements ICoreRunnableWithProgress
+public final class HydrographProcessResultOperation implements ICoreRunnableWithProgress
 {
   private final IHydrographCollection m_hydrographs;
 
@@ -89,7 +89,7 @@ public final class HydrographProcessResultsOperation2 implements ICoreRunnableWi
 
   private final IFolder m_scenarioFolder;
 
-  public HydrographProcessResultsOperation2( final IHydrographCollection hydrographs, final Map<IPath, Date> resultMap, final IFolder scenarioFolder )
+  public HydrographProcessResultOperation( final IHydrographCollection hydrographs, final Map<IPath, Date> resultMap, final IFolder scenarioFolder )
   {
     m_hydrographs = hydrographs;
     m_resultMap = resultMap;
