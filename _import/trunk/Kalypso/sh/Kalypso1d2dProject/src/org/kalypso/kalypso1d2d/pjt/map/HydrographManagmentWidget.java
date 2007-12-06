@@ -520,7 +520,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
     /* process */
-    final ICoreRunnableWithProgress processOperation = new HydrographProcessResultsOperation( m_hydrographs, results, scenarioFolder );
+    final ICoreRunnableWithProgress processOperation = new HydrographProcessResultsOperation2( m_hydrographs, results, scenarioFolder );
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( processOperation );
     if( !resultStatus.isOK() )
