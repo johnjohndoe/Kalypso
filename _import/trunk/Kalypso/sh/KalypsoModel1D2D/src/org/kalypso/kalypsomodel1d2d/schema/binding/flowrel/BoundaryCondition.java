@@ -84,7 +84,8 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   {
     final Feature obsFeature = getTimeserieFeature();
 
-    if( domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
+    if( (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ))
+        || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE )) )
       getFeature().setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) );
     else
       getFeature().setProperty( QNAME_P_DIRECTION, null );

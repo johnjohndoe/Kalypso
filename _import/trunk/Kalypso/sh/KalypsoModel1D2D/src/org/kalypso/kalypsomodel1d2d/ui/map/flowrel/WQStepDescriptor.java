@@ -161,7 +161,7 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
       }
     } );
 
-    textH.setText( String.format( "%.0", h ) );
+    textH.setText( String.format( "%s", h ) );
 
     final Text textQ = new Text( parent, SWT.BORDER );
     textQ.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -175,7 +175,7 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
       }
     } );
 
-    textQ.setText( String.format( "%.3", q ) );
+    textQ.setText( String.format( "%s", q ) );
   }
 
   protected void updatePageState( final IStatus status )
@@ -247,9 +247,9 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
       final IComponent valueComponent = components[1];
       result.setSortComponents( new IComponent[] { domainComponent } );
 
-      final Double hStop = m_h[1];
       final Double hStart = m_h[0];
-      final LinearEquation linearEquation = new LinearEquation( hStart, m_q[0], hStart, hStop );
+      final Double hStop = m_h[1];
+      final LinearEquation linearEquation = new LinearEquation( hStart, m_q[0], hStop, m_q[1] );
 
       for( double h = hStart; h < hStop; h += ((hStop - hStart) / m_step) )
       {

@@ -90,6 +90,8 @@ public class Control1D2DConverter
 
   private final LinkedHashMap<String, Integer> m_roughnessIDProvider;
 
+  private final LinkedHashMap<Integer, IBoundaryCondition> m_WQboundaryConditionsIDProvider = new LinkedHashMap<Integer, IBoundaryCondition>();
+
   private final BuildingIDProvider m_buildingProvider;
 
   public Control1D2DConverter( final RMA10Calculation calculation, final INativeIDProvider idProvider, final LinkedHashMap<String, Integer> roughnessIDProvider, final BuildingIDProvider buildingProvider )
@@ -129,6 +131,9 @@ public class Control1D2DConverter
     m_formatter.format( "CONTROL A %4d 2d 0%n", controlModel.getIaccyc() ); //$NON-NLS-1$
     if( controlModel.getRestart() )
       m_formatter.format( "RESTART%n" ); //$NON-NLS-1$
+
+    /* Write W/Q file, even if it is empty. */
+    m_formatter.format( "STFLFIL %s%n", RMA10SimModelConstants.BC_WQ_File ); //$NON-NLS-1$
 
     /* We always write a building file, even if it is empty. */
     m_formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.BUILDING_File ); //$NON-NLS-1$
@@ -366,10 +371,13 @@ public class Control1D2DConverter
       formatBC( formatter, uRVal, niti );
 
     // order is important, first QC than HC
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+
+    // FIXME Nico fix this, you will have it twice
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
 
     for( final Map.Entry<Integer, IBuildingFlowRelation> buildingData : m_buildingProvider.getBuildingData().entrySet() )
     {
@@ -396,18 +404,19 @@ public class Control1D2DConverter
   }
 
   /** Formats the lines for one type of boundary condition (QC or HC or ... ). */
-  private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final String bcType )
+  private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final String bcAbscissaComponentType, final String bcOrdinateComponentType )
   {
     final List<IBoundaryCondition> boundaryConditions = m_calculation.getBoundaryConditions();
     for( final IBoundaryCondition boundaryCondition : boundaryConditions )
     {
-      if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D) || boundaryCondition.getTypeByLocation().equals(IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
+
+      if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D ) || boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
       {
         int ordinal = m_nativeIDProvider.getConversionID( boundaryCondition.getParentElementID() );
         final double stepValue;
         final IObservation<TupleResult> obs = boundaryCondition.getObservation();
         final TupleResult obsResult = obs.getResult();
-        final IComponent valueComponent = TupleResultUtilities.findComponentById( obsResult, bcType );
+        final IComponent valueComponent = TupleResultUtilities.findComponentById( obsResult, bcOrdinateComponentType );
         if( valueComponent != null )
         {
           if( stepCal != null )
@@ -420,18 +429,25 @@ public class Control1D2DConverter
           else
             stepValue = boundaryCondition.getStationaryCondition();
 
-          if( bcType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
+          if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
             double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
             formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
           }
-          else if( bcType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) )
+          else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
+          {
+            double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
+            formatter.format( "SQC%13d%40.4f%8.3f%8.3f%8.3f%n", ordinal, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
+            m_WQboundaryConditionsIDProvider.put( ordinal, boundaryCondition );
+          }
+          else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) )
           {
             formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 0.000, 20.000 ); //$NON-NLS-1$
           }
-          else if( bcType.equals(Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D) || bcType.equals(Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D))
+          else if( (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D ))
+              || (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D )) )
           {
-            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, 0, stepValue, 0.0, 0.0, 20.000); //$NON-NLS-1$
+            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, 0, stepValue, 0.0, 0.0, 20.000 ); //$NON-NLS-1$
           }
         }
       }
@@ -484,5 +500,10 @@ public class Control1D2DConverter
       throw new SimulationException( Messages.getString( "Control1D2DConverter.52" ), null ); //$NON-NLS-1$
     final IRecord firstRecord = iterator.next();
     return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( compTime ) );
+  }
+
+  public LinkedHashMap<Integer, IBoundaryCondition> getBoundaryConditionsIDProvider( )
+  {
+    return m_WQboundaryConditionsIDProvider;
   }
 }

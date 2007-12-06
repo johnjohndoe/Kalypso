@@ -115,7 +115,8 @@ public class RoughnessAssignService extends Job
     }
     catch( final Throwable t )
     {
-      return StatusUtilities.statusFromThrowable( t, "Roughness asigning not finished." );
+//      return StatusUtilities.statusFromThrowable( t, "Roughness asigning not finished." );
+      t.printStackTrace();
     }
     finally
     {

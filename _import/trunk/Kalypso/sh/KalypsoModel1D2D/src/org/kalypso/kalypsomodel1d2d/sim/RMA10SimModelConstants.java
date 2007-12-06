@@ -58,6 +58,8 @@ public interface RMA10SimModelConstants
 
   public static final String BUILDING_File = "bauwerke.txt";
 
+  public static final String BC_WQ_File = "wqusw.txt";
+
   public static final String SIM_EXE_FILE_3_5 = "RMA10S35Kalypso.exe";
 
   public static final String SIM_EXE_FILE_TEST = "RMA10S35Kalypso.exe";

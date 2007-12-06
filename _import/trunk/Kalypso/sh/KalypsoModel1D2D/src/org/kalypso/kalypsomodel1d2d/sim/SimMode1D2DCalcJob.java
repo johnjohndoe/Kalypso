@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.conv.Building1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
+import org.kalypso.kalypsomodel1d2d.conv.WQboundaryConditions1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -146,6 +147,7 @@ public class SimMode1D2DCalcJob implements ISimulation
 
       PrintWriter r10pw = null;
       PrintWriter buildingPw = null;
+      PrintWriter bcWQPw = null;
       try
       {
         /* Control model */
@@ -161,6 +163,12 @@ public class SimMode1D2DCalcJob implements ISimulation
         final Building1D2DConverter buildingConverter = new Building1D2DConverter( buildingProvider );
         buildingConverter.writeBuildingFile( new java.util.Formatter( buildingPw ) );
         buildingPw.close();
+
+        /* W/Q BC File */
+        bcWQPw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.BC_WQ_File ) );
+        final WQboundaryConditions1D2DConverter bc1D2DConverter = new WQboundaryConditions1D2DConverter( controlConverter.getBoundaryConditionsIDProvider() );
+        bc1D2DConverter.writeWQbcFile( new java.util.Formatter( bcWQPw ) );
+        bcWQPw.close();
       }
       finally
       {

@@ -108,24 +108,24 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
     final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
-    // final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
+    final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
 
     final IFolder importFolder = KalypsoModel1D2DHelper.getTimeeseriesFolder( scenarioFolder );
     final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
 
     // TODO: ask ingenieurs what is right here:
     if( modelElement instanceof IElement1D )
-      return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser };
+      return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser, wqDescriptor };
 
     if( modelElement instanceof IPolyElement )
-      return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
+      return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser, wqDescriptor };
 
     // TODO: probably comment the next two lines out
     if( modelElement instanceof IFE1D2DNode )
-      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
 
     if( modelElement instanceof IFELine )
-      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
 
     return new IBoundaryConditionDescriptor[] {};
   }
