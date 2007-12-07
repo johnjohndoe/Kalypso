@@ -123,7 +123,7 @@
    <extension
          point="org.kalypso.ui.addlayer.WMSImageProvider">
       <imageProvider
-            class="org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider"
+            class="org.kalypso.ogc.gml.wms.provider.WMSImageProvider"
             id="org.kalypso.ui.addlayer.kalypsoImageProvider"
             name="WMS Client">
       </imageProvider>
