@@ -490,6 +490,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     /* set the water level as new z-coordinate of the profile line */
     return GeometryUtilities.setValueZ( curve.getAsLineString(), waterlevel );
 
+    // TODO: add some gml file for the points
+
     // TODO: King
 
   }
@@ -546,8 +548,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final IComponent stationComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_STATION );
     final IComponent thalComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_GROUND );
     final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL );
-    final IComponent velocityComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
-    final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
+    // final IComponent velocityComp = ComponentUtilities.findComponentByID( components,
+    // IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
+    // final IComponent dischargeComp = ComponentUtilities.findComponentByID( components,
+    // IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
     // final IComponent depthComp = ComponentUtilities.findComponentByID( components,
     // IWspmDictionaryConstants.LS_COMPONENT_DEPTH );
     // final IComponent slopeComp = ComponentUtilities.findComponentByID( components,
@@ -558,11 +562,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     newRecord.setValue( stationComp, station );
     newRecord.setValue( thalComp, thalweg );
     newRecord.setValue( waterlevelComp, waterlevel );
-    newRecord.setValue( velocityComp, velocity );
+    // newRecord.setValue( velocityComp, velocity );
     // newRecord.setValue( depthComp, depth );
     // newRecord.setValue( slopeComp, slope );
-    if( discharge != null )
-      newRecord.setValue( dischargeComp, discharge );
+    // if( discharge != null )
+    // newRecord.setValue( dischargeComp, discharge );
 
     tuples.add( newRecord );
   }
