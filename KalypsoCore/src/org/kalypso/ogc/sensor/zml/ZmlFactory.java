@@ -340,8 +340,8 @@ public class ZmlFactory
           format = getProperties().getProperty( type + "_format" );
 
         parser = getParserFactory().createParser( type, format );
-        if( parser instanceof DateParser && timeZone != null )
-          ((DateParser) parser).setTimezone( timeZone );
+//        if( parser instanceof DateParser && timeZone != null )
+//          ((DateParser) parser).setTimezone( timeZone );
 
         values = createValues( context, tmpAxis, parser, data );
       }
