@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.tableview;
 
 import java.util.List;
+import java.util.TimeZone;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -102,6 +103,7 @@ public class TableView extends ObsView
   @Override
   public void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )
   {
+    setTimezone( TimeZone.getDefault() );
     final List ignoreTypeList = getIgnoreTypesAsList();
 
     final IObservation obs = provider.getObservation();
