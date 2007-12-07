@@ -134,7 +134,6 @@ public class Control1D2DConverter
 
     /* Write W/Q file, even if it is empty. */
     m_formatter.format( "STFLFIL %s%n", RMA10SimModelConstants.BC_WQ_File ); //$NON-NLS-1$
-
     /* We always write a building file, even if it is empty. */
     m_formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.BUILDING_File ); //$NON-NLS-1$
 
@@ -370,12 +369,10 @@ public class Control1D2DConverter
     else
       formatBC( formatter, uRVal, niti );
 
-    // order is important, first QC than HC
+    // order is important, first QC than HC, SQC and EFE
     formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-
-    // FIXME Nico fix this, you will have it twice
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
     formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
 
@@ -416,14 +413,15 @@ public class Control1D2DConverter
         final double stepValue;
         final IObservation<TupleResult> obs = boundaryCondition.getObservation();
         final TupleResult obsResult = obs.getResult();
-        final IComponent valueComponent = TupleResultUtilities.findComponentById( obsResult, bcOrdinateComponentType );
-        if( valueComponent != null )
+        final IComponent abscissaComponent = TupleResultUtilities.findComponentById( obsResult, bcAbscissaComponentType );
+        final IComponent ordinateComponent = TupleResultUtilities.findComponentById( obsResult, bcOrdinateComponentType );
+        if( abscissaComponent != null && ordinateComponent != null )
         {
           if( stepCal != null )
           {
             final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
             final TupleResultIndex tupleResultIndex = new TupleResultIndex( obsResult, timeComponent );
-            final Number result = (Number) tupleResultIndex.getValue( valueComponent, stepCal.getTime() );
+            final Number result = (Number) tupleResultIndex.getValue( ordinateComponent, stepCal.getTime() );
             stepValue = (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
           }
           else

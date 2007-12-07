@@ -115,7 +115,8 @@ public class SimMode1D2DCalcJob implements ISimulation
       monitor.setMessage( "Generiere Ascii Files für FE-Simulation..." );
       if( monitor.isCanceled() )
         return;
-
+      
+      // TODO Improve the performance!!!
       final RMA10Calculation calculation = new RMA10Calculation( inputProvider );
 
       /* Prepare for any results */
@@ -131,6 +132,8 @@ public class SimMode1D2DCalcJob implements ISimulation
       /** convert discretisation model stuff... */
       // write merged *.2d file for calc core / Dejan
       final File modelFile = new File( tmpDir, "model.2d" );
+      
+      // TODO Improve the performance!!!
       final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, calculation );
 
       if( monitor.isCanceled() )

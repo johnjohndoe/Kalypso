@@ -57,6 +57,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -165,6 +166,8 @@ public class SLDHelper
 
   private static void exportSLD( final IFile sldFile, final StyledLayerDescriptor descriptor, final IProgressMonitor progressMonitor ) throws IOException, SAXException, CoreException
   {
+    if( !sldFile.isSynchronized( IResource.DEPTH_ZERO ) )
+      sldFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
     final ByteArrayInputStream stream = new ByteArrayInputStream( descriptor.exportAsXML().getBytes( "UTF-8" ) );
     final Document doc = XMLTools.parse( stream );
     final Source source = new DOMSource( doc );

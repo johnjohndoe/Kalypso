@@ -59,7 +59,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
-import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -211,13 +210,13 @@ public class RMA10Calculation
     return result;
   }
 
-/*
- * not used at all; when it is used this function is available in roughnessCls
- */
-// public Double getcharactV( final Feature roughnessFE )
-// {
-// return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV );
-// }
+  /*
+   * not used at all; when it is used this function is available in roughnessCls
+   */
+  // public Double getcharactV( final Feature roughnessFE )
+  // {
+  // return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV );
+  // }
   public String getName( final Feature feature )
   {
     return (String) feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME );
@@ -231,24 +230,24 @@ public class RMA10Calculation
   public Double getKsValue( final Feature roughnessFE )
   {
     final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFE.getAdapter( IRoughnessCls.class );
-    if(roughnessCls == null)
-      throw new RuntimeException("Used feature is not a roughness class; no kS-value available.");
+    if( roughnessCls == null )
+      throw new RuntimeException( "Used feature is not a roughness class; no kS-value available." );
     return roughnessCls.getKs();
   }
 
   public Double getAxAyValue( final Feature roughnessFE )
   {
     final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFE.getAdapter( IRoughnessCls.class );
-    if(roughnessCls == null)
-      throw new RuntimeException("Used feature is not a roughness class; no AxAy-value available.");
+    if( roughnessCls == null )
+      throw new RuntimeException( "Used feature is not a roughness class; no AxAy-value available." );
     return roughnessCls.getAxAy();
   }
 
   public Double getDpValue( final Feature roughnessFE )
   {
     final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFE.getAdapter( IRoughnessCls.class );
-    if(roughnessCls == null)
-      throw new RuntimeException("Used feature is not a roughness class; no Dp-value available.");
+    if( roughnessCls == null )
+      throw new RuntimeException( "Used feature is not a roughness class; no Dp-value available." );
     return roughnessCls.getDp();
   }
 

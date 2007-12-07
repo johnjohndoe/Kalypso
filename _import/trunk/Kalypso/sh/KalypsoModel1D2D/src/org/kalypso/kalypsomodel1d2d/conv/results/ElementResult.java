@@ -286,8 +286,8 @@ public class ElementResult
     final double depth = waterlevel - node.getPoint().getZ();
     if( depth > 0 )
     {
-      System.out.println( "Wasserspiegel zugewiesen (" + node.getNodeID() + "): " );
-      System.out.println( "alt:  " + node.getWaterlevel() );
+//      System.out.println( "Wasserspiegel zugewiesen (" + node.getNodeID() + "): " );
+//      System.out.println( "alt:  " + node.getWaterlevel() );
 
       final List<Double> velocity = new LinkedList<Double>();
       velocity.add( 0.0 );
@@ -296,7 +296,7 @@ public class ElementResult
       node.setDepth( depth );
       node.setWaterlevel( waterlevel );
 
-      System.out.println( "neu:  " + node.getWaterlevel() );
+//      System.out.println( "neu:  " + node.getWaterlevel() );
       // node.setResultValues( 0, 0, depth, water level );
       return true;
     }

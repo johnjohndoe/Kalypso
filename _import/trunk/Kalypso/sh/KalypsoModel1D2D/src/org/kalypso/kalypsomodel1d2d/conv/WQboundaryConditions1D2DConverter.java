@@ -69,8 +69,8 @@ public class WQboundaryConditions1D2DConverter
     final Iterator<Integer> iterator = m_boundaryConditionsIDProvider.keySet().iterator();
     while( iterator.hasNext() )
     {
-      final Integer bcID = iterator.next();
-      final IBoundaryCondition boundaryCondition = m_boundaryConditionsIDProvider.get( bcID );
+      final Integer bcParentID = iterator.next();
+      final IBoundaryCondition boundaryCondition = m_boundaryConditionsIDProvider.get( bcParentID );
       final IObservation<TupleResult> obs = boundaryCondition.getObservation();
       final TupleResult obsResult = obs.getResult();
       final IComponent wComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
@@ -79,7 +79,7 @@ public class WQboundaryConditions1D2DConverter
         continue;
       final TupleResultIndex tupleResultIndex = new TupleResultIndex( obsResult, wComponent );
       final Iterator<IRecord> tupleIterator = tupleResultIndex.getIterator();
-      format.format( "CTL%13d%n", bcID );
+      format.format( "CTL%13d%n", bcParentID );
       while( tupleIterator.hasNext() )
       {
         final IRecord record = tupleIterator.next();
