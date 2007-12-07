@@ -474,16 +474,21 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
 
     final double waterlevel = nodeResult.getWaterlevel();
-    final GM_Curve curve = cutProfileAtWaterlevel( waterlevel, profil, crs );
+    final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
 
-    /* simplify the profile */
-    final double epsThinning = 0.05;
-    final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
+    /* REMARK: now we us the whole profile in order to get a bigger area for the flood modeler */
 
-    thinnedCurve.setCoordinateSystem( crs );
+    // final GM_Curve curve = cutProfileAtWaterlevel( waterlevel, profil, crs );
+    //
+    // /* simplify the profile */
+    // final double epsThinning = 0.05;
+    // final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
+    //
+    // thinnedCurve.setCoordinateSystem( crs );
+    GM_Curve curve = ProfilUtil.getLine( profil, crs );
 
     /* set the water level as new z-coordinate of the profile line */
-    return GeometryUtilities.setValueZ( thinnedCurve.getAsLineString(), waterlevel );
+    return GeometryUtilities.setValueZ( curve.getAsLineString(), waterlevel );
 
     // TODO: King
 
