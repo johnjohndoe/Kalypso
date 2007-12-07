@@ -120,8 +120,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   {
     super( pageName, title, titleImage );
 
-    setDescription( "Auswahl Observation" );
-    setTitle( "Titel Auswahl der zu importierenden Observation" );
+    setDescription( "Auswahl Zeitreihe" );
+    setTitle( "Auswahl der zu importierenden Zeitreihe" );
     setPageComplete( false );
 
     m_adapter = createNativeAdapters();
@@ -319,7 +319,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     {
       public void widgetSelected( SelectionEvent e )
       {
-        m_targetFile = chooseFile( m_targetFile );
+        m_targetFile = chooseFileZML( m_targetFile );
         validate();
 
       }
@@ -346,6 +346,20 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   File chooseFile( File selectedFile )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
+    if( selectedFile != null )
+    {
+      dialog.setFileName( selectedFile.getName() );
+      dialog.setFilterPath( selectedFile.getParent() );
+    }
+    dialog.open();
+    String fileName = dialog.getFileName();
+    String filterPath = dialog.getFilterPath();
+    return new File( filterPath, fileName );
+  }
+  File chooseFileZML( File selectedFile )
+  {
+    FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
+    dialog.setFilterExtensions( new String[] { "*.zml" }  );
     if( selectedFile != null )
     {
       dialog.setFileName( selectedFile.getName() );
