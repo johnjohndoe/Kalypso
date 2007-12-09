@@ -112,7 +112,7 @@ public class SimMode1D2DCalcJob implements ISimulation
     ResultManager resultRunner = null;
     try
     {
-      monitor.setMessage( "Generiere Ascii Files für FE-Simulation..." );
+      monitor.setMessage( "Generiere Ascii Dateien für FE-Simulation: Sammle Daten..." );
       if( monitor.isCanceled() )
         return;
       
@@ -122,6 +122,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       /* Prepare for any results */
       final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
       resultEater.addResult( RMA10SimModelConstants.RESULT_DIR_NAME_ID, outputDir );
+      
       final ICalculationUnit calculationUnit = calculation.getControlModel().getCalculationUnit();
       final String calcUnitID = calculationUnit.getWrappedFeature().getId();
       final File calcUnitOutputDir = new File( outputDir, calcUnitID );
@@ -134,17 +135,18 @@ public class SimMode1D2DCalcJob implements ISimulation
       final File modelFile = new File( tmpDir, "model.2d" );
       
       // TODO Improve the performance!!!
+      
       final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, calculation );
 
       if( monitor.isCanceled() )
         return;
 
-      monitor.setMessage( "Generiere Finite Elemente Netz..." );
+      monitor.setMessage( "Generiere Ascii Dateien für FE-Simulation: Schreibe Finite Elemente Netz..." );
       converter2D.toRMA10sModel();
 
       /** convert control/resistance stuff... */
       // first this because we need roughness classes IDs for creating 2D net later
-      monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
+      monitor.setMessage( "Generiere Ascii Dateien für FE-Simulation: Schreibe Randbedingungen und Berechnungssteuerung..." );
       if( monitor.isCanceled() )
         return;
 

@@ -166,6 +166,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       element.createCenterNode(); // split the element
       splitElement( element );
+      
+      // set Centernode null again in order to free some memory
+      // remove element from list
+      
     }
   }
 
@@ -221,6 +225,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     // get the information which nodes are mid-side nodes
     final INodeResult result = m_nodeIndex.get( middleNodeID );
+    
+    // check for illegal arcs
+    if ( result == null)
+    {
+      m_arcIndex.remove( id );
+      return;
+    }
     if( middleNodeID != -1 )
     {
       result.setMidSide( true );
@@ -338,6 +349,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         /* midside node of the current arc */
         GMLNodeResult midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
+        if ( midsideNode == null)
+          return;
         midsideNode.setArc( currentArc );
 
         // TODO: this check has to run again after the water level check of an element

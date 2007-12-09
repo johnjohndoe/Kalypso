@@ -94,7 +94,7 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#importCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#updateResultMeta(org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta, boolean, boolean, boolean, java.lang.Integer)
    */
   public void updateResultMeta( final ICalcUnitResultMeta newCalcUnitMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception
   {

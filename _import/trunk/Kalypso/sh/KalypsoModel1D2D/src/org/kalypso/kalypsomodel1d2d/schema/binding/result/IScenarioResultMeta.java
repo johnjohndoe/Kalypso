@@ -55,12 +55,22 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public interface IScenarioResultMeta extends IResultMeta
 {
-  // TODO: Document interface methods!
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "ScenarioResultMeta" );
-
+  
+  /**
+   * tries to find a calculation unit in the result meta 
+   * @param calcUnitGmlID calc unit, that has to be find.
+   * @returns calc unit result meta  entry or null if none can be found
+   */
   public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID );
-
+  
+  /**
+   * updates the scenario result meta by the result of a new calculated result meta
+   */
   public void updateResultMeta( final ICalcUnitResultMeta newCalcunitResultMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception;
 
+  /**
+   * adds a document result meta entry to the scenario result meta
+   */
   public void addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue );
 }

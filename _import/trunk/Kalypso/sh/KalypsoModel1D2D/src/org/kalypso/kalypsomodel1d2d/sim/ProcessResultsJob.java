@@ -436,10 +436,20 @@ public class ProcessResultsJob extends Job
     }
     else
     {
-      // final String dateString = dateFormatter.format( time );
-      stepResultMeta.setName( "Maximalwerte" );
-      stepResultMeta.setDescription( "Maximalwerte des intationären Rechnelaufs" );
-      stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.maximum );
+      if (outputDir.toString() == "mini")
+      {
+        /*
+        stepResultMeta.setName( "Minimalwerte" );
+        stepResultMeta.setDescription( "Minimalwerte des intationären Rechenlaufs" );
+        stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.min );
+        */
+      }
+      else if (outputDir.toString() == "maxi")
+      {
+        stepResultMeta.setName( "Maximalwerte" );
+        stepResultMeta.setDescription( "Maximalwerte des intationären Rechenlaufs" );
+        stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.maximum );
+      }
     }
 
     stepResultMeta.setStepTime( time );
