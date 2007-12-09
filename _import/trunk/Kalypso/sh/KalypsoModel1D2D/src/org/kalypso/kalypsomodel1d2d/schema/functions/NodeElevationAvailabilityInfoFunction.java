@@ -57,7 +57,7 @@ public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFuncti
         }
         if( point.getCoordinateDimension() == 3 )
         {
-          return Boolean.TRUE;
+          return !Double.isNaN( point.getZ() );
         }
         else
         {

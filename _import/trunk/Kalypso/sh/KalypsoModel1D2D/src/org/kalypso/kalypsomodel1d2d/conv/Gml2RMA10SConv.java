@@ -491,6 +491,16 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
       if( m_writtenNodesIDs.contains( node.getGmlID() ) )
         continue;
+      
+      // check if node elevation is assigned
+      if( Double.isNaN( node.getPoint().getZ() ) )
+      {
+        final double x = node.getPoint().getX();
+        final double y = node.getPoint().getY();
+        throw new SimulationException( "Kein Höhendaten: [" + x + ", " + y + "]", null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      }
+      
+      
       m_writtenNodesIDs.add( node.getGmlID() );
 
       /* The node itself */
@@ -527,7 +537,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final double slope = teschkeRelation.getSlope();
           final Double min = teschkeConv.getMin();
           final Double max = teschkeConv.getMax();
-          
+
           formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max ); //$NON-NLS-1$
 
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );

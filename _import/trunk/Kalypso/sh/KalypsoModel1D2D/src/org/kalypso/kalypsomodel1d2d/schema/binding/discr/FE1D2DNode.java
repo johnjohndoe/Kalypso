@@ -92,6 +92,10 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
     if( point.getCoordinateSystem() == null )
       point.setCoordinateSystem( IFE1D2DNode.DEFAULT_COORDINATE_SYSTEM );
     getWrappedFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT, point );
+//    if(point.getCoordinateDimension()>2 || !Double.isNaN( point.getZ() ))
+//      getWrappedFeature().setProperty( IFE1D2DNode.PROP_HAS_ELEVATION, true );
+//    else
+//      getWrappedFeature().setProperty( IFE1D2DNode.PROP_HAS_ELEVATION, false );
   }
 
   public static FE1D2DNode createNode( final FE1D2DDiscretisationModel discModel )

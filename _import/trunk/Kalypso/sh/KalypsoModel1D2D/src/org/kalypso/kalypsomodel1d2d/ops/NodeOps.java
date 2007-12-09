@@ -135,19 +135,13 @@ public class NodeOps
     return equals;
   }
 
-  public static boolean hasElevation( IFE1D2DNode node )
+  public static boolean hasElevation( final IFE1D2DNode node )
   {
-    GM_Point point = node.getPoint();
+    final GM_Point point = node.getPoint();
     boolean status = false;
     if( point.getCoordinateDimension() <= 2 )
-    {
-      status = false;
-    }
-    else
-    {
-      return status = true;
-    }
-    return status;
+      return false;
+    return !Double.isNaN( point.getZ() );
   }
 
   /**

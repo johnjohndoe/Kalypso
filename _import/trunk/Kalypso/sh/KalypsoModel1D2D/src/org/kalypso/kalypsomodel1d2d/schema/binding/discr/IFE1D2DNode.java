@@ -64,6 +64,8 @@ public interface IFE1D2DNode<CT extends IFENetItem> extends IFENode/*<CT>*/
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Node" ); //$NON-NLS-1$
 
+  public static final QName PROP_HAS_ELEVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "hasElevation" ); //$NON-NLS-1$
+
   public static final CS_CoordinateSystem DEFAULT_COORDINATE_SYSTEM = ConvenienceCSFactory.getInstance().getOGCCSByName( IKalypsoCorePreferences.DEFAULT_CRS );
 
   /**
