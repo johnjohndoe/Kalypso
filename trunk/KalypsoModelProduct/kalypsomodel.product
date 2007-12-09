@@ -148,6 +148,7 @@ kalypso.model.product.expert=true</vmArgsWin>
       <plugin id="org.junit"/>
       <plugin id="org.junit4"/>
       <plugin id="org.kalypso.KalypsoManual1D2D"/>
+      <plugin id="org.kalypso.KalypsoManualRisk"/>
       <plugin id="org.kalypso.ModelSimulationBase"/>
       <plugin id="org.kalypso.NACalcJob"/>
       <plugin id="org.kalypso.afgui"/>
