@@ -12,7 +12,7 @@
          point="org.eclipse.help.contexts">
       <contexts
             file="contexts.xml"
-            plugin="org.kalypso.KalypsoManual1D2D">
+            plugin="org.kalypso.KalypsoManualRisk">
       </contexts>
    </extension>
 

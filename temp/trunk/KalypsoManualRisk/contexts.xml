@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <contexts>
-<context id="KalypsoRiskAllgemeines">
-<description>Allgemeine Einführung Modell KalypsoRisk</description>
-<topic href="ch01.html" label="Allgemeine Einführung Modell KalypsoRisk"/>
+<context id="KalypsoRiskPreprocessing">
+<description>Preprocessing - Modellaufbau</description>
+<topic href="ch01.html" label="Preprocessing - Modellaufbau"/>
 </context>
 </contexts>
