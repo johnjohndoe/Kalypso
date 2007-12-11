@@ -51,6 +51,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_TYPE;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries.AbstractArrowGeometry;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries.IArrowGeometry;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -59,9 +62,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelegate
 {
 
-  public StrokeArrowPaintDelegateLine( final ARROW_TYPE arrowType, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final Double strokeWidth )
+  public StrokeArrowPaintDelegateLine( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final Double strokeWidth )
   {
-    super( arrowType, arrowAlignment, arrowSize );
+    super( arrowType, arrowWidget, arrowAlignment, arrowSize );
   }
 
   /**
@@ -75,7 +78,7 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
     {
       final GM_Point[] points = calculatePoints( curve );
 
-      final IArrowGeometry arrow = AbstractArrowGeometry.getArrowGeometry( g2, projection, points );
+      final IArrowGeometry arrow = AbstractArrowGeometry.getArrowGeometry( getWidget(), g2, projection, points );
       arrow.paint( getSize() );
 
       // draw triangle (arrow)

@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.geotiff.image.jai.GeoTIFFDirectory;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -113,7 +114,14 @@ public class GridFileVerifier
         return null;
 
       case eImageGeo:
-        return new GridMetaReaderGeoTiff( urlImage, determineImageType( urlImage ) );
+        try
+        {
+          return new GridMetaReaderGeoTiff( urlImage, determineImageType( urlImage ) );
+        }
+        catch( final IOException e )
+        {
+          e.printStackTrace();
+        }
 
       case eImageWorldFile:
         return new GridMetaReaderWorldFile( urlImage, getWorldFile( urlImage ) );

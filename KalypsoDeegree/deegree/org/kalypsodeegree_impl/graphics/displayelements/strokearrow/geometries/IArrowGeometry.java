@@ -38,35 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
-
-import java.awt.Graphics2D;
-
-import org.apache.commons.lang.NotImplementedException;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
-import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_TYPE;
-import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
+package org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries;
 
 /**
  * @author kuch
  */
-public class StrokeArrowPaintDelegateSegment extends AbstractStrokeArrowPaintDelegate
+public interface IArrowGeometry
 {
-  public StrokeArrowPaintDelegateSegment( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final double strokeWidth )
-  {
-    super( arrowType, arrowWidget, arrowAlignment, arrowSize );
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.IStrokeArrowPaintDelegate#paint(org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter,
-   *      java.awt.Graphics2D, org.kalypsodeegree.graphics.transformation.GeoTransform,
-   *      org.kalypsodeegree.model.geometry.GM_Curve)
-   */
-  public void paint( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve )
-  {
-    throw (new NotImplementedException());
-  }
-
+  void paint( Double size );
 }

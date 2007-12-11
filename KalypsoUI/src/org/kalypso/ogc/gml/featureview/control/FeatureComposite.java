@@ -90,6 +90,8 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerHelper;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.Checkbox;
@@ -194,24 +196,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       fc.updateControl();
 
     for( final Control control : m_swtControls )
-    {
       updateLayoutData( control );
 
-// if( control instanceof Composite )
-// {
-// // TODO: remove, not necessary
-// final Composite composite = (Composite) control;
-//
-// composite.layout();
-// composite.getParent().layout();
-// }
-    }
-
     if( m_control != null && !m_control.isDisposed() )
-    {
       if( m_control instanceof Composite )
         ((Composite) m_control).layout();
-    }
   }
 
   /**
@@ -235,9 +224,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final IFeatureControl fc = (IFeatureControl) element;
 
       if( !fc.isValid() )
-      {
         return false;
-      }
     }
 
     return true;
@@ -251,9 +238,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
-    {
       m_formToolkit.adapt( m_control, true, true );
-    }
 
     return m_control;
   }
@@ -284,7 +269,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     m_swtControls.add( control );
 
     /* Set the background-color. */
-    Object backgroundColor = controlType.getBackgroundColor();
+    final Object backgroundColor = controlType.getBackgroundColor();
     if( backgroundColor != null )
     {
       RGB rgb = null;
@@ -409,33 +394,23 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       // Layout setzen
       final LayoutType layoutType = compositeType.getLayout().getValue();
       if( layoutType != null )
-      {
         composite.setLayout( createLayout( layoutType ) );
-      }
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
-      {
         m_formToolkit.adapt( composite, true, true );
-      }
 
       for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
-      {
         createControl( composite, SWT.NONE, element.getValue() );
-      }
 
       return composite;
     }
 
     final IPropertyType ftp;
     if( controlType instanceof PropertyControlType )
-    {
       ftp = getProperty( feature, (PropertyControlType) controlType );
-    }
     else
-    {
       ftp = null;
-    }
 
     // control erzeugen!
     if( controlType instanceof LabelType )
@@ -446,15 +421,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final QName property = labelType.getProperty();
       if( property != null )
-      {
         applyAnnotation( label, property, feature );
-      }
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
-      {
         m_formToolkit.adapt( label, true, true );
-      }
 
       return label;
     }
@@ -462,10 +433,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final ValidatorLabelType validatorLabelType = (ValidatorLabelType) controlType;
       if( ftp == null )
-      {
         // TODO: should never happen. The error occurs while generating the ValidatorLabelType.
         System.out.println( "ValidatorLabelType without property" );
-      }
       else
       {
         final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, m_showOk );
@@ -475,9 +444,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
         /* If a toolkit is set, use it. */
         if( m_formToolkit != null )
-        {
           m_formToolkit.adapt( control, true, true );
-        }
 
         return control;
       }
@@ -491,9 +458,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
-      {
         m_formToolkit.adapt( control, true, true );
-      }
 
       return control;
     }
@@ -509,9 +474,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
-      {
         m_formToolkit.adapt( control, true, true );
-      }
 
       return control;
     }
@@ -566,10 +529,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof TupleResult )
     {
       final TupleResult editorType = (TupleResult) controlType;
+
+      final ColumnDescriptor[] descriptors = editorType.getColumnDescriptor().toArray( new ColumnDescriptor[] {} );
+      final IComponentUiHandler[] handlers = ComponentUiHandlerHelper.createHandlers( descriptors );
+
       final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp );
-      final List<ColumnDescriptor> columnDescriptors = editorType.getColumnDescriptor();
-      final ColumnDescriptor[] cd = columnDescriptors.toArray( new ColumnDescriptor[columnDescriptors.size()] );
-      tfc.setColumnDescriptors( cd );
+      tfc.setComponentUiHandlers( handlers );
 
       final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
 
@@ -602,7 +567,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         {
           final String elementId = element.getAttribute( "id" );
           if( id.equals( elementId ) )
-          {
             try
             {
               comparator = (ViewerComparator) element.createExecutableExtension( "class" );
@@ -611,12 +575,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
             {
               e.printStackTrace();
             }
-          }
         }
 
         /* If a valid id was given ... */
         if( comparator != null )
-        {
           /* The default-comparator doesn't use any parameter, so they are ignored, even, if they are supplied. */
           if( comparator instanceof IViewerComparator )
           {
@@ -626,15 +588,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
             /* Get all parameter. */
             final List<org.kalypso.template.featureview.Combo.Sorter.Param> parameter = sorter.getParam();
             if( parameter != null )
-            {
               /* Collect all parameter. */
               for( final org.kalypso.template.featureview.Combo.Sorter.Param param : parameter )
                 params.put( param.getName(), param.getValue() );
-            }
 
             ((IViewerComparator) comparator).init( feature, params );
           }
-        }
       }
 
       final List<Entry> entryList = comboType.getEntry();
@@ -763,9 +722,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final Gistableview gistableview = tableType.getGistableview();
       if( gistableview != null )
-      {
         fc.setTableTemplate( gistableview );
-      }
 
       fc.setFeature( feature );
 
@@ -782,9 +739,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
-    {
       m_formToolkit.adapt( label, true, true );
-    }
 
     return label;
   }
@@ -898,9 +853,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           {
             final Method method = label.getClass().getMethod( "setText", new Class[] { String.class } ); //$NON-NLS-1$
             if( method != null )
-            {
               method.invoke( label, annotation.getLabel() );
-            }
           }
           catch( final Exception e )
           {
@@ -928,15 +881,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   private IPropertyType getPropertyTypeForQName( final IFeatureType featureType, final QName property )
   {
     if( property == null )
-    {
       return null;
-    }
 
     final IPropertyType propertyType = featureType.getProperty( property );
     if( propertyType != null )
-    {
       return propertyType;
-    }
 
     if( property.getNamespaceURI().equals( FeatureComposite.FEATUREVIEW_NAMESPACE ) )
     {
@@ -972,7 +921,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     final ModifyListener[] listeners = m_modifyListeners.toArray( new ModifyListener[m_modifyListeners.size()] );
     for( final ModifyListener listener : listeners )
-    {
       SafeRunnable.run( new SafeRunnable()
       {
         public void run( ) throws Exception
@@ -980,7 +928,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           listener.modifyText( e );
         }
       } );
-    }
   }
 
   /** Traverse the tree feature controls adds all found feature view types to the given collection */
@@ -988,28 +935,20 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     final Feature feature = getFeature();
     if( feature == null )
-    {
       return;
-    }
 
     final FeatureviewType type = m_featureviewFactory.get( feature.getFeatureType(), feature );
     types.add( type );
 
     for( final IFeatureControl control : m_featureControls )
-    {
       if( control instanceof FeatureComposite )
-      {
         ((FeatureComposite) control).collectViewTypes( types );
-      }
       else if( control instanceof SubFeatureControl )
       {
         final IFeatureControl fc = ((SubFeatureControl) control).getFeatureControl();
         if( fc instanceof FeatureComposite )
-        {
           ((FeatureComposite) fc).collectViewTypes( types );
-        }
       }
-    }
   }
 
   public FormToolkit getFormToolkit( )

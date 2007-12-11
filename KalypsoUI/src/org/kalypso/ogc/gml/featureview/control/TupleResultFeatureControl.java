@@ -41,10 +41,11 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
@@ -70,8 +71,8 @@ import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
-import org.kalypso.template.featureview.ColumnDescriptor;
-import org.kalypso.template.featureview.ColumnTypeDescriptor;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerHelper;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -82,9 +83,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 {
   private final List<ModifyListener> m_listener = new ArrayList<ModifyListener>( 10 );
 
-  private final Map<String, ColumnDescriptor> m_columnDescriptors = new HashMap<String, ColumnDescriptor>();
-
-  private final Map<String, ColumnTypeDescriptor> m_columnTypeDescriptors = new HashMap<String, ColumnTypeDescriptor>();
+  IComponentUiHandler[] m_handlers = new IComponentUiHandler[] {};
 
   private DefaultTableViewer m_viewer;
 
@@ -108,11 +107,30 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   public TupleResultFeatureControl( final IPropertyType ftp )
   {
     super( ftp );
+
+    throw (new NotImplementedException());
   }
 
   public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
+
+    final List<IComponentUiHandler> handlers = new ArrayList<IComponentUiHandler>();
+
+    /* result definition */
+    final Feature resultDefinition = (Feature) feature.getProperty( new QName( "http://www.opengis.net/om", "resultDefinition" ) );
+    final List< ? > components = (List< ? >) resultDefinition.getProperty( new QName( "http://www.opengis.net/swe", "component" ) );
+    for( final Object object : components )
+    {
+      if( !(object instanceof Feature) )
+        continue;
+
+      final Feature component = (Feature) object;
+      final IComponentUiHandler handler = ComponentUiHandlerHelper.getHandler( component );
+      handlers.add( handler );
+    }
+
+    m_handlers = handlers.toArray( new IComponentUiHandler[] {} );
   }
 
   /**
@@ -127,9 +145,9 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     m_lastLineBackground = new Color( parent.getDisplay(), 170, 230, 255 );
 
-    m_tupleResultContentProvider = new TupleResultContentProvider( m_columnDescriptors, m_columnTypeDescriptors );
+    m_tupleResultContentProvider = new TupleResultContentProvider( m_handlers );
     m_lastLineContentProvider = new LastLineContentProvider( m_tupleResultContentProvider );
-    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_columnDescriptors, m_columnTypeDescriptors );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_handlers );
     m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
 
     if( m_viewerFilter != null )
@@ -317,25 +335,16 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     fireFeatureChange( new ChangeFeatureCommand( obsFeature, resultPT, strResult ) );
   }
 
-  /** Sets the column descriptors used to render the columns. Must called before {@link #createControl(Composite, int)}. */
-  public void setColumnDescriptors( final ColumnDescriptor[] cd )
-  {
-    for( final ColumnDescriptor descriptor : cd )
-      m_columnDescriptors.put( descriptor.getComponent(), descriptor );
-  }
-
-  /** dto. for feature type comparement */
-  public void setColumnTypeDescriptor( final ColumnTypeDescriptor[] cd )
-  {
-    for( final ColumnTypeDescriptor descr : cd )
-      m_columnTypeDescriptors.put( descr.getComponent(), descr );
-  }
-
   /**
    * must be callen before createControl() is callen!
    */
   public void setViewerFilter( final ViewerFilter filter )
   {
     m_viewerFilter = filter;
+  }
+
+  public void setComponentUiHandlers( final IComponentUiHandler[] handlers )
+  {
+    m_handlers = handlers;
   }
 }

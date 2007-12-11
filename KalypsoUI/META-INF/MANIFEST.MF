@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoUI
 Bundle-SymbolicName: org.kalypso.ui; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: lib/swtcalendar.jar,
- lib/jcommon-0.9.6.jar,
+Bundle-ClassPath: lib/jcommon-0.9.6.jar,
  lib/jfreechart-0.9.21.jar,
  lib/opencsv/opencsv-1.8.jar,
  .
@@ -99,6 +98,7 @@ Export-Package: com.keypoint,
  org.kalypso.ogc.gml.map.widgets.providers.tooltips,
  org.kalypso.ogc.gml.om,
  org.kalypso.ogc.gml.om.table,
+ org.kalypso.ogc.gml.om.table.handlers,
  org.kalypso.ogc.gml.om.tableex,
  org.kalypso.ogc.gml.outline,
  org.kalypso.ogc.gml.schemaeditor,
@@ -184,8 +184,7 @@ Export-Package: com.keypoint,
  org.kalypso.util.swtcalendar,
  org.kalypso.util.transformation,
  org.kalypsodeegree.model.feature,
- org.vafada.swtcalendar,
- org.vafada.swtcalendar.demo
+ org.vafada.swtcalendar
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport,

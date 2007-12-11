@@ -44,7 +44,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * Delegat for
+ * Delegate for
  * 
  * @author Gernot Belger
  */

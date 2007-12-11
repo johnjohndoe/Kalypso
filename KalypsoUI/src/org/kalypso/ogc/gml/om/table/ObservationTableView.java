@@ -48,6 +48,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
@@ -68,16 +69,18 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     KalypsoCorePlugin.getDefault().getSelectionManager().addSelectionListener( this );
 
     m_viewer = new DefaultTableViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_viewer.getTable().setHeaderVisible( true );
     m_viewer.getTable().setLinesVisible( true );
-    m_tupleResultContentProvider = new TupleResultContentProvider();
+
+    m_tupleResultContentProvider = new TupleResultContentProvider( new IComponentUiHandler[] {} );
     m_viewer.setContentProvider( m_tupleResultContentProvider );
-    m_tupleResultLabelProvider = new TupleResultLabelProvider();
+
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( new IComponentUiHandler[] {} );
     m_viewer.setLabelProvider( m_tupleResultLabelProvider );
     m_viewer.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
 

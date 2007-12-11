@@ -71,13 +71,9 @@ public class Component extends AbstractComponent
   public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue, final IPhenomenon phenomenon )
   {
     if( name == null )
-    {
       throw new IllegalArgumentException( "name argument must not be null for " + getClass().getName() );
-    }
     if( valueTypeName == null )
-    {
       throw new IllegalArgumentException( "valueTypeName argument must not be null for " + getClass().getName() );
-    }
 
     m_id = id;
     m_unit = unit;
@@ -96,32 +92,28 @@ public class Component extends AbstractComponent
   public boolean equals( final Object obj )
   {
     if( !(obj instanceof IComponent) )
-    {
       return false;
-    }
 
     if( this == obj )
-    {
       return true;
-    }
 
     // subclass are sure that the component they receive is of the same class
     if( !getClass().getName().equals( obj.getClass().getName() ) )
-    {
       return false;
-    }
+
+    // FIXME
 
     final IComponent comp = (IComponent) obj;
-
     final EqualsBuilder builder = new EqualsBuilder();
 
-    fillEqualsBilder( comp, builder );
+    fillEqualsBuilder( comp, builder );
 
     return builder.isEquals();
   }
 
-  protected void fillEqualsBilder( final IComponent comp, final EqualsBuilder builder )
+  protected void fillEqualsBuilder( final IComponent comp, final EqualsBuilder builder )
   {
+    builder.append( comp.getId(), m_id );
     builder.append( comp.getDefaultValue(), m_defaultValue );
     builder.append( comp.getDescription(), m_description );
     builder.append( comp.getName(), m_name );
@@ -130,6 +122,7 @@ public class Component extends AbstractComponent
 
   protected void fillHashCodeBuilder( final HashCodeBuilder builder )
   {
+    builder.append( m_id );
     builder.append( m_defaultValue );
     builder.append( m_description );
     builder.append( m_name );

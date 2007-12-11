@@ -56,6 +56,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.libtiff.jai.codec.XTIFFField;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.sun.media.jai.codec.SeekableStream;
@@ -67,173 +68,95 @@ import com.sun.media.jai.codec.SeekableStream;
  */
 public class GridMetaReaderGeoTiff implements IGridMetaReader
 {
-  private final IMAGE_TYPE m_type;
+  /**
+   * GeoTiff differs between PixelIsArea and PixelIsRaster representation
+   */
+  private enum RASTER_TYPE
+  {
+    ePixelIsArea,
+    ePixelIsPoint;
 
-  private GeoTIFFDirectory m_geoTiffReader;
+    public static RASTER_TYPE getRasterType( final GeoTIFFDirectory directory )
+    {
+      /**
+       * http://remotesensing.org/geotiff/spec/geotiff6.html#6.3.1<br>
+       * Values:<br>
+       * RasterPixelIsArea = 1<br>
+       * RasterPixelIsPoint = 2<br>
+       */
+      final XTIFFField pixelType = directory.getGeoKey( GTRasterTypeGeoKey );
+      final int code = pixelType.getAsInt( 0 );
+
+      if( code == 1 )
+        return ePixelIsArea;
+      else if( code == 2 )
+        return ePixelIsPoint;
+
+      // TODO default ?!?
+      return ePixelIsArea;
+
+    }
+  }
+
+  private static int GTRasterTypeGeoKey = 1025;
+
+  /**
+   * tie points<br>
+   * <br>
+   * raster space <br>
+   * m_tiepoints[0] = I<br>
+   * m_tiepoints[1] = J<br>
+   * m_tiepoints[2] = K<br>
+   * <br>
+   * model space<br>
+   * m_tiepoints[3] = X<br>
+   * m_tiepoints[4] = Y<br>
+   * m_tiepoints[5] = Z<br>
+   */
+  private double[] m_tiepoints;
+
+  private double[] m_pixelScales;
 
   private final URL m_urlImage;
 
-  public GridMetaReaderGeoTiff( final URL urlImage, final IMAGE_TYPE type )
+  public GridMetaReaderGeoTiff( final URL urlImage, final IMAGE_TYPE type ) throws IOException
   {
     m_urlImage = urlImage;
-    m_type = type;
+    if( urlImage == null || type == null )
+      throw new IllegalStateException( "invalid geotiff file" );
 
-    // TODO: ATM we only supporting GeoTiffs - no fabrication needed!
-    setup();
-  }
+    if( !IMAGE_TYPE.eTIFF.equals( type ) )
+      throw new IllegalStateException( urlImage.toString() + " isn't a geotiff file" );
 
-  private void setup( )
-  {
-    if( (m_urlImage == null) || (m_type == null) )
-    {
-      throw (new IllegalStateException());
-    }
-
-    if( IMAGE_TYPE.eTIFF.equals( m_type ) )
-    {
-      try
-      {
-        final SeekableStream stream = SeekableStream.wrapInputStream( m_urlImage.openStream(), true );
-        m_geoTiffReader = new GeoTIFFDirectory( stream, 0 );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
-    else
-    {
-      throw (new NotImplementedException());
-    }
+    discover();
   }
 
   /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
+   * discover geotiff settings - not completely implemented because lack of geotiff examples and tiff world file
+   * representation
    */
-  public String getOriginCornerY( )
+  private void discover( ) throws IOException
   {
-    try
-    {
-      final double[] modelBounds = m_geoTiffReader.getModelBounds();
+    final SeekableStream stream = SeekableStream.wrapInputStream( m_urlImage.openStream(), true );
+    final GeoTIFFDirectory directory = new GeoTIFFDirectory( stream, 0 );
 
-      if( modelBounds.length >= 2 )
-      {
-        return new Double( modelBounds[1] ).toString();
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    return null;
-  }
+    /* determine pixel is area or point */
+    final RASTER_TYPE rasterType = RASTER_TYPE.getRasterType( directory );
+    if( RASTER_TYPE.ePixelIsPoint.equals( rasterType ) )
+      throw new NotImplementedException();
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiX()
-   */
-  public String getVectorXy( )
-  {
-    try
-    {
-      final double[] scale = m_geoTiffReader.getPixelScale();
+    /* get tie points */
+    m_tiepoints = directory.getTiepoints();
 
-      if( scale.length >= 2 )
-      {
-        return new Double( scale[1] ).toString();
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    return null;
-  }
+    /* get pixel scale */
+    m_pixelScales = directory.getPixelScale();
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiY()
-   */
-  public String getVectorYx( )
-  {
-    try
-    {
-      final double[] points = m_geoTiffReader.getTiepoints();
+    /* get transformationMatrix */
+    final double[] transformationMatrix = directory.getTransformationMatrix();
+    if( transformationMatrix != null )
+      throw new NotImplementedException();
 
-      if( points.length >= 2 )
-      {
-        return new Double( points[0] ).toString();
-      }
-
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDx()
-   */
-  public String getVectorXx( )
-  {
-    try
-    {
-      final double[] scale = m_geoTiffReader.getPixelScale();
-
-      if( scale.length >= 2 )
-      {
-        return new Double( scale[0] ).toString();
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDy()
-   */
-  public String getVectorYy( )
-  {
-    try
-    {
-      final double[] points = m_geoTiffReader.getTiepoints();
-
-      if( points.length >= 2 )
-      {
-        return new Double( points[1] ).toString();
-      }
-
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
-   */
-  public String getOriginCornerX( )
-  {
-    try
-    {
-      final double[] modelBounds = m_geoTiffReader.getModelBounds();
-
-      if( modelBounds.length >= 2 )
-      {
-        return new Double( modelBounds[0] ).toString();
-      }
-
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    return null;
+    stream.close();
   }
 
   /**
@@ -244,12 +167,12 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
   public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final CS_CoordinateSystem crs ) throws Exception
   {
     if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
-    {
       throw (new IllegalStateException());
-    }
 
     final RenderedOp image = JAI.create( "url", m_urlImage );
     final TiledImage tiledImage = new TiledImage( image, true );
+    image.dispose();
+
     final int height = tiledImage.getHeight();
     final int width = tiledImage.getWidth();
 
@@ -259,6 +182,56 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
     final GridRange gridRange = new GridRange_Impl( lows, highs );
     final GM_Point origin = GeometryFactory.createGM_Point( upperLeftCorner[0], upperLeftCorner[1], crs );
 
+    tiledImage.dispose();
+
     return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
+  }
+
+  /**
+   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
+   */
+  public String getOriginCornerX( )
+  {
+    return Double.toString( m_tiepoints[3] );
+  }
+
+  /**
+   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
+   */
+  public String getOriginCornerY( )
+  {
+    return Double.toString( m_tiepoints[4] );
+  }
+
+  /**
+   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDx()
+   */
+  public String getVectorXx( )
+  {
+    return Double.toString( m_pixelScales[0] );
+  }
+
+  /**
+   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiX()
+   */
+  public String getVectorXy( )
+  {
+    return Double.toString( 0 );
+  }
+
+  /**
+   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiY()
+   */
+  public String getVectorYx( )
+  {
+    return Double.toString( 0 );
+  }
+
+  /**
+   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDy()
+   */
+  public String getVectorYy( )
+  {
+    return Double.toString( m_pixelScales[1] * -1.0 );
   }
 }

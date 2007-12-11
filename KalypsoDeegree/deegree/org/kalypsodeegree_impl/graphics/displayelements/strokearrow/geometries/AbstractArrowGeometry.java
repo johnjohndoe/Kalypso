@@ -38,14 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
+package org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.LabelFactory;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
 
 /**
  * @author kuch
@@ -61,7 +63,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
 
   private AffineTransform m_savedAT;
 
-  public AbstractArrowGeometry( Graphics2D g2, GeoTransform projection, GM_Point[] points )
+  public AbstractArrowGeometry( final Graphics2D g2, final GeoTransform projection, final GM_Point[] points )
   {
     m_g2 = g2;
     m_projection = projection;
@@ -86,11 +88,11 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
   /**
    * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.IArrowGeometry#paint()
    */
-  public void paint( Double size )
+  public void paint( final Double size )
   {
     // calculate screenpoints
-    int[] p1 = LabelFactory.calcScreenCoordinates( getProjection(), getPoints()[0] );
-    int[] p2 = LabelFactory.calcScreenCoordinates( getProjection(), getPoints()[1] );
+    final int[] p1 = LabelFactory.calcScreenCoordinates( getProjection(), getPoints()[0] );
+    final int[] p2 = LabelFactory.calcScreenCoordinates( getProjection(), getPoints()[1] );
 
     // setTransform
     setAffineTransformation( p1, p2 );
@@ -108,36 +110,40 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
 
   }
 
-  private void setAffineTransformation( int[] p1, int[] p2 )
+  private void setAffineTransformation( final int[] p1, final int[] p2 )
   {
     m_savedAT = getGraphic().getTransform();
-    AffineTransform transform = new AffineTransform();
+    final AffineTransform transform = new AffineTransform();
     transform.translate( p1[0], p1[1] );
     transform.rotate( getRotation( p1, p2 ) );
     getGraphic().setTransform( transform );
   }
 
-  public static IArrowGeometry getArrowGeometry( Graphics2D g2, GeoTransform projection, GM_Point[] points )
+  public static IArrowGeometry getArrowGeometry( final ARROW_WIDGET widget, final Graphics2D g2, final GeoTransform projection, final GM_Point[] points )
   {
-    return new DefaultArrowGeometry( g2, projection, points );
+    switch( widget )
+    {
+      case eFill:
+        return new FillArrowGeometry( g2, projection, points );
 
+      case eOpen:
+        return new OpenArrowGeometry( g2, projection, points );
+
+      default:
+        throw new NotImplementedException();
+    }
   }
 
-  protected double getRotation( int[] p1, int[] p2 )
+  protected double getRotation( final int[] p1, final int[] p2 )
   {
     final double dx = p2[0] - p1[0];
     final double dy = -(p2[1] - p1[1]);
     double rotation = 0.0;
 
     if( dx <= 0 )
-    {
-
       rotation = -Math.atan( dy / dx );
-    }
     else
-    {
       rotation = -Math.PI - Math.atan( dy / dx );
-    }
 
     return rotation;
   }

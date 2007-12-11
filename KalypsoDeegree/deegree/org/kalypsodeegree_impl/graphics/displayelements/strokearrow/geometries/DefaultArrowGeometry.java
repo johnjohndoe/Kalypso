@@ -38,41 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
+package org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries;
 
 import java.awt.Graphics2D;
-import java.util.Map;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
-import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_TYPE;
-import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author kuch
  */
-public class StrokeArrowPainter implements IAdditionalStrokePainter
+@Deprecated
+public class DefaultArrowGeometry extends AbstractArrowGeometry
 {
-  private final GeoTransform m_projection;
 
-  private final Map< ? , ? > m_cssParameters;
-
-  public StrokeArrowPainter( final Map< ? , ? > cssParameters, final GeoTransform projection )
+  public DefaultArrowGeometry( final Graphics2D g2, final GeoTransform projection, final GM_Point[] points )
   {
-    m_cssParameters = cssParameters;
-    m_projection = projection;
+    super( g2, projection, points );
   }
 
-  public void paint( final Graphics2D g2, final GM_Curve curve, final int[][] positions )
+  /**
+   * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.AbstractArrowGeometry#draw(java.lang.Double)
+   */
+  @Override
+  protected void draw( int size )
   {
-    final ARROW_TYPE arrowType = StrokeArrowHelper.getArrowType( m_cssParameters );
-    final ARROW_WIDGET arrowWidget = StrokeArrowHelper.getArrowWidget( m_cssParameters );
-    final ARROW_ALIGNMENT arrowAlignment = StrokeArrowHelper.getArrowAlignment( m_cssParameters );
-    final Double arrowSize = StrokeArrowHelper.getArrowSize( m_cssParameters );
-    final Double strokeWidth = StrokeArrowHelper.getStrokeWidth( m_cssParameters );
+    // draw triangle
+    int size_4 = size / 4;
 
-    final IStrokeArrowPaintDelegate painter = AbstractStrokeArrowPaintDelegate.getPaintDelegate( arrowType, arrowWidget, arrowAlignment, arrowSize, strokeWidth );
-    painter.paint( g2, m_projection, curve );
+    final int[] a = new int[] { -size, +size_4 };
+    final int[] b = new int[] { -size, -size_4 };
+    final int[] c = new int[] { 0, 0 };
+
+    final int[] x = new int[] { a[0], b[0], c[0] };
+    final int[] y = new int[] { a[1], b[1], c[1] };
+
+    getGraphic().drawPolygon( x, y, 3 );
   }
 }
