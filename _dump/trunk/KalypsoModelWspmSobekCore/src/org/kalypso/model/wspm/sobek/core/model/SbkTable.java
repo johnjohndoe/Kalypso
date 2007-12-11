@@ -43,6 +43,10 @@ package org.kalypso.model.wspm.sobek.core.model;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -113,13 +117,9 @@ public class SbkTable implements ISbkTable
 
       final Object property = table.getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_TABLE_INTERPOLATION_VALUE );
       if( property instanceof Byte )
-      {
         m_value = ((Number) property).byteValue();
-      }
       else
-      {
         m_value = ((Number) 0).byteValue();
-      }
     }
 
     public byte getValue( )
@@ -142,72 +142,91 @@ public class SbkTable implements ISbkTable
   {
     private final long m_rowsCount;
 
+    private final TupleResult m_result;
+
     TabularData( final Feature table )
     {
-      IObservation test;
-      
-//      public IObservation<TupleResult> getRunOffEvent( )
-//      {
-//        final Feature runOffEvent = FeatureHelper.resolveLink( getFeature(), new QName( NS_WSPM_TUHH, "runOffEventMember" ) );
-//        if( runOffEvent == null )
-//          return null;
-//
-//        return ObservationFeatureFactory.toObservation( runOffEvent );
-//      }
-      // TODO
-//      - {http://www.opengis.net/om}result
-      
-//      final IObservation<TupleResult> valBenObs = ObservationFeatureFactory.toObservation( valBenFunctFeat );
-//      if( valBenObs == null )
-//        return null;
-//
-//      final TupleResult result = valBenObs.getResult();
-//      if( result == null )
-//        return null;
-//      final IComponent compX = TupleResultUtilities.findComponentById( result, CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER );
-//      final IComponent compY = TupleResultUtilities.findComponentById( result, CriterionValueBenefitRating.DICT_ID_RATING );
-//      if( (compX == null) || (compY == null) )
-//        return null;
-//      if( !(XmlTypes.isNumber( compX.getValueTypeName() ) && XmlTypes.isNumber( compY.getValueTypeName() )) )
-//        return null;
-//
-//      // compute valueBenefitFunction(value)
-//      return interpolate( result, value );
-      
-//      private Object interpolate( final TupleResult result, final java.lang.Double value )
-//      {
-//        final Double vbFuncMax = tupleResultMax( result, CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER, CriterionValueBenefitRating.DICT_ID_RATING );
-//        final Double vbFuncMin = tupleResultMin( result, CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER, CriterionValueBenefitRating.DICT_ID_RATING );
-//
-//        // is value to the left or to the right of the function? Then extrapolate
-//        if( (vbFuncMax == null) || (vbFuncMin == null) || (value == null) )
-//          return null;
-//
-//        if( (vbFuncMax.x <= value) && (vbFuncMin.x >= value) )
-//          return interpolate( vbFuncMin, vbFuncMax, value );
-//        else if( vbFuncMax.x <= value )
-//        {
-//          final Point2D.Double[] neighbors = getNeighbors( result, vbFuncMax.x, CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER, CriterionValueBenefitRating.DICT_ID_RATING, true, false );
-//          return interpolate( neighbors[0], vbFuncMax, value );
-//        }
-//        else if( vbFuncMin.x >= value )
-//        {
-//          final Point2D.Double[] neighbors = getNeighbors( result, vbFuncMin.x, CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER, CriterionValueBenefitRating.DICT_ID_RATING, false, true );
-//          return interpolate( vbFuncMin, neighbors[1], value );
-//        }
-//        else
-//        {
-//          final Point2D.Double[] neighbors = getNeighbors( result, value, CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER, CriterionValueBenefitRating.DICT_ID_RATING, false, false );
-//          return interpolate( neighbors[0], neighbors[1], value );
-//        }
-//      }
 
-      m_rowsCount = 0;
+      final IObservation<TupleResult> tableObs = ObservationFeatureFactory.toObservation( table );
+      m_result = tableObs.getResult();
+      m_rowsCount = m_result.size();
+
+      for( final IRecord record : m_result )
+      {
+// ObservationUtilities.
+
+      }
+
+      // TODO
+// <catalog:system systemId="urn:ogc:gml:dict:kalypso:nofdp:idss:retardingBasinObservationDefs"
+// uri="dict_retarding_basin_observation_defs.gml" />
+// WATERLEVEL
+// DISCHARGE
+
+// - {http://www.opengis.net/om}result
+
+// final IObservation<TupleResult> valBenObs = ObservationFeatureFactory.toObservation( valBenFunctFeat );
+// if( valBenObs == null )
+// return null;
+//
+// final TupleResult result = valBenObs.getResult();
+// if( result == null )
+// return null;
+// final IComponent compX = TupleResultUtilities.findComponentById( result,
+// CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER );
+// final IComponent compY = TupleResultUtilities.findComponentById( result, CriterionValueBenefitRating.DICT_ID_RATING
+// );
+// if( (compX == null) || (compY == null) )
+// return null;
+// if( !(XmlTypes.isNumber( compX.getValueTypeName() ) && XmlTypes.isNumber( compY.getValueTypeName() )) )
+// return null;
+//
+// // compute valueBenefitFunction(value)
+// return interpolate( result, value );
+
+// private Object interpolate( final TupleResult result, final java.lang.Double value )
+// {
+// final Double vbFuncMax = tupleResultMax( result, CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER,
+// CriterionValueBenefitRating.DICT_ID_RATING );
+// final Double vbFuncMin = tupleResultMin( result, CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER,
+// CriterionValueBenefitRating.DICT_ID_RATING );
+//
+// // is value to the left or to the right of the function? Then extrapolate
+// if( (vbFuncMax == null) || (vbFuncMin == null) || (value == null) )
+// return null;
+//
+// if( (vbFuncMax.x <= value) && (vbFuncMin.x >= value) )
+// return interpolate( vbFuncMin, vbFuncMax, value );
+// else if( vbFuncMax.x <= value )
+// {
+// final Point2D.Double[] neighbors = getNeighbors( result, vbFuncMax.x,
+// CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER, CriterionValueBenefitRating.DICT_ID_RATING, true, false );
+// return interpolate( neighbors[0], vbFuncMax, value );
+// }
+// else if( vbFuncMin.x >= value )
+// {
+// final Point2D.Double[] neighbors = getNeighbors( result, vbFuncMin.x,
+// CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER, CriterionValueBenefitRating.DICT_ID_RATING, false, true );
+// return interpolate( vbFuncMin, neighbors[1], value );
+// }
+// else
+// {
+// final Point2D.Double[] neighbors = getNeighbors( result, value, CriterionValueBenefitRating.DICT_ID_VALUE_NUMBER,
+// CriterionValueBenefitRating.DICT_ID_RATING, false, false );
+// return interpolate( neighbors[0], neighbors[1], value );
+// }
+// }
+
     }
 
     public long getRowsCount( )
     {
       return m_rowsCount;
+    }
+
+    public TupleResult getResult( )
+    {
+      return m_result;
     }
   }
 
@@ -217,5 +236,13 @@ public class SbkTable implements ISbkTable
   public long getRowsCount( )
   {
     return getTabularData().getRowsCount();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable#getTupleResult()
+   */
+  public TupleResult getTupleResult( )
+  {
+    return getTabularData().getResult();
   }
 }

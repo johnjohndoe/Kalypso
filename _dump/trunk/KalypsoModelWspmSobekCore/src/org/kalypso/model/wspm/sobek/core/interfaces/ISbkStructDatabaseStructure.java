@@ -55,4 +55,8 @@ public interface ISbkStructDatabaseStructure extends ISbkStructure
 
   public String getInterpolationType( );
 
+  public ISbkTable getDatabase( );
+
+  public ISbkTable getDatabaseUsage( );
+
 }

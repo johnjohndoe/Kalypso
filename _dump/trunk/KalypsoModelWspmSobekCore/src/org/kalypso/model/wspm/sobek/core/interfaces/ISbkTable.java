@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.kalypso.observation.result.TupleResult;
+
 /**
  * @author thuel2
- *
  */
 public interface ISbkTable
 {
@@ -54,5 +55,7 @@ public interface ISbkTable
   public byte getInterpolationValue( );
 
   public long getRowsCount( );
+
+  public TupleResult getTupleResult( );
 
 }

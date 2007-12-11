@@ -345,15 +345,16 @@ public class PiSobekModelUtils
     final ISbkStructPump sbkPump = (ISbkStructPump) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    final List<Object> content = structureDefinition.getContent();
-    content.add( factory.createStructureDefinitionId( sbkPump.getId() + "_pump" ) );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
     String name = sbkPump.getName();
     if( name == null )
       name = "";
-    content.add( factory.createStructureDefinitionName( name + "_pump" ) );
-    content.add( factory.createStructureDefinitionType( "Sobek.Structures.Pump" ) );
+    structureDefinition.setStructureDefinitionId( sbkPump.getId() + "_pump" );
+    structureDefinition.setStructureDefinitionName( name + "_pump" );
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.Pump" );
 
     final Parameters parameters = factory.createParameters();
+
     Parameter parameter = factory.createParameter();
     parameter.setId( "flowDirection" );
     parameter.setType( "string" );
@@ -411,7 +412,7 @@ public class PiSobekModelUtils
     parameter.getContent().add( innerTable );
     parameters.getParameter().add( parameter );
 
-    content.add( parameters );
+    structureDefinition.setParameters( parameters );
     return structureDefinition;
   }
 
@@ -420,15 +421,16 @@ public class PiSobekModelUtils
     final ISbkStructDatabaseStructure sbkDBStruct = (ISbkStructDatabaseStructure) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    final List<Object> content = structureDefinition.getContent();
-    content.add( factory.createStructureDefinitionId( sbkDBStruct.getId() + "_dbStruct" ) );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
     String name = sbkDBStruct.getName();
     if( name == null )
       name = "";
-    content.add( factory.createStructureDefinitionName( name + "_dbStruct" ) );
-    content.add( factory.createStructureDefinitionType( "Sobek.Structures.DatabaseStructure" ) );
+    structureDefinition.setStructureDefinitionId( sbkDBStruct.getId() + "_dbStruct" );
+    structureDefinition.setStructureDefinitionName( name + "_dbStruct" );
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.DatabaseStructure" );
 
     final Parameters parameters = factory.createParameters();
+
     Parameter parameter = factory.createParameter();
     parameter.setId( "crestLevel" );
     parameter.setType( "double" );
@@ -453,93 +455,95 @@ public class PiSobekModelUtils
     parameter.getContent().add( sbkDBStruct.getInterpolationType() );
     parameters.getParameter().add( parameter );
 
-// ###
-// parameter = factory.createParameter();
-// parameter.setId( "database" );
-// parameter.setType( "table" );
-// final Table innerTable = factory.createTable();
-// innerTable.setName( "database" );
-//
-// final Info tableInfo = factory.createInfo();
-// // final Interpolation interpolation = factory.createInterpolation();
-// // interpolation.setPeriod( "No" );
-// // interpolation.setType( "Interpolation.Continuous" );
-// // // TODO understand the byte value or leave default
-// // // interpolation.setValue( );
-// // tableInfo.setInterpolation( interpolation );
-// final Columns columns = factory.createColumns();
-// final int colCount = 5;
-// columns.setCount( ((Number) colCount).byteValue() );
-//
-// final Column column = factory.createColumn();
-// column.setType( "double" );
-// for( int i = 0; i < colCount; i++ )
-// columns.getColumn().add( column );
-// tableInfo.setColumns( columns );
-//
-// innerTable.setInfo( tableInfo );
-//
-// final Rows tableRows = factory.createRows();
-// final Row tableRow = factory.createRow();
-// tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelSuctionSide() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelPressureSide() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelPressureSide() ) );
-//
-// tableRows.getRow().add( tableRow );
-// innerTable.setRows( tableRows );
-//
-// parameter.getContent().add( innerTable );
-// parameters.getParameter().add( parameter );
-// ###
+    parameter = factory.createParameter();
+    parameter.setId( "database" );
+    parameter.setType( "table" );
+    final Table innerTableDB = factory.createTable();
+    innerTableDB.setName( "database" );
 
-// ###
-// parameter = factory.createParameter();
-// parameter.setId( "databaseUsage" );
-// parameter.setType( "table" );
-// final Table innerTable = factory.createTable();
-// innerTable.setName( "databaseUsage" );
-//
-// final Info tableInfo = factory.createInfo();
-// final Columns columns = factory.createColumns();
-// columns.setCount( ((Number) 5).byteValue() );
-//
-// final Info tableInfo = factory.createInfo();
-// // final Interpolation interpolation = factory.createInterpolation();
-// // interpolation.setPeriod( "No" );
-// // interpolation.setType( "Interpolation.Continuous" );
-// // // TODO understand the byte value or leave default
-// // // interpolation.setValue( );
-// // tableInfo.setInterpolation( interpolation );
-// final Columns columns = factory.createColumns();
-// final int colCount = 5;
-// columns.setCount( ((Number) colCount).byteValue() );
-//
-// final Column column = factory.createColumn();
-// column.setType( "double" );
-// for( int i = 0; i < colCount; i++ )
-// columns.getColumn().add( column );
-// tableInfo.setColumns( columns );
-//
-// innerTable.setInfo( tableInfo );
-//
-// final Rows tableRows = factory.createRows();
-// final Row tableRow = factory.createRow();
-// tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelSuctionSide() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelPressureSide() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelPressureSide() ) );
-//
-// tableRows.getRow().add( tableRow );
-// innerTable.setRows( tableRows );
-//
-// parameter.getContent().add( innerTable );
-// parameters.getParameter().add( parameter );
-// ###
+    final Info tableInfoDB = factory.createInfo();
 
-    content.add( parameters );
+    final Interpolation interpolationDB = factory.createInterpolation();
+
+    interpolationDB.setPeriod( sbkDBStruct.getDatabase().getInterpolationPeriod() );
+    interpolationDB.setType( sbkDBStruct.getDatabase().getInterpolationType() );
+    interpolationDB.setValue( sbkDBStruct.getDatabase().getInterpolationValue() );
+
+    tableInfoDB.setInterpolation( interpolationDB );
+
+    final Columns columnsDB = factory.createColumns();
+    final int colCountDB = 2;
+    columnsDB.setCount( ((Number) colCountDB).byteValue() );
+
+    final Column columnDB = factory.createColumn();
+    columnDB.setType( "double" );
+    for( int i = 0; i < colCountDB; i++ )
+      columnsDB.getColumn().add( columnDB );
+    tableInfoDB.setColumns( columnsDB );
+
+    innerTableDB.setInfo( tableInfoDB );
+
+    final Rows tableRowsDB = factory.createRows();
+    final long rowsCountDB = sbkDBStruct.getDatabase().getRowsCount();
+    for( int i = 0; i < rowsCountDB; i++ )
+    {
+      final Row tableRow = factory.createRow();
+      // TODO
+      // tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
+      // tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
+      tableRowsDB.getRow().add( tableRow );
+    }
+
+    innerTableDB.setRows( tableRowsDB );
+
+    parameter.getContent().add( innerTableDB );
+    parameters.getParameter().add( parameter );
+
+    parameter = factory.createParameter();
+    parameter.setId( "databaseUsage" );
+    parameter.setType( "table" );
+    final Table innerTableDBUsage = factory.createTable();
+    innerTableDBUsage.setName( "databaseUsage" );
+
+    final Info tableInfoDBUsage = factory.createInfo();
+
+    final Interpolation interpolationDBUsage = factory.createInterpolation();
+
+    interpolationDBUsage.setPeriod( sbkDBStruct.getDatabaseUsage().getInterpolationPeriod() );
+    interpolationDBUsage.setType( sbkDBStruct.getDatabaseUsage().getInterpolationType() );
+    interpolationDBUsage.setValue( sbkDBStruct.getDatabaseUsage().getInterpolationValue() );
+
+    tableInfoDBUsage.setInterpolation( interpolationDBUsage );
+
+    final Columns columnsDBUsage = factory.createColumns();
+    final int colCountDBUsage = 2;
+    columnsDBUsage.setCount( ((Number) colCountDBUsage).byteValue() );
+
+    final Column columnDBUsage = factory.createColumn();
+    columnDBUsage.setType( "double" );
+    for( int i = 0; i < colCountDBUsage; i++ )
+      columnsDBUsage.getColumn().add( columnDBUsage );
+    tableInfoDBUsage.setColumns( columnsDBUsage );
+
+    innerTableDBUsage.setInfo( tableInfoDBUsage );
+
+    final Rows tableRowsDBUsage = factory.createRows();
+    final long rowsCountDBUsage = sbkDBStruct.getDatabaseUsage().getRowsCount();
+    for( int i = 0; i < rowsCountDBUsage; i++ )
+    {
+      final Row tableRow = factory.createRow();
+      // TODO
+      // tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
+      // tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
+      tableRowsDBUsage.getRow().add( tableRow );
+    }
+
+    innerTableDBUsage.setRows( tableRowsDBUsage );
+
+    parameter.getContent().add( innerTableDBUsage );
+    parameters.getParameter().add( parameter );
+
+    structureDefinition.setParameters( parameters );
     return structureDefinition;
   }
 
@@ -548,15 +552,16 @@ public class PiSobekModelUtils
     final ISbkStructGeneralStructure sbkGenStruct = (ISbkStructGeneralStructure) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    final List<Object> content = structureDefinition.getContent();
-    content.add( factory.createStructureDefinitionId( sbkGenStruct.getId() + "_genStruct" ) );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
     String name = sbkGenStruct.getName();
     if( name == null )
       name = "";
-    content.add( factory.createStructureDefinitionName( name + "_genStruct" ) );
-    content.add( factory.createStructureDefinitionType( "Sobek.Structures.GeneralStructure" ) );
+    structureDefinition.setStructureDefinitionId( sbkGenStruct.getId() + "_genStruct" );
+    structureDefinition.setStructureDefinitionName( name + "_genStruct" );
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.GeneralStructure" );
 
     final Parameters parameters = factory.createParameters();
+
     Parameter parameter = factory.createParameter();
     parameter.setId( "widthUpstream" );
     parameter.setType( "double" );
@@ -689,7 +694,7 @@ public class PiSobekModelUtils
     parameter.getContent().add( Double.toString( sbkGenStruct.getExtraResistence() ) );
     parameters.getParameter().add( parameter );
 
-    content.add( parameters );
+    structureDefinition.setParameters( parameters );
     return structureDefinition;
   }
 
@@ -698,16 +703,16 @@ public class PiSobekModelUtils
     final ISbkStructRiverWeir sbkRiverWeir = (ISbkStructRiverWeir) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    final List<Object> content = structureDefinition.getContent();
-
-    content.add( factory.createStructureDefinitionId( sbkRiverWeir.getId() + "_riverWeir" ) );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
     String name = sbkRiverWeir.getName();
     if( name == null )
       name = "";
-    content.add( factory.createStructureDefinitionName( name + "_riverWeir" ) );
-    content.add( factory.createStructureDefinitionType( "Sobek.Structures.RiverWeir" ) );
+    structureDefinition.setStructureDefinitionId( sbkRiverWeir.getId() + "_riverWeir" );
+    structureDefinition.setStructureDefinitionName( name + "_riverWeir" );
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.RiverWeir" );
 
     final Parameters parameters = factory.createParameters();
+
     Parameter parameter = factory.createParameter();
     parameter.setId( "crestLevel" );
     parameter.setType( "double" );
@@ -741,44 +746,53 @@ public class PiSobekModelUtils
     parameter = factory.createParameter();
     parameter.setId( "positiveReductionFactors" );
     parameter.setType( "table" );
-    final Table innerTable = factory.createTable();
-    innerTable.setName( "positiveReductionFactors" );
+    final Table innerTablePos = factory.createTable();
+    innerTablePos.setName( "positiveReductionFactors" );
 
-    final Info tableInfo = factory.createInfo();
+    final Info tableInfoPos = factory.createInfo();
 
-    final Interpolation interpolation = factory.createInterpolation();
+    final Interpolation interpolationPos = factory.createInterpolation();
 
-    interpolation.setPeriod( sbkRiverWeir.getPosReductionFactors().getInterpolationPeriod() );
-    interpolation.setType( sbkRiverWeir.getPosReductionFactors().getInterpolationType() );
-    interpolation.setValue( sbkRiverWeir.getPosReductionFactors().getInterpolationValue() );
+    interpolationPos.setPeriod( sbkRiverWeir.getPosReductionFactors().getInterpolationPeriod() );
+    interpolationPos.setType( sbkRiverWeir.getPosReductionFactors().getInterpolationType() );
+    interpolationPos.setValue( sbkRiverWeir.getPosReductionFactors().getInterpolationValue() );
 
-    tableInfo.setInterpolation( interpolation );
+    tableInfoPos.setInterpolation( interpolationPos );
 
-    final Columns columns = factory.createColumns();
+    final Columns columnsPos = factory.createColumns();
+    final int colCountPos = 2;
+    columnsPos.setCount( ((Number) colCountPos).byteValue() );
 
-    final int colCount = 2;
-    columns.setCount( ((Number) colCount).byteValue() );
+    final Column columnPos = factory.createColumn();
+    columnPos.setType( "double" );
+    for( int i = 0; i < colCountPos; i++ )
+      columnsPos.getColumn().add( columnPos );
+    tableInfoPos.setColumns( columnsPos );
 
-    final Column column = factory.createColumn();
-    column.setType( "double" );
-    for( int i = 0; i < colCount; i++ )
-      columns.getColumn().add( column );
-    tableInfo.setColumns( columns );
+    innerTablePos.setInfo( tableInfoPos );
 
-    innerTable.setInfo( tableInfo );
+    final TupleResult result = sbkRiverWeir.getPosReductionFactors().getTupleResult();
+// Submergeance and Reduction
+    // als Konstante festlegen
+// <catalog:system systemId="urn:ogc:gml:dict:kalypso:wspm:sobek:sbkRiverWeirObservationDefs"
+// uri="dict_sbk_river_weir_observation_defs.gml
+// SUBMERGEANCE, REDUCTION
 
-    final Rows tableRows = factory.createRows();
-    final long rowsCount = sbkRiverWeir.getPosReductionFactors().getRowsCount();
-    // TODO Schleife um Zeilen
-// ###
-// final Row tableRow = factory.createRow();
-// tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
-// tableRows.getRow().add( tableRow );
-// ###
-    innerTable.setRows( tableRows );
+// final IComponent compY = TupleResultUtilities.findComponentById( result, CriterionValueBenefitRating.DICT_ID_RATING
+    final Rows tableRowsPos = factory.createRows();
+    final long rowsCountPos = sbkRiverWeir.getPosReductionFactors().getRowsCount();
+    for( int i = 0; i < rowsCountPos; i++ )
+    {
+      final Row tableRow = factory.createRow();
+      // TODO
+      // tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
+      // tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
+      tableRowsPos.getRow().add( tableRow );
+    }
 
-    parameter.getContent().add( innerTable );
+    innerTablePos.setRows( tableRowsPos );
+
+    parameter.getContent().add( innerTablePos );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
@@ -793,49 +807,51 @@ public class PiSobekModelUtils
     parameter.getContent().add( Double.toString( sbkRiverWeir.getNegSubmergeLimit() ) );
     parameters.getParameter().add( parameter );
 
-// ###
-// parameter = factory.createParameter();
-// parameter.setId( "negativeReductionFactors" );
-// parameter.setType( "table" );
-// final Table innerTable = factory.createTable();
-// innerTable.setName( "negativeReductionFactors" );
-//
-// final Info tableInfo = factory.createInfo();
-//    
-// // final Interpolation interpolation = factory.createInterpolation();
-// // interpolation.setPeriod( "No" );
-// // interpolation.setType( "Interpolation.Continuous" );
-// // // TODO understand the byte value or leave default
-// // // interpolation.setValue( );
-// // tableInfo.setInterpolation( interpolation );
-// final Columns columns = factory.createColumns();
-// final int colCount = 5;
-// columns.setCount( ((Number) colCount).byteValue() );
-//
-// final Column column = factory.createColumn();
-// column.setType( "double" );
-// for( int i = 0; i < colCount; i++ )
-// columns.getColumn().add( column );
-// tableInfo.setColumns( columns );
-//
-// innerTable.setInfo( tableInfo );
-//
-// final Rows tableRows = factory.createRows();
-// final Row tableRow = factory.createRow();
-// tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelSuctionSide() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelPressureSide() ) );
-// tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelPressureSide() ) );
-//
-// tableRows.getRow().add( tableRow );
-// innerTable.setRows( tableRows );
-//
-// parameter.getContent().add( innerTable );
-// parameters.getParameter().add( parameter );
-// ###
+    parameter = factory.createParameter();
+    parameter.setId( "negativeReductionFactors" );
+    parameter.setType( "table" );
+    final Table innerTableNeg = factory.createTable();
+    innerTableNeg.setName( "negativeReductionFactors" );
 
-    content.add( parameters );
+    final Info tableInfoNeg = factory.createInfo();
+
+    final Interpolation interpolationNeg = factory.createInterpolation();
+
+    interpolationNeg.setPeriod( sbkRiverWeir.getNegReductionFactors().getInterpolationPeriod() );
+    interpolationNeg.setType( sbkRiverWeir.getNegReductionFactors().getInterpolationType() );
+    interpolationNeg.setValue( sbkRiverWeir.getNegReductionFactors().getInterpolationValue() );
+
+    tableInfoNeg.setInterpolation( interpolationNeg );
+
+    final Columns columnsNeg = factory.createColumns();
+    final int colCountNeg = 2;
+    columnsNeg.setCount( ((Number) colCountNeg).byteValue() );
+
+    final Column columnNeg = factory.createColumn();
+    columnNeg.setType( "double" );
+    for( int i = 0; i < colCountNeg; i++ )
+      columnsNeg.getColumn().add( columnNeg );
+    tableInfoNeg.setColumns( columnsNeg );
+
+    innerTableNeg.setInfo( tableInfoNeg );
+
+    final Rows tableRowsNeg = factory.createRows();
+    final long rowsCountNeg = sbkRiverWeir.getNegReductionFactors().getRowsCount();
+    for( int i = 0; i < rowsCountNeg; i++ )
+    {
+      final Row tableRow = factory.createRow();
+      // TODO
+      // tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
+      // tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
+      tableRowsNeg.getRow().add( tableRow );
+    }
+
+    innerTableNeg.setRows( tableRowsNeg );
+
+    parameter.getContent().add( innerTableNeg );
+    parameters.getParameter().add( parameter );
+
+    structureDefinition.setParameters( parameters );
     return structureDefinition;
   }
 
@@ -844,15 +860,16 @@ public class PiSobekModelUtils
     final ISbkStructWeir sbkWeir = (ISbkStructWeir) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    final List<Object> content = structureDefinition.getContent();
-    content.add( factory.createStructureDefinitionId( sbkWeir.getId() + "_weir" ) );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
     String name = sbkWeir.getName();
     if( name == null )
       name = "";
-    content.add( factory.createStructureDefinitionName( name + "_weir" ) );
-    content.add( factory.createStructureDefinitionType( "Sobek.Structures.Weir" ) );
+    structureDefinition.setStructureDefinitionId( sbkWeir.getId() + "_weir" );
+    structureDefinition.setStructureDefinitionName( name + "_weir" );
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.Weir" );
 
     final Parameters parameters = factory.createParameters();
+
     Parameter parameter = factory.createParameter();
     parameter.setId( "flowDirection" );
     parameter.setType( "string" );
@@ -883,7 +900,8 @@ public class PiSobekModelUtils
     parameter.getContent().add( Double.toString( sbkWeir.getLateralContractionCoeffCW() ) );
     parameters.getParameter().add( parameter );
 
-    content.add( parameters );
+    structureDefinition.setParameters( parameters );
+
     return structureDefinition;
   }
 

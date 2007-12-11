@@ -21,6 +21,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="structureDefinitionType" type="xs:string"/>
+	<xs:element name="crossSectionType" type="xs:string"/>
 	<xs:element name="structureDefinitionName" type="xs:string"/>
 	<xs:element name="structureDefinitionId" type="xs:string"/>
 	<xs:element name="structureDefinition">
@@ -29,16 +30,11 @@
 				<xs:element ref="fews:structureDefinitionId"/>
 				<xs:element ref="fews:structureDefinitionName"/>
 				<xs:element ref="fews:structureDefinitionType"/>
-				<xs:choice>
-					<xs:sequence>
-						<xs:element ref="fews:Parameters"/>
-						<xs:element ref="fews:Controllers" minOccurs="0"/>
-					</xs:sequence>
-					<xs:sequence>
-						<xs:element ref="fews:closedCrossSection"/>
-						<xs:element ref="fews:Parameters"/>
-					</xs:sequence>
-				</xs:choice>
+				<xs:element ref="fews:crossSectionType"/>
+				<xs:element ref="fews:tabulatedCrossSection" minOccurs="0"/>
+				<xs:element ref="fews:yzCrossSection" minOccurs="0"/>
+				<xs:element ref="fews:Parameters"/>
+				<xs:element ref="fews:Controllers" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -75,13 +71,6 @@
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="id" type="xs:string" use="required"/>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="crossSectionData">
-		<xs:complexType>
-			<xs:attribute name="totalWidth" type="xs:double" use="required"/>
-			<xs:attribute name="height" type="xs:double" use="required"/>
-			<xs:attribute name="flowWidth" type="xs:double" use="required"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Controllers">
@@ -238,12 +227,35 @@
 			<xs:attribute name="count" type="xs:byte" use="required"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="closedCrossSection">
+	<xs:element name="tabulatedCrossSection">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="fews:roughnessType"/>
-				<xs:element ref="fews:crossSectionData" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="fews:tabulatedCrossSectionData" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="yzCrossSection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="fews:roughnessType"/>
+				<xs:element ref="fews:yzCrossSectionData" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tabulatedCrossSectionData">
+		<xs:complexType>
+			<xs:attribute name="totalWidth" type="xs:double" use="required"/>
+			<xs:attribute name="height" type="xs:double" use="required"/>
+			<xs:attribute name="flowWidth" type="xs:double" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="yzCrossSectionData">
+		<xs:complexType>
+			<xs:attribute name="csy" type="xs:double" use="required"/>
+			<xs:attribute name="z" type="xs:double" use="required"/>		
+			<xs:attribute name="roughness" type="xs:double" use="optional"/>
+			<xs:attribute name="mark" type="xs:integer" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="checkOnDirection">

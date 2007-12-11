@@ -342,7 +342,6 @@ public final class SobekModelMember implements ISobekModelMember
       try
       {
         jc = JAXBContext.newInstance( ObjectFactory.class );
-
         final Marshaller m = jc.createMarshaller();
         m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
 
@@ -515,7 +514,10 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public CommandableWorkspace getWorkspace( )
   {
-    return m_workspace.getCommandableWorkspace();
+    if( m_workspace == null )
+      return null;
+    else
+      return m_workspace.getCommandableWorkspace();
   }
 
   /**
@@ -523,6 +525,9 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public IProject getMappedProject( )
   {
-    return m_workspace.getMappedProject();
+    if( m_workspace == null )
+      return null;
+    else
+      return m_workspace.getMappedProject();
   }
 }
