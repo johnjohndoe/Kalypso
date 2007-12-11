@@ -95,7 +95,7 @@ public class DateTimeDialog extends TitleAreaDialog
   protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = (Composite) super.createDialogArea( parent );
-    composite.setLayout( new GridLayout( 2, false ) );
+    composite.setLayout( new GridLayout() );
     final GridData data = new GridData( GridData.FILL, GridData.FILL, true, true );
     data.heightHint = 300;
     data.widthHint = 100;
@@ -104,7 +104,7 @@ public class DateTimeDialog extends TitleAreaDialog
 
     /* date */
     final SWTCalendar calendar = new SWTCalendar( composite, SWT.FLAT );
-    calendar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+    calendar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     if( m_preSettedDateTime != null )
       calendar.setCalendar( m_preSettedDateTime );
 
