@@ -48,7 +48,6 @@ import java.util.List;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
-import org.kalypso.model.wspm.sobek.core.pub.ISnapPainter;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -58,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author kuch
  */
-public class FNSnapPainterExtendBranches implements ISnapPainter
+public class FNSnapPainterExtendBranches
 {
   public static final int RADIUS = 10;
 
@@ -80,10 +79,6 @@ public class FNSnapPainterExtendBranches implements ISnapPainter
     }
   }
 
-  /**
-   * @see org.kalypso.nofdpidss.ui.application.flow.network.ISnapPainter#isSnapPoaint(org.kalypso.ogc.gml.map.MapPanel,
-   *      java.awt.Point)
-   */
   public GM_Point getSnapPoint( final MapPanel panel, final GM_Point point )
   {
     try

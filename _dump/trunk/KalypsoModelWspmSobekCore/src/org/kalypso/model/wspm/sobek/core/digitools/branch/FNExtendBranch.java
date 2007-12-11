@@ -50,7 +50,6 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
-import org.kalypso.model.wspm.sobek.core.pub.ISnapPainter;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -67,7 +66,7 @@ public class FNExtendBranch extends AbstractWidget
 {
   private IGeometryBuilder m_geoBuilder = null;
 
-  protected ISnapPainter m_snapPainter = null;
+  protected FNSnapPainterExtendBranches m_snapPainter = null;
 
   private GM_Point m_pos;
 
@@ -170,12 +169,12 @@ public class FNExtendBranch extends AbstractWidget
        * Only adds points. The return value should be always null, because we specified no rule regarding the amount of
        * points.
        */
-      final GM_Point point = m_snapPainter.getSnapPoint( getMapPanel(), m_pos );
-      if( point == null )
+
+      final GM_Point snapPoint = m_snapPainter.getSnapPoint( getMapPanel(), m_pos );
+      if( snapPoint == null )
         m_geoBuilder.addPoint( m_pos );
       else
-        m_geoBuilder.addPoint( point );
-
+        m_geoBuilder.addPoint( snapPoint );
     }
     catch( final Exception e )
     {

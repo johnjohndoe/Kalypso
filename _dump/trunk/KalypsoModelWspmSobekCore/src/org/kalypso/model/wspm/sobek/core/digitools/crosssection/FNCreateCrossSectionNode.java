@@ -48,11 +48,15 @@ import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
+import org.kalypso.model.wspm.sobek.core.pub.ISnapPainter.SnappedBranch;
 import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -69,7 +73,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget
 {
   final static private java.awt.Cursor CURSOR_CROSSHAIR = java.awt.Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
 
-  final static private java.awt.Cursor CURSOR_DEFAULT = java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
+// final static private java.awt.Cursor CURSOR_DEFAULT = java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
 
   protected FNSnapPainterCreateProfileNode m_snapPainter = null;
 
@@ -138,25 +142,75 @@ public class FNCreateCrossSectionNode extends AbstractWidget
   public void leftReleased( final Point p )
   {
     final GM_Point point = MapUtilities.transform( getMapPanel(), p );
-    final GM_Point snapPoint = m_snapPainter.getSnapPoint( getMapPanel(), point );
-    if( snapPoint != null )
+
+    new UIJob( "processing..." )
     {
-      final IBranch branch = m_snapPainter.getLastSnappedBranch();
-      final Feature crossSection = m_snapPainter.getLastSnappedCrossSection();
 
-      final GM_Curve geoBranch = (GM_Curve) branch.getFeature().getDefaultGeometryProperty();
-      final GM_Curve geoCrossSection = (GM_Curve) crossSection.getDefaultGeometryProperty();
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        final SnappedBranch snappedBranch = getSnappedBranch( point );
+        if( snappedBranch != null )
+        {
+          final Feature crossSection = getCrossSection();
+          final IBranch branch = snappedBranch.m_branch;
 
-      final GM_Object intersection = geoBranch.intersection( geoCrossSection );
+          final GM_Curve geoBranch = (GM_Curve) branch.getFeature().getDefaultGeometryProperty();
+          final GM_Curve geoCrossSection = (GM_Curve) crossSection.getDefaultGeometryProperty();
 
-      if( intersection instanceof GM_Point )
-        performFinish( branch, crossSection, (GM_Point) intersection );
-      else
-        throw (new NotImplementedException());
-    }
+          final GM_Object intersection = geoBranch.intersection( geoCrossSection );
+
+          if( intersection instanceof GM_Point )
+            performFinish( branch, crossSection, (GM_Point) intersection );
+          else
+            throw (new NotImplementedException());
+        }
+
+        return Status.OK_STATUS;
+      }
+
+    }.schedule();
   }
 
-  private void performFinish( final IBranch branch, final Feature crossSection, final GM_Point snapPoint )
+  protected SnappedBranch getSnappedBranch( final GM_Point point )
+  {
+    final SnappedBranch[] snapped = m_snapPainter.getSnapPoint( getMapPanel(), point );
+    if( snapped.length == 0 )
+      return null;
+    else if( snapped.length == 1 )
+      return snapped[0];
+    else if( snapped.length > 1 )
+    {
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final SelectSnappedBranchDialog dialog = new SelectSnappedBranchDialog( shell, snapped );
+
+      if( Dialog.OK == dialog.open() )
+        return dialog.getSelectedCrossSection();
+    }
+    return null;
+  }
+
+  protected Feature getCrossSection( )
+  {
+    final Feature[] crossSections = m_snapPainter.getLastSnappedCrossSections();
+
+    if( crossSections.length == 0 )
+      return null;
+    else if( crossSections.length == 1 )
+      return crossSections[0];
+    else if( crossSections.length > 1 )
+    {
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final SelectCrossSectionDialog dialog = new SelectCrossSectionDialog( shell, crossSections );
+
+      if( Dialog.OK == dialog.open() )
+        return dialog.getSelectedCrossSection();
+    }
+
+    return null;
+  }
+
+  protected void performFinish( final IBranch branch, final Feature crossSection, final GM_Point snapPoint )
   {
     try
     {

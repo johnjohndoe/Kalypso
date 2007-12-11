@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.sobek.core.digitools.crosssection;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,9 +75,7 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
 
   Map<Feature, GM_Curve> m_profiles = new HashMap<Feature, GM_Curve>();
 
-  private IBranch m_lastSnappedBranch = null;
-
-  private Feature m_lastSnappedCrossSection = null;
+  private Feature[] m_lastSnappedCrossSections = new Feature[] {};
 
   public FNSnapPainterCreateProfileNode( final ISobekModelMember model )
   {
@@ -121,45 +120,40 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
       m_curves.put( branch, branch.getGeometryProperty() );
   }
 
-  public IBranch getLastSnappedBranch( )
+  public Feature[] getLastSnappedCrossSections( )
   {
-    return m_lastSnappedBranch;
-  }
-
-  public Feature getLastSnappedCrossSection( )
-  {
-    return m_lastSnappedCrossSection;
+    return m_lastSnappedCrossSections;
   }
 
   /**
    * @see org.kalypso.nofdpidss.ui.application.flow.network.ISnapPainter#isSnapPoaint(org.kalypso.ogc.gml.map.MapPanel,
    *      java.awt.Point)
    */
-  public GM_Point getSnapPoint( final MapPanel panel, final GM_Point point )
+  public SnappedBranch[] getSnapPoint( final MapPanel panel, final GM_Point point )
   {
     try
     {
       final Point p = MapUtilities.retransform( panel, point );
-
       final Set<Entry<IBranch, GM_Curve>> entrySet = m_curves.entrySet();
+
+      final List<SnappedBranch> myBranches = new ArrayList<SnappedBranch>();
 
       for( final Entry<IBranch, GM_Curve> entry : entrySet )
       {
         final GM_Point pSnap = MapUtilities.snap( panel, entry.getValue(), p, FNSnapPainterCreateProfileNode.RADIUS, SNAP_TYPE.SNAP_AUTO );
-        if( pSnap != null )
-        {
-          m_lastSnappedBranch = entry.getKey();
 
-          return pSnap;
-        }
+        if( pSnap != null )
+          myBranches.add( new SnappedBranch( entry.getKey(), pSnap ) );
       }
+
+      return myBranches.toArray( new SnappedBranch[] {} );
     }
     catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
 
-    return null;
+    return new SnappedBranch[] {};
   }
 
   /**
@@ -187,19 +181,26 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
 
       final Set<Entry<Feature, GM_Curve>> profiles = m_profiles.entrySet();
 
+      Point lastSnappedPoint = null;
+      final List<Feature> crossSections = new ArrayList<Feature>();
+
       for( final Entry<Feature, GM_Curve> profile : profiles )
       {
         final GM_Point pSnapProfile = MapUtilities.snap( panel, profile.getValue(), currentPoint, FNSnapPainterCreateProfileNode.RADIUS, SNAP_TYPE.SNAP_TO_LINE );
         if( pSnapProfile != null )
         {
-          m_lastSnappedCrossSection = profile.getKey();
-
-          final Point point = MapUtilities.retransform( panel, pBranchSnap );
-          // $ANALYSIS-IGNORE
-          g.drawRect( (int) point.getX() - 10, (int) point.getY() - 10, 20, 20 );
-
-          return point;
+          crossSections.add( profile.getKey() );
+          lastSnappedPoint = MapUtilities.retransform( panel, pBranchSnap );
         }
+      }
+
+      if( lastSnappedPoint != null )
+        g.drawRect( (int) lastSnappedPoint.getX() - 10, (int) lastSnappedPoint.getY() - 10, 20, 20 );
+
+      if( crossSections.size() > 0 )
+      {
+        m_lastSnappedCrossSections = crossSections.toArray( new Feature[] {} );
+        return lastSnappedPoint;
       }
     }
     catch( final GM_Exception e )

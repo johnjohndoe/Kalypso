@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.sobek.core.pub;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -51,7 +52,20 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface ISnapPainter
 {
-  GM_Point getSnapPoint( MapPanel panel, GM_Point point );
+  public class SnappedBranch
+  {
+    public IBranch m_branch;
+
+    public GM_Point m_snapPoint;
+
+    public SnappedBranch( final IBranch branch, final GM_Point snapPoint )
+    {
+      m_branch = branch;
+      m_snapPoint = snapPoint;
+    }
+  }
+
+  SnappedBranch[] getSnapPoint( MapPanel panel, GM_Point point );
 
   Point paint( Graphics g, MapPanel panel, Point currentPoint );
 }
