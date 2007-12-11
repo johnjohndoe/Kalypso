@@ -1,11 +1,830 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="KalypsoRiskPreprocessing">
+<chapter id="KalypsoRiskoPreprocessing">
   <title>Preprocessing - Modellaufbau</title>
 
   <indexterm>
     <primary>Preprocessing KalypsoRisiko</primary>
   </indexterm>
 
-  <para>Blah, blah...</para>
+  <para>Nach der Datenaufbereitung im betrachteten Gewässer kann mit dem
+  eigentlichen Modellaufbau begonnen werden. Hierbei werden folgende
+  Teilschritte bearbeitet:</para>
 
+  <orderedlist>
+    <listitem>
+      <para>Daten laden</para>
+    </listitem>
+
+    <listitem>
+      <para>Berechnungsparameter</para>
+    </listitem>
+  </orderedlist>
+
+  <section id="KalypsoRisikoDatenladen">
+    <title>Daten laden</title>
+
+    <indexterm>
+      <primary>Daten einladen in KalypsoRisiko</primary>
+    </indexterm>
+
+    <para>Der erste Schritt zum Modellaufbau besteht darin, die benötigten
+    Grundlagendaten in das Projekt zu integrieren.</para>
+
+    <section id="KalypsoRisikoImport_Hintergrunddaten">
+      <title>Import von Hintergrunddaten</title>
+
+      <indexterm>
+        <primary>Import von Hintergrunddaten in KalypsoRisiko</primary>
+      </indexterm>
+
+      <para>Es gibt drei Möglichkeiten Hintergrundinformationen für die
+      Modellierung bereitzustellen:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>georeferenzierte <filename>*.tif</filename> oder
+          <filename>*.jpg</filename> Dateien importieren</para>
+        </listitem>
+
+        <listitem>
+          <para>Esri Shape Files importieren oder</para>
+        </listitem>
+
+        <listitem>
+          <para>einen Web-Map-Service einbinden.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Gegebenenfalls kann auch mehr als nur eine Möglichkeit genutzt
+      werden. Um mehrere Hintergrunddaten zu laden, muss die Aktivität erneut
+      angesteuert werden.</para>
+
+      <para>Um Hintergrundinformationen bereitzustellen, öffnen Sie in der
+      Ansicht "Aktivitäten" den Baum <guimenu>Preprocessing &gt; Daten
+      laden</guimenu>. Aktivieren Sie <guibutton>Import von
+      Hintergrundkarten</guibutton> mit einem Doppelklick. Ein Assistent
+      öffnet sich und führt Sie durch die Möglichkeiten der Dateneinbindung.
+      Hierbei ist zunächst die Art der einzubindenden Daten auszuwählen. Wenn
+      Sie sich für eine Option entschieden haben, klicken Sie anschließend auf
+      den Knopf <guibutton>Weiter</guibutton>.</para>
+
+      <figure>
+        <title>Assistent zum Import von Hintergrunddaten</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/Datenladen_Hintergr_ass_1.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <section id="KalypsoRisikoImport_Hintergrunddaten_TIF_JPG">
+        <title>Import von Hintergrunddaten in den Formaten TIF oder
+        JPG</title>
+
+        <indexterm>
+          <primary>Import von TIF oder JPG Daten in KalypsoRisiko</primary>
+        </indexterm>
+
+        <para>Bei der Auswahl von <filename>*.tif</filename> oder
+        <filename>*.jpg</filename> Daten ist neben der Angabe des Datenfiles
+        die Angabe des Ursprungkoordinatensystems der Geodaten erforderlich.
+        Es ist darauf zu achten, dass lediglich georeferenzierte Daten
+        integriert werden können. Dies bedeutet, dass neben den Daten selbst
+        ein World File existieren muss.</para>
+
+        <para>Im folgenden Schritt müssen die Hintergrunddaten ausgewählt
+        werden. Klicken Sie hierfür auf den Knopf
+        <guibutton>Durchsuchen...</guibutton>, wählen Sie das entsprechende
+        Bild mit zugehörigem Ursprungkoordinatensystem (z.B. EPSG: 31467) aus
+        und klicken Sie dann auf <guibutton>Fertig stellen</guibutton>.</para>
+
+        <para>Der Vorgang kann wiederholt werden, wenn die Hintergrundkarte
+        aus mehreren Bildern besteht.</para>
+
+        <para>Diese Art des Datenimports emfpiehlt sich nicht für das Anzeigen
+        großer Mengen an Hintergrundkarten und -dateien. Bei flächendeckender
+        Kartendarstellung sollte ein MAP-Service (siehe <xref
+        linkend="KalypsoRisikoImport_Hintergrunddaten_WMS" />) verwendet
+        werden.</para>
+
+        <figure>
+          <title>Assistent zum Import von Hintergrundkarten im TIF oder JPG
+          Format</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/Risk/Datenladen_Hintergr_ass_tifjpg.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section id="KalypsoRisikoImport_Hintergrunddaten_SHP">
+        <title>Import von Hintergrunddaten in den Formaten Esri(tm)
+        SHP</title>
+
+        <indexterm>
+          <primary>Import von SHP Daten in KalypsoRisiko</primary>
+        </indexterm>
+
+        <para>Bei der Auswahl von <filename>*.shp</filename> ist neben der
+        Angabe des Datenfiles die Angabe des Ursprungkoordinatensystems der
+        Geodaten erforderlich. Shape-Daten können sowohl reinen
+        Hintergrundcharakter als auch Datencharakter haben.</para>
+
+        <para>Im folgenden Schritt müssen die Hintergrunddaten ausgewählt
+        werden. Klicken Sie hierfür auf den Knopf
+        <guibutton>Durchsuchen...</guibutton>, wählen Sie die entsprechende
+        Shapedatei mit zugehörigem Ursprungkoordinatensystem (z.B. EPSG:
+        31467) aus und klicken Sie dann auf <guibutton>Fertig
+        stellen</guibutton>.</para>
+
+        <figure>
+          <title>Assistent zum Import von Hintergrundkarten im SHP
+          Format</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/Risk/Datenladen_Hintergr_ass_shp.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section id="KalypsoRisikoImport_Hintergrunddaten_WMS">
+        <title>Web-Map-Service einbinden</title>
+
+        <indexterm>
+          <primary>Einbinden eines Web-Map-Services in KalypsoRisiko</primary>
+        </indexterm>
+
+        <para>Bei der Einbindung des Web-Map-Services muss lediglich die URL
+        des Servers angegeben werden. Es wird eine Verbindung zu der
+        angegebenen URL erstellt und eine Liste der verfügbaren Themen
+        bereitgestellt. Der Anwender ist dazu aufgefordert die entsprechenden
+        Themen des Servers der Kartenansicht hinzuzufügen. Diese erscheinen
+        später als Einzellayer in der Karte, sofern die Option
+        <guilabel>Themen zusammenfassen</guilabel> nicht gewählt wurde.</para>
+
+        <para>Nach dem Import der Daten wird zugleich die Basiskarte mit den
+        vorhandenen Layern in der Gliederungsansicht geöffnet.</para>
+
+        <figure>
+          <title>Assistent zum Einbinden eines Web-Map-Services</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="???" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+    </section>
+
+    <section id="KalypsoRisikoImport_Landnutzungsdaten">
+      <title>Import von Landnutzungsdaten</title>
+
+      <indexterm>
+        <primary>Import von Landnutzungsdaten in KalypsoRisiko</primary>
+      </indexterm>
+
+      <para>Um Landnutzungsdaten zu importieren, öffnen Sie in der Ansicht
+      "Aktivitäten" den Baum <guimenu>Preprocessing &gt; Daten
+      laden</guimenu>. Aktivieren Sie <guibutton>Import von
+      Landnutzungsdaten</guibutton> mit einem Doppelklick. Es öffnet sich der
+      folgende Assistent:</para>
+
+      <figure>
+        <title>Assistent zum Import von Landnutzungsdaten</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/Datenladen_Landn_ass.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Im Assistenten ist zunächst die Shapedatei zu öffnen, die die
+      Landnutzungsdaten enthält. Klicken Sie hierfür auf den Knopf
+      <guibutton>Durchsuchen</guibutton> und wählen Sie die entsprechende
+      Datei aus.</para>
+
+      <para>In dem Pulldown Menü der Landnutzung ist der Name des Attributs
+      auszuwählen, das die Landnutzungsinformationen enthält. Die Shapedatei
+      muss zudem wieder einem Koordinatensystem zugeordnet werden.</para>
+
+      <para>Für die Erstellung einer Datenbank gibt es folgende
+      Optionen:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Manuell eine Standard Parameterdatenbank erstellen,</para>
+        </listitem>
+
+        <listitem>
+          <para>eine bereits erstellte und gespeicherte Datenbank aus einem
+          anderen Projekt importieren oder</para>
+        </listitem>
+
+        <listitem>
+          <para>eine der vordefinierten Datenbanken importieren.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Wenn Sie bereits einmal mit KalypsoRisiko gearbeitet haben und
+      eine Datenbank erstellt haben, die auch sinnvoll für ihr neu erstelltes
+      Projekt ist, dann sollten Sie diese importieren. Klicken Sie hierfür auf
+      den Knopf <guibutton>Durchsuchen</guibutton> und wählen Sie die
+      Datenbank aus.</para>
+
+      <para>Für einige Regionen in Deutschland stehen bereits vordefinierte
+      Datenbankeinträge zur Verfügung. Es wird zwischen den
+      <guilabel>Schadensfunktionen</guilabel> und den
+      <guilabel>Vermögenswerten</guilabel> unterschieden.</para>
+
+      <para>Bei den vordefinierten Datenbankeinträgen stehen die folgenden
+      vier Schadensfunktionen zur Auswahl:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>IKSE- Regionalisierung Schleswig-Holstein</para>
+        </listitem>
+
+        <listitem>
+          <para>Rheinatlas (IKSR)</para>
+        </listitem>
+
+        <listitem>
+          <para>Aktionsplan Hochwasserschutz Elbe (IKSE)</para>
+        </listitem>
+
+        <listitem>
+          <para>MERK</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Des Weiteren kann zwischen den folgenden vier vordefinierten
+      Vermögenswerten ausgewählt werden:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Regionalisierungsmethode Schleswig-Holstein</para>
+        </listitem>
+
+        <listitem>
+          <para>Aktionsplan HW-Schutz Elbe</para>
+        </listitem>
+
+        <listitem>
+          <para>Rheinatlas mit gemittelten Werten</para>
+        </listitem>
+
+        <listitem>
+          <para>MERK</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Wenn Sie sich für eine Datenbank Option entschieden haben, klicken
+      Sie anschließend auf <guibutton>Finish</guibutton> und die Landnutzung
+      wird in die Karte eingeladen.</para>
+    </section>
+
+    <section id="KalypsoRisikoImport_Wassertiefendaten">
+      <title>Import von Wassertiefendaten</title>
+
+      <indexterm>
+        <primary>Import von Wassertiefendaten in KalypsoRisiko</primary>
+      </indexterm>
+
+      <para>Um Wassertiefendaten zu importieren, öffnen Sie in der Ansicht
+      "Aktivitäten" den Baum <guimenu>Preprocessing &gt; Daten
+      laden</guimenu>. Aktivieren Sie <guibutton>Import von
+      Wassertiefendaten</guibutton> mit einem Doppelklick. Es öffnet sich der
+      folgende Assistent:</para>
+
+      <figure>
+        <title>Assistent zum Import von Wassertiefendaten im ASCII-Raster
+        Format</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/Import_HQs.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <table>
+        <title>Funktionen im Assistenten zum Einladen von
+        Wassertiefendaten</title>
+
+        <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="5*" />
+
+          <tbody>
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/Risk/Icon_ImportHQ_hinzufuegen.png"
+                               width="" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Neues Ereignis
+              hinzufügen</entry>
+
+              <entry align="left" valign="middle">Wenn Sie diesen Knopf
+              betätigen öffnet sich ein weiterer Assistent. In diesem
+              Assistenten können Sie nun ihre <filename>*.asc</filename> Daten
+              auswählen (mit Hilfe der Shift-Taste können auch mehrere Daten
+              gleichzeitig eingeladen werden). Die ausgewählten
+              Hochwasserereignisse werden der Tabelle hinzugefügt.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_ImportHQ_loeschen.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Ereignis löschen</entry>
+
+              <entry align="left" valign="middle">Markieren Sie zunächst das
+              Ereignis in der Tabelle, das Sie entfernen möchten. Wenn Sie
+              anschließend auf den Knopf drücken wird das Ereignis aus der
+              Tabelle gelöscht.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>Wenn Sie die Wassertiefendaten eingeladen haben, müssen Sie noch
+      einige Einstellungen vornehmen. Klicken Sie auf einen Dateinamen und die
+      entsprechenden Datei Informationen werden in dem Fenster unten
+      angezeigt. Stellen Sie hier das richtige Koordinatensystem und das
+      Wiederkehrintervall in [Jahren] ein. Wiederholen Sie diesen Vorgang, bis
+      Sie für jedes Ereignis diese Einstellungen vorgenommen haben. Klicken
+      Sie anschließend auf <guibutton>Finish</guibutton> um die
+      Hochwasserereignisse einzuladen. Diese werden nun in der Karte
+      dargestellt.</para>
+
+      <figure>
+        <title>Ansicht der Hochwasserereignisse in der Karte und Darstellung
+        in der Gliederung</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="left" fileref="img/Risk/HQ_Kartenansicht.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="KalypsoRisikoBearbeiten_HQi">
+      <title>Bearbeiten von Ü-Daten für HQi</title>
+
+      <indexterm>
+        <primary>Bearbeiten von Ü-Daten für HQi in KalypsoRisiko</primary>
+      </indexterm>
+
+      <para>Um die Daten der Hochwasserereignisse zu bearbeiten, öffnen Sie in
+      der Ansicht "Aktivitäten" den Baum <guimenu>Preprocessing &gt; Daten
+      laden</guimenu>. Aktivieren Sie <guibutton>Bearbeiten von Ü-Daten für
+      HQi</guibutton> mit einem Doppelklick und es öffnet sich die zugehörige
+      Karten Werkzeugansicht.</para>
+
+      <para>Die Kachel des markierten Hochwasserereignisses wird in der Karte
+      mit einem roten Rand dargestellt.</para>
+
+      <figure>
+        <title>Karten Werkzeugansicht zum Bearbeiten der
+        Hochwasserereignisse</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="right"
+                       fileref="img/Risk/KaWzAnsicht_Bearbeiten_HQi.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <table>
+        <title>Funktionen der Karten Werkzeugansicht</title>
+
+        <tgroup cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="5*" />
+
+          <tbody>
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_HQbearbeiten_Ereignis+.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Ereignis hinzufügen</entry>
+
+              <entry align="left" valign="middle">Drücken Sie diesen Knopf, um
+              ein neues Ereignis hinzuzufügen. Es öffnet sich der unten
+              dargestellte Assistent, in dem Sie die Wiederkehrperiode des
+              Hochwasserereignisses in Jahren angeben müssen. Das neue
+              Ereignis wird der Tabelle hinzugefügt, wenn Sie auf
+              <guibutton>OK</guibutton> klicken.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_HQbearbeiten_Wiederkiaendern.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Wiederkehrintervall des
+              Ereignisses ändern</entry>
+
+              <entry align="left" valign="middle">Wenn Sie auf diesen Knopf
+              drücken öffnet sich erneut der unten abgebildete Assistent. Sie
+              können nun die neue Wiederkehrperiode des Hochwasserereignisses
+              angeben.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_HQbearbeiten_Ereignis-.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Ereignis entfernen</entry>
+
+              <entry align="left" valign="middle">Markieren Sie das
+              Hochwasserereignis in der Tabelle, das Sie entfernen möchten.
+              Klicken Sie anschließend auf den Knopf und das Ereignis wird
+              gelöscht.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_HQbearbeiten_Pfeil_hoch.png" />
+                  </imageobject>
+                </mediaobject><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_HQbearbeiten_Pfeil_runter.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Ereignis in nach oben/ unten
+              verschieben</entry>
+
+              <entry align="left" valign="middle">Um die Reihenfolge der
+              Darstellung in der Gliederung der Karte zu verändern, können Sie
+              ein Ereignis in der Tabelle markieren und dann mit den
+              Pfeiltasten entweder nach unten oder nach oben
+              verschieben.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <figure>
+        <title>Neues Hochwasserereignis anlegen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/HQbearbeiten_ass_ereignneu.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="KalypsoRisikoBearbeiten_Rasterdaten">
+      <title>Bearbeiten von Ü-Rasterdaten</title>
+
+      <indexterm>
+        <primary>Bearbeiten von Ü-Rasterdaten in KalypsoRisiko</primary>
+      </indexterm>
+
+      <para>Um Rasterdaten zu bearbeiten, öffnen Sie in der Ansicht
+      "Aktivitäten" den Baum <guimenu>Preprocessing &gt; Daten
+      laden</guimenu>. Aktivieren Sie <guibutton>Bearbeiten von
+      Ü-Rasterdaten</guibutton> mit einem Doppelklick und es öffnet sich die
+      zugehörige Karten Werkzeugansicht.</para>
+
+      <para>Funktionalitäten: </para>
+
+      <para>Wassertiefen anzeigen lassen, indem man mit dem Mauscursor auf die
+      überschwemmten Flächen zeigt (in der Gliederung sollte entsprechendes
+      Thema aktiviert sein, also z.B. wie in diesem Beispiel HQ10 markiert.
+      </para>
+
+      <para>Farbeinstellungen für die verschiedenen Wassertiefen</para>
+
+      <para>Exportieren von Rasterdaten</para>
+
+      <figure>
+        <title>Karten Werkzeugansicht zur Bearbeitung der
+        Ü-Rasterdaten</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/KaWzAnsicht_Bearbeiten_Rasterdaten.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <table>
+        <title>Funktionen der Karten Werkzeugansicht</title>
+
+        <tgroup cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="5*" />
+
+          <tbody>
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_RDatenbearbeiten_Kachel+.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Kachel hinzufügen</entry>
+
+              <entry align="left" valign="middle">Wenn Sie diesen Knopf
+              drücken, öffnet sich der unten abgebildete Assistent zum Import
+              einer Rasterdatei. Geben Sie den Pfad an und die geforderten
+              Details. Die neu hinzugefügte Kachel wird in der Karte mit rotem
+              Rand dargestellt.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_RDatenbearbeiten_Kachel-.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Kachel entfernen</entry>
+
+              <entry align="left" valign="middle">Markieren Sie die Kachel in
+              der Tabelle, die Sie entfernen möchten und drücken Sie
+              anschließend diesen Knopf. Die Kachel wird gelöscht und auch aus
+              der Kartenansicht entfernt.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_RDatenbearbeiten_export.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Kachel exportieren</entry>
+
+              <entry align="left" valign="middle">Wenn Sie diesen Knopf
+              drücken, öffnet sich der unten abgebildete Assistent zum Export
+              einer Rasterdatei. Geben Sie den Pfad an und klicken Sie auf
+              <guibutton>Finish</guibutton> um den Export
+              abzuschließen.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_RDatenbearbeiten_Pfeil_hoch.png" />
+                  </imageobject>
+                </mediaobject><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_RDatenbearbeiten_Pfeil_runter.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Kachel nach oben/ unten
+              verschieben</entry>
+
+              <entry align="left" valign="middle">Um die Reihenfolge der
+              Darstellung zu verändern, können Sie ein Ereignis in der Tabelle
+              markieren und dann mit den Pfeiltasten entweder nach unten oder
+              nach oben verschieben.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_RDatenbearbeiten_zuKachel.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Kartenausschnitt auf
+              ausgewählte Kachel verschieben</entry>
+
+              <entry align="left" valign="middle">Markieren Sie in der Tabelle
+              eine Kachel. Wenn Sie nun auf den Knopf drücken, wird der
+              Kartenausschnitt genau auf die vorher ausgewählte Kachel
+              verschoben und hereingezoomt.</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/Risk/Icon_RDatenbearbeiten_Farbpalette.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" charoff="" valign="middle">Einstellungen zum
+              Farbverlauf</entry>
+
+              <entry align="left" valign="middle">Wenn Sie diesen Knopf
+              drücken, öffnet sich der unten abgebildete Assistent zur
+              Einstellung der Farben in der Karte. Sinnvoll ist es hier für
+              große Wassertiefen eine dunkle Farbe zu wählen mit geringer
+              Transparenz (Deckkraft) und für kleine Wassertiefen eine hellere
+              Farbe mit größerer Transparenz (wie im Beispiel).</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <figure>
+        <title>Assistent zum Import einer Rasterdatei</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/RDatenbearbeiten_Import.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <figure>
+        <title>Assistent zum Export einer Rasterdatei</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/RDatenbearbeiten_Export.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <figure>
+        <title>Assistent zur Einstellung der Farben</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/RDatenbearbeiten_Farbverlauf.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+  </section>
+
+  <section id="KalypsoRisikoBerechnungsparameter">
+    <title>Berechnungsparameter</title>
+
+    <indexterm>
+      <primary>Einstellen der Berechnungsparameter in KalypsoRisiko</primary>
+    </indexterm>
+
+    <para>Nachdem das Laden aller notwendigen Daten nun abgeschlossen ist,
+    müssen diese nun noch bearbeitet werden.</para>
+
+    <section id="KalypsoRisikoBerechnungsparameter_festlegen">
+      <title>Festlegen der Berechnungsparameter</title>
+
+      <indexterm>
+        <primary>Festlegen der Berechnungsparameter in KalypsoRisiko</primary>
+      </indexterm>
+
+      <para>Um Berechnungsparameter festzulegen, öffnen Sie in der Ansicht
+      "Aktivitäten" den Baum <guimenu>Preprocessing &gt;
+      Berechnungsparameter</guimenu>. Aktivieren Sie <guibutton>Festlegen der
+      Berechnungsparameter</guibutton> mit einem Doppelklick und es öffnet
+      sich die Feature View mit den zugehörigen drei Tabellen:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Tabelle der Landnutzungsklassen,</para>
+        </listitem>
+
+        <listitem>
+          <para>der Schadenfunktionen und</para>
+        </listitem>
+
+        <listitem>
+          <para>der Schadenspotentiale.</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure>
+        <title>Tabelle der Landnutzungsklassen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/Berpara_Landnutzkl.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Die Tabelle der Landnutzungsklassen ist die übergeordnete Tabelle
+      in dieser Ansicht. Die beiden anderen Tabellen sind mit ihr verlinkt.
+      Hier sind die verschiedenen Landnutzungsklassen aufgelistet, die der
+      Shapedatei entnommen werden. Den Landnutzungen müssen nun sowohl eine
+      Kategorie (bebaute oder freie Fläche), als auch eine Schadensfunktion
+      zugeordnet werden. Klicken Sie hierfür mit der linken Maustaste auf das
+      Feld, indem zunächst <guilabel>&lt;kein Link&gt;</guilabel> steht und es
+      öffnet sich ein Pulldownmenü, aus dem Sie die entsprechenden Einträge
+      auswählen müssen. Das folgende Bild zeigt diese Zuordnung einmal
+      beispielhaft:</para>
+
+      <figure>
+        <title>Beispiel: Zuordnungen zu den Landnutzungsklassen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/Berpara_Landnutzkl_einstellung.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <figure>
+        <title>Tabelle der Schadensfunktionen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/Berpara_Schadensf.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Dieser Tabelle können Sie die Schadensfunktionen entnehmen. Beim
+      Import von Landnutzungsdaten (siehe <xref
+      linkend="KalypsoRisikoImport_Landnutzungsdaten" />) haben Sie diese
+      bereits festgelegt. Die Namen der einzelnen Schadensfunktionen
+      erscheinen im Pulldownmenü der Landnutzungsklassen in der Spalte
+      Schadensfunktion.</para>
+
+      <para>Die Funktion liefert den prozentualen Anteil vom maximalen
+      Schadenspotential für die entsprechende Landnutzungsklasse. In dem
+      Beispiel oben gilt z.B. für Verkehr ein prozentualer Anteil von 10%.
+      Dieser Wert bleibt bei den verschiedenen Hochwasserereignissen konstant
+      im Gegensatz zu Wohngebieten, wo der Schaden vom Wasserstand
+      abhängt.</para>
+
+      <figure>
+        <title>Tabelle der Schadenspotentiale</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/Berpara_assetvalues.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Dieser Tabelle können Sie die Schadenspotentiale für die
+      verschiedenen Landnutzungsklassen entnehmen (Verlinkung ist durch den
+      Namen bereits gesetzt), d.h. der maximale Schaden in [€/m²] der bei
+      Hochwasser entstehen kann. Beim Import von Landnutzungsdaten (siehe
+      <xref linkend="KalypsoRisikoImport_Landnutzungsdaten" />) haben Sie
+      diese bereits festgelegt.</para>
+
+      <para>Z. B. würde durch die Überflutung der Verkehrsflächen ein Schaden
+      von 0,1*54,32 [€/m²] entstehen.</para>
+    </section>
+
+    <section id="KalypsoRisikoBerechnungsparameter_Risikozonierung">
+      <title>Risikozonierung</title>
+
+      <indexterm>
+        <primary>Risikozonierung in KalypsoRisiko</primary>
+      </indexterm>
+
+      <para>Um die Risikozonierung zu bearbeiten, öffnen Sie in der Ansicht
+      "Aktivitäten" den Baum <guimenu>Preprocessing &gt;
+      Berechnungsparameter</guimenu>. Aktivieren Sie
+      <guibutton>Risikozonierung</guibutton> mit einem Doppelklick und es
+      öffnet sich die Feature View mit der zugehörigen Tabelle.</para>
+
+      <figure>
+        <title>Tabelle zur Risikozonierung</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/Risk/Risikozonierung.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+  </section>
 </chapter>

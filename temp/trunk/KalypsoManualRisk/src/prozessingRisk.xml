@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="KalypsoRiskProcessing">
+  <title>Processing - Rasterung und Berechnung</title>
+
+  <indexterm>
+    <primary>Preprocessing KalypsoRisiko</primary>
+  </indexterm>
+
+  <para>Wenn alle Daten geladen und fertig bearbeitet worden sind, kann nun
+  mit der Berechnung begonnen werden.</para>
+
+  <section id="KalypsoRisikoBerechnungsparameter_Risikozonierung">
+    <title>Rasterung der Landnutzung</title>
+
+    <indexterm>
+      <primary>Risikozonierung in KalypsoRisiko</primary>
+    </indexterm>
+
+    <para>Auf der Basis von HQ100 wird die Landnutzung</para>
+
+    <para>Farbdarstellung aus Zuweisung der Berechnungsparameter
+    Preprocessing</para>
+
+    <figure>
+      <title></title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Proc_Landnutzung_ass.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <figure>
+      <title>Ansicht nach der Berechnung der Rasterung der Landnutzung</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Proc_Landnutzung.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section id="KalypsoRisikoBerechnungsparameter_Risikozonierung">
+    <title>Berechnung des Schadenspotentials</title>
+
+    <indexterm>
+      <primary>Risikozonierung in KalypsoRisiko</primary>
+    </indexterm>
+
+    <para>Berechnung des spezifischen jährlichen Schadenpotentials für jedes
+    HQi</para>
+
+    <para>Auch wenn mehrere gleichzeitig in der Gliederung aktiviert sind,
+    werden mittels des Info-Knopfes immer die werte angezeigt, die zu dem
+    markierten Schadenspotential gehören. In der Abbildung unten sind z.B. das
+    Schadenspotential für HQ2 und HQ100 aktiviert, aber der angezeigte Wert
+    bezieht sich auf HQ100.</para>
+
+    <figure>
+      <title></title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Proc_Schaden_ass.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <figure>
+      <title></title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Proc_Schaden.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section id="KalypsoRisikoBerechnungsparameter_Risikozonierung">
+    <title>Ausweisung des Hochwasserrisikos</title>
+
+    <indexterm>
+      <primary>Risikozonierung in KalypsoRisiko</primary>
+    </indexterm>
+
+    <para>Zonierung ist abhängig von dem jährlichen Schaden, der durch
+    Hochwasser verursacht wird.</para>
+
+    <para>Farben aus Risikozonierung Preprocessing</para>
+
+    <figure>
+      <title></title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Proc_Risikozonen_ass.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <figure>
+      <title>Ansicht nach der Berechnung des Hochwasserrisikos</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Risk/Proc_Risikozonen.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+</chapter>
