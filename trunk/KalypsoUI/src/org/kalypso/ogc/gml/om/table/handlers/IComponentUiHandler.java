@@ -38,40 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
+package org.kalypso.ogc.gml.om.table.handlers;
 
-import java.awt.Graphics2D;
-
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.eclipse.jface.viewers.CellEditor;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.observation.result.IComponent;
 
 /**
- * @author kuch
+ * Implementors of this class are responsible for UI-representation of values of tuple-result components.
+ * 
+ * @author Dirk Kuch
+ * @see org.kalypso.observation.result.TupleResult
+ * @see org.kalypso.observation.result.IComponent
  */
-public class DefaultArrowGeometry extends AbstractArrowGeometry
+public interface IComponentUiHandler
 {
+  void addColumn( DefaultTableViewer tableviewer );
 
-  public DefaultArrowGeometry( Graphics2D g2, GeoTransform projection, GM_Point[] points )
-  {
-    super( g2, projection, points );
-  }
+  CellEditor createCellEditor( );
+
+  String getIdentity( );
+
+  boolean isEditable( );
+
+  IComponent getComponent( );
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.AbstractArrowGeometry#draw(java.lang.Double)
+   * Format value for cell editor
+   * 
+   * @return Must not return <code>null</code>.
    */
-  @Override
-  protected void draw( int size )
-  {
-    // draw triangle
-    int size_4 = size / 4;
+  Object formatValue( Object value );
 
-    int[] a = new int[] { -size, +size_4 };
-    int[] b = new int[] { -size, -size_4 };
-    int[] c = new int[] { 0, 0 };
+  /**
+   * Parses a value from a user input.
+   * 
+   * @return return object from celleditor converted into celleditor data type
+   */
+  Object parseValue( Object value );
 
-    int[] x = new int[] { a[0], b[0], c[0] };
-    int[] y = new int[] { a[1], b[1], c[1] };
-
-    getGraphic().drawPolygon( x, y, 3 );
-  }
+  String getStringRepresentation( Object value );
 }

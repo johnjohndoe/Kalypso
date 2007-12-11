@@ -48,7 +48,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -130,7 +129,7 @@ public abstract class ObsView implements IObsViewEventProvider
    * them.
    * 
    * @param ignoreTypes
-   *          if null a default empty array is used
+   *            if null a default empty array is used
    */
   public void setIgnoreTypes( final String[] ignoreTypes )
   {
@@ -165,9 +164,9 @@ public abstract class ObsView implements IObsViewEventProvider
   {
     synchronized( m_items )
     {
-      for( final Iterator iter = m_items.iterator(); iter.hasNext(); )
+      for( final Object element2 : m_items )
       {
-        final ObsViewItem element = (ObsViewItem) iter.next();
+        final ObsViewItem element = (ObsViewItem) element2;
         element.dispose();
       }
       m_items.clear();
@@ -241,8 +240,8 @@ public abstract class ObsView implements IObsViewEventProvider
     synchronized( m_listeners )
     {
       final Object[] listeners = m_listeners.toArray();
-      for( int i = 0; i < listeners.length; i++ )
-        ((IObsViewEventListener) listeners[i]).onObsViewChanged( evt );
+      for( final Object element : listeners )
+        ((IObsViewEventListener) element).onObsViewChanged( evt );
     }
   }
 
@@ -251,8 +250,8 @@ public abstract class ObsView implements IObsViewEventProvider
     synchronized( m_listeners )
     {
       final Object[] listeners = m_listeners.toArray();
-      for( int i = 0; i < listeners.length; i++ )
-        ((IObsViewEventListener) listeners[i]).onPrintObsView( evt );
+      for( final Object element : listeners )
+        ((IObsViewEventListener) element).onPrintObsView( evt );
     }
   }
 
@@ -301,13 +300,13 @@ public abstract class ObsView implements IObsViewEventProvider
   {
     // obs -> columns
     final Map<IObservation, ArrayList<ObsViewItem>> obsmap = new HashMap<IObservation, ArrayList<ObsViewItem>>();
-    for( int i = 0; i < items.length; i++ )
+    for( final ObsViewItem element : items )
     {
-      final IObservation observation = items[i].getObservation();
+      final IObservation observation = element.getObservation();
       if( !obsmap.containsKey( observation ) )
         obsmap.put( observation, new ArrayList<ObsViewItem>() );
 
-      ((List<ObsViewItem>) obsmap.get( observation )).add( items[i] );
+      ((List<ObsViewItem>) obsmap.get( observation )).add( element );
     }
 
     return obsmap;
@@ -362,7 +361,7 @@ public abstract class ObsView implements IObsViewEventProvider
    * setIgnoreType, but in contrario to the former, it only hides the items in the ui (it does not remove it).
    * 
    * @param types
-   *          list of types that should be hidden
+   *            list of types that should be hidden
    */
   public void hideTypes( final List types )
   {

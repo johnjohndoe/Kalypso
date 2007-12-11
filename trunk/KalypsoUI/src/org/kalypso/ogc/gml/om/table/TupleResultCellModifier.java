@@ -40,53 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
-import java.text.ParseException;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
-import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
-import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler;
-import org.kalypso.template.featureview.ColumnDescriptor;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
 public class TupleResultCellModifier implements ICellModifier
 {
-  private final TupleResultContentProvider m_provider;
+  private final TupleResultContentProvider m_contentProvider;
 
-  public TupleResultCellModifier( final TupleResultContentProvider provider )
+  public TupleResultCellModifier( final TupleResultContentProvider contentProvider )
   {
-    m_provider = provider;
+    m_contentProvider = contentProvider;
   }
 
-  public boolean canModify( final Object element, final String property )
+  public boolean canModify( final Object element, final String handlerId )
   {
-    final IComponent component = m_provider.getComponent( property );
-
-    return m_provider.isEditable( component );
+    final IComponentUiHandler handler = m_contentProvider.getHandler( handlerId );
+    return handler.isEditable();
   }
 
-  public Object getValue( final Object element, final String property )
+  public Object getValue( final Object element, final String handlerId )
   {
     final IRecord record = (IRecord) element;
-    final IComponent component = m_provider.getComponent( property );
+    final IComponentUiHandler handler = m_contentProvider.getHandler( handlerId );
+    final IComponent component = handler.getComponent();
 
     final Object value = record.getValue( component );
 
-    /* Empty elements are always edited as empty string */
-    if( value == null )
-    {
-      return "";
-    }
-
-    final ColumnDescriptor descriptor = m_provider.getColumnDescriptors().get( component.getId() );
-    final String formatValue = TupleResultLabelProvider.formatValue( value, descriptor );
-
-    return formatValue == null ? "" : formatValue;
+    return handler.formatValue( value );
   }
 
   public void modify( final Object element, final String property, final Object value )
@@ -95,13 +80,11 @@ public class TupleResultCellModifier implements ICellModifier
     final IRecord record = (IRecord) item.getData();
     final IComponent component = modifyRecord( record, property, value );
     if( component == null )
-    {
       return;
-    }
 
     final Object changedValue = record.getValue( component );
     final ValueChange[] changes = new ValueChange[] { new ValueChange( record, component, changedValue ) };
-    m_provider.getResult().fireValuesChanged( changes );
+    m_contentProvider.getResult().fireValuesChanged( changes );
   }
 
   /**
@@ -109,53 +92,23 @@ public class TupleResultCellModifier implements ICellModifier
    * <p>
    * Only changes the record if the new value is different frmo the current value.
    * 
-   * @return the component whichs was modified, <code>null</code> if the record was not changed.
+   * @return the component which was modified, <code>null</code> if the record was not changed.
    */
-  public IComponent modifyRecord( final IRecord record, final String property, final Object value )
+  public IComponent modifyRecord( final IRecord record, final String handlerId, final Object value )
   {
-    final IComponent component = m_provider.getComponent( property );
-    final XsdBaseGuiTypeHandler handler = handlerForProperty( component );
-    try
-    {
-      if( handler != null )
-      {
-        final ColumnDescriptor descriptor = m_provider.getColumnDescriptors().get( component.getId() );
-        final String formatHint = descriptor == null ? null : descriptor.getParseFormat();
+    final IComponentUiHandler compHandler = m_contentProvider.getHandler( handlerId );
+    final IComponent component = compHandler.getComponent();
 
-        final Object valueToSet = value == null ? null : handler.parseText( value.toString(), formatHint );
+    // TODO: maybe rename to transform value or something; or better 'cellEditorValueToValue'
+    final Object valueToSet = compHandler.parseValue( value );
 
-        final Object oldValue = record.getValue( component );
-        if( ObjectUtils.equals( valueToSet, oldValue ) )
-        {
-          return null;
-        }
+    final Object oldValue = record.getValue( component );
+    if( ObjectUtils.equals( valueToSet, oldValue ) )
+      return null;
 
-        record.setValue( component, valueToSet );
-        m_provider.getResult().sort();
-      }
-      else
-      {
-        System.out.println( "No type handler for component:" + component );
-      }
-    }
-    catch( final ParseException e1 )
-    {
-      // ignore
-      e1.printStackTrace();
-    }
+    record.setValue( component, valueToSet );
+    m_contentProvider.getResult().sort();
 
     return component;
-  }
-
-  private XsdBaseGuiTypeHandler handlerForProperty( final IComponent component )
-  {
-    final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    final IGuiTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( component.getValueTypeName() );
-    if( handler instanceof XsdBaseGuiTypeHandler )
-    {
-      return (XsdBaseGuiTypeHandler) handler;
-    }
-
-    return null;
   }
 }

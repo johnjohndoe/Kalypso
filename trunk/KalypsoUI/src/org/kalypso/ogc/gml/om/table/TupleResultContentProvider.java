@@ -40,56 +40,35 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.SWT;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.template.featureview.ColumnDescriptor;
-import org.kalypso.template.featureview.ColumnTypeDescriptor;
-import org.kalypso.util.swt.SWTUtilities;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
 /**
  * @author Marc Schlienger
  */
 public class TupleResultContentProvider implements IStructuredContentProvider, ITupleResultChangedListener
 {
-  private final Map<String, IComponent> m_componentMap = new HashMap<String, IComponent>();
+// private final Map<String, IComponent> m_componentMap = new HashMap<String, IComponent>();
 
   private DefaultTableViewer m_tableViewer;
 
   private TupleResult m_result;
 
-  private final Map<String, ColumnDescriptor> m_columnDescriptors;
+  private final IComponentUiHandler[] m_componentHandlers;
 
-  private final Map<String, ColumnTypeDescriptor> m_columnTypeDescriptors;
-
-  public TupleResultContentProvider( )
+  public TupleResultContentProvider( final IComponentUiHandler[] componentHandlers )
   {
-    this( new HashMap<String, ColumnDescriptor>() );
-  }
-
-  public TupleResultContentProvider( final Map<String, ColumnDescriptor> columnDescriptors )
-  {
-    this( columnDescriptors, new HashMap<String, ColumnTypeDescriptor>() );
-  }
-
-  public TupleResultContentProvider( final Map<String, ColumnDescriptor> columnDescriptors, final Map<String, ColumnTypeDescriptor> columnTypeDescriptors )
-  {
-    m_columnDescriptors = columnDescriptors;
-    m_columnTypeDescriptors = columnTypeDescriptors;
+    m_componentHandlers = componentHandlers;
   }
 
   /**
@@ -110,101 +89,34 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     m_tableViewer = tableViewer;
 
     if( oldInput instanceof TupleResult )
-    {
       ((TupleResult) oldInput).removeChangeListener( this );
-    }
-
-    m_componentMap.clear();
 
     m_result = (TupleResult) newInput;
     if( m_result != null )
     {
       // Only remove columns if input non null, because input==null may happen while disposing
-      refreshColumns( m_result );
+      refreshColumns();
       m_result.addChangeListener( this );
     }
   }
 
-  private void refreshColumns( final TupleResult result )
+  private void refreshColumns( )
   {
     m_tableViewer.removeAllColumns();
 
-    final IComponent[] components = result == null ? new IComponent[] {} : result.getComponents();
-    final List<CellEditor> cellEditors = new ArrayList<CellEditor>( components.length );
-    for( final IComponent component : components )
+    final CellEditor[] cellEditors = new CellEditor[m_componentHandlers.length];
+
+    for( int i = 0; i < m_componentHandlers.length; i++ )
     {
-      final String id = component.getId();
+      final IComponentUiHandler handler = m_componentHandlers[i];
 
-      final int styleForComponent = styleForComponent( component );
-      // TODO: style should be independend from alignment of values
-      // introduce own attribute for column-header style
-      // final int style = SWT.CENTER;
-      final int style = styleForComponent & ~SWT.READ_ONLY;
-      final int ro = styleForComponent & SWT.READ_ONLY;
+      handler.addColumn( m_tableViewer );
 
-      final CellEditor editor;
-      final String label = component.getName();
-      final String tooltip = component.getDescription();
-      final boolean editable = ro != SWT.READ_ONLY;
-
-      m_tableViewer.addColumn( id, label, tooltip, 100, editable, style );
-      editor = TupleResultProviderFactory.getCellEditor( component, m_tableViewer, SWT.NONE, editable );
-
-      m_componentMap.put( id, component );
-
-      cellEditors.add( editor );
+      cellEditors[i] = handler.createCellEditor();
     }
 
     m_tableViewer.refreshColumnProperties();
-    m_tableViewer.setCellEditors( cellEditors.toArray( new CellEditor[cellEditors.size()] ) );
-  }
-
-  private int styleForComponent( final IComponent component )
-  {
-    String featureType = null;
-    if( component.getPhenomenon() instanceof DictionaryPhenomenon )
-    {
-      final DictionaryPhenomenon phenomenon = (DictionaryPhenomenon) component.getPhenomenon();
-      featureType = phenomenon.getDictionaryUrn();
-    }
-
-    final String id = component.getId();
-
-    final ColumnDescriptor descriptor = m_columnDescriptors.get( id );
-    final ColumnTypeDescriptor descType = m_columnTypeDescriptors.get( featureType );
-
-    if( (descriptor == null) && (descType == null) )
-    {
-      return SWT.CENTER;
-    }
-
-    final String alignment;
-    if( descriptor != null )
-    {
-      alignment = descriptor.getAlignment();
-    }
-    else if( descType != null )
-    {
-      alignment = descType.getAlignment();
-    }
-    else
-    {
-      alignment = null;
-    }
-
-    if( alignment == null )
-    {
-      return SWT.CENTER;
-    }
-
-    final int style = SWTUtilities.createStyleFromString( alignment );
-
-    if( style == SWT.NONE )
-    {
-      return SWT.CENTER;
-    }
-
-    return style;
+    m_tableViewer.setCellEditors( cellEditors );
   }
 
   /**
@@ -220,11 +132,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     }
 
     return null;
-  }
-
-  protected IComponent getComponent( final String property )
-  {
-    return m_componentMap.get( property );
   }
 
   public TupleResult getResult( )
@@ -269,15 +176,11 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
       }
 
       if( isEmpty )
-      {
         emptyRecords.add( record );
-      }
     }
 
     if( emptyRecords.size() > 0 )
-    {
       m_result.removeAll( emptyRecords );
-    }
     else
     {
       final String[] props = properties.toArray( new String[properties.size()] );
@@ -311,29 +214,23 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    */
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-    refreshColumns( getResult() );
-    m_tableViewer.refresh();
+// refreshColumns( );
+// m_tableViewer.refresh();
   }
 
-  public Map<String, ColumnDescriptor> getColumnDescriptors( )
+  public IComponentUiHandler[] getHandlers( )
   {
-    return m_columnDescriptors;
+    return m_componentHandlers;
   }
 
-  public Map<String, ColumnTypeDescriptor> getColumnTypeDescriptors( )
+  public IComponentUiHandler getHandler( final String id )
   {
-    return m_columnTypeDescriptors;
+    // TODO: hash id's for performance improvement
+    for( final IComponentUiHandler handler : m_componentHandlers )
+      if( id.equals( handler.getComponent().getId() ) )
+        return handler;
+
+    return null;
   }
 
-  public boolean isEditable( final IComponent component )
-  {
-    final int styleForComponent = styleForComponent( component );
-    final int ro = (styleForComponent & SWT.READ_ONLY);
-    if( ro == SWT.READ_ONLY )
-    {
-      return false;
-    }
-
-    return true;
-  }
 }

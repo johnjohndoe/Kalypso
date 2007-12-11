@@ -83,7 +83,7 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
    */
   public EasyFeatureWrapper[] getAllFeatures( )
   {
-    throw (new NotImplementedException());
+    return m_selectionManager.getAllFeatures();
   }
 
   /**

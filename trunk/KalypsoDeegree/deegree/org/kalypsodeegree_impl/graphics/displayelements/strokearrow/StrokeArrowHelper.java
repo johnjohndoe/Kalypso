@@ -60,14 +60,14 @@ public class StrokeArrowHelper
     eLine,
     eSegmentOfLine;
 
-    public static ARROW_TYPE getType( CssParameter param )
+    public static ARROW_TYPE getType( final CssParameter param )
     {
-      ParameterValueType value = param.getValue();
-      Object[] components = value.getComponents();
+      final ParameterValueType value = param.getValue();
+      final Object[] components = value.getComponents();
       if( components.length != 1 )
         throw (new IllegalStateException( "StrokeArrowType consists only of one parameter." ));
 
-      String type = ((String) components[0]).toLowerCase();
+      final String type = ((String) components[0]).toLowerCase();
 
       if( type.equals( "line" ) )
         return ARROW_TYPE.eLine;
@@ -78,19 +78,43 @@ public class StrokeArrowHelper
     }
   }
 
+  public enum ARROW_WIDGET
+  {
+    eOpen,
+    eFill;
+
+    public static ARROW_WIDGET getType( final CssParameter param )
+    {
+      final ParameterValueType value = param.getValue();
+      final Object[] components = value.getComponents();
+      if( components.length != 1 )
+        return ARROW_WIDGET.eOpen; // default value!
+
+      final String type = ((String) components[0]).toLowerCase();
+
+      if( type.equals( "open" ) )
+        return ARROW_WIDGET.eOpen;
+      else if( type.equals( "fill" ) )
+        return ARROW_WIDGET.eFill;
+
+      throw (new NotImplementedException());
+    }
+
+  }
+
   public enum ARROW_ALIGNMENT
   {
     eStart,
     eMiddle,
     eEnd;
-    public static ARROW_ALIGNMENT getType( CssParameter param )
+    public static ARROW_ALIGNMENT getType( final CssParameter param )
     {
-      ParameterValueType value = param.getValue();
-      Object[] components = value.getComponents();
+      final ParameterValueType value = param.getValue();
+      final Object[] components = value.getComponents();
       if( components.length != 1 )
         throw (new IllegalStateException( "StrokeArrowAligment can only consists about one parameter." ));
 
-      String type = ((String) components[0]).toLowerCase();
+      final String type = ((String) components[0]).toLowerCase();
 
       if( type.equals( "start" ) )
         return ARROW_ALIGNMENT.eStart;
@@ -105,17 +129,19 @@ public class StrokeArrowHelper
 
   public static final String STROKE_ARROW_TYPE = "stroke-arrow-type";
 
+  public static final String STROKE_ARROW_WIDGET = "stroke-arrow-widget";
+
   public static final String STROKE_ARROW_ALIGNMENT = "stroke-arrow-alignment";
 
   public static final String STROKE_ARROW_SIZE = "stroke-arrow-size";
 
-  public static boolean isArrowDefined( Stroke stroke )
+  public static boolean isArrowDefined( final Stroke stroke )
   {
     if( stroke == null )
       return false;
 
-    Map< ? , ? > map = stroke.getCssParameters();
-    Object object = map.get( STROKE_ARROW_TYPE );
+    final Map< ? , ? > map = stroke.getCssParameters();
+    final Object object = map.get( STROKE_ARROW_TYPE );
 
     if( object != null )
       return true;
@@ -123,43 +149,50 @@ public class StrokeArrowHelper
     return false;
   }
 
-  public static ARROW_TYPE getArrowType( Map< ? , ? > cssParameters )
+  public static ARROW_TYPE getArrowType( final Map< ? , ? > cssParameters )
   {
-    CssParameter csType = (CssParameter) cssParameters.get( STROKE_ARROW_TYPE );
+    final CssParameter csType = (CssParameter) cssParameters.get( STROKE_ARROW_TYPE );
 
     return ARROW_TYPE.getType( csType );
   }
 
-  public static ARROW_ALIGNMENT getArrowAlignment( Map< ? , ? > cssParameters )
+  public static ARROW_ALIGNMENT getArrowAlignment( final Map< ? , ? > cssParameters )
   {
-    CssParameter csType = (CssParameter) cssParameters.get( STROKE_ARROW_ALIGNMENT );
+    final CssParameter csType = (CssParameter) cssParameters.get( STROKE_ARROW_ALIGNMENT );
 
     return ARROW_ALIGNMENT.getType( csType );
   }
 
-  public static Double getArrowSize( Map< ? , ? > cssParameters )
+  public static Double getArrowSize( final Map< ? , ? > cssParameters )
   {
-    CssParameter csType = (CssParameter) cssParameters.get( STROKE_ARROW_SIZE );
+    final CssParameter csType = (CssParameter) cssParameters.get( STROKE_ARROW_SIZE );
 
-    ParameterValueType value = csType.getValue();
-    Object[] components = value.getComponents();
+    final ParameterValueType value = csType.getValue();
+    final Object[] components = value.getComponents();
     if( components.length != 1 )
       throw (new IllegalStateException( "StrokeArrowAligment can only consists about one parameter." ));
 
     return Double.valueOf( (String) components[0] );
   }
 
-  public static Double getStrokeWidth( Map< ? , ? > cssParameters )
+  public static Double getStrokeWidth( final Map< ? , ? > cssParameters )
   {
-    CssParameter csType = (CssParameter) cssParameters.get( STROKE_WIDTH );
+    final CssParameter csType = (CssParameter) cssParameters.get( STROKE_WIDTH );
     if( csType == null )
       return 1.0;
 
-    ParameterValueType value = csType.getValue();
-    Object[] components = value.getComponents();
+    final ParameterValueType value = csType.getValue();
+    final Object[] components = value.getComponents();
     if( components.length != 1 )
       throw (new IllegalStateException( "StrokeWidth can only consists about one parameter." ));
 
     return Double.valueOf( (String) components[0] );
+  }
+
+  public static ARROW_WIDGET getArrowWidget( final Map< ? , ? > cssParameters )
+  {
+    final CssParameter csType = (CssParameter) cssParameters.get( STROKE_ARROW_WIDGET );
+
+    return ARROW_WIDGET.getType( csType );
   }
 }

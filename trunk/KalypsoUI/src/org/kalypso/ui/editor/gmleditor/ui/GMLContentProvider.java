@@ -169,7 +169,6 @@ public class GMLContentProvider implements ITreeContentProvider
     final IPropertyType[] properties = parentFE.getFeatureType().getProperties();
 
     for( final IPropertyType property : properties )
-    {
       if( property instanceof IRelationType )
       {
         final FeatureAssociationTypeElement fate = new FeatureAssociationTypeElement( (Feature) parentElement, (IRelationType) property );
@@ -184,7 +183,6 @@ public class GMLContentProvider implements ITreeContentProvider
         if( value != null )
           result.add( value );
       }
-    }
   }
 
   private void collectAssociationChildren( final FeatureAssociationTypeElement fate, final List<Object> result )
@@ -196,12 +194,10 @@ public class GMLContentProvider implements ITreeContentProvider
     {
       final Feature feature = features[i];
       if( feature != null )
-      {
         if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) || feature instanceof XLinkedFeature_Impl )
           result.add( new LinkedFeatureElement2( feature ) );
         else
           result.add( feature );
-      }
     }
   }
 
@@ -222,10 +218,8 @@ public class GMLContentProvider implements ITreeContentProvider
     /* Is it one of the root elements? */
     final Object[] elements = getElements( m_workspace );
     for( final Object object : elements )
-    {
       if( object == element )
         return null;
-    }
 
     // TODO: there are also GeometryProperty-Elements
 
@@ -241,7 +235,6 @@ public class GMLContentProvider implements ITreeContentProvider
       {
         final Object[] parentChildren = getChildren( parent );
         for( final Object object : parentChildren )
-        {
           if( object instanceof FeatureAssociationTypeElement )
           {
             final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
@@ -250,12 +243,9 @@ public class GMLContentProvider implements ITreeContentProvider
             if( property == feature )
               return fate;
             else if( property instanceof List )
-            {
               if( ((List< ? >) property).contains( feature ) )
                 return fate;
-            }
           }
-        }
       }
     }
 
@@ -312,18 +302,19 @@ public class GMLContentProvider implements ITreeContentProvider
     if( parent instanceof Feature )
     {
       final GMLXPathSegment segment = m_rootPath.getSegment( m_rootPath.getSegmentSize() - 1 );
-      final QName childName = segment.getQName();
+
+      final Object valueFromSegment = GMLXPathUtilities.getValueFromSegment( segment, parent, false );
+
       final Object[] children = getChildren( parent );
       for( final Object object : children )
-      {
         if( object instanceof FeatureAssociationTypeElement )
         {
           final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
-          final QName name = fate.getAssociationTypeProperty().getQName();
-          if( name.equals( childName ) )
+
+          final Object property = ((Feature) parent).getProperty( fate.getAssociationTypeProperty() );
+          if( property == valueFromSegment )
             return object;
         }
-      }
     }
 
     return GMLXPathUtilities.query( m_rootPath, m_workspace );
@@ -501,7 +492,6 @@ public class GMLContentProvider implements ITreeContentProvider
       final Feature[] parentFeature = structureEvent.getParentFeatures();
 
       if( !control.isDisposed() )
-      {
         // REMARK: must be sync, if not we get a racing condition with handleGlobalSelection
         control.getDisplay().syncExec( new Runnable()
         {
@@ -514,37 +504,30 @@ public class GMLContentProvider implements ITreeContentProvider
             if( parentFeature == null )
               treeViewer.refresh();
             else
-            {
-// for( final Feature feature : parentFeature )
+              // for( final Feature feature : parentFeature )
 // {
               // treeViewer.refresh( feature ); childs are not updated!
               treeViewer.refresh();
 // }
-            }
 
             treeViewer.setExpandedElements( expandedElements );
           }
         } );
-      }
     }
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
       final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
       final Feature[] features = fcme.getFeatures();
       if( control != null && !control.isDisposed() )
-      {
         control.getDisplay().asyncExec( new Runnable()
         {
           public void run( )
           {
             if( !control.isDisposed() )
-            {
               for( final Feature feature : features )
                 treeViewer.refresh( feature, true );
-            }
           }
         } );
-      }
     }
   }
 

@@ -38,35 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
+package org.kalypso.ogc.gml.om.table.handlers;
 
-import java.awt.Graphics2D;
-
-import org.apache.commons.lang.NotImplementedException;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
-import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_TYPE;
-import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
+import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author kuch
  */
-public class StrokeArrowPaintDelegateSegment extends AbstractStrokeArrowPaintDelegate
+public abstract class AbstractComponentHandler implements IComponentUiHandler
 {
-  public StrokeArrowPaintDelegateSegment( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final double strokeWidth )
+
+  private final IComponent m_component;
+
+  private DefaultTableViewer m_tableviewer;
+
+  public AbstractComponentHandler( final IComponent component )
   {
-    super( arrowType, arrowWidget, arrowAlignment, arrowSize );
+    m_component = component;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.IStrokeArrowPaintDelegate#paint(org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter,
-   *      java.awt.Graphics2D, org.kalypsodeegree.graphics.transformation.GeoTransform,
-   *      org.kalypsodeegree.model.geometry.GM_Curve)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getComponent()
    */
-  public void paint( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve )
+  public IComponent getComponent( )
   {
-    throw (new NotImplementedException());
+    return m_component;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getIdentity()
+   */
+  public String getIdentity( )
+  {
+    return ObjectUtils.identityToString( this );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#addColumn(org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer)
+   */
+  public void addColumn( final DefaultTableViewer tableviewer )
+  {
+    m_tableviewer = tableviewer;
+  }
+
+  protected DefaultTableViewer getTableViewer( )
+  {
+    return m_tableviewer;
   }
 
 }

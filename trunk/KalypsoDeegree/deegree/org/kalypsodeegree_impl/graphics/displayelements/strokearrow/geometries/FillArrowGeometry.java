@@ -38,12 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
+package org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries;
+
+import java.awt.Graphics2D;
+
+import org.apache.commons.lang.NotImplementedException;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author kuch
  */
-public interface IArrowGeometry
+public class FillArrowGeometry extends AbstractArrowGeometry
 {
-  void paint( Double size );
+
+  public FillArrowGeometry( final Graphics2D g2, final GeoTransform projection, final GM_Point[] points )
+  {
+    super( g2, projection, points );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries.AbstractArrowGeometry#draw(int)
+   */
+  @Override
+  protected void draw( final int size )
+  {
+    throw (new NotImplementedException());
+  }
+
 }

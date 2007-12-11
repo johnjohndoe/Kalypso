@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_TYPE;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
 
 /**
  * @author kuch
@@ -56,9 +57,12 @@ public abstract class AbstractStrokeArrowPaintDelegate implements IStrokeArrowPa
 
   private final Double m_arrowSize;
 
-  public AbstractStrokeArrowPaintDelegate( ARROW_TYPE arrowType, ARROW_ALIGNMENT arrowAlignment, Double arrowSize )
+  private final ARROW_WIDGET m_arrowWidget;
+
+  public AbstractStrokeArrowPaintDelegate( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize )
   {
     m_arrowType = arrowType;
+    m_arrowWidget = arrowWidget;
     m_arrowAlignment = arrowAlignment;
     m_arrowSize = arrowSize;
   }
@@ -73,16 +77,21 @@ public abstract class AbstractStrokeArrowPaintDelegate implements IStrokeArrowPa
     return m_arrowSize;
   }
 
-  public static IStrokeArrowPaintDelegate getPaintDelegate( ARROW_TYPE arrowType, ARROW_ALIGNMENT arrowAlignment, Double arrowSize, Double strokeWidth )
+  protected ARROW_WIDGET getWidget( )
+  {
+    return m_arrowWidget;
+  }
+
+  public static IStrokeArrowPaintDelegate getPaintDelegate( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final Double strokeWidth )
   {
 
     switch( arrowType )
     {
       case eLine:
-        return new StrokeArrowPaintDelegateLine( arrowType, arrowAlignment, arrowSize, strokeWidth );
+        return new StrokeArrowPaintDelegateLine( arrowType, arrowWidget, arrowAlignment, arrowSize, strokeWidth );
 
       case eSegmentOfLine:
-        return new StrokeArrowPaintDelegateSegment( arrowType, arrowAlignment, arrowSize, strokeWidth );
+        return new StrokeArrowPaintDelegateSegment( arrowType, arrowWidget, arrowAlignment, arrowSize, strokeWidth );
 
       default:
         throw new NotImplementedException();

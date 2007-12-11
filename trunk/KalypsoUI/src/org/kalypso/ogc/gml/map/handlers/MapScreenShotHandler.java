@@ -43,7 +43,9 @@ package org.kalypso.ogc.gml.map.handlers;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.commands.AbstractHandler;
@@ -74,7 +76,7 @@ import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
  * final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();<br>
  * context.addVariable( MapScreenShotHandler.CONST_TARGET_DIR_URL, folder.getLocationURI().toURL() );<br> ..<br>
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class MapScreenShotHandler extends AbstractHandler
 {
@@ -141,9 +143,12 @@ public class MapScreenShotHandler extends AbstractHandler
     }
   }
 
-  private File getTargetImageFile( final File targetDir, final String format )
+  private File getTargetImageFile( final File targetDir, final String format ) throws IOException
   {
-    if( !targetDir.exists() || !targetDir.isDirectory() || (format == null) )
+    if( !targetDir.exists() )
+      FileUtils.forceMkdir( targetDir );
+
+    if( !targetDir.isDirectory() || (format == null) )
       // TODO: @Dirk: this always happens in Lanu1d2d maps
       throw (new IllegalStateException());
 

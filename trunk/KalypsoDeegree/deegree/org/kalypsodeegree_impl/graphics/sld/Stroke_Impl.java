@@ -92,13 +92,12 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <li>stroke-dasharray
  * <li>stroke-dashoffset
  * <li>stroke-arrow-type (line | segment)
+ * <li>stroke-arrow-widget (open (default) | fill )
  * <li>stroke-arrow-alignment (start | middle | end)
  * <li>stroke-arrow-size
  * <p>
- * 
  * <h1>stroke-arrow-type</h1>
  * An Arrow will be placed on a line or its line segments
- * 
  * <h1>stroke-arrow-alignment</h1>
  * where on a line or its line segments the arrow will be placed: start, middle, end
  * 
@@ -195,13 +194,11 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     boolean simple = true;
     final Object[] o = cssParam.getValue().getComponents();
     for( final Object element : o )
-    {
       if( element instanceof Expression )
       {
         simple = false;
         break;
       }
-    }
     return simple;
   }
 
@@ -213,7 +210,6 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   {
     final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-opacity" );
     if( cssParam != null )
-    {
       if( isSimple( cssParam ) )
       {
         final Object[] o = cssParam.getValue().getComponents();
@@ -227,11 +223,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
 
         if( (smplOpacity < 0.0) || (smplOpacity > 1.0) )
-        {
           throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '" + o[0] + "') must be between 0.0 and 1.0!" );
-        }
       }
-    }
   }
 
   /**
@@ -242,7 +235,6 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   {
     final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-width" );
     if( cssParam != null )
-    {
       if( isSimple( cssParam ) )
       {
         final Object[] o = cssParam.getValue().getComponents();
@@ -255,11 +247,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
           throw new FilterEvaluationException( "Given value for parameter 'stroke-width' ('" + o[0] + "') has invalid format!" );
         }
         if( smplWidth <= 0.0 )
-        {
           throw new FilterEvaluationException( "Value for parameter 'stroke-width' (given: '" + smplWidth + "') must be > 0.0!" );
-        }
       }
-    }
   }
 
   /**
@@ -270,29 +259,19 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   {
     final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-linejoin" );
     if( cssParam != null )
-    {
       if( isSimple( cssParam ) )
       {
         final Object[] o = cssParam.getValue().getComponents();
         final String value = ((String) o[0]).trim();
         if( value.equals( "mitre" ) )
-        {
           smplLineJoin = Stroke.LJ_MITRE;
-        }
         else if( value.equals( "round" ) )
-        {
           smplLineJoin = Stroke.LJ_ROUND;
-        }
         else if( value.equals( "bevel" ) )
-        {
           smplLineJoin = Stroke.LJ_BEVEL;
-        }
         else
-        {
           throw new FilterEvaluationException( "Given value for parameter 'stroke-linejoin' ('" + value + "') is unsupported. Supported values are: " + "'mitre', 'round' or 'bevel'!" );
-        }
       }
-    }
   }
 
   /**
@@ -303,29 +282,19 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   {
     final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-linecap" );
     if( cssParam != null )
-    {
       if( isSimple( cssParam ) )
       {
         final Object[] o = cssParam.getValue().getComponents();
         final String value = ((String) o[0]).trim();
         if( value.equals( "butt" ) )
-        {
           smplLineCap = Stroke.LC_BUTT;
-        }
         else if( value.equals( "round" ) )
-        {
           smplLineCap = Stroke.LC_ROUND;
-        }
         else if( value.equals( "square" ) )
-        {
           smplLineCap = Stroke.LC_SQUARE;
-        }
         else
-        {
           throw new FilterEvaluationException( "Given value for parameter 'stroke-linecap' ('" + value + "') is unsupported. Supported values are: " + "'butt', 'round' or 'square'!" );
-        }
       }
-    }
   }
 
   /**
@@ -336,7 +305,6 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   {
     final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-dasharray" );
     if( cssParam != null )
-    {
       if( isSimple( cssParam ) )
       {
         final Object[] o = cssParam.getValue().getComponents();
@@ -346,13 +314,9 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         float[] dashArray;
 
         if( (count % 2) == 0 )
-        {
           dashArray = new float[count];
-        }
         else
-        {
           dashArray = new float[count * 2];
-        }
 
         int k = 0;
         while( st.hasMoreTokens() )
@@ -373,13 +337,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         {
           int j = 0;
           while( k < count * 2 )
-          {
             dashArray[k++] = dashArray[j++];
-          }
         }
         smplDashArray = dashArray;
       }
-    }
   }
 
   /**
@@ -390,7 +351,6 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   {
     final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-dashoffset" );
     if( cssParam != null )
-    {
       if( isSimple( cssParam ) )
       {
         final Object[] o = cssParam.getValue().getComponents();
@@ -404,7 +364,6 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
           throw new FilterEvaluationException( "Given value for parameter 'stroke-dashoffset' ('" + value + "') has invalid format!" );
         }
       }
-    }
   }
 
   /**
@@ -468,9 +427,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       }
     }
     else
-    {
       awtColor = color;
-    }
 
     return awtColor;
   }
@@ -528,9 +485,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       return OPACITY_DEFAULT;
     }
     else
-    {
       return smplOpacity;
-    }
   }
 
   /**
@@ -542,13 +497,9 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   public void setOpacity( double opacity )
   {
     if( opacity > 1 )
-    {
       opacity = 1;
-    }
     else if( opacity < 0 )
-    {
       opacity = 0;
-    }
     this.smplOpacity = opacity;
     final CssParameter strokeOp = StyleFactory.createCssParameter( "stroke-opacity", "" + opacity );
     cssParams.put( "stroke-opacity", strokeOp );
@@ -590,15 +541,11 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         }
 
         if( width <= 0.0 )
-        {
           throw new FilterEvaluationException( "Value for parameter 'stroke-width' (given: '" + value + "') must be greater than 0!" );
-        }
       }
     }
     else
-    {
       width = smplWidth;
-    }
 
     return width;
   }
@@ -643,27 +590,17 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         final String value = cssParam.getValue( feature );
 
         if( value.equals( "mitre" ) )
-        {
           lineJoin = Stroke.LJ_MITRE;
-        }
         else if( value.equals( "round" ) )
-        {
           lineJoin = Stroke.LJ_ROUND;
-        }
         else if( value.equals( "bevel" ) )
-        {
           lineJoin = Stroke.LJ_BEVEL;
-        }
         else
-        {
           throw new FilterEvaluationException( "Given value for parameter 'stroke-linejoin' ('" + value + "') is unsupported. Supported values are: " + "'mitre', 'round' or 'bevel'!" );
-        }
       }
     }
     else
-    {
       lineJoin = smplLineJoin;
-    }
 
     return lineJoin;
   }
@@ -678,17 +615,11 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   {
     String join = null;
     if( lineJoin == Stroke.LJ_MITRE )
-    {
       join = "mitre";
-    }
     else if( lineJoin == Stroke.LJ_ROUND )
-    {
       join = "round";
-    }
     else if( lineJoin == Stroke.LJ_BEVEL )
-    {
       join = "bevel";
-    }
     else
     {
       // default
@@ -726,27 +657,17 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         final String value = cssParam.getValue( feature );
 
         if( value.equals( "butt" ) )
-        {
           lineCap = Stroke.LC_BUTT;
-        }
         else if( value.equals( "round" ) )
-        {
           lineCap = Stroke.LC_ROUND;
-        }
         else if( value.equals( "square" ) )
-        {
           lineCap = Stroke.LC_SQUARE;
-        }
         else
-        {
           throw new FilterEvaluationException( "Given value for parameter 'stroke-linecap' ('" + value + "') is unsupported. Supported values are: " + "'butt', 'round' or 'square'!" );
-        }
       }
     }
     else
-    {
       lineCap = smplLineCap;
-    }
 
     return lineCap;
   }
@@ -761,17 +682,11 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   {
     String cap = null;
     if( lineCap == Stroke.LC_BUTT )
-    {
       cap = "butt";
-    }
     else if( lineCap == Stroke.LC_ROUND )
-    {
       cap = "round";
-    }
     else if( lineCap == Stroke.LC_SQUARE )
-    {
       cap = "square";
-    }
     else
     {
       // default;
@@ -806,9 +721,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     if( smplDashArray == null )
     {
       if( cssParam == null )
-      {
         return null;
-      }
 
       final String value = cssParam.getValue( feature );
 
@@ -816,13 +729,9 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       final int count = st.countTokens();
 
       if( (count % 2) == 0 )
-      {
         dashArray = new float[count];
-      }
       else
-      {
         dashArray = new float[count * 2];
-      }
 
       int i = 0;
       while( st.hasMoreTokens() )
@@ -843,15 +752,11 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       {
         int j = 0;
         while( i < ((count * 2) - 1) )
-        {
           dashArray[i++] = dashArray[j++];
-        }
       }
     }
     else
-    {
       dashArray = smplDashArray;
-    }
 
     return dashArray;
   }
@@ -868,9 +773,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     {
       String s = "";
       for( int i = 0; i < dashArray.length - 1; i++ )
-      {
         s = s + dashArray[i] + ",";
-      }
       s = s + dashArray[dashArray.length - 1];
       smplDashArray = dashArray;
       final CssParameter strokeDash = StyleFactory.createCssParameter( "stroke-dasharray", s );
@@ -911,9 +814,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       }
     }
     else
-    {
       dashOffset = smplDashOffset;
-    }
 
     return dashOffset;
   }
@@ -948,18 +849,12 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     sb.append( "<Stroke>" );
 
     if( graphicFill != null )
-    {
       sb.append( ((Marshallable) graphicFill).exportAsXML() );
-    }
     else if( graphicStroke != null )
-    {
       sb.append( ((Marshallable) graphicStroke).exportAsXML() );
-    }
     final Iterator iterator = cssParams.values().iterator();
     while( iterator.hasNext() )
-    {
       sb.append( ((Marshallable) iterator.next()).exportAsXML() );
-    }
 
     sb.append( "</Stroke>" );
 

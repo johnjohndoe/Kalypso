@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
@@ -82,6 +83,11 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 
   private TextTitle m_subTitle;
 
+  public DiagView getDiagView( )
+  {
+    return m_diagView;
+  }
+
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -113,7 +119,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     getSite().getPage().removePartListener( this );
 
@@ -131,7 +137,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   @Override
   public void setFocus( )
   {
-  // noch nix
+    // noch nix
   }
 
   /**
@@ -142,12 +148,12 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     // always remove items first (we don't know which selection we get)
     m_diagView.removeAllItems();
 
-    final StructuredSelection selection = (StructuredSelection)event.getSelection();
+    final StructuredSelection selection = (StructuredSelection) event.getSelection();
 
-    if( !( selection.getFirstElement() instanceof IRepositoryItem ) )
+    if( !(selection.getFirstElement() instanceof IRepositoryItem) )
       return;
 
-    final IRepositoryItem item = (IRepositoryItem)selection.getFirstElement();
+    final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
 
     final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
 
@@ -155,56 +161,62 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     {
       final DateRange dra = ObservationViewHelper.makeDateRange( item );
 
-      m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ),
-          ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+      m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
 
       // sub title of diagram contains date-range info
       m_subTitle.setText( "" );
       if( dra != null )
         m_subTitle.setText( dra.toString() );
+
+      final IActionBars actionbar = this.getViewSite().getActionBars();
+      actionbar.updateActionBars();
+
+      // FIXME - wont update commands of view
+      actionbar.getToolBarManager().update( true );
+
     }
   }
 
   /**
    * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partActivated( IWorkbenchPart part )
+  public void partActivated( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ( (RepositoryExplorerPart)part ).addSelectionChangedListener( this );
+      ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
   }
 
   /**
    * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partBroughtToTop( IWorkbenchPart part )
+  public void partBroughtToTop( final IWorkbenchPart part )
   {
-  // nada
+    // nada
   }
 
   /**
    * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partClosed( IWorkbenchPart part )
+  public void partClosed( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
+      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
   }
 
   /**
    * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partDeactivated( IWorkbenchPart part )
+  public void partDeactivated( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
+      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
   }
 
   /**
    * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partOpened( IWorkbenchPart part )
+  public void partOpened( final IWorkbenchPart part )
   {
-  // Siehe partActivated...
+    // Siehe partActivated...
   }
 }
