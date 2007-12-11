@@ -140,7 +140,7 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
    */
   public Double getConstantValue( )
   {
-    throw new NotImplementedException();
+    return (Double) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
   }
 
   /**

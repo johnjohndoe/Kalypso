@@ -129,23 +129,25 @@ public class LastFallExplorer
     header.setLayout( layout );
     header.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final TreeViewer viewer = new TreeViewer( body );
-
-    getToolbar( toolkit, header, viewer );
-
     /* tree */
+    final TreeViewer viewer = new TreeViewer( body );
     viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    viewer.setLabelProvider( new LastfallTreeLabelProvider() );
+    final LastfallTreeLabelProvider prLabel = new LastfallTreeLabelProvider( viewer );
+    viewer.setLabelProvider( prLabel );
     viewer.setContentProvider( new LastfallTreeContentProvider() );
     viewer.setSorter( m_sorter );
+
+    /* toolbar */
+    getToolbar( toolkit, header, viewer, prLabel );
 
     final ILastfall[] lastfalls = m_modelBuilder.getLastfallMembers();
     viewer.setInput( lastfalls );
 
     viewer.expandAll();
+    prLabel.updateIcons();
   }
 
-  private void getToolbar( final FormToolkit toolkit, final Composite header, final TreeViewer viewer )
+  private void getToolbar( final FormToolkit toolkit, final Composite header, final TreeViewer viewer, final LastfallTreeLabelProvider provider )
   {
 
     /* label */
@@ -211,7 +213,7 @@ public class LastFallExplorer
         final TreeSelection selection = (TreeSelection) viewer.getSelection();
         final Object element = selection.getFirstElement();
 
-        openEditWizard( selection, element );
+        openEditWizard( selection, provider, element );
       }
     } );
 
@@ -223,7 +225,7 @@ public class LastFallExplorer
         final TreeSelection selection = (TreeSelection) viewer.getSelection();
         final Object element = selection.getFirstElement();
 
-        openEditWizard( selection, element );
+        openEditWizard( selection, provider, element );
       }
     } );
 
@@ -371,7 +373,7 @@ public class LastFallExplorer
 
   }
 
-  protected void openEditWizard( final TreeSelection selection, final Object element )
+  protected void openEditWizard( final TreeSelection selection, final LastfallTreeLabelProvider provider, final Object element )
   {
     if( element instanceof ILastfall )
     {
@@ -395,7 +397,7 @@ public class LastFallExplorer
       final ILastfall lastfall = (ILastfall) path[0].getFirstSegment();
       final IBoundaryNode node = (IBoundaryNode) element;
 
-      final SobekWizardEditBoundaryCondition wizard = new SobekWizardEditBoundaryCondition( lastfall, node );
+      final SobekWizardEditBoundaryCondition wizard = new SobekWizardEditBoundaryCondition( lastfall, node, provider );
       wizard.init( PlatformUI.getWorkbench(), null );
 
       final WizardDialog dialog = new WizardDialog( null, wizard );

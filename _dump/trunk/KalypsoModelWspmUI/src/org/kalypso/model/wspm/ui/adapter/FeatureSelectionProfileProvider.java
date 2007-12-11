@@ -44,6 +44,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
@@ -70,7 +72,7 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -139,8 +141,24 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       return;
 
     final IFeatureSelection fs = (IFeatureSelection) selection;
-    final Feature feature = FeatureSelectionHelper.getSelectedFeature( fs );
-    final CommandableWorkspace workspace = fs.getWorkspace( feature );
+
+    Feature fProfil = null;
+    final QName qProfile = new QName( "org.kalypso.model.wspmprofile", "Profile" );
+
+    final EasyFeatureWrapper[] features = fs.getAllFeatures();
+    for( final EasyFeatureWrapper eft : features )
+    {
+      final Feature feature = eft.getFeature();
+      final QName qname = feature.getFeatureType().getQName();
+      if( qProfile.equals( qname ) )
+      {
+        fProfil = feature;
+        break;
+      }
+
+    }
+
+    final CommandableWorkspace workspace = fs.getWorkspace( fProfil );
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
     m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
@@ -149,9 +167,9 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     IStationResult[] results = null;
     try
     {
-      if( feature != null )
+      if( fProfil != null )
       {
-        profileMember = ProfileFeatureProvider.findProfile( feature );
+        profileMember = ProfileFeatureProvider.findProfile( fProfil );
         if( profileMember != null )
         {
           profile = ProfileFeatureFactory.toProfile( profileMember.getFeature() );

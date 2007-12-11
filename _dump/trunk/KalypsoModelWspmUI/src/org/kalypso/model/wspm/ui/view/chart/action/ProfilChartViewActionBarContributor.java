@@ -64,7 +64,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
 
   private final AdapterPartListener m_adapterPartListener = new AdapterPartListener( ProfilChartView.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
-  private List<ChartAction> m_chartActions = new ArrayList<ChartAction>();
+  protected List<ChartAction> m_chartActions = new ArrayList<ChartAction>();
 
   public ProfilChartViewActionBarContributor( )
   {
@@ -75,10 +75,15 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   /**
    * Constructor for adding some, but not all ChartActions.
    */
-  public ProfilChartViewActionBarContributor( List<ChartAction> chartActions )
+  public ProfilChartViewActionBarContributor( final List<ChartAction> chartActions )
   {
     if( chartActions != null )
       m_chartActions = chartActions;
+  }
+
+  protected List<ChartAction> getChartActions( )
+  {
+    return m_chartActions;
   }
 
   /**
@@ -87,14 +92,12 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   public void contributeTo( final IMenuManager menuManager )
   {
     for( final ChartAction action : m_chartActions )
-    {
       // final String menuPath = action.getMenuPath();
       // TODO: find sub menu manager with the given relative path
       // implement similiar to object contributions
       // define menues and actions via the same mechanism
       // and make them here
       menuManager.add( action );
-    }
   }
 
   /**
@@ -110,10 +113,8 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   public void contributeTo( final ICoolBarManager coolbarManager )
   {
     for( final ChartAction action : m_chartActions )
-    {
       // TODO: find sub menu manager with the given relative path
       coolbarManager.add( action );
-    }
   }
 
   /**
@@ -129,10 +130,8 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
   public void contributeTo( final IToolBarManager toolbarManager )
   {
     for( final ChartAction action : m_chartActions )
-    {
       // TODO: find sub menu manager with the given relative path
       toolbarManager.add( action );
-    }
   }
 
   /**

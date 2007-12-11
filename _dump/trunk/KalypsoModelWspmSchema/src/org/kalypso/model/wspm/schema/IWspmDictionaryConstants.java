@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.schema;
 
+// $ANALYSIS-IGNORE
 /**
  * @author Thomas Jung
  */

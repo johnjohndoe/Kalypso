@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallConditi
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
+import org.kalypso.model.wspm.sobek.core.ui.lastfall.LastfallTreeLabelProvider;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
 import org.kalypso.model.wspm.sobek.core.wizard.worker.AbstractTimeSeriesProvider;
@@ -74,10 +75,13 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
 
   private PageEditBoundaryConditionGeneral m_general = null;
 
-  public SobekWizardEditBoundaryCondition( final ILastfall lastfall, final IBoundaryNode node )
+  private final LastfallTreeLabelProvider m_provider;
+
+  public SobekWizardEditBoundaryCondition( final ILastfall lastfall, final IBoundaryNode node, final LastfallTreeLabelProvider provider )
   {
     m_lastfall = lastfall;
     m_node = node;
+    m_provider = provider;
 
     setForcePreviousAndNextButtons( true );
   }
@@ -124,6 +128,8 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, worker );
     ErrorDialog.openError( getShell(), getWindowTitle(), "Error updating boundary condition.", status );
+
+    m_provider.updateIcons();
 
     if( status.isOK() )
       return true;
