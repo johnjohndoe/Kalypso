@@ -193,5 +193,9 @@
           class="org.kalypso.risk.plugin.RiskZonesThemeInfo"
           id="org.kalypso.risk.plugin.RiskZonesThemeInfo">
     </themeInfo>
+    <themeInfo
+          class="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo"
+          id="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo">
+    </themeInfo>
  </extension>
 </plugin>

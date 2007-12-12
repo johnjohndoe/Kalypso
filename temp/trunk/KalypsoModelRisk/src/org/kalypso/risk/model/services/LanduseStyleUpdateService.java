@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -61,6 +61,7 @@ import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
+import org.kalypso.risk.plugin.RasterizedLanduseThemeInfo;
 import org.kalypso.risk.plugin.RiskZonesThemeInfo;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -124,6 +125,10 @@ public class LanduseStyleUpdateService extends Job
       {
         SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor );
         SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolyzerSldFile, model.getLanduseClassesList(), null, null, monitor );
+        final HashMap<Double, String> values = new HashMap<Double, String>();
+        for( final ILanduseClass landuseClass : landuseClassesList )
+          values.put( new Double( landuseClass.getOrdinalNumber() ), landuseClass.getName() );
+        RasterizedLanduseThemeInfo.updateClassesDefinition( values );
       }
       final List<IRiskZoneDefinition> riskZonesList = model.getRiskZoneDefinitionsList();
       if( riskZonesList != null && riskZonesList.size() > 0 )

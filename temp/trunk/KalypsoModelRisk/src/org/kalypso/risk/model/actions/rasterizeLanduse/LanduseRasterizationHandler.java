@@ -64,13 +64,13 @@ public class LanduseRasterizationHandler extends AbstractHandler
     catch( CoreException e1 )
     {
       e1.printStackTrace();
-      MessageDialog.openError( shell, Messages.getString("LanduseRasterizationHandler.0"), Messages.getString("LanduseRasterizationHandler.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( shell, Messages.getString( "LanduseRasterizationHandler.0" ), Messages.getString( "LanduseRasterizationHandler.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
     if( model.getWaterlevelCoverageCollection().size() == 0 )
     {
-      MessageDialog.openError( shell, Messages.getString("LanduseRasterizationHandler.2"), Messages.getString("LanduseRasterizationHandler.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( shell, Messages.getString( "LanduseRasterizationHandler.2" ), Messages.getString( "LanduseRasterizationHandler.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
@@ -78,16 +78,23 @@ public class LanduseRasterizationHandler extends AbstractHandler
     int maxReturnPeriod = Integer.MIN_VALUE;
     for( final IAnnualCoverageCollection annualCoverageCollection : model.getWaterlevelCoverageCollection() )
     {
-      if( annualCoverageCollection.getReturnPeriod() > maxReturnPeriod )
+      if( annualCoverageCollection.getReturnPeriod() > maxReturnPeriod && annualCoverageCollection.size() > 0 )
       {
         maxReturnPeriod = annualCoverageCollection.getReturnPeriod();
         maxCoveragesCollection = annualCoverageCollection;
       }
     }
-
-    final String dialogTitle = Messages.getString("LanduseRasterizationHandler.4"); //$NON-NLS-1$
-    final String dialogMessage = Messages.getString("LanduseRasterizationHandler.5") + maxReturnPeriod + Messages.getString("LanduseRasterizationHandler.6"); //$NON-NLS-1$ //$NON-NLS-2$
-    final Dialog dialog = new MessageDialog( shell, dialogTitle, null, dialogMessage, MessageDialog.QUESTION, new String[] { Messages.getString("LanduseRasterizationHandler.7"), Messages.getString("LanduseRasterizationHandler.8") }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
+    
+    if( maxReturnPeriod == Integer.MIN_VALUE )
+    {
+      new MessageDialog( shell, "Missing HQ data", null, "No waterlevel data loaded. Please load waterlevel raster data before rasterizing landuse classes.", MessageDialog.ERROR, new String[] { "Ok" }, 0 ).open();
+      return null;
+    }
+    
+    final String dialogTitle = Messages.getString( "LanduseRasterizationHandler.4" ); //$NON-NLS-1$
+    final String dialogMessage = Messages.getString( "LanduseRasterizationHandler.5" ) + maxReturnPeriod + Messages.getString( "LanduseRasterizationHandler.6" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final Dialog dialog = new MessageDialog( shell, dialogTitle, null, dialogMessage, MessageDialog.QUESTION, new String[] {
+        Messages.getString( "LanduseRasterizationHandler.7" ), Messages.getString( "LanduseRasterizationHandler.8" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
     if( dialog.open() == 0 )
     {
       try
@@ -103,7 +110,7 @@ public class LanduseRasterizationHandler extends AbstractHandler
         {
           public void run( final IProgressMonitor monitor ) throws InterruptedException
           {
-            monitor.beginTask( Messages.getString("LanduseRasterizationHandler.9"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+            monitor.beginTask( Messages.getString( "LanduseRasterizationHandler.9" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
             try
             {
               final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
