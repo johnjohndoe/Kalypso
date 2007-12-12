@@ -175,7 +175,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="???" />
+              <imagedata fileref="img/Risk/Datenladen_WMS.png" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -402,6 +402,12 @@
       <para>Die Kachel des markierten Hochwasserereignisses wird in der Karte
       mit einem roten Rand dargestellt.</para>
 
+      <para>Dieser Bearbeitungsschritt ermöglicht es neue Hochwasserereignisse
+      zu erstellen, bzw. die Wiederkehrintervalle von vorhandenen Ereignissen
+      zu verändern. Der Import der Rasterdaten ist erst in dem nachfolgenden
+      Schritt möglich. Die Funktionen der Knöpfe in der Karten Werkzeugansicht
+      sind in der nachfolgenden Tabelle erläutert.</para>
+
       <figure>
         <title>Karten Werkzeugansicht zum Bearbeiten der
         Hochwasserereignisse</title>
@@ -487,18 +493,17 @@
               <entry align="left" valign="middle">Ereignis in nach oben/ unten
               verschieben</entry>
 
-              <entry align="left" valign="middle">Um die Reihenfolge der
-              Darstellung in der Gliederung der Karte zu verändern, können Sie
-              ein Ereignis in der Tabelle markieren und dann mit den
-              Pfeiltasten entweder nach unten oder nach oben
-              verschieben.</entry>
+              <entry align="left" valign="middle">Markieren Sie in der Tabelle
+              ein Ereignis und verschieben Sie es mit den Pfeiltasten entweder
+              nach unten oder nach oben.</entry>
             </row>
           </tbody>
         </tgroup>
       </table>
 
       <figure>
-        <title>Neues Hochwasserereignis anlegen</title>
+        <title>Neues Hochwasserereignis anlegen bzw. Wiederkehrintervall
+        ändern</title>
 
         <mediaobject>
           <imageobject>
@@ -521,16 +526,24 @@
       Ü-Rasterdaten</guibutton> mit einem Doppelklick und es öffnet sich die
       zugehörige Karten Werkzeugansicht.</para>
 
-      <para>Funktionalitäten: </para>
+      <para>Dieser Schritt ermöglicht den Import und Export von Rasterdaten.
+      Wenn Sie ein Projekt importiert haben, das vorher mit
+      KalypsoFloodModeler bearbeitet worden ist, dann ist bereits zu jedem
+      Hochwasserereignis eine <filename>*.asc</filename> Datei zugeordnet.
+      Hier haben Sie nun die Möglichkeit diese Dateien zu exportieren. Wenn
+      Sie in dem vorherigen Arbeitsschritt ein neues Hochwasserereignis
+      erstellt haben, dann können Sie hier die zugehörige Rasterdatei
+      einladen. Die Funktionen der Knöpfe in der Karten Werkzeugansicht sind
+      in der folgenden Tabelle erläutert.</para>
 
-      <para>Wassertiefen anzeigen lassen, indem man mit dem Mauscursor auf die
-      überschwemmten Flächen zeigt (in der Gliederung sollte entsprechendes
-      Thema aktiviert sein, also z.B. wie in diesem Beispiel HQ10 markiert.
-      </para>
-
-      <para>Farbeinstellungen für die verschiedenen Wassertiefen</para>
-
-      <para>Exportieren von Rasterdaten</para>
+      <para>Des Weiteren kann man in der Karten Werkzeugansicht die
+      Farbeinstellung für die verschiedenen Wassertiefen in der Karte
+      verändern. Wenn Sie mit dem Mauscursor in der Karte auf die
+      überschwemmten Flächen zeigen, dann wird die entsprechende Wassertiefe
+      an der Stelle angezeigt. In der Gliederung muss hierfür das
+      entsprechende Thema aktiviert sein. Diese Funktion ist in der folgenden
+      Ansicht dargestellt. In der Gliederung ist das Hochwasserereignis HQ10
+      markiert.</para>
 
       <figure>
         <title>Karten Werkzeugansicht zur Bearbeitung der
@@ -615,10 +628,9 @@
               <entry align="left" valign="middle">Kachel nach oben/ unten
               verschieben</entry>
 
-              <entry align="left" valign="middle">Um die Reihenfolge der
-              Darstellung zu verändern, können Sie ein Ereignis in der Tabelle
-              markieren und dann mit den Pfeiltasten entweder nach unten oder
-              nach oben verschieben.</entry>
+              <entry align="left" valign="middle">Markieren Sie in der Tabelle
+              ein Ereignis und verschieben Sie es mit den Pfeiltasten entweder
+              nach unten oder nach oben.</entry>
             </row>
 
             <row>
@@ -779,7 +791,7 @@
       Schadenspotential für die entsprechende Landnutzungsklasse. In dem
       Beispiel oben gilt z.B. für Verkehr ein prozentualer Anteil von 10%.
       Dieser Wert bleibt bei den verschiedenen Hochwasserereignissen konstant
-      im Gegensatz zu Wohngebieten, wo der Schaden vom Wasserstand
+      im Gegensatz zu Wohngebieten, wo der Schaden vom Wasserstand x in [m]
       abhängt.</para>
 
       <figure>
@@ -825,6 +837,12 @@
           </imageobject>
         </mediaobject>
       </figure>
+
+      <para>Die in der Tabelle angegebenen Werte, geben Intervallgrenzen an.
+      Das bedeutet, dass ein bebautes Gebiet z. B. mit einem jährlich
+      durchschnittlichen Schaden von 0,05 €/m² der Zone: "mäßige
+      Betroffenheit, bebaute Flächen" zugeordnet wird. Ab einem Wert von 1
+      €/m² wird das Gebiet der Zone "hohe Betroffenheit" zugeordnet.</para>
     </section>
   </section>
 </chapter>
