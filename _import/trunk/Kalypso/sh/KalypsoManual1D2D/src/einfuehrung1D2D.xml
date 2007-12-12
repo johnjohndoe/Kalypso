@@ -81,7 +81,7 @@
       </mediaobject>
     </figure>
 
-    <section>
+    <section id="Kalypso1D2DPerspektive">
       <title>Die Kalypso1D2D Perspektive</title>
 
       <indexterm>
@@ -108,7 +108,7 @@
         </mediaobject>
       </figure>
 
-      <section>
+      <section id="Kalypso1D2DWorkflow">
         <title>Workflow</title>
 
         <indexterm>
@@ -170,8 +170,8 @@
         gearbeitet haben fett markiert.</para>
       </section>
 
-      <section>
-        <title>Ansicht "Szenarien"</title>
+      <section id="Kalypso1D2DSzenarienansicht">
+        <title>Szenarienansicht</title>
 
         <indexterm>
           <primary>Szenarien Ansicht</primary>
@@ -189,7 +189,7 @@
         Symbole, die in der folgenden Tabelle vorgestellt werden.</para>
 
         <figure>
-          <title>Ansicht "Szenarien"</title>
+          <title>Szenarienansicht</title>
 
           <mediaobject>
             <imageobject>
@@ -250,7 +250,7 @@
 
                 <entry align="left">Szenario aktivieren</entry>
 
-                <entry valign="middle">Wenn Sie diesen Buttton betätigen wird
+                <entry valign="middle">Wenn Sie diesen Knopf betätigen wird
                 das markierte Szenario aktiviert. Das aktivierte Szenario wird
                 in Fettbuchstaben dargestellt.</entry>
               </row>
@@ -338,7 +338,7 @@
       werden.</para>
     </section>
 
-    <section>
+    <section id="Kalypso1D2DVorhProjekt_loeschen">
       <title>Vorhandenes Projekt löschen</title>
 
       <indexterm>
@@ -369,8 +369,12 @@
       <guibutton>No</guibutton>.</para>
     </section>
 
-    <section>
+    <section id="Kalypso1D2DKarte">
       <title>Arbeiten und Darstellung in der Karte</title>
+
+      <indexterm>
+        <primary>Arbeiten in der Karte in Kalypso1D2D</primary>
+      </indexterm>
 
       <para>Die Karte mit den dazugehörigen Funktionalitäten wird bei der
       Aktivierung eines Bearbeitungsschrittes des Workflows automatisch
@@ -547,8 +551,12 @@
         </tgroup>
       </table>
 
-      <section>
+      <section id="Kalypso1D2DKartenselektion">
         <title>Selektion von Elementen in der Karte</title>
+
+        <indexterm>
+          <primary>Selektion in der Karte</primary>
+        </indexterm>
 
         <para>Für die Selektion von Elementen in der Karte gibt es generell
         drei Optionen:</para>
