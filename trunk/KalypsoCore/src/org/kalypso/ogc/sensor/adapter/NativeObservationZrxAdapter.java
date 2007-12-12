@@ -98,12 +98,12 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     m_axisTypeValue = config.getAttribute( "axisType" );
   }
 
-  public IObservation createObservationFromSource( File source ) throws Exception
+  public IObservation createObservationFromSource( final File source ) throws Exception
   {
     return createObservationFromSource( source, true );
   }
 
-  public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( final File source, final boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
     metaDataList.put( ObservationConstants.MD_ORIGIN, source.getAbsolutePath() );
@@ -123,7 +123,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     return observation;
   }
 
-  private ITuppleModel createTuppelModel( File source, IAxis[] axis, boolean continueWithErrors ) throws IOException
+  private ITuppleModel createTuppelModel( final File source, IAxis[] axis, boolean continueWithErrors ) throws IOException
   {
     final int MAX_NO_OF_ERRORS = 30;
     int numberOfErrors = 0;

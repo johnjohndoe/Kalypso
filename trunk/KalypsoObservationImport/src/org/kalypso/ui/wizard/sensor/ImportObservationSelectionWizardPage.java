@@ -1,49 +1,50 @@
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
-*
-*  This file is part of kalypso.
-*  Copyright (C) 2004 by:
-* 
-*  Technical University Hamburg-Harburg (TUHH)
-*  Institute of River and coastal engineering
-*  Denickestraﬂe 22
-*  21073 Hamburg, Germany
-*  http://www.tuhh.de/wb
-* 
-*  and
-*  
-*  Bjoernsen Consulting Engineers (BCE)
-*  Maria Trost 3
-*  56070 Koblenz, Germany
-*  http://www.bjoernsen.de
-* 
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-* 
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-* 
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-* 
-*  Contact:
-* 
-*  E-Mail:
-*  belger@bjoernsen.de
-*  schlienger@bjoernsen.de
-*  v.doemming@tuhh.de
-*   
-*  ---------------------------------------------------------------------------*/
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.sensor;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.compare.internal.ListContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -80,12 +81,10 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 
-
 /**
  * @author doemming
  */
-public class ImportObservationSelectionWizardPage extends WizardPage implements FocusListener, ISelectionProvider,
-    ISelectionChangedListener
+public class ImportObservationSelectionWizardPage extends WizardPage implements FocusListener, ISelectionProvider, ISelectionChangedListener
 {
   private static final String DEFAUL_FILE_LABEL = "";
 
@@ -127,7 +126,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_adapter = createNativeAdapters();
   }
 
-  private List createNativeAdapters()
+  private List createNativeAdapters( )
   {
     final List adapters = new ArrayList();
 
@@ -150,8 +149,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
         try
         {
-          final INativeObservationAdapter adapter = (INativeObservationAdapter)element
-              .createExecutableExtension( "class" );
+          final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" );
           adapters.add( adapter );
         }
         catch( final CoreException e )
@@ -202,7 +200,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     gridLayout.numColumns = 3;
     group.setLayout( gridLayout );
 
-    //  line 1
+    // line 1
     Label label = new Label( group, SWT.NONE );
     label.setText( "von " );
 
@@ -252,12 +250,12 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
       public void addListener( ILabelProviderListener listener )
       {
-      // nothing as labelprovider will not change
+        // nothing as labelprovider will not change
       }
 
-      public void dispose()
+      public void dispose( )
       {
-      // nothing as labelprovider will not change
+        // nothing as labelprovider will not change
       }
 
       public boolean isLabelProperty( Object element, String property )
@@ -267,7 +265,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
       public void removeListener( ILabelProviderListener listener )
       {
-      //nothing
+        // nothing
       }
     } );
 
@@ -356,10 +354,11 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     String filterPath = dialog.getFilterPath();
     return new File( filterPath, fileName );
   }
+
   File chooseFileZML( File selectedFile )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
-    dialog.setFilterExtensions( new String[] { "*.zml" }  );
+    dialog.setFilterExtensions( new String[] { "*.zml" } );
     if( selectedFile != null )
     {
       dialog.setFileName( selectedFile.getName() );
@@ -374,7 +373,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * validates the page
    */
-  void validate()
+  void validate( )
   {
     setErrorMessage( null );
     setMessage( null );
@@ -413,19 +412,17 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   }
 
   /**
-   * 
    * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
    */
-  public boolean canFlipToNextPage()
+  public boolean canFlipToNextPage( )
   {
     return isPageComplete();
   }
 
   /**
-   * 
    * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     super.dispose();
     if( m_topLevel != null && !m_topLevel.isDisposed() )
@@ -440,7 +437,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
    */
   public void focusGained( FocusEvent e )
   {
-  // nothing
+    // nothing
   }
 
   /**
@@ -459,11 +456,11 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     validate();
   }
 
-  private void fireSelectionChanged()
+  private void fireSelectionChanged( )
   {
     for( Iterator iter = m_selectionListener.iterator(); iter.hasNext(); )
     {
-      ( (ISelectionChangedListener)iter.next() ).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
+      ((ISelectionChangedListener) iter.next()).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
     }
   }
 
@@ -478,19 +475,18 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
-    final IStructuredSelection formatSelection = (IStructuredSelection)m_formatCombo.getSelection();
+    final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo.getSelection();
     if( !m_controlFinished )
       return new ISelection()
       {
-        public boolean isEmpty()
+        public boolean isEmpty( )
         {
           return true;
         }
       };
-    return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter)formatSelection
-        .getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
+    return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter) formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
   }
 
   /**
@@ -508,7 +504,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   {
     if( selection instanceof ObservationImportSelection )
     {
-      ObservationImportSelection s = ( (ObservationImportSelection)selection );
+      ObservationImportSelection s = ((ObservationImportSelection) selection);
       if( m_formatCombo != null )
         m_formatCombo.setSelection( new StructuredSelection( s.getNativeAdapter() ) );
       m_sourceFile = s.getFileSource();
@@ -520,10 +516,10 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     }
     else if( selection instanceof IStructuredSelection )
     {
-      Object firstElement = ( (StructuredSelection)selection ).getFirstElement();
+      Object firstElement = ((StructuredSelection) selection).getFirstElement();
       if( firstElement instanceof IFile )
       {
-        m_targetFile = ResourceUtilities.makeFileFromPath( ( (IFile)firstElement ).getFullPath() );
+        m_targetFile = ResourceUtilities.makeFileFromPath( ((IFile) firstElement).getFullPath() );
       }
     }
     // nothing
