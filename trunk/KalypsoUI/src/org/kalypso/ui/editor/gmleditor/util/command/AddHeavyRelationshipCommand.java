@@ -73,7 +73,7 @@ public class AddHeavyRelationshipCommand implements ICommand
   /**
    *  
    */
-  public AddHeavyRelationshipCommand( GMLWorkspace workspace, Feature srcFE, IRelationType linkFT1, IFeatureType bodyFT, IRelationType linkFT2, Feature targetFE )
+  public AddHeavyRelationshipCommand( final GMLWorkspace workspace, final Feature srcFE, final IRelationType linkFT1, final IFeatureType bodyFT, final IRelationType linkFT2, final Feature targetFE )
   {
     m_workspace = workspace;
     m_srcFE = srcFE;
@@ -104,6 +104,12 @@ public class AddHeavyRelationshipCommand implements ICommand
     // create second link
     m_workspace.addFeatureAsAggregation( m_newFeature, m_linkFT2, 0, m_targetFE.getId() );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_newFeature, m_targetFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    // HACK: Normally, the first two event shold be enough; however the virtual-relation geometries don't get updated
+    // this way.
+    // In order to enforce a map redrawal, the next event is fired additinally.
+    // TODO: This should (somehow) be done automatically be the feature framework...
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_srcFE } ) );
   }
 
   /**
@@ -135,6 +141,12 @@ public class AddHeavyRelationshipCommand implements ICommand
     // remove relation feature and also first link
     m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkFT1, m_newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+
+    // HACK: Normally, the first two event shold be enough; however the virtual-relation geometries don't get updated
+    // this way.
+    // In order to enforce a map redrawal, the next event is fired additinally.
+    // TODO: This should (somehow) be done automatically be the feature framework...
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_srcFE } ) );
   }
 
   /**

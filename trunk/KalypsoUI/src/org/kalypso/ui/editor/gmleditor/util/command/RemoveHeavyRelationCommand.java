@@ -45,6 +45,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -107,10 +108,7 @@ public class RemoveHeavyRelationCommand implements ICommand
     else
       m_workspace.removeLinkedAsAggregationFeature( m_bodyFE, m_linkName2, m_destFE.getId() );
 
-    // TODO is this event needed ??
-    // m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
-    // m_workspace, m_bodyFE,
-    // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
 
     // then remove 1. normal relation
     if( m_isComposition1 )
@@ -118,10 +116,13 @@ public class RemoveHeavyRelationCommand implements ICommand
     else
       m_workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkName1, m_bodyFE.getId() );
 
-    final Feature parentFE = m_srcFE.getParent();
-    // TODO: hand over changed feature
-    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_bodyFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+
+    // HACK: Normally, the first two event shold be enough; however the virtual-relation geometries don't get updated
+    // this way.
+    // In order to enforce a map redrawal, the next event is fired additinally.
+    // TODO: This should (somehow) be done automatically be the feature framework...
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_srcFE } ) );
   }
 
   /**
@@ -146,14 +147,16 @@ public class RemoveHeavyRelationCommand implements ICommand
       m_workspace.addFeatureAsComposition( m_bodyFE, m_linkName2, m_pos2, m_destFE );
     else
       m_workspace.addFeatureAsAggregation( m_bodyFE, m_linkName2, m_pos2, m_destFE.getId() );
-    // TODO is this event needed ??
-    // m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent(
-    // m_workspace, m_bodyFE,
-    // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    final Feature parentFE = m_srcFE.getParent();
-    // TODO: hand over changed feature
-    // shouldn't m_srcFE be handed over as parentFeature instead of parentFE?!?
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, parentFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_bodyFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_bodyFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    // HACK: Normally, the first two event shold be enough; however the virtual-relation geometries don't get updated
+    // this way.
+    // In order to enforce a map redrawal, the next event is fired additinally.
+    // TODO: This should (somehow) be done automatically be the feature framework...
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_srcFE } ) );
   }
 
   /**
