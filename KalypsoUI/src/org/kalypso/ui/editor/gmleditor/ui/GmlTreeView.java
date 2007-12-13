@@ -70,8 +70,6 @@ import org.xml.sax.InputSource;
  * Is among others a {@link org.eclipse.jface.viewers.IPostSelectionProvider}. The returned selection consists of
  * {@link org.kalypsodeegree.model.feature.Feature}and
  * {@link org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty}objects.
- * 
- * @author <verschiedene>
  */
 public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEventProvider, ModellEventListener
 {
