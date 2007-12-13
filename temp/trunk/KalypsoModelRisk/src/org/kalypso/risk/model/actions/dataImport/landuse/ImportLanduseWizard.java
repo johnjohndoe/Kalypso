@@ -114,21 +114,21 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
   protected static final int DB_USE_PREDEFINED = 2;
 
-  private static final String PREDEFINED_DATASET_PATH = "models/PredefinedDataset.gml";
+  private static final String PREDEFINED_DATASET_PATH = "models/PredefinedDataset.gml"; //$NON-NLS-1$
 
-  private static final QName PROP_NAME = new QName( NS.GML3, "name" );
+  private static final QName PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
-  private static final QName PROP_DESCRIPTION = new QName( NS.GML3, "description" );
+  private static final QName PROP_DESCRIPTION = new QName( NS.GML3, "description" ); //$NON-NLS-1$
 
-  private static final QName PROP_VALUE = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "value" );
+  private static final QName PROP_VALUE = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "value" ); //$NON-NLS-1$
 
-  private static final QName PROP_LANDUSE_COLORS_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "landuseClassesDefaultColorsCollection" );
+  private static final QName PROP_LANDUSE_COLORS_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "landuseClassesDefaultColorsCollection" ); //$NON-NLS-1$
 
-  private static final QName PROP_DAMAGE_FUNCTION_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "damageFunctionsCollection" );
+  private static final QName PROP_DAMAGE_FUNCTION_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "damageFunctionsCollection" ); //$NON-NLS-1$
 
-  private static final QName PROP_ASSET_VALUES_CLASSES_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "assetValueClassesCollection" );
+  private static final QName PROP_ASSET_VALUES_CLASSES_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "assetValueClassesCollection" ); //$NON-NLS-1$
 
-  private static final QName PROP_DATA_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "dataMember" );
+  private static final QName PROP_DATA_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "dataMember" ); //$NON-NLS-1$
 
   private IStructuredSelection m_initialSelection;
 
@@ -285,7 +285,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             // if there is no administration units defined, define the default one
             final List<IAdministrationUnit> administrationUnits = controlModel.getAdministrationUnits();
             if( administrationUnits.size() == 0 )
-              controlModel.createNewAdministrationUnit( "Default administration unit", "" );
+              controlModel.createNewAdministrationUnit( "Default administration unit", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
             final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = vectorDataModel.getLandusePolygonCollection();
             landusePolygonCollection.clear();
@@ -302,7 +302,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                   final Map<String, String> landuseClassesGmlIDsMap = new HashMap<String, String>();
                   final Map<String, String> damageFunctionsGmlIDsMap = new HashMap<String, String>();
                   final Map<String, String> administrationUnitsGmlIDsMap = new HashMap<String, String>();
-                  final URL url = m_scenarioFolder.getProject().getParent().getRawLocation().append( "/" + externalProjectName + "/Basis/models/RasterizationControlModel.gml" ).toFile().toURL();
+                  final URL url = m_scenarioFolder.getProject().getParent().getRawLocation().append( "/" + externalProjectName + "/Basis/models/RasterizationControlModel.gml" ).toFile().toURL(); //$NON-NLS-1$ //$NON-NLS-2$
                   final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, new UrlResolver(), null );
                   final List<Feature> landuseClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
                   final List<Feature> assetValueClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
@@ -315,7 +315,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                     {
                       final IDamageFunction newDamageFunction = controlModel.createNewDamageFunction();
                       newDamageFunction.setName( entry.getName() );
-                      newDamageFunction.setDescription( "[Import from " + externalProjectName + "] " + entry.getDescription() );
+                      newDamageFunction.setDescription( "[Import from " + externalProjectName + "] " + entry.getDescription() ); //$NON-NLS-1$ //$NON-NLS-2$
                       newDamageFunction.setFunction( entry.getFunction() );
                       damageFunctionsGmlIDsMap.put( entry.getGmlID(), newDamageFunction.getGmlID() );
                     }
@@ -325,7 +325,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                     final IAdministrationUnit entry = (IAdministrationUnit) importedFeature.getAdapter( IAdministrationUnit.class );
                     if( entry != null )
                     {
-                      final String description = "[Import from " + externalProjectName + "] " + entry.getDescription();
+                      final String description = "[Import from " + externalProjectName + "] " + entry.getDescription(); //$NON-NLS-1$ //$NON-NLS-2$
                       final IAdministrationUnit newAdministrationUnit = controlModel.createNewAdministrationUnit( entry.getName(), description );
                       administrationUnitsGmlIDsMap.put( entry.getGmlID(), newAdministrationUnit.getGmlID() );
                     }
@@ -337,7 +337,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                     {
                       final ILanduseClass newLanduseClass = controlModel.createNewLanduseClass();
                       newLanduseClass.setName( entry.getName() );
-                      newLanduseClass.setDescription( "[Import from " + externalProjectName + "] " + entry.getDescription() );
+                      newLanduseClass.setDescription( "[Import from " + externalProjectName + "] " + entry.getDescription() ); //$NON-NLS-1$ //$NON-NLS-2$
                       newLanduseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
                       newLanduseClass.setColorStyle( entry.getColorStyle() );
                       final String damageFunctionGmlID = damageFunctionsGmlIDsMap.get( entry.getDamageFunctionGmlID() );
@@ -354,7 +354,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                     {
                       final String landuseClassGmlID = landuseClassesGmlIDsMap.get( entry.getLanduseClassGmlID() );
                       final String administrationUnitGmlID = administrationUnitsGmlIDsMap.get( entry.getAdministrationUnitGmlID() );
-                      final String description = "[Import from " + externalProjectName + "] " + entry.getDescription();
+                      final String description = "[Import from " + externalProjectName + "] " + entry.getDescription(); //$NON-NLS-1$ //$NON-NLS-2$
                       controlModel.createNewAssetValueClass( landuseClassGmlID, administrationUnitGmlID, entry.getAssetValue(), description );
                     }
                   }
@@ -384,9 +384,9 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                           final IDamageFunction damageFunction = controlModel.createNewDamageFunction();
                           damageFunction.setName( name );
                           if( description != null && description.length() > 0 )
-                            damageFunction.setDescription( description + " [" + damageFunctionsCollectionName + "]" );
+                            damageFunction.setDescription( description + " [" + damageFunctionsCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
                           else
-                            damageFunction.setDescription( "[" + damageFunctionsCollectionName + "]" );
+                            damageFunction.setDescription( "[" + damageFunctionsCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
                           damageFunction.setFunction( value );
                         }
                       }
@@ -418,11 +418,11 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                             // final String msg = String.format("Created by %s asset values import",
                             // assetValuesCollectionName );
 
-                            newLanduseClass.setDescription( "Created by " + assetValuesCollectionName + " asset values import" );
+                            newLanduseClass.setDescription( "Created by " + assetValuesCollectionName + " asset values import" ); //$NON-NLS-1$ //$NON-NLS-2$
 
                             final String landuseClassGmlID = newLanduseClass.getGmlID();
                             for( final IAdministrationUnit administrationUnit : administrationUnits )
-                              controlModel.createNewAssetValueClass( landuseClassGmlID, administrationUnit.getGmlID(), assetValue, "[" + assetValuesCollectionName + "]" );
+                              controlModel.createNewAssetValueClass( landuseClassGmlID, administrationUnit.getGmlID(), assetValue, "[" + assetValuesCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
                           }
                           else
                           {
@@ -431,7 +431,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                             {
                               final IAssetValueClass assetValueClass = controlModel.getAssetValueClass( landuseClassGmlID, administrationUnit.getGmlID(), true );
                               assetValueClass.setAssetValue( assetValue );
-                              assetValueClass.setDescription( "[" + assetValuesCollectionName + "]" );
+                              assetValueClass.setDescription( "[" + assetValuesCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
                             }
                           }
                         }
@@ -457,9 +457,9 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                 landuseClass.setName( landuseType );
                 landuseClass.setColorStyle( getLanduseClassDefaultColor( landuseType ) );
                 landuseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
-                landuseClass.setDescription( "Created as value of imported landuse shape" );
+                landuseClass.setDescription( "Created as value of imported landuse shape" ); //$NON-NLS-1$
                 for( final IAdministrationUnit administrationUnit : administrationUnits )
-                  controlModel.createNewAssetValueClass( landuseClass.getGmlID(), administrationUnit.getGmlID(), 0.0, "" );
+                  controlModel.createNewAssetValueClass( landuseClass.getGmlID(), administrationUnit.getGmlID(), 0.0, "" ); //$NON-NLS-1$
               }
             }
 
@@ -467,14 +467,14 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             if( controlModel.getDamageFunctionsList().size() == 0 )
             {
               final IDamageFunction newDamageFunction = controlModel.createNewDamageFunction();
-              newDamageFunction.setName( "Default function" );
-              newDamageFunction.setFunction( "0.0" );
-              newDamageFunction.setDescription( "Default damage function" );
+              newDamageFunction.setName( "Default function" ); //$NON-NLS-1$
+              newDamageFunction.setFunction( "0.0" ); //$NON-NLS-1$
+              newDamageFunction.setDescription( "Default damage function" ); //$NON-NLS-1$
             }
 
             // TODO try to guess damage function if no function is linked to the landuse class
 
-            szenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) );
+            szenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
             // creating landuse polygons
             monitor.subTask( Messages.getString( "ImportLanduseWizard.9" ) ); //$NON-NLS-1$
@@ -516,18 +516,18 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             // fireModellEvent to redraw a map...
             final GMLWorkspace workspace = szenarioDataProvider.getCommandableWorkSpace( IVectorDataModel.class );
             workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getWrappedFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-            szenarioDataProvider.postCommand( IVectorDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+            szenarioDataProvider.postCommand( IVectorDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
             // creating styles
-            final IFile polygonSldFile = scenarioFolder.getFile( "styles/LanduseVector.sld" );
+            final IFile polygonSldFile = scenarioFolder.getFile( "styles/LanduseVector.sld" ); //$NON-NLS-1$
             if( polygonSldFile.exists() )
               polygonSldFile.delete( false, new NullProgressMonitor() );
-            SLDHelper.exportPolygonSymbolyzerSLD( polygonSldFile, m_landuseClassesList, ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, "Kalypso style", "Kalypso style", null );
+            SLDHelper.exportPolygonSymbolyzerSLD( polygonSldFile, m_landuseClassesList, ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-            final IFile rasterSldFile = scenarioFolder.getFile( "styles/LanduseCoverage.sld" );
+            final IFile rasterSldFile = scenarioFolder.getFile( "styles/LanduseCoverage.sld" ); //$NON-NLS-1$
             if( rasterSldFile.exists() )
               rasterSldFile.delete( false, new NullProgressMonitor() );
-            SLDHelper.exportRasterSymbolyzerSLD( rasterSldFile, m_landuseClassesList, "Kalypso style", "Kalypso style", null );
+            SLDHelper.exportRasterSymbolyzerSLD( rasterSldFile, m_landuseClassesList, "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
           }
           catch( final Exception e )
           {
@@ -565,7 +565,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         if( landuseClass.getName().equals( className ) )
         {
           final String xlinkedFeaturePath = linkedFeaturePath + landuseClass.getGmlID();
-          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getWrappedFeature().getParentRelation(), landuseClass.getWrappedFeature().getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" );
+          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getWrappedFeature().getParentRelation(), landuseClass.getWrappedFeature().getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
           return linkedFeature_Impl;
         }
       }
@@ -580,8 +580,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        if( MessageDialog.openQuestion( display.getActiveShell(), "Question", "Large number of landuse classes detected.\nAre you sure that selected property [" + shapeLandusePropertyName
-            + "] is landuse class property?" ) )
+        if( MessageDialog.openQuestion( display.getActiveShell(), "Question", Messages.getString("ImportLanduseWizard.60") + shapeLandusePropertyName //$NON-NLS-1$ //$NON-NLS-2$
+            + Messages.getString("ImportLanduseWizard.61") ) ) //$NON-NLS-1$
           m_status = Status.OK_STATUS;
         else
           m_status = Status.CANCEL_STATUS;
