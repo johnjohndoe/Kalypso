@@ -335,23 +335,13 @@
 	<xs:complexType name="EdgePropertyType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
-
 			</xs:documentation>
 		</xs:annotation>
-		<!--xs:complexContent>
-			<xs:restriction 
-			base="simBase:FEEdgesPropertyType"-->
-		<!--  TODO: this is the definition of the property inside the disc-model.
-			Probably only inlined features are allowed there, if yes, change
-			minOccurs to 1 and remove the associationGroup -->
 		<xs:sequence>
 			<xs:element ref="wb1d2d:Edge" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-		<!--/xs:restriction>
-			</xs:complexContent-->
 	</xs:complexType>
-
 
 	<!-- =====================================================================
 		FEAbstractElementType base type for finite elements

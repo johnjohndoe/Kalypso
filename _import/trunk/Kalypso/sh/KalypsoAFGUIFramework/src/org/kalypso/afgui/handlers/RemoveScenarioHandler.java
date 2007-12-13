@@ -31,7 +31,7 @@ import org.kalypso.afgui.scenarios.ScenarioList;
 import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
- * @author pat_dev, Stefan Kurzbach
+ * @author Stefan Kurzbach
  */
 public class RemoveScenarioHandler extends AbstractHandler
 {

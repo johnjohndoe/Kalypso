@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.afgui.scenarios.Scenario;
 
 /**
- * @author pat_dev
+ * @author Stefan Kurzbach
  */
 public class NewSimulationModelWizardPage extends WizardPage
 {
@@ -42,7 +42,7 @@ public class NewSimulationModelWizardPage extends WizardPage
     super.setTitle( pageName );
   }
 
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     c = new NewSimulationModelControlBuilder( m_scenario, parent );
     setControl( c.getControl() );
