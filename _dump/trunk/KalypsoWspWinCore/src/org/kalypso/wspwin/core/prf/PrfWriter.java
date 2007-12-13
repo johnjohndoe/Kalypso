@@ -45,7 +45,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -56,12 +55,11 @@ import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 
 public class PrfWriter
 {
-
   private final Logger m_logger = Logger.getLogger( PrfWriter.class.getName() );
 
-  private ArrayList<IDataBlock> m_dbs = new ArrayList<IDataBlock>();
+  private final ArrayList<IDataBlock> m_dbs = new ArrayList<IDataBlock>();
 
-  private Map<Integer, String[]> m_metaMap = new HashMap<Integer, String[]>();
+  private final Map<Integer, String[]> m_metaMap = new HashMap<Integer, String[]>();
 
   public void addKeyValue( final int lineNr, final String[] data )
   {
@@ -80,10 +78,10 @@ public class PrfWriter
     pw.println( "0.0000  0.0000  0.0000  0.0000  0.0000  0.0000   0 0 0" );// Plotvorgaben
     try
     {
-      for( IDataBlock db : m_dbs )
+      for( final IDataBlock db : m_dbs )
         db.printToPrinter( pw );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       m_logger.log( Level.SEVERE, e.getMessage() );
       e.printStackTrace();
@@ -100,10 +98,10 @@ public class PrfWriter
   private void writeZeile14( final List< ? extends IDataBlock> dbs, final PrintWriter pw )
   {
     pw.print( dbs.size() );
-    for( final Iterator< ? extends IDataBlock> dbsIt = dbs.iterator(); dbsIt.hasNext(); )
+    for( final IDataBlock dataBlock : dbs )
     {
       pw.print( ' ' );
-      final int i = dbsIt.next().getCoordCount();
+      final int i = dataBlock.getCoordCount();
       pw.print( i );
     }
     pw.println();
@@ -203,7 +201,6 @@ public class PrfWriter
     return dbh;
   }
 
-  
   private void writeMetadata( final PrintWriter pw )
   {
     for( int i = 1; i < 14; i++ )
