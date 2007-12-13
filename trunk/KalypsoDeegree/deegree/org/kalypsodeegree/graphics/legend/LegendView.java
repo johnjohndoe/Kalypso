@@ -62,10 +62,8 @@
 package org.kalypsodeegree.graphics.legend;
 
 /**
- * 
- * 
  * @version $Revision$
- * @author $author$
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
 public interface LegendView
 {

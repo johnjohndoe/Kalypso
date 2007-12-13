@@ -698,16 +698,16 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public boolean removeLinkedAsAggregationFeature( final Feature parentFeature, final IRelationType linkProp, final String childFeatureId )
   {
     final Object prop = parentFeature.getProperty( linkProp );
+
     if( linkProp.isList() )
-    {
-      final List list = (List) prop;
-      return list.remove( childFeatureId );
-    }
+      return ((List) prop).remove( childFeatureId );
+
     if( childFeatureId.equals( parentFeature.getProperty( linkProp ) ) )
     {
       parentFeature.setProperty( linkProp, null );
       return true;
     }
+
     return false;
   }
 

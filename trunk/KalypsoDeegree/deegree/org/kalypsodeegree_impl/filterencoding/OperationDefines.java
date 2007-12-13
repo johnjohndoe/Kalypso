@@ -128,6 +128,8 @@ public class OperationDefines
 
   public static final int PROPERTYISBETWEEN = 107;
 
+  public static final int PROPERTYISNOTEQUALTO = 108;
+
   // logical operations
   public static final int AND = 200;
 
@@ -148,9 +150,9 @@ public class OperationDefines
    * 
    * @return TYPE_SPATIAL / TYPE_COMPARISON / TYPE_LOGICAL / TYPE_UNKNOWN
    */
-  public static int getTypeByName( String name )
+  public static int getTypeByName( final String name )
   {
-    OperationInfo operationInfo = names.get( name.toLowerCase() );
+    final OperationInfo operationInfo = names.get( name.toLowerCase() );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
     return operationInfo.m_type;
@@ -161,9 +163,9 @@ public class OperationDefines
    * 
    * @return BBOX / PROPERTYISEQUAL / AND / ...
    */
-  public static int getIdByName( String name )
+  public static int getIdByName( final String name )
   {
-    OperationInfo operationInfo = names.get( name.toLowerCase() );
+    final OperationInfo operationInfo = names.get( name.toLowerCase() );
     if( operationInfo == null )
       return UNKNOWN;
     return operationInfo.m_id;
@@ -174,9 +176,9 @@ public class OperationDefines
    * 
    * @return TYPE_SPATIAL / TYPE_COMPARISON / TYPE_LOGICAL / TYPE_UNKNOWN
    */
-  public static int getTypeById( int id )
+  public static int getTypeById( final int id )
   {
-    OperationInfo operationInfo = ids.get( new Integer( id ) );
+    final OperationInfo operationInfo = ids.get( new Integer( id ) );
     if( operationInfo == null )
       return TYPE_UNKNOWN;
     return operationInfo.m_type;
@@ -187,18 +189,18 @@ public class OperationDefines
    * 
    * @return null / Name of operation
    */
-  public static String getNameById( int id )
+  public static String getNameById( final int id )
   {
 
-    OperationInfo operationInfo = ids.get( new Integer( id ) );
+    final OperationInfo operationInfo = ids.get( new Integer( id ) );
     if( operationInfo == null )
       return null;
     return operationInfo.m_name;
   }
 
-  private static void addOperationInfo( int id, String name, int type )
+  private static void addOperationInfo( final int id, final String name, final int type )
   {
-    OperationInfo operationInfo = new OperationInfo( id, type, name );
+    final OperationInfo operationInfo = new OperationInfo( id, type, name );
     names.put( name, operationInfo );
     names.put( name.toLowerCase(), operationInfo );
     names.put( name.toUpperCase(), operationInfo );
@@ -230,12 +232,13 @@ public class OperationDefines
     addOperationInfo( PROPERTYISLIKE, "PropertyIsLike", TYPE_COMPARISON );
     addOperationInfo( PROPERTYISNULL, "PropertyIsNull", TYPE_COMPARISON );
     addOperationInfo( PROPERTYISBETWEEN, "PropertyIsBetween", TYPE_COMPARISON );
+    addOperationInfo( PROPERTYISNOTEQUALTO, "PropertyIsNotEqualTo", TYPE_COMPARISON );
 
     addOperationInfo( AND, "And", TYPE_LOGICAL );
     addOperationInfo( OR, "Or", TYPE_LOGICAL );
     addOperationInfo( NOT, "Not", TYPE_LOGICAL );
   }
-  
+
 }
 
 class OperationInfo
@@ -246,7 +249,7 @@ class OperationInfo
 
   String m_name;
 
-  OperationInfo( int id, int type, String name )
+  OperationInfo( final int id, final int type, final String name )
   {
     m_id = id;
     m_type = type;

@@ -109,6 +109,11 @@
             label="ListPropert toString"
             name="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression">
       </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ListSizeExpression"
+            label="List-Size Expression"
+            name="org.kalypsodeegree_impl.filterencoding.ListSizeExpression">
+      </function>
    </extension>
 
 </plugin>
