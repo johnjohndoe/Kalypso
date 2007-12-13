@@ -1,4 +1,4 @@
-!     Last change:  MD   28 Nov 2007    6:58 pm
+!     Last change:  MD    7 Aug 2007   12:17 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -216,12 +216,6 @@ IF (nprof.eq.1.or.strbr.ne.0.) then
                                                                         
   CALL grnzh (q, indmax, hgrenz, xi, hi, s)
 
-ELSEIF (nprof.gt.1 .and. BERECHNUNGSMODUS == 'REIB_KONST') then  !MD neu**
-  write (UNIT_OUT_LOG, 2000) hmin
-  2000 format (/1X, 'Aufruf von GRNZH in WSPANF mit   hmin = ', F8.3)
-
-  CALL grnzh (q, indmax, hgrenz, xi, hi, s)
-
 ENDIF
 
 100 CONTINUE
@@ -229,15 +223,15 @@ ENDIF
 
 IF (wsanf.lt.0.) then
 !MD  Ermittlung Anfangs-WSP aus stationaer gleichfoermigen Gefaelle = wsanf
-!MD  bzw. aus dem ggbnen Reibungsgefa  elle fuer das gesamte Gewaesser
+!MD  bzw. aus dem gegebenen Reibungsgefaelle fuer das gesamte Gewaesser
                                                                         
   !UT   SETZE EINUNGSVERLUST NULL
   hborda = 0.
                                                                         
   !UT    Erstes profil, DANN str = 100
-  IF (nprof.eq.1) then
+  IF (nprof .eq. 1) then
     str = 100.
-  ELSEIF (nprof.gt.1 .and. BERECHNUNGSMODUS == 'REIB_KONST') then !MD neu fuer Reibungsgefaelle
+  ELSE IF (nprof > 1 .and. BERECHNUNGSMODUS == 'REIB_KONST') then !MD neu fuer Reibungsgefaelle
    !MD neu** str = strbr
     str = 100.
 
@@ -247,7 +241,7 @@ IF (wsanf.lt.0.) then
    !MD neu** rg1 = rg
    !MD neu** vmp1 = vmp (nprof - 1)
    !MD neu** fges1 = fges
-  Endif
+  END IF
 
   CALL station (wsanf, nprof, hgrenz, q, hr, hv, rg, indmax, hvst, &
       & hrst, psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl, &
@@ -266,7 +260,7 @@ IF (wsanf.lt.0.) then
                                                                         
   ENDIF
                                                                         
-ELSEIF (wsanf.eq.0.) then
+ELSE IF (wsanf.eq.0.) then
   ! Ermittlung des Wasserspiegels als Grenztiefe
   ikenn = 1
   hr = hgrenz

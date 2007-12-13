@@ -895,6 +895,7 @@ subroutine schreib_erg_stat_unglf(ianz, nprof, qstep, rqmax, rqmin, stat)
 USE DIM_VARIABLEN
 USE AUSGABE_LAENGS
 USE MOD_ERG
+USE MOD_INI
 USE IO_UNITS
 
 implicit none
@@ -997,10 +998,6 @@ Schieben: do j = 1, anz_q
 end do Schieben
 
 
-
-
-
-
 ! -------------------------------------------------------------------------------------
 ! Hauptschleife
 alle_profile: do i = 1, anz_prof_orig
@@ -1031,20 +1028,28 @@ alle_profile: do i = 1, anz_prof_orig
 
   Alle_Abfluesse: do j = 1, ianz
 
-    ! Für das erste Profil eines Abschnittes wird das Reibungsgefaelle bzw. die gesamte
-    ! Verlusthoehe nicht berechnet. Da fuer das Kalinin-Miljukow-Verfahren jedoch
-    ! nur das Wasserspiegelgefaelle von Interesse ist (zur Bestimmung des vorhandenen
-    ! Wasservolumens) kann es auch direkt aus der Wasserspiegelhoehe und dem Profilabstand
-    ! berechnet werden. Fuer das erste Profil wird das Gefaelle zwischen ersten und zweitem
-    ! Profil berechnet, fuer die folgenden Profile immer das Gefaelle zwischen
-    ! aktuellem und unterhalb liegendem Profil.
-    if (i == 1) then
-      ! Falls es sich um das erste Profil eines Abschnittes handelt
-      I_wsp = (out_PROF(i+1,j)%wsp - out_PROF(i,j)%wsp) / (1000.0 * ABS (out_PROF(i+1,j)%stat - out_PROF(i,j)%stat) )
-    else
-      ! Fuer alle anderen Profile
-      I_wsp = (out_PROF(i,j)%wsp - out_PROF(i-1,j)%wsp) / (1000.0 * ABS (out_PROF(i,j)%stat - out_PROF(i-1,j)%stat) )
-    end if
+    IF (BERECHNUNGSMODUS == 'REIB_KONST') THEN
+      I_wsp = out_PROF(i,j)%gefaelle   
+    ELSE
+      ! Für das erste Profil eines Abschnittes wird das Reibungsgefaelle bzw. die gesamte
+      ! Verlusthoehe nicht berechnet. Da fuer das Kalinin-Miljukow-Verfahren jedoch
+      ! nur das Wasserspiegelgefaelle von Interesse ist (zur Bestimmung des vorhandenen
+      ! Wasservolumens) kann es auch direkt aus der Wasserspiegelhoehe und dem Profilabstand
+      ! berechnet werden. Fuer das erste Profil wird das Gefaelle zwischen ersten und zweitem
+      ! Profil berechnet, fuer die folgenden Profile immer das Gefaelle zwischen
+      ! aktuellem und unterhalb liegendem Profil.
+      if (i == 1) then
+        IF (BERECHNUNGSMODUS == 'BF_NON_UNI' .and. ART_RANDBEDINGUNG =='UNIFORM_BOTTOM_SLOPE') THEN
+          I_wsp = GEFAELLE
+        ELSE  
+          ! Falls es sich um das erste Profil eines Abschnittes handelt
+          I_wsp = (out_PROF(i+1,j)%wsp - out_PROF(i,j)%wsp) / (1000.0 * ABS (out_PROF(i+1,j)%stat - out_PROF(i,j)%stat) )
+        END IF  
+      else
+        ! Fuer alle anderen Profile
+        I_wsp = (out_PROF(i,j)%wsp - out_PROF(i-1,j)%wsp) / (1000.0 * ABS (out_PROF(i,j)%stat - out_PROF(i-1,j)%stat) )
+      end if
+    END IF
 
     WSP_temp = out_PROF(i,j)%wsp
 

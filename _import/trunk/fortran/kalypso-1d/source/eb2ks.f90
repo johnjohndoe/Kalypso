@@ -1,4 +1,4 @@
-!     Last change:  MD   28 Nov 2007    6:58 pm
+!     Last change:  MD    7 Aug 2007    9:47 am
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -181,25 +181,12 @@ SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot)
 !HB   st_alpha --     Stationskilometer                                 
 !HB   gesamt_a --     gesamte durchstroemte Flaeche                     
 !HB   ***************************************************************** 
-!**                                                                     
-!**   AUFGERUFENEN ROUTINEN                                             
-!**   ---------------------                                             
-!**   lindy(v_ks(ii),l_ks(ii),ax(ii),ay(ii),                            
-!**   1                   dp(ii),hvor(ii),isener,                       
-!**   2                 u_ks(ii),a_ks(ii),ak_mi,a_li,a_re,h_li,h_re,    
-!**   3              aks_li,aks_re,alpha,cwr(ii),alp(ii),
-!**   4              also(ii),anl(ii),anb(ii),vnvv(ii),cwn(ii),if_l(ii))
-!**   pasche(nknot,iprof,hr,bf,itere2,br,qvor1,qvor2,isener,
-!**        vt_l,anl_l,anb_l,om_l,ct_l,bm_l,alt_l,h_t,vt_n,v1_hg,
-!**        if_pa)                                                       
-                                                                        
-!***********************************************************************
                                                                         
 
                                                                         
-!**   ------------------------------------------------------------------
-!**   VEREINBARUNGSTEIL                                                 
-!**   ------------------------------------------------------------------
+! ------------------------------------------------------------------
+! VEREINBARUNGSTEIL                                                 
+! ------------------------------------------------------------------
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
@@ -208,15 +195,15 @@ USE IO_UNITS
 USE MOD_INI
 
 ! Calling variables
-CHARACTER(LEN=1), INTENT(IN) 	  	:: iprof        ! Art des Profils
-REAL, INTENT(OUT)                       :: hv           ! Geschwindigkeitsverlusthoehe
-REAL, INTENT(INOUT)                     :: rg           ! Reibungsverlusthoehe
-REAL, INTENT(IN)                        :: rg_alt       ! Reibungsverlusthoehe (alt)
-REAL, INTENT(IN)                        :: q            ! Abfluss
-REAL, INTENT(IN)                        :: q_alt        ! Abfluss (alt)
-INTEGER, INTENT(IN)                     :: itere1       ! Zahl der Iterationen
-INTEGER, INTENT(IN)                     :: nstat        ! Anzahl der Stationen/Nummer der aktuellen Station
-REAL, INTENT(IN)                  	:: hr		! Wasserspiegelhöhe
+CHARACTER(LEN=1), INTENT(IN)	:: iprof        ! Art des Profils
+REAL, INTENT(OUT)               :: hv           ! Geschwindigkeitsverlusthoehe
+REAL, INTENT(INOUT)             :: rg           ! Reibungsverlusthoehe
+REAL, INTENT(IN)                :: rg_alt       ! Reibungsverlusthoehe (alt)
+REAL, INTENT(IN)                :: q            ! Abfluss
+REAL, INTENT(IN)                :: q_alt        ! Abfluss (alt)
+INTEGER, INTENT(IN)             :: itere1       ! Zahl der Iterationen
+INTEGER, INTENT(IN)             :: nstat        ! Anzahl der Stationen/Nummer der aktuellen Station
+REAL, INTENT(IN)                :: hr		! Wasserspiegelhöhe
 INTEGER, INTENT(IN) 		  	:: nknot 	! Anzahl der Profilpunkte
 
 
@@ -327,9 +314,9 @@ itere2 = 0
 
 IF (itere1.le.1 .and. nstat.gt.1 .and. BERECHNUNGSMODUS/='REIB_KONST') then   !MD neu**
   isenen = q_alt * q_alt / rg_alt / rg_alt
-ELSEIF (itere1.le.1.and.nstat.le.1) then
+ELSE IF (itere1 .le. 1 .and. nstat .le. 1) then
   isenen = 0.001
-ELSEIF (nstat.eq.1) then
+ELSE IF (nstat .eq. 1) then
   isenen = q * q / rg / rg
 ELSEIF (nstat.gt.1 .and. BERECHNUNGSMODUS=='REIB_KONST') then   !MD neu**
   isenen = q * q / rg / rg
@@ -342,7 +329,7 @@ ELSEIF (itere1.gt.1) then
 ENDIF
 
 !MD Vermeidung von Unendlichgroßem Gefaelle oder negativem Gefaelle
-IF (isenen.gt.1 .or. isenen.le.0) then
+IF (isenen .gt. 1.0 .or. isenen .le. 0.0) then
   isenen = 0.001
 ENDIF
 
@@ -351,7 +338,7 @@ ENDIF
 difi = 1000.
 
 !UT   difi = abs(isener-isenen)/isener ----------------------------------
-DO 15 WHILE(difi.gt.0.01)
+DO 15 WHILE(difi .gt. 0.01)
 ! -----------------------------------------------------------------------
 
   !***********************************************************************
@@ -419,7 +406,7 @@ DO 15 WHILE(difi.gt.0.01)
 
     hvor (ii) = hr - (h_ks (ii) + h_ks (ii + 1) ) / 2.
 
-    IF (b_ks (ii) .gt.1.e-01) then
+    IF (b_ks(ii) .gt. 1.e-01) then
       alpha = atan (abs (h_ks (ii) - h_ks (ii + 1) ) / b_ks (ii) )
     ELSE
       alpha = 0.
@@ -439,9 +426,9 @@ DO 15 WHILE(difi.gt.0.01)
     !***********************************************************************
 
 
-    IF (ii.gt.ischl) then
+    IF (ii .gt. ischl) then
 
-      IF (hr.gt.h_ks (ii - 1) ) then
+      IF (hr .gt. h_ks(ii-1) ) then
         h_li = h_ks (ii - 1) - h_ks (ii)
       ELSE
         h_li = hr - h_ks (ii)
@@ -459,9 +446,9 @@ DO 15 WHILE(difi.gt.0.01)
 
     ENDIF
 
-    IF (ii.lt.ischr - 1) then
+    IF (ii .lt. (ischr-1) ) then
 
-      IF (hr.gt.h_ks (ii + 2) ) then
+      IF (hr .gt. h_ks (ii + 2) ) then
         h_re = h_ks (ii + 2) - h_ks (ii + 1)
       ELSE
         h_re = hr - h_ks (ii + 1)
@@ -479,22 +466,13 @@ DO 15 WHILE(difi.gt.0.01)
 
     ENDIF
 
-    !DK 10/05/01       ! this is the line **
-
-    !DK       Deactivated 22/05/01 for KOUWEN:
-    !         if (0.60*hvor(ii).lt.k_ks(ii)) then
-    !              ak_mi=0.60*hvor(ii)
-    !         else
-    !              ak_mi=k_ks(ii)
-    !         endif
-
     !DK      Activated 22/05/01 for KOUWEN:
     ak_mi = k_ks (ii)
 
 
     !UT      FEHLERMELDUNG WENN WSPHOEHE hvor IM VORLAND NULL, ABER EINE
     !UT      DURCHSTROEMTE FLAECHE a_ks VORLIEGT
-    IF (hvor (ii) .lt.1.e-06.and.a_ks (ii) .gt.1.e-05) then
+    IF (hvor(ii) .lt. 1.e-06 .and. a_ks(ii) .gt. 1.e-05) then
       PRINT * , 'Fehler! Fliesstiefe Vorland inkorrekt '
       PRINT * , 'Voraussichtlich Geometriefehler.'
       PRINT * , 'Beim Entwickler melden.'
@@ -598,26 +576,6 @@ DO 15 WHILE(difi.gt.0.01)
 
 
     !***********************************************************************
-    !        DK 29/05/01
-    !         PRINT *,'Sub EB2KS - left floodplain!'
-    !         PRINT *,'Value after LINDY:'
-    !         print *,'ibed=',ibed
-    !         print *,'icwl=',icwl,' icwm=',icwm,' icwr=',icwr
-    !         PRINT *
-    !***********************************************************************
-
-
-    !***********************************************************************
-    !        DK 29/05/01
-    !         PRINT *,'Sub EB2KS - left floodplain!'
-    !         PRINT *,'Values before correction:'
-    !         print *,'l_ks(ii)=',l_ks(ii),' v_ks(ii)=',v_ks(ii)
-    !         PRINT *
-    !***********************************************************************
-
-
-
-    !***********************************************************************
     !JK   PROGRAMMERWEITERUNG, 23. JUNI 2000, JANA KIEKBUSCH
     !JK   ------------------------------------------------------------------
     !      if (maean_ber.eq.'bwk') then
@@ -708,9 +666,9 @@ DO 15 WHILE(difi.gt.0.01)
 
   !UT   FALLS FLAECHE RECHTES VORLAND GROESSER NULL
   !UT   rk = WIDERSTANDSBEIWERT, v = GESCHWINDIGKEIT, qt = ABFLUSS
-  IF (f(1).gt.1.e-06 .and. qt(1).gt.1.e-06) then
+  IF (f(1) .gt. 1.e-06 .and. qt(1) .gt. 1.e-06) then
 
-    IF (actu.gt.0.and.actf.gt.0) then
+    IF (actu .gt. 0 .and. actf .gt. 0) then
       ! rk(1)=alsum/actu
       v(1) = qt (1) / actf
 
@@ -779,7 +737,7 @@ DO 15 WHILE(difi.gt.0.01)
 
     hvor (ii) = hr - (h_ks (ii) + h_ks (ii + 1) ) / 2.
 
-    IF (b_ks (ii) .gt.1.e-01) then
+    IF (b_ks(ii) .gt. 1.e-01) then
       alpha = atan (abs (h_ks (ii + 1) - h_ks (ii) ) / b_ks (ii) )
     ELSE
       alpha = 0.
@@ -801,8 +759,8 @@ DO 15 WHILE(difi.gt.0.01)
     !***********************************************************************
 
 
-    IF (ii.gt.1) then
-      IF (hr.gt.h_ks (ii - 1) ) then
+    IF (ii .gt. 1) then
+      IF (hr .gt. h_ks(ii - 1) ) then
         h_li = h_ks (ii - 1) - h_ks (ii)
       ELSE
         h_li = hr - h_ks (ii)
@@ -818,8 +776,8 @@ DO 15 WHILE(difi.gt.0.01)
       aks_li = 0.
     ENDIF
 
-    IF (ii.lt.nknot - 1) then
-      IF (hr.gt.h_ks (ii + 2) ) then
+    IF (ii .lt. (nknot- 1) ) then
+      IF (hr .gt. h_ks(ii + 2) ) then
         h_re = h_ks (ii + 2) - h_ks (ii + 1)
       ELSE
         h_re = hr - h_ks (ii + 1)
@@ -845,7 +803,7 @@ DO 15 WHILE(difi.gt.0.01)
 
     ak_mi = k_ks (ii)
 
-    IF (hvor (ii) .lt.1.e-06.and.a_ks (ii) .gt.1.e-05) then
+    IF (hvor(ii) .lt. 1.e-06 .and. a_ks(ii) .gt. 1.e-05) then
       PRINT * , 'Fehler! Fliesstiefe Vorland inkorrekt '
       PRINT * , 'Voraussichtlich Geometriefehler.'
       PRINT * , 'Beim Entwickler melden.'
@@ -1042,15 +1000,15 @@ DO 15 WHILE(difi.gt.0.01)
 
   !WP  70 CONTINUE  Never used
 
-  IF (itere1.le.1.and.itere2.le.1) then
+  IF (itere1 .le. 1 .and. itere2 .le. 1) then
 
-    IF (itrli.le.ischl.and.itrre.ge.ischr) then
+    IF (itrli .le. ischl .and. itrre .ge. ischr) then
       bf (1) = b_hg / 2.
       bf (2) = b_hg / 2.
-    ELSEIF (itrli.le.ischl) then
+    ELSE IF (itrli .le. ischl) then
       bf (1) = 1.e-06
       bf (2) = b_hg
-    ELSEIF (itrre.ge.ischr) then
+    ELSE IF (itrre .ge. ischr) then
       bf (1) = b_hg
       bf (2) = 1.e-06
     ELSE
@@ -1069,7 +1027,7 @@ DO 15 WHILE(difi.gt.0.01)
       ! endif
       ! ---------------------------------------
 
-      IF (k_ks (itrli - 1) .le.1.e-06) then
+      IF (k_ks (itrli - 1) .le. 1.e-06) then
         PRINT * , 'Fehler in Rauheitsdefinition Vorland.'
         PRINT * , 'Ueberpruefe Rauheit auf linkem Vorland.'
         STOP 'Programmabbruch in SUB PASCHE'
@@ -1080,7 +1038,7 @@ DO 15 WHILE(difi.gt.0.01)
       bf (2) = b_hg - bf (1)
     ENDIF
 
-  ELSEIF (abs (bf (1) ) .le.1.e-04) then
+  ELSE IF (abs (bf (1) ) .le.1.e-04) then
 
     IF (itrli.ne.1.or.ischl.lt.itrli) then
       IF (abs (l_ks (itrli - 1) ) .le.1.e-04) then
@@ -1096,7 +1054,7 @@ DO 15 WHILE(difi.gt.0.01)
       bf (2) = b_hg - bf (1)
     ENDIF
 
-  ELSEIF (abs (bf (2) ) .le.1.e-04) then
+  ELSE IF (abs (bf (2) ) .le.1.e-04) then
 
     IF (itrre.ne.nknot.or.ischr.gt.itrre) then
       IF (abs (l_ks (itrli - 1) ) .le.1.e-04) then
@@ -1124,37 +1082,28 @@ DO 15 WHILE(difi.gt.0.01)
 
   ibed = 2
 
-  !***********************************************************************
-  !        DK 29/05/01
-  !         PRINT *,'Sub EB2KS - main channel!'
-  !         PRINT *,'Value before PASCHE:'
-  !         print *,'ibed=',ibed
-  !         print *,'ifum=',ifum
-  !         PRINT *
-  !***********************************************************************
   !write (*,*) 'In EB2ks. vor Aufruf von PASCHE. v_hg  = ', v_hg
-
 
   CALL pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2,      &
    & isener, vt_l, anl_l, anb_l, om_l, ct_l, bm_l, alt_l, &
    & h_t, vt_n, v1_hg, if_pa, formbeiwert)
 
-  !***********************************************************************
-  !        DK 29/05/01
-  !         PRINT *,'Sub EB2KS - main channel!'
-  !         PRINT *,'Value after PASCHE:'
-  !         print *,'ibed=',ibed
-  !         print *,'ifum=',ifum
-  !         PRINT *
-  !***********************************************************************
-
-  !***********************************************************************
-  !        DK 29/05/01
-  !         PRINT *,'Sub EB2KS - main channel!'
-  !         PRINT *,'Values before correction:'
-  !         print *,'l_hg=',l_hg,' v_hg=',v_hg
-  !         PRINT *
-  !***********************************************************************
+  !write (UNIT_OUT_LOG,*) 'In EBKSN. Nach Aufruf von PASCHE. Linke Trennflaeche:'
+  !write (UNIT_OUT_LOG, 2000) vt_l(1), anl_l(1), anb_l(1), om_l(1), ct_l(1), &
+  !                         & bm_l(1), alt_l(1), h_t(1), vt_n(1), v1_hg
+    
+  !2000 format (1X, 'Trennfl. Geschw. vt_l = ', F10.4, /, &
+  !           & 1X, 'Nachlauflaenge anl_l  = ', F10.4, /, &
+  !           & 1X, 'Nachlaufbreite anb_l  = ', F10.4, /, &
+  !           & 1X, 'Bewuchsparam. om_l    = ', F10.4, /, &
+  !           & 1X, 'Hilfsparam. ct_l      = ', F10.4, /, &
+  !           & 1X, 'Mitwirk. Vorland B.   = ', F10.4, /, &
+  !           & 1X, 'Lambda Trennflaeche   = ', F10.4, /, &
+  !           & 1X, 'Hoehe Trennfl.        = ', F10.4, /, &
+  !           & 1X, 'Trennfl. Geschw. vt_n = ', F10.4, /, &
+  !           & 1X, 'Mittl. Geschw. FlussS = ', F10.4)
+  
+  ! write (UNIT_OUT_LOG,*) 'In EBKSN. Nach Aufruf von PASCHE. alt_l(2)  = ', alt_l(2)
 
   !**********************************************************************
   !JK  PROGRAMMERWEITERUNG, 23. JUNI 2000, JANA KIEKBUSCH
@@ -1172,15 +1121,6 @@ DO 15 WHILE(difi.gt.0.01)
   !      end if
   !JK  ENDE PROGRAMMERWEITERUNG
   !**********************************************************************
-
-
-  !***********************************************************************
-  !        DK 29/05/01
-  !         PRINT *,'Sub EB2KS - main channel!'
-  !         PRINT *,'Values after correction:'
-  !         print *,'l_hg=',l_hg,' v_hg=',v_hg
-  !         PRINT *
-  !***********************************************************************
 
 
   !write (*,*) 'In EBKSN. nach Aufruf von PASCHE. v_hg  = ', v_hg
@@ -1202,19 +1142,8 @@ DO 15 WHILE(difi.gt.0.01)
   psi = 0.
 
   !JK   BERECHNUNG psi FUER LINKES VORLAND
-  !WP 110 continue !Never Used
-
-  !WP 19.04.2005
-  !write (*,9010)
-  !9010 format (1X, 'Jetzt bei Marke 110 in EB2KS')
-  !WP 19.04.2005
 
   DO ii = ischl, itrli - 1
-
-    !write (*,9011) ischl, itrli, l_ks(ii)
-    !9011 format (1X, '  ISCHL    = ', I5, /, &
-    !           & 1X, '  ITRLI    = ', I5, /, &
-    !           & 1X, '  L_KS(ii) = ', F10.4 )
 
     IF (l_ks (ii) .gt. 1.e-6) then
       !JK  ERWEITERUNG FUER MAEANDRIERUNG
@@ -1232,7 +1161,7 @@ DO 15 WHILE(difi.gt.0.01)
 
   !JK   BERECHNUNG psi FUER RECHTES VORLAND
   DO ii = itrre, ischr - 1
-    IF (l_ks (ii) .gt.1.e-6) then
+    IF (l_ks (ii) .gt. 1.e-6) then
       !JK  ERWEITERUNG FUER MAEANDRIERUNG
       !    if (maean_ber.eq.'bwk') then
       !      pst=a_ks(ii)*((r_ks(ii)/l_m(ii))**0.5)
@@ -1259,7 +1188,7 @@ DO 15 WHILE(difi.gt.0.01)
   !JK   BERECHNUNG RAUHIGKEITSHOEHE rg
   rg = psi * sqrt (8. * g)
 
-  IF (rg_alt.le.1.e-04) then
+  IF (rg_alt .le. 1.e-04) then
     psi = 1. / (8. * g * psi * psi)
   ELSE
     psi_alt = rg_alt / sqrt (8. * g)
@@ -1272,130 +1201,15 @@ DO 15 WHILE(difi.gt.0.01)
   !JK   BERECHNUNG GESAMTABFLUSS qgs
   qgs = qt (1) + qt (2) + qt (3)
 
-
-  !***********************************************************************
-  !     Warnings coming from friction factor calculation in main channel!
-
-  !     a) COLEBROOK-WHITE
-  !      if (icwm.eq.1) then
-  !         PRINT *,'*****************************************************
-  !         PRINT *,'Calculation using COLEBROOK-WHITE eq. in main channel
-  !         PRINT *,'-----------------------------------------------------
-  !         PRINT *,'WARNING: k_s > 0.6*r_hy !!!
-  !         PRINT *,'k_s set to the max. allowable value (k_s=0.6*r_hy)
-  !         PRINT *,'*****************************************************
-  !         PRINT *
-  !      endif
-
-  !     b) FUENTES
-  !      if (ifum.eq.1) then
-  !         PRINT *,'***********************************'
-  !         PRINT *,'Calculation using FUENTES procedure'
-  !         PRINT *,'-----------------------------------'
-  !         PRINT *,'WARNING: r_hy/k_s > 20 !           '
-  !         PRINT *,'***********************************'
-  !         PRINT *
-  !      endif
-
-  !     c) KOUWEN
-  !      if (ikom.eq.1) then
-  !          PRINT *,'**************************************************'
-  !          PRINT *,'Calculation using KOUWEN procedure in main channel'
-  !          PRINT *,'--------------------------------------------------'
-  !          PRINT *,'WARNING - MEI > 200 N/m2!                         '
-  !          PRINT *,'Vegetation should be considered non-flexible one! '
-  !          PRINT *,'**************************************************'
-  !          PRINT *
-  !      endif
-  !      if (ikom.eq.2) then
-  !          PRINT *,'****************************************************
-  !          PRINT *,'Calculation using KOUWEN procedure in main channel
-  !          PRINT *,'--------------------------------------------------
-  !          PRINT *,'WARNING - r_hy < k_g !!!
-  !          PRINT *,'The second term in the resistance equation excluded!
-  !          PRINT *,'****************************************************
-  !          PRINT *
-  !      endif
-
-  !     Warnings coming from friction factor calculation in floodplains!
-
-  !     a) COLEBROOK-WHITE
-  !     Left floodplain
-  !      if (icwl.eq.1) then
-  !         PRINT *,'**************************************************'
-  !         PRINT *,'Calc. using COLEBROOK-WHITE eq. in left floodplain'
-  !         PRINT *,'--------------------------------------------------'
-  !         PRINT *,'WARNING: k_s > 0.6*r_hy !!!                       '
-  !         PRINT *,'k_s set to the max. allowable value (k_s=0.6*r_hy)'
-  !         PRINT *,'**************************************************'
-  !         PRINT *
-  !      endif
-  !     Right floodplain
-  !      if (icwr.eq.1) then
-  !         PRINT *,'***************************************************'
-  !         PRINT *,'Calc. using COLEBROOK-WHITE eq. in right floodplain'
-  !         PRINT *,'---------------------------------------------------'
-  !         PRINT *,'WARNING: k_s > 0.6*r_hy !!!                        '
-  !         PRINT *,'k_s set to the max. allowable value (k_s=0.6*r_hy) '
-  !         PRINT *,'***************************************************'
-  !         PRINT *
-  !      endif
-
-  !     b) KOUWEN
-  !     Left floodplain
-  !      if (ikol.eq.1) then
-  !          PRINT *,'*************************************************'
-  !          PRINT *,'Calc. using KOUWEN procedure in left floodplain  '
-  !          PRINT *,'-----------------------------------------------  '
-  !          PRINT *,'WARNING - MEI > 200 N/m2!                        '
-  !          PRINT *,'Vegetation should be considered non-flexible one!'
-  !          PRINT *,'*************************************************'
-  !          PRINT *
-  !      endif
-  !      if (ikol.eq.2) then
-  !          PRINT *,'****************************************************
-  !          PRINT *,'Calc. using KOUWEN procedure in left floodplain
-  !          PRINT *,'-----------------------------------------------
-  !          PRINT *,'WARNING - r_hy < k_g !!!
-  !          PRINT *,'The second term in the resistance equation excluded!
-  !          PRINT *,'****************************************************
-  !          PRINT *
-  !      endif
-  !     Right floodplain
-  !      if (ikor.eq.1) then
-  !          PRINT *,'*************************************************'
-  !          PRINT *,'Calc. using KOUWEN procedure in right floodplain '
-  !          PRINT *,'------------------------------------------------ '
-  !          PRINT *,'WARNING - MEI > 200 N/m2!                        '
-  !          PRINT *,'Vegetation should be considered non-flexible one!'
-  !          PRINT *,'*************************************************'
-  !          PRINT *
-  !      endif
-  !      if (ikor.eq.2) then
-  !          PRINT *,'****************************************************
-  !          PRINT *,'Calc. using KOUWEN procedure in right floodplain
-  !          PRINT *,'------------------------------------------------
-  !          PRINT *,'WARNING - r_hy < k_g !!!
-  !          PRINT *,'The second term in the resistance equation excluded!
-  !          PRINT *,'****************************************************
-  !          PRINT *
-  !      endif
-  !***********************************************************************
-
-
-
-  IF (itere2.gt.20) then
+  IF (itere2 .gt. 20) then
     !**   SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, 9006) itere2, difi
     9006 FORMAT (1X, 'Warnung! Keine Konvergenz bei der Berechnung des Gefaelles!', /, &
-             & 1X, 'Nach ',I3,' Iterationen betraegt der Fehler :', F10.4)
+               & 1X, 'Nach ',I3,' Iterationen betraegt der Fehler :', F10.4)
     GOTO 181
   ENDIF
 
-
-
   difi = abs (isener - isenen) / isener
-
 
 !WP Ende DO 15-Schleife--------------------------------------------------------
 15 CONTINUE
@@ -1426,7 +1240,7 @@ DO i = itrre, ischr - 1
 END DO
 
 !JK   FEHLERWARNUNG SOHLBERECHNUNG
-IF (if_pa.ne.0) then
+IF (if_pa .ne. 0) then
 
   !**      SCHREIBEN IN KONTROLLFILE
   WRITE (UNIT_OUT_LOG, '(''Warnung! w- '',i8,'' bei der Sohlberechnung'')') if_pa
@@ -1435,7 +1249,7 @@ ENDIF
 
 uges = u (1) + u (2) + u (3)
 
-IF (uges.gt.0) then
+IF (uges .gt. 0) then
 
   rhges = fges / uges
   vges = q / fges

@@ -414,4 +414,20 @@ Kalypso 2.0.5.2      3. Dezember 2007
      Betroffene Routinen: wspber, wspanf, station, verluste, eb2ks
 
                                                            Monika Donner, 03.12.2007  
+                                                           
+Kalypso 2.0.6       13. Dezember 2007
+-------------------------------------
+     
+1.)  Fehlerbehebung bei der Berechnung der Trennflaechenrauhigkeit nach Pasche.
+     
+2.)  Bugfix bei der Berechnung der Sohlrauhigkeit in Verbindung mit extremen 
+     Rauhigkeiten.
+     
+5.)  Im Projekt-Ordner /PROF/ wird nach einer Datei mit dem Namen "Kalypso_add.cfg"
+     gesucht. Hier können im INI-Format zusaetzliche oder abweichende Konfigurationen
+     für die Berechnung festgelegt werden. Die Datei wird nur gelesen, wenn sie
+     existiert und die WSPWIN-Oberfläche verwendet wird.
+     
+                                                           Wolf Plöger, 13.12.2007                                                            
+                                                           
                                                           

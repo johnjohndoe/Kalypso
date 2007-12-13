@@ -137,6 +137,7 @@ COMMON / ob_alpha / alpha_ja
 ! -----------------------------------------------------------------------------
 
 
+! COMMON-Block /GEF_SOHL/ -----------------------------------------------------
 !HB   Uebergabe Sohlgefaelle aus SUB NORMBER
 REAL             :: g_sohl
 COMMON / gef_sohl / g_sohl
@@ -176,8 +177,6 @@ INTEGER, INTENT(IN)            :: nr_q_out
 !write (*,*) 'Teilabfluss QTP(i,2)         = ', qtp(i,2)
 !write (*,*) 'Teilabfluss QTP(i,3)         = ', qtp(i,3)
 
-
-
 !WP 11.03.2006
 ! Speichern der ausgegebenen Werte in dem globalen Ergebnis-Modul
 
@@ -204,7 +203,7 @@ IF (Q_Abfrage.eq.'IN_SCHLEIFE') then
   out_PROF(i,nr_q)%tau    = (rkp(i,2)/8)*rho*vp(i,2)**2 ! Sohlschubspannung im Flussschlauch [N/m2]
   out_PROF(i,nr_q)%alphaIW  = Alpha_IW(i)               ! Impulsstrombeiwert aus eb2ks [-]
   out_PROF(i,nr_q)%alphaEW  = Alpha_EW(i)               ! Energiestrombeiwert aus eb2ks [-]
-  out_PROF(i,nr_q)%gefaelle = SQRT (g_sohl**2)          ! Reibungsgefaelle [-]
+  out_PROF(i,nr_q)%gefaelle = ABS(g_sohl)          ! Reibungsgefaelle [-]
 
 ELSEIF (Q_Abfrage.eq.'BR_SCHLEIFE') then
   do j = 1, 3
@@ -228,7 +227,7 @@ ELSEIF (Q_Abfrage.eq.'BR_SCHLEIFE') then
   out_Qin_PROF(i,nr_q_out,nr_q)%tau    = (rkp(i,2)/8)*rho*vp(i,2)**2    ! Sohlschubspannung im Flussschlauch [N/m2]
   out_Qin_PROF(i,nr_q_out,nr_q)%alphaIW  = Alpha_IW(i)                  ! Impulsstrombeiwert aus eb2ks [-]
   out_Qin_PROF(i,nr_q_out,nr_q)%alphaEW  = Alpha_EW(i)                  ! Energiestrombeiwert aus eb2ks [-]
-  out_Qin_PROF(i,nr_q_out,nr_q)%gefaelle = SQRT (g_sohl**2)             ! Reibungsgefaelle [-]
+  out_Qin_PROF(i,nr_q_out,nr_q)%gefaelle = ABS(g_sohl)             ! Reibungsgefaelle [-]
 
 END if
 

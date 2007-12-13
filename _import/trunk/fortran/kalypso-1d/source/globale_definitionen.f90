@@ -1,4 +1,4 @@
-!     Last change:  MD    3 Dec 2007   10:59 am
+!     Last change:  MD   15 Aug 2007    9:48 am
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.5.2 '
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 03.12.2007'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.6   '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 13.12.2007'
 
 end module VERSION
 
@@ -86,8 +86,8 @@ implicit none
 
 save
 
-REAL, parameter :: nue  = 1.0E-06
-REAL, parameter :: e    = 2.71828
+REAL, parameter :: nue  = 1.30E-06
+REAL, parameter :: e    = 2.71828182846
 REAL, parameter :: g    = 9.80665
 REAL, parameter :: rho  = 1000.0
 REAL, parameter :: epsi = 1.0E-03
@@ -111,6 +111,7 @@ INTEGER	:: UNIT_EIN_QWERT       ! Abflussdatei
 INTEGER	:: UNIT_EIN_KM          ! Teilgebietedatei
 INTEGER	:: UNIT_EIN_PSI         ! (Einzel-)Verlustbeiwerte
 INTEGER	:: UNIT_EIN_INI         ! KALYPSO-Konfigurationsdatei
+INTEGER :: UNIT_EIN_ADD_INI     ! Zusaetzliche Konfigurationsdatei im /PROF Ordner
 
 INTEGER	:: UNIT_OUT_LOG         ! Kontroll.log
 INTEGER	:: UNIT_OUT_LAMBDA_I    ! lambda_i.txt
@@ -151,6 +152,7 @@ CHARACTER(LEN=nch80) 			:: NAME_EIN_QWERT       ! Abflussdatei
 CHARACTER(LEN=nch80) 			:: NAME_EIN_KM          ! Teilgebietedatei
 CHARACTER(LEN=nch80) 			:: NAME_EIN_PSI         ! (Einzel-)Verlustbeiwerte
 CHARACTER(LEN=nch80) 			:: NAME_EIN_INI         ! KALYPSO-Konfigurationsdatei
+CHARACTER(LEN=nch80) 			:: NAME_EIN_ADD_INI     ! Zusaetzliche Konfigurationsdatei im /PROF Ordner
 
 CHARACTER(LEN=nch80) 			:: NAME_OUT_LOG         ! Kontroll.log
 CHARACTER(LEN=nch80) 			:: NAME_OUT_LAMBDA_I    ! lambda_i.txt
@@ -420,6 +422,7 @@ REAL :: GEFAELLE
 CHARACTER(LEN=4) :: VERZOEGERUNGSVERLUST        ! = DVWK
                                                 ! = BJOE
                                                 ! = DFG
+                                                ! = NON
 
 CHARACTER(LEN=5) :: ITERATIONSART               ! = SIMPL
                                                 ! = EXACT

@@ -1,5 +1,5 @@
 !     Last change:  MD    4 Jul 2007    1:50 pm
-!--------------------------------------------------------------------------
+! ---------------------------------------------------------------------------- 
 ! This code, lindy.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
 ! 1D steady state calculations: KALYPSO-1D
@@ -36,43 +36,62 @@
 !
 ! Wolf Ploeger, 18 August 2004
 ! Research Associate
-!***********************************************************************
+! ---------------------------------------------------------------------------- 
 
 SUBROUTINE lindy (vxmvor, lamvog, ax, ay, dp, h_mi, meil, is, &
      & u_mi, a_mi, rau_mi, a_li, a_re, h_li, h_re, rau_li, rau_re, alpha, &
      & cwr, lamv, aln_mi, axn1, b05, vv2, cwn, ifehl, fbw)
 
-!***********************************************************************
-!**                                                                     
-!**   SUBROUTINE LINDY                                                  
-!**                                                                     
-!**   ALLGEMEINE BESCHREIBUNG:                                          
-!**   ------------------------                                          
-!**   DIESES PROGRAMM BERECHNET DEN WIDERSTANDSBEIWERT IM VORLAND, DER  
-!**   SICH ZUSAMMENSETZT AUS DEM WIDERSTAND AUS BEWUCHS UND DEM WIDER-  
-!**   STAND AUS DER SOHLRAUHEIT.                                        
-!**                                                                     
-!**   LITERATUR: BWK-MERKBLATT, Teil 1, SEPTEMBER 1999                  
-!**
-!**                                                                     
-!**   DIREKT UEBERGEBENE VARIABLEN                                      
-!**   ----------------------------                                      
-!**   alpha        - NEIGUNGSWINKEL SOHLE, BOESCHUNG QUER ZUR FLIESS-   
-!**                  RICHTUNG                                           
-!**   a_mi/li/re   - FLAECHE DES TEILABSCHNITTES DES VORLANDES [m]      
-!**   b05          -
-!**   h_mi/li/re   - WASSERSPIEGELHOEHE IM VORLAND [M]
-!**   is           - GEFAELLE [-]
-!**   lamv         - WIDERSTANDSBEIWERT DURCH BEWUCHS [m]
-!**   rau_mi/li/re - KORRIGIERTE RAUHEIT DES TEILABSCHNITTES DES        
-!**                  VORLANDES [m]                                      
+! ---------------------------------------------------------------------------- 
+! ALLGEMEINE BESCHREIBUNG:                                          
+! ------------------------                                          
+! DIESES PROGRAMM BERECHNET DEN WIDERSTANDSBEIWERT IM VORLAND, DER  
+! SICH ZUSAMMENSETZT AUS DEM WIDERSTAND AUS BEWUCHS UND DEM WIDER-  
+! STAND AUS DER SOHLRAUHEIT.                                        
+!                                                                    
+! LITERATUR: BWK-MERKBLATT, Teil 1, SEPTEMBER 1999                  
+!
+! DIREKTE AUSGABE                                                   
+! ---------------                                                   
+! LAMDA-VORLAND UND GESCHWINDIGKEIT VORLAND                         
+!
+! ---------------------------------------------------------------------------- 
 
-!**                                                                     
-!**   DIREKTE AUSGABE                                                   
-!**   ---------------                                                   
-!**   LAMDA-VORLAND UND GESCHWINDIGKEIT VORLAND                         
-!**                                                                     
-!**                                                                     
+!WP 01.02.2005
+USE KONSTANTEN
+
+! Calling variables
+
+REAL, INTENT(OUT) 	:: vxmvor             	! MITTLERE GESCHWINDIGKEIT IM VORLAND [m/s]
+REAL, INTENT(OUT) 	:: lamvog             	! LAMBDA_GES auf dem Vorland [-]
+
+REAL, INTENT(IN)  	:: ax, ay, dp         	! Bewuchsparameter [m]
+REAL, INTENT(IN)  	:: h_mi               	! Wassertiefe auf dem Vorland [m]
+REAL, INTENT(INOUT)	:: meil               	! DK, 21/06/01 Stiffness parameter in Kouwen procedure
+REAL, INTENT(IN)  	:: is                 	! Energieliniengefaelle [-]
+REAL, INTENT(IN)  	:: u_mi               	! BENETZTER UMFANG DES TEILABSCHNITTES DES VORLANDES [m]
+REAL, INTENT(IN)  	:: a_mi               	! QUERSCHNITTSFLAECHE DES TEILABSCHNITTES DES VORLANDES [m2]
+REAL, INTENT(IN)    :: rau_mi               ! Korrigierte Rauhigkeit (ks) des Abschnittes [m]
+
+REAL, INTENT(IN)  	:: a_li               	! QUERSCHNITTSFLAECHE DES TEILABSCHNITTES DES VORLANDES [m2]
+REAL, INTENT(IN)  	:: a_re               	! QUERSCHNITTSFLAECHE DES TEILABSCHNITTES DES VORLANDES [m2]
+REAL, INTENT(IN)  	:: h_li               	! Wassertiefe auf dem Vorland [m]
+REAL, INTENT(IN)  	:: h_re               	! Wassertiefe auf dem Vorland [m]
+REAL, INTENT(IN)    :: rau_li               ! Korrigierte Rauhigkeit (ks) des Abschnittes [m]
+REAL, INTENT(IN)    :: rau_re               ! Korrigierte Rauhigkeit (ks) des Abschnittes [m]
+REAL, INTENT(IN)    :: alpha                ! NEIGUNGSWINKEL SOHLE, BOESCHUNG QUER ZUR FLIESSRICHTUNG   
+
+REAL, INTENT(OUT)   :: cwr                  ! Formwiderstandsbeiwert eines Zylinders in einer Gruppe
+REAL, INTENT(OUT)   :: lamv                 ! WIDERSTANDSBEIWERT DURCH BEWUCHS [-]
+REAL, INTENT(OUT)   :: aln_mi               ! WIDERSTANDSBEIWERT DURCH SOHLRAUHEIT [-]
+REAL, INTENT(OUT)   :: axn1                 ! Nachlauflaenge [m]
+REAL, INTENT(OUT)   :: b05                  ! Nachlaufbreite [m]
+REAL, INTENT(OUT)   :: vv2                  ! relative Anströmgeschwindigkeit
+REAL, INTENT(INOUT) :: cwn                  ! Formwiderstandsbeiwert eines Zylinders in einer Gruppe ??
+INTEGER, INTENT(OUT):: ifehl                ! Fehlernummer (=0 wenn fehlerfrei!)
+REAL, INTENT(IN)  	:: fbw                	! Formbeiwert fuer LAMBDA-Berechnung
+
+
 !**   IN DIESER SUBROUTINE WEITERHIN VERWENDETE VARIABLEN               
 !**   ---------------------------------------------------               
 !**   a_mi    - durchströmte Fläche eines Teilabschnittes des Vorlandes 
@@ -148,7 +167,6 @@ SUBROUTINE lindy (vxmvor, lamvog, ax, ay, dp, h_mi, meil, is, &
 !**                                                                     
 !**   AUFGERUFENE ROUTINEN                                              
 !**   --------------------                                              
-!**     - korrigi       (wenn gewuenscht)                               
 !**     - fuent_l       (wenn gewuenscht)                               
 !**     - cwsub(a,b,c)  a = geschwindigkeit                             
 !**                     b = stabdurchmesser                             
@@ -170,38 +188,12 @@ SUBROUTINE lindy (vxmvor, lamvog, ax, ay, dp, h_mi, meil, is, &
 ! ------------------------------------------------------------------
 ! Vereinbarungsteil
 ! ------------------------------------------------------------------
-                                                                        
-!WP 01.02.2005
-USE KONSTANTEN
-
-! Calling variables
-REAL, INTENT(OUT) 	:: vxmvor             	! MITTLERE GESCHWINDIGKEIT IM VORLAND [m/s]
-REAL, INTENT(OUT) 	:: lamvog             	! Lambda_ges auf dem Vorland [-]
-REAL, INTENT(IN)  	:: ax, ay, dp         	! Bewuchsparameter [m]
-REAL, INTENT(IN)  	:: h_mi               	! Wassertiefe auf dem Vorland [m]
-REAL, INTENT(INOUT)	:: meil               	! DK, 21/06/01 Stiffness parameter in Kouwen procedure
-REAL, INTENT(IN)  	:: is                 	! Energieliniengefaelle [-]
-REAL, INTENT(IN)  	:: u_mi               	! BENETZTER UMFANG DES TEILABSCHNITTES DES VORLANDES [m]
-REAL, INTENT(IN)  	:: a_mi               	! QUERSCHNITTSFLAECHE DES TEILABSCHNITTES DES VORLANDES [m2]
-REAL, INTENT(IN)        :: rau_mi               ! Rauhigkeit (ks) des Abschnittes [m]
-REAL, INTENT(OUT)       :: cwr                  ! Formwiderstandsbeiwert eines Zylinders in einer Gruppe
-REAL, INTENT(OUT)       :: lamv                 ! WIDERSTANDSBEIWERT DURCH BEWUCHS [-]
-REAL, INTENT(OUT)       :: aln_mi               ! WIDERSTANDSBEIWERT DURCH SOHLRAUHEIT [-]
-REAL, INTENT(OUT)       :: axn1                 ! Nachlauflaenge [m]
-REAL, INTENT(OUT)       :: b05                  ! Nachlaufbreite [m]
-REAL, INTENT(OUT)       :: vv2                  ! relative Anströmgeschwindigkeit
-REAL, INTENT(INOUT)     :: cwn                  ! Formwiderstandsbeiwert eines Zylinders in einer Gruppe ??
-INTEGER, INTENT(OUT)    :: ifehl                ! Fehlernummer (=0 wenn fehlerfrei!)
-
-REAL, INTENT(IN)  	:: fbw                	! Formbeiwert fuer LAMBDA-Berechnung
-
 
 INTEGER, parameter :: iterm = 20
 
 REAL :: GET_CW_UN
 REAL :: GET_A_NL
 REAL :: GET_LAMBDA, rhy
-                                                                        
 
 
 !***********************************************************************
@@ -226,11 +218,11 @@ vxmvor = 0.0
 
 
 !WP 07.05.2004
-IF (ibed.eq.1) then
+IF (ibed .eq. 1) then
   ! linkes Vorland
   tbedr = tbr1
   tgrar = tgr1
-ELSEIF (ibed.eq.3) then
+ELSE IF (ibed .eq. 3) then
   ! rechtes Vorland
   tbedr = tbr3
   tgrar = tgr3
@@ -238,7 +230,7 @@ ELSE
   ! Flussmitte
   tbedr = tbr2
   tgrar = tgr2
-ENDif
+END IF
 !WP 07.05.2004
 
 
@@ -276,7 +268,7 @@ ENDif
 !UT   Abfrage ob Flaeche a_mi Teilabschnitt Vorland groesser Null
 !UT   dann setzen von lamda und Fliessgeschw. null im Vorland
 !UT   sonst hydraul. Durchmesser Vorland berechnen
-IF (abs (a_mi) .le.1.e-02) then
+IF (abs (a_mi) .le. 1.e-02) then
   vxmvor = 0.0
   lamvog = 0.0
   RETURN
@@ -313,7 +305,7 @@ aln_mi = 0.09
 !UT   alpha - Boeschungswinkel
 !UT   lamv  - aus Bewuchs
 !UT   lamvog- komplett
-IF (abs (dp - 0.0) .gt.1.e-04) then
+IF (abs (dp - 0.0) .gt. 1.e-04) then
   lamv = 4. * cwn * h_mi * dp / ax / ay * cos (alpha)
 ELSE
   lamv = 0.
@@ -324,7 +316,7 @@ lamvog = aln_mi + lamv
 
 !UT   Berechnung Geschw. Vorland, Formle 6, BWK, S.15
 !MD   Abfangen von x/0
-if (dhyd.gt.0.D0 .and. lamvog.gt.0.D0) then
+if (dhyd .gt. 0.D0 .and. lamvog .gt. 0.D0) then
   vxmvor = (2. * g * is * dhyd / lamvog) **0.5
 else
   vxmvor = 0.0
@@ -368,7 +360,7 @@ itcwm = 40
 
 
 ! MAIN DO 3000-Loop-------------------------------------------------------------
-DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
+DO 3000 WHILE(abs (cwr - cwn) .gt. 1.e-02)
 
   il3000 = 0
   il_fr30 = 0
@@ -386,7 +378,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
 
 
   !UT   FALLS KEIN BEWUCHSPARAMETER ax VORLIEGT, ALLES NULL
-  IF (abs (ax - 0.0) .le.1.e-04) then
+  IF (abs (ax - 0.0) .le. 1.e-04) then
 
     cwr = 1.0
     lamv = 0.0
@@ -455,7 +447,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     !                                               /* schleife 3
 
 
-    IF (fr1.gt.fr2) then
+    IF (fr1 .gt. fr2) then
 
       !UT          ZAEHLEN DER ITERATIONSSCHRITTE FUER FROUDZAHL
       iter = iter + 1
@@ -511,7 +503,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
         fr2 = 1.e+06
         difmin = 1.e+06
 
-        DO 2550 WHILE(abs (fr1 - fr2) / fr2.gt.1.e-02)
+        DO 2550 WHILE(abs (fr1 - fr2) / fr2 .gt. 1.e-02)
 
           fr2a = fr2
           fr2 = (ystern * (ystern**2 - 1.) / (2. * (ystern - ay / (ay - dp) ) ) ) **.5
@@ -523,10 +515,10 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
             yn = ystern
           ENDIF
 
-          IF (fr2 - fr2a.ge.0) then
+          IF (fr2 - fr2a .ge. 0) then
             ystern = ystern - 0.001
 
-            IF (ystern.lt.0) then
+            IF (ystern .lt. 0) then
               ystern = yn
               fr2 = fr2min
               !JK  VERLASSEN DER SCHLEIFE
@@ -632,8 +624,8 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
 
   !UT   BEDINGUNG FUER DURCHSTROEMTE FLAECHE a-li? UND
   !UT   WASSERSPIEGELHOEHE LINKER ABSTURZ h_li (HIER FEHLT EIN PUNKT 0.0!)
-  IF ( (abs (a_li) .le.0.01) .and. (h_li.gt.0) ) then
-    IF (2 * a_li / h_li**2.le.0.05) then
+  IF ( (abs (a_li) .le. 0.01) .and. (h_li .gt. 0) ) then
+    IF ( (2 * a_li / h_li**2) .le. 0.05) then
       ak_li = rau_li
       uk_li = h_li
       !***********************************************************************
@@ -646,7 +638,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     !***********************************************************************
   ENDIF
 
-  IF ( (abs (a_re) .le.0.01) .and. (h_re.gt.0) ) then
+  IF ( (abs (a_re) .le. 0.01) .and. (h_re .gt. 0) ) then
     IF (2 * a_li / h_li**2.le.0.05) then
       ak_re = rau_re
       uk_re = h_re
@@ -711,7 +703,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
 
 
     !UT   MITTELUNG DER ITERIERTEN WERTE
-    IF (iter27.gt.1) then
+    IF (iter27 .gt. 1) then
       dh_mi = (dhn_mi + dh_mi) / 2.
       dh_li = (dhn_li + dh_li) / 2.
       dh_re = (dhn_re+dh_re) / 2.
@@ -770,29 +762,6 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
       dellam = 1000.
       it4max = 20
 
-      !**************************************************************
-      !**   KORREKTUR, 23. JUNI 2000, JANA KIEKBUSCH
-      !**   ----------------------------------------------------------
-      !**
-      !**   DAS GRENZKRITERIUM FUER DEN ks-WERT BEZIEHT SICH AUF DEN
-      !**   HYDRAULISCHEN RADIUS, NICHT AUF DEN HYDRAULISCHEN DURCH-
-      !**   MESSER. DIE SUBROUTINE 'KORRIGI' KORRIGIERT DAS GRENZ-
-      !**   KRITERIUM DURCH DIE UMRECHNUNG VON HYDRAULISCHEN DURCH-
-      !**   MESSER AUF HYDRAULISCHEN RADIUS (FAKTOR 4).
-      !**
-      !**   KORREKTUR ANWENDEN:
-      !**     korrekt = 'j' --> GRENZKRITERIUM KORRIGIEREN
-      !**
-      !**     korrekt = 'n' --> GRENZKRITERIUM BEIBEHALTEN
-      !      korrekt='n'
-      !      if (korrekt.eq.'j') then
-      !          call korrigi(rau_mi,rau_li,rau_re,ak_li,ak_re,dh_mi,dh_li,
-      !     +    dh_re,ak1_mi,ak1_li,ak1_re)
-      !          GOTO 333
-      !      endif
-      !**
-      !**   ENDE PROGRAMMERWEITERUNG VOM 23.06.2000
-      !***************************************************************
 
       !***********************************************************************
       !     DK, 21/05/01 - deactivated in order to apply Kouwen's procedure!
@@ -1102,7 +1071,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     !UT       BERECHNUNG HYDRAULISCHER DURCHMESSER MITTE MIT
     !UT       lamv DURCH BEWUCHS
                                                          ! al_mi changed
-    if (dhyd.gt.0.D0 .and. lamvog.gt.0.D0) then
+    if (dhyd .gt. 0.D0 .and. lamvog .gt. 0.D0) then
       dhn_mi = (aln_mi + lamv) / lamvog * dhyg
     else
       dhn_mi = 0.0
@@ -1112,7 +1081,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     !         ueberlagerung im Vorland die bewuchsbedingte Rauheit zur Be-
     !         rechnung des hydrl. Durchmessers nicht mit anzusetzen.
                                                                         
-    if (dhyd.gt.0.D0 .and. lamvog.gt.0.D0) then
+    if (dhyd .gt. 0.D0 .and. lamvog .gt. 0.D0) then
       dhn_li = aln_li / lamvog * dhyg                   ! al_li changed
       dhn_re = aln_re / lamvog * dhyg                   ! al_re changed
      else
@@ -1136,7 +1105,7 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     !UT       BERECHNUNG DER NOCH VORLIEGENDEN ABWEICHUNGEN IM HYDR. DURCHM. 
     delhyd = abs (dh_mi - dhn_mi) + abs (dh_re-dhn_re) + abs (dh_li - dhn_li)
                                                                         
-    IF (iter27.gt.it27ma) then
+    IF (iter27 .gt. it27ma) then
 
       il2710 = 1000
                                                                         

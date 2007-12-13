@@ -1,4 +1,4 @@
-!     Last change:  MD    3 Jul 2007    5:59 pm
+!     Last change:  WP    9 Nov 2007    5:59 pm
 !--------------------------------------------------------------------------
 ! This code, sohlef.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -7,7 +7,7 @@
 ! Subroutines:
 ! - sohlef
 !
-! Copyright (C) 2004  ULF TESCHKE & WOLF PLOEGER.
+! Copyright (C) 2004-2007  ULF TESCHKE & WOLF PLOEGER.
 !
 ! This library is free software; you can redistribute it and/or
 ! modify it under the terms of the GNU Lesser General Public License
@@ -86,8 +86,6 @@ USE BEWUCHS
 USE IO_UNITS
 USE MOD_INI
 
-!---------------------
-! ST 23.03.2005
 ! Calling Variables
 REAL, INTENT (IN) :: u_hg               ! benetzter Unfang des Flussschlauchs
 REAL, INTENT (IN) :: r_hg               ! hydraulischer Radius des Flusschlauchs
@@ -108,29 +106,24 @@ REAL, INTENT (OUT) :: l_hg              	! Widerstandsbeiwert im Flussschlauch
 REAL, INTENT (OUT) :: v_hg              	! mittlere Fließgeschwindigkeit im Flussschlauch
 REAL, INTENT (OUT) :: l_ks (maxkla)        	! Widerstandsbeiwert einer Teilfläche
 REAL, INTENT (OUT) :: r_ks (maxkla)        	! hydraulischer Radius einer Teilfläche
-REAL, DIMENSION(1:2), INTENT (OUT) :: l_tr  	! Widerstandsbeiwert der Trennfläche
+REAL, DIMENSION(1:2), INTENT (INOUT) :: l_tr  	! Widerstandsbeiwert der Trennfläche
 INTEGER, INTENT(OUT) :: if_so           	! Fehlerkennzahl
 
 ! Local variables
 REAL :: GET_LAMBDA                      ! Aufruf REAL function für lambda
-REAL :: isenk                           ! Funktion des Energieliniengefälle
 REAL :: dhynn                           ! Fließdurchmesser einer Teilfläche
-REAL :: ks_iter                         ! abgeminderter ks-Wert einer Teilfläche
 REAL :: ln_ks (maxkla)                  ! Widerstandsbeiwert einer Teilfläche
 REAL :: rhynn (maxkla)                  ! hydraulischer Radius einer Teilfläche
-REAL :: resof (maxkla)                  ! Reynoldszahl
 REAL :: dellam (maxkla)                 ! Grenzbedingung für DO-Schleife lambda
 REAL :: delrh (maxkla)                  ! Grenzbedingung für DO-Schleife rhy
-REAL :: grenzkrit (maxkla)              ! GRENZKRITERIUM NACH BATHURST
 REAL :: dm (maxkla)                     ! mittlerer Durchmesser der Rauheitselemente
-
+REAL,PARAMETER :: accuracy = 1.0E-5     ! Genauigkeitsschranke fuer REAL Variablen
 
 ! COMMON-Block /AUSGABELAMBDA/ -----------------------------------------------------
 REAL, DIMENSION(maxkla) :: lambda_teilflaeche
 CHARACTER(LEN=nch80) 	:: lambdai
 COMMON / ausgabelambda / lambda_teilflaeche, lambdai
 ! ----------------------------------------------------------------------------------
-
 
 
 ! COMMON-Block /FLEXI/ -------------------------------------------------------------
@@ -186,43 +179,18 @@ if_so = 0
 ibed = 2
 
                                                                         
-!**   ------------------------------------------------------------------
-!**   BERECHNUNGEN                                                      
-!**   ------------------------------------------------------------------
+! ------------------------------------------------------------------
+! BERECHNUNGEN                                                      
+! ------------------------------------------------------------------
 
 
 !UT   ZUWEISUNG VON KONSTANTEN AUF DIE FELDERWERTE                      
 !UT   LAMBDA(i) UND HYDRAUL. RADIUS
 !ST   STARTWERTE FÜR DIE ITERATIONEN
 DO i = itrli, itrre-1
-   ln_ks (i) = 0.0001
-   rhynn (i) = r_hg
-   !write (*,*) 'In SOHLEF. Zeile 194.  u_ks(',i,') = ', u_ks(i)
+   ln_ks(i) = 0.05
+   rhynn(i) = r_hg
 END DO
-
-                                                                        
-!***********************************************************************
-!     DK, 31/05/01                                                      
-!      PRINT *,'Entered Sub SOHLEF!'                                    
-!      do 1001 i=itrli,itrre-1                                          
-!          PRINT *,'i=',i,' ln_ks(i)=',ln_ks(i),' rhynn(i)=',rhynn(i)   
-!1001  continue                                                         
-!      PRINT *                                                          
-!***********************************************************************
-                                                                        
-!***********************************************************************
-!     DK, 31/05/01                                                      
-!      PRINT *,'Beginning of Sub SOHLEF!'                               
-!      PRINT *,'ibed=',ibed                                             
-!      PRINT *,'icwl=',icwl,' ikol=',ikol                               
-!      PRINT *,'icwm=',icwm,' ikom=',ikom,' ifum=',ifum                 
-!      PRINT *,'icwr=',icwr,' ikor=',ikor                               
-!      PRINT *                                                          
-!***********************************************************************
-                                                                        
-                                                                        
-!JK    WAR SCHON DEAKTIVIERT,30.04.00, JK                               
-!      endif                                                            
                                                                         
 !UT   STARTBEDINGUNGEN SCHLEIFE 3000
 sumdd = 1000.
@@ -231,7 +199,7 @@ iter3 = 0
 !JK   START BERECHNUNGSSCHLEIFE 3000 BIS ENDE SUBROUTINE (MAXIMAL 20 Durchläufe)
 !JK   ---------------------------------------------------------------
 !ST   Berechnung des hydraulischen Radius für jeden Teilquerschnitt
-DO 3000 WHILE(abs (sumdd) .gt.0.005)
+DO 3000 WHILE(abs (sumdd) .gt. 0.005)
 
    !UT     SETZEN DES FEHLERKENNWERTES
    is3000 = 0
@@ -246,19 +214,10 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
    iter2 = 0
    sumdel = 1000.
                                                                         
-                                                                        
-   !*********************************************************************
-   !      DK, 31/05/01
-   !      PRINT *,'Sub SOHLEF - entered the cycle for r_hy!'
-   !      PRINT *,'iter3=',iter3
-   !      PRINT *
-   !*********************************************************************
-                                                                        
-                                                                        
    !JK       BERECHNUNGSSCHLEIFE FUER WIDERSTANDSBEIWERT
    !JK       ----------------------------------------------------
    !ST  Lambda für jeden Teilabschnitt und gesamt = Sohle
-   DO 2000 WHILE(abs (sumdel) .gt.0.001)
+   DO 2000 WHILE(abs (sumdel) .gt. 0.001)
 
       !UT       SETZEN DES FEHLERKENNWERTES SCHLEIFE 2000
       is2000 = 0
@@ -279,41 +238,21 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
                                                                         
      !UT       FELDERZUWEISUNG DER WERTE
      DO i = itrli, itrre-1
-        l_ks (i) = ln_ks (i)
-        l_hg = l_ks (i) * u_ks (i) + l_hg
+        l_ks(i) = ln_ks(i)
+        l_hg    = l_hg + l_ks(i) * u_ks(i)
      END DO
-                                                                        
-                                                                        
-     !********************************************************************
-     !     DK, 31/05/01
-     !     PRINT *,'Sub SOHLEF - Contribution of the main channel!'
-     !     do i=itrli,itrre-1
-     !       PRINT *,'i=',i
-     !       print *,'l_ks(i)=',l_ks(i),' u_ks(i)=',u_ks(i),' l_hg=',l_hg
-     !     end do
-     !     PRINT *
-     !     PRINT *,'l_hg=',l_hg
-     !     PRINT *
-     !*******************************************************************
                                                                         
      !ST  Abfrage: Art der Gerinnegliederung und Zuweisung der Trennflächenrauheiten
      !JK       WENN GEGLIEDERTES GERINNE OHNE VORLANDBEWUCHS
-     IF (ifall.eq.22) then
-        l_tr (1) = l_ks (itrli)
+     IF (ifall .eq. 22) then
 
-        !***********************************************************************
-        !  DK, 12/06/01 - IMPORTANT: l_ks(itrre) changed to l_ks(itrre-1)!!!
-        !  In previous case, it takes lambda value of the first subsection in
-        !  right floodplain, which is not correct and is more expressed when
-        !  lambda in that subsection is high (calculated using Kouwen procedu
-        !  Now, it takes lambda value for the main channel!
+        l_tr (1) = l_ks (itrli)
         l_tr (2) = l_ks (itrre-1)
-        !***********************************************************************
                                                                         
      !JK       WENN GEGLIEDERTES GERINNE MIT EINSEITIGEM BEWUCHS
-     ELSEIF (ifall.eq.2) then
+     ELSE IF (ifall .eq. 2) then
 
-        IF (i1.eq.1) then
+        IF (i1 .eq. 1) then
            l_tr (i1) = l_ks (itrli)
         ELSE
            l_tr (i1) = l_ks (itrre-1)
@@ -322,7 +261,7 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
      ENDIF
                                                                         
      !UT       ABFRAGE OB UEBERHAUPT EIN BENETZTER UMFANG VORLIEGT
-     IF ( (u_hg + u_tr (1) + u_tr (2) ) .le.1.e-06) then
+     IF ( (u_hg + u_tr (1) + u_tr (2) ) .le. accuracy) then
         !WP 10.11.2004, Erweiterung der Fehlermeldung um Punkt b)
         write (*,2001)
         2001 format (/1X, 'Es ist ein Fehler aufgetreten: ', /, &
@@ -337,8 +276,8 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
      ENDIF
                                                                         
      !ST Summe über alle Teilflächen lambda * benetzter Umfang (Superpositionsprinzip)
-     !write (*,*) 'In SOHLEF. Zeile 334. L_HG = ', l_hg
-     l_hg = l_hg + l_tr (1) * u_tr (1) + l_tr (2) * u_tr (2)
+     !write (*,*) 'In SOHLEF. Zeile 296. L_HG = ', l_hg
+     !WP l_hg = l_hg + l_tr (1) * u_tr (1) + l_tr (2) * u_tr (2)
 
      !          l_hg = l_hg/(u_hg+u_tr(1)+u_tr(2))
      !***********************************************************************
@@ -348,44 +287,22 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
      !     instead of the line above:
      ku1 = 1
      ku2 = 1
-     IF (l_tr (1) .eq.0.) ku1 = 0
-     IF (l_tr (2) .eq.0.) ku2 = 0
+     IF (ABS(l_tr(1)) < accuracy) then
+       ku1 = 0
+     END IF  
+     IF (ABS(l_tr(2)) < accuracy) then
+       ku2 = 0
+     END IF  
+
+     l_hg = l_hg + l_tr(1)*u_tr(1)*ku1 + l_tr(2)*u_tr(2)*ku2
 
      !ST lambda_gesamt = (Summe lambda_i * lu_i) / lu_gesamt = lambda_So
-     !write (*,*) 'In SOHLEF. Zeile 347. L_HG = ', l_hg
 
-     l_hg = l_hg / (u_hg + ku1 * u_tr (1) + ku2 * u_tr (2) )
-     !write (*,*) 'In SOHLEF. Zeile 350. L_HG = ', l_hg
+     l_hg = l_hg / (u_hg + ku1*u_tr(1) + ku2*u_tr(2) )
 
-     !*********************************************************************
-                                                                        
-                                                                        
-     !*********************************************************************
-     !     DK, 31/05/01
-     !      PRINT *,'Sub SOHLEF - Contribution of imaginary walls!'
-     !      PRINT *,'ifall=',ifall
-     !      if (ifall.eq.22) then
-     !          PRINT *,'l_ks(itrli)=',l_ks(itrli)
-     !          print *,'l_ks(itrre-1)=',l_ks(itrre-1)
-     !      end if
-     !      if (ifall.eq.2) then
-     !          PRINT *,'i1=',i1
-     !          if (i1.eq.1) then
-     !             PRINT *,'l_ks(itrli)=',l_ks(itrli)
-     !          else
-     !              PRINT *,'l_ks(itrre-1)=',l_ks(itrre-1)
-     !          end if
-     !      end if
-     !      PRINT *
-     !      print *,'l_tr(1)=',l_tr(1),' u_tr(1)=',u_tr(1)
-     !      print *,'l_tr(2)=',l_tr(2),' u_tr(2)=',u_tr(2)
-     !      PRINT *,'l_hg=',l_hg
-     !      PRINT *
-     !*********************************************************************
-                                                                        
-                                                                        
+                                                                       
      !UT       SCHREIBEN IN KONTROLLDATEI, FALLS LAMBDA NULL -> Programmabbruch
-     IF (l_hg.lt.1.e-06) then
+     IF (l_hg < accuracy) then
 
         !write (UNIT_OUT_LOG, 1000) i, itere2, iter3, iter2, l_hg, v_hg, ln_ks(i), rhynn(i)
         write (UNIT_OUT_LOG, 1001)
@@ -423,250 +340,92 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
      !UT       BERECHNE MITTLERE FLIESSGESCHWINDIGKEIT IM FLUSSCHLAUCH v_hg
      !UT       z.B. UMGESTELLTE FORMEL 6, BWK, S.15
      v_hg = (8 * g * r_hg * isener / l_hg) **0.5
+     
+     !write (UNIT_OUT_LOG,1009) isener, r_hg, l_hg, v_hg
+     !1009 format(1X, 'Gefaelle I             = ', F10.6, /, &
+     !          & 1X, 'hydr. Radius r_hg      = ', F10.5, /, &
+     !          & 1X, 'lambda ges l_hg        = ', F10.5, /, &
+     !          & 1X, 'mittl. Fl.Geschw. v_hg = ', F10.5)
 
-     !write (*,*) 'In SOHLEF. V_HG = ', v_hg
+     !write (UNIT_OUT_LOG,1010) 'Iteration3', 'Iteration2', 'Abschnitt', 'R_HY', 'LAMBDA'
+     !1010 format (/1X, A12, A12, A12, A12, A12)
 
-     !***********************************************************************
-     !     DK, 31/05/01
-     !      PRINT *,'Sub SOHLEF!'
-     !      PRINT *,'r_hg=',r_hg,'isener=',isener,'v_hg=',v_hg
-     !      PRINT *
-     !***********************************************************************
-
-     !UT       SCHLEIFE 30, SCHREIBEN IN KONTROLLFILE
-     !UT       - FALLS EIN LAMBDA(i)= Widerstandsbeiwert NULL IST
-     !UT       - FALLS EIN RAUHEITSWERT(i) NULL IST
-     !ST    -> Programmabbruch
-     DO 30 i = itrli, itrre-1
+     all_points_in_main_ch: DO i = itrli, itrre-1
                                                                         
-        IF (ln_ks (i) .le.1.e-05) then
-           write (UNIT_OUT_LOG, '(3i2,4f8.4)') itere2, iter3, iter2, l_hg, v_hg, ln_ks (i) , rhynn (i)
+        IF (ln_ks (i) .le. accuracy) then
+           write (UNIT_OUT_LOG, '(3A5,4A10)') 'IT2', 'IT3', 'IT2', 'l_ges', 'v_m', 'ln_ks' , 'rhy'
+           write (UNIT_OUT_LOG, '(3I5,4F10.6)') itere2, iter3, iter2, l_hg, v_hg, ln_ks (i) , rhynn (i)
            PRINT * , 'Fehler bei ca. Zeile 215 in SUB SOHLEF. Beim Entwickler melden'
            PRINT * , 'ln_ks(i).le.1.e-05, ln_ks(i) = ', ln_ks (i)
            PRINT * , 'Fehler bei ca. Zeile 215 in SUB SOHLEF. Beim Entwickler melden'
            call stop_programm(0)
         ENDIF
                                                                         
-        IF (k_ks (i) .le.1.e-06) then
+        IF (k_ks (i) .le. accuracy) then
            WRITE ( * , '(''Fehler in der Rauhigkeitsdefinition.'')')
            WRITE ( * , '(''Rauhigkeit ist gleich Null an Station'',i3)') i
            WRITE ( * , '(''nicht uebergehbarer Fehler in SUB SOHLEF'')')
            call stop_programm(0)
         ENDIF
                                                                         
-                                                                        
-        !*******************************************************************
-        !             DK 31/05/01 - moved below !!!
-        !              if (k_ks(i).gt.0.60*rhynn(i)) then
-        !                  ks_iter = 0.60*rhynn(i)
-        !              else
-        !                  ks_iter = k_ks(i)
-        !              endif
-        !*******************************************************************
-                                                                        
-                                                                        
-        !JK           WAR SCHON DEAKTIVIERT, 30.4.00, JK
-        !             ln_ks(i)=(1./(-2.03*alog10(ks_iter/(4.*rhynn(i)*3.71))))**
-                                                                        
-        !JK           WENN BERECHNUNG NACH PASCHE
-        IF (FLIESSGESETZ == 'DW_M_FORMBW') THEN
-           !***********************************************************************
-           !             DK 31/05/01 - deactivated and "call fuent_s" moved below!
+        
+        IF (tbr2 .eq. 'd-50') then
 
-           !**           *****************************************************
-           !**           PROGRAMMERWEITERUNG, 16. JUNI 2000, JANA KIEKBUSCH
-           !**           -----------------------------------------------------
-           !**
-           !**           BERECHNUNGSART BESTIMMEN:
-           !**           ber_art_sohle = 'bwk' --> WIDERSTANDSGESETZ NACH BWK
-           !**                                     MIT RAUHEITSUNTERSCHEIDUNG
-           !**
-           !**           sonst                 --> WIDERSTANDSGESETZ NACH PASCHE
+          ! ------------------------------------------------------------
+          ! CALCULATION AFTER FUENTES
+          ! ------------------------------------------------------------
+          CALL fuent_s (rhynn (i), k_ks (i), dm (i), ln_ks (i) )
 
-           !UT                     LAEUFT NICHT MIT DIESER ERWEITERUNG AM 19.10.200
-           !UT                     BEI BERECHNUNG VON PROJEKT VORFLUT
-           !UT 191000              ber_art_sohle='bwk'
+        ELSE IF (tbr2 .eq. 'h-g ') then
 
-           !                 if (ber_art_sohle.eq.'bwk') then
+          ! ------------------------------------------------------------
+          ! CALCULATION AFTER KOUWEN
+          ! ------------------------------------------------------------
+          dhynn = 4 * rhynn (i)
 
-           !                   call fuent_s(v_hg,l_ks(i),rhynn(i),k_ks(i),resof(i),
-           !     +             grenzkrit(i),dm(i),ln_ks(i))
+          CALL kouwen (mei (i), isener, k_ks (i), tgr2, dhynn, ln_ks (i) )
 
-           !                   GOTO 222
+        ELSE IF (tbr2 .eq. 'k-s ') then
 
-           !                 else
-           !                   continue
-           !                 end if
-           !**
-           !**           ENDE PROGRAMMERWEITERUNG
-           !**           ******************************************************
+          !------------------------------------------------------------------
+          ! CALCULATION AFTER COLEBROOK-WHITE with form factor
+          !------------------------------------------------------------------
 
-           !             DK 31/05/01 - deactivated and "call fuent_s" moved below!
-           !***********************************************************************
+          !WP 09.11.2007 deaktiviert, weil ab Version 2.0.5
+          !IF (grenzkrit(i) .lt. 1.66667) ks_iter = 0.60 * rhynn (i)
 
+          !---------------------------------
+          !ST 23.03.2005
+          !Reynoldszahl wird in GET_LAMBDA berechnet, deaktiviert
+          !WP resof (i) = v_hg * 4 * rhynn (i) / nue
+          ln_ks(i)  = GET_LAMBDA(v_hg, rhynn(i), k_ks(i), fbw)
+          !---------------------------------
 
+          !WP 09.11.2007 folgende Zeile rausgenommen ab Version 2.0.5.1, weil nun 
+          !WP auch extreme Rauheiten regrechnet werden koennen.
+          !IF (grenzkrit (i) .lt.1.66667) icwm = 1
 
-
-           !***********************************************************************
-           !     DK, 21/05/01 - CALCULATION OF THE FRICTION FACTOR using
-           !     Colebrook-White formula, Kouwen or Fuentes procedure
-           !
-           !
-
-           !**               BERECHNUNG GRENZKRITERIUM NACH BATHURST, BWK, S.24
-           grenzkrit (i) = rhynn (i) / k_ks (i)
-
-           !***********************************************************************
-           !     DK, 31/05/01
-           !      PRINT *,'Sub SOHLEF!'
-           !      PRINT *,'i=',i
-           !      print *,'rhynn(i)=',rhynn(i),' k_ks(i)=',k_ks(i)
-           !      print *,'grenzkrit(i)=',grenzkrit(i)
-           !      PRINT *
-           !***********************************************************************
-
-           IF (tbr2.eq.'d-50') then
-
-              !**                   CALCULATION AFTER FUENTES
-              CALL fuent_s (rhynn (i), k_ks (i), dm (i), ln_ks (i) )
-
-           ELSEIF (tbr2.eq.'h-g ') then
-
-              !**             CALCULATION AFTER KOUWEN
-
-              !    PRINT *,'Sub SOHLEF!'
-              !    PRINT *,'Application of Kouwen procedure in main channel
-              !    PRINT *,'has not yet been checked!'
-              !    PRINT *
-
-              dhynn = 4 * rhynn (i)
-
-              !***********************************************************************
-              !     DK, 21/05/01
-              !      PRINT *,'Sub SOHLEF - It is entering Sub KOUWEN with these data:'
-              !      PRINT *,'ibed=',ibed,' isener=',isener,' k_ks(i)=',k_ks(i)
-              !      print *,'tgr2=',tgr2,' dhynn=',dhynn,' mei(i)=',mei(i)
-              !      PRINT *
-              !***********************************************************************
-
-              CALL kouwen (mei (i), isener, k_ks (i), tgr2, dhynn, ln_ks (i) )
-
-              !***********************************************************************
-              !     DK, 21/05/01
-              !      PRINT *,'Sub SOHLEF - Passed Sub KOUWEN!'
-              !      PRINT *,'isener=',isener,' k_ks(i)=',k_ks(i),' dhynn=',dhynn
-              !      PRINT *,'ln_ks(i)=',ln_ks(i)
-              !      PRINT *
-              !***********************************************************************
-
-              !**                   END OF CALCULATION AFTER KOUWEN
-
-           ELSEIF (tbr2.eq.'k-s ') then
-
-              !**                  CALCULATION AFTER COLEBROOK-WHITE
-              ks_iter = k_ks (i)
-
-              IF (grenzkrit (i) .lt.1.66667) ks_iter = 0.60 * rhynn (i)
-
-              !---------------------------------
-              !ST 23.03.2005
-              !Reynoldszahl wird in GET_LAMBDA berechnet, deaktiviert
-              resof (i) = v_hg * 4 * rhynn (i) / nue
-              ln_ks(i)  = GET_LAMBDA(v_hg, rhynn(i), ks_iter, fbw)
-              !---------------------------------
-
-              !**                   FORMEL NACH BWK-MERKBLATT, S.20, Formel 16 mit
-              !UT                   4*3.71=14.84, ABER OHNE FORMFAKTOR
-              !                      ln_ks(i) = (1./(-2.03*alog10(2.51/resof(i)
-              !     +                  /(l_ks(i)**0.5)+k_ks(i)/(4.*rhynn(i)*3.71))))**
-
-              !---------------------------------
-              !ST  23.03.2005 deaktiviert
-              !ln_ks (i) = (1. / ( - 2.03 * alog10 (2.51 / resof (i)       &
-              !&  / (l_ks (i) **0.5) + ks_iter / (4. * rhynn (i) * 3.71) ) ) ) ** 2
-              !---------------------------------
-
-              !***********************************************************************
-              !     DK, 21/05/01
-              !      PRINT *,'Sub SOHLEF - Colebrook-White formula applied!'
-              !      PRINT *,'v_hg=',v_hg,' rhynn(i)=',rhynn(i),'resof(i)=',resof(i)
-              !      PRINT *,'l_ks(i)=',l_ks(i),' ks_ite=',ks_iter,' dhynn=',4*rhynn(i
-              !      PRINT *,'ln_ks(i)=',ln_ks(i)
-              !      PRINT *
-              !***********************************************************************
-
-              !***********************************************************************
-              !                     Setting code for printing warning!
-              !                     Main channel
-              IF (grenzkrit (i) .lt.1.66667) icwm = 1
-              !***********************************************************************
-
-              !**                   END OF CALCULATION AFTER COLEBROOK-WHITE
-
-           ELSE
-
-              PRINT * , 'Sub SOHLEF!'
-              PRINT * , 'Name of bottom roughness type given improperly!'
-              PRINT * , 'Modify the name in PRF file!'
-              PRINT *
-
-           ENDIF
-
-           !
-           !
-           !     DK, 21/05/01 - CALCULATION OF THE FRICTION FACTOR using
-           !     Colebrook-White formula, Kouwen or Fuentes procedure
-           !***********************************************************************
-
-           !***********************************************************************
-           !      DK, 31/05/01
-           !      PRINT *,'Sub SOHLEF!'
-           !      PRINT *,'ln_ks(i)=',ln_ks(i)
-           !      PRINT *
-           !***********************************************************************
-
-
-
-        !JK           BERECHNUNG NACH COLEBROOK
         ELSE
-           ! FLIESSGESETZ /= 'DW_M_FORMBW'
-           ! -----------------------------
 
-           !write (*,*) 'In SOHLEF, bevor LAMBDA-Berechnung!'
-
-           !UT              BERECHNUNG EINER ENERGIEFUNKTION?
-           isenk = isener * (1. + isener**2.) **0.5
-
-           !UT              BERECHNUNG Dhyd AUS Rhyd
-           dhy1 = 4 * rhynn (i)
-           !UT              BERECHNUNG HILFSFAKTOR
-           factor = nue * 2.51 / (dhy1 * (2. * g * dhy1 * isenk) **0.5)
-
-           !UT              BERECHNUNG REYNOLDSZAHL resof
-           resof (i) = v_hg * 4 * rhynn (i) / nue
-
-           !UT              BERECHNUNG LAMBDA
-           ln_ks(i) = (1. / (-2.03 * LOG10 (factor+ (k_ks(i) / (4.* rhynn(i)*3.71)) ) ) ) ** 2
-
-           !ln_ks(i)  = GET_LAMBDA(v_hg, rhynn(i), ks_iter, fbw)
+          PRINT * , 'Sub SOHLEF!'
+          PRINT * , 'Name of bottom roughness type given improperly!'
+          PRINT * , 'Modify the name in PRF file!'
+          call stop_programm(0)
 
         ENDIF
                                                                         
-                                                                        
-        !UT       EINSPRUNGLABEL AENDERUNG KIEKBUSCH
-        !222           continue
-                                                                        
+        !write (UNIT_OUT_LOG, 1011) iter3, iter2, i, rhynn(i), ln_ks(i)
+        !1011 format (1X, I12, I12, I12, F12.4, F12.7)
+        
         !UT           BERECHNUNG DER GESAMTABWEICHUNG WIDERSTANDSBEIWERT
         dellam (i) = abs (ln_ks (i) - l_ks (i) )
         sumdel = sumdel + dellam (i)
 
-
-     30 END do
-
-                                                                        
+     END do all_points_in_main_ch
                                                                         
      !UT           ABBRUCHKRITERIUM WENN ITERATION UEBER 20
-     IF (iter2.gt.20) then
+     !WP IF (iter2 .gt. 20) then
+     IF (iter2 .gt. 50) then
 
          is2000 = 1
 
@@ -678,38 +437,20 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
    2000 CONTINUE
                                                                         
                                                                         
-   !***********************************************************************
-   !     DK, 31/05/01
-   !      PRINT *,'Sub SOHLEF - exited the cycle for lambda!'
-   !      PRINT *,'iter2=',iter2
-   !      PRINT *
-   !***********************************************************************
-                                                                        
-                                                                        
    !JK     BERECHNUNG HYDRAULISCHER RADIUS r_ks(i)
    !JK     ---------------------------------------
                                                                         
    1850 CONTINUE
 
-   DO 60 i = itrli, itrre-1
-      !JK         WENN 1. SCHLEIFENDURCHLAUF
-      IF (iter3.gt.1) then
-         r_ks (i) = (rhynn (i) + r_ks (i) ) / 2.
-      !JK         WENN MEHRMALIGE SCHLEIFENDURCHLAEUFE
-      ELSE
-         r_ks (i) = rhynn (i)
-      ENDIF
-   60 END DO
-                                                                        
-                                                                        
-   !***********************************************************************
-   !     DK, 31/05/01
-   !      PRINT *,'Sub SOHLEF!'
-   !      do 61 i=itrli,itrre-1
-   !          PRINT *,'i=',i,' r_ks(i)=',r_ks(i)
-   !61    continue
-   !      PRINT *
-   !***********************************************************************
+   DO i = itrli, itrre-1
+     !JK         WENN 1. SCHLEIFENDURCHLAUF
+     IF (iter3 .gt. 1) then
+       r_ks (i) = (rhynn (i) + r_ks (i) ) / 2.
+     !JK         WENN MEHRMALIGE SCHLEIFENDURCHLAEUFE
+     ELSE
+       r_ks (i) = rhynn (i)
+     ENDIF
+   END DO
                                                                         
    DO i = itrli, itrre-1
       rhynn (i) = ln_ks (i) / l_hg * r_hg
@@ -719,32 +460,11 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
    END DO
                                                                         
                                                                         
-   !***********************************************************************
-   !     DK, 31/05/01
-   !      PRINT *,'Sub SOHLEF!'
-   !      PRINT *,'l_hg=',l_hg,' r_hg=',r_hg
-   !      do 51 i=itrli,itrre-1
-   !          PRINT *,'i=',i
-   !          print *,'l_ks(i)=',l_ks(i),' ln_ks(i)=',ln_ks(i)
-   !          print *,'rhynn(i)=',rhynn(i),' r_ks(i)=',r_ks(i)
-   !51    continue
-   !      PRINT *
-   !***********************************************************************
-                                                                        
-                                                                        
-                                                                        
    !UT     ABBRUCHKRITERIUM SCHLEIFE 3000
-   IF (iter3.gt.20) then
+   IF (iter3 .gt. 20) then
 
       !UT         BELEGEN DES FEHLERKENNWERTES
       is3000 = 10
-                                                                        
-                                                                        
-      !JK         WAR SCHON DEAKTIVIERT, 30.4.00, JK
-      !**     *      write(UNIT_OUT_LOG,9002)iter3,sumdd
-      !**9002        format(/'konvergenzfehler in schleife 3000 [up sohlef]'/,
-      !**     1             'nach ',i2,' iterationen betraegt der fehler noch'
-      !**     2              f10.4)
 
       !UT         SUB ENDE - MUSS NICHT DIE FEHLERBERECHNUNG MIT REIN???,25080
       !UT         ALSO 3 ZEILEN VORHER
@@ -752,22 +472,8 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
                                                                         
    ENDIF
                                                                         
-                                                                        
 !JK   ENDE BERECHNUNGSSCHLEIFE 3000 ------------------------------------
 3000 CONTINUE
-                                                                        
-                                                                        
-!***********************************************************************
-!     DK, 31/05/01                                                      
-!      PRINT *,'Sub SOHLEF - exited the cycle for r_hy!'                
-!      PRINT *,'iter3=',iter3                                           
-!      PRINT *,'icwl=',icwl,' ikol=',ikol                               
-!      PRINT *,'icwm=',icwm,' ikom=',ikom,' ifum=',ifum                 
-!      PRINT *,'icwr=',icwr,' ikor=',ikor                               
-!      PRINT *,'It is returning to PASCHE!'                             
-!      PRINT *                                                          
-!***********************************************************************
-                                                                        
                                                                         
 !UT   BERECHNUNG FEHLERKENNZAHL DER SOHLE if_so                         
 if_so = is2000 + is3000

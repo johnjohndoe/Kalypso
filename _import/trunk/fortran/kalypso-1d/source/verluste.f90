@@ -1,4 +1,4 @@
-!     Last change:  MD   28 Nov 2007    6:59 pm
+!     Last change:  MD    4 Jul 2007    5:24 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -94,35 +94,20 @@ SUBROUTINE verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
 !**   vo      --      Fließgeschwindigkeit im Oberwasser                
 !**   vu      --      Fließgeschwindigkeit im Unterwasser               
 !**                                                                     
-!**                                                                     
-!**                                                                     
-!**   AUFGERUFENE ROUTINEN                                              
-!**   --------------------                                              
-!**   qks (iprof,sohle,q,itere1,hr,hv,nknot)
-!**   qkst (indmax,hr,hv,vm,q,sohle,ife)                                
-!**   uf (hr,hi,xi,s,indmax,nfli,nfre)                                  
-!JK   eb2ks                                                             
-!JK   eb2kst                                                            
-!**                                                                     
 !***********************************************************************
-                                                                        
-                                                                        
-
-! ------------------------------------------------------------------
-! VEREINBARUNGEN
-! ------------------------------------------------------------------
 
 USE DIM_VARIABLEN
 USE KONSTANTEN
 USE MOD_INI
+USE IO_UNITS
 
 implicit none
 
 ! Calling variables -----------------------------------------------------------
-REAL, INTENT(IN) 	:: str          ! Abstand (Strecke) zwischen zwei Profilen
+REAL, INTENT(IN) 		:: str          ! Abstand (Strecke) zwischen zwei Profilen
 REAL, INTENT(INOUT) 	:: q            ! Abfluss, wird uebergeben an eb2ks oder beechnet in qks!
-REAL, INTENT(IN)	:: q1           ! Abfluss
-INTEGER, INTENT(IN) 	:: nprof	! Entspricht NPROF, Anzahl bzw. aktive Nummer des Profil,
+REAL, INTENT(IN)		:: q1           ! Abfluss
+INTEGER, INTENT(IN) 	:: nprof		! Entspricht NPROF, Anzahl bzw. aktive Nummer des Profil,
                                         ! wird von WSBBER ueber NORMBER durchgereicht.
 REAL, INTENT(INOUT) 	:: hr           ! Wasserspiegelhoehe
 REAL, INTENT(INOUT) 	:: hv           ! Geschwindigkeitsverlusthoehe, wird veraendert/berechnet
@@ -139,7 +124,7 @@ REAL, INTENT(INOUT) 	:: s (maxkla)   ! Distanz der Profilpunkte (werden in VERLU
 INTEGER, INTENT(IN) 	:: istat        ! Flag zur Kennzeichnung der Strömung ( = 1 gleichförmig, = 0 ungleichförmig)
 REAL, INTENT(INOUT) 	:: froud        ! Froudzahl, wird in VERLUSTE -> ERFROUD bestimmt.
 INTEGER, INTENT(OUT) 	:: ifehlg       ! Fehlerkennung, normalerweise = 0
-INTEGER 		:: itere1       ! Iterationsvariable
+INTEGER 				:: itere1       ! Iterationsvariable
 
 
 ! COMMON-Block /ALT/ ---------------------------------------------------------------
@@ -242,7 +227,6 @@ REAL :: zeta            ! Verlustbeiwert bei seitlicher Verzeihung (Aufweitung o
 ! istat=0      --> stationaer ungleichfoermig
 ! istat=1      --> stationaer gleichfoermig
                                                                         
-                                                                        
 !write (*,*) 'In VERLUSTE. Start Subroutine.'
 !do i = 1, 3
 !  write (*,*) 'rk(',i,') = ', rk(i), '  f(',i,') = ', f(i)
@@ -255,9 +239,9 @@ REAL :: zeta            ! Verlustbeiwert bei seitlicher Verzeihung (Aufweitung o
 heins = 0.
 horts = 0.
 hborda = 0.
-dx = 0.05
 f_alt = 0.
-                                                                        
+
+dx = 0.05                                                                        
 
 101 CONTINUE
 
@@ -281,15 +265,19 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   !write (*,*) 'In VERLUSTE. fges = ', fges, '  q = ', q
 
-  IF (fges .lt. 1.e-02) then
+  IF (fges < 0.01) then
 
+    ! WP Wenn Fliessquerschnitt sehr klein, dann Anheben des
+    ! WP Wasserstandes HR um DX ( = 0.05 m )
     hr = hr + dx
     f_alt = fges
     GOTO 101
 
-  ELSEIF ( (q/fges) .gt. 20) then
-
-    IF (abs (f_alt - fges) .gt. 1.e-06) then
+  ELSE IF ( (q/fges) .gt. 20) then
+   
+    ! WP Wenn zu erwartende Fließgeschwindigkeit (v = Q/A) sehr
+    ! WP gross wird, dann Anheben des Wasserstandes HR um DX ( = 0.05 m)
+     IF (abs (f_alt - fges) .gt. 1.e-06) then
       hr = hr + dx
       f_alt = fges
       ifehlg = 0
@@ -307,8 +295,20 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
                                                                         
   !JK  BERECHNUNG NACH DARCY-WEISBACH
   IF (FLIESSGESETZ/='MANNING_STR') then
+
     nstat = nprof
+
+    !write (UNIT_OUT_LOG,1000)
+    !1000 format(1X, 'In VERLUSTE. Vor eb2ks')
+    !write (UNIT_OUT_LOG,1002) iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot
+    
     CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot)
+
+    !write (UNIT_OUT_LOG,1001)
+    !1001 format(1X, 'In VERLUSTE. Nach eb2ks')
+    !write (UNIT_OUT_LOG,1002) iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot
+
+
 
   !JK  BERECHNUNG NACH GMS
   ELSE
@@ -317,7 +317,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     rg = 0.
 
     CALL eb2kst (indmax, hr, hv, rg, q)
-  ENDIF
+  END IF
 
   !write (*,*) 'In VERLUSTE. Nach eb2ks.'
   !do i = 1, 3
@@ -327,12 +327,10 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
 
   ! -------------------------------------------------------------------
-  ! Berechnung des wirksamen Geschwindikeitsverlustes (hvm) des Profils
+  ! Berechnung des wirksamen Geschwindigkeitsverlustes (hvm) des Profils
   ! -------------------------------------------------------------------
   IF (nprof.eq.1.or.istat.eq.1) then
-    hvst = 0.
-
-  ELSEIF (nprof.gt.1.and. BERECHNUNGSMODUS=='REIB_KONST') then  !MD neu**
+    
     hvst = 0.
 
   ELSE
@@ -446,7 +444,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
       end if
 
-    ELSEIF (VERZOEGERUNGSVERLUST == 'BJOE') then
+    ELSE IF (VERZOEGERUNGSVERLUST == 'BJOE') then
     !MD   fuer Berechnungsvarainte mit konstantem Rebinungsgefaelle:
     !MD   werden KEINE oertlichen Verluste beruecksichtigt
       hvst = hv1 - hv
@@ -502,7 +500,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     ifehlg = 1
     rgm = 10000
 
-  ELSEIF (nprof.eq.1.or.istat.eq.1) then
+  ELSE IF (nprof .eq. 1 .or. istat .eq. 1) then
     IF (rg.gt.1.e-06) then
       rgm = q / rg * q / rg
     ELSE
@@ -516,15 +514,15 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       rgm = 0.001
     ENDIF
 
-  ELSEIF (REIBUNGSVERLUST == 'GEOMET') THEN
+  ELSE IF (REIBUNGSVERLUST == 'GEOMET') THEN
 
-    IF (rg1.gt.1.e-06.and.rg.gt.0) then
+    IF (rg1 .gt. 1.e-06 .and. rg .gt. 0) then
       wurzrg = (q + q1) / (rg1 + rg)
       rgm = wurzrg**2
-    ELSEIF (rg1.gt.1.e-06) then
+    ELSE IF (rg1.gt.1.e-06) then
       wurzrg = q1 / rg1
       rgm = wurzrg**2
-    ELSEIF (rg.gt.1.e-06) then
+    ELSE IF (rg.gt.1.e-06) then
       wurzrg = q / rg
       rgm = wurzrg**2
     ELSE
@@ -534,11 +532,11 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   ELSE
 
-    IF (rg1.gt.1.e-06.and.rg.gt.0) then
+    IF (rg1 .gt. 1.e-06 .and. rg .gt. 0) then
       rgm = 0.5 * ( (q / rg) **2 + (q1 / rg1) **2)
-    ELSEIF (rg1.gt.1.e-06) then
+    ELSE IF (rg1.gt.1.e-06) then
       rgm = (q1 / rg1) **2
-    ELSEIF (rg.gt.1.e-06) then
+    ELSE IF (rg.gt.1.e-06) then
       rgm = (q / rg) **2
     ELSE
       rgm = q**2 / 0.001
@@ -553,7 +551,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   ! ---------------------------------------------------------------------
   IF (VERZOEGERUNGSVERLUST /= 'NON ') then
     horts = psiort * hv
-    IF (nprof.ne.1.and.istat.ne.1) then
+    IF (nprof .ne. 1 .and. istat .ne. 1) then
       vu = sqrt (hv1 * 2 * 9.81)
       vo = sqrt (hv * 2 * 9.81)
       heins = psiein * (vu - vo) * (vu - vo) / (2 * 9.81)
@@ -632,5 +630,16 @@ ELSE
   hvst = vm
 
 ENDIF
+
+1002 format (1X, 'IPROF = ', A1, /, & 
+           & 1X, 'HV = ', F10.4, /, &
+           & 1X, 'RG = ', F10.4, /, &
+           & 1X, 'RG1 = ', F10.4, /, &
+           & 1X, 'Q = ', F10.4, /, &
+           & 1X, 'Q1 = ', F10.4, /, &
+           & 1X, 'ITERE1 = ', I10, /, &
+           & 1X, 'NSTAT = ', I10, /, &
+           & 1X, 'HR = ', F10.4, /, &
+           & 1X, 'NKNOT = ', I10)
 
 END SUBROUTINE verluste                                         

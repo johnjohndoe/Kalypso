@@ -268,6 +268,16 @@ else if (INDEX(part1,'DURCHFLUSS_EINHEIT')/=0) then
     DURCHFLUSS_EINHEIT = 'M'
   end if
 
+else if (INDEX(part1,'USE_EXTREM_ROUGH')/=0) then
+  if (INDEX(part2,'false')/=0) then
+    USE_EXTREM_ROUGH = .false.
+  else if (INDEX(part2,'true')/=0) then
+    USE_EXTREM_ROUGH = .true.
+  else
+    write (*,*) 'Keine Zuweisung fuer MIT_WEHREN. Abbruch.'
+    stop
+  end if
+
 end if
 
 end subroutine get_data_line

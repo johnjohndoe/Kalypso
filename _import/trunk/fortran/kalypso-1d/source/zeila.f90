@@ -219,7 +219,7 @@ WRITE (UNIT_OUT_QB1, 5) ' '
                                                                         
 
 !MD  IF (mark.eq.1.or.mark.eq.3) then
-!MD  Laengsschnitt wird auch fuer mark = 2 (stat. ungleichf. Berechnung) erzeugt                                                                        
+!MD  Laengsschnitt wird auch fuer mark = 2 (stat. ungleichf. Berechnung) erzeugt
 !MD  IF (mark.eq.1 .or. mark.eq.3 .or. mark.eq.2) then
 If (BERECHNUNGSMODUS == 'WATERLEVEL' .or. BERECHNUNGSMODUS == 'BF_NON_UNI' .or. BERECHNUNGSMODUS == 'REIB_KONST') then
   yhmin = 10000.

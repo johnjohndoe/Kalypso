@@ -50,18 +50,21 @@
 !---------------------------------------------------------------------------------------
 REAL function GET_LAMBDA (v, rhy, ks, f)
 !
-! geschrieben :                        28.04.2005 Wolf Ploeger
+! geschrieben :                        April 2005 Wolf Ploeger
+! geaendert :                          Oktober 2007 Wolf Ploeger
 !
 ! Allgemeine Beschreibung:
 ! ------------------------
 ! Funktion zur Bestimmung des Widerstandsbeiwertes der Sohle
 ! nach Colebrook-White.
+! NEU: Erweiterung Berechnung von extremen Rauheiten
+! nach Aguirre-Pe und Fuentes
 !
-! LITERATUR: BWK-MERKBLATT 1, 1999, S.20
+! LITERATUR: BWK-MERKBLATT 1, 1999, S.20 ff
 !
 ! Variablendefinition:
 ! f      =   profilartabhängiger Formbeiwert (nach BWK Merkblatt 1, 1999)
-! ks     =   äquivalente Snadrauheit
+! ks     =   aequivalente Sandrauheit
 ! lalt   =   Widerstandsbeiwert der Sohle (Iteration)
 ! lambda =   Widerstandsbeiwert der Sohle
 ! re     =   Reynoldszahl
@@ -77,27 +80,33 @@ USE EXTREME_ROUGHNESS
 implicit none
 
 ! Calling variables
-REAL, INTENT(IN) 	:: v, rhy, f
-REAL, INTENT(INOUT) 	:: ks
+REAL, INTENT(IN) 	:: v, rhy, f, ks
 
 ! Local variables
-REAL :: Re, lalt, Dm
+REAL :: Re, lalt, Dm, ks_local, rhy_local
 REAL :: lambda_CW, lambda_AF, lambda_final
 REAL :: f_CW, f_AF
 REAL :: lower_limit, upper_limit
+REAL :: grenzkrit
 INTEGER :: i
 
 ! Initialisieren --------------------------------------------------------------------
 lalt = 1000.0   ! Vorheriger Lambda-Wert (fuer Iteration)
 i = 0           ! Zaehler fuer Iterationsschleife
+ks_local = ks   ! Umspeichern von ks, da eventuell geaendert bei geringen Wassertiefen
 
+
+IF (.not. USE_EXTREM_ROUGH) THEN
+  grenzkrit = rhy / ks
+  IF (grenzkrit .lt. 1.66667) ks_local = 0.60 * rhy
+END IF
 
 ! Berechnung ------------------------------------------------------------------------
 Re = v * 4 * rhy / nue
 
 !WP Es kann passieren, dass v = 0 an diese Funktion uebergeben wird.
 !WP Dann darf nicht mit Re = 50 gerechnet werden, sondern es sollte
-!WP mit der Formel ohne laminaren Einfluss (Re > 2320)
+!WP mit der Formel ohne laminaren Einfluss (Re > 2320) gerechnet werden.
 if (Re < 50. .and. Re >= 1.) then
   Re = 50.0
 else if (Re < 1.0) then
@@ -111,7 +120,7 @@ IF (Re < 10000.0) THEN           !WP Vorher stand hier Re < 2320
    ! Laminare Strömung
 
    ! Startwert Lambda
-   lambda_CW = ( - 2.03 * log10 (ks / (14.84 * rhy * f) ) ) ** 2.0
+   lambda_CW = ( - 2.03 * log10 (ks_local / (14.84 * rhy * f) ) ) ** 2.0
    IF (lambda_CW .eq. 0.0) lambda_CW = 0.0001
    lambda_CW = 1.0 / lambda_CW
 
@@ -135,7 +144,7 @@ IF (Re < 10000.0) THEN           !WP Vorher stand hier Re < 2320
 	lalt = lambda_CW
 
    	! formular by COLEBROOK/WHITE
-   	lambda_CW = ( - 2.03 * log10 (2.51 / (f * Re * SQRT(lalt) ) + ks / (14.84 * rhy * f) ) ) ** 2.0
+   	lambda_CW = ( - 2.03 * log10 (2.51 / (f * Re * SQRT(lalt) ) + ks_local / (14.84 * rhy * f) ) ) ** 2.0
 
    	IF (lambda_CW .eq. 0.0) lambda_CW = 0.0001
 
@@ -145,12 +154,12 @@ IF (Re < 10000.0) THEN           !WP Vorher stand hier Re < 2320
 
    !write (*,*) 'In GET_LAMBDA. Iterationen: ', i, '  LAMBDA = ', lambda, '  RE = ', re
 
-Else
-
+ELSE
+  
   ! Turbulente Strömung
 
   ! formular by COLEBROOK/WHITE
-  lambda_CW = ( - 2.03 * log10 (ks / (14.84 * rhy * f) ) ) ** 2.0
+  lambda_CW = ( - 2.03 * log10 (ks_local / (14.84 * rhy * f) ) ) ** 2.0
 
   IF (lambda_CW .eq. 0.0) lambda_CW = 0.0001
 
@@ -158,37 +167,49 @@ Else
 
 END IF
 
-upper_limit = 3*ks
-lower_limit = 1*ks
-Dm = ks / 3.0
 
-! Calculation of LAMBDA if using AGUIRRE/FUENTES
-lambda_AF = ( (0.88*beta_w*Dm)/rhy + 2.03 * log10 ( (11.1*rhy)/(alpha_t*Dm) ) ) ** 2.0
+IF (USE_EXTREM_ROUGH) THEN
 
-IF (lambda_AF <= 0.0001) lambda_AF = 0.0001
-lambda_AF = 1.0 / lambda_AF
+  upper_limit = 3*ks_local
+  lower_limit = 1*ks_local
+  Dm = ks_local / 3.0
 
-! Do transition between Colebrook and Aguirre
-if (rhy > upper_limit) then
-  f_CW = 1.0
-  f_AF = 0.0
-else if (rhy < lower_limit) then
-  f_CW = 0.0
-  f_AF = 1.0
-else
-  f_CW = (rhy-lower_limit)/(upper_limit-lower_limit)  
-  f_AF = 1.0 - f_CW
-end if
+  ! In very shallow water (h < 0.05 m) the formula after AGUIRRE/FUENTES
+  ! sometimes tends to produce very low lambda-values. This must
+  ! be avioded and is done by limiting the hydraulic radius.
+  if (rhy < 0.05) then
+    rhy_local = 0.05
+  else
+    rhy_local = rhy
+  end if     
 
-lambda_final = f_CW*lambda_CW + f_AF*lambda_AF
+  ! Calculation of LAMBDA if using AGUIRRE/FUENTES
+  lambda_AF = ( (0.88*beta_w*Dm)/rhy_local + 2.03 * log10 ( (11.1*rhy_local)/(alpha_t*Dm) ) ) ** 2.0
 
-!write (*,1000) rhy, lambda_CW, lambda_AF, lambda_final
-!write (UNIT_OUT_LOG,1000) rhy, lambda_CW, lambda_AF, lambda_final
-!1000 format (1X, F10.3, F10.6, F10.6, F10.6)
+  IF (lambda_AF <= 0.0001) lambda_AF = 0.0001
+  lambda_AF = 1.0 / lambda_AF
+
+  ! Do transition between Colebrook and Aguirre
+  if (rhy_local > upper_limit) then
+    f_CW = 1.0
+    f_AF = 0.0
+  else if (rhy_local < lower_limit) then
+    f_CW = 0.0
+    f_AF = 1.0
+  else
+    f_CW = (rhy_local-lower_limit)/(upper_limit-lower_limit)  
+    f_AF = 1.0 - f_CW
+  end if
+
+  lambda_final = f_CW*lambda_CW + f_AF*lambda_AF
+
+ELSE
+
+  lambda_final = lambda_CW
+
+END IF
 
 GET_LAMBDA = lambda_final
-
-!write (*,*) 'GET_LAMBDA erfolgreich. LAMBDA = ', GET_LAMBDA
 
 end function GET_LAMBDA
 

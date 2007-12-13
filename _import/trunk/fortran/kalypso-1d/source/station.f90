@@ -1,4 +1,4 @@
-!     Last change:  MD   28 Nov 2007    5:57 pm
+!     Last change:  MD    4 Jul 2007    5:38 pm
 !--------------------------------------------------------------------------
 ! This code, station.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -112,6 +112,18 @@ USE DIM_VARIABLEN
 USE IO_UNITS
 USE MOD_INI
 
+!SUBROUTINE station (sgef, nprof, hgrenz, q, hr, hv, rg, indmax,   &
+!         & hvst, hrst, psiein, psiort, hi, xi, s, ikenn, froud, str,    &
+!         & ifehl, nblatt, nz, idr1)
+
+REAL, INTENT(IN) :: sgef		! Gefaelle, fuer das WSP berechnet werden soll
+INTEGER, INTENT(IN) :: nprof	! Profilnummer
+REAL, INTENT(IN) :: hgrenz		! Bereits berechnete Grenztiefe
+REAL, INTENT(IN) :: q			! Gesetzter Abfluss
+INTEGER, INTENT(IN) :: indmax	! Anzahl der Rauheitsabschnitte
+REAL, INTENT(OUT) :: froud		! Froudzahl
+REAL, INTENT(IN) :: str			! Abstand (Strecke) zwischen zwei Profilen
+
 !EP   Die Variable idr1 wird aufgerufen, obwohl sie nicht vorher deklari
 !EP   Der Common-Block BV definiert diese Variable. Er kann aber nicht ü
 !EP   werden, da die Variable nprof, die im Common-Block steht, auch in 
@@ -120,6 +132,7 @@ USE MOD_INI
 !EP                                                                     
 CHARACTER(LEN=1) :: idr1
 !EP   Ende der Ergänzung
+
 REAL :: xi (maxkla), hi (maxkla), s (maxkla)
 
 
@@ -139,7 +152,6 @@ CHARACTER(LEN=1):: ibridge
 COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
        & hokmax, hsuw, raub, breite, xk, hokmin, ibridge
 ! ----------------------------------------------------------------------------------
-
 
 
 ! COMMON-Block /DD/ -----------------------------------------------------------
@@ -208,7 +220,7 @@ INTEGER :: rdruck
 !       Vorbelegung:                                                    
 !       -max. anzahl der iterationsschritte:                            
 g_sohl = sgef
-                                                                        
+
 izz = 0
 ifehl = 0
 istat = 1
@@ -233,8 +245,6 @@ heins = 0.
 horts = 0.
 
 IF (nprof.eq.1) then
-  q1 = 0.
-ELSEIF (nprof.gt.1 .and. BERECHNUNGSMODUS == 'REIB_KONST') then  !MD neu**
   q1 = 0.
 ELSE
   q1 = q
@@ -276,7 +286,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   ! anfangsiterationswert (grenztiefe+delta, damit nicht im labilen
   !                        bereich der koch'schen parabel)
-  IF (nprof.eq.1) then
+  IF (nprof == 1) then
 
     nz = nz + 3
     IF (nz.gt.50) then
@@ -294,23 +304,21 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     WRITE (UNIT_OUT_LOG, '(''Wasserspiegel wird fuer stationaer &
                            & gleichfoermiges Reibungsgefaelle berechnet.'',/, &
                            & ''Reibungsgefaelle = '',f7.5)') sgef
-  Endif
+  END IF
 
   dx = 0.02
   !     anfangswasserspiegel:
   IF (nprof.gt.1 .and. BERECHNUNGSMODUS /= 'REIB_KONST') then      !MD neu**
     hr = ws1 - str * sgef
-  ELSEIF (nprof.gt.1 .and. BERECHNUNGSMODUS == 'REIB_KONST') then  !MD neu**
-    hr = hgrenz + 0.2
   ELSE
     hr = hgrenz + 0.2
-  ENDIF
+  END IF
 
-  IF (iprof.ne.' ') then
+  IF (iprof .ne. ' ') then
     hr = (hmin + hmax) / 2.0
-  ENDIF
+  END IF
 
-  IF (hr.le.hmin) hr = hmin + 0.2
+  IF (hr <= hmin) hr = hmin + 0.2
 
   ! ******************************************************************
   !  Iterationsschleife ueber die Verluste
@@ -327,12 +335,22 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   152 CONTINUE
 
+  !write (UNIT_OUT_LOG, 2001)
+  !2001 format (1X, 'In STATION. Werte vor Aufruf von VERLUSTE:')
+  !write (UNIT_OUT_LOG, 2000) str, q, q1, nprof, hrb, hv, rg, hvstb, hrstb,    &
+  ! & froud, ifehlg, itere1
+ 
   CALL verluste (str, q, q1, nprof, hrb, hv, rg, hvstb, hrstb,    &
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
    & itere1)
 
+  !write (UNIT_OUT_LOG, 2002)
+  !2002 format (1X, 'In STATION. Werte nach Aufruf von VERLUSTE:')
+  !write (UNIT_OUT_LOG, 2000) str, q, q1, nprof, hrb, hv, rg, hvstb, hrstb,    &
+  ! & froud, ifehlg, itere1
 
   sistb = hrstb / str
+  
   itere1 = 2
   hra = hrb + 2. * dx
 
@@ -342,14 +360,26 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
    & itere1)
 
+  !write (UNIT_OUT_LOG, 2002)
+  !write (UNIT_OUT_LOG, 2003) str, q, q1, nprof, hra, hv, rg, hvsta, hrsta,    &
+  ! & froud, ifehlg, itere1
+
+
+
   sista = hrsta / str
   hraa = - 10000.
 
   DO 150 i = 1, itmax
 
+    !write (UNIT_OUT_LOG, 2010) i
+    !2010 format (1X, 'In STATION. Iterationsschleife 150. Iteration Nr. ', I5)
+    
     del = hrsta / str + sgef
     dfh = abs (hraa - hrb)
 
+    !write (UNIT_OUT_LOG, 2011) del, dfh
+    !2011 format (1X, 'In STATION. DEL = ', F10.5, '   DFH = ', E10.3)
+ 
     !HB *************************************************************
     !HB 26.11.2001 Pasche
     !HB Genauigkeitsveraenderung durchgefuehrt
@@ -361,7 +391,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     !HB Berechnung nach Arbeitsgleichung fuer uebrige Profile.
     !HB erzielte Genauigkeit nun: 10**-3 (mm-Bereich)
     !HB *************************************************************
-    IF (abs (del) .lt.0.0000001) then
+    IF (abs (del) .lt. 0.0000001) then
 
       !  kennung, ob bei bruecken druckabfluss oder nicht :
       IF (ibridge.eq.'b'.and.hr.ge.hukmax) then
@@ -371,7 +401,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       ENDIF
 
       !  ueberpruefen, ob schiessen oder stroemen
-      IF (froud.ge.1. .and. rdruck.ne.0) then
+      IF (froud .ge. 1. .and. rdruck .ne. 0) then
 
         ikenn = 4
         hr = hgrenz
@@ -381,7 +411,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
          & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
          & ifehlg, itere1)
 
-      ELSEIF (froud.ge.1. .and. jdruck.eq.0) then
+      ELSE IF (froud .ge. 1. .and. jdruck .eq. 0) then
 
         ikenn = 1
         hr = hgrenz
@@ -423,7 +453,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     !HB       Genauigkeitsveraenderung durchgefuehrt
     !HB       alter Wert: 0.01
     !HB       *************************************************************
-    ELSEIF (abs (dfh) .le.0.0001) then
+    ELSE IF (abs (dfh) .le. 0.0001) then
 
       !  Iteration hat in Bezug auf Wasserspiegel konvergiert
       hr = hra
@@ -451,7 +481,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
          & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
          & ifehlg, itere1)
 
-      ELSEIF (froud.ge.1. .and. jdruck.eq.0) then
+      ELSE IF (froud .ge. 1. .and. jdruck .eq. 0) then
 
         ikenn = 1
         hr = hgrenz
@@ -489,24 +519,29 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     !JK       ELSE ZU (abs(del).lt.0.00005)
     ELSE
 
-      !             schaetzen neuer wasserspiegel
+      ! Schaetzen neues Wasserspiegelgefaelle SISTB ist Reibungsgefaelle aus HRSTB
       hdif2 = sistb - abs (sgef)
+      !write (UNIT_OUT_LOG, 2020) hdif2
+      !2020 format (1X, 'In STATION. Neues Gefaelle geschaetzt HDIF2 = ', F10.4)
+
 
       155 CONTINUE
 
       hdif1 = sista - abs (sgef)
+      !write (UNIT_OUT_LOG, 2021) hdif1
+      !2021 format (1X, 'In STATION. Neues Gefaelle geschaetzt HDIF1 = ', F10.4)
 
       it155 = it155 + 1
 
-      IF (hdif1 * hdif2.lt.0) then
+      IF ( (hdif1*hdif2) .lt. 0) then
 
         hraa = hra
         dfh = abs (hraa - hrb)
 
         !HB            Moeglichkeit Genauigkeitseinstellung
-        IF (abs (dfh) .le.0.01) then
+        IF (abs (dfh) .le. 0.01) then
           !                 Iteration hat in Bezug auf Wasserspiegel konvergiert
-          IF (ibridge.eq.'b'.and.hr.ge.hukmax) then
+          IF (ibridge .eq. 'b' .and. hr .ge. hukmax) then
             jdruck = 1
           ELSE
             jdruck = 0
@@ -521,7 +556,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
              & hrst, indmax, psiein, psiort, hi, xi, s, istat,  &
              & froud, ifehlg, itere1)
 
-          ELSEIF (froud.ge.1.and.jdruck.eq.0) then
+          ELSE IF (froud.ge.1.and.jdruck.eq.0) then
 
             ikenn = 1
             hr = hgrenz
@@ -583,7 +618,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       !JK   ELSE ZU (hdif1*hdif2.lt.0)
       ELSE
 
-        IF (abs (hra - hrb) .lt.1.e-05) then
+        IF (abs (hra - hrb) .lt. 1.e-05) then
           !JK                  SCHREIBEN IN KONTROLLFILE
           WRITE (UNIT_OUT_LOG, '(''Keine Konvergenz in Stationaer'')')
           GOTO 8000
@@ -859,6 +894,34 @@ ELSE
 ENDIF
 
 RETURN
+
+ 2000 format (1X, 'STR   = ', F10.4, /, &
+            & 1X, 'Q     = ', F10.4, /, &
+            & 1X, 'Q1    = ', F10.4, /, &
+            & 1X, 'NPROF = ', I10, /, &
+            & 1X, 'HRB   = ', F10.4, /, &
+            & 1X, 'HV    = ', F10.4, /, &
+            & 1X, 'RG    = ', F10.4, /, &                
+            & 1X, 'HVSTB = ', F10.4, /, &                
+            & 1X, 'HRSTB = ', F10.4, /, &                
+            & 1X, 'FROUD = ', F10.4, /, &                
+            & 1X, 'IFEHLG= ', I10, /, &
+            & 1X, 'ITERE1= ', I10)
+
+ 2003 format (1X, 'STR   = ', F10.4, /, &
+            & 1X, 'Q     = ', F10.4, /, &
+            & 1X, 'Q1    = ', F10.4, /, &
+            & 1X, 'NPROF = ', I10, /, &
+            & 1X, 'HRA   = ', F10.4, /, &
+            & 1X, 'HV    = ', F10.4, /, &
+            & 1X, 'RG    = ', F10.4, /, &                
+            & 1X, 'HVSTA = ', F10.4, /, &                
+            & 1X, 'HRSTA = ', F10.4, /, &                
+            & 1X, 'FROUD = ', F10.4, /, &                
+            & 1X, 'IFEHLG= ', I10, /, &
+            & 1X, 'ITERE1= ', I10)
+
+
 
 END SUBROUTINE station                                                                             
                                                                         

@@ -1262,8 +1262,7 @@ Kalypso 2.0.5       17. August 2007
      Die Parameter alpha_t und beta_w liegen in einem neuen Modul.
 
                                                            Wolf Plöger, 17.08.2007 
-
-
+                 
 Kalypso 2.0.5.2      3. Dezember 2007
 -------------------------------------
 1.)  Korrekturen und Erneuerungen fuer die Wehrroutine: w_ber, beiwert, g_wehr 
@@ -1288,3 +1287,33 @@ Kalypso 2.0.5.2      3. Dezember 2007
      Betroffene Routinen: wspber, wspanf, station, verluste, eb2ks
 
                                                            Monika Donner, 03.12.2007  
+Kalypso 2.0.6       13. Dezember 2007
+-------------------------------------
+1.)  Leicht Verbesserung in der Lesbarkeit des Codes. Explizite Definition einiger 
+     Variablen, wenn gesehen.
+
+2.)  Überarbeitung (deutliche Vereinfachung) der Subroutine SOHLEF. Korrektur der
+     ks-Wert Übergaben an GET_LAMBDA.     
+     
+3.)  Fehlerbehebung bei der Berechnung der Trennflaechenrauhigkeit nach Pasche.
+     In Subroutine PASCHE wird laut DVWK-Merkblatt 220, "Hydraulische Berechnung
+     von Fließgewässern", Seite 31, Formel 4.14 ein Abflussanteil innerhalb der
+     mitwirkenden Bewuchsbreite berücksichtigt.
+     Im Code wurde nach Berechnung dieses Abflussanteils über das allgemeine
+     Fließgesetz ( dQ/A = 1/wurzel(lambda) * wurzel(8*g*h*i) ) wiederum der
+     Fließwiderstand lambda des Vorlandes angepasst. Das ist m.E. falsch, da der
+     Fließwiderstand des Bewuchses und der Sohle nur von den geometrischen Parametern,
+     der äquivalenten Sohlrauheit (und dem Gefälle bei Berechnung von cWR) abhängt!
+     Ein Rückwärtsanpassung kann demnach nicht sinnvoll sein und führt auch in einigen 
+     Fällen zu unplausiblen Werten bei schlechter Konvergenz.
+     
+4.)  Bugfix bei der Berechnung der Sohlrauhigkeit in Verbindung mit extremen 
+     Rauhigkeiten. Hier: Anpassung des ks-Wertes bei geringen Wassertiefen,
+     wenn extreme Rauhigkeiten N I C H T berücksichtigt werden sollen. 
+     
+5.)  Im Projekt-Ordner /PROF/ wird nach einer Datei mit dem Namen "Kalypso_add.cfg"
+     gesucht. Hier können im INI-Format zusaetzliche oder abweichende Konfigurationen
+     für die Berechnung festgelegt werden. Die Datei wird nur gelesen, wenn sie
+     existiert und die WSPWIN-Oberfläche verwendet wird.
+     
+                                                           Wolf Plöger, 13.12.2007 

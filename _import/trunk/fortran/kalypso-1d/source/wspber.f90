@@ -1,4 +1,4 @@
-!     Last change:  MD   28 Nov 2007    5:45 pm
+!     Last change:  MD   15 Aug 2007    9:42 am
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -342,7 +342,7 @@ COMMON / wehr / xokw, hokw, nokw, iwmin, hokwmin, iwehr, xtrw, htrw, nwfd, iendw
 
 
 ! Local variables ---------------------------------------------------------------------------------
-INTEGER :: istat
+INTEGER :: istat, lnum
 LOGICAL :: is_open
 
 INTEGER :: izz, ilen, ilen2, iflen, jlen, ifehl, iint, ichar, ianz
@@ -519,7 +519,7 @@ IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
 
 !MD  ELSEIF (BERECHNUNGSMODUS == 'BF_NON_UNI') then
 !MD  neue Berechnungsvarainte mit konstanten Reibungsgefaelle
-ELSEIF (BERECHNUNGSMODUS == 'BF_NON_UNI' .or. BERECHNUNGSMODUS == 'REIB_KONST') then
+ELSE IF (BERECHNUNGSMODUS == 'BF_NON_UNI' .or. BERECHNUNGSMODUS == 'REIB_KONST') then
   WRITE (EREIGNISNAME, '(f8.3)') qvar
 
   EREIGNISNAME = ADJUSTL (EREIGNISNAME)
@@ -689,7 +689,19 @@ Hauptschleife: DO i = 1, maxger
 
     ELSE
 
-      OPEN (UNIT=UNIT_OUT_PRO, FILE=NAME_OUT_PRO(i), ACTION='WRITE', POSITION='APPEND', IOSTAT=istat)
+      INQUIRE(UNIT=UNIT_OUT_PRO, OPENED=is_open)
+      if (is_open) then
+        !write (*,*) 'UNIT_OUT_PRO ist offen, wird geschlossen!'
+        close(UNIT_OUT_PRO)
+      end if  
+      INQUIRE(FILE=NAME_OUT_PRO(i), OPENED=is_open, NUMBER=lnum)
+      if (is_open) then
+        !write (*,*) 'NAME_OUT_PRO(i) ist offen, wird geschlossen!'
+        close(lnum)
+      end if  
+
+
+      OPEN (UNIT=UNIT_OUT_PRO, FILE=NAME_OUT_PRO(i), STATUS='OLD', ACTION='WRITE', POSITION='APPEND', IOSTAT=istat)
 
       if (istat /= 0) then
         ! 9002
@@ -823,7 +835,7 @@ Hauptschleife: DO i = 1, maxger
           nz = nz + 3
           izz = izz + 1
 
-        ELSEIF (izz + 1.eq.nq.AND.qstat (izz + 1) .le.stat (nprof) ) then
+        ELSE IF (izz + 1.eq.nq.AND.qstat (izz + 1) .le.stat (nprof) ) then
           WRITE (UNIT_OUT_TAB, 14) stat (nprof), qwert (izz + 1)
           q = qwert (izz + 1)
           nz = nz + 3
@@ -858,7 +870,7 @@ Hauptschleife: DO i = 1, maxger
     !**      ENDIF ZU (nprof.gt.1)
     ENDIF
 
-  ELSEIF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
+  ELSE IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     q = qvar
 
     IF (nq.eq.1) then
@@ -910,7 +922,7 @@ Hauptschleife: DO i = 1, maxger
     ! ------------------------------------------------------------------
     ! Brueckenberechnung
     ! ------------------------------------------------------------------
-    ELSEIF (ibridge.eq.'b' .and. MIT_BRUECKEN) then
+    ELSE IF (ibridge.eq.'b' .and. MIT_BRUECKEN) then
 
       ! SCHREIBEN IN KONTROLLFILE
       write (UNIT_OUT_LOG, 22) x1(iwl), iwl, h1(iwl), x1(iwr), iwr, h1(iwr), hukmax, hmin, breite
@@ -1083,7 +1095,7 @@ Hauptschleife: DO i = 1, maxger
                                                                          !WP Hinweis: Je nach Abflusszustand kann sich die
                                                                          !WP Anzahl der interpolierten Profile aendern
             out_Qin_PROF(nprof,nr_q_out,nr_q)%interpol = .TRUE.  	 !WP In dem globalen Ergebnis TYPE wird sich gemerkt,
-            out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn = 'i'             !WP dass dieses Profil bei dem aktuellen Abfluss interpoliert wurde.
+            out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn = 'i'             !WP dass dieses Profil bei dem akt. Q interpol. wurde.
             out_Qin_PROF(nprof,nr_q_out,nr_q)%qges = q
 
             num (nprof) = '0'
@@ -1185,7 +1197,7 @@ Hauptschleife: DO i = 1, maxger
 
           out_Qin_PROF(nprof,nr_q_out,nr_q)%stat = stat(nprof)   !WP Zuweisung der Stationierung in globalen Array
           out_Qin_PROF(nprof,nr_q_out,nr_q)%interpol = .TRUE.    !WP In dem globalen Ergebnis TYPE wird sich gemerkt,
-          out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn = 'i'       !WP dass dieses Profil bei dem aktuellen Abfluss interpoliert wurde.
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn = 'i'       !WP dass dieses Profil bei dem akt. Q interpol. wurde.
           out_Qin_PROF(nprof,nr_q_out,nr_q)%qges = q
 
           write (UNIT_OUT_LOG,102) stat (nprof)
@@ -1550,6 +1562,9 @@ Hauptschleife: DO i = 1, maxger
             write (UNIT_OUT_QBRUECKE, 912) out_Qin_PROF(nprof,nr_q_out,nr_q)%stat,                     &
                              & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, q_out, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp,  &
                              & wsp_save (nprof_save-1), out_Qin_PROF(nprof,nr_q_out,nr_q)%hen
+            !WP 31.10.2007
+            IF (idr1.eq.'j') close (UNIT_OUT_PRO)
+            CYCLE Hauptschleife
 
           ENDIF
           !------------------------------------------------------------
@@ -2162,7 +2177,7 @@ Hauptschleife: DO i = 1, maxger
 
 
 
-    ELSEIF (BERECHNUNGSMODUS /= 'REIB_KONST') then
+    ELSE IF (BERECHNUNGSMODUS /= 'REIB_KONST') then
     ! ---------------------------------------------------------------
     ! Normale Berechnung fuer alle weiteren Profile ausser nprof=1
     ! ---------------------------------------------------------------
@@ -2180,7 +2195,8 @@ Hauptschleife: DO i = 1, maxger
 
     ! MD  Neue Berechenungsvariante mit konstantem Reibungsgefaelle
     ! MD  --> auch fuer alle anderen Profile n+1 wird die wspanf. aufgerufen!!
-    ELSEIF (BERECHNUNGSMODUS == 'REIB_KONST') then
+    ELSE IF (BERECHNUNGSMODUS == 'REIB_KONST') then
+      
       out_PROF(nprof,nr_q)%stat = stat(nprof)
       out_PROF(nprof,nr_q)%interpol = .FALSE.
       VERZOEGERUNGSVERLUST = 'NON '
@@ -2189,14 +2205,13 @@ Hauptschleife: DO i = 1, maxger
 
       !**   str = abstand zwischen 2 Profilen?
       str = (stat (nprof) - stat (nprof - 1) ) * 1000.
-
       !**   Berechnung Anfangswasserspiegel nach Vorgabe von wsanf:
       hgrenz = 0.
-
-      !MD neu**  strbr = str
-      strbr = 0.   !MD neu**
-
+      strbr = str
       wsanf = -1 * GEFAELLE
+      
+      !WP 2007
+      !write (*,*) ' WSANF = ', wsanf
 
       CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
         & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)

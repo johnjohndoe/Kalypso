@@ -1,10 +1,10 @@
-!     Last change:  MD   10 Aug 2007    4:25 pm
+!     Last change:  WP    5 Nov 2007   11:46 am
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
 ! 1D steady state calculations: KALYPSO-1D
 !
-! Copyright (C) 2004  ULF TESCHKE & WOLF PLOEGER.
+! Copyright (C) 2004 - 2007 ULF TESCHKE & WOLF PLOEGER.
 !
 ! This library is free software; you can redistribute it and/or
 ! modify it under the terms of the GNU Lesser General Public License
@@ -20,19 +20,23 @@
 ! Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 !
 ! For information please contact:
+!
 ! HAMBURG UNIVERSITY OF TECHNOLOGY, Deptartment of River and
 ! Coastal Engineering. Denickestr. 22, 21073 Hamburg, Germany.
-! Wolf Ploeger:     phone: +49 40 42878 4305 mail: ploeger@tuhh.de
-! Ulf Teschke:      phone: +49 40 42878 3895 mail: teschke@tuhh.de
 ! See our web page: www.tuhh.de/wb
 !
+! or
+!
+! EPK-Engineers, Kasernenstr. 12, 21073 Hamburg, Germany
+! Wolf Ploeger 
+! wolf.ploeger@epk2.de
+! See our web page: www.epk2.de
 !
 ! HAMBURG UNIVERSITY OF TECHNOLOGY, Deptartment of River and
 ! Coastal Engineering, hereby disclaims all copyright interest in
 ! the library 'Kalypso-1D'.
 !
-! Wolf Ploeger, 18 August 2004
-! Research Associate
+! Wolf Ploeger, 12 November 2007
 !--------------------------------------------------------------------------
 
 
@@ -42,7 +46,7 @@
 PROGRAM WSP
 !
 ! geschrieben: P. Koch, Maerz 1990
-! geaendert: W. Ploeger, 2004-2006
+! geaendert: W. Ploeger, 2004-2007
 !
 ! Programmbeschreibung:
 ! ---------------------
@@ -274,14 +278,12 @@ WRITE ( *, 1000) VERSIONNR, VERSIONDATE, HHMM, MMTTJJ
      & 1x, '****                                                  ****',/,  &
      & 1x, '****       TU HAMBURG-HARBURG, AB WASSERBAU           ****',/,  &
      & 1x, '****                                                  ****',/,  &
-     & 1x, '****                                                  ****',/,  &
      & 1x, '****             K A L Y P S O - 1 D                  ****',/,  &
      & 1x, '****                                                  ****',/,  &
      & 1x, '****                                                  ****',/,  &
      & 1x, '****             SPIEGELLINIENBERECHNUNG              ****',/,  &
      & 1x, '****          IN GERINNEN UND ROHRLEITUNGEN           ****',/,  &
      & 1x, '****     FUER STATIONAER-UNGLEICHFOERMIGEN ABFLUSS    ****',/,  &
-     & 1x, '****                                                  ****',/,  &
      & 1x, '****                                                  ****',/,  &
      & 1x, '****                                                  ****',/,  &
      & 1x, '****                                                  ****',/,  &
@@ -1061,15 +1063,15 @@ else
         CALL lcase (char (i1) )
         IF (char (i1) (1:ilen) .eq.'station') then
           psistat (jpsi) = feldr (i1)
-        ELSEIF (char (i1) (1:ilen) .eq.'einlauf') then
+        ELSE IF (char (i1) (1:ilen) .eq.'einlauf') then
           psiein (jpsi) = feldr (i1)
-        ELSEIF (char (i1) (1:ilen) .eq.'kruemmer') then
+        ELSE IF (char (i1) (1:ilen) .eq.'kruemmer') then
           psiort (jpsi) = psiort (jpsi) + feldr (i1)
-        ELSEIF (char (i1) (1:ilen) .eq.'rechen') then
+        ELSE IF (char (i1) (1:ilen) .eq.'rechen') then
           psiort (jpsi) = psiort (jpsi) + feldr (i1)
-        ELSEIF (char (i1) (1:ilen) .eq.'zusatzverlust') then
+        ELSE IF (char (i1) (1:ilen) .eq.'zusatzverlust') then
           psiort (jpsi) = psiort (jpsi) + feldr (i1)
-        ELSEIF (char (i1) (1:ilen) .eq.'auslauf') then
+        ELSE IF (char (i1) (1:ilen) .eq.'auslauf') then
           psiort (jpsi) = psiort (jpsi) + feldr (i1)
         ELSE
           write (*,9021) char(i1)(1:ilen)
@@ -1279,7 +1281,7 @@ if (RUN_MODUS /= 'KALYPSO') then
 
       wsanf = - 1. * wsanf
 
-    ELSEIF (mode.eq.4) then
+    ELSE IF (mode.eq.4) then
 
       STOP 'Programmende'
 
@@ -1601,7 +1603,7 @@ if (RUN_MODUS /= 'KALYPSO') then
 
     IF (mode.eq.1) then
       FLIESSGESETZ = 'DW_O_FORMBW'
-    ELSEIF (mode.eq.2) then
+    ELSE IF (mode.eq.2) then
       FLIESSGESETZ = 'DW_M_FORMBW'
     ELSE
       write (*, 9004)
@@ -1712,13 +1714,36 @@ if (RUN_MODUS /= 'KALYPSO') then
 
 end if
 
-USE_EXTREM_ROUGH = .true.
+
+! -----------------------------------------------------------------------------
+! ZUSAETZLICHE KONFIGURATIONSDATEI IM /PROF/ ORDNER
+! WP 14.11.2007
+! -----------------------------------------------------------------------------
+
+!WP Die fogenden Einstellungen koennen ab sofort in
+!WP der Datei Kalypso_add.cfg festegelgt werden.
+
+!USE_EXTREM_ROUGH = .false.
+!MD  TEST TEST TEST TEST
+!VERZOEGERUNGSVERLUST = 'NON '
+!BERECHNUNGSMODUS = 'REIB_KONST'
+!MD  TEST TEST TEST TEST
 
 
-  !MD  TEST TEST TEST TEST
-  !   VERZOEGERUNGSVERLUST = 'NON '
-  !   BERECHNUNGSMODUS = 'REIB_KONST'
-  !MD  TEST TEST TEST TEST
+IF (RUN_MODUS /= 'KALYPSO') THEN
+  ilen = LEN_TRIM(NAME_PFAD_PROF)
+  NAME_EIN_ADD_INI = NAME_PFAD_PROF(1:ilen) // 'Kalypso_add.cfg'
+
+  INQUIRE(FILE=NAME_EIN_ADD_INI, EXIST = lexist)
+  IF (lexist) THEN
+    write (*,1030) NAME_EIN_ADD_INI(1:ilen)
+    1030 format (//1X, 'Im Projektordner ', A, /, &
+                 & 1X, 'liegt die Datei "Kalypso_add.cfg" mit zusaetzlichen Konfigurationen vor!')
+    call read_config_file(ADJUSTL(NAME_EIN_ADD_INI),LEN_TRIM(NAME_EIN_ADD_INI))     
+  END IF  
+
+END IF
+
 
 
 ! -------------------------------------------------------------------------------------
@@ -1735,7 +1760,7 @@ write (*,1020) PROJEKTPFAD, STRANGDATEI, BERECHNUNGSMODUS, FLIESSGESETZ, &
              & ANFANGSSTATION, ENDSTATION, ART_RANDBEDINGUNG, &
              & ANFANGSWASSERSPIEGEL, GEFAELLE, &
              & VERZOEGERUNGSVERLUST, ITERATIONSART, REIBUNGSVERLUST, &
-             & MIT_BRUECKEN, MIT_WEHREN, &
+             & MIT_BRUECKEN, MIT_WEHREN, USE_EXTREM_ROUGH, &
              & ABFLUSSEREIGNIS, &
              & EINZELVERLUSTE, &
              & MIN_Q, MAX_Q, DELTA_Q, DURCHFLUSS_EINHEIT
@@ -1747,15 +1772,16 @@ write (*,1020) PROJEKTPFAD, STRANGDATEI, BERECHNUNGSMODUS, FLIESSGESETZ, &
              & 1X, 'BERECHNUNGSMODUS = ', A10, /, &
              & 1X, 'FLIESSGESETZ     = ', A11, //, &
              & 1X, 'ANFANGSSTATION = ', F12.4, /, &
-	     & 1X, 'ENDSTATION     = ', F12.4, //, &
+             & 1X, 'ENDSTATION     = ', F12.4, //, &
              & 1X, 'ART_RANDBEDINGUNG = ', A20, //, &
              & 1X, 'ANFANGSWASSERSPIEGEL = ', F12.4, /, &
              & 1X, 'GEFAELLE             = ', F12.7, //, &
              & 1X, 'VERZOEGERUNGSVERLUST = ', A4, /, &
              & 1X, 'ITERATIONSART        = ', A5, /, &
              & 1X, 'REIBUNGSVERLUST      = ', A6, //, &
-             & 1X, 'MIT_BRUECKEN = ', L1,/, &
-             & 1X, 'MIT_WEHREN   = ', L1, //, &
+             & 1X, 'MIT_BRUECKEN    = ', L1,/, &
+             & 1X, 'MIT_WEHREN      = ', L1, /, &
+             & 1X, 'MIT_EXTREM_RAUH = ', L1, //, &
              & 1X, 'ABFLUSSEREIGNIS = ', A, /, &
              & 1X, 'EINZELVERLUSTE  = ', A, //, &
              & 1X, 'MIN_Q   = ', F10.4, /, &

@@ -36,53 +36,60 @@
 !
 ! Wolf Ploeger, 18 August 2004
 ! Research Associate
-!***********************************************************************
+!-----------------------------------------------------------------------------
 
 
 SUBROUTINE pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2, &
     & isener, v_tr, anl_l, anb_l, om_l, ct_l, bmwvor, l_tr, &
     & u_tr, vt_n, v1_hg, if_pa, formbeiwert)
 
-!***********************************************************************
-!**                                                                     
-!JK   SUBROUTINE PASCHE                                                 
-!**                                                                     
-!JK   BESCHREIBUNG: BERECHNUNG TEILABFLUSS DER VORLAENDER NACH PASCHE   
-!**                 BERECHNUNG TRENNFLAECHENGESCHWINDIGKEIT             
-!**                 BERECHNUNG WIDERSTANDSBEIWERT DER TRENNFLAECHEN     
-!**                                                                     
-!**   DIREKT UEBERGEBENE PARAMETER                                      
-!**   ----------------------------                                      
-!**                                                                     
-!**
-!**   UNKLAR: BMWVOR ????                                               
-!**           anb_l                                                     
-!**           anl_l                                                     
-!**           vt_n,                                                     
-!**           v1_hg                                                     
-!**           if_pa                                                     
-!**                                                                     
-!**   EINGABE:                                                          
-!**   br(1)   -- BREITE DES LINKEN VORLANDES                            
-!**   br(3)   -- BREITE DES RECHTEN VORLANDES
-!**   hr                                                                
-!**   iprof   -- ANZAHL PROFILE                                         
-!**   isener  -- ENERGIEGEFAELLE                                        
-!**   itere2  -- ???????????????????????????????
-!**   nknot   --
-                                                                        
-!**                                                                     
-!**   AUSGABE:                                                          
-!**   bf(1)   -- MITWIRKENDE BREITE LINKES VORLAND                      
-!**   bf(2)   -- MITWIRKENDE BREITE RECHTES VORLAND                     
-!**   ct_l    -- HILFSWERT FORMEL (42), BWK S.36, RECHTS UND LINKS      
-!**   om_l    -- BEWUCHSPARAMETER                                       
-!**   qvor1   -- ABFLUSS VORLAND LINKS                                  
-!**   qvor2   -- ABFLUSS VORLAND RECHTS                                 
-!**   u_tr    -- BENETZTER UMFANG TRENNFLAECHE                          
-!**   v_tr    -- TRENNFLAECHENGESCHW. LINKS/RECHTS                      
-!**                                                                     
-!**                                                                     
+!-----------------------------------------------------------------------------
+!                                                                     
+! SUBROUTINE PASCHE                                                 
+!
+! BESCHREIBUNG: BERECHNUNG TEILABFLUSS DER VORLAENDER NACH PASCHE   
+!               BERECHNUNG TRENNFLAECHENGESCHWINDIGKEIT             
+!               BERECHNUNG WIDERSTANDSBEIWERT DER TRENNFLAECHEN     
+!
+!-----------------------------------------------------------------------------
+
+USE DIM_VARIABLEN
+USE KONSTANTEN
+USE BEWUCHS
+USE IO_UNITS
+
+! Calling variables
+INTEGER, INTENT(IN) 		  	    :: nknot 	! Anzahl der Profilpunkte
+CHARACTER(LEN=1), INTENT(IN) 	  	:: iprof        ! Art des Profils
+REAL, INTENT(IN)                  	:: hr		! Wasserspiegelhöhe
+REAL, DIMENSION(1:2), INTENT(OUT) 	:: bf           ! Mitwirkende Bewuchsbreite (1=links, 2=rechts)
+INTEGER, INTENT(IN)               	:: itere2       ! WP bleibt unklar ????
+REAL, DIMENSION(maxkla), INTENT(IN)	:: br           ! Spiegelbreite der drei Abschnitte
+                                                        ! (1 = links, 2 = mitte, 3 = rechts)
+REAL, INTENT(OUT)                   :: qvor1        ! Abfluss Vorland links
+REAL, INTENT(OUT)                   :: qvor2        ! Abfluss Vorland rechts
+REAL, INTENT(IN)                    :: isener       ! Energieliniengefälle
+REAL, DIMENSION(1:2), INTENT(OUT)   :: v_tr         ! Trennflächengeschwindigkeit (1 = links, 2 = rechts)
+REAL, DIMENSION(1:2), INTENT(OUT)   :: anl_l        ! Nachlauflänge  (1 = links, 2 = rechts)
+REAL, DIMENSION(1:2), INTENT(OUT)   :: anb_l        ! Nachlaufbreite (1 = links, 2 = rechts)
+REAL, DIMENSION(1:2), INTENT(OUT)   :: om_l         ! Bewuchsparameter (1 = links, 2 = rechts)
+REAL, DIMENSION(1:2), INTENT(OUT)   :: ct_l         ! HILFSWERT FORMEL (42), BWK S.36, (1 = links, 2 = rechts)
+REAL, DIMENSION(1:2), INTENT(OUT)   :: bmwvor       ! Mitwirkende Bewuchsbreite auf dem Vorland (1 = links, 2 = rechts)
+REAL, DIMENSION(1:2), INTENT(OUT)   :: l_tr         ! Widerstandsbeiwert der Trennfläche (1 = links, 2 = rechts)
+REAL, DIMENSION(1:2), INTENT(OUT)   :: u_tr         ! Benetzter Umfang der Trennfläche (1 = links, 2 = rechts)
+REAL, DIMENSION(1:2), INTENT(OUT)   :: vt_n         ! Trennflächengeschwindigkeit (1 = links, 2 = rechts)
+REAL, INTENT(OUT)                   :: v1_hg        ! Mittlere Fließgeschwindigkeit im Flußschlauch
+INTEGER, INTENT(OUT)                :: if_pa        ! Fehlervariable für Subroutine Pasche
+REAL, DIMENSION(maxkla), INTENT(IN) :: formbeiwert  ! Formbeiwert der drei Abschnitte fuer die LAMBDA-Berechnung
+
+! Local variables
+REAL :: GET_CW_UN
+REAL :: GET_A_NL
+CHARACTER(LEN=2) :: ifact
+INTEGER, DIMENSION(1:2) :: i10
+INTEGER :: isch, ifall
+REAL, DIMENSION(1:2) :: dqvor, b_vor, rhytr, a_kt
+
 !**   IN DIESER SUBROUTINE VERWENDETE VARIABLEN                         
 !**   -----------------------------------------                         
 !**   a_ks    --      durchströmte Fläche eines Teilabschnittes         
@@ -177,17 +184,9 @@ SUBROUTINE pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2, &
 !HB                  benetzte Hoehe der Trennflaeche)                   
 !HB   ***************************************************************** 
 !**                                                                     
-!**                                                                     
-!**   AUFGERUFENE ROUTINEN                                              
-!**   --------------------                                              
-!JK   - lcase                                                           
-!JK   - sohlef                                                          
-!JK   - cwsub                                                           
-!JK   - mitvor                                                          
-!**                                                                     
+!**
 !**   HINWEISE                                                          
 !**   --------                                                          
-!**   IN ZEILE 455 "ITERE1" NICHT BEKANNT, UT, 18.08.2000               
 !**                                                                     
 !**                                                                     
 !**   Folgende Fallunterscheidungen in Sub Pasche                       
@@ -264,52 +263,7 @@ SUBROUTINE pasche (nknot, iprof, hr, bf, itere2, br, qvor1, qvor2, &
 !**                              ---------                              
 !**                                                                     
 !***********************************************************************
-                                                                        
-                                                                        
 
-                                                                        
-!JK   ------------------------------------------------------------------
-!JK   VEREINBARUNGSTEIL                                                 
-!JK   ------------------------------------------------------------------
-                                                                        
-
-!WP 01.02.2005
-USE DIM_VARIABLEN
-USE KONSTANTEN
-USE BEWUCHS
-USE IO_UNITS
-
-! Calling variables
-INTEGER, INTENT(IN) 		  	:: nknot 	! Anzahl der Profilpunkte
-CHARACTER(LEN=1), INTENT(IN) 	  	:: iprof        ! Art des Profils
-REAL, INTENT(IN)                  	:: hr		! Wasserspiegelhöhe
-REAL, DIMENSION(1:2), INTENT(OUT) 	:: bf           ! Mitwirkende Bewuchsbreite (1=links, 2=rechts)
-INTEGER, INTENT(IN)               	:: itere2       ! WP bleibt unklar ????
-REAL, DIMENSION(maxkla), INTENT(IN) 	:: br           ! Spiegelbreite der drei Abschnitte
-                                                        ! (1 = links, 2 = mitte, 3 = rechts)
-REAL, INTENT(OUT)                       :: qvor1        ! Abfluss Vorland links
-REAL, INTENT(OUT)                       :: qvor2        ! Abfluss Vorland rechts
-REAL, INTENT(IN)                        :: isener       ! Energieliniengefälle
-REAL, DIMENSION(1:2), INTENT(OUT)       :: v_tr         ! Trennflächengeschwindigkeit (1 = links, 2 = rechts)
-REAL, DIMENSION(1:2), INTENT(OUT)       :: anl_l        ! Nachlauflänge  (1 = links, 2 = rechts)
-REAL, DIMENSION(1:2), INTENT(OUT)       :: anb_l        ! Nachlaufbreite (1 = links, 2 = rechts)
-REAL, DIMENSION(1:2), INTENT(OUT)       :: om_l         ! Bewuchsparameter (1 = links, 2 = rechts)
-REAL, DIMENSION(1:2), INTENT(OUT)       :: ct_l         ! HILFSWERT FORMEL (42), BWK S.36, (1 = links, 2 = rechts)
-REAL, DIMENSION(1:2), INTENT(OUT)       :: bmwvor       ! Mitwirkende Bewuchsbreite auf dem Vorland (1 = links, 2 = rechts)
-REAL, DIMENSION(1:2), INTENT(OUT)       :: l_tr         ! Widerstandsbeiwert der Trennfläche (1 = links, 2 = rechts)
-REAL, DIMENSION(1:2), INTENT(OUT)       :: u_tr         ! Benetzter Umfang der Trennfläche (1 = links, 2 = rechts)
-REAL, DIMENSION(1:2), INTENT(OUT)       :: vt_n         ! Trennflächengeschwindigkeit (1 = links, 2 = rechts)
-REAL, INTENT(OUT)                       :: v1_hg        ! Mittlere Fließgeschwindigkeit im Flußschlauch
-INTEGER, INTENT(OUT)                    :: if_pa        ! Fehlervariable für Subroutine Pasche
-REAL, DIMENSION(maxkla), INTENT(IN)     :: formbeiwert  ! Formbeiwert der drei Abschnitte fuer die LAMBDA-Berechnung
-
-! Local variables
-REAL :: GET_CW_UN
-REAL :: GET_A_NL
-CHARACTER(LEN=2) :: ifact
-INTEGER, DIMENSION(1:2) :: i10
-INTEGER :: isch, ifall
-REAL, DIMENSION(1:2) :: dqvor, b_vor, rhytr, a_kt
 
 
 ! COMMON-Block /DARCY/ -------------------------------------------------------------
@@ -398,7 +352,6 @@ trenn_li = u_tr (1)
 trenn_re = u_tr (2)
 !HB   *****************************************************************
 
-!UT   WAS IST itere2 ???, 31.08.2000???, UT
 !UT   itere2 WIRD DIREKT UEBERGEBEN!
 IF (itere2 .le. 1) then
   v_tr (1) = 0.0
@@ -406,12 +359,12 @@ IF (itere2 .le. 1) then
   l_tr (1) = 0.0
   l_tr (2) = 0.0
 
-  IF (itrli.gt.1.and.u_tr (1) .gt.1.e-02) then
+  IF (itrli .gt. 1 .and. u_tr(1) .gt. 1.e-02) then
     v_tr (1) = 3.0 * v_ks (itrli - 1)
     !WRITE (*, * ) 'In PASCHE: v_ks_li=', v_ks (itrli - 1)
   ENDIF
 
-  IF (itrre.lt.nknot.and.u_tr (2) .gt.1.e-02) then
+  IF (itrre .lt. nknot .and. u_tr(2) .gt. 1.e-02) then
     v_tr (2) = 3.0 * v_ks (itrre)
     !WRITE (*, * ) 'In PASCHE: v_ks_re=', v_ks (itrre)
   ENDIF
@@ -463,14 +416,14 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
         i10 (i1) = 0
 
         !UT  BETRACHTUNG LINKES VORLAND
-        IF (i1.eq.1) then
+        IF (i1 .eq. 1) then
           iii = itrli
           ik = itrli - 1
           ifact = itr_typ_li
           isch = ischl
 
           !****  D.Bley 12.1.98 eingefuegt:
-          IF (itrli.eq.1) then
+          IF (itrli .eq. 1) then
             ikli = 1
           ELSE
             ikli = itrli - 1
@@ -553,7 +506,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
           RETURN
 
         !UT            ELSEIF ZU if (iprof(1:1).ne.' ') then
-        ELSEIF (isch.ge.itrli.and.isch.le.itrre) then
+        ELSE IF (isch .ge. itrli .and. isch .le. itrre) then
           ! Keine Trennflaechen, da Wsp unter Bordvoll
           ! Fall 6-8
 
@@ -564,7 +517,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
           v_tr (i1) = 0.0
           ifall = 1
 
-          IF (itere2.le.1.and.i1.eq.1.and.iter5.le.1) l_tr (2) = l_tr (i1)
+          IF (itere2 .le. 1 .and. i1 .eq. 1 .and. iter5 .le. 1) l_tr (2) = l_tr (i1)
 
           ianf_hg = max (itrli, ischl)
           iend_hg = min (itrre, ischr)
@@ -573,19 +526,10 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
              & l_tr, isener, l_hg, v_hg, ifall, ianf_hg, iend_hg, itere2, i1,&
              & if_so, formbeiwert(2) )
 
-          ! ------------------------------------------------------
-          !JK  WAR SCHON DEAKTIVIERT, 01.05.00, JK
-          !  16.0.5.97 J.Sz
-          !ccc              elseif (itrli.gt.1 .AND. itrre.ge.1) then
-          !ccc                if (abs(dp(itrli-1)).le.1.e-04.and.
-          !ccc     *             abs(dp(itrre)) .le. 1.e-04) then
-          !cc               12.1.98 geaendert auf Wunsch von Dr. Pasche und D.Bley
-          !cc               naechte 3 Zeilen
-          ! ------------------------------------------------------
 
-          !JK  beide Vorlaender ohne Bewuchs, FALL 3
-        ELSEIF (abs (dp (ikli) ) .le.1.e-04.AND. abs(dp(itrre)) &
-             & .le.1.e-04.AND.itrli.gt.ischl.AND.itrre.lt.ischr) then
+        !JK  beide Vorlaender ohne Bewuchs, FALL 3
+        ELSE IF (abs (dp (ikli) ) .le. 1.e-04 .AND. abs(dp(itrre)) &
+             & .le. 1.e-04 .AND. itrli .gt. ischl .AND. itrre .lt. ischr) then
 
           ifall = 22
 
@@ -602,14 +546,14 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
 
         !JK            Vorland ohne Bewuchs, FALL 2
-        ELSEIF (abs (dp(ik) ) .le. 1.e-04) then
+        ELSE IF (abs (dp(ik) ) .le. 1.e-04) then
 
           ifall = 2
 
           !write (*,*) 'In PASCHE. Vorland ohne Bewuchs! IFALL = ', ifall
 
           !UT               IM FALL LINKES VORLAND
-          IF (itere2.le.1.and.i1.eq.1.and.iter5.le.1) then
+          IF (itere2 .le. 1 .and. i1 .eq. 1 .and. iter5 .le. 1) then
             l_tr (2) = l_tr (i1)
           ENDIF
 
@@ -622,7 +566,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
                      & l_tr, isener, l_hg, v_hg, ifall, ianf_hg, iend_hg, itere2, i1,&
                      & if_so, formbeiwert(2) )
 
-        ELSEIF (v_tr (i1) .le.1.e-03.and.v_ks (ik) .le.1.e-06) then
+        ELSE IF (v_tr(i1) .le. 1.e-03 .and. v_ks(ik) .le. 1.e-06) then
 
           ! Dieser Fall tritt nur auf, wenn der Vorlandbereich so gering
           ! eingestaut ist, dass die Fliessgeschwindigkeiten dort fast null
@@ -636,7 +580,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
           !write (*,*) 'In PASCHE. Geringes v auf Vorland! IFALL = ', ifall
 
-          IF (itere2.le.1.and.i1.eq.1.and.iter5.le.1) then
+          IF (itere2 .le. 1 .and. i1 .eq. 1 .and. iter5 .le. 1) then
             l_tr (2) = l_tr (i1)
           ENDIF
 
@@ -661,7 +605,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
           !JK  ITERATIVE BESTIMMUNG DER TRENNFL.-GESCHWINDIGKEIT,
           !JK  SCHLEIFE 1000 AN TRENNFLAECHE v_tr(i1) LINKS/RECHTS
-          DO 1000 WHILE(abs (v_tr (i1) - vxn) .gt. 0.015)
+          DO 1000 WHILE(abs (v_tr(i1) - vxn) .gt. 0.015)
 
             !UT  SETZE STARTWERT FEHLERKENNWERT SCHLEIFE 1000
             ip1000 = 0
@@ -711,19 +655,27 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
             !UT  BER. DER MITWIR. VORLANDBREITE, FORMEL 41, BWK, S.36
             !UT  DURCH AUFRUF SUB MITVOR, DORT NUR DIESE FORMEL
-            !CALL mitvor (ct, dp (ik), ax (ik), bmwvor (i1), u_tr (i1), l_ks (ik) )
             bmwvor(i1) = GET_MITVOR(ct, dp(ik), ax(ik), u_tr(i1), l_ks(ik))
+            
+            !write (UNIT_OUT_LOG, 7000) i1, ik, bmwvor(i1), ct, dp(ik), ax(ik), u_tr(i1), l_ks(ik)
+            !7000 format (1X, 'In PASCHE. Nach GET_MITVOR. i1 = ', I5, '  ik = ', I5, /, &
+            !           & 1X, 'BMWVOR(i1) = ', F10.4, /, &
+            !           & 1X, 'ct         = ', F10.4, /, &
+            !           & 1X, 'dp(ik)     = ', F10.4, /, &
+            !           & 1X, 'ax(ik)     = ', F10.4, /, &
+            !           & 1X, 'u_tr(i1)   = ', F10.4, /, &
+            !           & 1X, 'l_ks(ik)   = ', F10.4)
 
             !UT  WENN MITWIRK. BREITE DES VORL. > BREITE VORLAND
             !UT  DANN MITWIRK. BREITE DES VORL. = BREITE VORLAND
-            IF (bmwvor (i1) .gt.b_vor (i1) ) bmwvor (i1) = b_vor (i1)
+            IF (bmwvor(i1) .gt. b_vor(i1)) bmwvor(i1) = b_vor(i1)
 
             !UT  ZAEHLEN ITERATIONEN SCHLEIFE 1000 GRENZFL.-GESCHW
             num = num + 1
 
             !UT  MITWIRKENDE BREITE FLUSSCHLAUCH bf
             !UT  FALLS NULL, SETZE AUF HALBE FLUSSBREITE
-            IF (abs (bf (i1) ) .lt.1.e-04) then
+            IF (abs (bf (i1) ) .lt. 1.e-04) then
 
               bf (1) = b_hg / 2.
               bf (2) = b_hg / 2.
@@ -733,9 +685,9 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
             !UT  BERECHNUNG LAMBDA, LINKES (1), RECHTES (2) VORLAND
             !UT  BWK, S.35, FORMEL 36
             !ST  Widerstandsbeiwerte der Trennflächen
-            l_tr (i1) = (1. / ( - 2.03 * log10 (c3 * (fakt * bmwvor (i1) &
-                        &  / bf (i1) ) **c4 * omega) ) ) **2
+            l_tr (i1) = (1. / ( -2.03 * log10(omega * c3*   (fakt*bmwvor(i1)/bf(i1)) **c4) ) ) **2
 
+            !WP Begrenzung des Trennflaechenwiderstandes
             IF (l_tr (i1) .gt. 2.D0) THEN
               l_tr (i1) = 2.D0
             END IF
@@ -744,19 +696,20 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
               l_tr (2) = l_tr (i1)
             ENDIF
 
-            IF (ik.gt.0) then
-              IF (l_ks (ik) .gt.1.e-04) then
-                ctfak = u_tr (i1) / l_ks (ik)
-              ELSE
-                !UT  SCHREIBEN IN KONTROLLFILE
-                write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich. l_ks(ik) < 1.e-04!'' )')
-                write (UNIT_OUT_LOG, 8902) ik, l_ks(ik), i1, u_tr(i1), l_tr(i1)
-                8902 format (1X, 'IK=', i3, ' l_ks(ik) = ', F10.6, ' I1 = ', I3, ' u_tr(i1) = ', F10.5, ' l_tr(i1) = ', F10.5)
-              ENDIF
-            ELSE
-              !UT     SCHREIBEN IN KONTROLLFILE
-              write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich. ik <= 0!'')')
-            ENDIF
+            !WP ik ist Knoten links von der linken Trennflaeche oder Knoten der rechten Trennflaeche
+            !IF (ik.gt.0) then
+            !  IF (l_ks (ik) .gt. 1.e-04) then
+            !    ctfak = u_tr (i1) / l_ks (ik)
+            !  ELSE
+            !    !UT  SCHREIBEN IN KONTROLLFILE
+            !    write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich. l_ks(ik) < 1.e-04!'' )')
+            !    write (UNIT_OUT_LOG, 8902) ik, l_ks(ik), i1, u_tr(i1), l_tr(i1)
+            !    8902 format (1X, 'IK=', i3, ' l_ks(ik) = ', F10.6, ' I1 = ', I3, ' u_tr(i1) = ', F10.5, ' l_tr(i1) = ', F10.5)
+            !  ENDIF
+            !ELSE
+            !  !UT     SCHREIBEN IN KONTROLLFILE
+            !  write (UNIT_OUT_LOG, '(''Berechnung von ctfak nicht moeglich. ik <= 0!'')')
+            !ENDIF
 
             ianf_hg = max (itrli, ischl)
             iend_hg = min (itrre, ischr)
@@ -781,7 +734,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
 
             !UT                 SCHLEIFE 1000, MEHR ALS 10mal => ENDE
             !UT                 TRENNFLAECHENGESCHWINDIGKEIT
-            IF (num.gt.20) then
+            IF (num .gt. 20) then
 
               !UT                    SETZEN FEHLERKENNZAHL SCHLEIFE 1000
               ip1000 = 1000
@@ -791,7 +744,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
                          & 1X, 'Nach ',I3,' Iterationen betraegt die ', /, &
                          & 1X, 'Differenz V_TR_alt = ',F10.4, ' V_TR_neu = ',F10.4)
               write(UNIT_OUT_LOG,8901) iter1, i1, v_tr(i1), axn2, b05f, omega, &
-                              & ct, ctfak, bmwvor(i1), bf(1), bf(2), l_tr(i1)
+                              & ct, bmwvor(i1), bf(1), bf(2), l_tr(i1)
               8901 FORMAT (/1X, 'ITER1 = ', I7, /, &
                           & 1X, 'I1    = ', I7, /, &
                           & 1X, 'V_TR  = ', F7.4, /, &
@@ -799,7 +752,6 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
                           & 1X, 'B05F  = ', F7.4, /, &
                           & 1X, 'OMEGA = ', F7.4, /, &
                           & 1X, 'CT    = ', F7.4, /, &
-                          & 1X, 'HT/LV = ', F7.4, /, &
                           & 1X, 'BMW   = ', F7.4, /, &
                           & 1X, 'BF(1) = ', F7.4, /, &
                           & 1X, 'BF(1) = ', F7.4, /, &
@@ -827,11 +779,17 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
         !     erweiterung um ausgabe einer fiktiven rauheitshoehe k-t
         !     nach formel (7) des dvwk-fortbildungsheftes 13
 
-        IF (bmwvor (i1) .gt.1.e-04) then 
+        IF (bmwvor (i1) .gt. 1.e-04) then 
           rhytr (i1) = l_tr (i1) / l_hg * r_hg 
           a_kt(i1) = 0.854 * rhytr(i1) * omega * (1.7 * bmwvor(i1) / bf(i1) ) **c4
-          dqvor(i1) = 0.25 * u_tr(i1) * bmwvor(i1) * (v_tr(i1) - v_ks(ik) )
-          l_ks(ik) = 8. * g * r_ks(ik) * isener / ( ( (dqvor(i1) + q_ks(ik)) /a_ks(ik)) **2.D0)
+          dqvor(i1) = 0.25 * u_tr(i1) * bmwvor(i1) * ABS(v_tr(i1) - v_ks(ik) )
+          !WP 12.11.2007
+          !WP Der Lambda-Wert des Vorlandes kann nur von den Bewuchsparametern,
+          !WP der Sohlrauheit und dem Energieliniengefälle abhängen, nicht von der Fließgeschwindigkeit!
+          !WP Da das Gefälle und die Wassertiefe vorgegeben wird, ist eine Anpassung
+          !WP des Lambda-Wertes auf dem ersten Vorlandabschnitt nicht sinnvoll und
+          !WP führt auch zu unsinnigen Ergebnissen und schlechter Konvergenz!!!!
+          !l_ks(ik) = 8. * g * r_ks(ik) * isener / ( ( (dqvor(i1) + q_ks(ik)) /a_ks(ik)) **2.D0)
         ELSE 
           a_kt (i1) = 0. 
           dqvor (i1) = 0. 
@@ -853,7 +811,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
       !write (*,*) 'In PASCHE. Ende DO 10 Schleife. V_HG = ', v_hg
 
 
-      IF (iter5.gt.20) then 
+      IF (iter5 .gt. 20) then 
                                                                         
         !UT            SETZE FEHLERKENNZAHL
         ip5 = 10000 
@@ -901,7 +859,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
     vbmwv = 0.0
 
   !JK  NUR KEINE TRENNFLAECHE LINKS
-  ELSEIF (l_tr (1) .le. 0.0) then
+  ELSE IF (l_tr (1) .le. 0.0) then
 
     !UT  MITWIRKENDE BREITE LINKS NULL
     bf (1) = 0.0
@@ -913,7 +871,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
     vbmwv = 0.0
 
   !JK  NUR KEINE TRENNFLAECHE RECHTS
-  ELSEIF (l_tr (2) .le. 0.0) then
+  ELSE IF (l_tr (2) .le. 0.0) then
 
     !UT  MITWIRKENDE BREITE LINKS = FLUSSSCHLAUCHBREITE
     bf (1) = b_hg
@@ -945,7 +903,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
     bf (2) = b_hg - bf (1)
 
     !UT  SCHLEIFE 1 KONVERGIERT NICHT
-    IF (iter1.gt.10) then
+    IF (iter1 .gt. 10) then
 
       !UT  MITWIRKENDE BREITE BEI NICHTKONVERGENZ
       bfn1 = b_hg / (vlabw + 1.)

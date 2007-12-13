@@ -39,7 +39,6 @@
 !**********************************************************************
 
 SUBROUTINE w_ber (he, qw, np, nz, idr1, nblatt, Q_Abfrage)
-! w_ber (he, qw, np, nz, idr1, nblatt)
 
 !***********************************************************************
 !**                                                                     
@@ -1482,7 +1481,7 @@ DO 5000 j = 1, nwfd
   !MD  NEUER BERECHNUNGSMODUS
   IF (BERECHNUNGSMODUS == 'REIB_KONST' .and. Q_Abfrage == 'NO_SCHLEIFE') then
     WRITE (UNIT_OUT_WEHR, '(4x,f7.3,1x,f10.3,1x,f8.3,1x,f10.3,2x,f6.4,2x,f7.3,2x,f6.3,2x,f7.3, &
-       & 3x,a,1x,f10.3,1x,f10.3,1x,f8.3,1x,f10.3,1x,f8.3,)')  &
+       & 3x,a,1x,f10.3,1x,f10.3,1x,f8.3,1x,f10.3,1x,f8.3)')  &
        & qw, h_ow, v_ow, he, cq (j), q_w (j), huew (j), auew (j), uearttxt, he_q, h_uw, v_uw, hen1, K_verlust
 
     WRITE (UNIT_OUT_QWEHR, '(1x,F10.4,4F10.3,3x,a)')  &

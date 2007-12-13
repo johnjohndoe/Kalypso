@@ -99,7 +99,7 @@ REAL :: hvst
 REAL :: hrst
 REAL :: psieins, psiorts
 INTEGER :: nprof
-INTEGER :: hgrenz
+REAL :: hgrenz
 INTEGER :: ikenn
 INTEGER :: nblatt
 INTEGER :: nz
