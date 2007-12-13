@@ -78,4 +78,12 @@ public class DefaultFeaturePropertyHandler implements IFeaturePropertyHandler
     return GeometryUtilities.isGeometry( pt );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#isFunctionProperty(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public boolean isFunctionProperty( final IPropertyType pt )
+  {
+    return false;
+  }
+
 }

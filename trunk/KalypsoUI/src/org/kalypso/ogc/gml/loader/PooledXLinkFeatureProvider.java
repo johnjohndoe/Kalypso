@@ -84,35 +84,42 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   /**
    * @see org.kalypsodeegree.model.feature.IFeatureProvider#getWorkspace()
    */
-  public synchronized GMLWorkspace getWorkspace( )
+  public GMLWorkspace getWorkspace( )
   {
-    if( m_key == null )
+    KeyInfo info = null;
+
+    synchronized( this )
     {
-      final GMLWorkspace contextWorkspace = getContext().getWorkspace();
-
-      /* Immediately handle local features */
-      final String uri = getUri();
-
-      if( uri == null )
+      if( m_key == null )
       {
-        m_workspace = contextWorkspace;
-        return m_workspace;
+        final GMLWorkspace contextWorkspace = getContext().getWorkspace();
+
+        /* Immediately handle local features */
+        final String uri = getUri();
+
+        if( uri == null )
+        {
+          m_workspace = contextWorkspace;
+          return m_workspace;
+        }
+
+        m_key = new PoolableObjectType( "gml", uri, contextWorkspace.getContext() );
+
+        final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+
+        info = pool.addPoolListener( this, m_key );
       }
+    }
 
-      m_key = new PoolableObjectType( "gml", uri, contextWorkspace.getContext() );
-
-      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-
-      final KeyInfo info = pool.addPoolListener( this, m_key );
-      try
-      {
+    try
+    {
+      if( info != null )
         info.join();
-      }
-      catch( final InterruptedException e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        KalypsoGisPlugin.getDefault().getLog().log( status );
-      }
+    }
+    catch( final InterruptedException e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoGisPlugin.getDefault().getLog().log( status );
     }
 
     return m_workspace;
@@ -125,12 +132,10 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
-    {
       if( status.isOK() )
         m_workspace = (GMLWorkspace) newValue;
       else
         m_workspace = null;
-    }
   }
 
   /**

@@ -60,7 +60,7 @@ public interface IFeaturePropertyHandler
    * </p>
    * 
    * @param valueToSet
-   *          The value with which {@link Feature#setProperty(IPropertyType, Object)} was called.
+   *            The value with which {@link Feature#setProperty(IPropertyType, Object)} was called.
    * @return The value which should really be stored in the feature.
    */
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet );
@@ -73,11 +73,18 @@ public interface IFeaturePropertyHandler
    * </p>
    * 
    * @param currentValue
-   *          The value which is currently stored in the feature.
+   *            The value which is currently stored in the feature.
    * @return The value which should really be returned from {@link Feature#getProperty(QName)}.
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue );
 
   /** Return if the envelope of the feature shall be invalidated after settings this property. */
   public boolean invalidateEnvelope( final IPropertyType pt );
+
+  /**
+   * REMARK: only for internal use. Is used to determine if a property is a function property. Function properties do
+   * not get transformed during load.<br/> This is needed in order to prohibit loading of xlinked-workspaces during
+   * gml-loading, in order to avoid dead-locks.
+   */
+  public boolean isFunctionProperty( IPropertyType pt );
 }
