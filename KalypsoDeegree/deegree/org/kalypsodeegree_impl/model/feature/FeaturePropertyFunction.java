@@ -76,17 +76,25 @@ public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler
    *    &lt;/kapp:functionProperty&gt;
    * </pre>
    * 
-   * @param properties the properties of the appinfo
-   * 
-   *  TODO: allow init to throw an exception in order to produce better error messages, if function could not be correctly initialized
+   * @param properties
+   *            the properties of the appinfo TODO: allow init to throw an exception in order to produce better error
+   *            messages, if function could not be correctly initialized
    */
   public abstract void init( final Map<String, String> properties );
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
    */
   public boolean invalidateEnvelope( final IPropertyType pt )
   {
     return GeometryUtilities.isGeometry( pt );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#isFunctionProperty(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public boolean isFunctionProperty( final IPropertyType pt )
+  {
+    return true;
   }
 }

@@ -200,4 +200,16 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
     return DEFAULT_HANDLER.invalidateEnvelope( pt );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#isFunctionProperty(org.kalypso.gmlschema.property.IPropertyType)
+   */
+  public boolean isFunctionProperty( final IPropertyType pt )
+  {
+    final IFeaturePropertyHandler handler = m_handlers.get( pt.getQName() );
+    if( handler != null )
+      return handler.isFunctionProperty( pt );
+
+    return DEFAULT_HANDLER.isFunctionProperty( pt );
+  }
+
 }

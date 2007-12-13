@@ -61,5 +61,4 @@ public interface Feature extends DeegreeFeature, IAdaptable
   public void setWorkspace( final GMLWorkspace workspace );
 
   public void invalidEnvelope( );
-
 }

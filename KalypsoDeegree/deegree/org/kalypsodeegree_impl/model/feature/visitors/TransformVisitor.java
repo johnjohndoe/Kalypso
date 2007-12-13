@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -51,9 +54,22 @@ public class TransformVisitor implements FeatureVisitor
   {
     try
     {
-      final IPropertyType[] ftps = f.getFeatureType().getProperties();
+      final IFeatureType featureType = f.getFeatureType();
+
+      final IPropertyType[] ftps = featureType.getProperties();
       for( final IPropertyType ftp : ftps )
       {
+        if( ftp instanceof VirtualFeatureTypeProperty )
+          continue;
+        if( featureType.isVirtualProperty( ftp ) )
+          continue;
+
+        if( f instanceof Feature_Impl )
+        {
+          if( ((Feature_Impl) f).isFunctionProperty( ftp ) )
+            continue;
+        }
+
         if( GeometryUtilities.isGeometry( ftp ) )
         {
           if( ftp.isList() )
@@ -68,7 +84,7 @@ public class TransformVisitor implements FeatureVisitor
             }
           }
           else
-          {// TODO: we may get a deadlock here, because, we are loading antoher gml while accesing xlinked properties (that happens, if the property is a feature function accesing xlinked property; here it happened for ProfileChacherFeatureFunction: BUT: that function transform itself, s maybe we could mark such a property somehow and do not try to transform ) 
+          {
             final GM_Object object = (GM_Object) f.getProperty( ftp );
             final GM_Object transformedGeom = transformProperty( object );
             f.setProperty( ftp, transformedGeom );

@@ -50,9 +50,7 @@ public class Feature_Impl extends AbstractFeature
   protected Feature_Impl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     if( ft == null )
-    {
       throw new UnsupportedOperationException( "must provide a featuretype" );
-    }
 
     m_parent = parent;
     m_parentRelation = parentRelation;
@@ -97,12 +95,10 @@ public class Feature_Impl extends AbstractFeature
   public Object getProperty( final IPropertyType pt )
   {
     if( pt == null )
-    {
       throw new IllegalArgumentException( "pt may not null" );
-    }
 
     /* Special case for this kind of virtual property types */
-    // TODO: get rid of all theses different virtual property thingis
+    // TODO: get rid of all theses different virtual property thing is
     // Use IFeaturePropertyHandler in a consistent way instead!
     if( pt instanceof VirtualFeatureTypeProperty )
       return getVirtuelProperty( (VirtualFeatureTypeProperty) pt );
@@ -208,17 +204,11 @@ public class Feature_Impl extends AbstractFeature
     {
       final IVirtualFunctionPropertyType[] virtualGeometryProperties = m_featureType.getVirtualGeometryProperties();
       if( virtualGeometryProperties == null )
-      {
         return null;
-      }
       else if( virtualGeometryProperties.length > 0 )
-      {
         return (GM_Object) getProperty( virtualGeometryProperties[0] );
-      }
       else
-      {
         return null;
-      }
     }
 
     final Object prop = getProperty( defaultGeomProp );
@@ -229,9 +219,7 @@ public class Feature_Impl extends AbstractFeature
       return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
     }
     if( !((prop == null) || (prop instanceof GM_Object)) )
-    {
       throw new UnsupportedOperationException( "wrong geometry type" );
-    }
     return (GM_Object) prop;
   }
 
@@ -278,9 +266,7 @@ public class Feature_Impl extends AbstractFeature
     // Alternative: instead of invalidating: before every query we check if any feature-envelope is invalid
     final Feature parent = getParent();
     if( parent == null )
-    {
       return;
-    }
 
     final IRelationType rt = getParentRelation();
     if( (rt != null) && rt.isList() )
@@ -345,15 +331,11 @@ public class Feature_Impl extends AbstractFeature
   public Object getProperty( final String propNameLocalPart )
   {
     if( propNameLocalPart.indexOf( ':' ) > 0 )
-    {
       throw new UnsupportedOperationException( propNameLocalPart + " is not a localPart" );
-    }
 
     final IPropertyType pt = m_featureType.getProperty( propNameLocalPart );
     if( pt == null )
-    {
       throw new IllegalArgumentException( "unknown local part: " + propNameLocalPart );
-    }
 
     return getProperty( pt );
   }
@@ -389,13 +371,9 @@ public class Feature_Impl extends AbstractFeature
   public GMLWorkspace getWorkspace( )
   {
     if( m_parent instanceof GMLWorkspace )
-    {
       return (GMLWorkspace) m_parent;
-    }
     if( m_parent instanceof Feature )
-    {
       return ((Feature) m_parent).getWorkspace();
-    }
     return null;
   }
 
@@ -405,9 +383,7 @@ public class Feature_Impl extends AbstractFeature
   public Feature getParent( )
   {
     if( m_parent instanceof Feature )
-    {
       return (Feature) m_parent;
-    }
     return null;
   }
 
@@ -429,9 +405,7 @@ public class Feature_Impl extends AbstractFeature
       m_parent = workspace;
     }
     else
-    {
       throw new UnsupportedOperationException( "is not a root feature" );
-    }
   }
 
   /**
@@ -461,9 +435,7 @@ public class Feature_Impl extends AbstractFeature
 
     final IPropertyType prop = featureType.getProperty( propQName );
     if( prop == null )
-    {
       throw new IllegalArgumentException( "Property not found: " + propQName );
-    }
 
     setProperty( prop, value );
   }
@@ -471,6 +443,17 @@ public class Feature_Impl extends AbstractFeature
   private IFeaturePropertyHandler getPropertyHandler( )
   {
     return FeaturePropertyHandlerFactory.getInstance().getHandler( getFeatureType() );
+  }
+
+  /**
+   * REMARK: only for internal use. Is used to determine if a property is a function property. Function properties do
+   * not get transformed during load.<br/> This is needed in order to prohibit loading of xlinked-workspaces during
+   * gml-loading, in order to avoid dead-locks.
+   */
+  public boolean isFunctionProperty( final IPropertyType pt )
+  {
+    final IFeaturePropertyHandler propertyHandler = getPropertyHandler();
+    return propertyHandler.isFunctionProperty( pt );
   }
 
 }
