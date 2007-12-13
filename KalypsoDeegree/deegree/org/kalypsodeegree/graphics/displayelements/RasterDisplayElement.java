@@ -61,10 +61,7 @@
 package org.kalypsodeegree.graphics.displayelements;
 
 /**
- * 
- * 
  * @version $Revision$
- * @author $author$
  */
 public interface RasterDisplayElement extends GeometryDisplayElement
 {

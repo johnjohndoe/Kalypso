@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -97,14 +98,14 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
    * @param expr1
    * @param expr2
    */
-  public PropertyIsCOMPOperation( int id, Expression expr1, Expression expr2 )
+  public PropertyIsCOMPOperation( final int id, final Expression expr1, final Expression expr2 )
   {
     super( id );
     m_expr1 = expr1;
     m_expr2 = expr2;
   }
 
-  public void setOperatorId( int operatorId )
+  public void setOperatorId( final int operatorId )
   {
     m_operatorId = operatorId;
   }
@@ -114,17 +115,18 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Operation buildFromDOM( Element element ) throws FilterConstructionException
+  public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
     // check if root element's name is a known operator
-    String name = element.getLocalName();
-    int operatorId = OperationDefines.getIdByName( name );
+    final String name = element.getLocalName();
+    final int operatorId = OperationDefines.getIdByName( name );
 
     switch( operatorId )
     {
       case OperationDefines.PROPERTYISEQUALTO:
+      case OperationDefines.PROPERTYISNOTEQUALTO:
       case OperationDefines.PROPERTYISLESSTHAN:
       case OperationDefines.PROPERTYISGREATERTHAN:
       case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
@@ -134,15 +136,15 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
         throw new FilterConstructionException( "'" + name + "' is not a PropertyIsOperator!" );
     }
 
-    ElementList children = XMLTools.getChildElements( element );
+    final ElementList children = XMLTools.getChildElements( element );
 
     if( children.getLength() != 2 )
     {
       throw new FilterConstructionException( "'" + name + "' requires exactly 2 elements!" );
     }
 
-    Expression expr1 = Expression_Impl.buildFromDOM( children.item( 0 ) );
-    Expression expr2 = Expression_Impl.buildFromDOM( children.item( 1 ) );
+    final Expression expr1 = Expression_Impl.buildFromDOM( children.item( 0 ) );
+    final Expression expr2 = Expression_Impl.buildFromDOM( children.item( 1 ) );
 
     return new PropertyIsCOMPOperation( operatorId, expr1, expr2 );
   }
@@ -155,7 +157,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
     return m_expr1;
   }
 
-  public void setFirstExperssion( Expression expr1 )
+  public void setFirstExperssion( final Expression expr1 )
   {
     this.m_expr1 = expr1;
   }
@@ -168,7 +170,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
     return m_expr2;
   }
 
-  public void setSecondExperssion( Expression expr2 )
+  public void setSecondExperssion( final Expression expr2 )
   {
     this.m_expr2 = expr2;
   }
@@ -176,7 +178,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
   /** Produces an indented XML representation of this object. */
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 500 );
+    final StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
     sb.append( m_expr1.toXML() );
     sb.append( m_expr2.toXML() );
@@ -189,12 +191,12 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
    * <tt>Feature</tt>. TODO: Improve datatype handling.
    * 
    * @param feature
-   *          that determines the property values
+   *            that determines the property values
    * @return true, if the <tt>FeatureFilter</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *           if the expressions to be compared are of different types
+   *             if the expressions to be compared are of different types
    */
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     Object value1 = m_expr1.evaluate( feature );
     Object value2 = m_expr2.evaluate( feature );
@@ -212,7 +214,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
         {
           value1 = Double.valueOf( (String) value1 );
         }
-        catch( NumberFormatException e )
+        catch( final NumberFormatException e )
         {
           value2 = value2.toString();
         }
@@ -223,7 +225,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
         {
           value2 = Double.valueOf( (String) value2 );
         }
-        catch( NumberFormatException e )
+        catch( final NumberFormatException e )
         {
           value1 = value1.toString();
         }
@@ -236,14 +238,11 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
       switch( getOperatorId() )
       {
         case OperationDefines.PROPERTYISEQUALTO:
-        {
-          if( (value1 == null) || (value2 == null) )
-          {
-            return false;
-          }
+          return ObjectUtils.equals( value1, value2 );
 
-          return value1.equals( value2 );
-        }
+        case OperationDefines.PROPERTYISNOTEQUALTO:
+          return !ObjectUtils.equals( value1, value2 );
+
         case OperationDefines.PROPERTYISLESSTHAN:
         case OperationDefines.PROPERTYISGREATERTHAN:
         case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
@@ -255,13 +254,17 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
     }// compare Doubles
     else if( (value1 instanceof Number) && (value2 instanceof Number) )
     {
-      double d1 = Double.parseDouble( value1.toString() );
-      double d2 = Double.parseDouble( value2.toString() );
+      final double d1 = Double.parseDouble( value1.toString() );
+      final double d2 = Double.parseDouble( value2.toString() );
 
       switch( getOperatorId() )
       {
         case OperationDefines.PROPERTYISEQUALTO:
-          return d1 == d2;
+          return ObjectUtils.equals( d1, d2 );
+
+        case OperationDefines.PROPERTYISNOTEQUALTO:
+          return !ObjectUtils.equals( d1, d2 );
+
         case OperationDefines.PROPERTYISLESSTHAN:
           return d1 < d2;
         case OperationDefines.PROPERTYISGREATERTHAN:
@@ -281,9 +284,10 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
   }
 
   /**
-   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor, org.kalypsodeegree.filterencoding.Operation, int)
+   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
+   *      org.kalypsodeegree.filterencoding.Operation, int)
    */
-  public void accept( FilterVisitor fv, Operation operation, int depth )
+  public void accept( final FilterVisitor fv, final Operation operation, final int depth )
   {
     fv.visit( this );
   }

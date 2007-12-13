@@ -254,7 +254,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
         final Feature[] parents = fscme.getParentFeatures();
         for( final Feature parent : parents )
+        {
           if( m_featureList.getParentFeature() == parent )
+          {
             switch( fscme.getChangeType() )
             {
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
@@ -267,6 +269,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
               default:
                 setDirty();
             }
+          }
+        }
       }
     }
     else

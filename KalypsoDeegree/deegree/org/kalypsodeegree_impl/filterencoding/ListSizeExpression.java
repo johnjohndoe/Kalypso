@@ -42,54 +42,33 @@ package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.List;
 
-import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
  * @uathor Thomas Jung
  */
-public class ListPropertyToStringExpression extends AbstractFunctionExpression
+public class ListSizeExpression extends AbstractFunctionExpression
 {
   /**
-   * Returns a concatenation of a labels of the features of a feature list. <br/>Works only for list-properties.
-   * <br/>The following argument are needed:
+   * Returns the size of a list-property. <br/>Works only for list-properties. <br/>The following arguments are needed:
    * <ul>
    * <li>The property-name of the list-property.</li>
-   * <li>A string; used as separator berween two labels.</li>
    * </ul>
    * 
+   * @return The size of the list ( {@link Integer} ).
    * @see org.kalypsodeegree.filterencoding.IFunctionExpression#evaluate(org.kalypsodeegree.model.feature.Feature,
    *      java.util.List)
    */
   public Object evaluate( final Feature feature, final List<Expression> args ) throws FilterEvaluationException
   {
     final Expression expression = args.get( 0 );
-    final Expression separatorExpr = args.get( 1 );
 
-    final String separator = (String) separatorExpr.evaluate( feature );
+    final List< ? > list = (List< ? >) expression.evaluate( feature );
 
-    final StringBuffer result = new StringBuffer();
-
-    final FeatureList list = (FeatureList) expression.evaluate( feature );
-
-    for( int i = 0; i < list.size(); i++ )
-    {
-      final Feature child = FeatureHelper.getFeature( feature.getWorkspace(), list.get( i ) );
-      if( child != null )
-      {
-        final String label = FeatureHelper.getAnnotationValue( child, IAnnotation.ANNO_LABEL );
-        result.append( label );
-        if( i != list.size() - 1 )
-          result.append( separator );
-      }
-    }
-
-    return result.toString();
+    return list.size();
   }
 
 }

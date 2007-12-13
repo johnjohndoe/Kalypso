@@ -64,10 +64,8 @@ package org.kalypsodeegree_impl.graphics.legend;
 import org.kalypsodeegree.graphics.legend.LegendView;
 
 /**
- * 
- * 
  * @version $Revision$
- * @author $author$
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
 class LegendView_Impl implements LegendView
 {

@@ -73,7 +73,7 @@ import org.w3c.dom.Element;
 public abstract class ComparisonOperation extends AbstractOperation
 {
 
-  ComparisonOperation( int operationId )
+  ComparisonOperation( final int operationId )
   {
     super( operationId );
   }
@@ -83,46 +83,47 @@ public abstract class ComparisonOperation extends AbstractOperation
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Operation buildFromDOM( Element element ) throws FilterConstructionException
+  public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
 
     // check if root element's name is a known operator
-    String name = element.getLocalName();
-    int operatorId = OperationDefines.getIdByName( name );
+    final String name = element.getLocalName();
+    final int operatorId = OperationDefines.getIdByName( name );
     ComparisonOperation operation = null;
 
     switch( operatorId )
     {
-    case OperationDefines.PROPERTYISEQUALTO:
-    case OperationDefines.PROPERTYISLESSTHAN:
-    case OperationDefines.PROPERTYISGREATERTHAN:
-    case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
-    case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
-    {
-      operation = (ComparisonOperation)PropertyIsCOMPOperation.buildFromDOM( element );
-      break;
-    }
-    case OperationDefines.PROPERTYISLIKE:
-    {
-      operation = (ComparisonOperation)PropertyIsLikeOperation.buildFromDOM( element );
-      break;
-    }
-    case OperationDefines.PROPERTYISNULL:
-    {
-      operation = (ComparisonOperation)PropertyIsNullOperation.buildFromDOM( element );
-      break;
-    }
-    case OperationDefines.PROPERTYISBETWEEN:
-    {
-      operation = (ComparisonOperation)PropertyIsBetweenOperation.buildFromDOM( element );
-      break;
-    }
-    default:
-    {
-      throw new FilterConstructionException( "'" + name + "' is not a comparison operator!" );
-    }
+      case OperationDefines.PROPERTYISEQUALTO:
+      case OperationDefines.PROPERTYISNOTEQUALTO:
+      case OperationDefines.PROPERTYISLESSTHAN:
+      case OperationDefines.PROPERTYISGREATERTHAN:
+      case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
+      case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
+      {
+        operation = (ComparisonOperation) PropertyIsCOMPOperation.buildFromDOM( element );
+        break;
+      }
+      case OperationDefines.PROPERTYISLIKE:
+      {
+        operation = (ComparisonOperation) PropertyIsLikeOperation.buildFromDOM( element );
+        break;
+      }
+      case OperationDefines.PROPERTYISNULL:
+      {
+        operation = (ComparisonOperation) PropertyIsNullOperation.buildFromDOM( element );
+        break;
+      }
+      case OperationDefines.PROPERTYISBETWEEN:
+      {
+        operation = (ComparisonOperation) PropertyIsBetweenOperation.buildFromDOM( element );
+        break;
+      }
+      default:
+      {
+        throw new FilterConstructionException( "'" + name + "' is not a comparison operator!" );
+      }
     }
     return operation;
   }
