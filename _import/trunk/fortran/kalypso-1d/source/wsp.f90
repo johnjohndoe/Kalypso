@@ -1720,14 +1720,13 @@ end if
 ! WP 14.11.2007
 ! -----------------------------------------------------------------------------
 
-!WP Die fogenden Einstellungen koennen ab sofort in
-!WP der Datei Kalypso_add.cfg festegelgt werden.
+!WP Die folgenden Einstellungen koennen ab sofort in
+!WP der Datei Kalypso_add.cfg festegelgt werden, werden jetzt aber
+!WP mit Werten vorbelegt.
 
-!USE_EXTREM_ROUGH = .false.
-!MD  TEST TEST TEST TEST
-!VERZOEGERUNGSVERLUST = 'NON '
-!BERECHNUNGSMODUS = 'REIB_KONST'
-!MD  TEST TEST TEST TEST
+USE_EXTREM_ROUGH = .false.
+VERZOEGERUNGSVERLUST = 'NON '
+BERECHNUNGSMODUS = 'REIB_KONST'
 
 
 IF (RUN_MODUS /= 'KALYPSO') THEN
