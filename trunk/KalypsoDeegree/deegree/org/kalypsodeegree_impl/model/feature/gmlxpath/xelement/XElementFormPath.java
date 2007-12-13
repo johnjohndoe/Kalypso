@@ -98,7 +98,15 @@ public class XElementFormPath extends AbstractXElement
 
     final IPropertyType pt = getPropertyType( featureType, m_propName );
     if( pt == null )
+    {
+      // REMARK: the featureTypeLevel flag does not work in all cases, due to the missing
+      // Property-Level in our data model.
+      // IN order to let it work properly
+      if( m_propName == QNAME_ALL || m_propName.getLocalPart().equals( featureType.getQName().getLocalPart() ) || m_propName.equals( featureType.getQName() ) )
+        return contextFeature;
+
       return null;
+    }
 
     final Object value = contextFeature.getProperty( pt );
     if( pt instanceof IRelationType )
