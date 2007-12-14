@@ -1,3 +1,4 @@
 org.kalypso.ui/debug/resourcepool/keys = false
 
 org.kalypso.ui/debug/featurecomposite/operations = false
+org.kalypso.ui/debug/wms = false
