@@ -61,6 +61,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
 import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider;
+import org.kalypso.util.Debug;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -137,6 +138,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       /* If ok, set the image. On error, set the image to null. */
       if( !result.matches( IStatus.WARNING | IStatus.ERROR | IStatus.CANCEL ) )
       {
+        /* Debug-Information. */
+        Debug.WMS.printf( "WMS (" + getName() + "): Setting new image with extent -> " + m_extent + " ... \n" );
+
         /* Set the newly loaded image. */
         setImage( m_loader.getBuffer() );
       }
@@ -158,7 +162,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * This is the stored extent from the last time, a loader was started (call to
    * {@link #setExtent(int, int, GM_Envelope)}).
    */
-  private GM_Envelope m_extent;
+  protected GM_Envelope m_extent;
 
   /**
    * The source string. Do not remove this, because it is needed, when the template is saved.
@@ -258,32 +262,52 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     /* If the theme is not visible, do not restart the loading. */
     if( isVisible() == false )
     {
+      /* Debug-Information. */
+      Debug.WMS.printf( "WMS (" + getName() + "): Theme is not visible ... \n" );
+
       /* Set to finished, else this theme never 'isLoaded'. */
       m_isFinished = true;
       return;
     }
 
+    /* Debug-Information. */
+    Debug.WMS.printf( "WMS (" + getName() + "): Got new extent ... \n" );
+
     /* If it is the same extent than the last time, do not load again. */
     if( m_extent != null && m_extent.equals( extent ) )
       return;
 
+    /* Debug-Information. */
+    Debug.WMS.printf( "WMS (" + getName() + "): Different extent means, reload ... \n" );
+
     /* If there was a loader working, cancel it. */
     if( m_loader != null )
     {
+      /* Debug-Information. */
+      Debug.WMS.printf( "WMS (" + getName() + "): Cancel old loader ... \n" );
+
       m_loader.removeJobChangeListener( m_adapter );
       m_loader.dispose();
+      m_loader = null;
     }
 
     /* Reset the buffer. */
     if( m_buffer != null )
     {
+      /* Debug-Information. */
+      Debug.WMS.printf( "WMS (" + getName() + "): Clear the buffer ... \n" );
+
       m_buffer.flush();
       m_buffer = null;
     }
-    
+
     /* Create a new loader. */
     if( width > 0 && height > 0 && extent != null && extent.getWidth() > 0 && extent.getHeight() > 0 )
     {
+      /* Debug-Information. */
+      Debug.WMS.printf( "WMS (" + getName() + "): Creating a new loader ... \n" );
+
+      /* Create a new loader. */
       m_loader = new KalypsoImageLoader( getName(), m_provider, width, height, extent );
 
       /* Make sure, only one job is running at a time. */
@@ -294,12 +318,18 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
       /* Schedule it. */
       m_loader.schedule( 250 );
-      
-      /* Memorize the extend, so it can be compared the next time, this method is called. */
+
+      /* Debug-Information. */
+      Debug.WMS.printf( "WMS (" + getName() + "): Extent -> " + extent + " ... \n" );
+
+      /* Memorize the extent, so it can be compared the next time, this method is called. */
       m_extent = extent;
     }
     else
     {
+      /* Extent is null. */
+      m_extent = null;
+
       /* Set to true, else this theme never 'isLoaded'. */
       m_isFinished = true;
     }
@@ -355,6 +385,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     /* Set the new values. */
     m_buffer = image;
+
+    /* If an image is missing, there can be no extent. */
+    if( image == null )
+      m_extent = null;
 
     /* Inform to paint new image. */
     invalidate( getFullExtent() );

@@ -907,9 +907,20 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     }
 
     /* Tell the themes , that the extent has changed. */
-    if( m_model != null )
-      m_model.accept( new KalypsoThemeChangeExtentVisitor( m_width, m_height, m_boundingBox ), IKalypsoThemeVisitor.DEPTH_INFINITE );
+    if( m_model != null ) {
+      int height = getHeight();
+      int width = getWidth();
 
+      /* Update dimension. */
+      if( (height != m_height) || (width != m_width) )
+      {
+        m_height = height;
+        m_width = width;
+      }
+      
+      m_model.accept( new KalypsoThemeChangeExtentVisitor( m_width, m_height, m_boundingBox ), IKalypsoThemeVisitor.DEPTH_INFINITE );
+    }
+    
     fireExtentChanged( oldExtent, m_boundingBox );
   }
 
