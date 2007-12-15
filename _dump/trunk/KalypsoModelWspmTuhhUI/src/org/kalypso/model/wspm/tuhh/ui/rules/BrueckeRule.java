@@ -109,7 +109,7 @@ public class BrueckeRule extends AbstractValidatorRule
         lastPoint = point;
       }
 
-      for( String property : profileObject.getObjectProperties() )
+      for( final String property : profileObject.getObjectProperties() )
       {
         if( ((Double) profileObject.getValueFor( property )).isNaN() )
         {
@@ -143,10 +143,10 @@ public class BrueckeRule extends AbstractValidatorRule
         {
           if( trenner[0].getPoint() != uk_h_l )
 
-            collector.createProfilMarker( true, "Trennfläche nicht auf Schnittpunk Gelände-UK-Brücke", "", profil.getPoints().indexOf( trenner[0].getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, points.indexOf( uk_h_l ) ) } );
+            collector.createProfilMarker( true, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "", profil.getPoints().indexOf( trenner[0].getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, points.indexOf( uk_h_l ) ) } );
           if( trenner[trenner.length - 1].getPoint() != uk_h_r )
 
-            collector.createProfilMarker( true, "Trennfläche nicht auf Schnittpunk Gelände-UK-Brücke", "", profil.getPoints().indexOf( trenner[trenner.length - 1].getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, points.indexOf( uk_h_r ) ) } );
+            collector.createProfilMarker( true, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "", profil.getPoints().indexOf( trenner[trenner.length - 1].getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, points.indexOf( uk_h_r ) ) } );
         }
 
         // Brückenlager
@@ -160,7 +160,7 @@ public class BrueckeRule extends AbstractValidatorRule
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
@@ -170,7 +170,7 @@ public class BrueckeRule extends AbstractValidatorRule
 
   final boolean paramCheck( final IProfileObject profileObject )
   {
-    for( String property : profileObject.getObjectProperties() )
+    for( final String property : profileObject.getObjectProperties() )
     {
       if( ((Double) profileObject.getValueFor( property )).isNaN() )
         return false;

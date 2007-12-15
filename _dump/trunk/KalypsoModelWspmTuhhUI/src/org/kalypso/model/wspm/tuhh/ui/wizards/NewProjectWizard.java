@@ -92,7 +92,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
     private IFile m_file;
 
-    protected DoFinishOperation( IProject project )
+    protected DoFinishOperation( final IProject project )
     {
       m_project = project;
     }
@@ -188,7 +188,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     {
       if( !status.isOK() )
         ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, "Fehler beim Erzeugen des Projekts", status );
-      
+
       BasicNewProjectResourceWizard.updatePerspective( m_config );
       BasicNewResourceWizard.selectAndReveal( project, m_workbench.getActiveWorkbenchWindow() );
 

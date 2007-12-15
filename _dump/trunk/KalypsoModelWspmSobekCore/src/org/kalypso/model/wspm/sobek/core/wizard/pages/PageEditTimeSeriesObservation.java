@@ -80,6 +80,7 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControl;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
 /**
  * Wizard page with table of time series observation
@@ -127,7 +128,7 @@ public class PageEditTimeSeriesObservation extends WizardPage
     final TupleResult tupleResult = myObs.getResult();
 
     // obsTable
-    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null );
+    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, new IComponentUiHandler[] {} );
 // control.setComponentUiHandlers( new IComponentUiHandler[] { dateHandler } );
 
     // control.setViewerFilter( new CDViewerFilter( combinations ) );
@@ -145,6 +146,7 @@ public class PageEditTimeSeriesObservation extends WizardPage
 // public IStatus runInUIThread( IProgressMonitor monitor )
 // {
 // GMLWorkspace workspace = m_conflict.getWorkspace();
+
 // final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
 // m_pool.postCommand( command, null );
 //

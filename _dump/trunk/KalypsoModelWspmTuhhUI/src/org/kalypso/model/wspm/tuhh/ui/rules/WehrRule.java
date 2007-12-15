@@ -73,7 +73,7 @@ public class WehrRule extends AbstractValidatorRule
       validateDevider( profil, collector, pluginId );
       validateParams( profil, collector, pluginId, leftP );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
@@ -97,7 +97,7 @@ public class WehrRule extends AbstractValidatorRule
     }
     if( index2 > index4 )
     {
-      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( wehrDevider.length - 1, IWspmTuhhConstants.MARKER_TYP_WEHR,index4) } );
+      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( wehrDevider.length - 1, IWspmTuhhConstants.MARKER_TYP_WEHR, index4 ) } );
     }
   }
 
@@ -119,9 +119,10 @@ public class WehrRule extends AbstractValidatorRule
         break;
       }
     }
-    for( String property : profileObject.getObjectProperties() )
+    for( final String property : profileObject.getObjectProperties() )
     {
-      if( ((Double)profileObject.getValueFor( property )).isNaN() )
+      final Object prop = profileObject.getValueFor( property );
+      if( prop instanceof Double && ((Double) prop).isNaN() )
       {
         collector.createProfilMarker( true, "Parameter <" + profileObject.getLabelFor( property ) + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
         break;

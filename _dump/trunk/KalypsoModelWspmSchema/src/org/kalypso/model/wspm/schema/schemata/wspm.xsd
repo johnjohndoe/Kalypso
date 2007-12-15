@@ -335,7 +335,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="refNr" type="string">
+					<element name="refNr" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerkennziffer</label>

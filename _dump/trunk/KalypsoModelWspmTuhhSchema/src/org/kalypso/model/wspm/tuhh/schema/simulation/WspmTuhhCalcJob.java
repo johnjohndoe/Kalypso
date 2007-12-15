@@ -47,8 +47,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 
@@ -113,33 +115,52 @@ public class WspmTuhhCalcJob implements ISimulation
 
     PrintWriter pwSimuLog = null;
     InputStream zipInputStream = null;
-    OutputStream strmKernelLog = null;
+    final OutputStream strmKernelLog = null;
     OutputStream strmKernelErr = null;
     PrintWriter pwInParams = null;
     InputStream mapContentStream = null;
     PrintWriter mapWriter = null;
     try
     {
-      pwSimuLog = new PrintWriter( new BufferedWriter( new FileWriter( simulogFile ) ) );
+      final OutputStream osSimuLog = new BufferedOutputStream( new FileOutputStream( simulogFile ) )
+      {
+        // REMARK: also stream stuff into System.out in order to have a log in the console.view
+        /**
+         * @see java.io.BufferedOutputStream#write(byte[], int, int)
+         */
+        @Override
+        public synchronized void write( byte[] b, int off, int len ) throws IOException
+        {
+          super.write( b, off, len );
+
+          System.out.write( b, off, len );
+        }
+
+        /**
+         * @see java.io.BufferedOutputStream#write(int)
+         */
+        @Override
+        public synchronized void write( int b ) throws IOException
+        {
+          super.write( b );
+
+          System.out.write( b );
+        }
+      };
+      pwSimuLog = new PrintWriter( new OutputStreamWriter( osSimuLog, "CP1252" ) );
 
       final LogHelper log = new LogHelper( pwSimuLog, monitor );
-      log.log( true, "Parsing GMLXPath: %s", calcXPath );
+      log.log( true, "Eingangsdaten werden geladen...", calcXPath );
 
-      final GMLXPath calcpath = new GMLXPath( calcXPath );
-
-      // load gml
-      log.log( true, "Loading GML: %s", modellGmlURL );
+      final GMLXPath calcpath = new GMLXPath( calcXPath, null );
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellGmlURL, null );
-
-      // get calculation via path
-      log.log( true, "Loading Calculation: %s", calcXPath );
 
       final Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
       if( !(calcObject instanceof Feature) )
       {
-        monitor.setFinishInfo( IStatus.ERROR, "GMLXPath points to no feature: " + calcObject );
-        log.log( false, "GMLXPath (%s) points to no feature: %s", calcXPath, calcObject );
+        monitor.setFinishInfo( IStatus.ERROR, "GMLXPath zeigt auf kein Feature: " + calcObject );
+        log.log( false, "GMLXPath (%s) zeigt auf kein Feature: %s", calcXPath, calcObject );
         return;
       }
 
@@ -148,7 +169,7 @@ public class WspmTuhhCalcJob implements ISimulation
 
       monitor.setProgress( 10 );
 
-      log.log( true, "Writing files for tuhh calculation-core..." );
+      log.log( true, "Schreibe Dateien für Kalypso-1D..." );
 
       // write calculation to tmpDir
       WspWinExporter.writeForTuhhKernel( calculation, tmpDir );
@@ -163,10 +184,6 @@ public class WspmTuhhCalcJob implements ISimulation
       zipInputStream.close();
 
       // prepare kernel logs (log and err)
-      final File fleKernelLog = new File( tmpDir, "kernel.log" );
-      resultEater.addResult( "KernelLog", fleKernelLog );
-      strmKernelLog = new BufferedOutputStream( new FileOutputStream( fleKernelLog ) );
-
       final File fleKernelErr = new File( tmpDir, "kernel.err" );
       resultEater.addResult( "KernelErr", fleKernelErr );
       strmKernelErr = new BufferedOutputStream( new FileOutputStream( fleKernelErr ) );
@@ -190,20 +207,20 @@ public class WspmTuhhCalcJob implements ISimulation
       monitor.setProgress( 20 );
 
       /* Start kalypso-1d.exe */
-      log.log( true, "Executing calculation core..." );
+      log.log( true, "Rechenkern 'Kalypso-1D.exe' wird gestartet..." );
 
       if( log.checkCanceled() )
         return;
 
-      // start calculation
-      ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, strmKernelLog, strmKernelErr, null );
+      // start calculation; the out-stream gets copied into the simulation.log and the system.out
+      ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, osSimuLog, strmKernelErr, null );
 
       if( log.checkCanceled() )
         return;
 
       // load results + copy to result folder + unzip templates
       monitor.setProgress( 80 );
-      monitor.setMessage( "Retrieving results" );
+      monitor.setMessage( "Lade Ergebnisse" );
       pwSimuLog.println( "Ergebnis-Dateien werden generiert und übertragen." );
 
       // alle Modi
@@ -257,6 +274,7 @@ public class WspmTuhhCalcJob implements ISimulation
           final LengthSectionProcessor[] processedLengthSections = lsProcessor.getProcessedLengthSections();
           if( processedLengthSections.length != 1 )
           {
+            log.log( true, "Fehler bei der Ergebnisauswertung. Bitte prüfen Sie die Ergebnis-Logs.", new Object[0] );
             monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der Ergebnisauswertung. Bitte prüfen Sie die Ergebnis-Logs." );
             return;
           }
