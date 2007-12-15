@@ -40,52 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.swt.SWT;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.eclipse.swt.widgets.Table;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.om.table.celleditor.DateTimeCellEditor;
 
 /**
- * Handles XMLGreogorianCalendar types
+ * Handles XMLGreogorianCalendar types.
  * 
  * @author Dirk Kuch
  */
-public class ComponentUiDateHandler extends AbstractComponentHandler
+public class ComponentUiDateHandler extends AbstractComponentUiHandler
 {
-  private final DateFormat m_format;
-
-  public ComponentUiDateHandler( final IComponent component )
+  public ComponentUiDateHandler( final IComponent component, final boolean editable, final boolean resizeable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
-    super( component );
-
-    m_format = SimpleDateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
+    super( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.IComponentUiHandler#addColumn(java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
-  @Override
-  public void addColumn( final DefaultTableViewer tableviewer )
+  public CellEditor createCellEditor( final Table table )
   {
-    super.addColumn( tableviewer );
-
-    // TODO setStyle
-    tableviewer.addColumn( getComponent().getId(), getComponent().getName(), getComponent().getDescription(), 175, isEditable(), SWT.NONE );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.om.table.IComponentUiHandler#createCellEditor()
-   */
-  public CellEditor createCellEditor( )
-  {
-    return new DateTimeCellEditor( getTableViewer().getTable() );
+    return new DateTimeCellEditor( table );
   }
 
   /**
@@ -93,16 +75,8 @@ public class ComponentUiDateHandler extends AbstractComponentHandler
    */
   public Object formatValue( final Object value )
   {
+    // No formatting/parsing needed, the DateTimeCellEditor works for XMLGregorianCalendar's
     return value;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.om.table.IComponentUiHandler#isEditable()
-   */
-  public boolean isEditable( )
-  {
-    // FIXME
-    return true;
   }
 
   /**
@@ -110,23 +84,23 @@ public class ComponentUiDateHandler extends AbstractComponentHandler
    */
   public Object parseValue( final Object value )
   {
+    // No formatting/parsing needed, the DateTimeCellEditor works for XMLGregorianCalendar's
     return value;
   }
 
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(java.lang.Object)
    */
+  @Override
   public String getStringRepresentation( final Object value )
   {
     if( value instanceof XMLGregorianCalendar )
     {
-      final XMLGregorianCalendar calendar = (XMLGregorianCalendar) value;
-      final GregorianCalendar gregorian = calendar.toGregorianCalendar();
-
-      return m_format.format( gregorian.getTime() );
+      final Date date = DateUtilities.toDate( (XMLGregorianCalendar) value );
+      return super.getStringRepresentation( date );
     }
 
-    return value.toString();
+    return "<No Date>";
   }
 
 }

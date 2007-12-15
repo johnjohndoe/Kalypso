@@ -52,7 +52,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.om.table.ComboBoxViewerCellEditor;
+import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

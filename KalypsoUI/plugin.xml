@@ -4,6 +4,7 @@
 	<extension-point id="mapviewaction" name="mapviewaction"
 		schema="schema/org.kalypso.ui.mapview.action.exsd" />
    	<extension-point id="featureViewExtensionControl" name="featureViewExtensionControl" schema="schema/featureViewExtensionControl.exsd"/>
+    <extension-point id="componentUiHandlerProvider" name="componentUiHandlerProvider" schema="schema/componentUiHandlerProvider.exsd"/>
 
 	<extension id="preferences" name="preferences"
 		point="org.eclipse.core.runtime.preferences">
@@ -2116,5 +2117,12 @@
           class="org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo"
           id="org.kalypso.ui.featureThemeInfo.default">
     </themeInfo>
+ </extension>
+ <extension
+       point="org.kalypso.ui.componentUiHandlerProvider">
+    <provider
+          class="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider"
+          id="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider">
+    </provider>
  </extension>
 </plugin>

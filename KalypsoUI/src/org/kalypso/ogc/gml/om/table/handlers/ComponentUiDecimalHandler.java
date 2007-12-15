@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
+import java.math.BigDecimal;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -47,14 +49,14 @@ import org.eclipse.swt.widgets.Table;
 import org.kalypso.observation.result.IComponent;
 
 /**
- * Handles string values.
+ * Handles decimal values.
  * 
  * @author Dirk Kuch
  * @author Gernot Belger
  */
-public class ComponentUiStringHandler extends AbstractComponentUiHandler
+public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
 {
-  public ComponentUiStringHandler( final IComponent component, final boolean editable, final boolean resizeable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public ComponentUiDecimalHandler( final IComponent component, final boolean editable, final boolean resizeable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     super( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
   }
@@ -83,7 +85,12 @@ public class ComponentUiStringHandler extends AbstractComponentUiHandler
    */
   public Object parseValue( final Object value )
   {
-    // TODO: maybe handle null case differently?
-    return value;
+    if( value == null )
+      return null;
+
+    if( "".equals( value.toString().trim() ) ) // so we can delete rows!
+      return null;
+
+    return new BigDecimal( value.toString().replace( ",", "." ) );
   }
 }
