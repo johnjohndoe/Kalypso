@@ -65,14 +65,14 @@ public class ComboBoxViewerCellEditor extends CellEditor
 {
   protected ComboViewer m_viewer;
 
-  public ComboBoxViewerCellEditor( final IContentProvider prContent, final ILabelProvider prLabel, final Object[] input, final Composite parent, final int style )
+  public ComboBoxViewerCellEditor( final IContentProvider prContent, final ILabelProvider prLabel, final Object input, final Composite parent, final int style )
   {
     super( parent, style );
 
     setup( prContent, prLabel, input );
   }
 
-  private void setup( final IContentProvider prContent, final ILabelProvider prLabel, final Object[] input )
+  private void setup( final IContentProvider prContent, final ILabelProvider prLabel, final Object input )
   {
     m_viewer.setLabelProvider( prLabel );
     m_viewer.setContentProvider( prContent );
@@ -80,6 +80,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
     m_viewer.getCombo().addKeyListener( new KeyAdapter()
     {
       // hook key pressed - see PR 14201
+      @SuppressWarnings("synthetic-access")
       @Override
       public void keyPressed( final KeyEvent e )
       {
@@ -113,6 +114,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
 
     m_viewer.getCombo().addFocusListener( new FocusAdapter()
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       public void focusLost( final FocusEvent e )
       {
@@ -156,9 +158,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
     {
       final StructuredSelection sel = (StructuredSelection) selection;
       final Object element = sel.getFirstElement();
-
-      if( element instanceof String )
-        return element;
+      return element;
     }
 
     return null;

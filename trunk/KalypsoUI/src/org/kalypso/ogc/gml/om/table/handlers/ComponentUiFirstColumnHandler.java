@@ -40,52 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.observation.result.IComponent;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Table;
 
 /**
- * @author kuch
+ * This is the handler for a invisible, empty column. Used to fill the first column of a table with a dummy column, in
+ * order to align all columns correctly.
+ * 
+ * @author Gernot Belger
  */
-public abstract class AbstractComponentHandler implements IComponentUiHandler
+public class ComponentUiFirstColumnHandler extends AbstractComponentUiHandler
 {
-
-  private final IComponent m_component;
-
-  private DefaultTableViewer m_tableviewer;
-
-  public AbstractComponentHandler( final IComponent component )
+  public ComponentUiFirstColumnHandler( )
   {
-    m_component = component;
+    super( null, false, false, "-", SWT.CENTER, 0, -1, "", "", "" );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getComponent()
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
-  public IComponent getComponent( )
+  public CellEditor createCellEditor( final Table table )
   {
-    return m_component;
+    return null;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getIdentity()
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
    */
-  public String getIdentity( )
+  public Object formatValue( final Object value )
   {
-    return ObjectUtils.identityToString( this );
+    return null;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#addColumn(org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.Object)
    */
-  public void addColumn( final DefaultTableViewer tableviewer )
+  public Object parseValue( final Object value )
   {
-    m_tableviewer = tableviewer;
-  }
-
-  protected DefaultTableViewer getTableViewer( )
-  {
-    return m_tableviewer;
+    return null;
   }
 
 }

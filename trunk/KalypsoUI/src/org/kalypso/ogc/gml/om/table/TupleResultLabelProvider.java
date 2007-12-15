@@ -40,16 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerHelper;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
 /**
@@ -57,12 +53,11 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
  */
 public class TupleResultLabelProvider extends EventManager implements ITableLabelProvider
 {
-  private final List<IComponentUiHandler> m_handlers = new ArrayList<IComponentUiHandler>();
+  private final IComponentUiHandler[] m_handlers;
 
   public TupleResultLabelProvider( final IComponentUiHandler[] handlers )
   {
-    for( final IComponentUiHandler handler : handlers )
-      m_handlers.add( handler );
+    m_handlers = handlers;
   }
 
   /**
@@ -111,35 +106,27 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
    */
   public String getColumnText( final Object element, final int columnIndex )
   {
+    if( columnIndex >= m_handlers.length )
+      return "";
 
     if( element instanceof IRecord )
     {
       final IRecord record = (IRecord) element;
-      final IComponent component = getComponent( record, columnIndex );
+      final IComponent component = getComponent( columnIndex );
+      if( component == null )
+        return "";
+
       final Object value = record.getValue( component );
 
-      /* component handler already defined? */
-      for( final IComponentUiHandler handler : m_handlers )
-        if( handler.getComponent().equals( component ) )
-          return handler.getStringRepresentation( value );
-
-      /* no? get default component handler */
-      final IComponentUiHandler handler = ComponentUiHandlerHelper.getHandler( component );
-      m_handlers.add( handler );
-
+      final IComponentUiHandler handler = m_handlers[columnIndex];
       return handler.getStringRepresentation( value );
     }
 
-    return null;
+    return "";
   }
 
-  private IComponent getComponent( final IRecord record, final int columnIndex )
+  private IComponent getComponent( final int columnIndex )
   {
-    final IComponent[] comps = record.getOwner().getComponents();
-    if( (columnIndex < 0) || (columnIndex >= comps.length) )
-      return null;
-
-    final IComponent comp = comps[columnIndex];
-    return comp;
+    return m_handlers[columnIndex].getComponent();
   }
 }

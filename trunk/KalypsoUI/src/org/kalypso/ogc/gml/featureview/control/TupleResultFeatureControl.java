@@ -41,11 +41,12 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
@@ -53,6 +54,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -64,6 +66,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.LastLineCellModifier;
 import org.kalypso.ogc.gml.om.table.LastLineContentProvider;
@@ -71,9 +74,12 @@ import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerHelper;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
+import org.kalypso.template.featureview.ColumnDescriptor;
+import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -83,7 +89,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 {
   private final List<ModifyListener> m_listener = new ArrayList<ModifyListener>( 10 );
 
-  IComponentUiHandler[] m_handlers = new IComponentUiHandler[] {};
+  private final IComponentUiHandler[] m_handlers;
 
   private DefaultTableViewer m_viewer;
 
@@ -101,36 +107,48 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private TupleResult m_tupleResult;
 
-  /** TRICK: in order to supress refresh after our own changes we set this flag. */
-  private boolean m_ignoreNextUpdateControl = false;
+  /** TRICK: in order to suppress refresh after our own changes we set this flag. */
+  private int m_ignoreNextUpdateControl = 0;
 
-  public TupleResultFeatureControl( final IPropertyType ftp )
-  {
-    super( ftp );
-
-    throw (new NotImplementedException());
-  }
-
-  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp )
+  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandler[] handlers )
   {
     super( feature, ftp );
 
-    final List<IComponentUiHandler> handlers = new ArrayList<IComponentUiHandler>();
+    m_handlers = handlers;
+  }
+
+  public static IComponentUiHandler[] toHandlers( final Feature feature, final ColumnDescriptor[] descriptors )
+  {
+    final IComponentUiHandler[] handlers = new IComponentUiHandler[descriptors.length];
+
+    if( feature == null )
+      return new IComponentUiHandler[0];
 
     /* result definition */
-    final Feature resultDefinition = (Feature) feature.getProperty( new QName( "http://www.opengis.net/om", "resultDefinition" ) );
-    final List< ? > components = (List< ? >) resultDefinition.getProperty( new QName( "http://www.opengis.net/swe", "component" ) );
+    final Feature resultDefinition = (Feature) feature.getProperty( new QName( NS.OM, "resultDefinition" ) );
+    final GMLWorkspace workspace = resultDefinition.getWorkspace();
+    final List< ? > components = (List< ? >) resultDefinition.getProperty( new QName( NS.SWE, "component" ) );
+
+    final Map<String, IComponent> componentMap = new HashMap<String, IComponent>();
+
     for( final Object object : components )
     {
-      if( !(object instanceof Feature) )
-        continue;
-
-      final Feature component = (Feature) object;
-      final IComponentUiHandler handler = ComponentUiHandlerHelper.getHandler( component );
-      handlers.add( handler );
+      final Feature componentFeature = FeatureHelper.getFeature( workspace, object );
+      final IComponent component = new FeatureComponent( componentFeature );
+      componentMap.put( component.getId(), component );
     }
 
-    m_handlers = handlers.toArray( new IComponentUiHandler[] {} );
+    for( int i = 0; i < handlers.length; i++ )
+    {
+      final ColumnDescriptor cd = descriptors[i];
+
+      final String componentId = cd.getComponent();
+      final IComponent component = componentMap.get( componentId );
+      final int alignment = SWTUtilities.createStyleFromString( cd.getAlignment() );
+      handlers[i] = ComponentUiHandlerFactory.getHandler( component, cd.isEditable(), cd.isResizeable(), cd.getLabel(), alignment, cd.getWidth(), cd.getWidthPercent(), cd.getDisplayFormat(), cd.getNullFormat(), cd.getParseFormat() );
+    }
+
+    return handlers;
   }
 
   /**
@@ -147,7 +165,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     m_tupleResultContentProvider = new TupleResultContentProvider( m_handlers );
     m_lastLineContentProvider = new LastLineContentProvider( m_tupleResultContentProvider );
-    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_handlers );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider.getHandlers() );
     m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
 
     if( m_viewerFilter != null )
@@ -220,9 +238,9 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
    */
   public void updateControl( )
   {
-    if( m_ignoreNextUpdateControl )
+    if( m_ignoreNextUpdateControl > 0 )
     {
-      m_ignoreNextUpdateControl = false;
+      m_ignoreNextUpdateControl--;
       return;
     }
 
@@ -251,6 +269,11 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     final Feature feature = getFeature();
     final IPropertyType ftp = getFeatureTypeProperty();
 
+    return getObservationFeature( feature, ftp );
+  }
+
+  static Feature getObservationFeature( final Feature feature, final IPropertyType ftp )
+  {
     if( ftp instanceof IRelationType )
     {
       final Object property = feature.getProperty( ftp );
@@ -327,24 +350,19 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     // TODO: refaktor so that we may send multiple changes at one go
     if( definitionChanged )
     {
-      m_ignoreNextUpdateControl = true;
+      m_ignoreNextUpdateControl++;
       fireFeatureChange( new ChangeFeatureCommand( obsFeature, resultDefPT, rd ) );
     }
 
-    m_ignoreNextUpdateControl = true;
+    m_ignoreNextUpdateControl++;
     fireFeatureChange( new ChangeFeatureCommand( obsFeature, resultPT, strResult ) );
   }
 
   /**
-   * must be callen before createControl() is callen!
+   * must be called before createControl() is called!
    */
   public void setViewerFilter( final ViewerFilter filter )
   {
     m_viewerFilter = filter;
-  }
-
-  public void setComponentUiHandlers( final IComponentUiHandler[] handlers )
-  {
-    m_handlers = handlers;
   }
 }

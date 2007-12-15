@@ -81,11 +81,18 @@ public class ProcessHelper
 
           if( m_os != null )
             m_os.write( stuff, 0, read );
+
+          // This thread is already blocked by the read method, so normally we don_'t need to wait here, but who nows...
+          sleep( 25 );
         }
       }
       catch( final IOException ioe )
       {
         ioe.printStackTrace();
+      }
+      catch( final InterruptedException e )
+      {
+        e.printStackTrace();
       }
     }
   }

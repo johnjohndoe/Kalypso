@@ -44,9 +44,10 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
- * A delegate for {@link org.eclipse.jface.viewers.IStructuredContentProvider} which add an (empty) line to the end of
+ * A delegate for {@link org.eclipse.jface.viewers.IStructuredContentProvider} which adds an (empty) line to the end of
  * the table.
- * <p>Should be used in union with {@link org.kalypso.ogc.gml.om.table.LastLineLabelProvider}.
+ * <p>
+ * Should be used in union with {@link org.kalypso.ogc.gml.om.table.LastLineLabelProvider}.
  * 
  * @author Gernot Belger
  */

@@ -50,7 +50,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
-import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.eclipse.swt.widgets.Table;
 import org.kalypso.gmlschema.annotation.AnnotationAdapterFactory;
 import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
@@ -60,33 +60,26 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
 /**
- * @author kuch
+ * Handles enumerated values, i.e. values which have enumeration-restrictions.
+ * 
+ * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class ComponentUiEnumerationHandler extends AbstractComponentHandler
+public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
 {
   protected final Map<Object, ILanguageAnnontationProvider> m_items;
 
-  public ComponentUiEnumerationHandler( final IComponent component )
+  public ComponentUiEnumerationHandler( final IComponent component, final boolean editable, final boolean resizeable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
-    super( component );
+    super( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+
     m_items = getEnumerationItems( component.getRestrictions() );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#addColumn(org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
-  @Override
-  public void addColumn( final DefaultTableViewer tableviewer )
-  {
-    super.addColumn( tableviewer );
-
-    tableviewer.addColumn( getComponent().getId(), getComponent().getName(), getComponent().getDescription(), 100, isEditable(), SWT.NONE );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor()
-   */
-  public CellEditor createCellEditor( )
+  public CellEditor createCellEditor( final Table table )
   {
     final Set<Object> set = m_items.keySet();
 
@@ -108,7 +101,7 @@ public class ComponentUiEnumerationHandler extends AbstractComponentHandler
       }
     };
 
-    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), labelProvider, set.toArray(), getTableViewer().getTable(), SWT.READ_ONLY | SWT.DROP_DOWN );
+    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), labelProvider, set, table, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
   /**
@@ -117,15 +110,6 @@ public class ComponentUiEnumerationHandler extends AbstractComponentHandler
   public Object formatValue( final Object value )
   {
     return value;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isEditable()
-   */
-  public boolean isEditable( )
-  {
-    // FIXME
-    return true;
   }
 
   /**
@@ -150,7 +134,7 @@ public class ComponentUiEnumerationHandler extends AbstractComponentHandler
         return key;
     }
 
-    throw (new NotImplementedException());
+    throw new NotImplementedException();
   }
 
   private Map<Object, ILanguageAnnontationProvider> getEnumerationItems( final IRestriction[] restrictions )
@@ -158,12 +142,14 @@ public class ComponentUiEnumerationHandler extends AbstractComponentHandler
     final Map<Object, ILanguageAnnontationProvider> items = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
 
     for( final IRestriction restriction : restrictions )
+    {
       if( restriction instanceof EnumerationRestriction )
       {
         final EnumerationRestriction r = (EnumerationRestriction) restriction;
 
         items.putAll( r.getMapping() );
       }
+    }
 
     return items;
   }
@@ -171,6 +157,7 @@ public class ComponentUiEnumerationHandler extends AbstractComponentHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(java.lang.Object)
    */
+  @Override
   public String getStringRepresentation( final Object value )
   {
     final ILanguageAnnontationProvider provider = ComponentUtilities.getLanguageProvider( getComponent().getRestrictions(), value );

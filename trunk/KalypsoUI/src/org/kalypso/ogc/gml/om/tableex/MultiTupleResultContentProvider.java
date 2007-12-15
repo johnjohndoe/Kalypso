@@ -86,7 +86,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
     m_tableViewer = ((DefaultTableViewer) viewer);
     if( oldInput != null )
       m_tableViewer.removeAllColumns();
-    
+
     if( newInput == null )
       return;
 
@@ -100,7 +100,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
     m_labelProvider.setModel( m_model );
 
     for( final MTRMColumn col : m_model.getColumnKeySet() )
-      m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, true );
+      m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, -1, true );
 
     m_tableViewer.refreshColumnProperties();
   }
@@ -116,7 +116,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onValueChanged(java.lang.Object, R, C)
    */
-  public void onValueChanged( Object value, MTRMRow rowKey, MTRMColumn columnKey )
+  public void onValueChanged( final Object value, final MTRMRow rowKey, final MTRMColumn columnKey )
   {
     m_tableViewer.update( m_model, null );
   }
@@ -124,7 +124,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onRowAdded(R)
    */
-  public void onRowAdded( MTRMRow rowKey )
+  public void onRowAdded( final MTRMRow rowKey )
   {
     m_tableViewer.refresh();
   }
@@ -132,7 +132,7 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onRowRemoved(R)
    */
-  public void onRowRemoved( MTRMRow rowKey )
+  public void onRowRemoved( final MTRMRow rowKey )
   {
     m_tableViewer.refresh();
   }
@@ -140,18 +140,18 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onColumnAdded(C)
    */
-  public void onColumnAdded( MTRMColumn col )
+  public void onColumnAdded( final MTRMColumn col )
   {
-    m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, true );
+    m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, -1, true );
     m_tableViewer.refreshColumnProperties();
-    
+
     m_tableViewer.refresh();
   }
 
   /**
    * @see org.kalypso.commons.tuple.event.ITupleModelListener#onColumnRemoved(C)
    */
-  public void onColumnRemoved( MTRMColumn columnKey )
+  public void onColumnRemoved( final MTRMColumn columnKey )
   {
     m_tableViewer.refresh();
   }

@@ -51,6 +51,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiFirstColumnHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
 /**
@@ -58,8 +59,6 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
  */
 public class TupleResultContentProvider implements IStructuredContentProvider, ITupleResultChangedListener
 {
-// private final Map<String, IComponent> m_componentMap = new HashMap<String, IComponent>();
-
   private DefaultTableViewer m_tableViewer;
 
   private TupleResult m_result;
@@ -68,7 +67,10 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 
   public TupleResultContentProvider( final IComponentUiHandler[] componentHandlers )
   {
-    m_componentHandlers = componentHandlers;
+    m_componentHandlers = new IComponentUiHandler[componentHandlers.length + 1];
+
+    m_componentHandlers[0] = new ComponentUiFirstColumnHandler();
+    System.arraycopy( componentHandlers, 0, m_componentHandlers, 1, componentHandlers.length );
   }
 
   /**
@@ -105,14 +107,25 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     m_tableViewer.removeAllColumns();
 
     final CellEditor[] cellEditors = new CellEditor[m_componentHandlers.length];
-
     for( int i = 0; i < m_componentHandlers.length; i++ )
     {
       final IComponentUiHandler handler = m_componentHandlers[i];
 
-      handler.addColumn( m_tableViewer );
+      final IComponent component = handler.getComponent();
 
-      cellEditors[i] = handler.createCellEditor();
+      final int columnWidth = handler.getColumnWidth();
+      final int columnWidthPercent = handler.getColumnWidthPercent();
+      final int columnStyle = handler.getColumnStyle();
+      final boolean editable = handler.isEditable();
+      final boolean resizeable = handler.isResizeable();
+
+      final String label = handler.getColumnLabel();
+      final String columnLabel = label == null ? component.getName() : label;
+      final String tooltip = component == null ? null : component.getDescription();
+
+      m_tableViewer.addColumn( "" + i, columnLabel, tooltip, columnWidth, columnWidthPercent, editable, columnStyle, resizeable );
+
+      cellEditors[i] = handler.createCellEditor( m_tableViewer.getTable() );
     }
 
     m_tableViewer.refreshColumnProperties();
@@ -195,17 +208,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
     m_tableViewer.refresh();
-
-    // switch( type )
-    // {
-    // case ADDED:
-    // m_tableViewer.add( records );
-    // break;
-    //
-    // case REMOVED:
-    // m_tableViewer.remove( records );
-    // break;
-    // }
   }
 
   /**
@@ -225,12 +227,8 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 
   public IComponentUiHandler getHandler( final String id )
   {
-    // TODO: hash id's for performance improvement
-    for( final IComponentUiHandler handler : m_componentHandlers )
-      if( id.equals( handler.getComponent().getId() ) )
-        return handler;
-
-    return null;
+    final int index = Integer.parseInt( id );
+    return m_componentHandlers[index];
   }
 
 }

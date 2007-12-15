@@ -47,9 +47,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 /**
  * Within this class all extension-point from the KalypsoUI plug-in are handled.
@@ -99,6 +101,40 @@ public class KalypsoUIExtensions
     }
 
     return THE_FEATUREVIEW_CONTROL_MAP;
+  }
+
+  public static IComponentUiHandlerProvider createComponentUiHandlerProvider( final String componentUiHandlerProviderId )
+  {
+    final String idToFind = componentUiHandlerProviderId == null ? "org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider" : componentUiHandlerProviderId;
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.ui.componentUiHandlerProvider" );
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+
+    for( final IConfigurationElement element : configurationElements )
+    {
+      final String id = element.getAttribute( "id" );
+      if( id.equals( idToFind ) )
+      {
+        try
+        {
+          return (IComponentUiHandlerProvider) element.createExecutableExtension( "class" );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+
+          KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+
+          return null;
+        }
+      }
+    }
+
+    final IStatus status = StatusUtilities.createErrorStatus( "No componenUiHandlerProvider found with id: " + componentUiHandlerProviderId );
+    KalypsoGisPlugin.getDefault().getLog().log( status );
+
+    return null;
   }
 
 }
