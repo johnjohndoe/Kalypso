@@ -564,7 +564,6 @@ public class StyleFactory
    */
   public static Graphic createGraphic( final ExternalGraphic externalGraphic, final Mark mark, final double opacity, final double size, final double rotation )
   {
-
     Object[] mae = null;
     if( externalGraphic != null && mark != null )
     {
@@ -1139,6 +1138,25 @@ public class StyleFactory
     final ColorMapEntry colorMapEntry_noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
     colorMap.put( new Double( -9999 ), colorMapEntry_noData );
     return new RasterSymbolizer_Impl( colorMap );
+  }
+
+  /**
+   * create a default point symbolizer
+   * 
+   * @return the new point symbolizer
+   */
+  public static PointSymbolizer createPointSymbolizer( PropertyName propertyName )
+  {
+    Color grey = new Color( 200, 200, 200, 255 );
+    Color black = new Color( 0, 0, 0, 255 );
+    final String wellKnownName = "square";
+
+    // final Graphic graphic = createGraphic( null, null, 1, 5, 0 );
+
+    final Mark mark = createMark( wellKnownName, grey, black, 1 );
+    final Graphic graphic = createGraphic( null, mark, 1, 5, 0 );
+
+    return createPointSymbolizer( graphic, propertyName );
   }
 
   /**
