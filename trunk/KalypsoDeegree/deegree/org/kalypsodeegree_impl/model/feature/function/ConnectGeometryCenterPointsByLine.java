@@ -109,6 +109,9 @@ public class ConnectGeometryCenterPointsByLine extends FeaturePropertyFunction
     final GM_Object geom1 = (GM_Object) feature.getProperty( geom1Property );
     final GM_Object geom2 = (GM_Object) feature.getProperty( geom2Property );
 
+    if( geom1 == null || geom2 == null )
+      return null;
+
     final GM_Point center1 = geom1.getCentroid();
     final GM_Point center2 = geom2.getCentroid();
 
