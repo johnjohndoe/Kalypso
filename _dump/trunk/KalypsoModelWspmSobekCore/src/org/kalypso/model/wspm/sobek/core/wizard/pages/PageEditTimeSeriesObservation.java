@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -80,6 +82,8 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControl;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
 /**
@@ -127,39 +131,30 @@ public class PageEditTimeSeriesObservation extends WizardPage
     final IObservation<TupleResult> myObs = m_condition.getTimeSeriesObservation();
     final TupleResult tupleResult = myObs.getResult();
 
-    // obsTable
-    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, new IComponentUiHandler[] {} );
-// control.setComponentUiHandlers( new IComponentUiHandler[] { dateHandler } );
+    final List<IComponentUiHandler> myHandlers = new ArrayList<IComponentUiHandler>();
 
-    // control.setViewerFilter( new CDViewerFilter( combinations ) );
+    final IComponent[] components = tupleResult.getComponents();
+    for( final IComponent component : components )
+    {
+      final QName qname = component.getValueTypeName();
+
+      IComponentUiHandler handler;
+      if( DATE_AXIS.equals( qname ) )
+      {
+        handler = new ComponentUiDateHandler( component, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
+      }
+      else
+      {
+        handler = new ComponentUiStringHandler( component, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
+      }
+
+      myHandlers.add( handler );
+    }
+    // obsTable
+    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, myHandlers.toArray( new IComponentUiHandler[] {} ) );
 
     final Control tblControl = control.createControl( container, SWT.BORDER );
     tblControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
-
-// control.addChangeListener( new IFeatureChangeListener()
-// {
-// public void featureChanged( final FeatureChange[] changes )
-// {
-// final UIJob job = new UIJob( "modelUpdate" )
-// {
-// @Override
-// public IStatus runInUIThread( IProgressMonitor monitor )
-// {
-// GMLWorkspace workspace = m_conflict.getWorkspace();
-
-// final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
-// m_pool.postCommand( command, null );
-//
-// return Status.OK_STATUS;
-// }
-// };
-// job.schedule();
-// }
-//
-// public void openFeatureRequested( final Feature feature, final IPropertyType pt )
-// {
-// }
-// } );
 
     /* diagram */
     final Composite cDiagram = new Composite( container, SWT.NULL );
@@ -175,7 +170,6 @@ public class PageEditTimeSeriesObservation extends WizardPage
 
     final Map<IComponent, IAxis> axes = new HashMap<IComponent, IAxis>();
 
-    final IComponent[] components = tupleResult.getComponents();
     for( final IComponent component : components )
     {
       final QName qname = component.getValueTypeName();
