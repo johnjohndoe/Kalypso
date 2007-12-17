@@ -207,7 +207,7 @@ public class DefaultStyleFactory
   {
 
     if( GeometryUtilities.isPointGeometry( ftp ) || GeometryUtilities.isMultiPointGeometry( ftp ) )
-      return StyleFactory.createPointSymbolizer();
+      return StyleFactory.createPointSymbolizer( new PropertyName( ftp.getQName() ) );
     else if( GeometryUtilities.isLineStringGeometry( ftp ) || GeometryUtilities.isMultiLineStringGeometry( ftp ) )
       return StyleFactory.createLineSymbolizer();
     else if( GeometryUtilities.isPolygonGeometry( ftp ) )
