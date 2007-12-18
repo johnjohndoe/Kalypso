@@ -1292,7 +1292,7 @@ public class NaModelInnerCalcJob implements ICalcJob
         // pegelLink.getHref(), "ID", title, false, null, metadataList, axis,
         // qTuppelModel );
         final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID",
-            getTitleForSuffix( suffix ) + observationTitle, false, null, metadataList, axis, qTuppelModel );
+            getTitleForSuffix( suffix ) + " " + observationTitle, false, null, metadataList, axis, qTuppelModel );
 
         // update with Scenario metadata
 
