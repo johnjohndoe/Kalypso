@@ -52,8 +52,8 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.NSPrefixProvider;
 import org.kalypso.commons.xml.NSUtilities;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -111,7 +111,7 @@ public class GMLSAXFactory
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XLINK, null ), NS.XLINK );
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XSD, null ), NS.XSD );
 
-    final GMLSchema gmlSchema = (GMLSchema) workspace.getGMLSchema();
+    final IGMLSchema gmlSchema = workspace.getGMLSchema();
 
     final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
     for( final IFeatureType element : featureTypes )
@@ -125,8 +125,8 @@ public class GMLSAXFactory
     // We save these namespaces as prefixes, so if we reload the gml
     // the additional schema will also be loaded
     final Set<String> uriSet = new HashSet<String>();
-    final GMLSchema[] additionalSchemas = gmlSchema.getAdditionalSchemas();
-    for( final GMLSchema additionalSchema : additionalSchemas )
+    final IGMLSchema[] additionalSchemas = gmlSchema.getAdditionalSchemas();
+    for( final IGMLSchema additionalSchema : additionalSchemas )
       uriSet.add( additionalSchema.getTargetNamespace() );
     for( final String uri : uriSet )
     {
@@ -200,7 +200,7 @@ public class GMLSAXFactory
 
     final Object value = feature.getProperty( vpt );
 
-    final GMLSchema gmlSchema = (GMLSchema) feature.getWorkspace().getGMLSchema();
+    final IGMLSchema gmlSchema = feature.getWorkspace().getGMLSchema();
     final String version = gmlSchema.getGMLVersion();
 
     final IMarshallingTypeHandler th = vpt.getTypeHandler();
