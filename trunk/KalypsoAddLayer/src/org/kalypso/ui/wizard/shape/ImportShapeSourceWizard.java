@@ -9,6 +9,7 @@ import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -87,7 +88,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
       final String styleLocation = stylePath == null ? null : stylePath.toString();
       final String styleName = m_page.getStyleName();
 
-      final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", "featureMember", fileName, "sld", styleName, styleLocation, "simple" );
+      final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName, "sld", styleName, styleLocation, "simple" );
       m_outlineviewer.postCommand( command, null );
     }
 

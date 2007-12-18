@@ -50,8 +50,9 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.EmptyGMLSchema;
+import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -79,15 +80,20 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class ShapeSerializer
 {
-  public static final QName PROPERTY_FEATURE_MEMBER = new QName( "namespace", "featureMember" );
 
-  public static final QName PROPERTY_GEOMETRY = new QName( "namespace", "GEOM" );
+  public static final QName PROPERTY_GEOMETRY = DBaseFile.PROPERTY_GEOMETRY;
 
-  private static final QName PROPERTY_NAME = new QName( "namespace", "name" );
+  private static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
-  private static final QName PROPERTY_TYPE = new QName( "namespace", "type" );
+  private static final QName ROOT_FEATURETYPE = new QName( SHP_NAMESPACE_URI, "ShapeCollection" );
 
-  private static final QName ROOT_FEATURETYPE = new QName( "namespace", "featureCollection" );
+  private static final QName PROPERTY_SHAPE_TYPE = new QName( SHP_NAMESPACE_URI, "ShapeType" );
+
+  public static final QName PROPERTY_FEATURE_MEMBER = new QName( SHP_NAMESPACE_URI, "featureMember" );
+
+  private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" );
+
+  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" );
 
   /**
    * Pseudo QNAME, placeholder for the gml-id to be written.
@@ -102,7 +108,7 @@ public class ShapeSerializer
   public static void serialize( final GMLWorkspace workspace, final String filenameBase, IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
     final Feature rootFeature = workspace.getRootFeature();
-    final List<Feature> features = (List<Feature>) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final List<Feature> features = (List<Feature>) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
 
     try
     {
@@ -146,7 +152,7 @@ public class ShapeSerializer
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler typeHandler = geoPt.getTypeHandler();
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", "GEOM" ), typeHandler.getTypeName(), typeHandler, 0, 1, false );
+    ftps[0] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, typeHandler.getTypeName(), typeHandler, 0, 1, false );
 
     int count = 1;
     for( final Map.Entry<String, String> entry : mapping.entrySet() )
@@ -156,13 +162,13 @@ public class ShapeSerializer
       // ftps[count] = FeatureFactory.createFeatureTypeProperty( (String) entry.getKey(), ftp.getValueClass(),
       // ftp.isNullable() );
       final IMarshallingTypeHandler typeHandler2 = ftp.getTypeHandler();
-      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", entry.getKey() ), typeHandler2.getTypeName(), typeHandler2, 1, 1, false );
+      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler2.getTypeName(), typeHandler2, 1, 1, false );
       count++;
     }
 
     // final IFeatureType shapeFeatureType = FeatureFactory.createFeatureType( "shapeType", null, ftps, occurs, occurs,
     // null, new HashMap() );
-    final IFeatureType shapeFeatureType = GMLSchemaFactory.createFeatureType( new QName( "namespace", "shapeType" ), ftps );
+    final IFeatureType shapeFeatureType = GMLSchemaFactory.createFeatureType( PROPERTY_SHAPE_TYPE, ftps );
 
     try
     {
@@ -225,7 +231,7 @@ public class ShapeSerializer
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler geoTypeHandler = geoPt.getTypeHandler();
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", "GEOM" ), geoTypeHandler.getTypeName(), geoTypeHandler, 0, 1, false );
+    ftps[0] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, geoTypeHandler.getTypeName(), geoTypeHandler, 0, 1, false );
 
     int count = 1;
     for( final Entry<String, QName> entry : mapping.entrySet() )
@@ -236,19 +242,19 @@ public class ShapeSerializer
       {
         /* If it is the pseudo gml-id qname, create a string-property */
         final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
+        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
       }
       else
       {
         /* for each given value property create a corresponding type */
         final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( qname );
         final IMarshallingTypeHandler typeHandler = ftp.getTypeHandler();
-        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
+        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
       }
       count++;
     }
 
-    final IFeatureType shapeFeatureType = GMLSchemaFactory.createFeatureType( new QName( "namespace", "shapeType" ), ftps );
+    final IFeatureType shapeFeatureType = GMLSchemaFactory.createFeatureType( PROPERTY_SHAPE_TYPE, ftps );
 
     try
     {
@@ -297,11 +303,12 @@ public class ShapeSerializer
 
   public final static Feature createWorkspaceRootFeature( final IFeatureType featureType, final Object shapeFileType )
   {
+    final IGMLSchema schema = featureType.getGMLSchema();
+    final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( featureType );
-    new GMLWorkspace_Impl( new EmptyGMLSchema(), new IFeatureType[] { rootFeature.getFeatureType(), featureType }, rootFeature, null, null, null, null );
-
+    final String schemaLocation = schema instanceof GMLSchema ? ((GMLSchema) schema).getContext().toExternalForm() : null;
+    new GMLWorkspace_Impl( schema, featureTypes, rootFeature, null, null, schemaLocation, null );
     rootFeature.setProperty( ShapeSerializer.PROPERTY_TYPE, shapeFileType );
-
     return rootFeature;
   }
 
@@ -324,8 +331,8 @@ public class ShapeSerializer
     final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
 
     final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
-    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, new QName( "org.kalypso.gml.common.shape", "shapeType" ), intTH, 1, 1, false );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( ShapeSerializer.PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
+    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, PROPERTY_SHAPE_TYPE, intTH, 1, 1, false );
+    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps );
 
@@ -345,7 +352,7 @@ public class ShapeSerializer
       final Feature rootFeature = ShapeSerializer.createWorkspaceRootFeature( featureType, fileShapeType );
       final GMLWorkspace workspace = rootFeature.getWorkspace();
 
-      final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+      final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( PROPERTY_FEATURE_MEMBER );
       final List list = (List) rootFeature.getProperty( listRelation );
 
       // die shape-api liefert stets WGS84 als Koordinatensystem, daher
