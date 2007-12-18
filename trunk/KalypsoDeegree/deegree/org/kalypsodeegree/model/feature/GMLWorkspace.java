@@ -206,4 +206,6 @@ public interface GMLWorkspace extends ModellEventProvider
    * evaluated.
    */
   public NamespaceContext getNamespaceContext( );
+
+  public void setSchemaLocation( final String schemaLocation );
 }

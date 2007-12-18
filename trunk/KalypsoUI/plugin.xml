@@ -1192,6 +1192,12 @@
             id="org.kalypso.ogc.gml.map.OpenOutlineCommand"
             name="Gliederung öffnen/schließen">
       </command>
+      <command
+            categoryId="org.kalypso.ui.views.outline.category"
+            defaultHandler="org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler"
+            id="org.kalypso.ui.views.outline.GMLExport"
+            name="GML Export">
+      </command>
       </extension>
  <extension
        point="org.eclipse.ui.viewActions">
@@ -1631,6 +1637,26 @@
               label="Shape Export"
               style="push"
               tooltip="selektierter Layer als Shape exportieren">
+           <visibleWhen
+                 checkEnabled="false">
+              <with
+                    variable="selection">
+                 <iterate
+                       ifEmpty="false"
+                       operator="and">
+                    <instanceof
+                          value="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
+                    </instanceof>
+                 </iterate>
+              </with>
+           </visibleWhen>
+        </command>
+        <command
+              commandId="org.kalypso.ui.views.outline.GMLExport"
+              icon="icons/full/obj16/exportGml2Shp.gif"
+              label="GML Export"
+              style="push"
+              tooltip="selektierten Layer als GML exportieren">
            <visibleWhen
                  checkEnabled="false">
               <with

@@ -21,7 +21,8 @@ Require-Bundle: org.junit,
  org.kalypso.gmlschema;visibility:=reexport,
  org.kalypso.contribs.ogc2x,
  org.kalypso.contribs.ogc31,
- org.kalypso.deegree2;visibility:=reexport
+ org.kalypso.deegree2;visibility:=reexport,
+ org.eclipse.core.resources
 Eclipse-LazyStart: true
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: Acme,
