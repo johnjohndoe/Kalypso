@@ -69,6 +69,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -337,7 +339,7 @@ public class ShapeFile
 
     final Feature feature = m_dbf.getFRow( parent, parentRelation, RecNo, allowNull );
     final GM_Object geo = getGM_ObjectByRecNo( RecNo );
-    final IPropertyType pt = feature.getFeatureType().getProperty( "GEOM" );
+    final IPropertyType pt = feature.getFeatureType().getProperty( DBaseFile.PROPERTY_GEOMETRY );
     feature.setProperty( pt, geo );
 
     return feature;

@@ -62,22 +62,31 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -88,21 +97,23 @@ import org.kalypsodeegree_impl.tools.TimeTools;
 /**
  * the datatypes of the dBase file and their representation as java types: dBase-type dBase-type-ID java-type character
  * "C" String float "F" Float number "N" Double logical "L" String memo "M" String date "D" Date binary "B"
- * ByteArrayOutputStream <!---------------------------------------------------------------------------->
+ * ByteArrayOutputStream
  * 
  * @version 12.12.2000
  * @author Andreas Poth
- * @author Markus M?ller, email: mm@giub.uni-bonn.de
+ * @author Markus Müller, email: mm@giub.uni-bonn.de
+ * @version 18.12.2007
+ * @author Stefan Kurzbach
  */
 public class DBaseFile
 {
+  public static final String SHP_NAMESPACE_URI = "org.kalypso.shape";
 
-  public IFeatureType getFeatureType( )
-  {
-    return m_featureType;
-  }
+  public static final QName PROPERTY_GEOMETRY = new QName( SHP_NAMESPACE_URI, "GEOM" );
 
-  private static String NS_SHAPEFILE = "namespace";
+  private final String m_customNamespaceURI;
+
+  private final QName m_propertyCustomFeatureMember;
 
   private final ArrayList<String> colHeader = new ArrayList<String>();
 
@@ -162,7 +173,7 @@ public class DBaseFile
 
   final int m_defaultFileShapeType;
 
-  private String m_prefix;
+  private String m_suffix;
 
   /**
    * constructor <BR>
@@ -171,7 +182,11 @@ public class DBaseFile
   public DBaseFile( final String url, final int defaultFileShapeType ) throws IOException
   {
     fname = url;
-    m_prefix = fname.replaceAll( ".+[/|\\\\]", "" );
+    // m_prefix = fname.replaceAll( ".+[/|\\\\]", "" );
+    m_suffix = "" + fname.hashCode();
+    m_customNamespaceURI = "org.kalypso.shape.custom_" + m_suffix;
+    m_propertyCustomFeatureMember = new QName( m_customNamespaceURI, "featureMember" );
+
     m_defaultFileShapeType = defaultFileShapeType;
     // creates rafDbf
     rafDbf = new RandomAccessFile( url + _dbf, "r" );
@@ -200,6 +215,9 @@ public class DBaseFile
   {
     m_defaultFileShapeType = -1;
     fname = url;
+
+    m_customNamespaceURI = "org.kalypso.shape.custom#" + fname.hashCode();
+    m_propertyCustomFeatureMember = new QName( m_customNamespaceURI, "featureMember" );
 
     // create header
     header = new DBFHeader( fieldDesc );
@@ -331,6 +349,7 @@ public class DBaseFile
   private IFeatureType createFeatureType( )
   {
     dbfCol column = null;
+    String elementsString = "";
 
     final IPropertyType[] ftp = new IPropertyType[colHeader.size() + 1];
 
@@ -402,15 +421,45 @@ public class DBaseFile
       {
         th = null;
       }
-      ftp[i] = GMLSchemaFactory.createValuePropertyType( new QName( DBaseFile.NS_SHAPEFILE, column.name ), th.getTypeName(), th, 1, 1, false );
+      ftp[i] = GMLSchemaFactory.createValuePropertyType( new QName( m_customNamespaceURI, column.name ), th.getTypeName(), th, 1, 1, false );
+      elementsString = elementsString + "<xs:element name=\"" + column.name + "\" type=\"xs:" + th.getTypeName().getLocalPart() + "\"/>\n";
     }
 
     // remove everything before "\" or "/"
-    final QName qNameFT = new QName( DBaseFile.NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
+    // final QName qNameFT = new QName( ShapeFile.CUSTOM_NAMESPACE_URI, fname.replaceAll( ".+(/,\\\\)", "" ) );
+    // final QName qNameFT = new QName( DBaseFile.NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
     final Class< ? extends GM_Object> geoClass = getGeometryType();
     final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
-    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( DBaseFile.NS_SHAPEFILE, "GEOM" ), geoTH.getTypeName(), geoTH, 1, 1, false );
-    return GMLSchemaFactory.createFeatureType( qNameFT, ftp );
+    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, geoTH.getTypeName(), geoTH, 1, 1, false );
+
+    try
+    {
+      final InputStream schemaTemplateInput = getClass().getResource( "resources/shapeCustomTemplate.xsd" ).openStream();
+      String schemaString = IOUtils.toString( schemaTemplateInput );
+      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), m_suffix );
+      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_PROPERTY_ELEMENTS}" ), elementsString );
+      final File tempFile = TempFileUtilities.createTempFile( KalypsoDeegreePlugin.getDefault(), "temporaryCustomSchemas", "customSchema", ".xsd" );
+      IOUtils.copy( new StringReader( schemaString ), new FileOutputStream( tempFile ) );
+      final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURL() );
+      // final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( new StringInputStream( schemaString ), "3.1.1", new
+      // File( fname ).getParentFile().toURL() );
+      return GMLSchemaFactory.createFeatureType( m_propertyCustomFeatureMember, ftp, schema );
+    }
+    catch( final IOException e )
+    {
+      // should not happen
+      throw new IllegalStateException( e );
+    }
+    catch( final GMLSchemaException e )
+    {
+      // should not happen
+      throw new IllegalStateException( e );
+    }
+  }
+
+  public IFeatureType getFeatureType( )
+  {
+    return m_featureType;
   }
 
   private Class< ? extends GM_Object> getGeometryType( )
@@ -748,7 +797,7 @@ public class DBaseFile
       }
     }
 
-    return FeatureFactory.createFeature( parent, parentRelation, m_prefix + rowNo, m_featureType, fp );
+    return FeatureFactory.createFeature( parent, parentRelation, rowNo + "_" + m_suffix, m_featureType, fp );
   }
 
   /**
