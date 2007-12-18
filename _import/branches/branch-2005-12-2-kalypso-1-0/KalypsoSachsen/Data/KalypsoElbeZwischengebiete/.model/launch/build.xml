@@ -12,6 +12,8 @@
     <!-- Q: interpolation-filter -->
     <property name="filterQ"
 		value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+    <property name="filterQDefault0"
+		value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;0&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
 	
 	<!-- Filter für GmlWeightTask: wird auf jede Quelle angewendet. Wird eigentlich nur benötigt, um das Ergebnis auf den Vorhersagezeitraum auszuweiten (und fortzusetzen). -->
     <property name="filterWeight"
@@ -103,7 +105,7 @@
 		<!-- leere Zeitreihen holen, damit was reingeschrieben werden kann...-->
 	 	<!-- Das ist notwendig damit nach dem zusammendaddieren auch der Vorhersagezeitraum drin ist -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebieteMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Vorlage Zwischengebietsabflüsse (kein Fehler)">
-			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="${filterQ}"/>
+			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="${filterQDefault0}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 	 	
