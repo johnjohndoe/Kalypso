@@ -80,7 +80,7 @@
 
 		verticalAlignment="GridData.BEGINNING"
 -->
-		<group text="Parameter Gewaesser" style="0">
+		<group text="Parameter Gewässer" style="0">
 		<gridData verticalSpan="2" horizontalAlignment="GridData.FILL" 
 		horizontalSpan="2"
 		verticalAlignment="GridData.FILL"
@@ -111,7 +111,7 @@
 <!-- Umhuellende 
 		verticalAlignment="GridData.BEGINNING"
 -->
-		<group text="Parameter Unhüllende" style="SWT.NONE">
+		<group text="Parameter Umhüllende" style="SWT.NONE">
 		<gridData horizontalAlignment="GridData.FILL" 
 		verticalAlignment="GridData.FILL"
 		grabExcessVerticalSpace="false"
