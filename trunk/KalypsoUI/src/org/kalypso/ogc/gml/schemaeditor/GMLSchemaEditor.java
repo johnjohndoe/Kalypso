@@ -1,8 +1,10 @@
 package org.kalypso.ogc.gml.schemaeditor;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -21,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.part.EditorPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -33,7 +36,6 @@ import org.kalypso.gmlschema.ui.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.ui.GMLSchemaSorter;
 import org.kalypso.gmlschema.ui.GMLSchemaTreeContentProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-
 
 public class GMLSchemaEditor extends EditorPart
 {
@@ -151,6 +153,8 @@ public class GMLSchemaEditor extends EditorPart
   protected IGMLSchema createSchemaFromInput( ) throws CoreException, MalformedURLException, GMLSchemaException
   {
     final IEditorInput editorInput = getEditorInput();
+    final URL context;
+    final InputStream contents;
     if( editorInput instanceof IStorageEditorInput )
     {
 
@@ -158,27 +162,21 @@ public class GMLSchemaEditor extends EditorPart
 
       final IStorage storage = input.getStorage();
       final IFile file = (IFile) storage.getAdapter( IFile.class );
-      final URL context = file == null ? null : ResourceUtilities.createURL( file );
-
-      // if we have a context, load the schema via the cache
-      if( context != null )
+      context = file == null ? null : ResourceUtilities.createURL( file );
+      contents = storage.getContents();
+    }
+    else if( editorInput instanceof IURIEditorInput )
+    {
+      final IURIEditorInput input = (IURIEditorInput) editorInput;
+      final URI uri = input.getURI();
+      context = uri.toURL();
+      try
       {
-        // this does not load the schema from the cache but puts it at least into the cache
-        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-        return schemaCatalog.getSchema( null, context );
+        contents = context.openStream();
       }
-      else
+      catch( final IOException e )
       {
-        InputStream contents = null;
-        try
-        {
-          contents = storage.getContents();
-          return GMLSchemaFactory.createGMLSchema( contents, null, context );
-        }
-        finally
-        {
-          IOUtils.closeQuietly( contents );
-        }
+        throw new IllegalArgumentException( "Invalid IURIEditorInput input.", e );
       }
     }
     else if( editorInput instanceof GmlSchemaEditorInput )
@@ -193,6 +191,30 @@ public class GMLSchemaEditor extends EditorPart
       catch( final InvocationTargetException e )
       {
         throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+    else
+    {
+      context = null;
+      contents = null;
+    }
+
+    // if we have a context, load the schema via the cache
+    if( context != null )
+    {
+      // this does not load the schema from the cache but puts it at least into the cache
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      return schemaCatalog.getSchema( null, context );
+    }
+    else if( contents != null )
+    {
+      try
+      {
+        return GMLSchemaFactory.createGMLSchema( contents, null, null );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( contents );
       }
     }
 
