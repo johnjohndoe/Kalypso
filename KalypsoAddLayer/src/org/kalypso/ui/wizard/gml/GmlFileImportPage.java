@@ -266,7 +266,14 @@ public class GmlFileImportPage extends WizardPage
     // cache
     m_treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
     m_treeViewer.getTree().setFocus();
-    m_treeViewer.setSelection( new StructuredSelection( m_workspace.getRootFeature() ) );
+    if( m_workspace != null )
+    {
+      m_treeViewer.setSelection( new StructuredSelection( m_workspace.getRootFeature() ) );
+    }
+    else
+    {
+      m_treeViewer.setSelection( StructuredSelection.EMPTY );
+    }
   }
 
   protected void setWorkspace( final CommandableWorkspace workspace, final String source )
