@@ -85,7 +85,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -97,9 +96,7 @@ import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
@@ -574,15 +571,17 @@ public class GmlShapeFileImportDialog extends Dialog
     return new File( location );
   }
 
-  public GM_Object getGeometry( )
-  {
-    final Feature root = m_workspace.getRootFeature();
-    final FeatureList featureLIST = (FeatureList) root.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    final Feature fe = (Feature) featureLIST.get( 0 );
-    final IPropertyType geoPT = fe.getFeatureType().getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
-    return (GM_Object) fe.getProperty( geoPT );
-  }
-
+  /**
+   * TODO: This is not used! Can it be removed?
+   */
+// public GM_Object getGeometry( )
+// {
+// final Feature root = m_workspace.getRootFeature();
+// final FeatureList featureLIST = (FeatureList) root.getProperty( DBaseFile.PROPERTY_CUSTOM_FEATURE_MEMBER );
+// final Feature fe = (Feature) featureLIST.get( 0 );
+// final IPropertyType geoPT = fe.getFeatureType().getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
+// return (GM_Object) fe.getProperty( geoPT );
+// }
   public GMLWorkspace getWorkspace( )
   {
     return m_workspace;
