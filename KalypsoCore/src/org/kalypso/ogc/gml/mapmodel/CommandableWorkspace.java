@@ -428,4 +428,9 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   {
     return m_workspace.getNamespaceContext();
   }
+
+  public void setSchemaLocation( String schemaLocation )
+  {
+    m_workspace.setSchemaLocation( schemaLocation );
+  }
 }

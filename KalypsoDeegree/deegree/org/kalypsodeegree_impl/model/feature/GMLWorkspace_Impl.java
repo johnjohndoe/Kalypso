@@ -45,7 +45,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   /** The namespace context for which to resolve any namespcae-prefixes inside this workspace. */
   private final NamespaceContext m_namespaceContext;
 
-  private final String m_schemaLocation;
+  private String m_schemaLocation;
 
   private final IFeatureType[] m_featureTypes;
 
@@ -861,5 +861,13 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public NamespaceContext getNamespaceContext( )
   {
     return m_namespaceContext;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setSchemaLocation(java.lang.String)
+   */
+  public void setSchemaLocation( final String schemaLocation )
+  {
+    m_schemaLocation = schemaLocation;
   }
 }
