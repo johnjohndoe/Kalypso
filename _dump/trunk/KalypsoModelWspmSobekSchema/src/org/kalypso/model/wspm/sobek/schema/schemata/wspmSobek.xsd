@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek"
-	xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:obslink="obslink.zml.kalypso.org" xmlns:wspmprofile="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspm.sobek"
-	elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek" xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:obslink="obslink.zml.kalypso.org" xmlns:wspmprofile="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspm.sobek" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -31,11 +29,13 @@
 	<element name="AbstractNode" abstract="true" type="wspmSobek:AbstractNodeType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>AbstractNode</name>
 				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>AbstractNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
 				<description>AbstractNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>AbstractNode</name>
 				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>AbstractNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
 				<description>AbstractNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
@@ -45,7 +45,14 @@
 	<element name="AbstractNetworkNode" abstract="true" type="wspmSobek:AbstractNetworkNodeType" substitutionGroup="wspmSobek:AbstractNode">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>AbstractNetworkNode</name>
 				<label>AbstractNetworkNode - ${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>AbstractNetworkNode</tooltip>
+				<description>AbstractNetworkNode</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>AbstractNetworkNode</name>
+				<label>AbstractNetworkNode</label>
 				<tooltip>AbstractNetworkNode</tooltip>
 				<description>AbstractNetworkNode</description>
 			</documentation>
@@ -57,11 +64,13 @@
 	<element name="nodeMember" type="wspmSobek:NodePropertyType">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>nodeMember</name>
 				<label>nodeMember</label>
 				<tooltip>nodeMember</tooltip>
 				<description>nodeMember</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>nodeMember</name>
 				<label>nodeMember</label>
 				<tooltip>nodeMember</tooltip>
 				<description>nodeMember</description>
@@ -184,11 +193,13 @@
 					<element name="name" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Bezeichnung</name>
 								<label>Bezeichnung</label>
 								<tooltip>Bezeichnung</tooltip>
 								<description>Bezeichnung</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Name</name>
 								<label>Name</label>
 								<tooltip>Name</tooltip>
 								<description>Name</description>
@@ -198,11 +209,13 @@
 					<element name="description" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Beschreibung</name>
 								<label>Beschreibung</label>
 								<tooltip>Beschreibung</tooltip>
 								<description>Beschreibung</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Description</name>
 								<label>Description</label>
 								<tooltip>Description</tooltip>
 								<description>Description</description>
@@ -263,11 +276,13 @@
 					<element name="bcType" type="wspmSobekCommon:boundaryConditionType">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Typ der Randbedingung</name>
 								<label>Typ der Randbedingung</label>
 								<tooltip>Typ der Randbedingung</tooltip>
 								<description>Typ der Randbedingung</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Boundary Condition Type</name>
 								<label>Boundary Condition Type</label>
 								<tooltip>Boundary Condition Type</tooltip>
 								<description>Boundary Condition Type</description>
@@ -304,11 +319,13 @@
 	<element name="calcLinkMember" type="wspmSobek:CalcLinkPropertyType">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>calcLinkMember</name>
 				<label>calcLinkMember</label>
 				<tooltip>calcLinkMember</tooltip>
 				<description>calcLinkMember</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>calcLinkMember</name>
 				<label>calcLinkMember</label>
 				<tooltip>calcLinkMember</tooltip>
 				<description>calcLinkMember</description>
@@ -343,11 +360,13 @@
 					<element name="name" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Bezeichnung</name>
 								<label>Bezeichnung</label>
 								<tooltip>Bezeichnung</tooltip>
 								<description>Bezeichnung</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Name</name>
 								<label>Name</label>
 								<tooltip>Name</tooltip>
 								<description>Name</description>
@@ -357,11 +376,13 @@
 					<element name="description" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Beschreibung</name>
 								<label>Beschreibung</label>
 								<tooltip>Beschreibung</tooltip>
 								<description>Beschreibung</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Description</name>
 								<label>Description</label>
 								<tooltip>Description</tooltip>
 								<description>Description</description>
@@ -383,11 +404,13 @@
 	<element name="branchMember" type="wspmSobek:BranchPropertyType">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>branchMember</name>
 				<label>branchMember</label>
 				<tooltip>branchMember</tooltip>
 				<description>branchMember</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>branchMember</name>
 				<label>branchMember</label>
 				<tooltip>branchMember</tooltip>
 				<description>branchMember</description>
@@ -422,11 +445,13 @@
 					<element name="name" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Bezeichnung</name>
 								<label>Bezeichnung</label>
 								<tooltip>Bezeichnung</tooltip>
 								<description>Bezeichnung</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Name</name>
 								<label>Name</label>
 								<tooltip>Name</tooltip>
 								<description>Name</description>
@@ -436,11 +461,13 @@
 					<element name="description" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Beschreibung</name>
 								<label>Beschreibung</label>
 								<tooltip>Beschreibung</tooltip>
 								<description>Beschreibung</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Description</name>
 								<label>Description</label>
 								<tooltip>Description</tooltip>
 								<description>Description</description>
@@ -450,11 +477,13 @@
 					<element name="river" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Gewässer</name>
 								<label>Gewässer</label>
 								<tooltip>Gewässer</tooltip>
 								<description>Gewässer</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>River</name>
 								<label>River</label>
 								<tooltip>River</tooltip>
 								<description>River</description>
@@ -463,14 +492,16 @@
 					</element>
 					<element name="uniqueID" type="wspmSobekCommon:uniqueIdType"/>
 					<element name="riverLine" type="gml:LineStringPropertyType"/>
-					<element name="length" type="double">
+					<element name="length" type="wspmSobekCommon:notNegDoubleType">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Länge [m]</name>
 								<label>Länge [m]</label>
 								<tooltip>Länge [m]</tooltip>
 								<description>Länge [m]</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Length [m]</name>
 								<label>Length [m]</label>
 								<tooltip>Length [m]</tooltip>
 								<description>Length [m]</description>
@@ -487,11 +518,13 @@
 	<element name="lastfallMember" type="wspmSobek:LastfallPropertyType">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>lastfallMember</name>
 				<label>lastfallMember</label>
 				<tooltip>lastfallMember</tooltip>
 				<description>lastfallMember</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>lastfallMember</name>
 				<label>lastfallMember</label>
 				<tooltip>lastfallMember</tooltip>
 				<description>lastfallMember</description>
@@ -526,11 +559,13 @@
 					<element name="name" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Name</name>
 								<label>Bezeichnung</label>
 								<tooltip>Bezeichnung</tooltip>
 								<description>Bezeichnung</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Name</name>
 								<label>Name</label>
 								<tooltip>Name</tooltip>
 								<description>Name</description>
@@ -540,11 +575,13 @@
 					<element name="description" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Beschreibung</name>
 								<label>Beschreibung</label>
 								<tooltip>Beschreibung</tooltip>
 								<description>Beschreibung</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Description</name>
 								<label>Description</label>
 								<tooltip>Description</tooltip>
 								<description>Description</description>
@@ -554,11 +591,13 @@
 					<element name="simulationBegin" type="date" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Beginn der Simulation</name>
 								<label>Beginn der Simulation</label>
 								<tooltip>Beginn der Simulation</tooltip>
 								<description>Beginn der Simulation</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Start of Simulation</name>
 								<label>Start of Simulation</label>
 								<tooltip>Start of Simulation</tooltip>
 								<description>Start of Simulation</description>
@@ -568,11 +607,13 @@
 					<element name="simulationEnd" type="date" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Ende der Simulation</name>
 								<label>Ende der Simulation</label>
 								<tooltip>Ende der Simulation</tooltip>
 								<description>Ende der Simulation</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>End of Simulation</name>
 								<label>End of Simulation</label>
 								<tooltip>End of Simulation</tooltip>
 								<description>End of Simulation</description>
@@ -582,11 +623,13 @@
 					<element name="preSimulationTime" type="int" nillable="false" default="12">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Vorlaufrechnung [h]</name>
 								<label>Vorlaufrechnung [h]</label>
 								<tooltip>Vorlaufrechnung [h]</tooltip>
 								<description>Vorlaufrechnung [h]</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Length of Feeding Simulation [h]</name>
 								<label>Length of Feeding Simulation [h]</label>
 								<tooltip>Length of Feeding Simulation [h]</tooltip>
 								<description>Length of Feeding Simulation [h]</description>
@@ -596,11 +639,13 @@
 					<element name="simulationTimestep" type="int" nillable="false" default="10">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Zeitschritt [min]</name>
 								<label>Zeitschritt [min]</label>
 								<tooltip>Zeitschritt [min]</tooltip>
 								<description>Zeitschritt [min]</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Time Step [min]</name>
 								<label>Time Step [min]</label>
 								<tooltip>Time Step [min]</tooltip>
 								<description>Time Step [min]</description>
@@ -610,11 +655,13 @@
 					<element name="resultTimeStepAsMultiple" type="int" nillable="false" default="3">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Ergebnis Zeitschritt [Anzahl Zeitschritte]</name>
 								<label>Ergebnis Zeitschritt [Anzahl Zeitschritte]</label>
 								<tooltip>Ergebnis Zeitschritt [Anzahl Zeitschritte]</tooltip>
 								<description>Ergebnis Zeitschritt [Anzahl Zeitschritte]</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Result Time Step [Count of Time Steps]</name>
 								<label>Result Time Step [Count of Time Steps]</label>
 								<tooltip>Result Time Step [Count of Time Steps]</tooltip>
 								<description>Result Time Step [Count of Time Steps]</description>
@@ -628,11 +675,13 @@
 	<element name="lastfallDefinitionMember" type="wspmSobek:LastfallDefinitionPropertyType">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Lastfall Definitionen</name>
 				<label>Lastfall Definitionen</label>
 				<tooltip>Lastfall Definitionen</tooltip>
 				<description>Lastfall Definitionen</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Calculation Case Definitions</name>
 				<label>Calculation Case Definitions</label>
 				<tooltip>Calculation Case Definitions</tooltip>
 				<description>Calculation Case Definitions</description>
@@ -670,11 +719,13 @@
 					<element name="constValue" type="double" minOccurs="0" maxOccurs="1" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Konstanter Wert</name>
 								<label>Konstanter Wert</label>
 								<tooltip>Konstanter Wert</tooltip>
 								<description>Konstanter Wert</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Constant Value</name>
 								<label>Constant Value</label>
 								<tooltip>Constant Value</tooltip>
 								<description>Constant Value</description>
@@ -684,11 +735,13 @@
 					<element name="constValueIntervalMinutes" type="int" minOccurs="0" maxOccurs="1" default="30" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Zeitschritt [min]</name>
 								<label>Zeitschritt [min]</label>
 								<tooltip>Zeitschritt [min]</tooltip>
 								<description>Zeitschritt [min]</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Time Step [min]</name>
 								<label>Time Step [min]</label>
 								<tooltip>Time Step [min]</tooltip>
 								<description>Time Step [min]</description>
@@ -699,11 +752,13 @@
 					<element name="observationBegin" type="date" minOccurs="0" maxOccurs="1" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Anfang Zeitreihe</name>
 								<label>Anfang Zeitreihe</label>
 								<tooltip>Anfang Zeitreihe</tooltip>
 								<description>Anfang Zeitreihe</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Time Series Begin</name>
 								<label>Time Series Begin</label>
 								<tooltip>Time Series Begin</tooltip>
 								<description>Time Series Begin</description>
@@ -713,11 +768,13 @@
 					<element name="observationEnd" type="date" minOccurs="0" maxOccurs="1" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
+								<name>Ende Zeitreihe</name>
 								<label>Ende Zeitreihe</label>
 								<tooltip>Ende Zeitreihe</tooltip>
 								<description>Ende Zeitreihe</description>
 							</documentation>
 							<documentation xml:lang="en">
+								<name>Time Series End</name>
 								<label>Time Series End</label>
 								<tooltip>Time Series End</tooltip>
 								<description>Time Series End</description>

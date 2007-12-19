@@ -36,11 +36,13 @@
 	<element name="sobekModelMember" type="wspmSobekProj:SobekModelPropertyType">
 		<annotation>
 			<documentation xml:lang="de">
+				<name>Sobek-Modell (PI)</name>
 				<label>Sobek-Modell (PI)</label>
 				<tooltip>Sobek-Modell (PI)</tooltip>
 				<description>Sobek-Modell (PI)</description>
 			</documentation>
 			<documentation xml:lang="en">
+				<name>Sobek-Model (PI)</name>
 				<label>Sobek-Model (PI)</label>
 				<tooltip>Sobek-Model (PI)</tooltip>
 				<description>Sobek-Model (PI)</description>
