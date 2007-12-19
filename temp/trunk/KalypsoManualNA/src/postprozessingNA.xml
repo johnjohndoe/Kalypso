@@ -2,20 +2,20 @@
 <chapter id="KalypsoNAPostprozessing">
   <title>Postprozessing</title>
 
-    <indexterm>
-      <primary>Postprozessing KalypsoNA</primary>
-    </indexterm>
+  <indexterm>
+    <primary>Postprozessing KalypsoNA</primary>
+  </indexterm>
 
-    <para>Ist eine Berechnung erfolgreich durchgeführt, so können die
-    Ergebnisse im Unterordner <filename>Ergebnisse</filename> der
-    Rechenvariante angeschaut werden. Hierzu dient im ersten Schritt die
-    Diagrammansicht der Zeitreihen (siehe <xref
-    linkend="gui-zml_diagramm_ansicht" />). Sollen weitere Auswertungen der
-    Zeitreihen erfolgen, so sind diese im Grafikprogramm (siehe <xref
-    linkend="zeitreihen_bearbeiten" />) durchzuführen.</para>
+  <para>Ist eine Berechnung erfolgreich durchgeführt, so können die Ergebnisse
+  im Unterordner <filename>Ergebnisse</filename> der Rechenvariante angeschaut
+  werden. Hierzu dient im ersten Schritt die Diagrammansicht der Zeitreihen
+  (siehe <xref linkend="gui-zml_diagramm_ansicht" />). Sollen weitere
+  Auswertungen der Zeitreihen erfolgen, so sind diese im Grafikprogramm (siehe
+  <xref linkend="zeitreihen_bearbeiten" />) durchzuführen.</para>
 
-    <para>Bei nicht erfolgreicher Berechnung stehen verschiedene Log-Dateien
-    zur Fehlerlokalisierung zur Verfügung.</para>
+  <para>Bei nicht erfolgreicher Berechnung stehen verschiedene Log-Dateien zur
+  Fehlerlokalisierung zur Verfügung.</para>
+
   <section id="KalypsoNAModellkalibrierung">
     <title>Modellkalibrierung</title>
 
@@ -46,7 +46,12 @@
       für die Simulation lediglich die als Input dienenden Zeitreihen
       (Niederschlag, Temperatur, Verdunstung, Zuflussganglinien) lückenlos
       vorhanden seien müssen. Die zur Kalibrierung herangezogenen
-      Pegelganglinien können Lücken aufweisen.</para>
+      Pegelganglinien können Lücken aufweisen. Die Langzeitsimulation wird
+      generell über gesamte Tage durchgeführt, d.h. die Simulation startet und
+      endet um 00:00:00 Uhr. Die Eingangsdaten für den Niederschlag werden
+      hierbei auch auf ganze Tage bezogen (auch wenn sie für gewöhnlich um
+      07:30:00 Uhr vorliegen). Es ist zu beachten, dass die Niederschläge
+      jeweils für den Vortag gelten.</para>
     </section>
 
     <section id="KalypsoNAAnfangswerte">
@@ -99,7 +104,8 @@
       entsprechenden Anfangsdaten (d.h. die dem Simulationsanfang
       entsprechenden; Dateibenennung: ddMMyyyy(hh).gml) müssen nach Erstellung
       der Rechenvariante aus dem Basismodell (Ordner Anfangswerte) in den
-      Ordner Anfangswerte der Rechenvariante kopiert werden.</para>
+      Ordner Anfangswerte der Rechenvariante kopiert und in lzsim.gml
+      umbenannt werden.</para>
 
       <para>Identisch zur Langzeitsimulation wird die Kurzzeitkalibrierung des
       Modelles in der Rechenvariante durchgeführt. Zu Beachten ist jedoch,

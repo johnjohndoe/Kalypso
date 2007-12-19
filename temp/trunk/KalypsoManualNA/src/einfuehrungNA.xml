@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="KalypsoNAAllgemeines">
   <title>Allgemeine Einführung</title>
+
   <indexterm>
     <primary>Allgemeines Einführung KalypsoNA</primary>
   </indexterm>
 
-  <para>Das am Arbeitsbereich Wasserbau der TUHH verwendete
+  <para>Das am Institut für Wasserbau der TUHH verwendete
   Niederschlag-Abfluss-Modell KalypsoNA ist ein OpenSource Modell zur
   Simulation des vollständigen, landgebundenen Teils der globalen
   Wasserbilanz. Hierbei werden die Teilprozesse Schneespeicherung,
@@ -44,8 +45,6 @@
   Gerinnennetz zugeordnet. Dabei werden die Prozesse als lateral
   eindimensional aufgefasst. Die Abflussverformung im Gerinne erfolgt nach dem
   Verfahren von Kalinin-Miljukov.</para>
-
-  
 
   <section id="KalypsoNADatenakquisition">
     <title>Datenakquisition KalypsoNA</title>
@@ -102,33 +101,24 @@
       </listitem>
     </itemizedlist>
 
-    <figure id="KalypsoNAAusgangspunktDatenaufbereitung">
-      <title>Ausgangspunkt der Datenaufbereitung</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="img/kalypso_na/Kapitel_2/Ausgangspunkt-na.png"
-                     scale="100" />
-        </imageobject>
-      </mediaobject>
-    </figure>
-
     <para>Datenaufbereitung:</para>
 
-    <orderedlist>
+    <itemizedlist>
+      <listitem>
+        <para>Logische Verknüpung der Systemelemente (Teilgebiete, Knoten,
+        Stränge) - Systemplan</para>
+      </listitem>
+
       <listitem>
         <para>Teilgebietsuntergliederung</para>
       </listitem>
 
       <listitem>
-        <para>Ermittlung der Landnutzungsverteilung/ Ableitung der
-        Flächennutzungsparameter</para>
+        <para>Aufbereitung von Landnutzungsdaten</para>
       </listitem>
 
       <listitem>
-        <para>Ermittlung der geologischen und pedologischen
-        Gebietscharakteristika/ Ableitung von Bodenschichtung und
-        -kennwerten</para>
+        <para>Aufbereitung von Bodendaten</para>
       </listitem>
 
       <listitem>
@@ -136,16 +126,11 @@
       </listitem>
 
       <listitem>
-        <para>Logische Verknüpung der Systemelemente (Teilgebiete, Knoten,
-        Stränge) - Systemplan</para>
-      </listitem>
-
-      <listitem>
         <para>Aufbereitung der Zeitreihen</para>
       </listitem>
 
       <listitem>
-        <para>hydraulische Berechnung</para>
+        <para>Hydraulische Berechnung</para>
       </listitem>
 
       <listitem>
@@ -161,286 +146,10 @@
       <listitem>
         <para>Ermittlung der Zeitflächenfunktion je Teilgebiet</para>
       </listitem>
-    </orderedlist>
+    </itemizedlist>
 
     <para>Sind alle notwendigen Daten vorhanden, kann mit der Aufstellung des
-    Basismodelles in der Oberfläche begonnen werden.</para>
-
-    <section id="KalypsoNAAbgrenzung">
-      <title>Abgrenzung der Teilgebiete</title>
-
-      <indexterm>
-        <primary>Teilgebietsuntergliederung KalypsoNA</primary>
-      </indexterm>
-
-      <para><emphasis role="bold">Oberirdisches Teilgebiet</emphasis></para>
-
-      <para>Zur Abgrenzung von Teilgebieten dienen diverse Datenquellen. Der
-      Hintergrund sind die verschiedenen Ursachen, die den Fließweg des
-      Wassers bestimmen. Grundsätzlich fließt das Wasser entlang des stärksten
-      Gefälles. Als Datengrundlage ist deswegen ein Höhenmodell (siehe<xref
-      linkend="kalypso_na_ausgangspunkt_datenaufbereitung" />) unabdingbar.
-      Optimal ist die Verwendung von Höhenlinien, da hier auch weitere
-      Informationen direkt sichtbar bleiben. Es gibt zwar verschiedene
-      automatisierte Möglichkeiten z.B. auf der Grundlage von Rasterdaten
-      (GRID) Teileinzugsgebiete abzugrenzen, doch werden hier andere
-      Gegebenheiten als die Höhe nicht beachtet. Auch die Auswahl bestimmter
-      Pegelpunkte als Kalibrierungspunkte (Zwangspunkte), durch welche die
-      Gebietsgrenzen verlaufen sollen, werden nicht berücksichtigt. Weiterhin
-      können Wasserscheidenpläne und Kanalisationsdaten hinzu gezogen
-      werden.</para>
-
-      <figure>
-        <title>Einzugsgebiet nach DIN 4049</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata align="center"
-                       fileref="img/kalypso_na/Kapitel_2/Einzugsgebiet-na.png"
-                       scale="100" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>Das Einzugsgebiet (A<literal>E</literal>) ist in Deutschland nach
-      DIN 4049 definiert und bezeichnet in der Horizontalprojektion das
-      jeniege Gebiet, aus dem das an einem Punkt x im Flussverlauf abfließende
-      Wasser stammt. In der Abbildung bedeuten (A<literal>EO</literal>) das
-      oberirdische oder topografische Einzugsgebiet und
-      (A<literal>EU</literal>) das unterirdische Einzugsgebiet. Eine
-      Unterscheidung zwischen A<literal>EO</literal> und
-      A<literal>EU</literal> wird in Kalypso nicht vorgenommen.</para>
-
-      <para><figure>
-          <title>Teileinzugsgebiete</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/kalypso_na/Kapitel_2/Teileinzugsgebiete.png" />
-            </imageobject>
-          </mediaobject>
-        </figure></para>
-
-      <note>
-        <para>Bei der Erstellung der Shape-Datei sind mindestens die Elemente
-        aus <xref linkend="KalypsoNAMappingTeilgebiete" />
-        einzubinden.</para>
-      </note>
-
-      <para><emphasis role="">Bei der Aufteilung in Teileinzugsgebiete sind
-      folgende Punkte zu beachten:</emphasis></para>
-
-      <itemizedlist>
-        <listitem>
-          <para>Trennungslinien vom höchsten bis zum niedrigsten Punkt,
-          orthogonal zu den Höhenlinien</para>
-        </listitem>
-
-        <listitem>
-          <para>Gebiete mit überwiegend natürlicher Endwässerung</para>
-        </listitem>
-
-        <listitem>
-          <para>Gebiete mit überwiegender Ableitung über Kanalisation</para>
-        </listitem>
-
-        <listitem>
-          <para>Trennung der einzelnen Flusseinzugsgebiete</para>
-        </listitem>
-      </itemizedlist>
-
-      <para><emphasis role="bold">Unterirdisches Teilgebiet</emphasis></para>
-
-      <para>Bei der Eingrenzung des unterirdischen Einzugsgebietes erfolgt die
-      Bilanzierung über oberirdische Teileinzugsgebiete. Die Aufteilung des
-      Grundwasserabflusses erfolgt anteilig auf die projezierte Fläche. Ebenso
-      wird die Quantifizierung des Zustromes von außen vollzogen.
-      Berücksichtigt werden muss ebenfalls der Verlust an Wasser in einen
-      Tiefengrundwasserleiter.</para>
-    </section>
-
-    <section id="KalypsoNALandFlaechennutzung">
-      <title>Landnutzungsverteilung und Ableitung der
-      Flächennutzungsparameter</title>
-
-      <indexterm>
-        <primary>Land- und Flächennutzung KalypsoNA</primary>
-      </indexterm>
-
-      <para>Die Landnutzung im Einzugsgebiet ist entscheidend zur Ableitung
-      der Parameter des Versiegelungsgrades und der Vegetationsdaten. Sie kann
-      aus Flächennutzungsplänen, topographischen Karten, Luftbildaufnahmen
-      oder änlichem entnommen werden. Ziel ist es einen Parameterkatalog
-      aufzustellen, welcher einer dem Hydrotop zugeordneten Landnutzung
-      (Angabe eines Keys von maximal 10 Zeichen) die weiteren Eigenschaften
-      zuweist. Hierzu sind zunächst Versiegelungsklassen zu bilden, welche die
-      im Modellgebiet vorhandenen Landnutzungen zu Klassen gleicher
-      Versiegelung gruppieren (z.B. Wald, Industrie, Einzelhausbebauung,...).
-      <figure>
-          <title>Beispiel der Versiegelungs- und Vegetationsklassen</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/kalypso_na/Kapitel_2/tabels.png" />
-            </imageobject>
-          </mediaobject>
-        </figure>Weiterhin sind die auftretenden Landnutzungen nach
-      natürlichen Nutzungsklassen der auftretenden Vegetation in
-      Vegetationsklassen zu untergliedern (z.B. Nadelwald, Laubwald, Wiese,
-      Acker, Bebauung,...). Teilweise ist die Versiegelungsklasse und
-      Bewuchsklasse identisch, es ergeben sich jedoch bei sehr detaillierten
-      Daten auch Unterschiede, z.B. kann bei Bebauungen die
-      Versiegelungsklasse differenziert werden – Industrie – Hochhaus -
-      Einzelhaus, wohingegen die Bewuchsklasse identisch bleibt. Bei der
-      Bildung der Klassen zur Bebauung erfolgt die Belegung des
-      Versiegelungsgrades mit einem Korrekturfaktor. Sind die Nutzungsdaten
-      weniger detailliert, so kann auf diese Untergliederung verzichtet werden
-      und dem Hydrotop direkt eine identische Versiegelungs- und
-      Vegetationsklasse zugeordnet werden. Dies erleichtert die Erstellung des
-      Parameterkataloges. Der zuvor angelegte Key wird in diesem dann wieder
-      aufgeschlüsselt, wobei noch zu sagen ist, dass der Key in Hamburg nach
-      den Konventionen des <glossterm linkend="ALB">ALB</glossterm>
-      zusammengestellt wird. Grundsätzlich aber ist der Key frei
-      zusammenstellbar.</para>
-
-      <figure>
-        <title>Landnutzung</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/kalypso_na/Kapitel_2/landnutzung_na.png"
-                       scale="100" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-    </section>
-
-    <section id="KalypsoNABodenschichtung">
-      <title>Gebietscharakteristika und Ableitung der Bodenschichtung</title>
-
-      <indexterm>
-        <primary>Ableitung der Bodenschichtung KalypsoNA</primary>
-      </indexterm>
-
-      <para>Zunächst eine generelle Unterscheidung bzw. Definition: Man
-      unterscheidet zwischen Bodenart und Boden, bzw. Horizonttyp. Für die
-      Hydrologie ist die Bodenart entscheidend. Sie beschreibt die
-      Korngrößen-zusammensetzung des Bodens und damit die Porenverteilung im
-      Boden. Ungeeignet für die Hydrologie sind die Horizonttypen wie Bv, Ae
-      und die Bodentypen wie Braunerde, Parabraunerde. Hier wird nur ein
-      chemischer Prozess beschrieben, z. B. Verbraunung, Auswaschung. Es
-      bleibt jedoch unklar, welche Kornfraktionen vorliegen. Aus diesem Grund
-      ist es dann nicht möglich die Bodenwasserhaushaltsgrößen kf-Wert,
-      Welkepunkt, Feldkapazität und maximale Bodenfeuchte zu bestimmen. Zur
-      Bodenwasserhaushaltsmodellierung ist die Angabe des Bodenaufbaus und die
-      Ermittlung der Schichtenparameter erforderlich. Die für die Modellierung
-      benötigten Bodendaten beschreiben i.d.R. nur den obersten Meter des
-      Bodens (maximal die obersten zwei Meter) und den Übergangsbereich zum
-      Grundwasser (Hydrogeologie). Diese sind aus zur Verfügung stehenden
-      Bodenkarten zu entnehmen. Für die Bezeichnung der Bodenschichten sollten
-      ADV-gerechte Bezeichnungen gewählt werden (Sl2, Hn, Lu3...).</para>
-
-      <para>Für das Modell KalypsoNA ist es empfehlenswert, dass für alle
-      Modellböden die gleiche Anzahl von Schichten angesetzt wird. Es wird
-      zudem dringend empfohlen, die oberste Schicht (1-2 Meter) nicht durch
-      mehr als zwei Bodenschichten darzustellen, da sonst die Kalibrierung
-      verkompliziert würde. Je nach Datenverfügbarkeit ist es sinnvoll eine
-      weitere Schicht für den Übergang zum Grundwasserleiter zur Verfügung zu
-      stellen (z.B. Sperrschicht). Für das Modell sind zunächst die
-      verwendeten Bodenhorizonte und deren Parameter (kf-Wert, Welkepunkt,
-      Feldkapazität und maximale Bodenfeuchte) zusammenzustellen. Außerdem ist
-      der Bodenaufbau mit den verwendeten Schichten und Schichtdicken zu
-      definieren und durch einen Bodenschlüssel, welcher in den Hydrotopen
-      referenziert wird zu bezeichnen. Dieser darf, wie in Kapitel 2.2 schon
-      erwähnt, eine maximale Länge von 10 Zeichen besitzen. Anzumerken ist
-      noch, dass es keine Konvention für die Spaltenanzahl und deren
-      Bezeichnung in den Shape Dateien gibt. Bei der anschließenden
-      Bearbeitung mit KalypsoNA wird einfach eine Auswahl aus den vorliegenden
-      Spalten getroffen.</para>
-
-      <figure>
-        <title>Bodenaufbau</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/kalypso_na/Kapitel_2/bodenaufbau-na.png"
-                       scale="100" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para><emphasis role="bold">Zusammenfassung der für die Bodenschichtung
-      relevanten Punkte:</emphasis></para>
-
-      <itemizedlist>
-        <listitem>
-          <para>benötigte Karten: Karte des Oberbodens (1-2m); Karte der
-          Hydrogeologie (Grenze zum Grundwasserleiter)</para>
-        </listitem>
-
-        <listitem>
-          <para>definieren der maximal 3 Modellböden in maximal 2
-          Schichten</para>
-        </listitem>
-
-        <listitem>
-          <para>bestimmen der maximalen Perkolationsrate</para>
-        </listitem>
-
-        <listitem>
-          <para>bestimmen des Zuflussanteils in den Grundwasserleiter</para>
-        </listitem>
-
-        <listitem>
-          <para>festlegen der Bodenschlüssel unter Einbeziehung der
-          ADV-Bezeichnungen</para>
-        </listitem>
-
-        <listitem>
-          <para>bei voliegender Geologie --&gt; verschneiden von Geologie und
-          Bodenart zu einer Shape-Datei Bodenprofil</para>
-        </listitem>
-      </itemizedlist>
-    </section>
-
-    <section id="KalypsoNAHydrotope">
-      <title>Bildung von Hydrotopen</title>
-
-      <indexterm>
-        <primary>Bildung von Hydrotopen KalypsoNA</primary>
-      </indexterm>
-
-      <para>Es erfolgt die Verschneidung der Daten aus der Landnutzung, des
-      Bodens und den Teilgebieten zu Hydrotopen.</para>
-
-      <figure>
-        <title>Hydrotopbildung</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/kalypso_na/Kapitel_2/hydrotop_na.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <note>
-        <para><itemizedlist>
-            <listitem>
-              <para>Aggregieren pro Teileinzugsgebiet im Hydrotop durch
-              Multipolygonfunktion</para>
-            </listitem>
-
-            <listitem>
-              <para>es sind mindestens die Elemente aus <xref
-              linkend="KalypsoNAMappingHydrotope" /> einzubinden</para>
-            </listitem>
-          </itemizedlist></para>
-      </note>
-
-      <para>Nach der Verschneidung können Hydrotope identischer Eigenschaften
-      in einem Teilgebiet zusammengefast werden. Hierdurch kann die Rechenzeit
-      des späteren Modells erheblich verringert werden.</para>
-    </section>
+    Basismodells begonnen werden.</para>
 
     <section id="KalypsoNASystemelemente">
       <title>Verknüpfung der Systemelemente</title>
@@ -469,56 +178,54 @@
 
       <para>Das Einzugsgebiet muss vollständig in Teilgebiete unterteilt
       werden. Jedes Teilgebiet ist einem Gerinnestrang zugeordnet, in welchen
-      die oberflächennahe Entwässerung des Gebietes erfolgt. Dadurch bilden
-      die Wasserscheiden notwendige Grenzen der Teilgebiete. Weiterhin ist es
-      angebracht, falls möglich, Nutzungsgrenzen als Teilgebietsgrenzen zu
-      wählen. Dies gilt insbesondere für stark versiegelte Gebiete, deren
-      Kanalnetz an einen Gewässerknoten in das natürliche Gewässer abschlagen
-      soll.</para>
+      die Entwässerung des Gebietes erfolgt. Es existieren drei verschiedene
+      Formen von Gerinnesträngen im Modell, welche sich durch ihre
+      Funktionalität unterscheiden. Der reale oder auch Kalinin-Miljukov
+      Strang berücksichtigt die Wellenverformung im Gerinne. Der virtuelle
+      Stang ist lediglich als Modellierungswerkzeug zu verstehen und verändert
+      die Zuflusswelle nicht. Der virtuelle Stang ist jeweils am Anfang eines
+      Gewässersystems anzubringen, außerdem kann es sinnvoll sein, vor einem
+      Zufluss eines Nebengewässers den virtuellen Stang als
+      Modellierungswerkzeug zur einfachen aufgliederung der Abflüsse zu
+      verwenden. Als weiteres Strangelement ist der Speicherstrang vorhanden,
+      welcher einen Speicher (z.B. Hochwasserrückhaltebecken) abbildet. Die
+      räumliche Vernetzung der Teilgebiete erfolgt durch die Anbindung an
+      Gewässerstränge und die Weiterleitung über Knotenelemente. Über die
+      Stränge wird das Gewässernetz als Struktur eines gerichteten Baumes
+      wiedergegeben (d.h. Verzweigungsstrukturen können zunächst nicht
+      abgebildet werden). Jeder Strang besitzt einen Anfangs- und Endknoten.
+      Jeder Endknoten ist Anfangsknoten des nachfolgenden Strangs. Die
+      Fließbewegung erfolgt vom Anfang- zum Endknoten. Für jeden Quellknoten
+      muss ein eindeutiger Pfad bis zum Zielknoten, dem Abschlußpunkt des
+      Untersuchungsgebietes, existieren.</para>
 
-      <para>Die räumliche Vernetzung der Teilgebiete erfolgt durch die
-      Anbindung an Gewässerstränge. Über die Stränge wird das Gewässernetz als
-      Struktur eines gerichteten Baumes wiedergegeben. Jeder Strang besitzt
-      einen Anfangs- und Endknoten. Jeder Endknoten ist Anfangsknoten des
-      nachfolgenden Strangs. Die Fließbewegung erfolgt vom Anfang- zum
-      Endknoten. Für jeden Quellknoten sollte ein eindeutiger Pfad bis zum
-      Zielknoten, dem Abschlußpunkt des Untersuchungsgebietes,
-      existieren.</para>
+      <para>Sonderelemente des Systemplanes ermöglichen neben den
+      obligatorischen Vernetzungen des Gewässersystems die Abbildung von
+      Sonderstrukturen. Zunächst gibt es neben den Strängen die Möglichkeit
+      Knoten direkt miteinander zu vernetzen (Knoten zu Knoten Beziehungen),
+      um eine Sonderstruktur zwischen diesen Knoten abzubilden. Mögliche
+      Strukturen sind:</para>
 
-      <para>Die Zeitreihen der Abflüsse werden am Endknoten des
-      Gerinnestranges zu einem Gesamtabfluß aufaddiert. Als einzelne
-      Abflußwellen treten sowohl die Zuflüsse aus dem Gerinne als auch die
-      Zuflüsse unterschiedlicher Abflusskomponenten der von dem Gerinnestrang
-      durchflossenen Teilgebiete auf. An Gewässermündungen werden auch die
-      Abflusskomponenten mehrerer Stränge aufaddiert. Dabei können beliebig
-      viele Stränge an einem Knoten zusammenfallen. Der Gesamtabfluss eines
-      Endknoten stellt den Zufluss für den folgenden Gerinnestrang dar. Der
-      Addition der Teilabflüsse folgend muss die Reihenfolge der Stränge dem
-      Fließweg im Gewässernetz entsprechen, d. h. die Vernetzung der
-      Teilgebiete mit dem Gerinnenetz erfolgt entsprechend den Fließvorgängen
-      des oberflächennahen Abflusses. Jedoch können in KALYPSO auch
-      Fließvorgänge über die topographische Wasserscheide hinweg simuliert
-      werden. Dies gilt sowohl für den Grundwasserspeicher als auch für den
-      Tiefengrundwasserspeicher. So kann der GW-Abfluss eines
-      Grundwasserspeichers bis zu 3 anderen Speichern beliebiger Teilgebiete
-      zugeschlagen werden.</para>
+      <itemizedlist>
+        <listitem>
+          <para>Verzweigung (durch Angabe eines prozentualen
+          Verzweigungsfaktors)</para>
+        </listitem>
 
-      <para>Des weiteren kann die Abflusskomponente des
-      Tiefengrundwasserleiters eines Teilgebietes einem beliebigen Knoten
-      zugeschlagen werden. Hierfür lässt sich auch ein imaginärer Knoten
-      wählen, der über ebenfalls imaginäre Stränge an das Oberflächennetz
-      angeschlossen werden kann. Auf diese Weise lassen sich Fließvorgänge
-      z.B. eines Karstgrundwasserleiters in einem eigenständigen Netz in das
-      Modell einbauen.</para>
+        <listitem>
+          <para>Überlauf (Verzweigung durch Angabe einer Überlaufhöhe/
+          Abfluss)</para>
+        </listitem>
 
-      <para>Der Gesamtabfluss am oberen Knoten eines Stranges wird ohne
-      Verluste dem unteren Knoten zugeführt. In speziell gekennzeichneten
-      Fällen können allerdings Abschläge in beliebiger Art und Höhe aus einem
-      Gerinnestrang einem anderen, beliebigen Knoten zugeführt werden. Es ist
-      möglich, entweder einen festen Anteil oder einen konstanten Wert eines
-      Gerinneabschnittes einen anderen Knoten zuzuführen (z.B. Karstquellen).
-      Diese Modelloption dient zur Berücksichtigung von Sickerverlusten aus
-      dem Gerinne (z.B. ins Tiefengrundwasser).</para>
+        <listitem>
+          <para>Kontinuierlicher Zufluss oder Entnahme</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Des weiteren ist die Abbildung zur Abbildung einer
+      Mischkanalisation die Abführung des Teilgebietsabflusses auf
+      versiegelten Flächen zu einem Knoten möglich. Dieser Knoten stellt dann
+      das Klärwerk o.ä. dar.</para>
 
       <figure>
         <title>Komponenten eines Netzplans</title>
@@ -531,42 +238,377 @@
         </mediaobject>
       </figure>
 
-      <para><emphasis role="bold">Zusammenfassung der Netzplan
-      Regeln</emphasis></para>
+      <para><emphasis role="bold">Bei der Erstellung des Systemplanes sind
+      folgende Einschränkungen zu beachten:</emphasis></para>
 
       <itemizedlist>
         <listitem>
-          <para>Gewässernetz als Struktur eines gerichteten Baumes</para>
+          <para>Gewässernetz als Struktur eines gerichteten Baumes.</para>
         </listitem>
 
         <listitem>
-          <para>jeder Strang besitzt einen Anfangs- und Endknoten</para>
+          <para>Jeder Strang besitzt einen Anfangs- und Endknoten.</para>
         </listitem>
 
         <listitem>
-          <para>angeschlossene Teileinzugsgebiete entwässern in
-          Gerinnestränge</para>
+          <para>Angeschlossene Teileinzugsgebiete entwässern in Gerinnestränge
+          (der Abfluss wird am Endknoten des Gerinnes in das System
+          geführt).</para>
         </listitem>
 
         <listitem>
-          <para>maximal 6 Teileinzugsgebiete an einem Strang</para>
+          <para>Maximal 6 Teileinzugsgebiete können in einen Strang
+          entwässern.</para>
         </listitem>
 
         <listitem>
-          <para>erster Strang = virtueller Strang</para>
+          <para>Der erste Stang ist immer als virtueller Strang
+          auszuführen.</para>
         </listitem>
 
         <listitem>
-          <para>Speicherstränge haben einen Eingangs- und
-          Ausgangsknoten</para>
-        </listitem>
-
-        <listitem>
-          <para>verbinden verschiedener Flüsse in einem Knoten und hinzufügen
-          eines virtuellen Stranges, bevor der Zufluss in den Hauptstrom
-          erfolgt</para>
+          <para>Speicherstränge haben einen Eingangs- und Ausgangsknoten.
+          Optional verfügen sie weiterhin über einen Überlaufknoten.</para>
         </listitem>
       </itemizedlist>
+    </section>
+
+    <section id="KalypsoNAAbgrenzung">
+      <title>Abgrenzung der Teilgebiete</title>
+
+      <indexterm>
+        <primary>Teilgebietsuntergliederung KalypsoNA</primary>
+      </indexterm>
+
+      <para><emphasis role="bold">Oberirdisches
+      Einzugsgebiet</emphasis></para>
+
+      <para>Zur Abgrenzung von Teilgebieten dienen diverse Datenquellen. Der
+      Hintergrund sind die verschiedenen Einflussfaktoren, die den Fließweg
+      des Wassers bestimmen. Grundsätzlich fließt das Wasser entlang des
+      stärksten Gefälles orthogonal zu den Wasserscheiden. Als Datengrundlage
+      ist daher ein Höhenmodell unabdingbar. Weiterhin können
+      Wasserscheidenpläne und weitere den Fließweg beeinflussende Daten (z.B.
+      in städtischen Einzugsgebieten das Kanalnetz) hinzu gezogen werden. Die
+      Teileinzugsgebiete werden in einem GIS als Polygonthema digitalisiert
+      und als Shape-Datei abgelegt (siehe <xref
+      linkend="KalypsoNADigitalisierungNetzelemente" />).</para>
+
+      <figure>
+        <title>Einzugsgebiet nach DIN 4049</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="img/kalypso_na/Kapitel_2/Einzugsgebiet-na.png"
+                       scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <note>
+        <para>Das Einzugsgebiet (A<literal>E</literal>) ist in Deutschland
+        nach DIN 4049 definiert und bezeichnet in der Horizontalprojektion das
+        jeniege Gebiet, aus dem das an einem Punkt x im Flussverlauf
+        abfließende Wasser stammt. In der Abbildung bedeuten
+        (A<literal>EO</literal>) das oberirdische oder topografische
+        Einzugsgebiet und (A<literal>EU</literal>) das unterirdische
+        Einzugsgebiet. Eine Unterscheidung zwischen A<literal>EO</literal> und
+        A<literal>EU</literal> wird in Kalypso nicht vorgenommen.</para>
+      </note>
+
+      <para><figure>
+          <title>Teileinzugsgebiete</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/kalypso_na/Kapitel_2/Teileinzugsgebiete.png" />
+            </imageobject>
+          </mediaobject>
+        </figure></para>
+
+      <para><emphasis role="">Bei der Teilgebietsbildung sind folgende Punkte
+      zu beachten:</emphasis></para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Jedes Teilgebiet hat im Modell lediglich ein
+          Entwässerungspunkt - die Teilgebietsuntergliederung ist dem
+          entsprechend durchzuführen.</para>
+        </listitem>
+
+        <listitem>
+          <para>Gebiete mit überwiegend natürlicher Entwässerung werden gemäß
+          der Wasserscheiden abgegrenzt.</para>
+        </listitem>
+
+        <listitem>
+          <para>Gebiete mit überwiegender Ableitung über die Kanalisation
+          (städtische Einzugsgebiete) werden entsprechend der Zuordnung zu den
+          Haltungen abgegrenzt</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><emphasis role="bold">Unterirdisches
+      Einzugsgebiet</emphasis></para>
+
+      <para>Im Modell KalypsoNA entspricht die Untergliederung des
+      Unterirdischen Einzugsgebietes denjenigen des Oberirdischen. Die
+      Aufteilung des Grundwasserabflusses erfolgt durch Relationen zu den
+      Nachbargebieten</para>
+    </section>
+
+    <section id="KalypsoNADigitalisierungNetzelemente">
+      <title>Digitalisierung der Netzelemente</title>
+
+      <indexterm>
+        <primary>Digitalisierung der Netzelemente</primary>
+      </indexterm>
+
+      <para><emphasis role="bold">Teileinzugsgebiete</emphasis></para>
+
+      <para>Die Teileinzugsgebiete müssen zum späteren Import in KalypsoNA als
+      Polygon Thema digitalisiert werden. Hierbei ist darauf zu achten, dass
+      die Polygone geschlossen sind, keine Lückenaufweisen und sich nicht
+      überlagern (keine Multipolygone!). Die Fläche der Teileinzugsgebiet wird
+      für die spätere Berechnung verwendet. daher ist es sehr wichtig, dass
+      die Teileinzugsgebiete detailliert digitalisiert werden. Als Attribute
+      erhalten die einzelnen Teilgebiete einen Namen zu besseren
+      Identifizierung. Der Teilgebietsname ist für gewöhnlich eine 4 stellige
+      Ziffer, jedoch kann von diesem allgemeinen Konzept auch abgewichen
+      werden und ein beliebiger Name (keine Sonderzeichen!) vergeben werden.
+      Die Daten sind im Shape Format abzulegen.</para>
+
+      <para><emphasis role="bold">Stränge</emphasis></para>
+
+      <para>Die Stränge müssen zum späteren Import in KalypsoNA als Linien
+      Thema digitalisiert werden. Hierbei ist darauf zu achten, dass jeder
+      Strang eine geschlossene Linie bildet (keine Mulitline!). Die Geometrien
+      der Stränge werden zur späteren Berechnung nicht herangezogen, sie
+      dienen lediglich der Orientierung im Modell. Aus diesem Grund ist die
+      digitalisierung der Strangelemente lediglich so detailliert
+      durchzuführen, dass der Gewässerverlauf geometrisch richtig abgebildet
+      ist. Als Attribute erhalten die einzelnen Stränge wiederum einen Namen
+      zu besseren Identifizierung. Der Strangname ist für gewöhnlich eine 4
+      stellige Ziffer, welche sich falls möglich auf das zufließende
+      Teilgebiet bezieht. Von diesem allgemeinen Konzept kann auch abgewichen
+      werden und ein beliebiger Name (keine Sonderzeichen!) vergeben werden.
+      Als weiteres Attribut ist die Strangart festzulegen. Je nach Strangart
+      wird dieses Attribut mit 0 (virtueller Strang), 1 (realer bzw.
+      Kalinin-Miljukov Strang) oder 2 (Speicherstrang) belegt. Die Daten sind
+      im Shape Format abzulegen.</para>
+
+      <para><emphasis role="bold">Knoten</emphasis></para>
+
+      <para>Die Knoten müssen zum späteren Import in KalypsoNA als Punkt Thema
+      digitalisiert werden. Hierbei ist es unerheblich, dass die Knoten direkt
+      die Stränge abschließen, da auch die Geometrieinformation der Knoten
+      lediglich zur Orientierung dienen soll. Als Attribute erhalten die
+      einzelnen Knoten wiederum einen Namen zu besseren Identifizierung. Der
+      Knotenname ist für gewöhnlich eine 4 stellige Ziffer, welche sich falls
+      möglich auf den zufließenden Strang bezieht. Von diesem allgemeinen
+      Konzept kann auch abgewichen werden und ein beliebiger Name (keine
+      Sonderzeichen!) vergeben werden. Die Daten sind im Shape Format
+      abzulegen.</para>
+
+      <note>
+        <para>Die Namensvergabe für die Einzelelemente ist beliebig mit
+        Ausnahme von Sonderzeichen und Ziffern kleiner 1000 oder größer 9000
+        ist jede Bezeichnung zulässig. Es wird ausdrücklich darauf
+        hingewiesen, dass eine von der Konzeption abweichende Bezeichnung
+        verwendet werden kann, jedoch die Wasserbilanz nicht mit dieser
+        Bezeichnung geführt wird. Alle weiteren Ergebnisse können auch bei
+        einer beliebigen Namensvergabe angezeigt werden.</para>
+
+        <para>Empfehlenswert ist die bewährte Namensgebung mit Hilfe von
+        Ziffern. Zusätzlich kann zur weiteren Identifizierung auch eine
+        beliebige Beschreibung als Attribut hinzugezogen werden.</para>
+      </note>
+    </section>
+
+    <section id="KalypsoNALandFlaechennutzung">
+      <title>Aufbereitung von Landnutzungsdaten</title>
+
+      <indexterm>
+        <primary>Land- und Flächennutzung KalypsoNA</primary>
+      </indexterm>
+
+      <para>Die Landnutzung im Einzugsgebiet ist entscheidend zur Ableitung
+      der Parameter des Versiegelungsgrades und der Vegetationsdaten. Sie kann
+      aus Flächennutzungsplänen, topographischen Karten, Luftbildaufnahmen
+      oder änlichem entnommen werden. Ziel ist es unter Einbezug der
+      Teilgebiets- und Bodendaten Hydrotope (Flächen gleicher hydrologischer
+      Eigenschaften) zu bilden und einen Parameterkatalog aufzustellen,
+      welcher einer dem Hydrotop zugeordneten Landnutzung die weiteren
+      Eigenschaften zuweist.</para>
+
+      <para>Zunächst sind die auftretenden Landnutzungen in
+      Versiegelungsklassen einzuteilen, welche die im Modellgebiet vorhandenen
+      Landnutzungen zu Klassen gleicher Versiegelung gruppieren (z.B. Wald,
+      Industrie, Einzelhausbebauung,...). Jede Versiegelungsklasse verfügt
+      über einen Versiegelungsgrad, welcher falls notwendig für jedes Hydrotop
+      mit einem Faktor korregiert werden kann. Durch den versiegelungsgrad,
+      bzw. den evtl. zusätzlich gesetzen Korrekturfaktor der Versiegelung wird
+      jedes Hydrotop in einen natürlichen und versiegelten Flächenanteil
+      untergliedert, welches bei der Modellberechnung unterschiedliche
+      Berechnung der Abflussbildungsprozesse bewirkt (siehe Theorie
+      Handbuch).<figure>
+          <title>Beispiel der Versiegelungs- und Vegetationsklassen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/kalypso_na/Kapitel_2/tabels.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>Weiterhin sind die auftretenden Landnutzungen nach
+      natürlichen Nutzungsklassen der auftretenden Vegetation in
+      Vegetationsklassen zu untergliedern (z.B. Nadelwald, Laubwald, Wiese,
+      Acker, Bebauung,...). Eine Vegetationsklasse verfügt über die
+      natürlichen Nutzungsparameter als idealisierter Jahresgang (Wurzeltiefe,
+      Crop-Faktor, max. Interzeptionsspeicherinhalt), welche zur späteren
+      Berechnung der Abflussbildung auf der natürlichen Hydrotopfläche
+      herangezogen wird. Teilweise ist die Versiegelungsklasse und
+      Bewuchsklasse identisch, es ergeben sich jedoch bei sehr detaillierten
+      Daten auch Unterschiede. Z. B. kann bei Bebauungen die
+      Versiegelungsklasse differenziert werden – Industrie – Hochhaus -
+      Einzelhaus, wohingegen die Bewuchsklasse identisch bleibt. Sind die
+      Nutzungsdaten weniger detailliert, so kann auf diese Untergliederung
+      verzichtet werden und dem Hydrotop direkt eine identische Versiegelungs-
+      und Vegetationsklasse zugeordnet werden (übergeordnete Landnutzung).
+      Dies erleichtert die spätere Erstellung des Parameterkataloges. Die
+      übergeordnete Landnutzung muss in den Landnutzungsdaten als Attribut
+      eingetragen werden. Hierzu ist ein <emphasis role="bold">max. 10
+      stelliger Key</emphasis> zu verwenden, welcher später die Verknüpfung zu
+      den Daten im Parameterkatalog darstellt.</para>
+
+      <figure>
+        <title>Übersicht der Verknüpfung zum Parameterkatalog</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Kapitel_2/parameterkatalog.png"
+                       scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para><emphasis role="bold">Zusammenfassung der für die Bodenschichtung
+      relevanten Punkte:</emphasis></para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Benötigte Karten: Landnutzung aus z.B. Flächennutzungsplänen,
+          topographischen Karten, Luftbildaufnahmen</para>
+        </listitem>
+
+        <listitem>
+          <para>Aggregation der vorliegenden Nutzung zu
+          Landnutzungsgruppen</para>
+        </listitem>
+
+        <listitem>
+          <para>Attribut je Landnutzung: Nutzungskey, ggf Korrekturfaktor der
+          Versiegelung</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="KalypsoNABodenschichtung">
+      <title>Aufbereitung von Bodendaten</title>
+
+      <indexterm>
+        <primary>Ableitung der Bodenschichtung KalypsoNA</primary>
+      </indexterm>
+
+      <para>Zunächst eine generelle Unterscheidung bzw. Definition: Man
+      unterscheidet zwischen Bodenart und Boden, bzw. Horizonttyp. Für die
+      Hydrologie ist die Bodenart entscheidend. Sie beschreibt die
+      Korngrößenzusammensetzung des Bodens und damit die Porenverteilung im
+      Boden. Ungeeignet für die Hydrologie sind die Horizonttypen wie Bv, Ae
+      und die Bodentypen wie Braunerde, Parabraunerde. Hier wird nur ein
+      chemischer Prozess beschrieben, z. B. Verbraunung, Auswaschung. Es
+      bleibt jedoch unklar, welche Kornfraktionen vorliegen. Aus diesem Grund
+      ist es dann nicht möglich die Bodenwasserhaushaltsgrößen kf-Wert,
+      Welkepunkt, Feldkapazität und maximale Bodenfeuchte zu bestimmen. Zur
+      Bodenwasserhaushaltsmodellierung ist die Angabe des Bodenaufbaus und die
+      Ermittlung der Schichtenparameter erforderlich. Die für die Modellierung
+      benötigten Bodendaten beschreiben i.d.R. nur den obersten Meter des
+      Bodens (maximal die obersten zwei Meter) und den Übergangsbereich zum
+      Grundwasser (Hydrogeologie). Diese sind aus zur Verfügung stehenden
+      Bodenkarten zu entnehmen.</para>
+
+      <para>Für das Modell KalypsoNA ist es empfehlenswert, dass für alle
+      Modellböden die gleiche Anzahl von Schichten angesetzt wird. Es wird
+      zudem dringend empfohlen, die oberste Schicht (1-2 Meter) nicht durch
+      mehr als zwei Bodenschichten darzustellen, da sonst die Kalibrierung
+      verkompliziert würde. Je nach Datenverfügbarkeit ist es sinnvoll eine
+      weitere Schicht für den Übergang zum Grundwasserleiter zur Verfügung zu
+      stellen (z.B. Sperrschicht). Für das Modell sind zunächst die
+      verwendeten Bodenhorizonte und deren Parameter (kf-Wert, Welkepunkt,
+      Feldkapazität und maximale Bodenfeuchte) zusammenzustellen. Außerdem ist
+      der Bodenaufbau mit den verwendeten Schichten und Schichtdicken zu
+      definieren und durch einen Bodenkey, welcher in den Hydrotopen
+      referenziert wird zu bezeichnen. Dieser darf lediglich eine <emphasis
+      role="bold">maximale Länge von 10 Zeichen</emphasis> besitzen.</para>
+
+      <figure>
+        <title>Bodenaufbau</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Kapitel_2/bodenaufbau-na.png"
+                       scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para><emphasis role="bold">Zusammenfassung der für die Bodenschichtung
+      relevanten Punkte:</emphasis></para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Benötigte Karten: Karte des Oberbodens (1-2m); Karte der
+          Hydrogeologie (Übergang zum Grundwasserleiter)</para>
+        </listitem>
+
+        <listitem>
+          <para>Bei voliegender Geologie --&gt; verschneiden von Geologie und
+          Bodenart zu einer Shape-Datei Boden.</para>
+        </listitem>
+
+        <listitem>
+          <para>Attribute je Bodentyp: Bodenkey, maximalen Perkolationsrate,
+          Zuflussanteils in den Grundwasserleiters</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="KalypsoNAHydrotope">
+      <title>Bildung von Hydrotopen</title>
+
+      <indexterm>
+        <primary>Bildung von Hydrotopen KalypsoNA</primary>
+      </indexterm>
+
+      <para>Es erfolgt die Verschneidung der Daten aus der Landnutzung, des
+      Bodens und den Teilgebieten zu Hydrotopen.</para>
+
+      <figure>
+        <title>Hydrotopbildung</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Kapitel_2/hydrotop_na.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <note>
+        <para>Nach der Verschneidung können Hydrotope identischer
+        Eigenschaften in einem Teilgebiet zusammengefast werden. Hierdurch
+        kann die Rechenzeit des späteren Modells erheblich verringert
+        werden.</para>
+      </note>
     </section>
 
     <section id="KalypsoNAZeitreihenaufbereitung">
@@ -582,16 +624,17 @@
       Wasserhaushaltes und zum anderen die Kurzzeitsimulation zur möglichst
       genauen Abbildung von einzelnen Ereignissen auf Grundlage der
       Langzeitberechnungen. Die hierfür benötigten Daten beschränken sich auf
-      die diskreten Pegeldaten wie den Niederschlag, die Verdunstung
-      (Sekundärdaten aus Sonnenscheindauer, Temperatur, Wind und Luftfeuchte),
-      dem Pegel selbst und den sonstigen Modellganglinien.</para>
+      die diskreten Messdaten wie den Niederschlag, die Verdunstung
+      (Sekundärdaten aus Sonnenscheindauer, Temperatur, Wind und Luftfeuchte)
+      und dem Abflüssen bzw. Wasserständen selbst.</para>
 
       <para>Zur Vorbereitung und weiteren Aufbereitung müssen nun die
       Verdunstungsdaten aus den Inputdaten mit dem Verfahren von
       Penman-Monteith berechnet werden.</para>
 
       <figure>
-        <title>Penman-Monteith-Formel (Quelle: DVWK 238, Gl. 6.34, S.54)</title>
+        <title>Penman-Monteith-Formel (Quelle: DVWK 238, Gl. 6.34,
+        S.54)</title>
 
         <mediaobject>
           <imageobject>
@@ -601,17 +644,12 @@
         </mediaobject>
       </figure>
 
-      <para>Dies erfolgt mit Hilfe eines kleinen Tools, wobei die
-      Windgeschwindigkeiten in m/s benötigt werden, was eventuell eine
-      Umwandlung aus Beaufort notwendig macht. Weiterhin müssen die Ganglinien
-      auf ein für Kalypso-NA lesbareres Format transformiert werden (z.B.
-      grap-Format, siehe XXXXXXX) und abschließend die diskreten
-      Niederschlagsdaten auf flächenhafte Gebiete verteilt werden. Diese
-      Verteilung erfolgt nach dem Gebietsmodell, wobei in Kalypso jedem
-      Teilgebiet eine Niederschlags- und Verdunstungskennlinie zugewiesen
-      wird. Zum einen gibt es hier die Möglichkeit des
-      Gebietsniederschlagsmodells nach Kriging und zum anderen die
-      Thiessen-Polygon-Methode.</para>
+      <para>Abschließend sind die diskreten Niederschlagsdaten auf
+      flächenhafte Teilgebiete zu verteilen. In Kalypso kann jedem Teilgebiet
+      eine eigene Niederschlags-, Temperatur- und Verdunstungskennlinie
+      zugewiesen werden. HIerbei gibt es verscheidene Methoden die
+      Gebietsniederschläge zu ermittel. Auszugsweise seien hier das
+      Kriging-Modell sowie das Thiessen Verfahren erläutert.</para>
 
       <para><emphasis role="bold">Gebietsniederschlag nach Kriging:
       </emphasis></para>
@@ -626,13 +664,10 @@
       <para><emphasis role="bold">Thiessen-Polygon-Methode:</emphasis></para>
 
       <para>Hier erfolgt im Grunde die Referenzierung einer Station zu einem
-      ermittelten Teilgebiet. Die eingeladenen Pegelstandorte werden
-      untereinander durch gedachte Linien verbunden. Daraufhin werden zwischen
-      jeweils zwei Stationen die Mittelsenkrechten dieser Verbindungslinien
-      errichtet. Die daraus entstehenden Schnittpunkte der Mittelsenkrechten
-      bilden dann die Eckpunkte eines Teilgebietes um eine Station. Nun werden
-      die Daten der Station zu dem umschließenden Polygon referenziert und
-      stehen zur weiteren Berechnung zur Verfügung. </para>
+      ermittelten Teilgebiet bzw. die Flächenmäßige Gewichtung. Auf Basis der
+      Messstationsstandorte wird ein so genanntes Voronoi diagramme erzeugt
+      (Thiessen Polygone). Hierdurch kann die Stationszugehörigkeit je
+      Teilgebiet ermittelt werden.</para>
 
       <figure>
         <title>Niederschlag-Thiessen-Methode</title>
@@ -643,46 +678,6 @@
           </imageobject>
         </mediaobject>
       </figure>
-    </section>
-
-    <section id="KalypsoNAHydraulischeBerechnung">
-      <title>Hydraulische Berechnung</title>
-
-      <indexterm>
-        <primary>Hydraulische Berechnung KalypsoNA</primary>
-      </indexterm>
-
-      <para></para>
-    </section>
-
-    <section id="KalypsoNATeilStrangdaten">
-      <title>Ermittlung der Teilgebiets- und Strangdaten</title>
-
-      <indexterm>
-        <primary>Teilgebiets- und Strangdaten KalypsoNA</primary>
-      </indexterm>
-
-      <para></para>
-    </section>
-
-    <section id="KalypsoNARetention">
-      <title>Ermittlung der Retentionskonstanten</title>
-
-      <indexterm>
-        <primary>Retentionskonstanten KalypsoNA</primary>
-      </indexterm>
-
-      <para></para>
-    </section>
-
-    <section id="KalypsoNAZeitflaechenfunktion">
-      <title>Ermittlung der Zeitflächenfunktion je Teilgebiet</title>
-
-      <indexterm>
-        <primary>Zeitflächenfunktion je Teilgebiet KalypsoNA</primary>
-      </indexterm>
-
-      <para></para>
     </section>
   </section>
 </chapter>
