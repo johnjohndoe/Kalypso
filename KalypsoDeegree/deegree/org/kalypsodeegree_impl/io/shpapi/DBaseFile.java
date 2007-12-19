@@ -439,7 +439,11 @@ public class DBaseFile
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), m_suffix );
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_PROPERTY_ELEMENTS}" ), elementsString );
       final File tempFile = TempFileUtilities.createTempFile( KalypsoDeegreePlugin.getDefault(), "temporaryCustomSchemas", "customSchema", ".xsd" );
-      IOUtils.copy( new StringReader( schemaString ), new FileOutputStream( tempFile ) );
+      tempFile.deleteOnExit();
+      final FileOutputStream fileOutputStream = new FileOutputStream( tempFile );
+      fileOutputStream.write( schemaString.getBytes( "UTF8" ) );
+      fileOutputStream.flush();
+      fileOutputStream.close();
       final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURL() );
       // final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( new StringInputStream( schemaString ), "3.1.1", new
       // File( fname ).getParentFile().toURL() );
