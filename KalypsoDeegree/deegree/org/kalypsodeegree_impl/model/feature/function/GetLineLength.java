@@ -44,25 +44,19 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
+
 
 /**
- * multiplies (double) all values whose propertyNames are handed over <br>
- * accepts GMLXPathes <br>
- * and constant values (double)
- * 
  * @author thuel2
  */
-public class Multiply extends FeaturePropertyFunction
+public class GetLineLength extends FeaturePropertyFunction
 {
-
-  private Map<String, String> m_properties;
+  private QName m_lineName;
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -70,7 +64,17 @@ public class Multiply extends FeaturePropertyFunction
   @Override
   public void init( Map<String, String> properties )
   {
-    m_properties = properties;
+    final String lineProp = properties.get( "lineProperty" );
+
+    try
+    {
+      m_lineName = lineProp == null ? null : QName.valueOf( lineProp );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      e.printStackTrace();
+    }
+
   }
 
   /**
@@ -79,46 +83,23 @@ public class Multiply extends FeaturePropertyFunction
    */
   public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
+    if( m_lineName == null )
+      return null;
 
-    final GMLWorkspace workspace = feature.getWorkspace();
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType lineProperty = featureType.getProperty( m_lineName );
 
-    double multResult = 1.0;
-    Object objNumber = null;
-    for( String property : m_properties.values() )
-    {
-      // decide if property is a constant (double)
-      try
-      {
-        multResult = multResult * Double.parseDouble( property );
-      }
-      catch( NumberFormatException numForE )
-      {
-        try
-        {
-          GMLXPath path = new GMLXPath( feature );
-          final String[] xPathSegs = property.split( "/" );
-          for( int i = 0; i < xPathSegs.length; i++ )
-          {
-            if( xPathSegs[i] != null )
-            {
-              path = new GMLXPath( path, QName.valueOf( xPathSegs[i] ) );
-            }
-          }
+    if( lineProperty == null )
+      return null;
 
-          objNumber = GMLXPathUtilities.query( path, workspace );
-          if( !(objNumber instanceof Number) )
-            return null;
+    final Object objGeometry = feature.getProperty( lineProperty );
+    if( !(objGeometry instanceof GM_LineString) )
+      return null;
 
-          multResult = multResult * ((Number) objNumber).doubleValue();
-        }
-        catch( GMLXPathException e )
-        {
-          e.printStackTrace();
-          return null;
-        }
-      }
-    }
-    return multResult;
+    final GM_LineString line = (GM_LineString) objGeometry;
+
+    return line.getLength();
+
   }
 
   /**
