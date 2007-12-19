@@ -93,8 +93,18 @@
 			<complexContent>
 				<extension base="kwf:TaskGroup">
 					<sequence>									
-						<element ref="kwf:Perspectives"/>
-					</sequence>				
+						<element ref="kwf:Perspectives"/>						
+					</sequence>
+					<attribute name="defaultTask" type="IDREF" use="optional">
+							<annotation>
+								<appinfo>
+									<jaxb:property>
+										<jaxb:baseType
+											name="de.renew.workflow.base.Task" />
+									</jaxb:property>
+								</appinfo>
+							</annotation>
+					</attribute>
 				</extension>
 			</complexContent>
 		</complexType>

@@ -30,6 +30,8 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
 
   private final Font FONT_ACTIVE_TASK;
 
+  private final Font FONT_ACTIVE_TASKGROUP;
+
   private final WorkflowControl m_workflowControl;
 
   public WorkflowLabelProvider( final WorkflowControl workflowControl )
@@ -48,6 +50,8 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
     FONT_ACTIVE_TASK = new Font( display, boldFont );
     final FontData bigFont = new FontData( dialogFontName, dialogFontHeight + 1, SWT.NORMAL );
     FONT_TASKGROUP = new Font( display, bigFont );
+    final FontData bigBoldFont = new FontData( dialogFontName, dialogFontHeight + 1, SWT.BOLD );
+    FONT_ACTIVE_TASKGROUP = new Font( display, bigBoldFont );
   }
 
   /**
@@ -103,7 +107,10 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
   {
     if( element instanceof TaskGroup )
     {
-      return FONT_TASKGROUP;
+      if( m_workflowControl.getTaskExecutor().getActiveTask() == element )
+        return FONT_ACTIVE_TASKGROUP;
+      else
+        return FONT_TASKGROUP;
     }
     else
     {

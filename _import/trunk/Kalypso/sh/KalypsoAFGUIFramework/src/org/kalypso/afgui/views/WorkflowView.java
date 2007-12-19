@@ -16,6 +16,8 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
 
+import de.renew.workflow.base.Task;
+import de.renew.workflow.base.Workflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
@@ -88,7 +90,13 @@ public class WorkflowView extends ViewPart
             final WorkflowProjectNature workflowNature = WorkflowProjectNature.toThisNature( newProject.getProject() );
             if( workflowNature != null )
             {
-              m_workflowControl.setWorkflow( workflowNature.getCurrentWorklist() );
+              final Workflow currentWorklist = workflowNature.getCurrentWorklist();
+              m_workflowControl.setWorkflow( currentWorklist );
+              final Task defaultTask = currentWorklist.getDefaultTask();
+              if( defaultTask != null )
+              {
+                m_workflowControl.doTask( defaultTask );
+              }
             }
             else
             {

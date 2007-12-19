@@ -4,17 +4,20 @@
 	URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WF_Kalypso1D2D"
 	xmlns="http://www.renew.de/workflow/base"
 	xmlns:con="http://www.renew.de/workflow/contexts"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	defaultTask="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Preprocessing">
 	<Help>NONE</Help>
 	<Name>Kalypso1D2D-Workflow</Name>
 	<TaskGroup
-		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Preprocessing">
+		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Preprocessing"
+		context="BaseMap">
 		<Help><![CDATA[Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut.
 Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden.
 Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.]]></Help>
 		<Name>Preprocessing: Modellaufbau</Name>
 		<TaskGroup
-			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataLoad">
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataLoad"
+			context="BaseMap">
 			<Help>Daten aus dem Dateisystem in das Projekt laden</Help>
 			<Name>Daten laden</Name>
 			<Task context="ImportBaseMap"
@@ -54,15 +57,18 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			</Task>
 		</TaskGroup>
 		<TaskGroup
-			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__NetCstr">
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__NetCstr"
+			context="FenetMap">
 			<Help><![CDATA[Bereitstellung aller Bearbeitungsoptionen zum Aufbau eines gekoppelten 1D-2D-Netzes.]]></Help>
 			<Name>Netzaufbau</Name>
 			<TaskGroup
-				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DRivGroup">
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DRivGroup"
+				context="FenetMap">
 				<Help></Help>
 				<Name>1D-Gewässernetz</Name>
 				<TaskGroup
-					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImport">
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImport"
+					context="FenetMap">
 					<Help><![CDATA[Importieren von 1D-Finite-Elementen von externen Datenquellen]]></Help>
 					<Name>Fremddaten importieren</Name>
 					<!-- <Task context="ImportWSPM" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm">
@@ -95,7 +101,8 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				</Task>
 			</TaskGroup>
 			<TaskGroup
-				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net2DGroup">
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net2DGroup"
+				context="FenetMap">
 				<Help></Help>
 				<Name>2D-Netz</Name>
 				<Task context="Import2dNet"
@@ -127,7 +134,8 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				</Task>
 			</TaskGroup>
 			<TaskGroup
-				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TransGroup">
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TransGroup"
+				context="FenetMap">
 				<Help></Help>
 				<Name>Berechnungseinheiten und Randbedingungen</Name>
 				<Task type="ASYNCHRONOUS" context="ContLineTheme"
@@ -159,7 +167,8 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			</TaskGroup>
 		</TaskGroup>
 		<TaskGroup
-			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughMod">
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughMod"
+			context="FenetMap">
 			<Help><![CDATA[Rauheitszonen definieren sowie Rauheitsklassen bearbeiten.]]></Help>
 			<Name>Rauheitsmodellierung</Name>
 			<Task context="RoughnessDatabase"
@@ -174,7 +183,8 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			</Task>
 		</TaskGroup>
 		<TaskGroup
-			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataExport">
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataExport"
+			context="FenetMap">
 			<Help><![CDATA[Daten aus dem Projekt in das Dateisystem exportieren]]></Help>
 			<Name>Daten exportieren</Name>
 			<Task context="Export2DNet"
@@ -185,7 +195,8 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 		</TaskGroup>
 	</TaskGroup>
 	<TaskGroup
-		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Processing">
+		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Processing"
+		context="FenetMap">
 		<Help><![CDATA[Nach Aufbau des Strömungsmodells können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung durchgeführt werden.]]></Help>
 		<Name>Processing: Kalibrieren und Rechnen</Name>
 		<Task type="ASYNCHRONOUS" context="CalcParams"
@@ -201,7 +212,8 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 	</TaskGroup>
 
 	<TaskGroup
-		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Postprocessing">
+		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Postprocessing"
+		context="FenetMap">
 		<Help><![CDATA[Nach der Druchführung der Strömungsberechungen können die Ergebnisse hier ausgewertet und visualisiert werden.]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
 
