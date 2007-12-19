@@ -282,5 +282,28 @@
             name="Kalypso Workflow">
       </perspective>      
    </extension>
+ <extension
+       point="org.eclipse.ui.decorators">
+    <decorator
+          icon="icons/scenario_small.png"
+          id="org.kalypso.scenarios.scenarioNatureDecorator"
+          label="Szenario-Projekt"
+          lightweight="true"
+          location="TOP_RIGHT"
+          state="true">
+       <enablement>
+          <and>
+             <objectClass
+                   name="org.eclipse.core.resources.IProject">
+             </objectClass>
+             <objectState
+                   name="projectNature"
+                   value="org.kalypso.afgui.ScenarioHandlingProjectNature">
+             </objectState>
+          </and>
+       </enablement>
+    </decorator>
+ </extension>
+ 
    
 </plugin>
