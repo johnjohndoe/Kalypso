@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
- * This function property simply compares a value whith the value of a property.
+ * This function property simply compares a value with the value of a property.
  * <p>
  * Parameters:
  * <ul>

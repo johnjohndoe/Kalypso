@@ -47,7 +47,7 @@
                id="org.kalypso.gmlschema.functionProperty.constDoubleIfNull"
                name="Constant Double if Null"/>
          <function
-               class="org.kalypsodeegree_impl.model.feature.function.GetPolygoneArea"
+               class="org.kalypsodeegree_impl.model.feature.function.GetLineLength"
                id="org.kalypso.gmlschema.functionProperty.getPolygoneArea"
                name="Get Polygone Area">
          </function>
@@ -65,6 +65,11 @@
                class="org.kalypsodeegree_impl.model.feature.function.ConnectGeometryCenterPointsByLine"
                id="org.kalypso.gmlschema.functionProperty.connectCentersByLine"
                name="Connect Two Geometry Center Points By Line">
+         </function>
+         <function
+               class="kalypsoDeegree.FeaturePropertyFunction1"
+               id="org.kalypso.gmlschema.functionProperty.getLineLength"
+               name="Get Line Length">
          </function>
      </extension>
      <extension
