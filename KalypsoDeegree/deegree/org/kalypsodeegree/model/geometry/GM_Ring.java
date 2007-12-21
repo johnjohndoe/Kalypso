@@ -62,9 +62,7 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * defining a ring geometry that's part of a surface boundary
- * 
  * <p>
  * ----------------------------------------------------------------------
  * <p>
@@ -77,26 +75,25 @@ package org.kalypsodeegree.model.geometry;
 
 public interface GM_Ring extends GM_OrientableCurve
 {
-
   /**
    * returns true because a ring is always a cycle
    */
-  public boolean isCycle();
+  public boolean isCycle( );
 
   /**
    * returns true because a ring is always a simple
    */
-  public boolean isSimple();
+  public boolean isSimple( );
 
   /**
    * returns all positions the builds the ring
    */
-  public GM_Position[] getPositions();
+  public GM_Position[] getPositions( );
 
   /**
    * returns the ring as an instance of <tt>GM_CurveSegment</tt>
    */
-  public GM_CurveSegment getAsCurveSegment() throws GM_Exception;
+  public GM_CurveSegment getAsCurveSegment( ) throws GM_Exception;
 
   /**
    * @link aggregationByValue

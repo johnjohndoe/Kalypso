@@ -405,7 +405,7 @@ final public class GeometryFactory
    */
   public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_SurfacePatch patch ) throws GM_Exception
   {
-    return new GM_Surface_Impl( patch );
+    return new GM_Surface_Impl<GM_SurfacePatch>( patch );
   }
 
   /**
@@ -1106,14 +1106,13 @@ final public class GeometryFactory
    * @param crs
    *            geometries coordinate reference system
    */
-  public static GM_Curve[] createGM_Curve( GM_Position[][] rings, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Curve[] createGM_Curve( final GM_Position[][] rings, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
 
-    for( int i = 0; i < rings.length; i++ )
+    for( final GM_Position[] positions : rings )
     {
       final GM_CurveSegment[] cs = new GM_CurveSegment[1];
-      final GM_Position[] positions = rings[i];
       cs[0] = GeometryFactory.createGM_CurveSegment( positions, crs );
 
       curveList.add( new GM_Curve_Impl( cs ) );
@@ -1121,18 +1120,19 @@ final public class GeometryFactory
     return curveList.toArray( new GM_Curve[curveList.size()] );
   }
 
-  public static GM_Ring[] createGM_Ring( GM_Position[][] rings, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Ring[] createGM_Rings( final GM_Position[][] rings, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     final List<GM_Ring> ringList = new LinkedList<GM_Ring>();
 
-    for( int i = 0; i < rings.length; i++ )
-    {
-      final GM_Ring[] ring = new GM_Ring[1];
-      final GM_Position[] positions = rings[i];
+    for( final GM_Position[] positions : rings )
+      ringList.add( createGM_Ring( positions, crs ) );
 
-      ringList.add( new GM_Ring_Impl( positions, crs ) );
-    }
     return ringList.toArray( new GM_Ring[ringList.size()] );
+  }
+
+  public static GM_Ring_Impl createGM_Ring( final GM_Position[] positions, final CS_CoordinateSystem crs ) throws GM_Exception
+  {
+    return new GM_Ring_Impl( positions, crs );
   }
 
 }

@@ -67,6 +67,9 @@ public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerPro
    */
   public IComponentUiHandler[] createComponentHandler( final Feature obsFeature )
   {
+    if( obsFeature == null )
+      return new IComponentUiHandler[0];
+
     final Feature resultDefinition = (Feature) obsFeature.getProperty( new QName( NS.OM, "resultDefinition" ) );
     final GMLWorkspace workspace = resultDefinition.getWorkspace();
     final List< ? > components = (List< ? >) resultDefinition.getProperty( new QName( NS.SWE, "component" ) );

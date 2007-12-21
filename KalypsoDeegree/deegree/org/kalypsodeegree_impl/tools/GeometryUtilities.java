@@ -901,7 +901,7 @@ public class GeometryUtilities
       if( x0 > 0. && x1 >= 0. && x1 <= 1. )
         hits++;
     }
-    int check = hits % 2;
+    final int check = hits % 2;
 
     if( check == 1 )
       return 1;
@@ -933,6 +933,15 @@ public class GeometryUtilities
     {
       throw new RuntimeException( "error while creating a curve", e ); //$NON-NLS-1$
     }
+  }
+
+  /**
+   * Tests whether a ring (defined by its positions) is self-intersecting.
+   */
+  public static boolean isSelfIntersecting( final GM_Position[] ring )
+  {
+    final LineString ls = JTSAdapter.exportAsLineString( ring );
+    return !ls.isSimple();
   }
 
 }

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml"
-	xmlns="http://www.w3.org/2001/XMLSchema"
-	xmlns:common="org.kalypso.gml.common"
-	targetNamespace="org.kalypso.gml.common" elementFormDefault="qualified"
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.gml.common" elementFormDefault="qualified"
 	version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -12,11 +10,8 @@
 	<import namespace="http://www.opengis.net/gml" />
 	<!-- utility schema for gml application schemas -->
 	<!-- TODO: KALYPSO-Header einfügen -->
-	<!-- 
-		_________________________________________________________________________________________
-		TYPES
-		_________________________________________________________________________________________	
-	-->
+
+	<-- @deprecated: no not use any more -->
 	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType">
@@ -25,14 +20,13 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	<!-- 
-	-->
+	
+	<-- @deprecated: no not use any more -->
 	<complexType name="NamedFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType">
 				<sequence>
-					<element ref="gml:metaDataProperty" minOccurs="0"
-						maxOccurs="unbounded">
+					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Metadaten</label>
@@ -50,8 +44,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element ref="gml:name" minOccurs="1"
-						maxOccurs="1">
+					<element ref="gml:name" minOccurs="1" maxOccurs="1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Bezeichnung</label>
@@ -93,24 +86,17 @@
 		</restriction>
 	</simpleType>
 	<!-- Image -->
-	<element name="Image" type="common:ImageType"
-		substitutionGroup="gml:_Feature">
+	<element name="Image" type="common:ImageType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Bild</name>
-				<label>
-					${listProperty:http://www.opengis.net/gml#name;0;-Name
-					nicht gesetzt-}
-				</label>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
 				<tooltip>Referenz auf eine Bilddatei</tooltip>
 				<description><![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Image</name>
-				<label>
-					${listProperty:http://www.opengis.net/gml#name;0;-no
-					name-}
-				</label>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
 				<tooltip>Reference to an image file</tooltip>
 				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-no description-}]]></description>
 			</documentation>
@@ -124,23 +110,13 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>URL</label>
-								<tooltip>
-									Speicherort des Bildes (relative
-									Pfade möglich)
-								</tooltip>
-								<description>
-									Speicherort des Bildes
-								</description>
+								<tooltip>Speicherort des Bildes (relative Pfade möglich)</tooltip>
+								<description>Speicherort des Bildes</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>URL</label>
-								<tooltip>
-									Image location (relative pathes
-									possible)
-								</tooltip>
-								<description>
-									Image location
-								</description>
+								<tooltip>Image location (relative pathes possible)</tooltip>
+								<description>Image location</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -149,12 +125,9 @@
 		</complexContent>
 	</complexType>
 
-	<element name="Status" type="common:StatusType"
-		substitutionGroup="gml:_Feature">
+	<element name="Status" type="common:StatusType" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation xml:lang="de">
-				org.eclipse.core.runtime.IStatus as GML feature
-			</documentation>
+			<documentation xml:lang="de"><![CDATA[org.eclipse.core.runtime.IStatus as GML feature]]></documentation>
 		</annotation>
 	</element>
 
@@ -175,9 +148,7 @@
 					</element>
 					<element name="code" type="int"></element>
 					<element name="exception" type="string"></element>
-					<element name="childMember"
-						type="common:StatusPropertyType" minOccurs="0"
-						maxOccurs="unbounded">
+					<element name="childMember" type="common:StatusPropertyType" minOccurs="0" maxOccurs="unbounded">
 					</element>
 				</sequence>
 			</extension>
