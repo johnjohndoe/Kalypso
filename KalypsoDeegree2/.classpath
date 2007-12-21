@@ -34,7 +34,7 @@
 	<classpathentry kind="lib" path="libs/ecw/ermapperdoc.jar"/>
 	<classpathentry kind="lib" path="libs/ehcache/ehcache-1.2.0_03.jar"/>
 	<classpathentry kind="lib" path="libs/hsqldb/hsqldb.jar"/>
-	<classpathentry kind="lib" path="libs/j3d/j3d_deegreeversion.jar"/>
+	<classpathentry kind="lib" path="libs/j3d/j3d_deegreeversion.jar" sourcepath="D:/Projekte/kalypso_dev/j3d-1_5_1-src/com"/>
 	<classpathentry kind="lib" path="libs/jai/jai_codec.jar"/>
 	<classpathentry kind="lib" path="libs/jai/jai_core.jar"/>
 	<classpathentry kind="lib" path="libs/jai/mlibwrapper_jai.jar"/>

@@ -37,6 +37,8 @@ public class KalypsoDeegree2Plugin extends Plugin
     super.start( context );
 
     plugin = this;
+
+    org.j3d.geom.TriangulationUtils t;
   }
 
   /*
@@ -60,5 +62,14 @@ public class KalypsoDeegree2Plugin extends Plugin
   public static KalypsoDeegree2Plugin getDefault( )
   {
     return plugin;
+  }
+
+  // TODO!: move into real helper class
+  public static void doTriangle( )
+  {
+// new TriangulationUtils().triangulatePolygon2D( numContours, contourCounts, vertices, triangles );
+
+    // TODO Auto-generated method stub
+
   }
 }

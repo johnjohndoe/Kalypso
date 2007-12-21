@@ -69,7 +69,7 @@ public class ProcessHelper
 
       try
       {
-        final byte[] stuff = new byte[40];
+        final byte[] stuff = new byte[2048];
 
         while( true )
         {
@@ -83,16 +83,12 @@ public class ProcessHelper
             m_os.write( stuff, 0, read );
 
           // This thread is already blocked by the read method, so normally we don_'t need to wait here, but who nows...
-          sleep( 25 );
+// sleep( 25 );
         }
       }
       catch( final IOException ioe )
       {
         ioe.printStackTrace();
-      }
-      catch( final InterruptedException e )
-      {
-        e.printStackTrace();
       }
     }
   }
