@@ -131,7 +131,6 @@ public class EditGeometryWidget extends AbstractWidget
     final List<Object> features = selector.select( envelope, featureListVisible, false );
     m_handles = createHandles( features, null, envelope );
 
-// TODO: check if this repaint is necessary for the widget
     final MapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaint();
@@ -168,7 +167,6 @@ public class EditGeometryWidget extends AbstractWidget
     final MapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaint();
-
   }
 
   public void resetDragging( )
@@ -209,7 +207,7 @@ public class EditGeometryWidget extends AbstractWidget
   }
 
   /**
-   * Perform the translation of the selected feaetures.
+   * Perform the translation of the selected features.
    * 
    * @return true to signal that features
    */
