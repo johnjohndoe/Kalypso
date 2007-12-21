@@ -204,7 +204,17 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
     if( value1 == null || value2 == null )
       return false;
 
-    // Convert to comparable datatype
+    // Convert to comparable data type
+
+    if( (value1 instanceof String && value2 instanceof Boolean) || (value1 instanceof Boolean && value2 instanceof String) )
+    {
+      // Prefer boolean comparison
+      if( value1 instanceof String )
+        value1 = Boolean.valueOf( (String) value1 );
+      else
+        value2 = Boolean.valueOf( (String) value2 );
+    }
+
     if( (value1 instanceof String && value2 instanceof Number) || (value1 instanceof Number && value2 instanceof String) )
     {
       if( value1 instanceof String )
@@ -254,8 +264,8 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
     }// compare Doubles
     else if( (value1 instanceof Number) && (value2 instanceof Number) )
     {
-      final double d1 = Double.parseDouble( value1.toString() );
-      final double d2 = Double.parseDouble( value2.toString() );
+      final double d1 = ((Number) value1).doubleValue();
+      final double d2 = ((Number) value2).doubleValue();
 
       switch( getOperatorId() )
       {
@@ -275,6 +285,25 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
           return d1 >= d2;
         default:
           throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName() + "'!" );
+      }
+    }
+    // compare boolean
+    else if( value1 instanceof Boolean && value2 instanceof Boolean )
+    {
+      final Boolean b1 = (Boolean) value1;
+      final Boolean b2 = (Boolean) value2;
+
+      switch( getOperatorId() )
+      {
+        case OperationDefines.PROPERTYISEQUALTO:
+          return ObjectUtils.equals( b1, b2 );
+
+        case OperationDefines.PROPERTYISNOTEQUALTO:
+          return !ObjectUtils.equals( b1, b2 );
+
+        default:
+          final String msg = String.format( "Cannot apply comparison operation '%s' to boolean values.", getOperatorName() );
+          throw new FilterEvaluationException( msg );
       }
     }
     else
