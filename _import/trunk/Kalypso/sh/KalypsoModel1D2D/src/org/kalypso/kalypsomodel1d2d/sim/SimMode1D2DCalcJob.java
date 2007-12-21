@@ -75,16 +75,12 @@ import org.kalypso.simulation.core.SimulationException;
 
 /**
  * Implements the {@link ISimulation} interface to provide the simulation job for the 1d2d model
- * 
- * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
- * @author Patrice Congo
  */
 public class SimMode1D2DCalcJob implements ISimulation
 {
   /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
-   *      org.kalypso.services.calculation.job.ICalcMonitor)
+   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
+   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
   public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
@@ -115,14 +111,14 @@ public class SimMode1D2DCalcJob implements ISimulation
       monitor.setMessage( "Generiere Ascii Dateien für FE-Simulation: Sammle Daten..." );
       if( monitor.isCanceled() )
         return;
-      
+
       // TODO Improve the performance!!!
       final RMA10Calculation calculation = new RMA10Calculation( inputProvider );
 
       /* Prepare for any results */
       final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
       resultEater.addResult( RMA10SimModelConstants.RESULT_DIR_NAME_ID, outputDir );
-      
+
       final ICalculationUnit calculationUnit = calculation.getControlModel().getCalculationUnit();
       final String calcUnitID = calculationUnit.getWrappedFeature().getId();
       final File calcUnitOutputDir = new File( outputDir, calcUnitID );
@@ -133,9 +129,9 @@ public class SimMode1D2DCalcJob implements ISimulation
       /** convert discretisation model stuff... */
       // write merged *.2d file for calc core / Dejan
       final File modelFile = new File( tmpDir, "model.2d" );
-      
+
       // TODO Improve the performance!!!
-      
+
       final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, calculation );
 
       if( monitor.isCanceled() )
@@ -291,9 +287,7 @@ public class SimMode1D2DCalcJob implements ISimulation
    */
   private void startCalculation( final File basedir, final ISimulationMonitor monitor, final Runnable resultRunner, final RMA10Calculation calculation ) throws SimulationException
   {
-    /*
-     * Creates the result folder for the .exe file, must be same as in Control-Converter (maybe give as an argument?)
-     */
+    /* Creates the result folder for the .exe file, must be same as in Control-Converter (maybe give as an argument?) */
     new File( basedir, "result" ).mkdirs();
 
     final File exeFile = new File( basedir, calculation.getKalypso1D2DKernelPath() );
@@ -310,7 +304,7 @@ public class SimMode1D2DCalcJob implements ISimulation
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Fehler beim Ausfuehren der Berechnung", e );
+      throw new SimulationException( "Fehler beim Ausführen der Berechnung", e );
     }
     finally
     {

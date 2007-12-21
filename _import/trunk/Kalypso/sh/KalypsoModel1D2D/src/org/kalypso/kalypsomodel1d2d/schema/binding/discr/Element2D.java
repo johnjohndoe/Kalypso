@@ -14,6 +14,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -23,7 +25,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger, Patrice Congo
  */
-@SuppressWarnings("hiding")//$NON-NLS-1$
+@SuppressWarnings("hiding")
 public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends FE1D2DElement<CT, ET> implements IElement2D<CT, ET>
 {
   private final IFeatureWrapperCollection<ET> edges;
@@ -48,7 +50,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
    * @throws IllegalArgumentException
    *             if any argument is null
    */
-  public Element2D( Feature parentFeature, QName propQName, String gmlID, QName featureQName, Class<CT> complexElementClass, Class<ET> edgeClass )
+  public Element2D( final Feature parentFeature, final QName propQName, final String gmlID, final QName featureQName, final Class<CT> complexElementClass, final Class<ET> edgeClass )
   {
     this( FeatureHelper.createFeatureWithId( featureQName, parentFeature, propQName, gmlID ), featureQName, complexElementClass, edgeClass );
   }
@@ -65,7 +67,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
    * @param edgeClass
    *            the target binding class for edges
    */
-  public Element2D( final Feature featureToBind, QName featureQName, Class<CT> complexElementClass, Class<ET> edgeClass )
+  public Element2D( final Feature featureToBind, final QName featureQName, final Class<CT> complexElementClass, final Class<ET> edgeClass )
   {
     super( featureToBind, featureQName, complexElementClass );
     Object prop = null;
@@ -73,7 +75,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
     {
       prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
     }
@@ -83,7 +85,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
     {
       prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
       prop = null;
@@ -128,14 +130,22 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
    * @throws IllegalArgumentException
    *             if workspace is null or the roughness collection is not part of the workspace
    */
-  public Element2D( Feature parentFeature, QName propQName, QName newFeatureQName ) throws IllegalArgumentException
+  public Element2D( final Feature parentFeature, final QName propQName, final QName newFeatureQName ) throws IllegalArgumentException
   {
     this( Util.createFeatureAsProperty( parentFeature, propQName, newFeatureQName ) );
   }
 
-  public Element2D( Feature parentFeature, QName propQName, String gmlID )
+  public Element2D( final Feature parentFeature, final QName propQName, final String gmlID )
   {
     this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, parentFeature, propQName, gmlID ) );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D#getGeometry()
+   */
+  public GM_Surface<GM_SurfacePatch> getGeometry( )
+  {
+    return getProperty( QNAME_PROP_GEOMETRY, GM_Surface.class );
   }
 
   /**
@@ -166,7 +176,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
 
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public void setEdges( final ET[] edges )
   {
     final Feature feature = getFeature();
@@ -175,7 +185,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
     /*
      * remove former edges and un register this as container
      */
-    for( ET edge : edges )
+    for( final ET edge : edges )
     {
       edge.removeContainerAsRef( this );
     }
@@ -207,15 +217,15 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
   public List<IFE1D2DNode> getNodes( )
   {
 
-    List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>( edges.size() + 1 );
+    final List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>( edges.size() + 1 );
     IFE1D2DNode lasAddedNode = null;
 
-    for( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
+    for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
     {
       if( edge instanceof IEdgeInv )
       {
-        IFE1D2DEdge invertedEdge = ((IEdgeInv) edge).getInverted();
-        List<IFE1D2DNode> edgeNodes = invertedEdge.getNodes();
+        final IFE1D2DEdge invertedEdge = ((IEdgeInv) edge).getInverted();
+        final List<IFE1D2DNode> edgeNodes = invertedEdge.getNodes();
         IFE1D2DNode node;
         for( int i = edgeNodes.size() - 1; i >= 0; i-- )
         {
@@ -233,7 +243,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
       }
       else
       {
-        for( IFE1D2DNode node : edge.getNodes() )
+        for( final IFE1D2DNode node : edge.getNodes() )
         {
           if( node != null )
           {
@@ -277,9 +287,9 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
   @Override
   public String toString( )
   {
-    StringBuffer buf = new StringBuffer( 128 );
+    final StringBuffer buf = new StringBuffer( 128 );
     buf.append( "Element2D[" ); //$NON-NLS-1$
-    for( IFeatureWrapper2 featureWrapper : edges )
+    for( final IFeatureWrapper2 featureWrapper : edges )
     {
       buf.append( featureWrapper );
     }

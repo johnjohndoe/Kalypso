@@ -42,7 +42,9 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -55,7 +57,7 @@ public class DiscretisationModelUtils
 {
   private DiscretisationModelUtils( )
   {
-    throw new UnsupportedOperationException( Messages.getString("DiscretisationModelUtils.0") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "DiscretisationModelUtils.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -127,6 +129,16 @@ public class DiscretisationModelUtils
   {
     final Feature parent = modelItem.getWrappedFeature().getParent();
     return (IFEDiscretisationModel1d2d) parent.getAdapter( IFEDiscretisationModel1d2d.class );
+  }
+
+  /**
+   * Return the discretisation model for one of its themes (nodes, edges, elements, ...)
+   */
+  public static IFEDiscretisationModel1d2d modelForTheme( final IKalypsoFeatureTheme theme )
+  {
+    final FeatureList featureList = theme.getFeatureList();
+    final Feature parentFeature = featureList.getParentFeature();
+    return (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
   }
 
 }

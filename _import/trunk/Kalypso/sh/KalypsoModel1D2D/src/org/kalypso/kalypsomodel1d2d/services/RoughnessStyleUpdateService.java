@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.services;
 
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -60,6 +62,12 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
+ * FIXME: the same sld file is used for rendering the rougness polygones as well as the 2d-elements.<br>
+ * In order so that can work, the geometry name of both must be the same, but this should not be the case.<br>
+ * Introducing a second virtual property on the 2d-elements is no solution, as then the 2d-element geometry is always
+ * calculated twice, such having heavy impact on the overall performance!
+ * 
+ * 
  * @author Dejan Antanaskovic
  * 
  */
@@ -108,8 +116,14 @@ public class RoughnessStyleUpdateService extends Job
         }
         while( roughnessWorkspace == null );
       }
+      // TODO: change name of property here
+      // either write the sld twice, for polygons and 2d-element
+      // or don't specify the geometry, using the default one.
+      // Now trying to omit geometry: check if it works
+      final QName geomPropertyName = null; // IRoughnessPolygon.PROP_GEOM OR IElement2D.QNAME_PROP_GEOMETRY
+
       final IRoughnessClsCollection collection = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
-      SLDHelper.exportPolygonSymbolyzerSLD( m_sldFile, collection, IRoughnessPolygon.PROP_GEOMETRY, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, STYLE_NAME, STYLE_TITLE, monitor );
+      SLDHelper.exportPolygonSymbolyzerSLD( m_sldFile, collection, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, STYLE_NAME, STYLE_TITLE, monitor );
       return Status.OK_STATUS;
     }
     catch( final Throwable t )

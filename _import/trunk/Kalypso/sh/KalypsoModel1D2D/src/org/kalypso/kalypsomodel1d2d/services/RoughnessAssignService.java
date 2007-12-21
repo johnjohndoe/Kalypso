@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -115,7 +114,7 @@ public class RoughnessAssignService extends Job
     }
     catch( final Throwable t )
     {
-//      return StatusUtilities.statusFromThrowable( t, "Roughness asigning not finished." );
+      // return StatusUtilities.statusFromThrowable( t, "Roughness asigning not finished." );
       t.printStackTrace();
     }
     finally
@@ -131,7 +130,7 @@ public class RoughnessAssignService extends Job
     if( !(element instanceof IPolyElement) )
       return;
 
-    final GM_Object geometryProperty = (GM_Object) element.getWrappedFeature().getProperty( IRoughnessPolygon.PROP_GEOMETRY );
+    final GM_Object geometryProperty = ((IPolyElement) element).getGeometry();
 
     // this might happen if 2d network is just imported, and new elements are created
     // (by the widget) before saving anything

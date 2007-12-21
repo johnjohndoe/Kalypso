@@ -498,7 +498,6 @@
 			<xs:documentation>
 				Base type for all 1d 2d elements.
 			</xs:documentation>
-
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractFENetworkItemType">
@@ -583,12 +582,6 @@
 				edges cannot be used. the edges must build a closed
 				kurve.
 			</xs:documentation>
-			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
-					kapp:property="simBase:polygonGeometry"
-					kapp:valueType="gml:PolygonPropertyType" kapp:isVirtual="true" />
-			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="wb1d2d:Element2DType">

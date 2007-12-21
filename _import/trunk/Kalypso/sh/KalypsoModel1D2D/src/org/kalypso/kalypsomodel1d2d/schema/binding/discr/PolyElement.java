@@ -152,7 +152,7 @@ public class PolyElement extends Element2D implements IPolyElement
   }
 
   @Override
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public void setEdges( final IFE1D2DEdge[] edges )
   {
     final Feature feature = getFeature();
@@ -200,9 +200,9 @@ public class PolyElement extends Element2D implements IPolyElement
     return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
   }
 
-  public static IPolyElement createPolyElement( final FE1D2DDiscretisationModel discModel )
+  public static IPolyElement createPolyElement( final IFEDiscretisationModel1d2d discModel )
   {
-    final Feature parentFeature = discModel.getFeature();
+    final Feature parentFeature = discModel.getWrappedFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
     final IRelationType parentElementProperty = (IRelationType) parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
 
@@ -344,7 +344,7 @@ public class PolyElement extends Element2D implements IPolyElement
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessClsID(java.lang.String)
    */
-  public void setRoughnessClsID( String value )
+  public void setRoughnessClsID( final String value )
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, value );
   }
@@ -376,7 +376,7 @@ public class PolyElement extends Element2D implements IPolyElement
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessStyle(java.lang.String)
    */
-  public void setRoughnessStyle( String value )
+  public void setRoughnessStyle( final String value )
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
   }

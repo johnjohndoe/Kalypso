@@ -4,6 +4,8 @@
 	parse by the current parser.
 	
 	@author Patrice Congo
+	
+	TODO: remove; probobay its not used any more
 -->
 <xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wbGml="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:kapp="org.kalypso.appinfo" targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>

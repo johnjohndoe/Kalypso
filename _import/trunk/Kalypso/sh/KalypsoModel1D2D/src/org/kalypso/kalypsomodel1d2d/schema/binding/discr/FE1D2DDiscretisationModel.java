@@ -228,10 +228,9 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     T nearest = null;
     for( final Feature feature : foundElements )
     {
-      // TODO: remove next line
-      // final GM_Object geom = feature.getProperty( geoQName );
       if( feature == null )
-        continue;
+        continue; // This should never happen!
+
       final IFENetItem current = (IFENetItem) feature.getAdapter( elementClass );
       if( current != null )
       {
@@ -239,7 +238,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
         if( geometryFromNetItem != null )
         {
           final double curDist = position.distance( geometryFromNetItem );
-          if( min > curDist && curDist < grabDistance )
+          if( min > curDist && curDist <= grabDistance )
           {
             nearest = (T) current;
             min = curDist;
@@ -343,12 +342,12 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     for( final IFeatureWrapper2 oldNodecontainer : oldNodecontainers )
     {
       newNodecontainers.addRef( oldNodecontainer );
-      if(oldNodecontainer instanceof IFE1D2DEdge)
+      if( oldNodecontainer instanceof IFE1D2DEdge )
       {
-        final IFE1D2DEdge edge = (IFE1D2DEdge)oldNodecontainer;
-        if(edge.getNode( 0 ).equals( oldNode ))
+        final IFE1D2DEdge edge = (IFE1D2DEdge) oldNodecontainer;
+        if( edge.getNode( 0 ).equals( oldNode ) )
           edge.setNode( 0, newNode );
-        if(edge.getNode( 1 ).equals( oldNode ))
+        if( edge.getNode( 1 ).equals( oldNode ) )
           edge.setNode( 1, newNode );
       }
       oldNodecontainer.getWrappedFeature().invalidEnvelope();
@@ -356,6 +355,6 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     oldNodecontainers.clear();
     m_nodes.removeAllRefs( oldNode );
     m_nodes.remove( oldNode.getWrappedFeature() );
-//    m_nodes.getWrappedList().remove( oldNode.getWrappedFeature() );
+    // m_nodes.getWrappedList().remove( oldNode.getWrappedFeature() );
   }
 }

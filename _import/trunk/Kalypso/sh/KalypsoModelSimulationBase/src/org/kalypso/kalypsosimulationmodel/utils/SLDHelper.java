@@ -98,6 +98,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * TODO: move this into the deegree plug-in.
+ * 
  * @author Dejan Antanaskovic
  * 
  */
@@ -193,7 +195,7 @@ public class SLDHelper
           }
 
           final Transformer transformer = factory.newTransformer();
-          transformer.setOutputProperty( OutputKeys.ENCODING, writer.getEncoding() ); //$NON-NLS-1$
+          transformer.setOutputProperty( OutputKeys.ENCODING, writer.getEncoding() );
           transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
 
           // transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
@@ -292,11 +294,13 @@ public class SLDHelper
   {
     final FeatureTypeStyle style = new FeatureTypeStyle_Impl();
 
+    final PropertyName geomPropertyName = geometryProperty == null ? null : new PropertyName( geometryProperty );
+
     // creating the ElseFilter rule
     final Stroke defaultRuleStroke = StyleFactory.createStroke( ELSEFILTER_STROKECOLOR, ELSEFILTER_STROKEWIDTH, ELSEFILTER_STROKEOPACITY );
     defaultRuleStroke.setDashArray( ELSEFILTER_DASHARRAY );
     final Fill defaultRuleFill = StyleFactory.createFill( ELSEFILTER_FILLCOLOR, ELSEFILTER_FILLOPACITY );
-    final PolygonSymbolizer defaultRuleSymbolizer = StyleFactory.createPolygonSymbolizer( defaultRuleStroke, defaultRuleFill, new PropertyName( geometryProperty ) );
+    final PolygonSymbolizer defaultRuleSymbolizer = StyleFactory.createPolygonSymbolizer( defaultRuleStroke, defaultRuleFill, geomPropertyName );
     final Rule defaultRule = StyleFactory.createRule( defaultRuleSymbolizer );
     defaultRule.setElseFilter( true );
     defaultRule.setName( ELSEFILTER_NAME );
@@ -323,7 +327,7 @@ public class SLDHelper
         color = new Color( rgb.red, rgb.green, rgb.blue );
       final Stroke stroke = StyleFactory.createStroke( DEFAULT_STROKECOLOR, DEFAULT_STROKEWIDTH, DEFAULT_STROKEOPACITY );
       final Fill fill = StyleFactory.createFill( color, DEFAULT_FILLOPACITY );
-      final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, new PropertyName( geometryProperty ) );
+      final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, geomPropertyName );
       final Rule rule = StyleFactory.createRule( newSymbolizer );
       final String ruleName = styledFeature.getName();
       final Operation operation = new PropertyIsLikeOperation( new PropertyName( styleProperty.getLocalPart(), null ), new Literal( ruleName ), '*', '$', '/' );
@@ -345,7 +349,7 @@ public class SLDHelper
     font.setColor( Color.BLACK );
     final PointPlacement pointPlacement = new PointPlacement_Impl( anchorPoint, new ParameterValueType[0], rotation, true );
     final LabelPlacement labelPlacement = new LabelPlacement_Impl( pointPlacement );
-    final TextSymbolizer labelSymbolizer = StyleFactory.createTextSymbolizer( new PropertyName( geometryProperty ), "<ogc:PropertyName>" + styleProperty.getLocalPart() + "</ogc:PropertyName>", labelPlacement );
+    final TextSymbolizer labelSymbolizer = StyleFactory.createTextSymbolizer( geomPropertyName, "<ogc:PropertyName>" + styleProperty.getLocalPart() + "</ogc:PropertyName>", labelPlacement );
     labelSymbolizer.setHalo( null );
     labelSymbolizer.setFont( font );
     final Rule labelRule = StyleFactory.createRule( labelSymbolizer, 0.0, 10.0 );

@@ -41,7 +41,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   {
     super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
 
-    Object prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
+    final Object prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
 
     if( prop == null )
     {
@@ -68,7 +68,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
    * @throws IllegalArgumentException
    *             if workspace is null or the roughness collection is not part of the workspace
    */
-  public FE1D2DNode( Feature parentFeature, QName propQName ) throws IllegalArgumentException
+  public FE1D2DNode( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
   {
     this( Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) );
   }
@@ -77,7 +77,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   /**
    * Creates a feature with this gml id. This
    */
-  public FE1D2DNode( Feature parentFeature, QName propQName, String gmlID )
+  public FE1D2DNode( final Feature parentFeature, final QName propQName, final String gmlID )
   {
     this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, parentFeature, propQName, gmlID ) );
   }
@@ -92,15 +92,15 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
     if( point.getCoordinateSystem() == null )
       point.setCoordinateSystem( IFE1D2DNode.DEFAULT_COORDINATE_SYSTEM );
     getWrappedFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT, point );
-//    if(point.getCoordinateDimension()>2 || !Double.isNaN( point.getZ() ))
-//      getWrappedFeature().setProperty( IFE1D2DNode.PROP_HAS_ELEVATION, true );
-//    else
-//      getWrappedFeature().setProperty( IFE1D2DNode.PROP_HAS_ELEVATION, false );
+    // if(point.getCoordinateDimension()>2 || !Double.isNaN( point.getZ() ))
+    // getWrappedFeature().setProperty( IFE1D2DNode.PROP_HAS_ELEVATION, true );
+    // else
+    // getWrappedFeature().setProperty( IFE1D2DNode.PROP_HAS_ELEVATION, false );
   }
 
-  public static FE1D2DNode createNode( final FE1D2DDiscretisationModel discModel )
+  public static FE1D2DNode createNode( final IFEDiscretisationModel1d2d discModel )
   {
-    final Feature parentFeature = discModel.getFeature();
+    final Feature parentFeature = discModel.getWrappedFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
     final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES );
     final IFeatureType nodeType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
@@ -121,56 +121,61 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
    */
   public IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] getElements( )
   {
-    return ((List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>)m_containers).toArray( new IFE1D2DElement[0] );
-    
-    
-    
-//    // exTODO: at the moment, the elements are found via the geometric position, maybe change this later to references via
-//    // the containers.
-//
-//    final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getWorkspace().getRootFeature() );
-//    final FeatureList elementList = (FeatureList) model.getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
-//
-//    // get all elements touching this node
-//    final List touchingElements = elementList.query( getPoint().getPosition(), null );
-//
-//    final List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>> foundElements = new ArrayList<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>();
-//
-//    // filter all element which contain this node
-//    for( final Object object : touchingElements )
-//    {
-//      final Feature f = (Feature) object;
-//      final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> elt = (IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>) f.getAdapter( IFE1D2DElement.class );
-//      if( elt instanceof IElement1D )
-//      {
-//        // Special case for 1D-Elements, although they are elements. Its getEdges method is not supported.
-//        final IElement1D elt1d = (IElement1D) elt;
-//        final IFE1D2DEdge edge = elt1d.getEdge();
-//        final IFeatureWrapperCollection nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() : edge.getNodes();
-//        if( nodes.contains( this ) )
-//          foundElements.add( elt );
-//      }
-//      else if( elt instanceof IElement2D )
-//      {
-//        final IFeatureWrapperCollection<IFE1D2DEdge> edges = ((IElement2D) elt).getEdges();
-//        for( final IFE1D2DEdge edge : edges )
-//        {
-//          final IFeatureWrapperCollection nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() : edge.getNodes();
-//          if( nodes.contains( this ) )
-//          {
-//            foundElements.add( elt );
-//            // If one edge contains this node, we know the element contains it, so we can stop here
-//            break;
-//          }
-//        }
-//      }
-//    }
-//
-//    final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] result = new IFE1D2DElement[foundElements.size()];
-//    for( int i = 0; i < foundElements.size(); i++ )
-//      result[i] = foundElements.get( i );
-//
-//    return result;
+    return ((List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>) m_containers).toArray( new IFE1D2DElement[0] );
+
+    // // exTODO: at the moment, the elements are found via the geometric position, maybe change this later to
+    // references via
+    // // the containers.
+    //
+    // final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel(
+    // getFeature().getWorkspace().getRootFeature() );
+    // final FeatureList elementList = (FeatureList) model.getFeature().getProperty(
+    // Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+    //
+    // // get all elements touching this node
+    // final List touchingElements = elementList.query( getPoint().getPosition(), null );
+    //
+    // final List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>> foundElements = new
+    // ArrayList<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>();
+    //
+    // // filter all element which contain this node
+    // for( final Object object : touchingElements )
+    // {
+    // final Feature f = (Feature) object;
+    // final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> elt = (IFE1D2DElement<IFE1D2DComplexElement,
+    // IFE1D2DEdge>) f.getAdapter( IFE1D2DElement.class );
+    // if( elt instanceof IElement1D )
+    // {
+    // // Special case for 1D-Elements, although they are elements. Its getEdges method is not supported.
+    // final IElement1D elt1d = (IElement1D) elt;
+    // final IFE1D2DEdge edge = elt1d.getEdge();
+    // final IFeatureWrapperCollection nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() :
+    // edge.getNodes();
+    // if( nodes.contains( this ) )
+    // foundElements.add( elt );
+    // }
+    // else if( elt instanceof IElement2D )
+    // {
+    // final IFeatureWrapperCollection<IFE1D2DEdge> edges = ((IElement2D) elt).getEdges();
+    // for( final IFE1D2DEdge edge : edges )
+    // {
+    // final IFeatureWrapperCollection nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() :
+    // edge.getNodes();
+    // if( nodes.contains( this ) )
+    // {
+    // foundElements.add( elt );
+    // // If one edge contains this node, we know the element contains it, so we can stop here
+    // break;
+    // }
+    // }
+    // }
+    // }
+    //
+    // final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] result = new IFE1D2DElement[foundElements.size()];
+    // for( int i = 0; i < foundElements.size(); i++ )
+    // result[i] = foundElements.get( i );
+    //
+    // return result;
   }
 
   /**
@@ -185,7 +190,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
       if( container instanceof IFE1D2DEdge && !(container instanceof IEdgeInv) )
       {
         final IFeatureWrapperCollection<IFE1D2DNode> nodes = ((IFE1D2DEdge) container).getNodes();
-        for( IFE1D2DNode node : nodes )
+        for( final IFE1D2DNode node : nodes )
           if( !getGmlID().equals( node.getGmlID() ) )
             list.add( node );
       }
@@ -199,7 +204,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   public void addContainer( String linkRef )
   {
     linkRef = Assert.throwIAEOnNullOrEmpty( linkRef );
-    FeatureList wrappedList = m_containers.getWrappedList();
+    final FeatureList wrappedList = m_containers.getWrappedList();
     if( !wrappedList.contains( linkRef ) )
       wrappedList.add( linkRef );
   }
@@ -210,13 +215,13 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   @Override
   public String toString( )
   {
-    StringBuffer buf = new StringBuffer( 128 );
+    final StringBuffer buf = new StringBuffer( 128 );
     buf.append( "FE1D2DNode" ); //$NON-NLS-1$
     buf.append( getGmlID() );
     buf.append( '[' );
     buf.append( getPoint() );
     // edges
-    IFeatureWrapperCollection containers = getContainers();
+    final IFeatureWrapperCollection containers = getContainers();
     buf.append( "{Edges=" ); //$NON-NLS-1$
     for( int i = 0; i < containers.size(); i++ )
       if( containers.get( i ) instanceof IFE1D2DEdge )

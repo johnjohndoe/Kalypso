@@ -10,7 +10,6 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
  */
 public class Kalypso1D2DSchemaConstants
 {
-
   public final static QName GML_PROP_BOUNDED_BY = new QName( NS.GML3, "boundedBy" );
 
   public static final QName SIMULATION_MODEL1D2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "SimulationModelType1D2D" );
@@ -139,9 +138,7 @@ public class Kalypso1D2DSchemaConstants
    */
   public final static QName WB1D2D_PROP_COMPLEX_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "complexElement" );
 
-  public static final QName WB1D2D_PROP_EDGE_GEOM =
-  // new QName( NS.GML3, "curveProperty" );
-  new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
+  public static final QName WB1D2D_PROP_EDGE_GEOM = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
   public static final QName WB1D2D_PROP_ELEMENT_GEOM = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
