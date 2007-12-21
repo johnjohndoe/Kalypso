@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -65,7 +66,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   /**
    * Stores the count of points which this geometry must have. If it is 0, there is no rule.
    */
-  private int m_cnt_points;
+  private final int m_cnt_points;
 
   private final List<GM_Point> m_points = new ArrayList<GM_Point>();
 
@@ -78,16 +79,15 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    * 
    * @param cnt_points
    *            If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding
-   *            the count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
+   *            the count of the points will apply, except, that a polygon needs at least 3 points for being created.
    * @param targetCrs
    *            The target coordinate system.
    */
   public PolygonGeometryBuilder( final int cnt_points, final CS_CoordinateSystem targetCrs )
   {
-    m_cnt_points = 0;
+    Assert.isTrue( cnt_points == 0 || cnt_points > 2 );
 
-    if( cnt_points > 2 )
-      m_cnt_points = cnt_points;
+    m_cnt_points = cnt_points;
 
     m_crs = targetCrs;
   }
@@ -97,6 +97,8 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    */
   public GM_Object addPoint( final GM_Point p ) throws Exception
   {
+    // TODO: verify if point is allowed
+
     m_points.add( p );
 
     if( m_points.size() == m_cnt_points )
@@ -213,4 +215,10 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     for( int i = 0; i < y.length; i++ )
       g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
   }
+
+  public int getSize( )
+  {
+    return m_points.size();
+  }
+
 }

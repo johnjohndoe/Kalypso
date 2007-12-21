@@ -272,6 +272,18 @@ public abstract class AbstractWidget implements IWidget
     // not implemented by default
   }
 
+  /**
+   * Causes the map to be repainted. The {@link IWidget#paint(Graphics)} method will be called soon.<br>
+   * Does not invalidate the map.<br>
+   * Use this method, if the state of the widget changes.
+   */
+  protected void mapRepaint( )
+  {
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
+      panel.repaint();
+  }
+
   protected final MapPanel getMapPanel( )
   {
     return m_mapPanel;

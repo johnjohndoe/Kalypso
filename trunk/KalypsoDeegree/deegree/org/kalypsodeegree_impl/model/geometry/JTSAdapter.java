@@ -128,41 +128,28 @@ public class JTSAdapter
    */
   public static Geometry export( final GM_Object gmObject ) throws GM_Exception
   {
-
-    Geometry geometry = null;
     if( gmObject instanceof GM_Point )
-    {
-      geometry = export( (GM_Point) gmObject );
-    }
-    else if( gmObject instanceof GM_MultiPoint )
-    {
-      geometry = export( (GM_MultiPoint) gmObject );
-    }
-    else if( gmObject instanceof GM_Curve )
-    {
-      geometry = export( (GM_Curve) gmObject );
-    }
-    else if( gmObject instanceof GM_MultiCurve )
-    {
-      geometry = export( (GM_MultiCurve) gmObject );
-    }
-    else if( gmObject instanceof GM_Surface )
-    {
-      geometry = export( (GM_Surface< ? >) gmObject );
-    }
-    else if( gmObject instanceof GM_MultiSurface )
-    {
-      geometry = export( (GM_MultiSurface) gmObject );
-    }
-    else if( gmObject instanceof GM_MultiPrimitive )
-    {
-      geometry = export( (GM_MultiPrimitive) gmObject );
-    }
-    else
-    {
-      throw new GM_Exception( "JTSAdapter.export does not support type '" + gmObject.getClass().getName() + "'!" );
-    }
-    return geometry;
+      return export( (GM_Point) gmObject );
+
+    if( gmObject instanceof GM_MultiPoint )
+      return export( (GM_MultiPoint) gmObject );
+
+    if( gmObject instanceof GM_Curve )
+      return export( (GM_Curve) gmObject );
+
+    if( gmObject instanceof GM_MultiCurve )
+      return export( (GM_MultiCurve) gmObject );
+
+    if( gmObject instanceof GM_Surface )
+      return export( (GM_Surface< ? >) gmObject );
+
+    if( gmObject instanceof GM_MultiSurface )
+      return export( (GM_MultiSurface) gmObject );
+
+    if( gmObject instanceof GM_MultiPrimitive )
+      return export( (GM_MultiPrimitive) gmObject );
+
+    throw new GM_Exception( "JTSAdapter.export does not support type '" + gmObject.getClass().getName() + "'!" );
   }
 
   /**
@@ -188,41 +175,28 @@ public class JTSAdapter
    */
   public static GM_Object wrap( final Geometry geometry ) throws GM_Exception
   {
-
-    GM_Object gmObject = null;
     if( geometry instanceof Point )
-    {
-      gmObject = wrap( (Point) geometry );
-    }
-    else if( geometry instanceof MultiPoint )
-    {
-      gmObject = wrap( (MultiPoint) geometry );
-    }
-    else if( geometry instanceof LineString )
-    {
-      gmObject = wrap( (LineString) geometry );
-    }
-    else if( geometry instanceof MultiLineString )
-    {
-      gmObject = wrap( (MultiLineString) geometry );
-    }
-    else if( geometry instanceof Polygon )
-    {
-      gmObject = wrap( (Polygon) geometry );
-    }
-    else if( geometry instanceof MultiPolygon )
-    {
-      gmObject = wrap( (MultiPolygon) geometry );
-    }
-    else if( geometry instanceof GeometryCollection )
-    {
-      gmObject = wrap( (GeometryCollection) geometry );
-    }
-    else
-    {
-      throw new GM_Exception( "JTSAdapter.wrap does not support type '" + geometry.getClass().getName() + "'!" );
-    }
-    return gmObject;
+      return wrap( (Point) geometry );
+
+    if( geometry instanceof MultiPoint )
+      return wrap( (MultiPoint) geometry );
+
+    if( geometry instanceof LineString )
+      return wrap( (LineString) geometry );
+
+    if( geometry instanceof MultiLineString )
+      return wrap( (MultiLineString) geometry );
+
+    if( geometry instanceof Polygon )
+      return wrap( (Polygon) geometry );
+
+    if( geometry instanceof MultiPolygon )
+      return wrap( (MultiPolygon) geometry );
+
+    if( geometry instanceof GeometryCollection )
+      return wrap( (GeometryCollection) geometry );
+
+    throw new GM_Exception( "JTSAdapter.wrap does not support type '" + geometry.getClass().getName() + "'!" );
   }
 
   /**
@@ -330,12 +304,18 @@ public class JTSAdapter
    *            an array of <tt>GM_Position</tt> s
    * @return the corresponding <tt>LinearRing</tt> object
    */
-  private static LinearRing export( final GM_Position[] positions )
+  private static LinearRing exportAsRing( final GM_Position[] positions )
+  {
+    final Coordinate[] coords = export( positions );
+    return jtsFactory.createLinearRing( coords );
+  }
+
+  private static Coordinate[] export( final GM_Position[] positions )
   {
     final Coordinate[] coords = new Coordinate[positions.length];
     for( int i = 0; i < positions.length; i++ )
       coords[i] = export( positions[i] );
-    return jtsFactory.createLinearRing( coords );
+    return coords;
   }
 
   /**
@@ -354,14 +334,13 @@ public class JTSAdapter
     final GM_Position[] exteriorRing = patch.getExteriorRing();
     final GM_Position[][] interiorRings = patch.getInteriorRings();
 
-    final LinearRing shell = export( exteriorRing );
+    final LinearRing shell = exportAsRing( exteriorRing );
     LinearRing[] holes = new LinearRing[0];
     if( interiorRings != null )
       holes = new LinearRing[interiorRings.length];
     for( int i = 0; i < holes.length; i++ )
-    {
-      holes[i] = export( interiorRings[i] );
-    }
+      holes[i] = exportAsRing( interiorRings[i] );
+
     return jtsFactory.createPolygon( shell, holes );
   }
 
@@ -398,7 +377,6 @@ public class JTSAdapter
    */
   private static GeometryCollection export( final GM_MultiPrimitive multi ) throws GM_Exception
   {
-
     final GM_Object[] primitives = multi.getAllPrimitives();
     final Geometry[] geometries = new Geometry[primitives.length];
 
@@ -591,6 +569,12 @@ public class JTSAdapter
     final Coordinate min = export( posMin );
     final Coordinate max = export( posMax );
     return new Envelope( min, max );
+  }
+
+  public static LineString exportAsLineString( final GM_Position[] positions )
+  {
+    final Coordinate[] crds = export( positions );
+    return jtsFactory.createLineString( crds );
   }
 
 }

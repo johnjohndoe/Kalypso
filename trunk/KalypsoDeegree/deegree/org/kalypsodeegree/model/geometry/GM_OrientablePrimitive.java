@@ -62,9 +62,7 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * The basic interface for orientated two dimensional geometries.
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -73,25 +71,22 @@ package org.kalypsodeegree.model.geometry;
  * @version $Revision$ $Date$
  *          <p>
  */
-
 public interface GM_OrientablePrimitive extends GM_Primitive
 {
-
   /**
    * returns the orientation of a curve
    * 
    * @return curve orientation ('+'|'-')
    */
-  char getOrientation();
+  char getOrientation( );
 
   /**
    * sets the curves orientation
    * 
    * @param orientation
-   *          orientation of the curve ('+'|'-')
-   * 
+   *            orientation of the curve ('+'|'-')
    * @exception GM_Exception
-   *              will be thrown if orientation is invalid
+   *                will be thrown if orientation is invalid
    */
   void setOrientation( char orientation ) throws GM_Exception;
 
