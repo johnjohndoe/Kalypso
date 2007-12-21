@@ -189,8 +189,7 @@ public class RMA10S2GmlConv
         calendar.set( year, 0, 1 );
 
         final int wholeHours = (int) Math.floor( hours );
-        final int minutesInHours = (int) (hours - wholeHours);
-        final int wholeMinutes = (int) Math.floor( minutesInHours * 60 );
+        final int wholeMinutes = (int) Math.round( (hours - wholeHours) * 60 );
 
         calendar.add( Calendar.HOUR, wholeHours );
         calendar.add( Calendar.MINUTE, wholeMinutes );

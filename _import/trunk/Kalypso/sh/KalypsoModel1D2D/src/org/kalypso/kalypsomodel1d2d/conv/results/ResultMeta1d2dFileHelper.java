@@ -40,52 +40,74 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class ResultMeta1d2dFileHelper
 {
   /**
    * removes the specified resultMeta file
    */
-  private static void removeResultMetaFile( final IResultMeta resultMeta )
+  private static IStatus removeResultMetaFile( final IResultMeta resultMeta )
   {
+    /* get the scenario folder */
+    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+
     final IPath resultPath = resultMeta.getFullPath();
 
-    final IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember( resultPath );
-
+    // TODO: deleting does not work, member is always null
+    final IFolder folder = scenarioFolder.getFolder( resultPath );
     try
     {
-      if( member != null )
-        member.delete( true, new NullProgressMonitor() );
+      folder.delete( true, new NullProgressMonitor() );
+      // final IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember( folder );
+
+      // if( member != null )
+      // member.delete( true, new NullProgressMonitor() );
     }
     catch( CoreException e )
     {
       e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, "Error while deleting obsolete result files." );
     }
+    return Status.OK_STATUS;
   }
 
   /**
    * removes the specified resultMeta file including all of its children
    */
-  public static void removeResultMetaFileWithChidren( final IResultMeta resultMeta ) throws CoreException
+  public static IStatus removeResultMetaFileWithChidren( final IResultMeta resultMeta ) throws CoreException
   {
     final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
 
     /* delete children */
     for( IResultMeta child : children )
     {
-      removeResultMetaFileWithChidren( child );
+      final IStatus status = removeResultMetaFileWithChidren( child );
+      if( status != Status.OK_STATUS )
+        return status;
     }
 
     /* delete parent */
-    removeResultMetaFile( resultMeta );
+    final IStatus status = removeResultMetaFile( resultMeta );
+    if( status != Status.OK_STATUS )
+      return status;
+    return Status.OK_STATUS;
 
   }
 

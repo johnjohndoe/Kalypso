@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.ksp.org/chart/factory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.ksp.org/chart/factory ../../kalypso_workspace_dev_3.3/KalypsoChartFactory/etc/binding/schema/ChartConfiguration.xsd">
 	<Chart id="ls">
 		<Title>%TITLE%</Title>
-		<Description>LÃ¤ngsschnitt</Description>
+		<Description>Längsschnitt</Description>
 		<Layers>
 			<LayerRef ref="gridLayer" />
 			<LayerRef ref="wsp" />
@@ -116,7 +116,7 @@
 				<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" name="targetComponentId" />
 			</Parameters>
 		</Provider>
-		<Title>SohlhÃ¶he</Title>
+		<Title>Sohlhöhe</Title>
 		<Description></Description>
 		<Mapper>
 			<DomainAxisRef ref="Station_Axis" />
@@ -144,7 +144,7 @@
 			<TargetAxisRef ref="NN_Axis" />
 		</Mapper>
 		<Style>
-			<!-- Hier war zuvor kein Style definiert -> das muss "irgendwo" geÃ¤ndert werden-->
+			<!-- Hier war zuvor kein Style definiert -> das muss "irgendwo" geändert werden-->
 			<StyleRef ref="Boe_li_Style" />
 		</Style>
 
@@ -161,7 +161,7 @@
 				<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="targetComponentId" />
 			</Parameters>
 		</Provider>
-		<Title>Bordvoll HÃ¶he</Title>
+		<Title>Bordvoll Höhe</Title>
 		<Description></Description>
 
 		<Mapper>
@@ -183,7 +183,7 @@
 				<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li" name="targetComponentId" />
 			</Parameters>
 		</Provider>
-		<Title>BÃ¶schung (links)</Title>
+		<Title>Böschung (links)</Title>
 		<Description></Description>
 		<Mapper>
 			<DomainAxisRef ref="Station_Axis" />
@@ -204,7 +204,7 @@
 				<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re" name="targetComponentId" />
 			</Parameters>
 		</Provider>
-		<Title>BÃ¶schung (rechts)</Title>
+		<Title>Böschung (rechts)</Title>
 		<Description></Description>
 		<Mapper>
 			<DomainAxisRef ref="Station_Axis" />
@@ -227,7 +227,7 @@
 
 	<Axis id="NN_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number"></Provider>
-		<Label>HÃ¶he [NN+m]</Label>
+		<Label>Höhe [NN+m]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
 		<MinVal>5.0</MinVal>
@@ -237,7 +237,7 @@
 
 	<Axis id="M3S_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number"></Provider>
-		<Label>Abfluss [mÂ³/s]</Label>
+		<Label>Abfluss [m³/s]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>RIGHT</Position>
 		<MinVal>-5.0</MinVal>

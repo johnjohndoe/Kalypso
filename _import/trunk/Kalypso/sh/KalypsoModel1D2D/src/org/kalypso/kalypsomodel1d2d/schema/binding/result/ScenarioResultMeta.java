@@ -47,7 +47,10 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dFileHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.STEPTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
@@ -94,57 +97,87 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#updateResultMeta(org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta, boolean, boolean, boolean, java.lang.Integer)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#updateResultMeta(org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta,
+   *      boolean, boolean, boolean, java.lang.Integer)
    */
   public void updateResultMeta( final ICalcUnitResultMeta newCalcUnitMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception
   {
-    /* the managing of the result db data (documents) should happen somewhere outside the db */
     // look for existing results of this calc unit
     // this cannot happen, but just to be sure...
     if( isRestart && isUnsteadyCalculation && restartStep == null )
       throw new RuntimeException( "Unsteady restart is calculated, but there is no information regarding the restart step. Result database cannot be updated." );
 
+    /* get already existing result meta */
     final ICalcUnitResultMeta oldCalcUnitMeta = findCalcUnitMetaResult( newCalcUnitMeta.getCalcUnit() );
+
     if( oldCalcUnitMeta != null )
     {
+      /* insert the new data */
       if( isRestart )
       {
-        final IFeatureWrapperCollection<IResultMeta> oldChildren = oldCalcUnitMeta.getChildren();
-        final IFeatureWrapperCollection<IResultMeta> newChildren = newCalcUnitMeta.getChildren();
-        final List<IResultMeta> oldChildrenToRemove = new ArrayList<IResultMeta>();
-        final List<IResultMeta> newChildrenToRemove = new ArrayList<IResultMeta>();
 
-        // Delete every step-result which is after the restart step
+        /* explore the old result metas */
+        final IFeatureWrapperCollection<IResultMeta> oldChildren = oldCalcUnitMeta.getChildren();
+        final List<IResultMeta> oldChildrenToRemove = new ArrayList<IResultMeta>();
         for( final IResultMeta resultMeta : oldChildren )
         {
           if( resultMeta instanceof IStepResultMeta )
           {
-            final IStepResultMeta stepResultMeta = (IStepResultMeta) resultMeta;
-            if( isSteadyCalculation && stepResultMeta.getStepNumber() == -1 )
-              oldChildrenToRemove.add( resultMeta );
-            else if( isUnsteadyCalculation && stepResultMeta.getStepNumber() >= restartStep )
-              oldChildrenToRemove.add( resultMeta );
-          }
-        }
+            final IStepResultMeta oldStepResultMeta = (IStepResultMeta) resultMeta;
 
-        // Filter out any toplevel doc-nodes: necessairy, because there is this 'Model-DTM' toplevel
-        // Maybe TODO later: maybe its better to replace the old one by the new one....
-        for( final IResultMeta resultMeta : newChildren )
-        {
-          if( resultMeta instanceof IDocumentResultMeta )
+            // delete the already existing steady result, if a new one is computed
+            if( isSteadyCalculation && oldStepResultMeta.getStepType() == STEPTYPE.steady )
+              oldChildrenToRemove.add( oldStepResultMeta );
+
+            // delete every already existing step-result which is after the restart step
+            else if( isUnsteadyCalculation && oldStepResultMeta.getStepNumber() >= restartStep )
+              oldChildrenToRemove.add( oldStepResultMeta );
+
+            // delete the old maximum
+            // TODO: maybe it is good to save the old maximum or compare it with the new one in order to get an overall
+            // unsteady maximum result
+            else if( isUnsteadyCalculation && oldStepResultMeta.getStepType() == STEPTYPE.maximum )
+              oldChildrenToRemove.add( oldStepResultMeta );
+          }
+          else if( resultMeta instanceof IDocumentResultMeta )
           {
-            final IResultMeta parent = resultMeta.getParent();
-            if( !(parent instanceof IStepResultMeta) )
-              newChildrenToRemove.add( resultMeta );
+            final IDocumentResultMeta oldDocResultMeta = (IDocumentResultMeta) resultMeta;
+            if( oldDocResultMeta.getDocumentType() == DOCUMENTTYPE.tinTerrain )
+              oldChildrenToRemove.add( oldDocResultMeta );
           }
         }
+        final IFeatureWrapperCollection<IResultMeta> newChildren = newCalcUnitMeta.getChildren();
 
+        /* check if there are old results that are overwritten by new results */
         // removing cannot be done directly in previous loop because of ConcurrentModificationException on interator
-        // TODO: ask Thomas how to delete all attached resources as well (there is a helper function)
         for( final IResultMeta resultToRemove : oldChildrenToRemove )
-          oldChildren.remove( resultToRemove );
-        for( final IResultMeta resultToRemove : newChildrenToRemove )
-          newChildren.remove( resultToRemove );
+        {
+          // check if the new results are copied before or after that code in order to avoid deleting the new
+          // ones. --> Done. There are copied before this method, so everything would be deleted directly :-)
+
+          boolean removed = false;
+          // Therefore a check:
+          for( IResultMeta newChild : newChildren )
+          {
+            // check, if new result entry is on the to-remove-list
+            final String newPath = "results/" + newChild.getFullPath().toPortableString();
+            final String oldPath = resultToRemove.getFullPath().toPortableString();
+
+            if( newPath.equals( oldPath ) )
+            {
+              // just delete the result meta entry and leave the file
+              oldChildren.remove( resultToRemove );
+              removed = true;
+              break;
+            }
+          }
+          if( removed == false )
+          {
+            // delete the file and the meta entry
+            if( ResultMeta1d2dFileHelper.removeResultMetaFileWithChidren( resultToRemove ) == Status.OK_STATUS )
+              oldChildren.remove( resultToRemove );
+          }
+        }
 
         for( final IResultMeta resultMeta : newChildren )
           oldChildren.cloneInto( resultMeta );
@@ -152,9 +185,9 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
       else
       {
         // no restart
-
-        // TODO: ask Thomas how to delete all attached resources as well (there is a helper function)
-        getChildren().remove( oldCalcUnitMeta );
+        final IStatus status = ResultMeta1d2dFileHelper.removeResultMetaFileWithChidren( oldCalcUnitMeta );
+        if( status == Status.OK_STATUS )
+          getChildren().remove( oldCalcUnitMeta );
 
         getChildren().cloneInto( newCalcUnitMeta );
       }

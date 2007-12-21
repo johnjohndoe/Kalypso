@@ -61,6 +61,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.deegree2.KalypsoDeegree2Plugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
@@ -166,10 +167,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       element.createCenterNode(); // split the element
       splitElement( element );
-      
+
       // set Centernode null again in order to free some memory
       // remove element from list
-      
+
     }
   }
 
@@ -225,9 +226,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     // get the information which nodes are mid-side nodes
     final INodeResult result = m_nodeIndex.get( middleNodeID );
-    
+
     // check for illegal arcs
-    if ( result == null)
+    if( result == null )
     {
       m_arcIndex.remove( id );
       return;
@@ -316,12 +317,27 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       GMLNodeResult nodeUp = m_nodeIndex.get( currentArc.node2ID );
 
       // is it a 1d- or 2d-element
-      // TODO: @Thomas: kann auch 904+ sein: dann ists ein Wehr/Brücke
       if( currentRougthnessClassID == 89 ) // 1d
       {
         try
         {
           handle1dElement( nodeDown, nodeUp );
+        }
+        catch( final Exception e )
+        {
+          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "exception while handling 1d element." );
+          e.printStackTrace();
+          return;
+        }
+      }
+      else if( currentRougthnessClassID >= 904 )
+      {
+        // weir / bridge
+        try
+        {
+          // TODO: right now, we handle them as normal 2d - element. Do we need more?
+          handle1dElement( nodeDown, nodeUp );
+          // handle1dStructure( nodeDown, nodeUp );
         }
         catch( final Exception e )
         {
@@ -349,7 +365,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         /* midside node of the current arc */
         GMLNodeResult midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
-        if ( midsideNode == null)
+        if( midsideNode == null )
           return;
         midsideNode.setArc( currentArc );
 
@@ -445,6 +461,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "element does not exist in the arc list, check model!" );
     }
+  }
+
+  private void handle1dStructure( GMLNodeResult nodeDown, GMLNodeResult nodeUp )
+  {
+    // not implemented yet
+
   }
 
   private ITeschkeFlowRelation getFlowRelation( final INodeResult nodeResult ) throws Exception
@@ -543,7 +565,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // Q = v x A
     // A = A(y) //get it from the polynomials
 
-    // TODO: possibly this is wrong because the real discharge is calculated during calculation(?)
     final BigDecimal area = getCrossSectionArea( teschkeRelation, depth );
 
     BigDecimal discharge = null;
@@ -561,10 +582,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final IComponent stationComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_STATION );
     final IComponent thalComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_GROUND );
     final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL );
-    // final IComponent velocityComp = ComponentUtilities.findComponentByID( components,
-    // IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
-    // final IComponent dischargeComp = ComponentUtilities.findComponentByID( components,
-    // IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
+    final IComponent velocityComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
+    final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
     // final IComponent depthComp = ComponentUtilities.findComponentByID( components,
     // IWspmDictionaryConstants.LS_COMPONENT_DEPTH );
     // final IComponent slopeComp = ComponentUtilities.findComponentByID( components,
@@ -575,11 +594,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     newRecord.setValue( stationComp, station );
     newRecord.setValue( thalComp, thalweg );
     newRecord.setValue( waterlevelComp, waterlevel );
-    // newRecord.setValue( velocityComp, velocity );
+    newRecord.setValue( velocityComp, velocity );
     // newRecord.setValue( depthComp, depth );
     // newRecord.setValue( slopeComp, slope );
     // if( discharge != null )
-    // newRecord.setValue( dischargeComp, discharge );
+    newRecord.setValue( dischargeComp, discharge );
 
     tuples.add( newRecord );
   }
@@ -651,6 +670,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       breaklines.add( curves[1] );
 
       pwSimuLog = new PrintWriter( System.out );
+
+      KalypsoDeegree2Plugin.doTriangle();
+
+      // TriangulationUtils st;
 
       final File tempDir = FileUtilities.createNewTempDir( "Triangle" );
       final File polyfile = new File( tempDir, "input.poly" );
@@ -873,7 +896,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final GM_Position position = ring[i];
       final double x = position.getX();
       final double y = position.getY();
-      final double z = position.getZ(); // here: water level
+      double z = position.getZ(); // here: water level
 
       double wsp = 0;
       double vx = 0;
@@ -888,12 +911,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         wsp = nodeResults[0].getWaterlevel();
         vx = nodeResults[0].getVelocity().get( 0 );
         vy = nodeResults[0].getVelocity().get( 1 );
+        z = nodeResults[0].getPoint().getZ();
       }
       else if( buffer.intersects( curves[1] ) == true )
       {
         wsp = nodeResults[1].getWaterlevel();
         vx = nodeResults[1].getVelocity().get( 0 );
         vy = nodeResults[1].getVelocity().get( 1 );
+        z = nodeResults[1].getPoint().getZ();
       }
       else
       {
@@ -907,7 +932,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       velocity.add( vx );
       velocity.add( vy );
       node.setVelocity( velocity );
-      node.setDepth( 0.0 );
+      node.setDepth( wsp - z );
       node.setWaterlevel( wsp );
 
       // node.setResultValues( vx, vy, 0, wsp );

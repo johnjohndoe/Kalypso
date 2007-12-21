@@ -48,25 +48,25 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
  */
 public class NodeResultMinMaxCatcher
 {
-  double m_minDepth;
+  double m_minDepth = Double.POSITIVE_INFINITY;
 
-  double m_maxDepth;
+  double m_maxDepth = Double.NEGATIVE_INFINITY;
 
-  double m_minVelocityAbs;
+  double m_minVelocityAbs = Double.POSITIVE_INFINITY;
 
-  double m_maxVelocityAbs;
+  double m_maxVelocityAbs = Double.NEGATIVE_INFINITY;
 
-  double m_minWaterlevel;
+  double m_minWaterlevel = Double.POSITIVE_INFINITY;
 
-  double m_maxWaterlevel;
+  double m_maxWaterlevel = Double.NEGATIVE_INFINITY;
 
-  private double m_minShearStress;
+  private double m_minShearStress = Double.POSITIVE_INFINITY;
 
-  private double m_maxShearStress;
+  private double m_maxShearStress = Double.NEGATIVE_INFINITY;
 
-  private double m_minTerrain;
+  private double m_minTerrain = Double.POSITIVE_INFINITY;
 
-  private double m_maxTerrain;
+  private double m_maxTerrain = Double.NEGATIVE_INFINITY;
 
   public void addNodeResult( final INodeResult nodeResult )
   {
