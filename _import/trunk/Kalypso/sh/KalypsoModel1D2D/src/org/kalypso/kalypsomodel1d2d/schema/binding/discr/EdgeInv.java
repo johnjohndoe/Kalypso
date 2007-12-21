@@ -72,13 +72,13 @@ public class EdgeInv implements IEdgeInv
   /**
    * Create a new edge which is the inverted of the given one.
    */
-  public EdgeInv( Feature invEdgeFeature )
+  public EdgeInv( final Feature invEdgeFeature )
   {
     Assert.throwIAEOnNull( invEdgeFeature, "invedgeFeature to wrapped must not be null" ); //$NON-NLS-1$
     Object toInv = invEdgeFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV );
     if( toInv instanceof String )
     {
-      GMLWorkspace workspace = invEdgeFeature.getWorkspace();
+      final GMLWorkspace workspace = invEdgeFeature.getWorkspace();
       toInv = workspace.getFeature( (String) toInv );
     }
     this.edge = (IFE1D2DEdge) ((Feature) toInv).getAdapter( IFE1D2DEdge.class );// new FE1D2DEdge((Feature)toInv);
@@ -89,27 +89,27 @@ public class EdgeInv implements IEdgeInv
   /**
    * Create a new edge which is the inverted of the given one.
    */
-  public EdgeInv( IFE1D2DEdge edge, IFEDiscretisationModel1d2d targetModel )
+  public EdgeInv( final IFE1D2DEdge edge, final IFEDiscretisationModel1d2d targetModel )
   {
     Assert.throwIAEOnNull( edge, "edge to wrapped must not be null" ); //$NON-NLS-1$
-    Feature feature = edge.getWrappedFeature();
+    final Feature feature = edge.getWrappedFeature();
     Assert.throwIAEOnNotDirectInstanceOf( feature, IFE1D2DEdge.QNAME );
 
     // IRelationType parentRelation=feature.getParentRelation();
     // parentRelation.
     this.edge = edge;
-    IEdgeInv edgeInv = edge.getEdgeInv();
+    final IEdgeInv edgeInv = edge.getEdgeInv();
     if( edgeInv == null )
     {
       // this.wrappedFeature=null;
-      Feature modelFeature = targetModel.getWrappedFeature();
+      final Feature modelFeature = targetModel.getWrappedFeature();
       Assert.throwIAEOnNull( modelFeature, "Model feature must not be null" ); //$NON-NLS-1$
       wrappedFeature = Util.createFeatureAsProperty( modelFeature, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
       // set link to inverted
       wrappedFeature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, edge.getGmlID() );
-      String edgeInvID = getGmlID();
+      final String edgeInvID = getGmlID();
       edge.setInvEdge( edgeInvID );
-      for( IFE1D2DNode node : (List<IFE1D2DNode>) edge.getNodes() )
+      for( final IFE1D2DNode node : (List<IFE1D2DNode>) edge.getNodes() )
       {
         node.addContainer( edgeInvID );
       }
@@ -126,7 +126,7 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IEdgeInv#addInvEdgeToElement(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
-  public void addInvEdgeToElement( IFE1D2DElement targetElement )
+  public void addInvEdgeToElement( final IFE1D2DElement targetElement )
   {
     throw new RuntimeException( "add inverted edge to element not in use " ); //$NON-NLS-1$
   }
@@ -194,7 +194,7 @@ public class EdgeInv implements IEdgeInv
   public void addContainer( String containerID )
   {
     containerID = Assert.throwIAEOnNullOrEmpty( containerID );
-    FeatureList wrappedList = containers.getWrappedList();
+    final FeatureList wrappedList = containers.getWrappedList();
     if( !wrappedList.contains( containerID ) )
       wrappedList.add( containerID );
   }
@@ -202,11 +202,11 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#removeContainerAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
-  public boolean removeContainerAsRef( IFE1D2DElement containerToRemove )
+  public boolean removeContainerAsRef( final IFE1D2DElement containerToRemove )
   {
     Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" ); //$NON-NLS-1$
     final String id = containerToRemove.getGmlID();
-    FeatureList wrappedList = containers.getWrappedList();
+    final FeatureList wrappedList = containers.getWrappedList();
     boolean hasBeenRemoved = false;
     while( wrappedList.remove( id ) )
     {
@@ -219,7 +219,7 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getNode(int)
    */
-  public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException
+  public IFE1D2DNode getNode( final int index ) throws IndexOutOfBoundsException
   {
     if( index > 1 )
       throw new IndexOutOfBoundsException( "index=" + index ); //$NON-NLS-1$
@@ -230,7 +230,7 @@ public class EdgeInv implements IEdgeInv
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#setNode(int,
    *      org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode)
    */
-  public void setNode( int index, final IFE1D2DNode node ) throws IndexOutOfBoundsException
+  public void setNode( final int index, final IFE1D2DNode node ) throws IndexOutOfBoundsException
   {
     if( index > 1 )
       throw new IndexOutOfBoundsException( "index=" + index ); //$NON-NLS-1$
@@ -240,7 +240,7 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addNode(java.lang.String)
    */
-  public void addNode( String nodeID )
+  public void addNode( final String nodeID )
   {
     throw new UnsupportedOperationException( "adding node to inv not supported" ); //$NON-NLS-1$
   }
@@ -264,7 +264,7 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
    */
-  public void setDescription( String desc )
+  public void setDescription( final String desc )
   {
     throw new UnsupportedOperationException();
   }
@@ -272,7 +272,7 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
    */
-  public void setName( String name )
+  public void setName( final String name )
   {
     throw new UnsupportedOperationException();
   }
@@ -280,7 +280,7 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setInvEdge(java.lang.String)
    */
-  public void setInvEdge( String invEdgeID )
+  public void setInvEdge( final String invEdgeID )
   {
     throw new UnsupportedOperationException( "Cannot set inv to to a EdgeInv " ); //$NON-NLS-1$
   }
@@ -299,7 +299,7 @@ public class EdgeInv implements IEdgeInv
   @Override
   public String toString( )
   {
-    StringBuffer buf = new StringBuffer( 256 );
+    final StringBuffer buf = new StringBuffer( 256 );
     buf.append( "EdgeInv" ); //$NON-NLS-1$
     buf.append( getGmlID() );
     buf.append( '[' );
@@ -320,7 +320,7 @@ public class EdgeInv implements IEdgeInv
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setMiddleNode(org.kalypso.kalypsomodel1d2d.schema.binding.IFEMiddleNode)
    */
-  public void setMiddleNode( IFE1D2DNode middleNode )
+  public void setMiddleNode( final IFE1D2DNode middleNode )
   {
     edge.setMiddleNode( middleNode );
   }
@@ -355,5 +355,15 @@ public class EdgeInv implements IEdgeInv
   public void recalculateMiddleNodePosition( )
   {
     // edge.recalculateMiddleNodePosition();
+  }
+
+  /**
+   * Always returns <code>false</code>, as inverted edges are never at the border...??? TODO: Check
+   * 
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#isBorder()
+   */
+  public boolean isBorder( )
+  {
+    return false;
   }
 }

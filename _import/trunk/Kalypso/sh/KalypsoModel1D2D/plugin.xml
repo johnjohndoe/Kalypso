@@ -844,4 +844,12 @@
         </with>
      </definition>
   </extension>
+  <extension
+        point="org.kalypso.deegree.functionExpression">
+     <function
+           class="org.kalypso.kalypsomodel1d2d.ui.map.function.BorderEdgeFunctionExpression"
+           label="Border-Edges"
+           name="org.kalypso.kalypsomodel1d2d.ui.map.function.BorderEdgeFunctionExpression">
+     </function>
+  </extension>
 </plugin>

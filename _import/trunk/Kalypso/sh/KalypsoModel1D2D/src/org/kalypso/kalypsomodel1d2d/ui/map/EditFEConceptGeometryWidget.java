@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.List;
@@ -108,7 +109,8 @@ public class EditFEConceptGeometryWidget extends SnapToGeometryWidget
     m_edgeTheme = UtilMap.findEditableTheme( m_mapModell, IFE1D2DEdge.QNAME );
     m_continuityLineTheme = UtilMap.findEditableTheme( m_mapModell, IFELine.QNAME );
     m_flowRelationsTheme = UtilMap.findEditableTheme( m_mapModell, IBoundaryCondition.QNAME );
-    m_discModel = UtilMap.findFEModelTheme( m_mapModell );
+
+    reinit();
   }
 
   /**
@@ -140,7 +142,7 @@ public class EditFEConceptGeometryWidget extends SnapToGeometryWidget
           {
             if( node.equals( startNode ) && isSnappingActive() && snapNode != null )
             {
-              m_discModel.replaceNode( node, snapNode );
+              getDiscModel().replaceNode( node, snapNode );
               final IFeatureWrapperCollection containers = snapNode.getContainers();
               for( final Object containerObject : containers )
               {
@@ -193,5 +195,22 @@ public class EditFEConceptGeometryWidget extends SnapToGeometryWidget
       resetDragging();
     else
       super.keyPressed( e );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.SnapToGeometryWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
+  {
+    final IFE1D2DNode startNode = getStartNode();
+    if( startNode != null )
+    {
+      // TODO: Paint line from start node to end node
+
+    }
+
+    // TODO Auto-generated method stub
+    super.paint( g );
   }
 }

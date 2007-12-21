@@ -41,21 +41,18 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 /**
- * Interface to be implemented by classes representing 
- * the wb1d2d:EdgeInv interface
+ * Interface to be implemented by classes representing the wb1d2d:EdgeInv interface
  * 
  * @author Patrice Congo
- *
+ * 
  */
-public interface IEdgeInv 
-                  extends IFE1D2DEdge
+public interface IEdgeInv extends IFE1D2DEdge
 {
-  public IFE1D2DEdge getInverted();  
-  
+  public IFE1D2DEdge getInverted( );
+
   /**
-   * Adds this an inverted edge to the given element.
+   * Adds this inverted edge to the given element.
    * 
    */
-  public void addInvEdgeToElement(
-                  IFE1D2DElement targetElement);
+  public void addInvEdgeToElement( IFE1D2DElement targetElement );
 }

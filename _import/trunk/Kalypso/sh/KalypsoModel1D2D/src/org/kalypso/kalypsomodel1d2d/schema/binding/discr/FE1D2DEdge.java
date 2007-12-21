@@ -56,7 +56,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     {
       prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       logger.info( "feature:" + featureToBind ); //$NON-NLS-1$
@@ -89,11 +89,11 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     }
   }
 
-  public static final IFE1D2DEdge createFromModel( IFEDiscretisationModel1d2d model, IFE1D2DNode node0, IFE1D2DNode node1 )
+  public static final IFE1D2DEdge createFromModel( final IFEDiscretisationModel1d2d model, final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
-    IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
-    IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> curEdge = edges.addNew( IFE1D2DEdge.QNAME, IFE1D2DEdge.class );
-    String edgeGmlID = curEdge.getGmlID();
+    final IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
+    final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> curEdge = edges.addNew( IFE1D2DEdge.QNAME, IFE1D2DEdge.class );
+    final String edgeGmlID = curEdge.getGmlID();
     curEdge.addNode( node0.getGmlID() );
     node0.addContainer( edgeGmlID );
     //
@@ -117,12 +117,12 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    * @throws IllegalArgumentException
    *             if workspace is null or the roughness collection is not part of the workspace
    */
-  public FE1D2DEdge( Feature parentFeature, QName propQName ) throws IllegalArgumentException
+  public FE1D2DEdge( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
   {
     this( Util.createFeatureAsProperty( parentFeature, propQName, IFE1D2DEdge.QNAME ) );
   }
 
-  public FE1D2DEdge( Feature parentFeature, QName propQName, String gmlID )
+  public FE1D2DEdge( final Feature parentFeature, final QName propQName, final String gmlID )
   {
     this( FeatureHelper.createFeatureWithId( IFE1D2DEdge.QNAME, parentFeature, propQName, gmlID ) );
   }
@@ -195,9 +195,9 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     return ModelGeometryBuilder.computeEgdeGeometry( this );
   }
 
-  public static FE1D2DEdge createEdge( final FE1D2DDiscretisationModel discModel )
+  public static FE1D2DEdge createEdge( final IFEDiscretisationModel1d2d discModel )
   {
-    final Feature parentFeature = discModel.getFeature();
+    final Feature parentFeature = discModel.getWrappedFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
     final IRelationType parentEdgeProperty = (IRelationType) parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
     final IFeatureType edgeType = parentFT.getGMLSchema().getFeatureType( IFE1D2DEdge.QNAME );
@@ -205,15 +205,15 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     return new FE1D2DEdge( edgeFeature );
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
-  public void setNodes( final FE1D2DNode node0, final FE1D2DNode node1 )
+  @SuppressWarnings("unchecked")
+  public void setNodes( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
     final Feature feature = getFeature();
     final FeatureList nodeList = (FeatureList) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE /* QNAME_PROP_DIRECTEDNODE */
     );
     nodeList.clear();
-    nodeList.add( node0.getFeature().getId() );
-    nodeList.add( node1.getFeature().getId() );
+    nodeList.add( node0.getWrappedFeature().getId() );
+    nodeList.add( node1.getWrappedFeature().getId() );
     nodeList.invalidate();
     getWrappedFeature().invalidEnvelope();
   }
@@ -250,7 +250,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     /* QNAME_PROP_CURVE */);
   }
 
-  public void setCurve( GM_Curve curve )
+  public void setCurve( final GM_Curve curve )
   {
     if( curve == null )
     {
@@ -266,7 +266,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     {
       setCurve( recalculateEgdeGeometry() );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
@@ -275,10 +275,10 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addContainer(java.lang.String)
    */
-  public void addContainer( String containerID )
+  public void addContainer( final String containerID )
   {
     Assert.throwIAEOnNullParam( containerID, "containerID" ); //$NON-NLS-1$
-    FeatureList wrappedList = m_containers.getWrappedList();
+    final FeatureList wrappedList = m_containers.getWrappedList();
     if( wrappedList.contains( containerID ) )
     {
       logger.info( "Edge container already registered as container:" + containerID ); //$NON-NLS-1$
@@ -296,7 +296,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   {
     Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" ); //$NON-NLS-1$
     final String id = containerToRemove.getGmlID();
-    FeatureList wrappedList = m_containers.getWrappedList();
+    final FeatureList wrappedList = m_containers.getWrappedList();
     boolean hasBeenRemoved = false;
     while( wrappedList.remove( id ) )
     {
@@ -309,7 +309,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getNode(int)
    */
-  public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException
+  public IFE1D2DNode getNode( final int index ) throws IndexOutOfBoundsException
   {
     return m_nodes.get( index );
   }
@@ -318,10 +318,10 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#setNode(int,
    *      org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode)
    */
-  public void setNode( int index, final IFE1D2DNode node ) throws IndexOutOfBoundsException
+  public void setNode( final int index, final IFE1D2DNode node ) throws IndexOutOfBoundsException
   {
     m_nodes.getWrappedList().set( index, node.getGmlID() );
-//    m_nodes.set( index, node );
+    // m_nodes.set( index, node );
   }
 
   /**
@@ -360,9 +360,9 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   public IEdgeInv getEdgeInv( )
   {
     final Feature wrappedFeature = getWrappedFeature();
-    Object prop = wrappedFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV );
+    final Object prop = wrappedFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV );
 
-    Feature edgeInvFeature = FeatureHelper.getFeature( wrappedFeature.getWorkspace(), prop );
+    final Feature edgeInvFeature = FeatureHelper.getFeature( wrappedFeature.getWorkspace(), prop );
 
     if( edgeInvFeature == null )
     {
@@ -370,7 +370,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     }
     else
     {
-      IEdgeInv edgeInv = (IEdgeInv) edgeInvFeature.getAdapter( IEdgeInv.class );
+      final IEdgeInv edgeInv = (IEdgeInv) edgeInvFeature.getAdapter( IEdgeInv.class );
       return edgeInv;
     }
   }
@@ -381,10 +381,10 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   @Override
   public String toString( )
   {
-    StringBuffer buf = new StringBuffer( 256 );
+    final StringBuffer buf = new StringBuffer( 256 );
     buf.append( getWrappedFeature() );
     buf.append( '[' );
-    for( IFE1D2DNode node : m_nodes )
+    for( final IFE1D2DNode node : m_nodes )
     {
       buf.append( node.getWrappedFeature() );
       buf.append( ' ' );
@@ -435,7 +435,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
       edgeInvContainers = edgeInv.getContainers();
     try
     {
-      for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : getContainers() )
+      for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : getContainers() )
       {
         if( ele instanceof IFELine )
           continue;
@@ -453,7 +453,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
       }
       if( edgeInv != null )
       {
-        for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : edgeInvContainers )
+        for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : edgeInvContainers )
         {
           if( ele instanceof IFELine )
             continue;
@@ -469,7 +469,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
         }
       }
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       throw new RuntimeException( "unable to recompute the edge container geometrie" );
@@ -514,6 +514,28 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
           getMiddleNode().setPoint( GeometryFactory.createGM_Point( x, y, pointN1.getCoordinateSystem() ) );
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#isBorder()
+   */
+  public boolean isBorder( )
+  {
+    final IFE1D2DEdge inv;
+    if( this instanceof IEdgeInv )
+      inv = ((IEdgeInv) this).getInverted();
+    else
+      inv = getEdgeInv();
+
+    final IFeatureWrapperCollection<IFE1D2DElement> containers = getContainers();
+
+    if( inv == null && containers.size() == 2 )
+      return false;
+
+    if( inv != null && containers.size() == 1 )
+      return false;
+
+    return true;
   }
 
 }

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.EditGeometryWidget;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -61,9 +63,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * Widget that provides the snapping mechanism for editing the geometry of finite element:
  * <ul>
- * <li>Snapping to the nearest node in the snapping radius is the default behavior. 
- * <li>Snapping will not occur if SHIFT button is pressed during the operation. 
- * <li>Pressing the ESC button cancels the current operation 
+ * <li>Snapping to the nearest node in the snapping radius is the default behavior.
+ * <li>Snapping will not occur if SHIFT button is pressed during the operation.
+ * <li>Pressing the ESC button cancels the current operation
  * </ul>
  * 
  * @author Dejan Antanaskovic
@@ -71,19 +73,18 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class SnapToGeometryWidget extends EditGeometryWidget
 {
-  protected IFEDiscretisationModel1d2d m_discModel;
+  /** Snapping radius in screen-pixels. */
+  public static final int SNAPPING_RADIUS = 20;
 
-  private MapPanel m_mapPanel;
+  private final List<IFE1D2DNode> m_neighborNodes = new ArrayList<IFE1D2DNode>();
+
+  private IFEDiscretisationModel1d2d m_discModel;
 
   private boolean m_snappingActive = true;
 
   private IFE1D2DNode m_snapNode = null;
 
   private IFE1D2DNode m_startNode;
-
-  private List<IFE1D2DNode> m_neighbourNodes = new ArrayList<IFE1D2DNode>();
-
-  private static final double SNAPPING_RADIUS = 50.0;
 
   private Point m_currentMapPoint;
 
@@ -100,33 +101,58 @@ public class SnapToGeometryWidget extends EditGeometryWidget
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-    m_mapPanel = mapPanel;
-    m_discModel = UtilMap.findFEModelTheme( mapPanel.getMapModell() );
+
+    reinit();
   }
 
   /**
+   * Reset this widget
+   */
+  protected void reinit( )
+  {
+    // Search the discretisation Model
+
+    m_discModel = null;
+
+    final IMapModell mapModell = getMapPanel().getMapModell();
+    m_discModel = UtilMap.findFEModelTheme( mapModell );
+
+  }
+
+  /**
+   * TODO: move to {@link EditFEConceptGeometryWidget}, its only used there...
+   * 
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#leftPressed(java.awt.Point)
    */
   @Override
   public void leftPressed( final Point p )
   {
-    final GM_Point currentPosition = MapUtilities.transform( m_mapPanel, p );
-    m_startNode = m_discModel.findNode( currentPosition, SNAPPING_RADIUS );
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
 
-    // create the list of neighbour nodes to exclude from snapping into
+    final GM_Point currentPosition = MapUtilities.transform( mapPanel, p );
+
+    final double snapRadius = MapUtilities.calculateWorldDistance( mapPanel, currentPosition, SNAPPING_RADIUS );
+    m_startNode = m_discModel.findNode( currentPosition, snapRadius );
+
+    // create the list of neighbor nodes to exclude from snapping into
     // i.e. to prevent user to create zero-area polygons
-    m_neighbourNodes.clear();
+    // TODO: This is probably nonsense! Check the complete polygon after editing
+    // in order to prevent such things; preventing the snap here only creates
+    // new nodes and such stuff...
+    m_neighborNodes.clear();
     if( m_startNode != null )
     {
-      m_neighbourNodes.add( m_startNode );
+      m_neighborNodes.add( m_startNode );
       final IFeatureWrapperCollection<IFeatureWrapper2> edgeContainers = m_startNode.getContainers();
       for( final IFeatureWrapper2 edgeContainer : edgeContainers )
       {
         if( edgeContainer instanceof IFE1D2DEdge )
         {
           final IFE1D2DNode middleNode = ((IFE1D2DEdge) edgeContainer).getMiddleNode();
-          if( middleNode != null && !m_neighbourNodes.contains( middleNode ) )
-            m_neighbourNodes.add( middleNode );
+          if( middleNode != null && !m_neighborNodes.contains( middleNode ) )
+            m_neighborNodes.add( middleNode );
           final IFeatureWrapperCollection<IFeatureWrapper2> elementContainers = ((IFE1D2DEdge) edgeContainer).getContainers();
           for( final IFeatureWrapper2 elementContainer : elementContainers )
           {
@@ -135,8 +161,8 @@ public class SnapToGeometryWidget extends EditGeometryWidget
               final List<IFE1D2DNode> nodes = ((IFE1D2DElement) elementContainer).getNodes();
               for( final IFE1D2DNode node : nodes )
               {
-                if( !m_neighbourNodes.contains( node ) )
-                  m_neighbourNodes.add( node );
+                if( !m_neighborNodes.contains( node ) )
+                  m_neighborNodes.add( node );
               }
             }
           }
@@ -153,14 +179,18 @@ public class SnapToGeometryWidget extends EditGeometryWidget
   public void moved( final Point p )
   {
     snap( p );
+
     if( m_snapNode != null )
       m_currentMapPoint = MapUtilities.retransform( getMapPanel(), m_snapNode.getPoint() );
     else
       m_currentMapPoint = p;
+
     super.moved( m_currentMapPoint );
   }
 
   /**
+   * TODO: move to {@link EditFEConceptGeometryWidget}, its only used there
+   * 
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#dragged(java.awt.Point)
    */
   @Override
@@ -168,18 +198,20 @@ public class SnapToGeometryWidget extends EditGeometryWidget
   {
     snap( p );
     if( m_snapNode == null )
-
       super.dragged( p );
     else
     {
-      if( isNodeSnappable() )
+      final MapPanel mapPanel = getMapPanel();
+      if( isNodeSnappable() && mapPanel != null )
       {
-        final Point snappedPoint = MapUtilities.retransform( m_mapPanel, m_snapNode.getPoint() );
+        final Point snappedPoint = MapUtilities.retransform( mapPanel, m_snapNode.getPoint() );
+
         super.dragged( snappedPoint );
       }
       else
       {
         m_snapNode = null;
+
         super.dragged( p );
       }
     }
@@ -187,10 +219,13 @@ public class SnapToGeometryWidget extends EditGeometryWidget
 
   private void snap( final Point p )
   {
-    if( m_snappingActive && m_discModel != null )
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel != null && m_snappingActive && m_discModel != null )
     {
-      final GM_Point currentGM_Point = MapUtilities.transform( m_mapPanel, p );
-      m_snapNode = m_discModel.findNode( currentGM_Point, SNAPPING_RADIUS );
+      final GM_Point currentGM_Point = MapUtilities.transform( mapPanel, p );
+
+      final double snapRadius = MapUtilities.calculateWorldDistance( mapPanel, currentGM_Point, SNAPPING_RADIUS );
+      m_snapNode = m_discModel.findNode( currentGM_Point, snapRadius );
     }
     else
       m_snapNode = null;
@@ -204,6 +239,7 @@ public class SnapToGeometryWidget extends EditGeometryWidget
   {
     if( e.getKeyCode() == KeyEvent.VK_SHIFT )
       m_snappingActive = false;
+
     super.keyPressed( e );
   }
 
@@ -215,26 +251,37 @@ public class SnapToGeometryWidget extends EditGeometryWidget
   {
     if( e.getKeyCode() == KeyEvent.VK_SHIFT )
       m_snappingActive = true;
+
     super.keyReleased( e );
   }
 
-  protected void mapRepaint( )
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyTyped( final KeyEvent e )
   {
-    final MapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaint();
+    super.keyTyped( e );
+    if( KeyEvent.VK_ESCAPE == e.getKeyChar() )
+    {
+      reinit();
+      mapRepaint();
+    }
   }
 
   private final boolean isNodeSnappable( )
   {
+    // TODO: is this really ok? Causes NPE if this happens
     if( m_snapNode == null )
       return true;
+
     // we don't want to snap to our neighbours
-    if( m_neighbourNodes.contains( m_snapNode ) )
+    if( m_neighborNodes.contains( m_snapNode ) )
       return false;
     // neither to some middle node
     if( m_snapNode.getContainers().size() < 2 )
       return false;
+
     return true;
   }
 
@@ -258,19 +305,24 @@ public class SnapToGeometryWidget extends EditGeometryWidget
     return m_startNode;
   }
 
-  public List<IFE1D2DNode> getNeighbourNodes( )
-  {
-    return m_neighbourNodes;
-  }
-
-  public static double getSnappingRadius( )
-  {
-    return SNAPPING_RADIUS;
-  }
-
   public Point getCurrentMapPoint( )
   {
     return m_currentMapPoint;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
+  {
+    final MapPanel mapPanel = getMapPanel();
+    final IFE1D2DNode snapNode = getSnapNode();
+    if( snapNode != null && mapPanel != null )
+    {
+      final Point snappedPoint = MapUtilities.retransform( mapPanel, m_snapNode.getPoint() );
+      final int snapRadius = SNAPPING_RADIUS / 2;
+      g.drawRect( (int) snappedPoint.getX() - snapRadius, (int) snappedPoint.getY() - snapRadius, SNAPPING_RADIUS, SNAPPING_RADIUS );
+    }
+  }
 }

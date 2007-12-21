@@ -101,6 +101,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
   public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException;
 
   public void setNode( int index, IFE1D2DNode node ) throws IndexOutOfBoundsException;
+
   /**
    * Add a node to this edge.
    * 
@@ -186,5 +187,16 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
   public IFE1D2DElement getLeftElement( );
 
   public IFE1D2DElement getRightElement( );
+
+  /**
+   * An edge is inside the net if:
+   * <ul>
+   * <li>it has exactly to element, or</li>
+   * <li>it has exactly one element and an associated inverted edge</li>
+   * </ul>
+   * 
+   * @return <code>true</code>, if this edge lies on the border of the net.
+   */
+  public boolean isBorder( );
 
 }
