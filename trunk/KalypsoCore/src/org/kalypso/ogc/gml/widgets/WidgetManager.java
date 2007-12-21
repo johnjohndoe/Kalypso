@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -56,14 +55,12 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 
 /**
- * Der Controller fuer die MapView
+ * Der Controller für die MapView
  * 
  * @author vdoemming
  */
 public class WidgetManager implements MouseListener, MouseMotionListener, KeyListener
 {
-  private static final double MINIMUM_MOUSE_DISTANCE = 5;
-
   private final Set<IWidgetChangeListener> m_widgetChangeListener = new HashSet<IWidgetChangeListener>();
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
@@ -79,10 +76,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   private final ICommandTarget m_commandTarget;
 
   private IWidget m_actualWidget = null;
-
-  private Point m_lastDragged = null;
-
-  private Point m_lastMoved = null;
 
   public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
@@ -109,6 +102,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     if( e.isPopupTrigger() )
       actualWidget.clickPopup( e.getPoint() );
     else
+    {
       switch( e.getButton() )
       {
         case MouseEvent.BUTTON1:
@@ -136,16 +130,14 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
         default:
           break;
       }
+    }
   }
 
   public void mouseMoved( final MouseEvent e )
   {
-    if( (m_lastMoved == null) || (m_lastMoved.distance( e.getPoint() ) > WidgetManager.MINIMUM_MOUSE_DISTANCE) )
-      if( getActualWidget() != null )
-      {
-        m_lastMoved = e.getPoint();
-        getActualWidget().moved( m_lastMoved );
-      }
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget != null )
+      actualWidget.moved( e.getPoint() );
 
     m_mapPanel.fireMouseMouveEvent( e );
   }
@@ -153,14 +145,9 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   // MouseMotionAdapter:
   public void mouseDragged( final MouseEvent e )
   {
-    if( (m_lastDragged == null) || (m_lastDragged.distance( e.getPoint() ) > WidgetManager.MINIMUM_MOUSE_DISTANCE) )
-
-      if( getActualWidget() != null )
-      {
-        m_lastDragged = e.getPoint();
-        getActualWidget().dragged( m_lastDragged );
-      }
-
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget != null )
+      actualWidget.dragged( e.getPoint() );
   }
 
   public void mouseEntered( final MouseEvent e )
@@ -181,6 +168,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     if( e.isPopupTrigger() )
       actualWidget.clickPopup( e.getPoint() );
     else
+    {
       switch( e.getButton() )
       {
         case MouseEvent.BUTTON1:
@@ -198,6 +186,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
         default:
           break;
       }
+    }
   }
 
   public void mouseReleased( final MouseEvent e )
@@ -209,6 +198,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     if( e.isPopupTrigger() )
       actualWidget.clickPopup( e.getPoint() );
     else
+    {
       switch( e.getButton() )
       {
         case MouseEvent.BUTTON1: // Left
@@ -226,12 +216,14 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
         default:
           break;
       }
+    }
   }
 
   public void paintWidget( final Graphics g )
   {
-    if( getActualWidget() != null )
-      getActualWidget().paint( g );
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget != null )
+      actualWidget.paint( g );
   }
 
   public IWidget getActualWidget( )
@@ -256,7 +248,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
 
     if( m_mapPanel != null )
       m_mapPanel.repaint();
-
   }
 
   /**
