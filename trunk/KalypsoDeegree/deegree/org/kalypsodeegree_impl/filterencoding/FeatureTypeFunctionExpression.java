@@ -46,10 +46,10 @@ import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * A functrion epxression with evaluates to the (full qualified) Feature-Type name of the feature in scope.
- * <p>
- * Example return value: {http://www.opengis.net/gml}_Feature
- * </p>
+ * A function expression with evaluates to the (full qualified) Feature-Type name of the feature in scope.<br>
+ * Currently, no substitution is recognized<br>
+ * Example return value: {http://www.opengis.net/gml}_Feature<br>
+ * NOTE TO DEVELOPERS: If substitution is introduced, introduce a parameter, else old code will brake!.
  * 
  * @author Gernot Belger
  */
