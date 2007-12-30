@@ -63,6 +63,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
@@ -136,7 +137,7 @@ public class HydrographUtils
     if( resultMeta != null )
       calcUnitResult.removeChild( resultMeta );
 
-    calcUnitResult.addDocument( "Ganglinien", "Ganglinien des Teilmodells " + calcUnitResult.getName(), DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null );
+    ResultMeta1d2dHelper.addDocument( calcUnitResult, "Ganglinien", "Ganglinien des Teilmodells " + calcUnitResult.getName(), DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null );
 
     return newHydrograph;
   }

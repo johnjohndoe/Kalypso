@@ -109,9 +109,9 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
     try
     {
       final Set<Entry<IPath, Date>> entrySet = m_resultMap.entrySet();
-      
-      final SubMonitor progress = SubMonitor.convert( monitor,  "Ergebnisse für Ganglinien auslesen", entrySet.size() );
-      
+
+      final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisse für Ganglinien auslesen", entrySet.size() );
+
       final Map<GM_Point, IObservation<TupleResult>> obsMap = new HashMap<GM_Point, IObservation<TupleResult>>();
 
       for( IHydrograph hydrograph : m_hydrographs )
@@ -132,19 +132,18 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
           obsMap.put( point, obs );
         }
       }
-      
 
       int count = 0;
       final int resultSize = entrySet.size();
-      
+
       for( Entry<IPath, Date> entry : entrySet )
       {
         final Date date = entry.getValue();
-        count ++;
-        progress.subTask( "Zeitschritt (" + count + "/" + resultSize+ ") - lese Ergbnisdatei..." );
-        
+        count++;
+        progress.subTask( "Zeitschritt (" + count + "/" + resultSize + ") - lese Ergebnisdatei..." );
+
         /* get the observation */
-        
+
         /* get the date for which this result is valid */
         final GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime( date );
@@ -161,18 +160,18 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
         final FeatureList nodeList = nodeResultCollection.getWrappedList();
 
         int hyd = 0;
-        
+
         /* get the hydrograph locations and observations */
         for( IHydrograph hydrograph : m_hydrographs )
         {
           hyd++;
-          
+
           GM_Object location = hydrograph.getLocation();
           if( location instanceof GM_Point )
           {
             final GM_Point point = (GM_Point) location;
-            
-            progress.subTask( "Zeitschritt (" + count + "/" + resultSize+ "), " + date.toString() + " - weise Ergebnis zu ("+ hyd+"/"+m_hydrographs.size()+ "..." );
+
+            progress.subTask( "Zeitschritt (" + count + "/" + resultSize + "), " + date.toString() + " - weise Ergebnis zu (" + hyd + "/" + m_hydrographs.size() + "..." );
             addResult( obsMap, calendar, nodeList, point );
           }
         }
@@ -180,7 +179,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       }
 
       saveToHydrographFeature( obsMap );
-      
+
       return Status.OK_STATUS;
     }
     catch( final IOException e )
@@ -230,13 +229,13 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      if(discharge != null)
+      if( discharge != null )
       {
         newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       }
       else
         newRecord.setValue( dischargeComp, new BigDecimal( 0.0 ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      
+
       tuples.add( newRecord );
       o.setResult( tuples );
     }
