@@ -437,7 +437,10 @@ public class JTSAdapter
     final GM_Position[] positions = new GM_Position[coords.length];
     for( int i = 0; i < coords.length; i++ )
     {
-      positions[i] = new GM_Position_Impl( coords[i].x, coords[i].y );
+      if( !Double.isNaN( coords[i].z ) )
+        positions[i] = new GM_Position_Impl( coords[i].x, coords[i].y, coords[i].z );
+      else
+        positions[i] = new GM_Position_Impl( coords[i].x, coords[i].y );
     }
     return GeometryFactory.createGM_Curve( positions, null );
   }

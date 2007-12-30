@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 import java.util.ArrayList;
 
+import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -69,7 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.algorithm.PointInRing;
@@ -318,7 +318,7 @@ public class SHP2WKS
         ring[k] = new Coordinate( shppolygon.m_rings.points[i][k].getX(), shppolygon.m_rings.points[i][k].getY() );
 
       // note: esris (unmathemathic) definition of positive area is clockwise => outer ring, negative => inner ring
-      double area = GeometryUtilities.calcSignedAreaOfRing( ring );
+      double area = JTSUtilities.calcSignedAreaOfRing( ring );
       double esriArea = -area;
 
       final LinearRing linearRing = GF.createLinearRing( ring );
@@ -389,7 +389,7 @@ public class SHP2WKS
         ring[k] = new Coordinate( pointsz[i][k].getX(), pointsz[i][k].getY(), pointsz[i][k].getZ() );
 
       // note: esris (unmathemathic) definition of positive area is clockwise => outer ring, negative => inner ring
-      double area = GeometryUtilities.calcSignedAreaOfRing( ring );
+      double area = JTSUtilities.calcSignedAreaOfRing( ring );
       double esriArea = -area;
 
       final LinearRing linearRing = GF.createLinearRing( ring );
