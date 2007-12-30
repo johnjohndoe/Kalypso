@@ -40,13 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -79,12 +76,10 @@ public interface ICalcUnitResultMeta extends IResultMeta
 
   public IStepResultMeta addStepResult( );
 
-  public IDocumentResultMeta addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue );
+  public boolean containsChildType( final DOCUMENTTYPE doctype );
 
-  public boolean containsChildType( final DOCUMENTTYPE type );
+  public IDocumentResultMeta getDocument( DOCUMENTTYPE doctype );
 
-  public IDocumentResultMeta getDocument( DOCUMENTTYPE hydrograph );
-
-  public IDocumentResultMeta[] getDocuments( DOCUMENTTYPE hydrograph );
+  public IDocumentResultMeta[] getDocuments( DOCUMENTTYPE doctype );
 
 }

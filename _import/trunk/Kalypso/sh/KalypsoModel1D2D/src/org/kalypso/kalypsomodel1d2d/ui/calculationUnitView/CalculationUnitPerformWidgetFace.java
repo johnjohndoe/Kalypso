@@ -56,78 +56,87 @@ import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationC
 
 /**
  * @author Madanagopal
- *
+ * 
  */
 public class CalculationUnitPerformWidgetFace
 {
 
   private Composite m_parent;
+
   private FormToolkit toolkit;
+
   private ScrolledForm form;
+
   private Section selectCalcUnitSection;
-//  private Section problemsSection;
+
+  // private Section problemsSection;
   private Composite sectionFirstComposite;
+
   private CalculationUnitPerformComponent calcSelect;
+
   private Composite sectionSecondComposite;
-//  private CalculationUnitProblemsComponent calcProblemsGUI;
+
+  // private CalculationUnitProblemsComponent calcProblemsGUI;
   private CalculationUnitDataModel dataModel;
+
   private Section calculationElementUnitSection;
+
   private Composite sectionThirdComposite;
+
   private SelectedCalculationComponent calcElementGUI;
 
   public CalculationUnitPerformWidgetFace( )
   {
   }
-  
-  public CalculationUnitPerformWidgetFace(CalculationUnitDataModel dataModel)
+
+  public CalculationUnitPerformWidgetFace( CalculationUnitDataModel dataModel )
   {
     this.dataModel = dataModel;
   }
-  
-  public Composite createControl(Composite parent)
+
+  public Composite createControl( Composite parent )
   {
     m_parent = parent;
-    toolkit = new FormToolkit(parent.getDisplay());
-    form = toolkit.createScrolledForm(parent);
-    form.setExpandHorizontal(true);
-    form.setExpandVertical(true);
-//    form.setText(Messages.getString("CalculationUnitPerformWidgetFace.0"));  //$NON-NLS-1$
-    form.getBody().setLayout(new TableWrapLayout());
-    
+    toolkit = new FormToolkit( parent.getDisplay() );
+    form = toolkit.createScrolledForm( parent );
+    form.setExpandHorizontal( true );
+    form.setExpandVertical( true );
+    // form.setText(Messages.getString("CalculationUnitPerformWidgetFace.0")); //$NON-NLS-1$
+    form.getBody().setLayout( new TableWrapLayout() );
 
-    // Calculation Unit Section     
+    // Calculation Unit Section
     selectCalcUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    selectCalcUnitSection.setText( Messages.getString("CalculationUnitPerformWidgetFace.1") ); //$NON-NLS-1$
+    selectCalcUnitSection.setText( Messages.getString( "CalculationUnitPerformWidgetFace.1" ) ); //$NON-NLS-1$
     final TableWrapData tableWrapDataCU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-//    tableWrapDataCU.grabHorizontal = true;
-//    tableWrapDataCU.grabVertical = true;
+    // tableWrapDataCU.grabHorizontal = true;
+    // tableWrapDataCU.grabVertical = true;
     selectCalcUnitSection.setLayoutData( tableWrapDataCU );
-    selectCalcUnitSection.setExpanded(true);
+    selectCalcUnitSection.setExpanded( true );
 
     // Creates Section for "Calculation Elements Unit"
     calculationElementUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationElementUnitSection.setText( Messages.getString("CalculationUnitPerformWidgetFace.2") ); //$NON-NLS-1$
+    calculationElementUnitSection.setText( Messages.getString( "CalculationUnitPerformWidgetFace.2" ) ); //$NON-NLS-1$
     TableWrapData tableWrapDataCE = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-//    tableWrapDataCE.grabHorizontal = true;
-//    tableWrapDataCE.grabVertical = true;
+    // tableWrapDataCE.grabHorizontal = true;
+    // tableWrapDataCE.grabVertical = true;
     calculationElementUnitSection.setLayoutData( tableWrapDataCE );
     calculationElementUnitSection.setExpanded( true );
-    
+
     // Creates Section for "Calculation Settings Unit"
-//    problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-//    problemsSection.setText( Messages.getString("CalculationUnitPerformWidgetFace.3") ); //$NON-NLS-1$
-//    final TableWrapData tableWrapDataPU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-////    tableWrapDataPU.grabHorizontal = true;
-////    tableWrapDataPU.grabVertical = true;
-//    problemsSection.setLayoutData( tableWrapDataPU );
-//    problemsSection.setExpanded(true);
-    
+    // problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT |
+    // Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    // problemsSection.setText( Messages.getString("CalculationUnitPerformWidgetFace.3") ); //$NON-NLS-1$
+    // final TableWrapData tableWrapDataPU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    // // tableWrapDataPU.grabHorizontal = true;
+    // // tableWrapDataPU.grabVertical = true;
+    // problemsSection.setLayoutData( tableWrapDataPU );
+    // problemsSection.setExpanded(true);
+
     createCalculationUnitSection( selectCalcUnitSection );
-    createCalculationElementsSection(calculationElementUnitSection);
-//    createProblemsInCalculationSection(problemsSection);
+    createCalculationElementsSection( calculationElementUnitSection );
+    // createProblemsInCalculationSection(problemsSection);
     return parent;
   }
-  
 
   private void createCalculationUnitSection( Section selectCalcUnitSection )
   {
@@ -140,10 +149,10 @@ public class CalculationUnitPerformWidgetFace
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( 0, 5 );
     sectionFirstComposite.setLayoutData( formData );
-    
-    calcSelect = new CalculationUnitPerformComponent(dataModel);    
-    calcSelect.createControl( dataModel, toolkit, sectionFirstComposite );
-    
+
+    calcSelect = new CalculationUnitPerformComponent( dataModel );
+    calcSelect.createControl( dataModel, sectionFirstComposite );
+
   }
 
   private void createCalculationElementsSection( Section calculationElementUnitSection )
@@ -153,38 +162,38 @@ public class CalculationUnitPerformWidgetFace
     calculationElementUnitSection.setClient( sectionThirdComposite );
     FormLayout formLayout = new FormLayout();
     sectionThirdComposite.setLayout( formLayout );
-    
+
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( sectionThirdComposite, 5 );
     formData.bottom = new FormAttachment( 100, -5 );
     sectionThirdComposite.setLayoutData( formData );
-    
-    calcElementGUI= new SelectedCalculationComponent();    
-    calcElementGUI.createControl( dataModel, toolkit, sectionThirdComposite );    
+
+    calcElementGUI = new SelectedCalculationComponent();
+    calcElementGUI.createControl( dataModel, toolkit, sectionThirdComposite );
 
   }
-  
+
   private void createProblemsInCalculationSection( Section problemsSection )
   {
     problemsSection.setLayout( new FillLayout() );
     sectionSecondComposite = toolkit.createComposite( problemsSection, SWT.FLAT );
     problemsSection.setClient( sectionSecondComposite );
-    
+
     FormLayout formLayout = new FormLayout();
     sectionSecondComposite.setLayout( formLayout );
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( sectionFirstComposite, 5 );
     sectionSecondComposite.setLayoutData( formData );
-    
-//    calcProblemsGUI = new CalculationUnitProblemsComponent();
-//    calcProblemsGUI.createControl( dataModel, toolkit, sectionSecondComposite );    
+
+    // calcProblemsGUI = new CalculationUnitProblemsComponent();
+    // calcProblemsGUI.createControl( dataModel, toolkit, sectionSecondComposite );
   }
 
   public void disposeControl( )
   {
-  
+
     if( m_parent == null )
     {
       System.out.println( "Disposing null root panel" ); //$NON-NLS-1$
@@ -194,6 +203,6 @@ public class CalculationUnitPerformWidgetFace
     {
       m_parent.dispose();
       toolkit.dispose();
-    }  
+    }
   }
 }

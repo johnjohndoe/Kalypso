@@ -65,6 +65,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
@@ -138,15 +139,14 @@ public class ProcessResultsJob extends Job
       final File exeLog = new File( m_inputFile.getParentFile().toString() + "/exe.log" );
       final File exeErr = new File( m_inputFile.getParentFile().toString() + "/exe.err" );
       final File outputOut = new File( m_inputFile.getParentFile().toString() + "/result/Output.out" );
-      final File[] files = new File[] { m_inputFile, exeLog, exeErr, outputOut };
+      final File[] files = new File[] { m_inputFile };// , exeLog, exeErr, outputOut };
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
       ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
-      m_stepResultMeta.addDocument( "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null );
+      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null );
 
       monitor.worked( 1 );
 
       /* Read into NodeResults */
-
       read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider, m_resultMinMaxCatcher, m_timeStepNr, m_stepResultMeta );
     }
     catch( final Throwable e )
@@ -281,7 +281,7 @@ public class ProcessResultsJob extends Job
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( "Beginn Einlesen in : " );
+      logger.printCurrentInterim( "Starte Auswertung (" + result2dFile.getName() + ") : " );
 
       conv.parse( is );
 
@@ -342,7 +342,7 @@ public class ProcessResultsJob extends Job
             {
               min = new BigDecimal( minMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               max = new BigDecimal( minMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              calcUnitResult.addDocument( "Modellhöhen", "TIN der Modellhöhen", IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.gml" ), Status.OK_STATUS, min, max );
+              ResultMeta1d2dHelper.addDocument( calcUnitResult, "Modellhöhen", "TIN der Modellhöhen", IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.gml" ), Status.OK_STATUS, min, max );
             }
 
             break;
@@ -351,14 +351,14 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( minMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( minMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            stepResultMeta.addDocument( "Fließtiefen", "TIN der Fließtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( stepResultMeta, "Fließtiefen", "TIN der Fließtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
             break;
 
           case VELOCITY:
 
             min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            stepResultMeta.addDocument( "Geschwindigkeiten", "TIN der tiefengemittelten Fließgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( stepResultMeta, "Geschwindigkeiten", "TIN der tiefengemittelten Fließgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
@@ -366,7 +366,7 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( minMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( minMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            stepResultMeta.addDocument( "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( stepResultMeta, "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
@@ -374,7 +374,7 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( minMaxCatcher.getMinShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( minMaxCatcher.getMaxShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            stepResultMeta.addDocument( "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( stepResultMeta, "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
@@ -385,14 +385,14 @@ public class ProcessResultsJob extends Job
 
       min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       max = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      stepResultMeta.addDocument( "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, min, max );
+      ResultMeta1d2dHelper.addDocument( stepResultMeta, "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, min, max );
 
       /* length section entry in result db */
       if( lsObs.getResult().size() > 0 )
       {
         min = new BigDecimal( 0 );
         max = new BigDecimal( 0 );
-        stepResultMeta.addDocument( "Längsschnitt", "1d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
+        ResultMeta1d2dHelper.addDocument( stepResultMeta, "Längsschnitt", "1d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
       }
 
       /* HMO(s) */
@@ -436,15 +436,14 @@ public class ProcessResultsJob extends Job
     }
     else
     {
-      if (outputDir.toString() == "mini")
+      if( outputDir.getName().equals( "mini" ) )
       {
         /*
-        stepResultMeta.setName( "Minimalwerte" );
-        stepResultMeta.setDescription( "Minimalwerte des intationären Rechenlaufs" );
-        stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.min );
-        */
+         * stepResultMeta.setName( "Minimalwerte" ); stepResultMeta.setDescription( "Minimalwerte des intationären
+         * Rechenlaufs" ); stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.min );
+         */
       }
-      else if (outputDir.toString() == "maxi")
+      else if( outputDir.getName().equals( "maxi" ) )
       {
         stepResultMeta.setName( "Maximalwerte" );
         stepResultMeta.setDescription( "Maximalwerte des intationären Rechenlaufs" );

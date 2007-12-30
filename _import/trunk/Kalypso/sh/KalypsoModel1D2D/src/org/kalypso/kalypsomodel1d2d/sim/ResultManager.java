@@ -306,7 +306,7 @@ public class ResultManager implements Runnable
     for( final File file : existing2dFiles )
     {
       /* check for already processed files */
-      if( !m_found2dFiles.contains( file ) )
+      if( !m_found2dFiles.contains( file ) && !file.getName().equals( "mini.2d" ) )
         addResultFile( file );
     }
 

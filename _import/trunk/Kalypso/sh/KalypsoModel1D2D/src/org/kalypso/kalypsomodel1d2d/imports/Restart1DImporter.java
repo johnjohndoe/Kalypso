@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -275,8 +276,7 @@ public class Restart1DImporter
     }
 
     // TODO: message box if this document was already existant?
-
-    return stepResultMeta.addDocument( "vektoren", description, DOCUMENTTYPE.nodes, Path.fromPortableString( "results.gml" ), Status.OK_STATUS, null, null );
+    return ResultMeta1d2dHelper.addDocument( stepResultMeta, "vektoren", description, DOCUMENTTYPE.nodes, Path.fromPortableString( "results.gml" ), Status.OK_STATUS, null, null );
   }
 
   private IObservation<TupleResult> readLengthSection( final IFile lengthSectionFile ) throws Exception

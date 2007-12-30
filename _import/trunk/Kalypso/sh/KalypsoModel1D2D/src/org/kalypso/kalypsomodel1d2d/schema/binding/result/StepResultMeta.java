@@ -40,15 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -67,7 +63,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#getStepNumber()
    */
-  public int getStepNumber( )
+  public Integer getStepNumber( )
   {
     // may be null for 'steady' or 'max' steps.
     return (Integer) getFeature().getProperty( QNAME_PROP_STEP_NUMBER );
@@ -110,7 +106,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setStepNumber(int)
    */
-  public void setStepNumber( final int stepNumber )
+  public void setStepNumber( final Integer stepNumber )
   {
     getFeature().setProperty( QNAME_PROP_STEP_NUMBER, stepNumber );
   }
@@ -132,24 +128,4 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
     getFeature().setProperty( QNAME_PROP_STEP_TYPE, stepType.name() );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#addDocument(java.lang.String,
-   *      java.lang.String, org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE,
-   *      java.lang.String)
-   */
-  public IDocumentResultMeta addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue )
-  {
-    final IDocumentResultMeta document = getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
-    document.setName( name );
-    document.setDescription( description );
-    document.setDocumentType( type );
-    document.setPath( path );
-    document.setStatus( status );
-    if( minValue != null )
-      document.setMinValue( minValue );
-    if( maxValue != null )
-      document.setMaxValue( maxValue );
-
-    return document;
-  }
 }

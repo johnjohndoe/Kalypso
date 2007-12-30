@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.bind.JAXBException;
@@ -66,6 +65,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -92,7 +92,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
- * TODO: Do notjust copy.paste everything! No one will ever be able to manage this code ever!
+ * TODO: Do not just copy.paste everything! No one will ever be able to manage this code ever!
  * 
  * Implements the {@link ISimulation} interface to provide the simulation job for the 1d2d model
  * 
@@ -121,6 +121,9 @@ public class CalculationUnitSimMode1D2DCalcJob
     {
       if( !MessageDialog.openConfirm( shell, "Berechnung starten", "Es sind bereits Ergebnisdaten einer vorangegangenen Berechnung vorhanden.\nWenn Sie fortfahren werden diese unwiederruflich gelöscht." ) )
         return Status.CANCEL_STATUS;
+
+      // TODO: handle deletion of old calc data, if no restart is chosen
+
     }
 
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
@@ -162,7 +165,7 @@ public class CalculationUnitSimMode1D2DCalcJob
         }
         if( activeControlModel == null )
         {
-          return StatusUtilities.createErrorStatus( "Could not found active control model for: " + calculationUnit.getGmlID() );
+          return StatusUtilities.createErrorStatus( "Could not find active control model for: " + calculationUnit.getGmlID() );
         }
 
         try
@@ -203,28 +206,24 @@ public class CalculationUnitSimMode1D2DCalcJob
     return RunnableContextHelper.execute( workbench.getProgressService(), true, false, runnable );
   }
 
-  protected static void fillResultModel( final IFolder unitFolder, final IScenarioResultMeta scenarioResultMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep )
+  protected static IStatus fillResultModel( final IFolder unitFolder, final IScenarioResultMeta scenarioResultMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception
   {
-    try
-    {
-      final IFile metaFile = unitFolder.getFile( "resultMeta.gml" );
-      final URL metaURL = ResourceUtilities.createURL( metaFile );
-      final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaURL, null );
-      final Feature rootFeature = metaWorkspace.getRootFeature();
-      final ICalcUnitResultMeta newCalcunitResultMeta = (ICalcUnitResultMeta) rootFeature.getAdapter( ICalcUnitResultMeta.class );
-      scenarioResultMeta.updateResultMeta( newCalcunitResultMeta, isRestart, isSteadyCalculation, isUnsteadyCalculation, restartStep );
-    }
-    catch( MalformedURLException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    final IFile metaFile = unitFolder.getFile( "resultMeta.gml" );
+    final URL metaURL = ResourceUtilities.createURL( metaFile );
+    final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaURL, null );
+    final Feature rootFeature = metaWorkspace.getRootFeature();
+    final ICalcUnitResultMeta newCalcunitResultMeta = (ICalcUnitResultMeta) rootFeature.getAdapter( ICalcUnitResultMeta.class );
 
+    if( ResultMeta1d2dHelper.checkForConsistency( scenarioResultMeta ) == Status.OK_STATUS )
+    {
+      ResultMeta1d2dHelper.updateResultMeta( scenarioResultMeta, newCalcunitResultMeta, isRestart, isSteadyCalculation, isUnsteadyCalculation, restartStep );
+      return Status.OK_STATUS;
+    }
+    else
+    {
+      ResultMeta1d2dHelper.updateResultMeta( scenarioResultMeta, newCalcunitResultMeta, isRestart, isSteadyCalculation, isUnsteadyCalculation, restartStep );
+      return Status.OK_STATUS;
+    }
   }
 
   // TODO: load modelspec from binaries, not from the project

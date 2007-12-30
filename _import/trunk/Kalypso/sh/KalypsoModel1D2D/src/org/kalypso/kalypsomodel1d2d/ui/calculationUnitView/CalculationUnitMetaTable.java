@@ -69,7 +69,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
@@ -181,7 +180,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   private Button m_btnRunCalculation;
 
-  public void createControl( final KeyBasedDataModel dataModel, final FormToolkit toolkit, final Composite parent )
+  public void createControl( final KeyBasedDataModel dataModel, final Composite parent )
   {
     m_parent = parent;
     m_dataModel = dataModel;
@@ -245,6 +244,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
       m_btnMaximizeCalcUnit.setImage( image );
       m_btnMaximizeCalcUnit.addSelectionListener( new SelectionAdapter()
       {
+        @SuppressWarnings("synthetic-access")
         @Override
         public void widgetSelected( final SelectionEvent event )
         {

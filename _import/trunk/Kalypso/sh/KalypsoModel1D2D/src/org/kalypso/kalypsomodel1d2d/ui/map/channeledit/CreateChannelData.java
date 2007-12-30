@@ -603,7 +603,7 @@ public class CreateChannelData
     boolean error = false;
 
     // At first line[0] and line [1]
-    // check if the lines lie allready in a right orientation.
+    // check if the lines lie already in a right orientation.
 
     Point startpoint1 = lines[0].getStartPoint();
     Point endpoint1 = lines[0].getEndPoint();
