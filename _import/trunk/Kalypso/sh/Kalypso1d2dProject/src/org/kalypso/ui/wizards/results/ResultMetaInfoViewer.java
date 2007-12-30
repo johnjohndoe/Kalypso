@@ -217,7 +217,9 @@ public class ResultMetaInfoViewer extends Viewer
       stepType = stepResult.getStepType().toString();
       final Date stepResultTime = stepResult.getStepTime();
       stepTime = stepResultTime == null ? "-" : INFO_DF.format( stepResultTime );
-      stepNumber = ((Integer) stepResult.getStepNumber()).toString();
+      final Integer number = stepResult.getStepNumber();
+      if( number != null )
+        stepNumber = number.toString();
     }
 
     IDocumentResultMeta docResult = null;

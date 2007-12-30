@@ -67,6 +67,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate.MATH_OPERATOR;
@@ -318,7 +319,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
               final String description = "Differenzen erzeugt am xx.xx.xxxx xx.xx:xx Uhr (resultierend aus: Minuend: xxx Subtrahent:xxx)";
 
               IStepResultMeta stepResult = (IStepResultMeta) destResult;
-              stepResult.addDocument( "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max );
+              ResultMeta1d2dHelper.addDocument( stepResult, "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max );
             }
             else
             {
