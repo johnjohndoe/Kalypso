@@ -40,10 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
+import org.kalypso.kalypsomodel1d2d.conv.TeschkeRelationConverter;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
+import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -168,6 +195,178 @@ public class NodeResultHelper
       velocities.add( 0.0 );
       midsideNode.setVelocity( getMeanValue( velocities ) );
     }
+  }
+
+  /**
+   * returns a simplified profile curve of a 1d-node, already cut at the intersection points with the water level
+   * 
+   * @param nodeResult
+   *            1d-node
+   * 
+   */
+  public static GM_Curve getProfileCurveFor1dNode( final WspmProfile profile ) throws Exception
+  {
+    final IProfil profil = profile.getProfil();
+
+    /* cut the profile at the intersection points with the water level */
+    // get the intersection points
+    // get the crs from the profile-gml
+    final String srsName = profile.getSrsName();
+    final CS_CoordinateSystem crs = srsName == null ? KalypsoCorePlugin.getDefault().getCoordinatesSystem()
+        : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
+
+    // final double waterlevel = nodeResult.getWaterlevel();
+
+    /* REMARK: now we us the whole profile in order to get a bigger area for the flood modeler */
+
+    // final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
+    // final GM_Curve curve = cutProfileAtWaterlevel( waterlevel, profil, crs );
+    GM_Curve curve = ProfilUtil.getLine( profil, crs );
+
+    /* simplify the profile */
+    final double epsThinning = 0.10;
+    final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
+    thinnedCurve.setCoordinateSystem( crs );
+
+    /* set the water level as new z-coordinate of the profile line */
+    // return GeometryUtilities.setValueZ( thinnedCurve.getAsLineString(), waterlevel );
+    return thinnedCurve;
+
+    // TODO: add some gml file for the points
+    // TODO: King
+  }
+
+  public static BigDecimal getCrossSectionArea( final ITeschkeFlowRelation teschkeRelation, final BigDecimal depth )
+  {
+    final IPolynomial1D[] polynomials = teschkeRelation.getPolynomials();
+    final TeschkeRelationConverter teschkeConv = new TeschkeRelationConverter( polynomials );
+
+    final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
+    if( polyArea == null )
+      return null;
+
+    // TODO: for some reason there appears a depth that is not defined in the Polynomial Array!?
+    final IPolynomial1D poly = PolynomialUtilities.getPoly( polyArea, depth.doubleValue() );
+    if( poly == null )
+      return null;
+    final double computeResult = poly.computeResult( depth.doubleValue() );
+
+    return new BigDecimal( computeResult ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+  }
+
+  public static Double[] getPosTriangleArray( GM_Position[] positions )
+  {
+    Double[] posArray = new Double[positions.length * 3];
+
+    for( int i = 0; i < positions.length; i++ )
+    {
+      posArray[i * 3] = positions[i].getX();
+      posArray[i * 3 + 1] = positions[i].getY();
+      posArray[i * 3 + 2] = positions[i].getZ();
+    }
+    return posArray;
+  }
+
+  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final CS_CoordinateSystem crs ) throws Exception, GM_Exception
+  {
+    final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
+    IProfil cutProfile = null;
+
+    if( points != null )
+    {
+      if( points.length > 1 )
+      {
+        cutProfile = WspmProfileHelper.cutIProfile( profil, points[0], points[points.length - 1] );
+      }
+    }
+
+    // final CS_CoordinateSystem crs = nodeResult.getPoint().getCoordinateSystem();
+    final GM_Curve curve = ProfilUtil.getLine( cutProfile, crs );
+    return curve;
+  }
+
+  /**
+   * gets the x-coordinate of the zero point of a line defined by y1 (>0), y2 (<0) and the difference of the
+   * x-coordinates (x2-x1) = dx12.
+   * 
+   * @param dx12
+   *            distance between x1 and x2.
+   * @param y1
+   *            the y-value of point 1 of the line. It has to be always > 0!
+   * @param y2
+   *            the y-value of point 2 of the line. It has to be always < 0!
+   */
+  public static double getZeroPoint( final double dx12, final double y1, final double y2 )
+  {
+    final double x3 = y1 / (Math.abs( y1 ) + Math.abs( y2 )) * dx12;
+
+    // check: y3Temp is the y-value of the zero point and should always be zero !!
+    final double y3Temp = Math.round( (-(Math.abs( y1 ) + Math.abs( y2 )) / dx12 * x3 + y1) * 100 ) / 100;
+
+    if( y3Temp != 0.00 )
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %9.3f", "error while interpolation node-data, y3Temp != 0 = ", y3Temp );
+
+    return x3;
+  }
+
+  public static boolean checkTriangleArc( final INodeResult node1, final INodeResult node2 )
+  {
+    /* get the spit point (inundation point) */
+    if( (node1.isWet() == true && node2.isWet() == false) || (node1.isWet() == false && node2.isWet() == true) )
+      return true;
+    else
+      return false;
+  }
+
+  public static GM_Curve getCurveForBoundaryLine( final GM_Point[] linePoints, final double waterlevel, final CS_CoordinateSystem crs ) throws GM_Exception, Exception
+  {
+    // we create a profile in order to use already implemented methods
+    final IProfil boundaryProfil = ProfilFactory.createProfil( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    boundaryProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    boundaryProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    boundaryProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    boundaryProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
+    double width = 0;
+    for( int i = 0; i < linePoints.length; i++ )
+    {
+      final GM_Point geoPoint = linePoints[i];
+
+      if( i > 0 )
+        width = width + geoPoint.distance( linePoints[i - 1] );
+
+      final IProfilPoint point = boundaryProfil.createProfilPoint();
+
+      /* calculate the width of the intersected profile */
+      // sort intersection points by width
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, geoPoint.getZ() );
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint.getX() );
+      point.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint.getY() );
+
+      boundaryProfil.addPoint( point );
+    }
+    return cutProfileAtWaterlevel( waterlevel, boundaryProfil, crs );
+
+  }
+
+  public static INodeResult getNodeResult( final GM_Point point, final FeatureList resultList, final double searchDistance )
+  {
+    final Feature feature = GeometryUtilities.findNearestFeature( point, searchDistance, resultList, GMLNodeResult.QNAME_PROP_LOCATION );
+    return (INodeResult) feature.getAdapter( INodeResult.class );
+  }
+
+  @SuppressWarnings("unchecked")
+  public static GM_Point[] getLinePoints( final IContinuityLine2D continuityLine2D )
+  {
+    final List<IFE1D2DNode> nodes = continuityLine2D.getNodes();
+    final GM_Point[] points = new GM_Point[nodes.size()];
+    int i = 0;
+    for( final IFE1D2DNode node : nodes )
+    {
+      points[i++] = node.getPoint();
+    }
+    return points;
   }
 
 }
