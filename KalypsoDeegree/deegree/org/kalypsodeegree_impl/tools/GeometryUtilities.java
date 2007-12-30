@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -662,25 +663,25 @@ public class GeometryUtilities
   }
 
   /**
-   * @param ring
-   *            array of ordered coordinates, last must equal first one
+   * @param positions
+   *            array of ordered {@link GM_Position}, last must equal first one
    * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive)
    */
-  public static double calcSignedAreaOfRing( final Coordinate[] ring )
+  public static double calcSignedAreaOfRing( final GM_Position[] positions )
   {
-    if( ring.length < 4 ) // 3 points and 4. is repetition of first point
+    if( positions.length < 4 ) // 3 points and 4. is repetition of first point
       throw new UnsupportedOperationException( "can not calculate area of < 3 points" );
-    final Coordinate a = ring[0]; // base
+    final GM_Position a = positions[0]; // base
     double area = 0;
-    for( int i = 1; i < ring.length - 2; i++ )
+    for( int i = 1; i < positions.length - 2; i++ )
     {
-      final Coordinate b = ring[i];
-      final Coordinate c = ring[i + 1];
-      area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
+      final GM_Position b = positions[i];
+      final GM_Position c = positions[i + 1];
+      area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
 
-          - ((a.x - b.x) * (b.y - a.y)//
-              + (b.x - c.x) * (b.y - c.y)//
-          + (a.x - c.x) * (c.y - a.y)//
+          - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
+              + (b.getX() - c.getX()) * (b.getY() - c.getY())//
+          + (a.getX() - c.getX()) * (c.getY() - a.getY())//
           ) / 2d;
     }
     return area;
@@ -944,4 +945,76 @@ public class GeometryUtilities
     return !ls.isSimple();
   }
 
+  protected static GM_Position[] getPolygonPositions( final GM_Curve[] curves, final boolean selfIntersected ) throws GM_Exception
+  {
+    /* test for self-intersection */
+    final List<GM_Position> posList = new ArrayList<GM_Position>();
+
+    /* - add first curve's positions to positions list */
+    final GM_Position[] positions1 = curves[1].getAsLineString().getPositions();
+    for( int i = 0; i < positions1.length; i++ )
+    {
+      posList.add( positions1[i] );
+    }
+
+    /* - add second curve's positions to positions list */
+    final GM_Position[] positions2 = curves[0].getAsLineString().getPositions();
+
+    if( selfIntersected != true )
+    {
+      // not twisted: curves are oriented in the same direction, so we add the second curve's positions in the
+      // opposite direction in order to get a non-self-intersected polygon.
+      for( int i = 0; i < positions2.length; i++ )
+      {
+        posList.add( positions2[positions2.length - 1 - i] );
+      }
+    }
+    else
+    {
+      // twisted: curves are oriented in different directions, so we add the second curve's positions
+      // from start to end in order to get a non-self-intersected polygon.
+      for( int i = 0; i < positions2.length; i++ )
+      {
+        posList.add( positions2[i] );
+      }
+    }
+
+    /* close polygon position list */
+    posList.add( positions1[0] );
+
+    return posList.toArray( new GM_Position[posList.size()] );
+  }
+
+  /**
+   * converts two given curves into a position array of a non-self-intersecting, ccw oriented, closed polygon
+   * 
+   * @param curves
+   *            the curves as {@link GM_Curve}
+   */
+  public static GM_Position[] getPolygonfromCurves( final GM_Curve[] curves ) throws GM_Exception
+  {
+    /* get the positions of the curves */
+
+    // as a first guess, we assume that the curves build a non-intersecting polygon
+    GM_Position[] polygonPositions = getPolygonPositions( curves, false );
+
+    // then we check this assumption
+    if( isSelfIntersecting( polygonPositions ) )
+      polygonPositions = getPolygonPositions( curves, true );
+
+    // check orientation
+    if( calcSignedAreaOfRing( polygonPositions ) < 0 )
+    {
+      /* orientation is cw */
+      // invert the direction
+      final GM_Position[] invertedPositions = new GM_Position[polygonPositions.length];
+      for( int i = 0; i < polygonPositions.length; i++ )
+      {
+        invertedPositions[i] = polygonPositions[polygonPositions.length - 1 - i];
+      }
+      return invertedPositions;
+    }
+    else
+      return polygonPositions;
+  }
 }

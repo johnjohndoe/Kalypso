@@ -557,4 +557,30 @@ public class JTSUtilities
     return planeEquation[0] * x + planeEquation[1] * y + planeEquation[2];
   }
 
+  /**
+   * @param ring
+   *            array of ordered coordinates, last must equal first one
+   * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive) TODO: move it to
+   *         JTSUtilities
+   */
+  public static double calcSignedAreaOfRing( final Coordinate[] ring )
+  {
+    if( ring.length < 4 ) // 3 points and 4. is repetition of first point
+      throw new UnsupportedOperationException( "can not calculate area of < 3 points" );
+    final Coordinate a = ring[0]; // base
+    double area = 0;
+    for( int i = 1; i < ring.length - 2; i++ )
+    {
+      final Coordinate b = ring[i];
+      final Coordinate c = ring[i + 1];
+      area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
+
+          - ((a.x - b.x) * (b.y - a.y)//
+              + (b.x - c.x) * (b.y - c.y)//
+          + (a.x - c.x) * (c.y - a.y)//
+          ) / 2d;
+    }
+    return area;
+  }
+
 }
