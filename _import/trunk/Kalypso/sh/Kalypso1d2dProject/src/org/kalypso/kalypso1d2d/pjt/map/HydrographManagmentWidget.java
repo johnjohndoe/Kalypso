@@ -296,8 +296,11 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
     /* Theme selection combo + add / remove calc unit hydrograph theme buttons */
     final Composite themeSelectionPanel = toolkit.createComposite( panel, SWT.NONE );
-    themeSelectionPanel.setLayout( new GridLayout( 5, false ) );
-    themeSelectionPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final GridLayout themeGridLayout = new GridLayout( 5, false );
+    themeGridLayout.marginWidth = 0;
+    themeSelectionPanel.setLayout( themeGridLayout );
+    final GridData themeGridLayoutData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    themeSelectionPanel.setLayoutData( themeGridLayoutData );
     toolkit.createLabel( themeSelectionPanel, "Teilmodell: ", SWT.NONE );
     m_themeCombo = new ComboViewer( themeSelectionPanel, SWT.READ_ONLY | SWT.DROP_DOWN );
     final GridData comboGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -312,7 +315,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     final Composite hydrographPanel = toolkit.createComposite( panel, SWT.NONE );
     final GridLayout hydrographPanelLayout = new GridLayout( 2, false );
     final GridData hydrographPanelData = new GridData( SWT.FILL, SWT.FILL, true, false );
-    hydrographPanelData.heightHint = 200;
+    hydrographPanelData.heightHint = 140;
     hydrographPanel.setLayoutData( hydrographPanelData );
     hydrographPanelLayout.marginHeight = 0;
     hydrographPanelLayout.marginWidth = 0;
