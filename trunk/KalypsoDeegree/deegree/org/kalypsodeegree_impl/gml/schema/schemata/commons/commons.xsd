@@ -11,7 +11,7 @@
 	<!-- utility schema for gml application schemas -->
 	<!-- TODO: KALYPSO-Header einfügen -->
 
-	<-- @deprecated: no not use any more -->
+	<!-- @deprecated: no not use any more -->
 	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType">
