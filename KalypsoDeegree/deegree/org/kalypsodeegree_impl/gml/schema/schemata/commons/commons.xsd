@@ -20,8 +20,8 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	
-	<-- @deprecated: no not use any more -->
+	 
+	<!-- @deprecated: no not use any more -->
 	<complexType name="NamedFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType">

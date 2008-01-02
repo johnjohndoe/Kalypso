@@ -48,6 +48,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
@@ -67,9 +68,14 @@ public class MoveDownHandler extends AbstractHandler implements IHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    if( part == null )
-      throw new ExecutionException( "No active part." );
+
+    IWorkbenchPart part = null;
+    if( context == null )
+    {
+      part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+    }
+    else
+      part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
 
     final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
     if( mapPanel == null )
