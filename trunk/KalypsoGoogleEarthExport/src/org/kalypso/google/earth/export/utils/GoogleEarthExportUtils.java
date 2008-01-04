@@ -24,14 +24,6 @@ public class GoogleEarthExportUtils
 {
 
   /**
-   * @param folderType
-   */
-  public static void removeEmtpyFolders( final FolderType folderType )
-  {
-    // TODO:
-  }
-
-  /**
    * @param feature
    * @param m_factory
    * @param symbolizer
@@ -52,6 +44,14 @@ public class GoogleEarthExportUtils
       throw (new NotImplementedException());
 
     throw (new NotImplementedException());
+  }
+
+  /**
+   * @param folderType
+   */
+  public static void removeEmtpyFolders( final FolderType folderType )
+  {
+    // TODO:
   }
 
 }
