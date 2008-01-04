@@ -67,13 +67,15 @@ import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
  */
 public class FileUtilities
 {
+  public static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
+
   /** regex defining which are the invalid characters for a file name */
   public final static String INVALID_CHARACTERS = "[\\\\/:\\*\\?\"<>|]";
 
   /**
    * THE system tmp dir "java.io.tmpdir"
    */
-  public static final File TMP_DIR = new File( System.getProperty( "java.io.tmpdir" ) );
+  public static final File TMP_DIR = new File( System.getProperty( JAVA_IO_TMPDIR ) );
 
   /**
    * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
@@ -156,7 +158,7 @@ public class FileUtilities
     {
       try
       {
-        final File existingFile = fileExistsInDir( prefix, suffix, System.getProperty( "java.io.tmpdir" ) );
+        final File existingFile = fileExistsInDir( prefix, suffix, System.getProperty( JAVA_IO_TMPDIR ) );
         return existingFile;
       }
       catch( final FileNotFoundException ignored )
@@ -618,6 +620,50 @@ public class FileUtilities
     finally
     {
       IOUtils.closeQuietly( is );
+    }
+  }
+
+  /**
+   * Moves the complete content of one directory into another.
+   * 
+   * @throws IOException
+   *             If the move failed.
+   */
+  public static void moveContents( final File sourceDir, final File destDir ) throws IOException
+  {
+    final File[] children = sourceDir.listFiles();
+    if( children == null )
+      throw new IOException( "Invalid directory for move: " + sourceDir );
+
+    for( final File child : children )
+      move( child, destDir );
+  }
+
+  /**
+   * Moves one single file/dir into another directory.
+   * 
+   * @throws IOException
+   *             If the move failed.
+   */
+  public static void move( final File source, final File destDir ) throws IOException
+  {
+    // TODO: probably platform dependend.
+    // Handle the following problems:
+    // - file will be moved onto another file system (in that case copy/delete ist probably better)
+
+    final File destFile = new File( destDir, source.getName() );
+
+    if( destFile.exists() )
+    {
+      final String message = String.format( "Unable move file %s into %s. Destination file already exsits: %s", source, destDir, destFile );
+      throw new IOException( message );
+    }
+
+    boolean success = source.renameTo( destFile );
+    if( !success )
+    {
+      final String message = String.format( "Unable move file %s into %s.", source, destDir );
+      throw new IOException( message );
     }
   }
 }

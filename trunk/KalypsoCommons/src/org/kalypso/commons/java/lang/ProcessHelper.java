@@ -254,12 +254,18 @@ public class ProcessHelper
           // Prozess noch nicht fertig, weiterlaufen lassen
         }
 
-        // TODO: cancelling the process does not work
+        // TODO: canceling the process does not work
         if( cancelable.isCanceled() )
         {
           process.destroy();
           if( procCtrlThread != null )
             procCtrlThread.endProcessControl();
+
+          // Sometimes, the process is not yet really killed, when process.exitValue() is called,
+          // causing an IllegalThreadStateException. In order to avoid this we wait a bit here,
+          // maybe it works...
+          Thread.sleep( 250 );
+
           iRetVal = process.exitValue();
           return iRetVal;
         }
