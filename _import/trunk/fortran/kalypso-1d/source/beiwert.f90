@@ -1,4 +1,4 @@
-!     Last change:  MD   20 Nov 2007    2:25 pm
+!     Last change:  MD    4 Jan 2008    4:10 pm
 !--------------------------------------------------------------------------
 ! This code, beiwert.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -224,8 +224,8 @@ ELSEIF (wart.eq.'rk') then
 
   !HW Überfallbeiwert für rundkronige Wehre nach Knapp, S. 232
   !MD Formel korregiert
-  !cq = (3./2.)*phi*( (1.+phi) * (1.-beta)**0.5) / (1. - beta*phi2) ** (3./2.) * phi1
-  cq = (sqrt (2.*g)) *phi *(1.+phi) *((1.-beta)**0.5) / ((1. -(beta*phi2)) **(3./2.)) * phi1
+  cq = (3./2.)*phi*( (1.+phi) * (1.-beta)**0.5) / (1. - beta*phi2) ** (3./2.) * phi1
+  !MD cq = (sqrt (2.*g)) *phi *(1.+phi) *((1.-beta)**0.5) / ((1. -(beta*phi2)) **(3./2.)) * phi1
 
 
 ELSEIF (wart.eq.'bk') then  !HW breitkroniges Wehr
