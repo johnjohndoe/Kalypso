@@ -1,4 +1,4 @@
-!     Last change:  MD    3 Dec 2007   10:58 am
+!     Last change:  MD    4 Jan 2008    3:51 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -300,9 +300,15 @@ IF (BERECHNUNGSMODUS=='REIB_KONST' .and. Q_Abfrage=='NO_SCHLEIFE') then
   !MD Kontrolle der Grenztiefe im Unterwasser
   ! -----------------------------------------------------
   IF ((h_uw - sohlp(np-1)) .lt. (2./3.* (hen1 - sohlp(np-1))) ) THEN
-    write (UNIT_OUT_TAB,' (''  KEINE Wehrberechnung an Station km = '',f7.3)') stat(np)
-    WRITE (UNIT_OUT_TAB, '(''    fuer Innerer Abfluss qw  ='',f8.4)') qw
-    WRITE (UNIT_OUT_TAB, '(''    da Grenztiefe im UW erreicht!! '')')
+    write (UNIT_OUT_TAB,' ('' KEINE Wehrberechnung an Station km = '',f7.3)') stat(np)
+    WRITE (UNIT_OUT_TAB, '(''   fuer Innerer Abfluss qw  ='',f8.4)') qw
+    WRITE (UNIT_OUT_TAB, '(''   da Grenztiefe im UW erreicht!! '')')
+    Q_Abfrage = 'GR_SCHLEIFE'
+    RETURN
+  ELSEIF (v_uw .lt. ( SQRT(0.0001 *2.*g)) ) THEN
+    write (UNIT_OUT_TAB,' ('' KEINE Wehrberechnung an Station km = '',f7.3)') stat(np)
+    WRITE (UNIT_OUT_TAB, '(''   fuer Innerer Abfluss qw  ='',f8.4)') qw
+    WRITE (UNIT_OUT_TAB, '(''   da Fliessgeschwindigkeit im UW kleiner 0,044!! '')')
     Q_Abfrage = 'GR_SCHLEIFE'
     RETURN
   END IF
@@ -624,7 +630,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         tauu = (h_uw  - hokwmin) / hgrw (j)  !MD   Wasserstand DES Unterwassers - Wehrhoehe
         taoo = (huew (j) + h_v) / hgrw (j)   !MD   ENERGIEHÖHE DES OBERWASSERS an Wehrkrone
         tauu_grenz = 2.0 - (0.5 / 0.38679)
-        tauo = 3.286 - (1.905 * tauu)
+        tauo = 1.725 - (0.525 * tauu)        !MD  Grenzgerade f(tauu) vollk - unvollk
+        ! tauo = 3.286 - (1.905 * taoo)
 
         IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(/,''j='',i3,'' tauu='',f8.4,'' taoo='',f8.4)') j, tauu, taoo
@@ -660,12 +667,6 @@ DO 1000 WHILE(dif_e.gt.0.0001)
        !   taugrenz = SQRT ( (1 +(hokwmin/ hgrw (j)))**2 + 2 + (v_uw_konti**2 / (hgrw (j) *g)) **2)  &
        !                 &  - (v_uw_konti**2 / (g * hgrw (j))) - (hokwmin/ hgrw (j))
 
-    !      !HW    SCHREIBEN IN KONTROLLFILE
-    !      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
-    !        WRITE (UNIT_OUT_LOG, '(/,''Grenzwert für überströmen nach Imp.bilanz'')')
-    !        WRITE (UNIT_OUT_LOG, '(''taugrenz = '',f8.4)') taugrenz
-    !      ENDIF
-    !
     !      !HW    Kontrolle der Abflussart bei breitkronigem Wehr mit taugrenz
     !      IF (tauu .gt. taugrenz) then
     !        iueart(j) = 2   !    Ueberstroemen
@@ -693,15 +694,16 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         ENDIF
 
         !MD  IF (tauo.ge.tauu .and. tauo.le.1.0) then
-        IF (tauu.lt.0.0) then  ! Wenn UW < Wehr-ok
+        IF (tauu.le.0.0) then  ! Wenn UW < Wehr-ok
+          iueart(j) = 0   !    VOLLKOMMENER UEBERFALL
+          GOTO 2030
+        ! ELSEIF (tauu.lt.2.0 .and. tauo.lt.tauu_grenz .and. tauu.le.tauo) then
+        ELSEIF (tauo.lt.tauu_grenz .and. tauu.lt.tauu_grenz) then
           iueart(j) = 0   !    VOLLKOMMENER UEBERFALL
           GOTO 2030
 
-        ELSEIF (tauu.lt.2.0 .and. tauo.lt.tauu_grenz .and. tauu.le.tauo) then
-          iueart(j) = 0   !    VOLLKOMMENER UEBERFALL
-          GOTO 2030
-
-        ELSEIF (tauu.lt.2.0 .and. tauu.gt.tauo .and. taoo.lt.tauu) then
+        ! ELSEIF (tauu.lt.2.0 .and. tauu.gt.tauo .and. taoo.lt.tauu) then
+        ELSEIF (tauu.lt.2.0 .and. taoo.lt.2) then
           iueart(j) = 1   !    UNVOLLKOMMENER UEBERFALL
 
           IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
@@ -751,12 +753,15 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         end if
 
         if ((h_uw - hokwmin).gt.0.0) then
-           q_w (j) = huew(j) * wb(j) * g2* ((huew(j) + h_v - (h_uw - hokwmin)) **0.5)
+          q_w (j) = huew(j) * wb(j) * g2* ((huew(j) + h_v - (h_uw - hokwmin)) **0.5)
         endif
 
-       IF (K_verlust.gt.0.0) then
-           q_ueber(j) = huew(j) * wb(j) * g2 * (((huew(j) + h_v - (h_uw - hokwmin)) /(1.+ K_verlust))  **0.5)
-           q_w(j) =  q_ueber(j)
+        IF (K_verlust.gt.0.0 .and. (huew(j) +h_v).gt.(h_uw -hokwmin)) then
+          q_ueber(j) = huew(j) * wb(j) * g2 * (((huew(j) + h_v - (h_uw - hokwmin)) /(1.+ K_verlust))  **0.5)
+          q_w(j) =  q_ueber(j)
+        ELSEIF (K_verlust.gt.0.0 .and. (huew(j) +h_v).le.(h_uw -hokwmin)) then
+          q_ueber(j) = huew(j) * wb(j) * g2 * (((huew(j) + h_v) /(1.+ K_verlust))  **0.5)
+          q_w(j) =  q_ueber(j)
         endif
 
  !     if (he_q.eq.hen1 .and. q_w(j).ge.q_wehr) then
@@ -913,7 +918,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
         tauu = (h_uw  - hokwmin) / hgrw (j)   !MD   Wasserstand DES Unterwassers - Wehrhoehe
         taoo = (huew (j) + h_v) / hgrw (j)    !MD   ENERGIEHÖHE DES OBERWASSERS an Wehrkrone
-        tauo = 3.286 - (1.905 * tauu)
+        tauo = 1.725 - (0.525 * tauu)         !MD  Grenzgerade f(tauu) vollk - unvollk
+        ! tauo = 3.286 - (1.905 * taoo)       !MD  Grenzgerade f(taoo) vollk - unvollk
 
         IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(/,''Berechnung der dimensionlosen Hoehen'')')
@@ -972,15 +978,16 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         ENDIF
 
         !MD  IF (tauo.ge.tauu .and. tauo.le.1.0) then
-        IF (tauu.lt.0.0) then  ! Wenn UW < Wehr-ok
+        IF (tauu.le.0.0) then  ! Wenn UW < Wehr-ok
+          iueart(j) = 0   !    VOLLKOMMENER UEBERFALL
+          GOTO 2031
+        ! ELSEIF (tauu.lt.2.0 .and. tauo.lt.tauu_grenz .and. tauu.le.tauo) then
+        ELSEIF (tauo.lt.tauu_grenz .and. tauu.lt.tauu_grenz) then
           iueart(j) = 0   !    VOLLKOMMENER UEBERFALL
           GOTO 2031
 
-        ELSEIF (tauu.lt.2.0 .and.tauo.lt.tauu_grenz .and. tauu.le.tauo) then
-          iueart(j) = 0   !    VOLLKOMMENER UEBERFALL
-          GOTO 2031
-
-        ELSEIF (tauu.lt.2.0 .and. tauu.gt.tauo .and. taoo.lt.tauu) then
+        ! ELSEIF (tauu.lt.2.0 .and. tauu.gt.tauo .and. taoo.lt.tauu) then
+        ELSEIF (tauu.lt.2.0 .and. taoo.lt.2) then
           iueart(j) = 1   !    UNVOLLKOMMENER UEBERFALL
 
           WRITE (UNIT_OUT_LOG, '(/,''Unvollkommener Ueberfall'')')
@@ -1026,12 +1033,15 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         end if
 
         if ((h_uw - hokwmin).gt.0.0) then
-           q_w(j) = huew(j) * wb(j) * g2* ((huew(j) + h_v - (h_uw - hokwmin)) **0.5)
+          q_w(j) = huew(j) * wb(j) * g2* ((huew(j) + h_v - (h_uw - hokwmin)) **0.5)
         endif
 
-        IF (K_verlust.gt.0.0) then
-           q_ueber(j) = huew(j) * wb(j) * g2 * (((huew(j) + h_v - (h_uw - hokwmin)) /(1. + K_verlust))  **0.5)
-           q_w(j) =  q_ueber(j)
+        IF (K_verlust.gt.0.0 .and. (huew(j) +h_v).gt.(h_uw -hokwmin)) then
+          q_ueber(j) = huew(j) * wb(j) * g2 * (((huew(j) + h_v - (h_uw - hokwmin)) /(1. + K_verlust))  **0.5)
+          q_w(j) =  q_ueber(j)
+        ELSEIF (K_verlust.gt.0.0 .and. (huew(j) +h_v).le.(h_uw -hokwmin)) then
+          q_ueber(j) = huew(j) * wb(j) * g2 * (((huew(j) + h_v) /(1.+ K_verlust))  **0.5)
+          q_w(j) =  q_ueber(j)
         endif
 
   !    if (he_q.eq.hen1 .and. q_w(j).ge.q_wehr) then
@@ -1279,7 +1289,9 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
       tauu = (h_uw - hokwmin) / hgrw (j)      !MD   Wasserstand DES Unterwassers - Wehrhoehe
       taoo = (huew (j) + h_v ) / hgrw (j)     !MD   ENERGIEHÖHE DES OBERWASSERS an Wehrkrone
-      tauo = 3.286 - (1.905 * tauu)
+      tauo = 1.725 - (0.525 * tauu)
+    ! tauo = 3.286 - (1.905 * taoo)
+
       IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(/,''Berechnung der dimensionlosen Hoehen'')')
         WRITE (UNIT_OUT_LOG, '(/,''j='',i3,'' tauu='',f8.4,'' taoo='',f8.4)') j, tauu, taoo
@@ -1308,12 +1320,6 @@ DO 1000 WHILE(dif_e.gt.0.0001)
           GOTO 2043       !JK  Weiter ZU UEBERSTROEMEN
         end if
 
-        !HW    SCHREIBEN IN KONTROLLFILE
-  !      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
-  !        WRITE (UNIT_OUT_LOG, '(/,''Grenzwert für überströmen nach Imp.bilanz'')')
-  !        WRITE (UNIT_OUT_LOG, '(''taugrenz = '',f8.4)') taugrenz
-  !      ENDIF
-  !
   !      !HW    Kontrolle der Abflussart bei breitkronigem Wehr mit taugrenz
   !      IF (tauu .gt. taugrenz) then
   !        iueart(j) = 2   !    Ueberstroemen
@@ -1342,15 +1348,17 @@ DO 1000 WHILE(dif_e.gt.0.0001)
       ENDIF
 
       !MD  IF (tauo.ge.tauu .and. tauo.le.1.0) then
-      IF (tauu.lt.0.0) then  ! Wenn UW < Wehr-ok
+      IF (tauu.le.0.0) then  ! Wenn UW < Wehr-ok
         iueart(j) = 0   !    VOLLKOMMENER UEBERFALL
         GOTO 2033
 
-      ELSEIF (tauu.lt.2.0 .and. tauo.lt.tauu_grenz .and. tauu.le.tauo) then
+      ! ELSEIF (tauu.lt.2.0 .and. tauo.lt.tauu_grenz .and. tauu.le.tauo) then
+      ELSEIF (tauo.lt.tauu_grenz .and. tauu.lt.tauu_grenz) then
         iueart(j) = 0   !    VOLLKOMMENER UEBERFALL
         GOTO 2033
 
-      ELSEIF (tauu.lt.2.0 .and. tauu.gt.tauo .and. taoo.lt.tauu) then
+      ! ELSEIF (tauo.ge.tauu_grenz .and. tauu.lt.2.0) then
+      ELSEIF (tauu.lt.2.0 .and. taoo.lt.2) then
         iueart(j) = 1   !    UNVOLLKOMMENER UEBERFALL
 
         WRITE (UNIT_OUT_LOG, '(/,''Unvollkommener Ueberfall'')')
@@ -1400,8 +1408,11 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         q_w(j) = huew(j) * wb(j) * g2* ((huew(j) + h_v - (h_uw - hokwmin)) **0.5)
       endif
 
-      IF (K_verlust.gt.0.0) then
+      IF (K_verlust.gt.0.0 .and. (huew(j) +h_v).gt.(h_uw -hokwmin)) then
         q_ueber(j) = huew(j) * wb(j) * g2 * (((huew(j) + h_v - (h_uw - hokwmin)) /(1. + K_verlust))  **0.5)
+        q_w(j) =  q_ueber(j)
+      ELSEIF (K_verlust.gt.0.0 .and. (huew(j) +h_v).le.(h_uw -hokwmin)) then
+        q_ueber(j) = huew(j) * wb(j) * g2 * (((huew(j) + h_v) /(1.+ K_verlust))  **0.5)
         q_w(j) =  q_ueber(j)
       endif
 
@@ -1486,6 +1497,9 @@ DO 5000 j = 1, nwfd
 
     WRITE (UNIT_OUT_QWEHR, '(1x,F10.4,4F10.3,3x,a)')  &
        & stat (np), qw, q_w (j), h_ow, h_uw, uearttxt
+
+    WRITE (UNIT_OUT_HEWEHR, '(1x,F10.4,4F10.3,3x,a)')  &
+       & stat (np), qw, q_w (j), he, hen1, uearttxt
   endif
 
 5000 END DO
