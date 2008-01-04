@@ -171,7 +171,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setParentElement(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
-  public void setParentElement( IFeatureWrapper2 parentElement )
+  public void setParentElement( final IFeatureWrapper2 parentElement )
   {
     if( parentElement == null )
       return;
@@ -213,6 +213,21 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   public List<String> getParentCalculationUnitIDs( )
   {
     return (List<String>) getFeature().getProperty( IBoundaryCondition.PROP_PARENT_CALCULATION_UNIT );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#isMemberOf(java.lang.String)
+   */
+  public boolean isMemberOf( final String calculationUnitId )
+  {
+    final List<String> parentCalculationUnits = getParentCalculationUnitIDs();
+    for( final String parentCalculationUnit : parentCalculationUnits )
+    {
+      if( calculationUnitId.equals( parentCalculationUnit ) )
+        return true;
+    }
+
+    return false;
   }
 
 }

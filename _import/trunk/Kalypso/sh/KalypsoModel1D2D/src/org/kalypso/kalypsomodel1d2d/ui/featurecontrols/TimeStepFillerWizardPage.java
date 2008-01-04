@@ -75,7 +75,6 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
   private Text m_dateTimeTo;
 
   private Text m_dateTimeStep;
-  
 
   private int timeStep_val;
 
@@ -104,10 +103,10 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-    Composite container = new Composite( parent, SWT.NULL );
-    GridLayout gridLayout = new GridLayout();
+    final Composite container = new Composite( parent, SWT.NULL );
+    final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     container.setLayout( gridLayout );
     setControl( container );
@@ -123,7 +122,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     m_dateTimeFrom = new Text( container, SWT.BORDER );
     m_dateTimeFrom.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         try
         {
@@ -132,16 +131,17 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
           {
             setMessage( null );
             setErrorMessage( "Startdatum nach Enddatum nicht möglich." );
-            setPageComplete(false);
+            setPageComplete( false );
           }
-          else {
+          else
+          {
             setMessage( null );
-            setErrorMessage(null);
-            setPageComplete( true );  
+            setErrorMessage( null );
+            setPageComplete( true );
           }
-          
+
         }
-        catch( ParseException e1 )
+        catch( final ParseException e1 )
         {
           // m_diagView.removeAllItems();
           setPageComplete( false );
@@ -161,7 +161,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( getShell(), m_dateFrom );
         if( calendarDialog.open() == Window.OK )
@@ -172,14 +172,14 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
       }
     } );
 
-    Label bisLbl = new Label( container, SWT.NONE );
+    final Label bisLbl = new Label( container, SWT.NONE );
     bisLbl.setLayoutData( gridBeginning );
     bisLbl.setText( "Bis:" );
 
     m_dateTimeTo = new Text( container, SWT.BORDER );
     m_dateTimeTo.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         try
         {
@@ -190,13 +190,14 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
             setErrorMessage( "Enddatum vor Startdatum nicht möglich." );
             setPageComplete( false );
           }
-          else {
+          else
+          {
             setMessage( null );
-            setErrorMessage(null);
+            setErrorMessage( null );
             setPageComplete( true );
           }
         }
-        catch( ParseException e1 )
+        catch( final ParseException e1 )
         {
           setPageComplete( false );
         }
@@ -215,7 +216,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         final SWTCalendarDialog calendarDialog = new SWTCalendarDialog( getShell(), m_dateTo );
 
@@ -227,26 +228,27 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
       }
     } );
 
-    Label timeStepLbl = new Label( container, SWT.NONE );
+    final Label timeStepLbl = new Label( container, SWT.NONE );
     timeStepLbl.setLayoutData( gridBeginning );
     timeStepLbl.setText( "Zeitschritt [min]:" );
 
     m_dateTimeStep = new Text( container, SWT.BORDER );
     m_dateTimeStep.addModifyListener( new ModifyListener()
-       {
-      public void modifyText( ModifyEvent e )
-      {    
-        String numberPattern = "\\d+";
+    {
+      public void modifyText( final ModifyEvent e )
+      {
+        final String numberPattern = "\\d+";
         if( !m_dateTimeStep.getText().matches( numberPattern ) )
         {
           setMessage( null );
           setErrorMessage( "Falsch Parameter" );
           setPageComplete( false );
         }
-        else {
+        else
+        {
           timeStep_val = Integer.parseInt( m_dateTimeStep.getText() );
           setMessage( null );
-          setErrorMessage(null);
+          setErrorMessage( null );
           setPageComplete( true );
         }
       }
@@ -259,40 +261,44 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     emptylabel_1.setLayoutData( gridEnd );
     emptylabel_1.setText( "" );
 
-    Label uRelFactorLabel = new Label( container, SWT.NONE );
+    final Label uRelFactorLabel = new Label( container, SWT.NONE );
     uRelFactorLabel.setLayoutData( gridBeginning );
     uRelFactorLabel.setText( "Relaxationsfaktor [-]:" );
 
-    m_uRelFactorCombo = new Combo( container, SWT.NONE );
+    m_uRelFactorCombo = new Combo( container, SWT.DROP_DOWN | SWT.READ_ONLY );
+    // TODO: do not use Combo; use ComvoViewer instead!
     final String possibleURFValues[] = { "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0" };
     m_uRelFactorCombo.setItems( possibleURFValues );
     m_uRelFactorCombo.select( 9 );
     m_uRelFactor = 1.0;
     m_uRelFactorCombo.setLayoutData( gridFillHorizontal );
-    m_uRelFactorCombo.addModifyListener( new ModifyListener() {
-      public void modifyText( ModifyEvent e )
+    m_uRelFactorCombo.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( final ModifyEvent e )
       {
-        String comboPattern = "0.1|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.0";
-        if(!m_uRelFactorCombo.getText().matches( comboPattern )) {
+        final String comboPattern = "0.1|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.0";
+        if( !m_uRelFactorCombo.getText().matches( comboPattern ) )
+        {
           setMessage( null );
           setErrorMessage( "Falsch Relaxation Factor" );
-          setPageComplete( false );          
+          setPageComplete( false );
         }
-        else {
-          m_uRelFactor = Double.parseDouble(m_uRelFactorCombo.getText() );
+        else
+        {
+          m_uRelFactor = Double.parseDouble( m_uRelFactorCombo.getText() );
           setMessage( null );
-          setErrorMessage(null);
+          setErrorMessage( null );
           setPageComplete( true );
-        }       
-      }      
-    });
+        }
+      }
+    } );
     final Label emptylabel_2 = new Label( container, SWT.NONE );
     emptylabel_2.setLayoutData( gridEnd );
     emptylabel_2.setText( "" );
     container.layout();
   }
 
-  public void init( IStructuredSelection initialSelection )
+  public void init( final IStructuredSelection initialSelection )
   {
     // TODO Auto-generated method stub
 
@@ -322,7 +328,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
-  public void widgetDefaultSelected( SelectionEvent e )
+  public void widgetDefaultSelected( final SelectionEvent e )
   {
     //
   }
@@ -330,9 +336,9 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
-  public void widgetSelected( SelectionEvent e )
+  public void widgetSelected( final SelectionEvent e )
   {
-    Widget w = e.widget;
+    final Widget w = e.widget;
     if( w instanceof Combo )
     {
       m_uRelFactor = Double.parseDouble( m_uRelFactorCombo.getText() );

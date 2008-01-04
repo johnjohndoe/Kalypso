@@ -61,6 +61,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
@@ -70,16 +71,17 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -100,28 +102,32 @@ public class ProcessResultsJob extends Job
 
   private final File m_inputFile;
 
-  private final ISimulationDataProvider m_dataProvider;
-
-  private static RMA10Calculation m_calculation;
-
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
 
-  private final int m_timeStepNr;
-
-  private static List<TYPE> m_parameters;
+  private List<TYPE> m_parameters;
 
   private final IStepResultMeta m_stepResultMeta;
 
-  public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final List<ResultType.TYPE> parameter, final int timeStepNr, final ICalcUnitResultMeta unitResultMeta )
+  private final IFlowRelationshipModel m_flowModel;
+
+  private final IControlModel1D2D m_controlModel;
+
+  private final Date m_stepDate;
+
+  /**
+   * @param stepDate
+   *            The date which is determined by the result file name (i.e. step-number) and the control timeseries.
+   */
+  public ProcessResultsJob( final File inputFile, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
   {
     super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
 
     m_inputFile = inputFile;
     m_outputDir = outputDir;
-    m_dataProvider = dataProvider;
-    m_calculation = calculation;
+    m_flowModel = flowModel;
+    m_controlModel = controlModel;
     m_parameters = parameter;
-    m_timeStepNr = timeStepNr;
+    m_stepDate = stepDate;
     m_stepResultMeta = unitResultMeta.addStepResult();
   }
 
@@ -129,25 +135,31 @@ public class ProcessResultsJob extends Job
    * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  public IStatus run( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Processing result file: " + m_inputFile.getName(), 10 );
+    final String timeStepName;
+    if( m_stepDate == ResultManager.STEADY_DATE )
+      timeStepName = "stationärer Rechenlauf";
+    else if( m_stepDate == ResultManager.MAXI_DATE )
+      timeStepName = "Maximalwerte";
+    else
+      timeStepName = String.format( "Zeitschritt - %1$te.%1$tm.%1$tY %1$tH:%1$tM", m_stepDate );
+
+    monitor.beginTask( "Ergebnisse werden ausgewertet - " + timeStepName, 10 );
+    monitor.subTask( "Ergebnisse werden ausgewertet - " + timeStepName );
 
     try
     {
       /* Zip .2d file to outputDir */
-      final File exeLog = new File( m_inputFile.getParentFile().toString() + "/exe.log" );
-      final File exeErr = new File( m_inputFile.getParentFile().toString() + "/exe.err" );
-      final File outputOut = new File( m_inputFile.getParentFile().toString() + "/result/Output.out" );
-      final File[] files = new File[] { m_inputFile };// , exeLog, exeErr, outputOut };
+      final File[] files = new File[] { m_inputFile };
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
       ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
       ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null );
 
-      monitor.worked( 1 );
+      ProgressUtilities.worked( monitor, 1 );
 
       /* Read into NodeResults */
-      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider, m_resultMinMaxCatcher, m_timeStepNr, m_stepResultMeta );
+      read2DIntoGmlResults();
     }
     catch( final Throwable e )
     {
@@ -157,25 +169,17 @@ public class ProcessResultsJob extends Job
     return Status.OK_STATUS;
   }
 
-  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final NodeResultMinMaxCatcher minMaxCatcher, final int timeStepNum, final IStepResultMeta stepResultMeta ) throws Exception
+  public File read2DIntoGmlResults( ) throws Exception
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
-    if( dataProvider != null )
-    {
-      /* Write template sld into result folder */
-      final URL resultStyleURL = (URL) dataProvider.getInputForID( "ResultStepTemplate" );
-      if( resultStyleURL != null )
-        ZipUtilities.unzip( resultStyleURL, outputDir );
-    }
-
-    final File gmlResultFile = new File( outputDir, "results.gml" );
-    final File lsObsFile = new File( outputDir, "lengthSection.gml" );
+    final File gmlResultFile = new File( m_outputDir, "results.gml" );
+    final File lsObsFile = new File( m_outputDir, "lengthSection.gml" );
 
     InputStream is = null;
     try
     {
-      is = new FileInputStream( result2dFile );
+      is = new FileInputStream( m_inputFile );
 
       /* GMLWorkspace für Ergebnisse anlegen */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlResultFile.toURL(), null );
@@ -209,7 +213,7 @@ public class ProcessResultsJob extends Job
         if( parameter == ResultType.TYPE.TERRAIN )
         {
           /* create TIN-Dir for FEM terrain model */
-          final String calcUnitPath = outputDir.getParent();
+          final String calcUnitPath = m_outputDir.getParent();
 
           final File modelPath = new File( calcUnitPath, "model" );
           if( !modelPath.exists() )
@@ -233,7 +237,7 @@ public class ProcessResultsJob extends Job
         else
         {
           /* create TIN-Dir for results */
-          final File tinPath = new File( outputDir, "Tin" );
+          final File tinPath = new File( m_outputDir, "Tin" );
           tinPath.mkdirs();
 
           final File tinResultFile = new File( tinPath, "tin.gml" );
@@ -277,11 +281,11 @@ public class ProcessResultsJob extends Job
         }
       }
 
-      final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation, minMaxCatcher, lsObs );
+      final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_flowModel, m_controlModel, m_resultMinMaxCatcher, lsObs );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( "Starte Auswertung (" + result2dFile.getName() + ") : " );
+      logger.printCurrentInterim( "Starte Auswertung (" + m_inputFile.getName() + ") : " );
 
       conv.parse( is );
 
@@ -320,7 +324,7 @@ public class ProcessResultsJob extends Job
         {
           case TERRAIN:
 
-            final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) stepResultMeta.getParent();
+            final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) m_stepResultMeta.getParent();
 
             final IFeatureWrapperCollection<IResultMeta> children = calcUnitResult.getChildren();
 
@@ -340,8 +344,8 @@ public class ProcessResultsJob extends Job
             /* if not, add it */
             if( terrainExists == false )
             {
-              min = new BigDecimal( minMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              max = new BigDecimal( minMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+              min = new BigDecimal( m_resultMinMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+              max = new BigDecimal( m_resultMinMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               ResultMeta1d2dHelper.addDocument( calcUnitResult, "Modellhöhen", "TIN der Modellhöhen", IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.gml" ), Status.OK_STATUS, min, max );
             }
 
@@ -349,32 +353,32 @@ public class ProcessResultsJob extends Job
 
           case DEPTH:
 
-            min = new BigDecimal( minMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            max = new BigDecimal( minMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( stepResultMeta, "Fließtiefen", "TIN der Fließtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
+            min = new BigDecimal( m_resultMinMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( m_resultMinMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Fließtiefen", "TIN der Fließtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
             break;
 
           case VELOCITY:
 
-            min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            max = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( stepResultMeta, "Geschwindigkeiten", "TIN der tiefengemittelten Fließgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
+            min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Geschwindigkeiten", "TIN der tiefengemittelten Fließgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
           case WATERLEVEL:
 
-            min = new BigDecimal( minMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            max = new BigDecimal( minMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( stepResultMeta, "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max );
+            min = new BigDecimal( m_resultMinMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( m_resultMinMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
           case SHEARSTRESS:
 
-            min = new BigDecimal( minMaxCatcher.getMinShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            max = new BigDecimal( minMaxCatcher.getMaxShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( stepResultMeta, "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max );
+            min = new BigDecimal( m_resultMinMaxCatcher.getMinShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( m_resultMinMaxCatcher.getMaxShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
@@ -383,16 +387,16 @@ public class ProcessResultsJob extends Job
         }
       }
 
-      min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      max = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      ResultMeta1d2dHelper.addDocument( stepResultMeta, "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, min, max );
+      min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, min, max );
 
       /* length section entry in result db */
       if( lsObs.getResult().size() > 0 )
       {
         min = new BigDecimal( 0 );
         max = new BigDecimal( 0 );
-        ResultMeta1d2dHelper.addDocument( stepResultMeta, "Längsschnitt", "1d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
+        ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Längsschnitt", "1d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
       }
 
       /* HMO(s) */
@@ -403,7 +407,10 @@ public class ProcessResultsJob extends Job
        */
 
       final Date time = handler.getTime();
-      addToResultDB( stepResultMeta, timeStepNum, outputDir, time );
+
+      // TODO: maybe check if time and stepTime are equal?
+
+      addToResultDB( m_stepResultMeta, m_stepDate, m_outputDir, time );
 
       return gmlResultFile;
     }
@@ -416,43 +423,34 @@ public class ProcessResultsJob extends Job
     }
   }
 
-  private static void addToResultDB( final IStepResultMeta stepResultMeta, final int timeStepNum, final File outputDir, final Date time )
+  private static void addToResultDB( final IStepResultMeta stepResultMeta, final Date stepDate, final File outputDir, final Date time )
   {
     // TODO: retrieve time zone from central plugin preferences
     final DateFormat dateFormatter = DateFormat.getDateTimeInstance();
 
-    if( outputDir.getName().equals( "steady" ) && timeStepNum == -1 )
+    if( ResultManager.STEADY_DATE.equals( stepDate ) )
     {
       stepResultMeta.setName( "stationär" );
       stepResultMeta.setDescription( "stationärer Rechenlauf" );
       stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.steady );
+      stepResultMeta.setStepTime( null );
     }
-    else if( timeStepNum != -1 )
+    else if( ResultManager.MAXI_DATE.equals( stepDate ) )
     {
-      final String dateString = dateFormatter.format( time );
-      stepResultMeta.setName( String.format( "Zeitschritt %s (%s)", timeStepNum, dateString ) );
-      stepResultMeta.setDescription( "instationärer Rechenlauf zum Zeitpunkt: " + dateString );
-      stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.unsteady );
+      stepResultMeta.setName( "Maximalwerte" );
+      stepResultMeta.setDescription( "Maximalwerte des intationären Rechenlaufs" );
+      stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.maximum );
+      stepResultMeta.setStepTime( null );
     }
     else
     {
-      if( outputDir.getName().equals( "mini" ) )
-      {
-        /*
-         * stepResultMeta.setName( "Minimalwerte" ); stepResultMeta.setDescription( "Minimalwerte des intationären
-         * Rechenlaufs" ); stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.min );
-         */
-      }
-      else if( outputDir.getName().equals( "maxi" ) )
-      {
-        stepResultMeta.setName( "Maximalwerte" );
-        stepResultMeta.setDescription( "Maximalwerte des intationären Rechenlaufs" );
-        stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.maximum );
-      }
+      final String dateString = dateFormatter.format( time );
+      stepResultMeta.setName( String.format( "Zeitschritt (%s)", dateString ) );
+      stepResultMeta.setDescription( "instationärer Rechenlauf zum Zeitpunkt: " + dateString );
+      stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.unsteady );
+      stepResultMeta.setStepTime( time );
     }
 
-    stepResultMeta.setStepTime( time );
-    stepResultMeta.setStepNumber( timeStepNum );
     stepResultMeta.setPath( new Path( outputDir.getName() ) );
   }
 

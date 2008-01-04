@@ -2,13 +2,6 @@
 <?eclipse version="3.0"?>
 <plugin>
      <extension
-           point="org.kalypso.simulation.core.simulation">
-        <simulation
-              catalogClass="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
-              simulationClass="org.kalypso.kalypsomodel1d2d.sim.SimMode1D2DCalcJob"
-              typeID="KalypsoModel1D2D"/>
-     </extension>
-     <extension
            point="org.kalypso.contribs.java.urlCatalog">
         <catalog
               class="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
@@ -811,24 +804,7 @@
            </command>
         </menuContribution>
      </extension>
-  <extension
-        point="org.eclipse.ui.popupMenus">
-     <objectContribution
-           id="org.kalypso.kalypsomodel1d2d.objectContribution.discretisationmodel"
-           objectClass="org.kalypsodeegree.model.feature.Feature">
-        <filter
-              name="featureType"
-              value="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d#DiscretisationModel">
-        </filter>
-        <action
-              class="org.kalypso.kalypsomodel1d2d.actions.ExportDiscrModelaction"
-              icon="icons/obj16/DiscrModelExport.gif"
-              id="org.kalypso.kalypsomodel1d2d.discretisationmodel.action"
-              label="Modell exportieren"
-              tooltip="exportiert das DiscretisationModel">
-        </action>
-     </objectContribution>
-  </extension>
+
   <extension
         point="org.eclipse.core.expressions.definitions">
      <definition

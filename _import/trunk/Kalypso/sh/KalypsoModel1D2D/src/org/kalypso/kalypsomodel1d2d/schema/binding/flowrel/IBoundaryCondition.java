@@ -93,6 +93,8 @@ public interface IBoundaryCondition extends IFlowRelationship
   public String getParentElementID( );
 
   public String getTypeByLocation( );
-  
-  public List<String> getParentCalculationUnitIDs();
+
+  public List<String> getParentCalculationUnitIDs( );
+
+  public boolean isMemberOf( final String calculationUnitId );
 }

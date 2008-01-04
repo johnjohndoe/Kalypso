@@ -61,15 +61,6 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#getStepNumber()
-   */
-  public Integer getStepNumber( )
-  {
-    // may be null for 'steady' or 'max' steps.
-    return (Integer) getFeature().getProperty( QNAME_PROP_STEP_NUMBER );
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#getStepTime()
    */
   public Date getStepTime( )
@@ -101,14 +92,6 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   public void setRestart( final boolean setRestart )
   {
     getFeature().setProperty( QNAME_PROP_STEP_IS_RESTART, setRestart );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#setStepNumber(int)
-   */
-  public void setStepNumber( final Integer stepNumber )
-  {
-    getFeature().setProperty( QNAME_PROP_STEP_NUMBER, stepNumber );
   }
 
   /**

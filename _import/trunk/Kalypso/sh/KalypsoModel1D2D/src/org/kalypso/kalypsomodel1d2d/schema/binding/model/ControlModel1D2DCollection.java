@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -53,6 +51,7 @@ import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -66,12 +65,12 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class ControlModel1D2DCollection extends FeatureWrapperCollection<IControlModel1D2D> implements IControlModel1D2DCollection
 {
-  public ControlModel1D2DCollection( Feature featureCol )
+  public ControlModel1D2DCollection( final Feature featureCol )
   {
     this( featureCol, IControlModel1D2D.class, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
   }
 
-  public ControlModel1D2DCollection( Feature featureCol, Class<IControlModel1D2D> fwClass, QName featureMemberProp )
+  public ControlModel1D2DCollection( final Feature featureCol, final Class<IControlModel1D2D> fwClass, final QName featureMemberProp )
   {
     super( featureCol, fwClass, featureMemberProp );
   }
@@ -101,19 +100,12 @@ public class ControlModel1D2DCollection extends FeatureWrapperCollection<IContro
    */
   public IControlModel1D2D getActiveControlModel( )
   {
-    final Feature feature = getFeature();
-    final Object activeModelID = feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL );
-    if( activeModelID == null )
+    final Object activeModelID = getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL, Object.class );
+    final Feature feature = FeatureHelper.getFeature( getFeature().getWorkspace(), activeModelID );
+    if( feature == null )
       return null;
-    final String activeModelGmlID = activeModelID.toString();
-    final List<Feature> controlModels = (List<Feature>) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
-    for( final Feature modelFeature : controlModels )
-    {
-      final IControlModel1D2D model = (IControlModel1D2D) modelFeature.getAdapter( IControlModel1D2D.class );
-      if( model != null && model.getCalculationUnit() != null && model.getCalculationUnit().getGmlID().equals( activeModelGmlID ) )
-        return model;
-    }
-    return null;
+
+    return (IControlModel1D2D) feature.getAdapter( IControlModel1D2D.class );
   }
 
 }

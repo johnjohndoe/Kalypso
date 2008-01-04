@@ -125,18 +125,18 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return getStartCalendar().getYear();
   }
 
-  public Integer getIaccyc( )
+  public int getIaccyc( )
   {
-    final Integer propertyValue;
-    final Object property = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC );
-    if( property instanceof BigInteger )
-      propertyValue = ((BigInteger) property).intValue();
-    else
-      propertyValue = (Integer) property;
+    // REMARK: do not change the value here, this is DANGEROUS!
+    // This class is just the binding class and should not decide what to do about its data...
+
+    final BigInteger propertyValue = getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC, BigInteger.class );
+
+    // DANGEROUS: does the user get some warning, that he has chosen restart but it is ignored? I think not...
     if( propertyValue != null && getRestart() && !isSteadySelected() && isUnsteadySelected() )
-      return propertyValue;
-    else
-      return 0;
+      return propertyValue.intValue();
+
+    return 0;
   }
 
   public boolean getRestart( )

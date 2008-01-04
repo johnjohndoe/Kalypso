@@ -48,44 +48,62 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.simulation.core.ISimulationDataProvider;
-import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
- * This runnable will be called while running the 2d-exe and will check for new .2d result files.
- * <p>
+ * This runnable will be called while running the 2d-exe and will check for new .2d result files.<br>
  * Every new 2d result file we be processed in order to return it to the kalypso client.
- * </p>
- * TODO: - write System.out in simulation-log
  * 
  * @author Gernot Belger
  */
-public class ResultManager implements Runnable
+public class ResultManager
 {
-  private final static MutexRule m_mutex = new MutexRule();
+  public static final Date STEADY_DATE = new Date( 0 );
+
+  public static final Date MAXI_DATE = new Date( 1 );
 
   private static final FilenameFilter FILTER_2D = new PrefixSuffixFilter( "", ".2d" );
 
@@ -94,9 +112,7 @@ public class ResultManager implements Runnable
    */
   private static final int PSEUDO_TIME_STEP_NR = -1;
 
-  private final List<File> m_found2dFiles = new ArrayList<File>();
-
-  private final List<Job> m_resultJobs = new ArrayList<Job>();
+  private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
 
   private final File m_outputDir;
 
@@ -104,241 +120,304 @@ public class ResultManager implements Runnable
 
   private final Pattern m_resultFilePattern;
 
-  private final ISimulationDataProvider m_dataProvider;
-
-  private final RMA10Calculation m_calculation;
-
-  private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
-
-  private final ICalcUnitResultMeta m_calcUnitResultMeta;
-
-  /* just for test purposes */
+  /* just for test purposes TODO: still? */
   private final List<ResultType.TYPE> m_parameters = new ArrayList<ResultType.TYPE>();
+
+  private final Date m_startTime;
+
+  private final IGeoLog m_geoLog;
+
+  private final ICaseDataProvider<IModel> m_caseDataProvider;
+
+  private final IFolder m_resultFolder;
+
+  public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final Date startTime, final ICaseDataProvider<IModel> caseDataProvider, final IFolder resultFolder, final IGeoLog geoLog )
   {
+    m_caseDataProvider = caseDataProvider;
+    m_resultFolder = resultFolder;
+    m_inputDir = inputDir;
+    m_outputDir = outputDir;
+
+    m_startTime = startTime;
+    m_geoLog = geoLog;
+    m_resultFilePattern = Pattern.compile( resultFilePattern + "(\\d+)" );
+
     m_parameters.add( ResultType.TYPE.DEPTH );
     m_parameters.add( ResultType.TYPE.WATERLEVEL );
     m_parameters.add( ResultType.TYPE.VELOCITY );
     m_parameters.add( ResultType.TYPE.TERRAIN );
   }
 
-  private final IJobChangeListener m_finishListener = new JobChangeAdapter()
+  public IStatus process( final boolean deleteAll, final boolean deleteFollowers, final Date[] steps, final IProgressMonitor monitor ) throws CoreException
   {
-    /**
-     * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void done( final IJobChangeEvent event )
+    final IControlModel1D2D controlModel = m_caseDataProvider.getModel( IControlModelGroup.class ).getModel1D2DCollection().getActiveControlModel();
+    final IFlowRelationshipModel flowModel = m_caseDataProvider.getModel( IFlowRelationshipModel.class );
+    final IScenarioResultMeta scenarioResultMeta = m_caseDataProvider.getModel( IScenarioResultMeta.class );
+
+    final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisauswertung: " + controlModel.getName(), 100 );
+
+    /* Process Results */
+    final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
+
+    // Step 1: Delete existing results and save result-DB (in case of problems while processing)
+    deleteExistingResults( calculationUnit, steps, deleteAll, deleteFollowers, progress.newChild( 5 ) );
+
+    // Step 2: Process results and add new entries to result-DB
+    final IStatus processResultsStatus = processResults( controlModel, flowModel, scenarioResultMeta, progress.newChild( 90 ) );
+    m_geoLog.log( processResultsStatus );
+
+    if( processResultsStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
+      return processResultsStatus;
+
+    // TODO: handle the processResultStatus?
+    // show error message and ask user if result should be kept anyway?
+
+    // Step 3: Move results into workspace and save result-DB
+    return moveResults( m_outputDir, progress.newChild( 5 ) );
+  }
+
+  private IStatus moveResults( final File outputDir, final IProgressMonitor monitor )
+  {
+    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+    progress.subTask( "Ergebnisdaten werden in Arbeitsbereich verschoben..." );
+
+    try
     {
-      resultJobDone( event );
+      final File unitWorkspaceDir = m_resultFolder.getLocation().toFile();
+      FileUtils.forceMkdir( unitWorkspaceDir );
+      FileUtilities.moveContents( outputDir, unitWorkspaceDir );
+      ProgressUtilities.worked( progress, 70 );
+
+      m_resultFolder.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 20 ) );
+
+      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) );
+      m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 10 ) );
+
+      return Status.OK_STATUS;
     }
-  };
-
-  private boolean m_init = false;
-
-  private final List<String> m_ignoredFilenames = new ArrayList<String>();
-  {
-    m_ignoredFilenames.add( "mini.2d" );
-    m_ignoredFilenames.add( "maxi.2d" );
-  }
-
-  @SuppressWarnings("unchecked")
-  public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final Date startTime ) throws InvocationTargetException
-  {
-    m_inputDir = inputDir;
-    m_outputDir = outputDir;
-    m_dataProvider = dataProvider;
-    m_calculation = calculation;
-    m_resultFilePattern = Pattern.compile( resultFilePattern + "(\\d+)" );
-
-    /* GMLWorkspace für Ergebnisse anlegen */
-    final GMLWorkspace resultMetaWorkspace = FeatureFactory.createGMLWorkspace( ICalcUnitResultMeta.QNAME, null, null );
-    m_calcUnitResultMeta = (ICalcUnitResultMeta) resultMetaWorkspace.getRootFeature().getAdapter( ICalcUnitResultMeta.class );
-
-    final ICalculationUnit calculationUnit = calculation.getCalculationUnit();
-
-    m_calcUnitResultMeta.setCalcStartTime( startTime );
-    m_calcUnitResultMeta.setCalcUnit( calculationUnit.getGmlID() );
-    m_calcUnitResultMeta.setName( calculationUnit.getName() );
-    m_calcUnitResultMeta.setDescription( calculationUnit.getDescription() );
-    m_calcUnitResultMeta.setPath( new Path( outputDir.getName() ) );
-  }
-
-  /**
-   * Call this immediately before calculation starts.
-   */
-  public void calculationAboutToStart( )
-  {
-    m_init = true;
-
-    /* Filter existing .2d files at that point (filters out model.2d) */
-    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
-    m_found2dFiles.addAll( Arrays.asList( existing2dFiles ) );
-  }
-
-  /**
-   * This method should be run often during the real calculation (i.e. execution of the RMA10S.exe).
-   * <p>
-   * Each time, it is checked if new result files are present and if this is the case they are processed.
-   * </p>
-   * 
-   * @see java.lang.Runnable#run()
-   */
-  public void run( )
-  {
-    if( !m_init )
-      return;
-
-    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
-    for( final File file : existing2dFiles )
+    catch( final IOException e )
     {
-      /*
-       * check for already processed files and for min / max files (they have to processed at the end of the
-       * calculation)
-       */
-      if( !m_found2dFiles.contains( file ) && !m_ignoredFilenames.contains( file.getName() ) )
-        addResultFile( file );
+      return StatusUtilities.createStatus( IStatus.ERROR, "Ergebnisdateien konnten nicht in den Arbeitsbereich verschoben werden", e );
+    }
+    catch( final InvocationTargetException e )
+    {
+      return StatusUtilities.createStatus( IStatus.ERROR, "Ergebnisdateien konnten nicht in den Arbeitsbereich verschoben werden", e.getTargetException() );
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
     }
   }
 
-  private void addResultFile( final File file )
+  private IStatus deleteExistingResults( final ICalculationUnit calcUnit, final Date[] calculatedSteps, final boolean deleteAll, final boolean deleteFollowers, final IProgressMonitor monitor ) throws CoreException
   {
-    final String resultFileName = FileUtilities.nameWithoutExtension( file.getName() );
+    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+    progress.subTask( "Bestehende Ergebnisse werden gelöscht..." );
 
-    System.out.println( "Found new 2d-file: " + resultFileName );
-    // check for 2d files
+    final IScenarioResultMeta scenarioResultMeta = m_caseDataProvider.getModel( IScenarioResultMeta.class );
+    final ICalcUnitResultMeta calcUnitMeta = scenarioResultMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
 
+    /* If no results available yet, nothing to do. */
+    if( calcUnitMeta == null )
+      return Status.OK_STATUS;
+
+    final Date[] stepsToDelete = findStepsToDelete( calcUnitMeta, calculatedSteps, deleteAll, deleteFollowers );
+    ProgressUtilities.worked( progress, 5 );
+
+    final IStatus result = ResultMeta1d2dHelper.deleteResults( calcUnitMeta, stepsToDelete, progress.newChild( 90 ) );
+    if( !result.isOK() )
+      throw new CoreException( result );
+
+    /* Save result db */
+    try
+    {
+      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) );
+    }
+    catch( final InvocationTargetException e )
+    {
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Speichern der Ergebnisdatenbank", e.getTargetException() ) );
+    }
+
+    m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 5 ) );
+
+    return result;
+  }
+
+  private Date[] findStepsToDelete( final ICalcUnitResultMeta calcUnitMeta, final Date[] calculatedSteps, final boolean deleteAll, final boolean deleteFollowers )
+  {
+    final Date[] existingSteps = ResultMeta1d2dHelper.getStepDates( calcUnitMeta );
+
+    if( deleteAll )
+      return existingSteps;
+
+    final SortedSet<Date> dates = new TreeSet<Date>();
+
+    /* Always delete all calculated steps */
+    dates.addAll( Arrays.asList( calculatedSteps ) );
+
+    if( deleteFollowers )
+    {
+      /* Delete all steps later than the first calculated */
+      final Date firstCalculated = dates.first();
+      for( final Date date : existingSteps )
+      {
+        if( date.after( firstCalculated ) )
+          dates.add( date );
+      }
+    }
+
+    return dates.toArray( new Date[dates.size()] );
+  }
+
+  /* check for already processed files */
+  // TODO: care for status of each processed file -> step result status!
+  private IStatus processResultFile( final File file, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final ICalcUnitResultMeta calcUnitResultMeta, final IProgressMonitor monitor ) throws CoreException
+  {
+    try
+    {
+      final String filename = file.getName();
+
+      if( RMA10Calculation.MODEL_2D.equals( filename ) )
+        return Status.OK_STATUS;
+
+      final String resultFileName = FileUtilities.nameWithoutExtension( filename );
+
+      final Date stepDate = findStepDate( controlModel, resultFileName );
+      if( stepDate == null )
+        return Status.OK_STATUS;
+
+      m_geoLog.formatLog( IStatus.INFO, "Ergebnisauswertung - %s", resultFileName );
+
+      // start a job for each unknown 2d file.
+      final String outDirName;
+
+      if( stepDate == STEADY_DATE )
+        outDirName = "steady";
+      else if( stepDate == MAXI_DATE )
+        outDirName = "maxi";
+      else
+        outDirName = String.format( "timestep-%1$te.%1$tm.%1$tY_%1$tH#%1$tM", stepDate );
+
+      final File resultOutputDir = new File( m_outputDir, outDirName );
+      resultOutputDir.mkdirs();
+      final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, flowModel, controlModel, m_parameters, stepDate, calcUnitResultMeta );
+      final IStatus result = processResultsJob.run( monitor );
+
+      m_minMaxCatcher.addNodeResultMinMaxCatcher( processResultsJob.getMinMaxData() );
+
+      // TODO: set this status as step result status?
+
+      return result;
+    }
+    finally
+    {
+      ProgressUtilities.done( monitor );
+    }
+  }
+
+  private Date findStepDate( final IControlModel1D2D controlModel, final String resultFileName )
+  {
     // start a job for each unknown 2d file.
     final Matcher matcher = m_resultFilePattern.matcher( resultFileName );
-    final String outDirName;
-    final int timeStepNum;
     if( matcher.matches() )
     {
       final String countStr = matcher.group( 1 );
-      final int count = Integer.parseInt( countStr );
-      // TODO Please explain why x-1? In that case, we have timestep-0 instead to start from 1
+      final int step = Integer.parseInt( countStr );
 
-      outDirName = "timestep-" + countStr;
-      timeStepNum = count;
-    }
-    else
-    {
-      outDirName = resultFileName;
-      timeStepNum = PSEUDO_TIME_STEP_NR;
-    }
-
-    final File resultOutputDir = new File( m_outputDir, outDirName );
-    resultOutputDir.mkdirs();
-    final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation, m_parameters, timeStepNum, m_calcUnitResultMeta );
-    processResultsJob.addJobChangeListener( m_finishListener );
-
-    m_resultJobs.add( processResultsJob );
-
-    /* Schedule job: wait some time in order to make sure file was written to disk. */
-    processResultsJob.setRule( m_mutex );
-    processResultsJob.schedule( 1000 );
-
-    m_found2dFiles.add( file );
-  }
-
-  public Job[] getResultJobs( )
-  {
-    return m_resultJobs.toArray( new Job[m_resultJobs.size()] );
-  }
-
-  /** After calculation, wait until all result process jobs have finished. */
-  private IStatus waitForResultProcessing( )
-  {
-    // TODO: timeout
-    for( int i = 0; i < 1000; i++ )
-    {
-      try
-      {
-        final IStatus status = jobsFinished();
-        if( status != null )
-          return status;
-
-        Thread.sleep( 1000 );
-      }
-      catch( final InterruptedException e )
-      {
-        e.printStackTrace();
-      }
+      // find TIME
+      // final boolean isRestart = controlModel.getRestart();
+      // final Integer restartStep = controlModel.getIaccyc();
+      final IObservation<TupleResult> obs = controlModel.getTimeSteps();
+      final TupleResult timeSteps = obs.getResult();
+      final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+      final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
+      return DateUtilities.toDate( stepCal );
     }
 
-    // Timeout reached, produce error status
-    return StatusUtilities.createWarningStatus( "Zeitüberschreitung beim Prozessieren der Ergebnisdateien, möglicherweise können nicht lale Ergebnisdaten übertragen werden." );
+    if( resultFileName.startsWith( "steady" ) )
+      return STEADY_DATE;
+
+    if( resultFileName.startsWith( "maxi" ) )
+      return MAXI_DATE;
+
+    return null;
   }
 
-  /**
-   * Check if all jobs have finished. If this is thre case, return a multi status composed of all job-results.
-   * <p>
-   * If one or more jobs are not finished, returns <code>null</code>.
-   * </p>
-   */
-  private IStatus jobsFinished( )
+  private IStatus processResults( final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IScenarioResultMeta scenarioMeta, final IProgressMonitor monitor )
   {
-    final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), -1, "Ergebnisse der Ergebnisauswertung:", null );
-    for( final Job job : m_resultJobs )
-    {
-      final IStatus jobResult = job.getResult();
-      if( jobResult == null )
-        return null;
+    final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisse werden ausgewertet...", 1000 );
+    progress.subTask( "Ergebnisse werden ausgewertet..." );
 
-      status.add( jobResult );
-    }
-
-    return status;
-  }
-
-  protected void resultJobDone( final IJobChangeEvent event )
-  {
-    final ProcessResultsJob job = (ProcessResultsJob) event.getJob();
-    m_minMaxCatcher.addNodeResultMinMaxCatcher( job.getMinMaxData() );
-  }
-
-  public void finish( ) throws SimulationException
-  {
-    if( !m_init )
-      return;
-
-    /* Process all remaining .2d files. Now including min and max files */
-    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
-    for( final File file : existing2dFiles )
-    {
-      /* check for already processed files */
-      if( !m_found2dFiles.contains( file ) && !file.getName().equals( "mini.2d" ) )
-        addResultFile( file );
-    }
-
-    /* We need to wait until all result process jobs have finished. */
-    final IStatus resultProcessingStatus = waitForResultProcessing();
-    if( resultProcessingStatus != null )
-      System.out.println( resultProcessingStatus );
-    // TODO: evaluate status
-
-    /* other, general post-processing stuff. */
     try
     {
-      /* Write template sld into result folder */
-      // final URL resultStyleURL = (URL) m_dataProvider.getInputForID( "ResultTemplate" );
-      // ZipUtilities.unzip( resultStyleURL, m_outputDir );
-      // TODO: error handling! handle stati everywhere....
-      writeResultMeta( resultProcessingStatus );
+      /* Create meta result workspace */
+      final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
+      final ICalcUnitResultMeta existingCalcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
+      final ICalcUnitResultMeta calcUnitResultMeta;
+      if( existingCalcUnitMeta == null )
+        calcUnitResultMeta = scenarioMeta.getChildren().addNew( ICalcUnitResultMeta.QNAME, ICalcUnitResultMeta.class );
+      else
+        calcUnitResultMeta = existingCalcUnitMeta;
+
+      calcUnitResultMeta.setCalcStartTime( m_startTime );
+      calcUnitResultMeta.setCalcUnit( calculationUnit.getGmlID() );
+      calcUnitResultMeta.setName( calculationUnit.getName() );
+      calcUnitResultMeta.setDescription( calculationUnit.getDescription() );
+      calcUnitResultMeta.setPath( new Path( m_resultFolder.getName() ) );
+
+      ProgressUtilities.worked( monitor, 100 );
+
+      /* Process all remaining .2d files. Now including min and max files */
+      final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+      progress.setWorkRemaining( existing2dFiles.length );
+
+      final IStatus[] fileStati = new IStatus[existing2dFiles.length];
+
+      for( int i = 0; i < fileStati.length; i++ )
+      {
+        final File file = existing2dFiles[i];
+        fileStati[i] = processResultFile( file, controlModel, flowModel, calcUnitResultMeta, progress.newChild( 1 ) );
+      }
+
+      // TODO: this calcUnitStatus is quite important: we should see to it, that it contains some meaningful message to
+      // the user Probably it should only be set after everything has finished?
+      // TODO: also consider calculation problems
+      final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), -1, "", null );
+      // TODO: distinguish between problems during calculation and problems during processing
+      final IStatus calcUnitStatus = StatusUtilities.createStatus( multiStatus.getSeverity(), "", null );
+
+      calcUnitResultMeta.setCalcEndTime( new Date() );
+      calcUnitResultMeta.setStatus( calcUnitStatus );
+
+      return multiStatus;
+    }
+    catch( final OperationCanceledException e )
+    {
+      return StatusUtilities.createStatus( IStatus.CANCEL, "Abbruch durch den Benutzer", e );
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
     }
     catch( final Throwable e )
     {
-      e.printStackTrace();
-      throw new SimulationException( "Fehler bei der Ergebnisauswertung", e );
+      return StatusUtilities.createStatus( IStatus.ERROR, "Unbekannter Fehler", e );
     }
   }
 
-  private void writeResultMeta( final IStatus resultStatus ) throws IOException, GmlSerializeException
+  public Date[] getCalculatedSteps( ) throws CoreException
   {
-    m_calcUnitResultMeta.setCalcEndTime( new Date() );
-    m_calcUnitResultMeta.setStatus( resultStatus );
+    final IControlModel1D2D controlModel = m_caseDataProvider.getModel( IControlModelGroup.class ).getModel1D2DCollection().getActiveControlModel();
 
-    final GMLWorkspace workspace = m_calcUnitResultMeta.getWrappedFeature().getWorkspace();
-    final File metaFile = new File( m_outputDir, "resultMeta.gml" );
-    GmlSerializer.serializeWorkspace( metaFile, workspace, "UTF-8" );
+    final Set<Date> dates = new TreeSet<Date>();
+    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+    for( final File file : existing2dFiles )
+    {
+      final Date stepDate = findStepDate( controlModel, file.getName() );
+      if( stepDate != null )
+        dates.add( stepDate );
+    }
+
+    return dates.toArray( new Date[dates.size()] );
   }
 }

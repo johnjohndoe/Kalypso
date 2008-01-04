@@ -116,8 +116,6 @@ public interface IStepResultMeta extends IResultMeta
 
   public static final QName QNAME_PROP_STEP_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "stepTime" );
 
-  public static final QName QNAME_PROP_STEP_NUMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "stepNumber" );
-
   public static final QName QNAME_PROP_STEP_IS_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "isRestart" );
 
   public static final QName QNAME_PROP_STEP_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" );
@@ -125,10 +123,6 @@ public interface IStepResultMeta extends IResultMeta
   public void setStepTime( final Date stepTime );
 
   public Date getStepTime( );
-
-  public void setStepNumber( final Integer stepNumber );
-
-  public Integer getStepNumber( );
 
   public boolean isRestart( );
 

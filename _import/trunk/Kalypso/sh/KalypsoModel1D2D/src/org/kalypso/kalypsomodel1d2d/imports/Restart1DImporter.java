@@ -254,7 +254,6 @@ public class Restart1DImporter
     stepResultMeta.setName( name );
     stepResultMeta.setRestart( false );
     stepResultMeta.setStatus( Status.OK_STATUS );
-    stepResultMeta.setStepNumber( 0 );
     stepResultMeta.setStepTime( null );
     stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.steady );
     stepResultMeta.setPath( Path.fromPortableString( name ) );

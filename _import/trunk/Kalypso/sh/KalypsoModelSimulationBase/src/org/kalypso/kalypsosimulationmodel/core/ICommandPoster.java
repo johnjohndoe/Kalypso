@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
- * Interface use to make some workflow specific stuff accessible to class in simulation base and model1d2d plugin.
+ * Interface use to make some workflow specific stuff accessible to class in simulation base and model1d2d plug-in.
  * 
  * @author Patrice Congo
  * 
@@ -54,10 +56,9 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 public interface ICommandPoster
 {
   /**
-   * Post the command to a commandable wokspace identified by the wrapperClass.
-   * 
+   * Post the command to a commandable workspace identified by the wrapperClass.<br>
    */
-  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws Exception;
+  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws InvocationTargetException;
 
   /**
    * gets the a commandable workspace for the given wrapper class.

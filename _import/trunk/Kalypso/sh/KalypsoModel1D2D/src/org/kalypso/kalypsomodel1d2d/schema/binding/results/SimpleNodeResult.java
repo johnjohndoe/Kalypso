@@ -44,6 +44,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -250,7 +251,7 @@ public class SimpleNodeResult implements INodeResult
     if( m_lambdas.size() > 0 )
     {
       double sum = 0;
-      for( double lambda : m_lambdas )
+      for( final double lambda : m_lambdas )
       {
         sum += lambda;
       }
@@ -272,7 +273,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtualDepth(double)
    */
-  public void setVirtualDepth( double virtualDepth )
+  public void setVirtualDepth( final double virtualDepth )
   {
     // no virtual depth in simple nodes
   }
@@ -288,7 +289,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDry(int)
    */
-  public void setDry( int dry )
+  public void setDry( final int dry )
   {
   }
 
@@ -304,9 +305,24 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDischarge(double)
    */
-  public void setDischarge( double discharge )
+  public void setDischarge( final double discharge )
   {
     // TODO Auto-generated method stub
+  }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   */
+  public GM_Object getLocation( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  public void setLocation( final GM_Object location )
+  {
+    throw new UnsupportedOperationException();
   }
 }

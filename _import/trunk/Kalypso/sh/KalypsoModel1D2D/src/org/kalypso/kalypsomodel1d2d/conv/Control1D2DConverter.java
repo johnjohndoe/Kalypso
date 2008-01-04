@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-import java.io.PrintWriter;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
@@ -54,7 +57,10 @@ import java.util.Map;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -62,8 +68,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation.KIND;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10SimModelConstants;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -71,9 +80,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
-import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
@@ -82,42 +88,78 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
  */
 public class Control1D2DConverter
 {
+  /** Directory name for rma10s result files (Output...) files */
+  public static final String RESULT_DIR_NAME = "result";
+
+  /** Base filename name for rma10s result files (Output...) files */
+  public static final String RESULT_FILE_BASE = "Output";
+
+  private final List<IBoundaryCondition> m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
+
   private final INativeIDProvider m_nativeIDProvider;
-
-  private final RMA10Calculation m_calculation;
-
-  private Formatter m_formatter;
-
-  private final LinkedHashMap<String, Integer> m_roughnessIDProvider;
 
   private final LinkedHashMap<Integer, IBoundaryCondition> m_WQboundaryConditionsIDProvider = new LinkedHashMap<Integer, IBoundaryCondition>();
 
   private final BuildingIDProvider m_buildingProvider;
 
-  public Control1D2DConverter( final RMA10Calculation calculation, final INativeIDProvider idProvider, final LinkedHashMap<String, Integer> roughnessIDProvider, final BuildingIDProvider buildingProvider )
+  private final IControlModel1D2D m_controlModel;
+
+  private final IRoughnessClsCollection m_roughnessModel;
+
+  public Control1D2DConverter( final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider )
   {
-    m_calculation = calculation;
+    m_controlModel = controlModel;
+    m_roughnessModel = roughnessMmodel;
     m_nativeIDProvider = idProvider;
-    m_roughnessIDProvider = roughnessIDProvider;
     m_buildingProvider = buildingProvider;
+
+    /* Initialize boundary conditions */
+    final String calculationUnit = controlModel.getCalculationUnit().getGmlID();
+    for( final IFlowRelationship relationship : flowModel )
+    {
+      if( relationship instanceof IBoundaryCondition )
+      {
+        final IBoundaryCondition boundaryCondition = (IBoundaryCondition) relationship;
+        if( boundaryCondition.isMemberOf( calculationUnit ) )
+          m_unitBoundaryConditions.add( boundaryCondition );
+      }
+    }
   }
 
-  public void writeR10File( final PrintWriter pw ) throws SimulationException
+  public void writeR10File( final File outputFile ) throws CoreException, IOException
   {
-    m_formatter = new Formatter( pw, Locale.US );
-    writeR10ControlDataBlock();
-    writeR10PropertiesDataBlock();
-    writeR10ContinuityLineDataBlock();
-    writeR10TimeStepDataBlock();
+    Formatter formatter = null;
+    try
+    {
+      // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
+      // so no locale parameter for each format is needed any more .
+      formatter = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.US );
+      writeR10File( formatter );
+      FormatterUtils.checkIoException( formatter );
+    }
+    finally
+    {
+      if( formatter != null )
+      {
+        // REMARK: do not check io-exception here, else other exception would be hidden by this on
+        formatter.close();
+      }
+    }
+  }
+
+  public void writeR10File( final Formatter formatter ) throws CoreException, IOException
+  {
+    writeR10ControlDataBlock( formatter );
+    writeR10PropertiesDataBlock( formatter );
+    writeR10ContinuityLineDataBlock( formatter );
+    writeR10TimeStepDataBlock( formatter );
   }
 
   /**
    * Writes the Control Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
-  private void writeR10ControlDataBlock( ) throws SimulationException
+  private void writeR10ControlDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
-    final IControlModel1D2D controlModel = m_calculation.getControlModel();
-
     // This value is not used at all during the steady calculation,
     // so if user did not selected unsteady, instead of first time step we will take current date/time (see method
     // getFirstTimeStep())
@@ -126,118 +168,125 @@ public class Control1D2DConverter
     calendarForFirstTimeStep.setTime( firstDate );
 
     /* FILES DATA BLOCK */
-    m_formatter.format( "OUTFIL  result\\Output%n" ); //$NON-NLS-1$
-    m_formatter.format( "INKALYPSmodel.2d%n" ); //$NON-NLS-1$
-    m_formatter.format( "CONTROL A %4d 2d 0%n", controlModel.getIaccyc() ); //$NON-NLS-1$
-    if( controlModel.getRestart() )
-      m_formatter.format( "RESTART%n" ); //$NON-NLS-1$
+    formatter.format( "OUTFIL  %s\\%s%n", RESULT_DIR_NAME, RESULT_FILE_BASE ); //$NON-NLS-1$
+    formatter.format( "INKALYPSmodel.2d%n" ); //$NON-NLS-1$
+    formatter.format( "CONTROL A %4d 2d 0%n", m_controlModel.getIaccyc() ); //$NON-NLS-1$
+    if( m_controlModel.getRestart() )
+      formatter.format( "RESTART%n" ); //$NON-NLS-1$
 
     /* Write W/Q file, even if it is empty. */
-    m_formatter.format( "STFLFIL %s%n", RMA10SimModelConstants.BC_WQ_File ); //$NON-NLS-1$
+    formatter.format( "STFLFIL %s%n", RMA10SimModelConstants.BC_WQ_File ); //$NON-NLS-1$
     /* We always write a building file, even if it is empty. */
-    m_formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.BUILDING_File ); //$NON-NLS-1$
+    formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.BUILDING_File ); //$NON-NLS-1$
 
-    m_formatter.format( "ENDFIL%n" ); //$NON-NLS-1$
+    formatter.format( "ENDFIL%n" ); //$NON-NLS-1$
 
     /* CONTROL DATA BLOCK */
-    // TODO: write given name of szenario/projekt
-    final String discModelName = m_calculation.getDiscModel().getName();
-    final String projectName = discModelName == null ? Messages.getString( "Control1D2DConverter.8" ) : discModelName; //$NON-NLS-1$
-    m_formatter.format( "TI      %30s%n", projectName ); //$NON-NLS-1$
+    final String controlModelName = m_controlModel.getName();
+    final String projectName = controlModelName == null ? Messages.getString( "Control1D2DConverter.8" ) : controlModelName; //$NON-NLS-1$
+    formatter.format( "TI      %30s%n", projectName ); //$NON-NLS-1$
 
     // // C0
-    final Object[] c0Props = new Object[] { 0, controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
-        getTimeInPercentage( calendarForFirstTimeStep ), controlModel.getIEDSW(), controlModel.getTBFACT(), controlModel.getTBMIN(), 1 };
-    m_formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props ); //$NON-NLS-1$
+    final Object[] c0Props = new Object[] { 0, m_controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
+        getTimeInPercentage( calendarForFirstTimeStep ), m_controlModel.getIEDSW(), m_controlModel.getTBFACT(), m_controlModel.getTBMIN(), 1 };
+    formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props ); //$NON-NLS-1$
 
     // C1
     // m_formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
-    m_formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 0, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
+    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 0, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
 
     // C2
     // TODO: P_BOTTOM still not implemented, ask Nico
-    m_formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1, controlModel.get_P_BOTTOM() ); //$NON-NLS-1$
+    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", m_controlModel.getOMEGA(), m_controlModel.getELEV(), 1.0, 1.0, 1.0, 1, m_controlModel.get_P_BOTTOM() ); //$NON-NLS-1$
     // formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0,
     // 1.0, 1 );
 
     // C3
-    m_formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, controlModel.getUNOM(), controlModel.getUDIR(), controlModel.getHMIN(), controlModel.getDSET(), controlModel.getDSETD() ); //$NON-NLS-1$
+    formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, m_controlModel.getUNOM(), m_controlModel.getUDIR(), m_controlModel.getHMIN(), m_controlModel.getDSET(), m_controlModel.getDSETD() ); //$NON-NLS-1$
 
     // C4
     final int artImpulsstromBeiwert = 0;
-    m_formatter.format( "C4%14.1f%8.1f%8.1f%56d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert ); //$NON-NLS-1$
+    formatter.format( "C4%14.1f%8.1f%8.1f%56d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert ); //$NON-NLS-1$
 
     // C5
-    m_formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", controlModel.getNITI(), controlModel.getNITN(), controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 ); //$NON-NLS-1$
+    formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", m_controlModel.getNITI(), m_controlModel.getNITN(), m_controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 ); //$NON-NLS-1$
 
     // CV
-    m_formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", controlModel.getCONV_1(), controlModel.getCONV_2(), controlModel.getCONV_3(), 0.05, 0.05, controlModel.getIDRPT(), controlModel.getDRFACT() ); //$NON-NLS-1$
+    formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", m_controlModel.getCONV_1(), m_controlModel.getCONV_2(), m_controlModel.getCONV_3(), 0.05, 0.05, m_controlModel.getIDRPT(), m_controlModel.getDRFACT() ); //$NON-NLS-1$
 
     // IOP line deleted because Nico said that it is an ugly, baaad line... :)
     // (IOP has something to do with reordering, and this is not working properly with 1D-2D coupling)
     // formatter.format( "IOP%n" );
 
     // VEGETA
-    if( controlModel.getVegeta() )
-      m_formatter.format( "VEGETA%n" ); //$NON-NLS-1$
+    if( m_controlModel.getVegeta() )
+      formatter.format( "VEGETA%n" ); //$NON-NLS-1$
 
-    m_formatter.format( "KAL_BC%n" ); //$NON-NLS-1$
+    formatter.format( "KAL_BC%n" ); //$NON-NLS-1$
+
+    FormatterUtils.checkIoException( formatter );
   }
 
   /**
    * writes the Properties Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
-  private void writeR10PropertiesDataBlock( ) throws SimulationException
+  private void writeR10PropertiesDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
-    for( final Object elt : m_calculation.getRoughnessClassList() )
+    for( final IRoughnessCls rClass : m_roughnessModel )
     {
-      final Feature roughnessCL = (Feature) elt;
-      final int roughnessAsciiID = m_roughnessIDProvider.get( roughnessCL.getId() );
+      final int roughnessAsciiID = m_nativeIDProvider.getConversionID( rClass );
 
-      final Double[] eddy = m_calculation.getViscosities( roughnessCL );
-
-      final Double ks = m_calculation.getKsValue( roughnessCL );
-      final Double axAy = m_calculation.getAxAyValue( roughnessCL );
-      final Double dp = m_calculation.getDpValue( roughnessCL );
+      final int iedsw = m_controlModel.getIEDSW();
+      final Double[] eddy = rClass.getViscosities( iedsw );
+      final Double ks = rClass.getKs();
+      final Double axAy = rClass.getAxAy();
+      final Double dp = rClass.getDp();
 
       if( ks == null )
-        throw new SimulationException( Messages.getString( "Control1D2DConverter.7" ) + NamedFeatureHelper.getName( roughnessCL ), null ); //$NON-NLS-1$
+      {
+        final String msg = Messages.getString( "Control1D2DConverter.7" ) + rClass.getName();//$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+      }
 
       final Double axayCorrected = axAy == null ? 0.0 : axAy;
       final Double dpCorrected = dp == null ? 0.0 : dp;
 
-      writeEDBlock( m_formatter, roughnessAsciiID, eddy, ks, axayCorrected, dpCorrected );
+      writeEDBlock( formatter, roughnessAsciiID, eddy, ks, axayCorrected, dpCorrected );
     }
 
     final Map<Integer, IBuildingFlowRelation> buildingMap = m_buildingProvider.getBuildingData();
     for( final Integer buildingID : buildingMap.keySet() )
-      writeEDBlock( m_formatter, buildingID, 0.0, 0.0, 0.0, 0.0 );
+      writeEDBlock( formatter, buildingID, 0.0, 0.0, 0.0, 0.0 );
   }
 
-  private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final Double[] eddy, final Double ks, final Double axayCorrected, final Double dpCorrected )
+  private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final Double[] eddy, final Double ks, final Double axayCorrected, final Double dpCorrected ) throws IOException
   {
     if( eddy.length < 4 )
       throw new IllegalArgumentException( Messages.getString( "Control1D2DConverter.17" ) ); //$NON-NLS-1$
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, eddy[0], eddy[1], eddy[2], eddy[3], -1.0, 1.0, 1.0 ); //$NON-NLS-1$
     formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
     formatter.format( "ED4%21.5f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
+
+    FormatterUtils.checkIoException( formatter );
   }
 
-  private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final double val, final Double ks, final Double axayCorrected, final Double dpCorrected )
+  private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final double val, final Double ks, final Double axayCorrected, final Double dpCorrected ) throws IOException
   {
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 ); //$NON-NLS-1$
     formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
     formatter.format( "ED4%21.5f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
+
+    FormatterUtils.checkIoException( formatter );
   }
 
   /**
    * writes the Continuity Lines Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
 
-  private void writeR10ContinuityLineDataBlock( ) throws SimulationException
+  private void writeR10ContinuityLineDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
-    final List<IFELine> continuityLines = m_calculation.getContinuityLines();
-    m_formatter.format( "SCL%9d%n", continuityLines.size() ); //$NON-NLS-1$
+    final List<IFELine> continuityLines = m_controlModel.getCalculationUnit().getContinuityLines();
+    formatter.format( "SCL%9d%n", continuityLines.size() ); //$NON-NLS-1$
     for( final IFELine line : continuityLines )
     {
       final IFE1D2DNode[] nodes = new IFE1D2DNode[line.getNodes().size()];
@@ -247,33 +296,38 @@ public class Control1D2DConverter
         final IFE1D2DNode node = nodes[i];
         final int nodeID = m_nativeIDProvider.getConversionID( node );
         if( nodeID == 0 )
-          throw new SimulationException( "At least one node contained by boundary line is not included in this calculation unit.", null );
+        {
+          final String msg = "At least one node contained by boundary line is not included in this calculation unit.";
+          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+        }
+
         if( i == 0 )
-          m_formatter.format( "CC1 %4d", m_nativeIDProvider.getConversionID( line ) ); //$NON-NLS-1$
+          formatter.format( "CC1 %4d", m_nativeIDProvider.getConversionID( line ) ); //$NON-NLS-1$
         else if( i % 9 == 0 )
-          m_formatter.format( "%nCC2     " ); //$NON-NLS-1$
-        m_formatter.format( "%8d", nodeID ); //$NON-NLS-1$
+          formatter.format( "%nCC2     " ); //$NON-NLS-1$
+        formatter.format( "%8d", nodeID ); //$NON-NLS-1$
       }
       if( nodes.length % 9 != 0 )
-        m_formatter.format( "%n" ); //$NON-NLS-1$
-    }
-    m_formatter.format( "ECL%n" ); //$NON-NLS-1$
+        formatter.format( "%n" ); //$NON-NLS-1$
 
-    final IControlModel1D2D controlModel = m_calculation.getControlModel();
-    if( controlModel.getIDNOPT() != 0 && controlModel.getIDNOPT() != -1 ) // Write MP Line only under this conditions
-    {
-      m_formatter.format( "MP%21.2f%8.2f%8.2f%n", controlModel.getAC1(), controlModel.getAC2(), controlModel.getAC3() ); //$NON-NLS-1$
+      FormatterUtils.checkIoException( formatter );
     }
-    m_formatter.format( "ENDGEO%n" ); //$NON-NLS-1$
+    formatter.format( "ECL%n" ); //$NON-NLS-1$
+
+    if( m_controlModel.getIDNOPT() != 0 && m_controlModel.getIDNOPT() != -1 )
+      formatter.format( "MP%21.2f%8.2f%8.2f%n", m_controlModel.getAC1(), m_controlModel.getAC2(), m_controlModel.getAC3() ); //$NON-NLS-1$
+
+    formatter.format( "ENDGEO%n" ); //$NON-NLS-1$
+
+    FormatterUtils.checkIoException( formatter );
   }
 
   /**
    * writes the Timestep Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
-  private void writeR10TimeStepDataBlock( ) throws SimulationException
+  private void writeR10TimeStepDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
-    final IControlModel1D2D controlModel = m_calculation.getControlModel();
-    final IObservation<TupleResult> observation = controlModel.getTimeSteps();
+    final IObservation<TupleResult> observation = m_controlModel.getTimeSteps();
     final TupleResult result = observation.getResult();
     final IComponent[] components = result.getComponents();
     // final IComponent componentOrdinalNumber = ComponentUtilities.findComponentByID( components,
@@ -282,29 +336,39 @@ public class Control1D2DConverter
     final IComponent componentRelaxationsFaktor = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_UNDER_RELAXATION_FACTOR );
 
     /* Steady state, just one block for the Starting Date. */
-    final int niti = controlModel.getNITI();
+    final int niti = m_controlModel.getNITI();
 
     final String msg = Messages.getString( "Control1D2DConverter.33" ); //$NON-NLS-1$
 
-    Double uRValSteady = controlModel.get_RelaxationsFactor();
+    Double uRValSteady = m_controlModel.get_RelaxationsFactor();
     if( uRValSteady == null || uRValSteady.isNaN() || uRValSteady < 0.1 || uRValSteady > 1.0 )
-      if( controlModel.isSteadySelected() )
-        throw new SimulationException( Messages.getString( "Control1D2DConverter.34" ), null ); //$NON-NLS-1$
+    {
+      if( m_controlModel.isSteadySelected() )
+      {
+        final String errMsg = Messages.getString( "Control1D2DConverter.34" );//$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
+      }
       else
         // Not used anyway (1.0 should be default value)
         uRValSteady = 1.0;
-    writeTimeStep( m_formatter, msg, null, null, uRValSteady.floatValue(), niti );
+    }
 
-    if( controlModel.isUnsteadySelected() )
+    writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti );
+
+    if( m_controlModel.isUnsteadySelected() )
     {
       /* Sort records by time */
       final TupleResultIndex index = new TupleResultIndex( result, componentTime );
       final Iterator<IRecord> iterator = index.getIterator();
       if( !iterator.hasNext() )
-        throw new SimulationException( Messages.getString( "Control1D2DConverter.35" ), null ); //$NON-NLS-1$
+      {
+        final String errMsg = Messages.getString( "Control1D2DConverter.35" );//$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
+      }
+
       final IRecord firstRecord = iterator.next();
 
-      final int nitn = controlModel.getNITN();
+      final int nitn = m_controlModel.getNITN();
 
       if( nitn > 0 )
       {
@@ -319,17 +383,20 @@ public class Control1D2DConverter
           final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( componentTime )).toGregorianCalendar();
 
           final String unsteadyMsg = String.format( Messages.getString( "Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
-          writeTimeStep( m_formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
+          writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
 
           lastStepCal = stepCal;
         }
-        if( controlModel.getIaccyc() > stepCount )
-          throw new SimulationException( stepCount + " timesteps defined, but " + controlModel.getIaccyc() + " is selected as first restart step.", null );
+        if( m_controlModel.getIaccyc() > stepCount )
+        {
+          final String errMsg = stepCount + " timesteps defined, but " + m_controlModel.getIaccyc() + " is selected as first restart step.";
+          throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
+        }
       }
     }
   }
 
-  private void writeTimeStep( final Formatter formatter, final String message, final Calendar calculationStep, final Calendar lastStepCal, final float uRVal, final int niti ) throws SimulationException
+  private void writeTimeStep( final Formatter formatter, final String message, final Calendar calculationStep, final Calendar lastStepCal, final float uRVal, final int niti ) throws CoreException, IOException
   {
     final String dashes = StringUtils.repeat( "-", message.length() ); //$NON-NLS-1$
     formatter.format( "com %s%n", dashes ); //$NON-NLS-1$
@@ -376,6 +443,8 @@ public class Control1D2DConverter
     formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
     formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
 
+    FormatterUtils.checkIoException( formatter );
+
     for( final Map.Entry<Integer, IBuildingFlowRelation> buildingData : m_buildingProvider.getBuildingData().entrySet() )
     {
       final Integer buildingID = buildingData.getKey();
@@ -389,27 +458,30 @@ public class Control1D2DConverter
           break;
 
         default:
-          throw new SimulationException( Messages.getString( "Control1D2DConverter.43" ) + kind, null ); //$NON-NLS-1$
+          final String msg = Messages.getString( "Control1D2DConverter.43" ) + kind;//$NON-NLS-1$
+          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
       }
 
       final double direction = Math.toRadians( building.getDirection() );
       formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", buildingID, buildingKind, 0.0, 0.0, 0.0, 0.0, direction ); //$NON-NLS-1$
+
+      FormatterUtils.checkIoException( formatter );
     }
 
     // add other conti lines types as well (buildings)?
     formatter.format( "ENDSTEP %s%n", message ); //$NON-NLS-1$
+
+    FormatterUtils.checkIoException( formatter );
   }
 
   /** Formats the lines for one type of boundary condition (QC or HC or ... ). */
-  private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final String bcAbscissaComponentType, final String bcOrdinateComponentType )
+  private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final String bcAbscissaComponentType, final String bcOrdinateComponentType ) throws IOException
   {
-    final List<IBoundaryCondition> boundaryConditions = m_calculation.getBoundaryConditions();
-    for( final IBoundaryCondition boundaryCondition : boundaryConditions )
+    for( final IBoundaryCondition boundaryCondition : m_unitBoundaryConditions )
     {
-
       if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D ) || boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
       {
-        int ordinal = m_nativeIDProvider.getConversionID( boundaryCondition.getParentElementID() );
+        final int ordinal = m_nativeIDProvider.getConversionID( boundaryCondition.getParentElementID() );
         final double stepValue;
         final IObservation<TupleResult> obs = boundaryCondition.getObservation();
         final TupleResult obsResult = obs.getResult();
@@ -429,33 +501,39 @@ public class Control1D2DConverter
 
           if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
-            double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
-            formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
+            final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
+            formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
-            double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
-            formatter.format( "SQC%13d%40.4f%8.3f%8.3f%8.3f%n", ordinal, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
+            final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
+            formatter.format( "SQC%13d%40.4f%8.3f%8.3f%8.3f%n", ordinal, theta, 0.000, 20.000, 0.000 );
             m_WQboundaryConditionsIDProvider.put( ordinal, boundaryCondition );
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) )
           {
-            formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 0.000, 20.000 ); //$NON-NLS-1$
+            formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 0.000, 20.000 );
           }
           else if( (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D ))
               || (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D )) )
           {
-            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, 0, stepValue, 0.0, 0.0, 20.000 ); //$NON-NLS-1$
+            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, 0, stepValue, 0.0, 0.0, 20.000 );
           }
         }
       }
+
+      FormatterUtils.checkIoException( formatter );
     }
   }
 
-  private void formatBC( final Formatter formatter, final float uRVal, final int nitn ) throws SimulationException
+  private void formatBC( final Formatter formatter, final float uRVal, final int nitn ) throws CoreException, IOException
   {
     if( uRVal < 0.0 || uRVal > 1.0 )
-      throw new SimulationException( Messages.getString( "Control1D2DConverter.6" ), null ); //$NON-NLS-1$
+    {
+      final String msg = Messages.getString( "Control1D2DConverter.6" );//$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+    }
+
     final int buffVal = 10 - (int) (uRVal * 10);
     for( int j = 0; j < nitn; j++ )
     {
@@ -465,6 +543,8 @@ public class Control1D2DConverter
       formatter.format( "%5d010", buffVal ); //$NON-NLS-1$
     }
     formatter.format( "%n" ); //$NON-NLS-1$
+
+    FormatterUtils.checkIoException( formatter );
   }
 
   private double getTimeInPercentage( final Calendar cal )
@@ -481,21 +561,24 @@ public class Control1D2DConverter
    *         If unsteady calculation is not selected, returns current date/time (in the case of steady calculation, this
    *         value is not considered by RMA10s)
    */
-  private Date getFirstTimeStep( ) throws SimulationException
+  private Date getFirstTimeStep( ) throws CoreException
   {
-    if( m_calculation.getControlModel().isUnsteadySelected() == false )
+    if( m_controlModel.isUnsteadySelected() == false )
       return new Date();
-    final IControlModel1D2D controlModel = m_calculation.getControlModel();
-    controlModel.isUnsteadySelected();
-    final IObservation<TupleResult> tupleSet = controlModel.getTimeSteps();
+
+    m_controlModel.isUnsteadySelected();
+    final IObservation<TupleResult> tupleSet = m_controlModel.getTimeSteps();
     final TupleResult result = tupleSet.getResult();
     final IComponent[] components = result.getComponents();
     final IComponent compTime = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
     final TupleResultIndex index = new TupleResultIndex( result, compTime );
-    // todo check if result is not empty
     final Iterator<IRecord> iterator = index.getIterator();
     if( !iterator.hasNext() )
-      throw new SimulationException( Messages.getString( "Control1D2DConverter.52" ), null ); //$NON-NLS-1$
+    {
+      final String msg = Messages.getString( "Control1D2DConverter.52" );//$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+    }
+
     final IRecord firstRecord = iterator.next();
     return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( compTime ) );
   }

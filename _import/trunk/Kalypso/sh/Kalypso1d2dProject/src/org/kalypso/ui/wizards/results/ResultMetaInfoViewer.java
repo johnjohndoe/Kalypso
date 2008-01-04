@@ -176,7 +176,6 @@ public class ResultMetaInfoViewer extends Viewer
     String stepDescription = null;
     String stepType = null;
     String stepTime = null;
-    String stepNumber = null;
 
     String docName;
     String docDescription;
@@ -217,9 +216,6 @@ public class ResultMetaInfoViewer extends Viewer
       stepType = stepResult.getStepType().toString();
       final Date stepResultTime = stepResult.getStepTime();
       stepTime = stepResultTime == null ? "-" : INFO_DF.format( stepResultTime );
-      final Integer number = stepResult.getStepNumber();
-      if( number != null )
-        stepNumber = number.toString();
     }
 
     IDocumentResultMeta docResult = null;
@@ -283,10 +279,6 @@ public class ResultMetaInfoViewer extends Viewer
       buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + stepType + "\"></li>" );
 
       buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"zum Zeitpunkt:\">" + stepTime + "</li>" );
-
-      // Just to avoid to write -1 as steady "timestep"
-      if( !stepResult.getStepType().equals( IStepResultMeta.STEPTYPE.steady ) )
-        buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Schrittnummer:\">" + stepNumber + "</li>" );
 
       buf.append( "<br/>" );
     }

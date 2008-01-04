@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.Map;
 
+import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BuildingParameters;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 
@@ -63,9 +67,31 @@ public class Building1D2DConverter
     m_buildingProvider = buildingProvider;
   }
 
-  public void writeBuildingFile( final Formatter format )
+  public void writeBuildingFile( final File outputFile ) throws IOException
   {
-    format.format( "TI      %s%n", "Bauwerksdaten" );
+    Formatter formatter = null;
+    try
+    {
+      // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
+      // so no locale parameter for each format is needed any more .
+      formatter = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.US );
+      writeBuildingFile( formatter );
+      FormatterUtils.checkIoException( formatter );
+    }
+    finally
+    {
+      if( formatter != null )
+      {
+        // REMARK: do not check io-exception here, else other exception would be hidden by this on
+        formatter.close();
+      }
+    }
+
+  }
+
+  public void writeBuildingFile( final Formatter formatter ) throws IOException
+  {
+    formatter.format( "TI      %s%n", "Bauwerksdaten" );
 
     for( final Map.Entry<Integer, IBuildingFlowRelation> buildingEntry : m_buildingProvider.getBuildingData().entrySet() )
     {
@@ -73,41 +99,45 @@ public class Building1D2DConverter
       final Integer buildingID = buildingEntry.getKey();
       final BuildingParameters buildingParameters = building.getBuildingParameters();
 
-      writeBuildingBlock( format, buildingID, buildingParameters );
+      writeBuildingBlock( formatter, buildingID, buildingParameters );
     }
 
-    format.format( "ENDDATA" );
+    formatter.format( "ENDDATA" );
+
+    FormatterUtils.checkIoException( formatter );
   }
 
-  private void writeBuildingBlock( final Formatter format, final Integer buildingID, final BuildingParameters buildingParameters )
+  private void writeBuildingBlock( final Formatter formatter, final Integer buildingID, final BuildingParameters buildingParameters ) throws IOException
   {
     final BigDecimal[] upstreamWaterlevels = buildingParameters.getUpstreamWaterlevels();
     final BigDecimal[] downstreamWaterlevels = buildingParameters.getDownstreamWaterlevels();
 
-    format.format( "IDC     %8d%8d%8d%n", buildingID, upstreamWaterlevels.length, downstreamWaterlevels.length );
+    formatter.format( "IDC     %8d%8d%8d%n", buildingID, upstreamWaterlevels.length, downstreamWaterlevels.length );
 
-    formatBlock( format, "HRW", upstreamWaterlevels );
-    formatBlock( format, "HCL", downstreamWaterlevels );
+    formatBlock( formatter, "HRW", upstreamWaterlevels );
+    formatBlock( formatter, "HCL", downstreamWaterlevels );
 
-    formatDischarges( format, upstreamWaterlevels, downstreamWaterlevels, buildingParameters );
+    formatDischarges( formatter, upstreamWaterlevels, downstreamWaterlevels, buildingParameters );
   }
 
-  private void formatBlock( final Formatter format, final String name, final BigDecimal[] values )
+  private void formatBlock( final Formatter formatter, final String name, final BigDecimal[] values ) throws IOException
   {
     for( int i = 0; i < values.length; )
     {
-      format.format( "%3s     ", name );
+      formatter.format( "%3s     ", name );
 
       for( int j = 0; j < 9; j++, i++ )
       {
         if( i < values.length )
-          format.format( Locale.US, "%8.3f", values[i] ); // write decimals with '.'
+          formatter.format( Locale.US, "%8.3f", values[i] ); // write decimals with '.'
       }
-      format.format( "%n" );
+      formatter.format( "%n" );
+
+      FormatterUtils.checkIoException( formatter );
     }
   }
 
-  private void formatDischarges( final Formatter format, final BigDecimal[] upstreamWaterlevels, final BigDecimal[] downstreamWaterlevels, final BuildingParameters buildingParameters )
+  private void formatDischarges( final Formatter formatter, final BigDecimal[] upstreamWaterlevels, final BigDecimal[] downstreamWaterlevels, final BuildingParameters buildingParameters ) throws IOException
   {
     for( final BigDecimal upstreamWaterlevel : upstreamWaterlevels )
     {
@@ -118,7 +148,9 @@ public class Building1D2DConverter
         discharges[i] = buildingParameters.interpolateDischarge( upstreamWaterlevel, downstreamWaterlevel );
       }
 
-      formatBlock( format, "FLW", discharges );
+      formatBlock( formatter, "FLW", discharges );
+
+      FormatterUtils.checkIoException( formatter );
     }
   }
 

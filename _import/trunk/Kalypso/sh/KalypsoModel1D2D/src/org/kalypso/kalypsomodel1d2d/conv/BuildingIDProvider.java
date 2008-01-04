@@ -44,8 +44,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
-import org.kalypso.simulation.core.SimulationException;
 
 /**
  * Saves informations about buildings and creates there IDs.
@@ -61,12 +62,12 @@ public class BuildingIDProvider
 
   private int m_currentID = 904;
 
-  public int addBuilding( final IBuildingFlowRelation building ) throws SimulationException
+  public int addBuilding( final IBuildingFlowRelation building ) throws CoreException
   {
     if( m_currentID > 999 )
     {
       final String msg = String.format( "Zu viele Bauwerke definiert. Es können nicht mehr als %d Bauwerke berechnet werden.", 1000 - 904 );
-      throw new SimulationException( msg, null );
+      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
 
     final Integer newID = new Integer( m_currentID );

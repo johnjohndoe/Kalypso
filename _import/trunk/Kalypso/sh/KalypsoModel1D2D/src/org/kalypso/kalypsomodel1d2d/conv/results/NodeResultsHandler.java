@@ -73,13 +73,14 @@ import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
-import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
@@ -110,6 +111,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class NodeResultsHandler implements IRMA10SModelElementHandler
 {
+  private static final int WSP_EXTRAPOLATION_RANGE = 20;
+
   private final Map<Integer, GMLNodeResult> m_nodeIndex = new HashMap<Integer, GMLNodeResult>();
 
   private final HashMap<Integer, ArcResult> m_arcIndex = new HashMap<Integer, ArcResult>();
@@ -124,21 +127,22 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private final ITriangleEater m_triangleEater;
 
-  private final RMA10Calculation m_calculation;
-
-  private static final int WSP_EXTRAPOLATION_RANGE = 20;
-
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher;
 
   private Date m_time;
 
   private final IObservation<TupleResult> m_lengthSectionObs;
 
-  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final RMA10Calculation calculation, final NodeResultMinMaxCatcher resultMinMaxCatcher, final IObservation<TupleResult> lengthSectionObs )
+  private final IFlowRelationshipModel m_flowModel;
+
+  private final IControlModel1D2D m_controlModel;
+
+  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final NodeResultMinMaxCatcher resultMinMaxCatcher, final IObservation<TupleResult> lengthSectionObs )
   {
     m_resultWorkspace = resultWorkspace;
     m_triangleEater = triangleEater;
-    m_calculation = calculation;
+    m_flowModel = flowModel;
+    m_controlModel = controlModel;
     m_resultMinMaxCatcher = resultMinMaxCatcher;
     m_lengthSectionObs = lengthSectionObs;
     m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( INodeResultCollection.QNAME_PROP_NODERESULT_MEMBER );
@@ -454,7 +458,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  private void handle1dStructure( GMLNodeResult nodeDown, GMLNodeResult nodeUp )
+  private void handle1dStructure( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp )
   {
     // not implemented yet
 
@@ -464,7 +468,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     final GM_Position nodePos = nodeResult.getPoint().getPosition();
 
-    final IFlowRelationship[] flowRelationships = m_calculation.getFlowModel().findFlowrelationships( nodePos, 0.2 );
+    final IFlowRelationship[] flowRelationships = m_flowModel.findFlowrelationships( nodePos, 0.2 );
 
     if( flowRelationships == null )
       return null;
@@ -593,38 +597,38 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // make a polygon from the curves (polygon must be oriented ccw)
 
     final GM_Position[] polygonPoses = GeometryUtilities.getPolygonfromCurves( curves );
-    Double[] posArray = NodeResultHelper.getPosTriangleArray( polygonPoses );
+    final Double[] posArray = NodeResultHelper.getPosTriangleArray( polygonPoses );
 
     // convert into float values
-    float[] floatPosArray = new float[posArray.length];
+    final float[] floatPosArray = new float[posArray.length];
     for( int i = 0; i < posArray.length; i++ )
     {
       floatPosArray[i] = posArray[i].floatValue();
     }
     final Map<Integer, int[]> triangles = KalypsoDeegree2Plugin.doTriangle( floatPosArray );
 
-    Set<Entry<Integer, int[]>> entrySet = triangles.entrySet();
-    for( Entry<Integer, int[]> entry : entrySet )
+    final Set<Entry<Integer, int[]>> entrySet = triangles.entrySet();
+    for( final Entry<Integer, int[]> entry : entrySet )
     {
       final int numOfTriangles = entry.getKey();
-      int[] nodeOrderArray = entry.getValue();
+      final int[] nodeOrderArray = entry.getValue();
 
       for( int i = 0; i < numOfTriangles; i++ )
       {
-        double x1 = posArray[nodeOrderArray[i * 3]];
-        double y1 = posArray[nodeOrderArray[i * 3] + 1];
-        double z1 = posArray[nodeOrderArray[i * 3] + 2];
-        GM_Position pos1 = GeometryFactory.createGM_Position( x1, y1, z1 );
+        final double x1 = posArray[nodeOrderArray[i * 3]];
+        final double y1 = posArray[nodeOrderArray[i * 3] + 1];
+        final double z1 = posArray[nodeOrderArray[i * 3] + 2];
+        final GM_Position pos1 = GeometryFactory.createGM_Position( x1, y1, z1 );
 
-        double x2 = posArray[nodeOrderArray[i * 3 + 1]];
-        double y2 = posArray[nodeOrderArray[i * 3 + 1] + 1];
-        double z2 = posArray[nodeOrderArray[i * 3 + 1] + 2];
-        GM_Position pos2 = GeometryFactory.createGM_Position( x2, y2, z2 );
+        final double x2 = posArray[nodeOrderArray[i * 3 + 1]];
+        final double y2 = posArray[nodeOrderArray[i * 3 + 1] + 1];
+        final double z2 = posArray[nodeOrderArray[i * 3 + 1] + 2];
+        final GM_Position pos2 = GeometryFactory.createGM_Position( x2, y2, z2 );
 
-        double x3 = posArray[nodeOrderArray[i * 3 + 2]];
-        double y3 = posArray[nodeOrderArray[i * 3 + 2] + 1];
-        double z3 = posArray[nodeOrderArray[i * 3 + 2] + 2];
-        GM_Position pos3 = GeometryFactory.createGM_Position( x3, y3, z3 );
+        final double x3 = posArray[nodeOrderArray[i * 3 + 2]];
+        final double y3 = posArray[nodeOrderArray[i * 3 + 2] + 1];
+        final double z3 = posArray[nodeOrderArray[i * 3 + 2] + 2];
+        final GM_Position pos3 = GeometryFactory.createGM_Position( x3, y3, z3 );
 
         final GM_Position[] poses = new GM_Position[3];
         poses[0] = pos1;
@@ -788,9 +792,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     final List<INodeResult> nodes = new LinkedList<INodeResult>();
 
-    for( int i = 0; i < ring.length; i++ )
+    for( final GM_Position position : ring )
     {
-      final GM_Position position = ring[i];
       final double x = position.getX();
       final double y = position.getY();
       double z = position.getZ(); // here: water level
@@ -1671,7 +1674,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodeResult1d );
       final GM_Curve nodeCurve1d = NodeResultHelper.getProfileCurveFor1dNode( teschkeRelation.getProfile() );
 
-      final List<IFELine> continuityLine2Ds = m_calculation.getContinuityLines();
+      final List<IFELine> continuityLine2Ds = m_controlModel.getCalculationUnit().getContinuityLines();
       IContinuityLine2D selectedBoundaryLine = null;
       for( final IFELine continuityLine2D : continuityLine2Ds )
       {

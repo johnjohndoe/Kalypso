@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
@@ -90,7 +91,9 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
       {
         final TimeStepFillerWizard wizard = new TimeStepFillerWizard( getFeature() );
         final WizardDialog wizardDialog = new WizardDialog( parent.getDisplay().getActiveShell(), wizard );
-        wizardDialog.open();
+        if( wizardDialog.open() != Window.OK )
+          return;
+
         final FeatureChange[] changes = wizard.getFeatureChange();
         fireFeatureChange( new ChangeFeaturesCommand( getFeature().getWorkspace(), changes ) );
       }

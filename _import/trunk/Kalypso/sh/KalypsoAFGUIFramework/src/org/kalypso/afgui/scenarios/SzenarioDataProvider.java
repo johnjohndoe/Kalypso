@@ -3,6 +3,7 @@
  */
 package org.kalypso.afgui.scenarios;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -348,10 +349,17 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     return (T) workspace.getRootFeature().getAdapter( modelClass );
   }
 
-  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws Exception
+  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws InvocationTargetException
   {
-    final CommandableWorkspace modelWorkspace = getCommandableWorkSpace( wrapperClass );
-    modelWorkspace.postCommand( command );
+    try
+    {
+      final CommandableWorkspace modelWorkspace = getCommandableWorkSpace( wrapperClass );
+      modelWorkspace.postCommand( command );
+    }
+    catch( final Exception e )
+    {
+      throw new InvocationTargetException( e );
+    }
   }
 
   public boolean isDirty( )

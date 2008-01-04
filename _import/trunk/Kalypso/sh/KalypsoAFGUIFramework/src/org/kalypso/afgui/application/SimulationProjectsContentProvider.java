@@ -105,6 +105,7 @@ public abstract class SimulationProjectsContentProvider implements IIntroXHTMLCo
 
   public void handleResourceChanged( )
   {
+    // TODO: sometimes causes swt-exception: widget disposed
     final IIntroContentProviderSite site = m_site;
     PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
     {

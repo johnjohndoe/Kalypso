@@ -48,7 +48,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * The case data provider functions as a bridge between the abstract case data model and actual data objects. Generics
  * provide a way to create data providers that return data objects of a type more specific than {@link Object}.
  * 
- * @author Gernot Belger, Stefan Kurzbach
+ * @author Gernot Belger
+ * @author Stefan Kurzbach
  */
 public interface ICaseDataProvider<T extends Object>
 {
@@ -67,8 +68,6 @@ public interface ICaseDataProvider<T extends Object>
    */
   public void saveModel( final Class< ? extends T> modelClass, final IProgressMonitor monitor ) throws CoreException;
 
-  /** Post a command to the right command manager corresponding to the fiven model. */
-  // public void postCommand( final Class< ? extends T> wrapperClass, final ICommand command ) throws Exception;
   /**
    * Returns <code>true</code> if the data object corresponding to the given case data key has been modified since it
    * was retrieved.

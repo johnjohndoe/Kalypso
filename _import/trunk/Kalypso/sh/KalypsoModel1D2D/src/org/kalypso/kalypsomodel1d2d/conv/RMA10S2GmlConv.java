@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -71,7 +72,7 @@ public class RMA10S2GmlConv
 
   private final int m_monitorStep;
 
-  public RMA10S2GmlConv( final IProgressMonitor monitor, int numberOfLinesToProcess )
+  public RMA10S2GmlConv( final IProgressMonitor monitor, final int numberOfLinesToProcess )
   {
     m_monitorStep = numberOfLinesToProcess / 100;
     if( monitor == null )
@@ -182,17 +183,20 @@ public class RMA10S2GmlConv
         final String hourString = line.substring( 18, 32 ).trim();
 
         final int year = Integer.parseInt( yearString );
-        final double hours = Double.parseDouble( hourString );
+        final BigDecimal hours = new BigDecimal( hourString );
 
         final Calendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "UTM" ) ); //$NON-NLS-1$
         calendar.clear();
         calendar.set( year, 0, 1 );
 
-        final int wholeHours = (int) Math.floor( hours );
-        final int wholeMinutes = (int) Math.round( (hours - wholeHours) * 60 );
+        final BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
+        final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) );
 
-        calendar.add( Calendar.HOUR, wholeHours );
-        calendar.add( Calendar.MINUTE, wholeMinutes );
+        // final int wholeHours = (int) Math.floor( hours.doubleValue() );
+        // final int wholeMinutes = (int) Math.round( (hours - wholeHours) * 60 );
+
+        calendar.add( Calendar.HOUR, wholeHours.intValue() );
+        calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
 
         m_handler.handleTime( line, calendar.getTime() );
       }

@@ -3,11 +3,9 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
 import javax.xml.namespace.QName;
 
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -26,7 +24,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    *            the wbr:Roughness feature to wrapped
    * @throw IllegalArgumentException if feature is null or is note a wbr:Roughness feature
    */
-  public RoughnessCls( Feature featureToBind ) throws IllegalArgumentException
+  public RoughnessCls( final Feature featureToBind ) throws IllegalArgumentException
   {
     super( featureToBind, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
   }
@@ -42,7 +40,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * @throws IllegalArgumentException
    *             if workspace is null or the roughness collection is not part of the workspace
    */
-  public RoughnessCls( Feature parentFeature, QName propQName ) throws IllegalArgumentException
+  public RoughnessCls( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
   {
     super( Util.createFeatureAsProperty( parentFeature, propQName, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS ), KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
 
@@ -121,7 +119,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setAxAy(double)
    */
-  public void setAxAy( double axay ) throws IllegalArgumentException
+  public void setAxAy( final double axay ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY, Double.valueOf( axay ) );
@@ -132,7 +130,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setDp(double)
    */
-  public void setDp( double dp ) throws IllegalArgumentException
+  public void setDp( final double dp ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, Double.valueOf( dp ) );
@@ -143,25 +141,25 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setEddy(double)
    */
-  public void setEddyXX( double eddy ) throws IllegalArgumentException
+  public void setEddyXX( final double eddy ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, Double.valueOf( eddy ) );
   }
 
-  public void setEddyYX( double eddy ) throws IllegalArgumentException
+  public void setEddyYX( final double eddy ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, Double.valueOf( eddy ) );
   }
 
-  public void setEddyXY( double eddy ) throws IllegalArgumentException
+  public void setEddyXY( final double eddy ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, Double.valueOf( eddy ) );
   }
 
-  public void setEddyYY( double eddy ) throws IllegalArgumentException
+  public void setEddyYY( final double eddy ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, Double.valueOf( eddy ) );
@@ -172,7 +170,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setKs(double)
    */
-  public void setKs( double ks ) throws IllegalArgumentException
+  public void setKs( final double ks ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, Double.valueOf( ks ) );
@@ -183,7 +181,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setMarsh(double)
    */
-  public void setMarsh( double marsh ) throws IllegalArgumentException
+  public void setMarsh( final double marsh ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV, Double.valueOf( marsh ) );
@@ -207,9 +205,9 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#configure(java.lang.String, double, double,
    *      double, double)
    */
-  public RoughnessConfigConsistency configure( String name, double ks, double axay, double dp, double eddy_xx, double eddy_yx, double eddy_xy, double eddy_yy, double marsh )
+  public RoughnessConfigConsistency configure( final String name, final double ks, final double axay, final double dp, final double eddy_xx, final double eddy_yx, final double eddy_xy, final double eddy_yy, final double marsh )
   {
-    RoughnessConfigConsistency check = validate( name, ks, axay, dp, eddy_xx, eddy_yx, eddy_xy, eddy_yy, marsh );
+    final RoughnessConfigConsistency check = validate( name, ks, axay, dp, eddy_xx, eddy_yx, eddy_xy, eddy_yy, marsh );
     if( check != RoughnessConfigConsistency.OK )
     {
       return check;
@@ -227,7 +225,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
     return RoughnessConfigConsistency.OK;
   }
 
-  public static RoughnessConfigConsistency validate( String name, double ks, double axay, double dp, double eddy_xx, double eddy_yx, double eddy_xy, double eddy_yy, double marsh )
+  public static RoughnessConfigConsistency validate( final String name, final double ks, final double axay, final double dp, final double eddy_xx, final double eddy_yx, final double eddy_xy, final double eddy_yy, final double marsh )
   {
 
     if( Assert.isNullOrEmpty( name ) )
@@ -274,9 +272,9 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   @Override
   public String toString( )
   {
-    StringBuffer buf = new StringBuffer( 64 );
+    final StringBuffer buf = new StringBuffer( 64 );
     buf.append( "RoughnessCls" ); //$NON-NLS-1$
-    String id = getGmlID();
+    final String id = getGmlID();
     if( id != null )
       buf.append( '{' ).append( id ).append( '}' );
     buf.append( "[name=" ).append( getName() ); //$NON-NLS-1$
@@ -308,10 +306,45 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper#setColorStyle(org.eclipse.swt.graphics.RGB)
    */
-  public void setColorStyle( RGB rgb )
+  public void setColorStyle( final RGB rgb )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls#getViscosities()
+   */
+  public Double[] getViscosities( final int iedsw )
+  {
+    final Double[] result = new Double[4];
+
+    /*
+     * turbulence combo (iedsw), these values mean: constant eddy viscosity to be applied, but value has to come from
+     * the class or it will be the default value.
+     */
+    if( iedsw == 0 || iedsw == 10 || iedsw == 13 )
+    {
+      /*
+       * Get the default eddy value from the getEddy-method, too. There the information is given, whether it has some
+       * value or default should be applied. Furthermore value is changed to 2500.
+       */
+      result[0] = getEddyXX();
+      result[1] = getEddyYX();
+      result[2] = getEddyXY();
+      result[3] = getEddyYY();
+    }
+    else
+    {
+      /*
+       * For usage of non-constant eddy-viscosity approaches, the value is 0.5
+       */
+      final double defaultValue = 0.5;
+      result[0] = defaultValue;
+      result[1] = defaultValue;
+      result[2] = defaultValue;
+      result[3] = defaultValue;
+    }
+    return result;
+  }
 }

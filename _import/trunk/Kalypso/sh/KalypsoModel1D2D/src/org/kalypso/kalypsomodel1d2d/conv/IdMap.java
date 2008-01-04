@@ -38,34 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.mpcoverage;
+package org.kalypso.kalypsomodel1d2d.conv;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * @author schrage
- *
+ * 
+ * 
+ * @author Gernot Belger
+ * 
  */
-public class Messages
+public class IdMap
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypsosimulationmodel.core.mpcoverage.messages"; //$NON-NLS-1$
+  private final Map<String, Integer> m_map;
 
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
-
-  private Messages( )
+  public IdMap( final int initialSize )
   {
+    m_map = new LinkedHashMap<String, Integer>( initialSize );
   }
 
-  public static String getString( String key )
+  public IdMap( )
   {
-    try
+    m_map = new LinkedHashMap<String, Integer>();
+  }
+
+  public int getOrAdd( final String id )
+  {
+    if( !m_map.containsKey( id ) )
     {
-      return RESOURCE_BUNDLE.getString( key );
+      final int newId = m_map.size() + 1;
+      m_map.put( id, newId );
+      return newId;
     }
-    catch( MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
+
+    return m_map.get( id );
+  }
+
+  public boolean contains( final String id )
+  {
+    return m_map.containsKey( id );
   }
 }

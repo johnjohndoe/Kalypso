@@ -45,7 +45,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
 
     if( prop == null )
     {
-      // create the property tha is still missing
+      // create the property that is still missing
       m_containers = new FeatureWrapperCollection( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS, IFE1D2DEdge.class );
     }
     else
@@ -54,6 +54,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
       m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
     }
     m_containers.addSecondaryWrapper( IFELine.class );
+    // TODO: does this collection really may contain 1D-Elements??
     m_containers.addSecondaryWrapper( IElement1D.class );
   }
 
@@ -121,13 +122,14 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
    */
   public IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] getElements( )
   {
+    // TODO Check: Dejan change the whole method to this line, but this cannot possibly work, as we will get an instant
+    // exception here???
     // return ((List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>) m_containers).toArray( new IFE1D2DElement[0]
     // );
 
-    // // exTODO: at the moment, the elements are found via the geometric position, maybe change this later to
-    // references via
-    // // the containers.
-    //
+    // TODO: at the moment, the elements are found via the geometric position, maybe change this later to
+    // references via the containers.
+
     final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getWorkspace().getRootFeature() );
     final FeatureList elementList = (FeatureList) model.getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
 

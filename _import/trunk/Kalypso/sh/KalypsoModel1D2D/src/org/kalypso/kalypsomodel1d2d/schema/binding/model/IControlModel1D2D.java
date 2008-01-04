@@ -72,7 +72,7 @@ public interface IControlModel1D2D extends IControlModel
 
   public int getStartYear( );
 
-  public Integer getIaccyc( );
+  public int getIaccyc( );
 
   public boolean getRestart( );
 

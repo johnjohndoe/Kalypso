@@ -38,34 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.actions;
+package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
+import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 
 /**
- * @author schrage
- *
+ * A common log facility into which {@link IGeoStatus}'es may be logged.
+ * 
+ * @author Gernot Belger
  */
-public class Messages
+public interface IGeoLog
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.actions.messages"; //$NON-NLS-1$
+  /**
+   * Closes the log and releases all used resources.
+   */
+  void close( );
 
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+  /**
+   * Formats the message and logs the result as {@link #log(int, String, -1, null, null)}
+   * 
+   * @see java.util.Formatter#format(String, Object...)
+   */
+  IGeoStatus formatLog( int severity, String message, Object... args );
 
-  private Messages( )
-  {
-  }
+  /**
+   * Add a logging message to this log. From the given parameters a {@link IGeoStatus} will be created and returned.
+   * 
+   * @return The newly created {@link IGeoStatus}.
+   */
+  IGeoStatus log( int severity, String message, int code, GM_Object location, Throwable t );
 
-  public static String getString( String key )
-  {
-    try
-    {
-      return RESOURCE_BUNDLE.getString( key );
-    }
-    catch( MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-  }
+  void log( IStatus status );
+
+  IStatusCollection getStatusCollection( );
 }

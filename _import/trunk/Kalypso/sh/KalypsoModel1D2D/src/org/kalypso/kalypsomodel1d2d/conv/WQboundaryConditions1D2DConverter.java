@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
+import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.observation.IObservation;
@@ -63,9 +68,33 @@ public class WQboundaryConditions1D2DConverter
     m_boundaryConditionsIDProvider = boundaryConditionsIDProvider;
   }
 
-  public void writeWQbcFile( final Formatter format )
+  public void writeWQbcFile( final File file ) throws IOException
+  {
+    Formatter formatter = null;
+    try
+    {
+      // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
+      // so no locale parameter for each format is needed any more .
+      formatter = new Formatter( file, Charset.defaultCharset().name(), Locale.US );
+      writeWQbcFile( formatter );
+      FormatterUtils.checkIoException( formatter );
+    }
+    finally
+    {
+      if( formatter != null )
+      {
+        // REMARK: do not check io-exception here, else other exception would be hidden by this on
+        formatter.close();
+      }
+    }
+  }
+
+  public void writeWQbcFile( final Formatter format ) throws IOException
   {
     format.format( "TIT     %s%n", "stage discharge data file" );
+
+    FormatterUtils.checkIoException( format );
+
     final Iterator<Integer> iterator = m_boundaryConditionsIDProvider.keySet().iterator();
     while( iterator.hasNext() )
     {
@@ -77,6 +106,7 @@ public class WQboundaryConditions1D2DConverter
       final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
       if( wComponent == null || qComponent == null )
         continue;
+
       final TupleResultIndex tupleResultIndex = new TupleResultIndex( obsResult, wComponent );
       final Iterator<IRecord> tupleIterator = tupleResultIndex.getIterator();
       format.format( "CTL%13d%n", bcParentID );
@@ -87,6 +117,8 @@ public class WQboundaryConditions1D2DConverter
         final BigDecimal q = (BigDecimal) record.getValue( qComponent );
         format.format( "STD%13.4f%8.3f%n", w, q );
       }
+
+      FormatterUtils.checkIoException( format );
     }
     format.format( "ENDDATA" );
   }

@@ -718,6 +718,7 @@
 						default="1">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
+							TODO: default 1??? does not match the comment below!
 								<xs:label>Restart step</xs:label>
 								<xs:tooltip>
 									Angabe des Restart Zeitschrittes

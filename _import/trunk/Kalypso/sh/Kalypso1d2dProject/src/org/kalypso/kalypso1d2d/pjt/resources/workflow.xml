@@ -214,7 +214,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 	<TaskGroup
 		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Postprocessing"
 		context="FenetMap">
-		<Help><![CDATA[Nach der Druchführung der Strömungsberechungen können die Ergebnisse hier ausgewertet und visualisiert werden.]]></Help>
+		<Help><![CDATA[Nach der Durchführung der Strömungsberechungen können die Ergebnisse hier ausgewertet und visualisiert werden.]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
 
 		<TaskGroup

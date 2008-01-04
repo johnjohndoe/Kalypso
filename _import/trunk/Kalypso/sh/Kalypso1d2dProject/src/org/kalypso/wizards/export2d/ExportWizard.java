@@ -41,29 +41,29 @@
 package org.kalypso.wizards.export2d;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 public class ExportWizard extends Wizard implements INewWizard
@@ -97,7 +97,7 @@ public class ExportWizard extends Wizard implements INewWizard
    * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPageControls( Composite pageContainer )
+  public void createPageControls( final Composite pageContainer )
   {
     setWindowTitle( "Als Datei exportieren" );
     setNeedsProgressMonitor( true );
@@ -109,69 +109,47 @@ public class ExportWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    try
+    final File exportFile = new File( m_page1.getFilePath() );
+    final boolean exportMiddleNodes = m_page1.isSelectedExportMiddleNodes();
+    final boolean exportRoughness = m_page1.isSelectedExportRoughessData();
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
-      final SzenarioDataProvider dataProvider = Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
-      final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
-      final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
-      final Gml2RMA10SConv converter = new Gml2RMA10SConv( new File( m_page1.getFilePath() ), discretisationModel, flowRelationshipModel );
-      converter.setExportParameters( true, m_page1.isSelectedExportMiddleNodes(), m_page1.isSelectedExportRoughessData() );
-      getContainer().run( true, true, new IRunnableWithProgress()
+      public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
-        public void run( final IProgressMonitor monitor ) throws InterruptedException
+        monitor.beginTask( "FE Netz exportieren", IProgressMonitor.UNKNOWN );
+
+        final SzenarioDataProvider dataProvider = Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
+        final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
+        final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
+        final IRoughnessClsCollection roughnessModel = exportRoughness ? dataProvider.getModel( IRoughnessClsCollection.class ) : null;
+
+        final Gml2RMA10SConv converter = new Gml2RMA10SConv( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, exportMiddleNodes );
+
+        try
         {
-          monitor.beginTask( "FE Netz exportieren", IProgressMonitor.UNKNOWN );
-          try
-          {
-            converter.toRMA10sModel();
-          }
-          catch( final SimulationException e )
-          {
-            throw new InterruptedException(e.getLocalizedMessage());
-          }
+          converter.writeRMA10sModel( exportFile );
         }
-      } );
-    }
-    catch( final Exception e )
-    {
-      ErrorDialog.openError( getShell(), "Datei kann nicht erzeugt werden", "", StatusUtilities.statusFromThrowable( e ) );
-      e.printStackTrace();
-      return false;
-    }
-
-    if( m_project != null )
-    {
-      final Job refreshJob = new Job( "Projekt " + m_project.getName() + " aktualisieren" )
-      {
-        @Override
-        protected IStatus run( IProgressMonitor monitor )
+        catch( IOException e )
         {
-          try
-          {
-            m_project.refreshLocal( IResource.DEPTH_INFINITE, monitor );
-          }
-          catch( CoreException e )
-          {
-            e.printStackTrace();
-
-            return StatusUtilities.statusFromThrowable( e );
-          }
-
-          return Status.OK_STATUS;
+          e.printStackTrace();
+          throw new InvocationTargetException( e );
         }
-      };
+        return Status.OK_STATUS;
+      }
+    };
 
-      refreshJob.schedule();
-    }
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    ErrorDialog.openError( getShell(), "FE-Netz exportieren", "Datei kann nicht erzeugt werden", result );
 
-    return true;
+    return result.isOK();
   }
 
   /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     // TODO Auto-generated method stub
 

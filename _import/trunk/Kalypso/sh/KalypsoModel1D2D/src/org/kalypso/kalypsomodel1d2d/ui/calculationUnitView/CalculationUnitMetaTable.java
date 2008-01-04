@@ -42,9 +42,9 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -65,21 +65,28 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob;
+import org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Calculation unit widget component that shows the table of existing calculation units, with the corresponding buttons
@@ -123,7 +130,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   final private ISelectionChangedListener elevationModelSelectListener = new ISelectionChangedListener()
   {
-    @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+    @SuppressWarnings("synthetic-access")
     public void selectionChanged( SelectionChangedEvent event )
     {
       try
@@ -154,7 +161,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   private final KeyBasedDataModelChangeListener dataModelListener = new KeyBasedDataModelChangeListener()
   {
-    @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+    @SuppressWarnings("synthetic-access")
     public void dataChanged( String key, Object newValue )
     {
       if( ICommonKeys.KEY_FEATURE_WRAPPER_LIST.equals( key ) )
@@ -296,7 +303,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
           try
           {
             createFeatureWrapper();
-            int newEntryPosition = tableViewer.getTable().getItemCount() - 1;
+            final int newEntryPosition = tableViewer.getTable().getItemCount() - 1;
             tableViewer.getTable().select( newEntryPosition );
           }
           catch( final Throwable th )
@@ -318,24 +325,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
         @Override
         public void widgetSelected( final SelectionEvent event )
         {
-          final Action action = new Action()
-          {
-            @Override
-            public void run( )
-            {
-              final ICalculationUnit calculationUnit = getDataModel().getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-              if( calculationUnit != null )
-              {
-                final IWorkbench workbench = PlatformUI.getWorkbench();
-                final IStatus result = CalculationUnitSimMode1D2DCalcJob.startCalculation( calculationUnit, workbench );
-                if( result.isOK() )
-                  MessageDialog.openInformation( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString( "CalculationUnitMetaTable.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-                else
-                  ErrorDialog.openError( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString( "CalculationUnitPerformComponent.3" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
-              }
-            }
-          };
-          action.run();
+          handleRunPressed( parent, event );
         }
       } );
       m_btnRunCalculation.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_CLICK_TO_CALCULATE" ) ); //$NON-NLS-1$
@@ -459,7 +449,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
   {
     final Runnable runnable = new Runnable()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       public void run( )
       {
         refreshTableView();
@@ -497,6 +487,36 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
   protected List<ICalculationUnit> setInputContentProvider( )
   {
     return null;
+  }
+
+  protected void handleRunPressed( final Composite parent, final SelectionEvent event )
+  {
+    final ICalculationUnit calculationUnit = getDataModel().getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+
+    if( calculationUnit != null )
+    {
+      final Shell shell = event.display.getActiveShell();
+
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
+      final IFolder scenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+      final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+
+      if( !MessageDialog.openConfirm( shell, "Berechnung starten", "Die Berechnung wird jetzt gestartet, dies kann sehr lange dauern." ) )
+        return;
+
+      // TODO: do it via the result-model instead
+      final IFolder unitFolder = scenarioFolder.getFolder( new Path( "results/" + calculationUnit.getGmlID() ) );
+      if( unitFolder.exists() )
+      {
+        if( !MessageDialog.openConfirm( shell, "Berechnung starten", "Es sind bereits Ergebnisdaten einer vorangegangenen Berechnung vorhanden.\nWenn Sie fortfahren werden diese unwiederruflich gelöscht." ) )
+          return;
+      }
+
+      final Model1D2DSimulation runnable = new Model1D2DSimulation( shell, caseDataProvider, scenarioFolder, unitFolder, calculationUnit.getGmlID() );
+      runnable.process();
+    }
   }
 
 }

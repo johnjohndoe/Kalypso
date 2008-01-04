@@ -141,15 +141,9 @@ public class Util
       final IEvaluationContext currentState = service.getCurrentState();
       final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       if( caseDataProvider instanceof ICommandPoster )
-      {
-        CommandableWorkspace commandableWorkSpace = ((ICommandPoster) caseDataProvider).getCommandableWorkSpace( modelClass );
-        return commandableWorkSpace;
-      }
+        return ((ICommandPoster) caseDataProvider).getCommandableWorkSpace( modelClass );
       else
-      {
         throw new RuntimeException( Messages.getString( "Util.0" ) ); //$NON-NLS-1$
-      }
-
     }
     catch( final Throwable th )
     {
@@ -159,7 +153,7 @@ public class Util
   }
 
   @SuppressWarnings("unchecked")
-  public static final void postCommand( final Class< ? extends IModel> modelClass, ICommand command )
+  public static final void postCommand( final Class< ? extends IModel> modelClass, final ICommand command )
   {
     try
     {
@@ -168,14 +162,9 @@ public class Util
       final IEvaluationContext currentState = service.getCurrentState();
       final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       if( caseDataProvider instanceof ICommandPoster )
-      {
         ((ICommandPoster) caseDataProvider).postCommand( modelClass, command );
-      }
       else
-      {
         throw new RuntimeException( Messages.getString( "Util.1" ) ); //$NON-NLS-1$
-      }
-
     }
     catch( final Throwable th )
     {

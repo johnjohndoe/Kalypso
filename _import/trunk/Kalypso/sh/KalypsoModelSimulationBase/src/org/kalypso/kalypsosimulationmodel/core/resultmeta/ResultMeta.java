@@ -120,8 +120,8 @@ public abstract class ResultMeta extends AbstractFeatureBinder implements IResul
    */
   public void setStatus( IStatus status )
   {
-    if( status instanceof org.kalypsodeegree_impl.gml.binding.commons.IStatus )
-      getFeature().setProperty( QNAME_PROP_STATUS, ((org.kalypsodeegree_impl.gml.binding.commons.IStatus) status).getWrappedFeature() );
+    if( status instanceof org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus )
+      getFeature().setProperty( QNAME_PROP_STATUS, ((org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus) status).getWrappedFeature() );
     else
     {
       // TODO: create new Status and copy values to it

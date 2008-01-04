@@ -45,14 +45,11 @@ package org.kalypso.kalypsomodel1d2d.sim;
  */
 public interface RMA10SimModelConstants
 {
-
-  public static final long PROCESS_TIMEOUT = 1000 * 60 * 60 * 24; // max 60 * 24 minutes = 1 day
-
   public static final String OUTPUT_DIR_NAME = "Ergebnisse";
 
-  public static final String CALCJOB_SPEC = "resource/1D2Dcalcjob_spec.xml";
+  public static final String RESOURCEBASE = "resource/";
 
-  public static final String RESOURCEBASE = "resource/template/";
+  public static final String RMA10S_BASE = RESOURCEBASE + "rma10s/";
 
   public static final String R10_File = "control.R10";
 
@@ -61,8 +58,6 @@ public interface RMA10SimModelConstants
   public static final String BC_WQ_File = "wqusw.txt";
 
   public static final String SIM_EXE_FILE_3_5 = "RMA10S35Kalypso.exe";
-
-  public static final String SIM_EXE_FILE_TEST = "RMA10S35Kalypso.exe";
 
   // input
   public static final String DISCRETISATIOMODEL_ID = "DiscretisationModel";
