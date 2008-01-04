@@ -20,7 +20,7 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-	 
+
 	<!-- @deprecated: no not use any more -->
 	<complexType name="NamedFeatureBaseType">
 		<complexContent>
@@ -127,7 +127,7 @@
 
 	<element name="Status" type="common:StatusType" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation xml:lang="de"><![CDATA[org.eclipse.core.runtime.IStatus as GML feature]]></documentation>
+			<documentation xml:lang="de"><![CDATA[org.eclipse.core.runtime.IStatus as GML feature (and so adding a (temporal, geo) position).]]></documentation>
 		</annotation>
 	</element>
 
@@ -135,7 +135,8 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="status">
+					<element name="time" type="dateTime"></element>
+					<element name="severity">
 						<simpleType>
 							<restriction base="string">
 								<enumeration value="ok"></enumeration>
@@ -147,6 +148,7 @@
 						</simpleType>
 					</element>
 					<element name="code" type="int"></element>
+					<element name="plugin" type="string"></element>
 					<element name="exception" type="string"></element>
 					<element name="childMember" type="common:StatusPropertyType" minOccurs="0" maxOccurs="unbounded">
 					</element>
@@ -159,6 +161,22 @@
 		<sequence>
 			<element ref="common:Status"></element>
 		</sequence>
+	</complexType>
+
+	<element name="StatusCollection" type="common:StatusCollectionType">
+		<annotation>
+			<documentation xml:lang="de"><![CDATA[A collection of stati.]]></documentation>
+		</annotation>
+	</element>
+
+	<complexType name="StatusCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="statusMember" type="common:StatusPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
 	</complexType>
 
 </schema>

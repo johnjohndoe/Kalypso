@@ -38,46 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.feature.binding;
+package org.kalypsodeegree_impl.gml.binding.commons;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Object;
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
- * The better feature wrapper. Use instead of IFeatureWrapper.<br>
- * TODO: rename and implement the {@link Feature}-Interface.
+ * Binds the common:StatusCollection type.
  * 
  * @author Gernot Belger
  */
-public interface IFeatureWrapper2
+public interface IStatusCollection extends IFeatureWrapperCollection<IGeoStatus>
 {
-  /** Returns the id of the bound feature. */
-  public String getGmlID( );
+  public static final QName QNAME = new QName( NS.COMMON, "StatusCollection" );
 
-  /** Returns the gml:name property of the bound feature. */
-  public String getName( );
-
-  /** Sets the gml:name property */
-  public void setName( final String name );
-
-  /** Returns the gml:description property of the bound feature. */
-  public String getDescription( );
-
-  /** Sets the gml_description property */
-  public void setDescription( final String desc );
-
-  /**
-   * Return the gml:location property of the bound feature.<br>
-   * REMARK: gml:location is deprecated in the GML3-Schema.
-   */
-  public GM_Object getLocation( );
-
-  /**
-   * Sets the gml:location property to the bound feature.<br>
-   * REMARK: gml:location is deprecated in the GML3-Schema.
-   */
-  public void setLocation( final GM_Object location );
-
-  /** Returns the bound feature, which this wrapper class is representing. */
-  public Feature getWrappedFeature( );
+  public static final QName QNAME_PROP_STATUS_MEMBER = new QName( NS.COMMON, "statusMember" );
 }

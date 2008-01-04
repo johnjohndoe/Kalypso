@@ -60,6 +60,8 @@ public class NamedFeatureHelper
 
   public static final QName GML_DESCRIPTION = new QName( NS.GML3, "description" );
 
+  public static final QName GML_LOCATION = new QName( NS.GML3, "location" );
+
   private NamedFeatureHelper( )
   {
   }

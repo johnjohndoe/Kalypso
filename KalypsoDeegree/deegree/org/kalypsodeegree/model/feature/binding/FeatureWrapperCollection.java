@@ -58,7 +58,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    * Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
    * 
    * @param featureCol
-   *            the feature or feature collection with a list property to wrapp
+   *            the feature or feature collection with a list property to wrap
    * @param fwClass
    *            the base class representing the property feature in the list
    * @param featureMemberProp
@@ -73,6 +73,10 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     m_featureList = (FeatureList) m_featureCollection.getProperty( featureMemberProp );
   }
 
+  /**
+   * @deprecated THIS IS RUBBISH!
+   */
+  @Deprecated
   public FeatureWrapperCollection( final Feature parentFeature, final QName childQName, final QName featureMemberProp, final Class<FWCls> fwClass ) throws IllegalArgumentException
   {
     super( createSubfeature( parentFeature, childQName, featureMemberProp ), childQName );
