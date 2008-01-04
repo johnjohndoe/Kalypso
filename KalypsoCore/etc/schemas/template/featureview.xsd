@@ -397,6 +397,13 @@
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="optional" type="xs:boolean" use="optional" default="false">
+			<xs:annotation>
+				<xs:documentation>
+					If true, the given component must be available in the data, else an error message will occur. If false, the column will be just ignored if the component is not available.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 		<xs:attribute name="width" type="xs:int" use="optional" default="100">
 			<xs:annotation>
 				<xs:documentation>The width in pixels of the column. Defaults to 100.</xs:documentation>

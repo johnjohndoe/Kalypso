@@ -119,7 +119,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   public static IComponentUiHandler[] toHandlers( final Feature feature, final ColumnDescriptor[] descriptors )
   {
-    final IComponentUiHandler[] handlers = new IComponentUiHandler[descriptors.length];
+    final List<IComponentUiHandler> handlers = new ArrayList<IComponentUiHandler>( descriptors.length );
 
     if( feature == null )
       return new IComponentUiHandler[0];
@@ -127,10 +127,10 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     /* result definition */
     final Feature resultDefinition = (Feature) feature.getProperty( new QName( NS.OM, "resultDefinition" ) );
     final GMLWorkspace workspace = resultDefinition.getWorkspace();
+
+    /* Directly read components from feature, without converting the whole stuff into an observation */
     final List< ? > components = (List< ? >) resultDefinition.getProperty( new QName( NS.SWE, "component" ) );
-
     final Map<String, IComponent> componentMap = new HashMap<String, IComponent>();
-
     for( final Object object : components )
     {
       final Feature componentFeature = FeatureHelper.getFeature( workspace, object );
@@ -138,17 +138,28 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       componentMap.put( component.getId(), component );
     }
 
-    for( int i = 0; i < handlers.length; i++ )
+    for( final ColumnDescriptor cd : descriptors )
     {
-      final ColumnDescriptor cd = descriptors[i];
-
       final String componentId = cd.getComponent();
       final IComponent component = componentMap.get( componentId );
       final int alignment = SWTUtilities.createStyleFromString( cd.getAlignment() );
-      handlers[i] = ComponentUiHandlerFactory.getHandler( component, cd.isEditable(), cd.isResizeable(), cd.getLabel(), alignment, cd.getWidth(), cd.getWidthPercent(), cd.getDisplayFormat(), cd.getNullFormat(), cd.getParseFormat() );
+
+      if( component != null )
+      {
+        final IComponentUiHandler handler = ComponentUiHandlerFactory.getHandler( component, cd.isEditable(), cd.isResizeable(), cd.getLabel(), alignment, cd.getWidth(), cd.getWidthPercent(), cd.getDisplayFormat(), cd.getNullFormat(), cd.getParseFormat() );
+        handlers.add( handler );
+      }
+
+      final boolean optional = cd.isOptional();
+      if( component == null && !optional )
+      {
+        /* Non-optional columns must exists: throw error message */
+        final String msg = String.format( "Non-Optional component does not exist: %s. Remove from template or make optional.", componentId );
+        throw new IllegalArgumentException( msg );
+      }
     }
 
-    return handlers;
+    return handlers.toArray( new IComponentUiHandler[handlers.size()] );
   }
 
   /**
