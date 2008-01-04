@@ -68,8 +68,10 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public class CalculationUnitComponent extends CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 {
-  public CalculationUnitComponent( )
+  public CalculationUnitComponent( final CalculationUnitDataModel model )
   {
+    super( model );
+
     setRequiredButtons( BTN_SHOW_AND_MAXIMIZE, BTN_REMOVE, BTN_ADD );
   }
 
@@ -141,4 +143,20 @@ public class CalculationUnitComponent extends CalculationUnitMetaTable implement
     return calcList;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable#getBtnDescription(java.lang.String)
+   */
+  @Override
+  protected String getBtnDescription( final String key )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable#moveSelection(int)
+   */
+  @Override
+  protected void moveSelection( final int delta )
+  {
+  }
 }

@@ -44,11 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -79,7 +76,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 /**
  * @author Madanagopal
  * @author Dejan Antanaskovic
- * 
  */
 public class SelectedCalculationComponent
 {
@@ -99,42 +95,37 @@ public class SelectedCalculationComponent
 
   private Text m_numberOfContinuityLines;
 
-  private Composite m_parent;
+  private final KeyBasedDataModel m_dataModel;
 
-  private KeyBasedDataModel m_dataModel;
-
-  private FormToolkit m_toolkit;
-
-  final KeyBasedDataModelChangeListener newKeyListener = new KeyBasedDataModelChangeListener()
+  public SelectedCalculationComponent( final CalculationUnitDataModel dataModel )
   {
-    public void dataChanged( final String key, final Object newValue )
-    {
-      final Display display = m_parent.getDisplay();
-      final Runnable runnable = new Runnable()
-      {
-        public void run( )
-        {
-          if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
-          {
-            updateThisSection( newValue );
-          }
-        }
-      };
-      display.syncExec( runnable );
-    }
-  };
-
-  public void createControl( final KeyBasedDataModel dataModel, final FormToolkit toolkit, final Composite parent )
-  {
-    m_parent = parent;
     m_dataModel = dataModel;
-    m_dataModel = dataModel;
-    m_dataModel.addKeyBasedDataChangeListener( newKeyListener );
-    m_toolkit = toolkit;
-    createGUI( parent );
   }
 
-  protected void updateThisSection( Object newValue )
+  public void createControl( final FormToolkit toolkit, final Composite parent )
+  {
+    m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
+    {
+      public void dataChanged( final String key, final Object newValue )
+      {
+        final Display display = parent.getDisplay();
+        final Runnable runnable = new Runnable()
+        {
+          public void run( )
+          {
+            if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
+            {
+              updateThisSection( newValue );
+            }
+          }
+        };
+        display.syncExec( runnable );
+      }
+    } );
+    createGUI( toolkit, parent );
+  }
+
+  protected void updateThisSection( final Object newValue )
   {
     m_txtCalcUnitName.setText( "" );
     m_txtCalcUnitType.setText( "" );
@@ -143,29 +134,29 @@ public class SelectedCalculationComponent
     m_numberOfContinuityLines.setText( "0" );
     m_numberOfBoundaryConditions.setText( "0" );
     m_subCalcUnitsTable.clearAll();
-    
+
     if( newValue instanceof ICalculationUnit1D )
     {
       m_txtCalcUnitName.setText( ((ICalculationUnit) newValue).getName() );
-      m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.5" ) ); //$NON-NLS-1$
-      m_txtNumberOfElements1D.setText( String.valueOf( ( (ICalculationUnit) newValue ).getElements1D().size() ) );
+      m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.5" ) );
+      m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements1D().size() ) );
       m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit) newValue).getContinuityLines().size() ) );
       m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue ) ) );
     }
     else if( newValue instanceof ICalculationUnit2D )
     {
       m_txtCalcUnitName.setText( ((ICalculationUnit) newValue).getName() );
-      m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.6" ) ); //$NON-NLS-1$
-      m_txtNumberOfElements2D.setText( String.valueOf( ( (ICalculationUnit) newValue ).getElements2D().size() ) );
+      m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.6" ) );
+      m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements2D().size() ) );
       m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit) newValue).getContinuityLines().size() ) );
       m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue ) ) );
     }
     else if( newValue instanceof ICalculationUnit1D2D )
     {
       m_txtCalcUnitName.setText( ((ICalculationUnit) newValue).getName() );
-      m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.7" ) ); //$NON-NLS-1$
-      m_txtNumberOfElements1D.setText( String.valueOf( ( (ICalculationUnit) newValue ).getElements1D().size() ) );
-      m_txtNumberOfElements2D.setText( String.valueOf( ( (ICalculationUnit) newValue ).getElements2D().size() ) );
+      m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.7" ) );
+      m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements1D().size() ) );
+      m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements2D().size() ) );
       m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit) newValue).getContinuityLines().size() ) );
       m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue ) ) );
       m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D) newValue).getSubUnits().toArray() );
@@ -177,7 +168,7 @@ public class SelectedCalculationComponent
     final CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( m_dataModel );
     final Feature bcHolderFeature = workspace.getRootFeature();
     final IFlowRelationshipModel flowRelationshipsModel = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
-    final List<IFeatureWrapper2> allFlowRelationshipsList = new ArrayList<IFeatureWrapper2>( (List) flowRelationshipsModel );
+    final List<IFeatureWrapper2> allFlowRelationshipsList = new ArrayList<IFeatureWrapper2>( flowRelationshipsModel );
     final List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>();
     for( final IFeatureWrapper2 relationship : allFlowRelationshipsList )
     {
@@ -187,51 +178,51 @@ public class SelectedCalculationComponent
     return conditions;
   }
 
-  private void createGUI( final Composite parent )
+  private void createGUI( final FormToolkit toolkit, final Composite parent )
   {
     final Composite rootComposite = new Composite( parent, SWT.FLAT );
     rootComposite.setLayout( new GridLayout( 1, false ) );
     GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
 
-    Composite optionsComposite = new Composite( rootComposite, SWT.FLAT );
+    final Composite optionsComposite = new Composite( rootComposite, SWT.FLAT );
     optionsComposite.setLayout( new GridLayout( 2, false ) );
 
     final Label selectedProjectName = new Label( optionsComposite, SWT.RIGHT );
-    selectedProjectName.setText( Messages.getString( "SelectedCalculationComponent.11" ) ); //$NON-NLS-1$
-    m_txtCalcUnitName = m_toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    selectedProjectName.setText( Messages.getString( "SelectedCalculationComponent.11" ) );
+    m_txtCalcUnitName = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
     m_txtCalcUnitName.setEditable( false );
     m_txtCalcUnitName.setLayoutData( gridData );
 
     final Label labelName = new Label( optionsComposite, SWT.RIGHT );
-    labelName.setText( Messages.getString( "SelectedCalculationComponent.12" ) ); //$NON-NLS-1$
-    m_txtCalcUnitType = m_toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    labelName.setText( Messages.getString( "SelectedCalculationComponent.12" ) );
+    m_txtCalcUnitType = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
     m_txtCalcUnitType.setEditable( false );
     gridData = new GridData( GridData.FILL_HORIZONTAL );
     m_txtCalcUnitType.setLayoutData( gridData );
 
     final Label element1DLabel = new Label( optionsComposite, SWT.RIGHT );
-    element1DLabel.setText( Messages.getString( "SelectedCalculationComponent.13" ) ); //$NON-NLS-1$
-    m_txtNumberOfElements1D = m_toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    element1DLabel.setText( Messages.getString( "SelectedCalculationComponent.13" ) );
+    m_txtNumberOfElements1D = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
     m_txtNumberOfElements1D.setEditable( false );
     gridData = new GridData( GridData.FILL_HORIZONTAL );
     m_txtNumberOfElements1D.setLayoutData( gridData );
 
     final Label element2DLabel = new Label( optionsComposite, SWT.RIGHT );
-    element2DLabel.setText( Messages.getString( "SelectedCalculationComponent.14" ) ); //$NON-NLS-1$
-    m_txtNumberOfElements2D = m_toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    element2DLabel.setText( Messages.getString( "SelectedCalculationComponent.14" ) );
+    m_txtNumberOfElements2D = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
     m_txtNumberOfElements2D.setEditable( false );
     gridData = new GridData( GridData.FILL_HORIZONTAL );
     m_txtNumberOfElements2D.setLayoutData( gridData );
 
-    Label boundaryUpLabel = new Label( optionsComposite, SWT.RIGHT );
-    boundaryUpLabel.setText( Messages.getString( "SelectedCalculationComponent.16" ) ); //$NON-NLS-1$
-    m_numberOfContinuityLines = m_toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    final Label boundaryUpLabel = new Label( optionsComposite, SWT.RIGHT );
+    boundaryUpLabel.setText( Messages.getString( "SelectedCalculationComponent.16" ) );
+    m_numberOfContinuityLines = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
     m_numberOfContinuityLines.setLayoutData( gridData );
     m_numberOfContinuityLines.setEditable( false );
 
     final Label boundaryConditionsLabel = new Label( optionsComposite, SWT.RIGHT );
-    boundaryConditionsLabel.setText( Messages.getString( "SelectedCalculationComponent.18" ) ); //$NON-NLS-1$
-    m_numberOfBoundaryConditions = m_toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    boundaryConditionsLabel.setText( Messages.getString( "SelectedCalculationComponent.18" ) );
+    m_numberOfBoundaryConditions = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
     m_numberOfBoundaryConditions.setLayoutData( gridData );
     m_numberOfBoundaryConditions.setEditable( false );
 
@@ -246,37 +237,8 @@ public class SelectedCalculationComponent
 
     m_subCalcUnitsTableViewer = new TableViewer( subCalculationComposite, SWT.FILL | SWT.BORDER );
     m_subCalcUnitsTable = m_subCalcUnitsTableViewer.getTable();
-    m_subCalcUnitsTable.addSelectionListener( new SelectionAdapter()
-    {
-      private IStructuredSelection sel;
-
-      public void widgetSelected( SelectionEvent e )
-      {
-
-        if( m_subCalcUnitsTableViewer.getSelection() != null )
-        {
-          try
-          {
-            if( m_subCalcUnitsTableViewer.getSelection() instanceof IStructuredSelection )
-            {
-              sel = (IStructuredSelection) (m_subCalcUnitsTableViewer.getSelection());
-              // descriptionText.setText( description );
-            }
-          }
-          catch( RuntimeException e1 )
-          {
-            e1.printStackTrace();
-          }
-        }
-        else
-        {
-          // descriptionText.setText( defaultTestDecription );
-        }
-      }
-    } );
     m_subCalcUnitsTableViewer.setContentProvider( new ArrayContentProvider() );
-    m_subCalcUnitsTableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( subCalculationComposite.getDisplay() ) );// ListLabelProvider(this)
-    // );
+    m_subCalcUnitsTableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( subCalculationComposite.getDisplay() ) );
     m_subCalcUnitsTable.setLinesVisible( false );
 
     final TableColumn lineColumn = new TableColumn( m_subCalcUnitsTable, SWT.LEFT );

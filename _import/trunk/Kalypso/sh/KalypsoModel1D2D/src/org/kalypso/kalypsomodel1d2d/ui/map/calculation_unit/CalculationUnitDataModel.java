@@ -54,25 +54,16 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings("unchecked") //$NON-NLS-1$
+@SuppressWarnings("unchecked")
 public class CalculationUnitDataModel extends KeyBasedDataModel
 {
   private final Map<ICalculationUnit, List<IProblem>> validateMessages = new HashMap<ICalculationUnit, List<IProblem>>();
 
   public CalculationUnitDataModel( )
   {
-    super( new String[] { 
-        ICommonKeys.KEY_FEATURE_WRAPPER_LIST, 
-        ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
-        ICommonKeys.KEY_DISCRETISATION_MODEL, 
-        ICommonKeys.KEY_MAP_PANEL,
-        ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, 
-        ICommonKeys.WIDGET_WITH_STRATEGY, 
-        ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, 
-        ICommonKeys.KEY_SELECTED_DISPLAY,
-        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, 
-        ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER
-        }, null );
+    super( new String[] { ICommonKeys.KEY_FEATURE_WRAPPER_LIST, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, ICommonKeys.KEY_DATA_PROVIDER, ICommonKeys.KEY_DISCRETISATION_MODEL,
+        ICommonKeys.KEY_MAP_PANEL, ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, ICommonKeys.WIDGET_WITH_STRATEGY, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, ICommonKeys.KEY_SELECTED_DISPLAY,
+        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER }, null );
   }
 
   public ICalculationUnit getSelectedCalculationUnit( )

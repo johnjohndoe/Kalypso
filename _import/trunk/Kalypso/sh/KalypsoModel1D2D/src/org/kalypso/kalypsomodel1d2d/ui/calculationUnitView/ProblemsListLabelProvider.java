@@ -42,38 +42,29 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
 public class ProblemsListLabelProvider extends LabelProvider
 {
-  
-  public ProblemsListLabelProvider( )
-  {
-  }
-  
-  public Image getImage( Object element )
+  @Override
+  public Image getImage( final Object element )
   {
     return null;
   }
 
-  public String getText( Object element )
+  @Override
+  public String getText( final Object element )
   {
     if( element instanceof IProblem )
     {
-
-      String name = ((IProblem)element).getMessageDescription();
+      final String name = ((IProblem) element).getMessageDescription();
       if( name != null )
-      {
         return name;
-      }
       else
-      {
         return ""; //$NON-NLS-1$
-      }
     }
     else
     {

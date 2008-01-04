@@ -54,7 +54,6 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
@@ -66,7 +65,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -79,7 +77,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Madanagopal
  * 
  */
-public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidgetWithStrategy, IGrabDistanceProvider
+public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidgetWithStrategy
 {
   private IWidget m_strategy = null;
 
@@ -175,7 +173,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     try
     {
       m_dataModel.setData( ICommonKeys.KEY_SELECTED_DISPLAY, parent.getDisplay() );
-      return m_widgetFace.createControl( parent );
+      return m_widgetFace.createControl( parent, toolkit );
     }
     catch( final Throwable th )
     {
@@ -189,10 +187,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void disposeControl( )
   {
-    if( m_widgetFace != null )
-    {
-      m_widgetFace.disposeControl();
-    }
+    m_dataModel.removeAllListeners();
   }
 
   /**
@@ -501,21 +496,5 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
       final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
       m_strategy.activate( commandPoster, mapPanel );
     }
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider#getGrabDistance()
-   */
-  public double getGrabDistance( )
-  {
-    if( m_strategy instanceof IGrabDistanceProvider )
-    {
-      return ((IGrabDistanceProvider) m_strategy).getGrabDistance();
-    }
-
-    System.out.println( "getting fix grab distance" ); //$NON-NLS-1$
-
-    final MapPanel mapPanel = m_dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
-    return MapUtilities.calculateWorldDistance( mapPanel, 6 );
   }
 }

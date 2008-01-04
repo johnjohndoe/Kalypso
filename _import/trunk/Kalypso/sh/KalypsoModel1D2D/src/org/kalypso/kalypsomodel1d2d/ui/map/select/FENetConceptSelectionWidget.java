@@ -56,7 +56,6 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.JMSelector;
@@ -84,7 +83,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  */
-public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvider
+public class FENetConceptSelectionWidget implements IWidget
 {
   private final QName[] m_themeElementQNames;
 
@@ -339,7 +338,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
         final List<EasyFeatureWrapper> selected = getSelectedByPoint( point );
         changeSelection( selected );
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -611,10 +610,5 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
       return null;
     else
       return MapUtilities.transform( m_mapPanel, m_currentPoint );
-  }
-
-  public double getGrabDistance( )
-  {
-    return MapUtilities.calculateWorldDistance( m_mapPanel, getCurrentPoint(), 6 );
   }
 }

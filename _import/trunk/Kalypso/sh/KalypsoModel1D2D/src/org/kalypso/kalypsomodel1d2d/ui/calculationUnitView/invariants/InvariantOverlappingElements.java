@@ -60,89 +60,53 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 @SuppressWarnings("unchecked")
 public class InvariantOverlappingElements implements ICalculationValidateInterface
 {
-  private final ICalculationUnit1D2D mainCalculation1D2D;
-
-  private List<ICalculationUnit> subUnits;
-
-  private final List<IFeatureWrapper2> bufferList = new ArrayList<IFeatureWrapper2>();
-
-  private List<IFENetItem> bufSubUnits;
-
-  private ICalculationUnit2D thisCalcUnit;
-
-  private ICalculationUnit2D toCompareCalcUnit;
-
-  private final List<IProblem> invariantErrorMessages = new ArrayList<IProblem>();
-
-  public InvariantOverlappingElements( final ICalculationUnit1D2D mainCalculation1D2D )
-  {
-    this.mainCalculation1D2D = mainCalculation1D2D;
-  }
-
   /**
    * Provides Validating Conditions for this Class.
    * 
-   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.ICalculationValidateInterface#checkAllInvariants()
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.ICalculationValidateInterface#checkAllInvariants(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
    */
-  public void checkAllInvariants( )
+  public List<IProblem> checkAllInvariants( final ICalculationUnit calcUnit )
   {
-    subUnits = mainCalculation1D2D.getSubUnits();
-    System.out.println( "subUnits " + subUnits.size() );
+    final List<IProblem> invariantErrorMessages = new ArrayList<IProblem>();
 
-    for( final IFeatureWrapper2 subUnit : subUnits )
+    final List<IFeatureWrapper2> bufferList = new ArrayList<IFeatureWrapper2>();
+
+    if( !(calcUnit instanceof ICalculationUnit1D2D) )
+      return invariantErrorMessages;
+
+    final ICalculationUnit1D2D calcUnit1d2d = (ICalculationUnit1D2D) calcUnit;
+
+    final List<ICalculationUnit> subUnits = calcUnit1d2d.getSubUnits();
+    for( final ICalculationUnit subUnit : subUnits )
     {
+      ICalculationUnit2D thisCalcUnit;
 
       if( subUnit instanceof ICalculationUnit2D )
-      {
-
         thisCalcUnit = (ICalculationUnit2D) subUnit;
-        System.out.println( thisCalcUnit.getName() );
+      else
+        thisCalcUnit = null;
 
-      }
       for( final IFeatureWrapper2 subUnit_ : subUnits )
-
       {
-        System.out.println( "subUnits " + subUnits.size() );
         if( subUnit_ instanceof ICalculationUnit2D )
         {
-          toCompareCalcUnit = (ICalculationUnit2D) subUnit_;
-          System.out.println( toCompareCalcUnit.getName() );
+          final ICalculationUnit2D toCompareCalcUnit = (ICalculationUnit2D) subUnit_;
 
           if( thisCalcUnit.equals( toCompareCalcUnit ) )
             continue;
           if( bufferList.contains( thisCalcUnit ) )
             continue;
-          bufSubUnits = thisCalcUnit.getElements();
-          System.out.println( bufSubUnits.size() );
+
+          final List<IFENetItem> bufSubUnits = thisCalcUnit.getElements();
           for( final IFeatureWrapper2 element : bufSubUnits )
           {
             if( toCompareCalcUnit.getElements().contains( element ) )
-            {
-              // @TODO Can Change the Focus to particular Calculation Unit
-              invariantErrorMessages.add( new ProblemDescriptor( null, "Overlapping Elements in " + toCompareCalcUnit.getName(), mainCalculation1D2D, mainCalculation1D2D ) );
-              System.out.println( "Overlapping Elements in " + toCompareCalcUnit.getName() );
-            }
+              invariantErrorMessages.add( new ProblemDescriptor( null, "Overlapping Elements in " + toCompareCalcUnit.getName(), calcUnit, calcUnit1d2d ) );
           }
           bufferList.add( thisCalcUnit );
         }
       }
     }
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getBrokenInvariantMessages()
-   */
-  public List<IProblem> getBrokenInvariantMessages( )
-  {
     return invariantErrorMessages;
   }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getCalculationUnit()
-   */
-  public ICalculationUnit getCalculationUnit( )
-  {
-    return mainCalculation1D2D;
-  }
-
 }

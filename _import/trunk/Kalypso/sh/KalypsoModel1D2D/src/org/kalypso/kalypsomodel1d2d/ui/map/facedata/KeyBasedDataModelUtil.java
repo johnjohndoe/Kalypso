@@ -143,11 +143,11 @@ public class KeyBasedDataModelUtil
       public void run( )
       {
         // TODO: probably wrong to call it from here; instead let the theme fire the corresponding event
-        
+
         ((MapPanel) mapPanelEntry).invalidateMap();
       }
     };
-//    dataModel.getData( key )
+    // dataModel.getData( key )
     ((Display) displayEntry).asyncExec( repaintRunnable );
   }
 
@@ -158,7 +158,6 @@ public class KeyBasedDataModelUtil
 
   public static final CommandableWorkspace getCommandableWorkspace( final KeyBasedDataModel dataModel, final QName themeQName )
   {
-
     final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     if( mapPanel == null )
     {
@@ -169,8 +168,7 @@ public class KeyBasedDataModelUtil
     {
       throw new RuntimeException( "Could not get map model" );
     }
-    final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapModell, themeQName//
-    );
+    final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapModell, themeQName );
     if( bcTheme == null )
     {
       throw new RuntimeException( "Could not find boundary condition theme" );

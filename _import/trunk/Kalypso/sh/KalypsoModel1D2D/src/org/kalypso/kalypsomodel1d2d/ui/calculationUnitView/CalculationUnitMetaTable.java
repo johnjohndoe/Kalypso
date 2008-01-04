@@ -98,7 +98,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 {
   private TableViewer tableViewer;
 
-  private KeyBasedDataModel m_dataModel;
+  private final KeyBasedDataModel m_dataModel;
 
   private Image image;
 
@@ -161,7 +161,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   private final KeyBasedDataModelChangeListener dataModelListener = new KeyBasedDataModelChangeListener()
   {
-    @SuppressWarnings("synthetic-access")
     public void dataChanged( String key, Object newValue )
     {
       if( ICommonKeys.KEY_FEATURE_WRAPPER_LIST.equals( key ) )
@@ -187,12 +186,16 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   private Button m_btnRunCalculation;
 
-  public void createControl( final KeyBasedDataModel dataModel, final Composite parent )
+  public CalculationUnitMetaTable( final KeyBasedDataModel dataModel )
+  {
+    m_dataModel = dataModel;
+  }
+
+  public void createControl( final Composite parent )
   {
     m_parent = parent;
-    m_dataModel = dataModel;
     guiSelectFromList( parent );
-    dataModel.addKeyBasedDataChangeListener( this.dataModelListener );
+    m_dataModel.addKeyBasedDataChangeListener( dataModelListener );
   }
 
   private void guiSelectFromList( final Composite parent )
@@ -338,28 +341,19 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     tableViewer.setColumnProperties( new String[] { "Name" } ); //$NON-NLS-1$
   }
 
-  /*
-   * Template Methods
-   */
-  protected boolean showDescription( )
-  {
-    return false;
-  }
+  protected abstract boolean showDescription( );
 
-  protected IBaseLabelProvider getLabelProvider( final Display display )
-  {
-    return null;
-  }
+  protected abstract IBaseLabelProvider getLabelProvider( final Display display );
 
-  protected void deleteSelected( ) throws Exception
-  {
+  protected abstract void deleteSelected( ) throws Exception;
 
-  }
+  protected abstract void moveSelection( final int delta );
 
-  protected void moveSelection( final int delta )
-  {
+  protected abstract String getBtnDescription( final String key );
 
-  }
+  public abstract void createFeatureWrapper( );
+
+  protected abstract List<ICalculationUnit> setInputContentProvider( );
 
   private void maximizeSelected( )
   {
@@ -377,14 +371,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
   public void setRequiredButtons( final String... buttonsList )
   {
     this.buttonsList = buttonsList;
-  }
-
-  /**
-   * Template Method -- Override by inheriting Class
-   */
-  protected String getBtnDescription( final String key )
-  {
-    return null;
   }
 
   public boolean searchForThisString( final String searchStr )
@@ -405,11 +391,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
   protected IFeatureWrapper2 getCurrentSelection( )
   {
     return (IFeatureWrapper2) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-  }
-
-  public void createFeatureWrapper( )
-  {
-
   }
 
   public KeyBasedDataModel getDataModel( )
@@ -477,16 +458,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     };
     final Display display = m_parent.getDisplay();
     display.syncExec( runnable );
-  }
-
-  public void refreshOtherSections( )
-  {
-
-  }
-
-  protected List<ICalculationUnit> setInputContentProvider( )
-  {
-    return null;
   }
 
   protected void handleRunPressed( final Composite parent, final SelectionEvent event )

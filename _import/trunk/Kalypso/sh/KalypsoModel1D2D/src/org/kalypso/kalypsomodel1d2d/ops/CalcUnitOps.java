@@ -58,6 +58,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -328,12 +329,12 @@ public class CalcUnitOps
    * @throws IllegalArgumentException
    *             if condition or unit is null or grabDistance is less than 0
    */
-  public static final List<IBoundaryCondition> getBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit<IFE1D2DElement> unit )
+  public static final List<IBoundaryCondition> getBoundaryConditions( final Collection<IFlowRelationship> conditions, final ICalculationUnit unit )
   {
     final List<IBoundaryCondition> assignedConditions = new ArrayList<IBoundaryCondition>();
-    for( final IBoundaryCondition condition : conditions )
-      if( isBoundaryConditionOf( unit, condition ) )
-        assignedConditions.add( condition );
+    for( final IFlowRelationship condition : conditions )
+      if( condition instanceof IBoundaryCondition && isBoundaryConditionOf( unit, (IBoundaryCondition) condition ) )
+        assignedConditions.add( (IBoundaryCondition) condition );
     return assignedConditions;
   }
 
@@ -352,7 +353,7 @@ public class CalcUnitOps
    *             if condition or unit is null or grabDistance is less than 0
    * 
    */
-  public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit<IFE1D2DElement> unit )
+  public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit unit )
   {
     int count = 0;
     for( final IBoundaryCondition condition : conditions )

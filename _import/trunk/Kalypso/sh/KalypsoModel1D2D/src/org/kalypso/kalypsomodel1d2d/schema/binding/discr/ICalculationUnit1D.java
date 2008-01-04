@@ -43,14 +43,13 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 
 /**
  * Interface for classes representing a wb1d2d:CalculationUnit1D
+ * 
  * @author Patrice Congo
- *
  */
-public interface ICalculationUnit1D<T extends IFENetItem> extends ICalculationUnit<T>
+public interface ICalculationUnit1D extends ICalculationUnit
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D" ); //$NON-NLS-1$
 }

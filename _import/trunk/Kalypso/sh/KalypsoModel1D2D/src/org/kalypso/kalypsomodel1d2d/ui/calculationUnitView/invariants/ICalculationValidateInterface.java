@@ -47,15 +47,10 @@ import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 
 /**
  * Interface for Validating conditions of Calculation Units
+ * 
  * @author Madanagopal
- *
  */
-@SuppressWarnings("unchecked")
 public interface ICalculationValidateInterface
 {
-
-  //public List<IBoundaryLine> getBoundaryLines();
-  public ICalculationUnit getCalculationUnit();  
-  public void checkAllInvariants();
-  public List<IProblem> getBrokenInvariantMessages(); 
+  public List<IProblem> checkAllInvariants( final ICalculationUnit calcUnit );
 }

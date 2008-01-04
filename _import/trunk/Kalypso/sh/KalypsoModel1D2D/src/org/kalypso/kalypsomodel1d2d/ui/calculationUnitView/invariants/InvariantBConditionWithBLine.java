@@ -53,14 +53,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
-import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Provides Validating Conditions for Checking if every boundary line has atleast one boundary condition
@@ -70,54 +64,34 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class InvariantBConditionWithBLine implements ICalculationValidateInterface
 {
-  private final ICalculationUnit m_calculationUnit;
+  private final IFlowRelationshipModel m_flowRelationship;
 
-  private final CalculationUnitDataModel m_dataModel;
-
-  private final List<IProblem> m_invariantErrorMessages = new ArrayList<IProblem>();
-
-  public InvariantBConditionWithBLine( final ICalculationUnit calc, final CalculationUnitDataModel dataModel )
+  public InvariantBConditionWithBLine( final IFlowRelationshipModel flowRelationship )
   {
-    m_calculationUnit = calc;
-    m_dataModel = dataModel;
-  }
-
-  public List<IBoundaryCondition> getBoundaryConditions( )
-  {
-    final CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( m_dataModel );// dataModel.getData(
-    // CommandableWorkspace.class,
-    // ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE
-    // );
-    final Feature bcHolderFeature = workspace.getRootFeature();
-    final IFlowRelationshipModel flowRelationship = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
-    final List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>( (List) flowRelationship );
-    return conditions;
-  }
-
-  public double getGrabDistance( )
-  {
-    final IGrabDistanceProvider grabDistanceProvider = m_dataModel.getData( IGrabDistanceProvider.class, ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER );
-    return grabDistanceProvider.getGrabDistance();
+    m_flowRelationship = flowRelationship;
   }
 
   /**
    * Runs the validating Checks
    * 
-   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#checkAllInvariants()
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.ICalculationValidateInterface#checkAllInvariants(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
    */
-  @SuppressWarnings("unchecked")
-  public void checkAllInvariants( )
+  public List<IProblem> checkAllInvariants( final ICalculationUnit calcUnit )
   {
-    invariant_CheckEachBLhasBC();
-    if( m_calculationUnit instanceof ICalculationUnit1D )
+    final List<IProblem> invariantErrorMessages = new ArrayList<IProblem>();
+
+    invariant_CheckEachBLhasBC( invariantErrorMessages, calcUnit );
+    if( calcUnit instanceof ICalculationUnit1D )
     {
-      invariant_CheckForBLExist( (ICalculationUnit1D) m_calculationUnit );
-      invariant_CheckBC_On_EndNode( (ICalculationUnit1D) m_calculationUnit );
+      invariant_CheckForBLExist( invariantErrorMessages, (ICalculationUnit1D) calcUnit );
+      invariant_CheckBC_On_EndNode( invariantErrorMessages, (ICalculationUnit1D) calcUnit );
     }
+
+    return invariantErrorMessages;
   }
 
   @SuppressWarnings("unchecked")
-  private void invariant_CheckBC_On_EndNode( final ICalculationUnit1D calc )
+  private void invariant_CheckBC_On_EndNode( final List<IProblem> invariantErrorMessages, final ICalculationUnit1D calc )
   {
     final List<IFENetItem> elements = calc.getElements();
     final List<IFE1D2DNode> endNodes = new ArrayList<IFE1D2DNode>();
@@ -133,20 +107,21 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
     }
 
-    final List<IBoundaryCondition> bConditions_ = CalcUnitOps.getBoundaryConditions( getBoundaryConditions(), calc );
+    final List<IBoundaryCondition> bConditions_ = CalcUnitOps.getBoundaryConditions( m_flowRelationship, calc );
     boolean foundEndBLine = false;
     for( final IBoundaryCondition condition_ : bConditions_ )
     {
       for( final IFE1D2DNode endNode : endNodes )
       {
-        if( endNode.getPoint().distance( condition_.getPosition() ) < getGrabDistance() )
+        // TODO: set an definite constant value for this grab distance!
+        if( endNode.getPoint().distance( condition_.getPosition() ) < 0.5 )
         {
           foundEndBLine = true;
         }
       }
       if( !foundEndBLine )
       {
-        m_invariantErrorMessages.add( new ProblemDescriptor( null, "Add Boundary Line & BC on End Node " + m_calculationUnit.getName(), m_calculationUnit, m_calculationUnit ) );
+        invariantErrorMessages.add( new ProblemDescriptor( null, "Add Boundary Line & BC on End Node " + calc.getName(), calc, calc ) );
       }
       foundEndBLine = false;
     }
@@ -154,20 +129,18 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   }
 
   @SuppressWarnings("unchecked")
-  private void invariant_CheckForBLExist( final ICalculationUnit1D calc )
+  private void invariant_CheckForBLExist( final List<IProblem> invariantErrorMessages, final ICalculationUnit1D calc )
   {
     final List<IFELine> continuityLine2Ds = calc.getContinuityLines();
     if( continuityLine2Ds.size() == 0 )
-    {
-      m_invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line must be present or yet to be assigned " + calc.getName(), calc, calc ) );
-    }
+      invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line must be present or yet to be assigned " + calc.getName(), calc, calc ) );
   }
 
   @SuppressWarnings("unchecked")
-  private void invariant_CheckEachBLhasBC( )
+  private void invariant_CheckEachBLhasBC( final List<IProblem> invariantErrorMessages, final ICalculationUnit calcUnit )
   {
-    final List<IFELine> continuityLine2Ds = m_calculationUnit.getContinuityLines();
-    final List<IBoundaryCondition> boundaryConditions = CalcUnitOps.getBoundaryConditions( getBoundaryConditions(), m_calculationUnit );
+    final List<IFELine> continuityLine2Ds = calcUnit.getContinuityLines();
+    final List<IBoundaryCondition> boundaryConditions = CalcUnitOps.getBoundaryConditions( m_flowRelationship, calcUnit );
 
     for( final IFELine line : continuityLine2Ds )
     {
@@ -176,7 +149,8 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       {
         for( final IBoundaryCondition bc : boundaryConditions )
         {
-          if( line.recalculateElementGeometry().distance( bc.getPosition() ) < getGrabDistance() )
+          // TODO: set an definite constant value for this grab distance!
+          if( line.recalculateElementGeometry().distance( bc.getPosition() ) < 0.5 )
           {
             hasBc = true;
           }
@@ -189,24 +163,8 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
       if( !hasBc )
       {
-        m_invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line may not have Boundary condition or have not yet been assigned to " + m_calculationUnit.getName(), m_calculationUnit, line ) );
+        invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line may not have Boundary condition or have not yet been assigned to " + calcUnit.getName(), calcUnit, line ) );
       }
     }
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getBrokenInvariantMessages()
-   */
-  public List<IProblem> getBrokenInvariantMessages( )
-  {
-    return m_invariantErrorMessages;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getCalculationUnit()
-   */
-  public ICalculationUnit getCalculationUnit( )
-  {
-    return m_calculationUnit;
   }
 }

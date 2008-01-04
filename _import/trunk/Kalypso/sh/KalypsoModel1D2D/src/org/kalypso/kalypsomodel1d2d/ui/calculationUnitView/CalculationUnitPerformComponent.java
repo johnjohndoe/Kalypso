@@ -49,7 +49,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Patrice Congo
@@ -58,12 +57,11 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public class CalculationUnitPerformComponent extends CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 {
-  private final CalculationUnitDataModel m_dataModel;
-
   public CalculationUnitPerformComponent( final CalculationUnitDataModel dataModel )
   {
+    super( dataModel );
+
     setRequiredButtons( BTN_SHOW_AND_MAXIMIZE, BTN_CLICK_TO_CALCULATE );
-    m_dataModel = dataModel;
   }
 
   @Override
@@ -75,14 +73,61 @@ public class CalculationUnitPerformComponent extends CalculationUnitMetaTable im
   @Override
   protected List<ICalculationUnit> setInputContentProvider( )
   {
-    Object inputData = m_dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    if( inputData == null )
-    {
-      inputData = new ArrayList<IFeatureWrapper2>();
+    final Object inputData = getDataModel().getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    if( inputData != null )
       return (List<ICalculationUnit>) inputData;
-    }
-    final List<ICalculationUnit> calcList = (List<ICalculationUnit>) m_dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    return calcList;
+
+    return new ArrayList<ICalculationUnit>();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable#createFeatureWrapper()
+   */
+  @Override
+  public void createFeatureWrapper( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable#deleteSelected()
+   */
+  @Override
+  protected void deleteSelected( ) throws Exception
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable#getBtnDescription(java.lang.String)
+   */
+  @Override
+  protected String getBtnDescription( final String key )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable#moveSelection(int)
+   */
+  @Override
+  protected void moveSelection( final int delta )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable#showDescription()
+   */
+  @Override
+  protected boolean showDescription( )
+  {
+    // TODO Auto-generated method stub
+    return false;
   }
 
 }

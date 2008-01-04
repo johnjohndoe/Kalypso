@@ -45,25 +45,31 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
+ * TODO: change this to an geo status!
+ * 
  * Every Validating Condition for Calculation Units implements this Interface
- * @author Madanagopal 
+ * 
+ * @author Madanagopal
  */
-@SuppressWarnings("unchecked") //$NON-NLS-1$
+@SuppressWarnings("unchecked")
 public interface IProblem
 {
-  public void setName(String name);
-  public String getName();
-  
-  public void setMessageDescription(String Description);
-  public String getMessageDescription();
-  
-  public void setParentCalculationUnit(ICalculationUnit calculationUnit);
-  public ICalculationUnit getParentCalculationUnit();
-  
-  public void navigateToProblem(MapPanel panel);
-  
+  public void setName( String name );
+
+  public String getName( );
+
+  public void setMessageDescription( String Description );
+
+  public String getMessageDescription( );
+
+  public void setParentCalculationUnit( ICalculationUnit calculationUnit );
+
+  public ICalculationUnit getParentCalculationUnit( );
+
+  public void navigateToProblem( MapPanel panel );
+
   /**
    * Sets focus on particular Feature
    */
-  public IFeatureWrapper2 showFocusOn();
+  public IFeatureWrapper2 showFocusOn( );
 }

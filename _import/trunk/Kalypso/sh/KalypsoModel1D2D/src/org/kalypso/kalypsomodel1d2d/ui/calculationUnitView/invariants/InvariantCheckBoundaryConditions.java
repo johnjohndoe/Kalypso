@@ -46,7 +46,6 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 
 /**
  * Provides Validating conditions to check if Every Calculation Unit has atleast 2 boundary conditions.
@@ -57,55 +56,24 @@ import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataM
 @SuppressWarnings("unchecked")
 public class InvariantCheckBoundaryConditions implements ICalculationValidateInterface
 {
-
-  private CalculationUnitDataModel dataModel;
-
-  private ICalculationUnit calculationUnit;
-
-  private List<IProblem> invResults = new ArrayList<IProblem>();
-
-  public InvariantCheckBoundaryConditions( ICalculationUnit orgCalc, CalculationUnitDataModel dataModel )
-  {
-    this.dataModel = dataModel;
-    this.calculationUnit = orgCalc;
-  }
-
   /**
-   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getBrokenInvariantMessages()
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.ICalculationValidateInterface#checkAllInvariants(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
    */
-  public List<IProblem> getBrokenInvariantMessages( )
+  public List<IProblem> checkAllInvariants( final ICalculationUnit calculationUnit )
   {
-    return invResults;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getCalculationUnit()
-   */
-  public ICalculationUnit getCalculationUnit( )
-  {
-    return calculationUnit;
-  }
-
-  /**
-   * Runs invariant checks
-   * 
-   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#checkAllInvariants()
-   */
-  public void checkAllInvariants( )
-  {
-    int size = calculationUnit.getContinuityLines().size();
-    System.out.println( size );
+    final List<IProblem> invResults = new ArrayList<IProblem>();
+    final int size = calculationUnit.getContinuityLines().size();
     if( ((size < 2) && (size > 0)) || (size > 2) )
     {
-      String message = "Invalid Num of BoundaryLines in : " + calculationUnit.getName();
-      System.out.println( "INVARIANT " + message );
+      final String message = "Invalid Num of BoundaryLines in : " + calculationUnit.getName();
       invResults.add( new ProblemDescriptor( null, message, calculationUnit, calculationUnit ) );
     }
     else if( size == 0 )
     {
-      String message = "No BoundaryLines in : " + calculationUnit.getName();
-      System.out.println( "INVARIANT " + message );
+      final String message = "No BoundaryLines in : " + calculationUnit.getName();
       invResults.add( new ProblemDescriptor( null, message, calculationUnit, calculationUnit ) );
     }
+
+    return invResults;
   }
 }

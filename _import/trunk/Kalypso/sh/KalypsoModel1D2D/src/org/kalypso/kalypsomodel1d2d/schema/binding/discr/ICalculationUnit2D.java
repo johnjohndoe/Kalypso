@@ -43,13 +43,12 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 
 /**
- * Interface for classes representing a wb1d2d:CalculationUnit2D.
- * It basically contains 2d element and boundary lines
+ * Interface for classes representing a wb1d2d:CalculationUnit2D. It basically contains 2d element and boundary lines
  * 
  * @author Patrice Congo
- *
+ * 
  */
-public interface ICalculationUnit2D<T extends IFENetItem> extends ICalculationUnit<T>
+public interface ICalculationUnit2D<T extends IFENetItem> extends ICalculationUnit
 {
-  
+
 }

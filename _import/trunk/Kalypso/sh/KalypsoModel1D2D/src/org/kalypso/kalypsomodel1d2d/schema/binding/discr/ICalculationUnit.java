@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Tagging interface for classes representing a wb1d2d:CalculationUnit
@@ -52,7 +51,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * @author Dejan Antanaskovic
  * 
  */
-public interface ICalculationUnit<T extends IFENetItem> extends IFE1D2DComplexElement<T>
+public interface ICalculationUnit extends IFE1D2DComplexElement<IFENetItem>
 {
   public static enum TYPE
   {
@@ -73,5 +72,5 @@ public interface ICalculationUnit<T extends IFENetItem> extends IFE1D2DComplexEl
 
   public List<IElement2D> getElements2D( );
 
-  public boolean contains( final IFeatureWrapper2 member );
+  public boolean contains( final IFENetItem member );
 }

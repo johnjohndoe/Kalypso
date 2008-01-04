@@ -78,6 +78,8 @@ public interface ICommonKeys
    */
   public static final String KEY_DISCRETISATION_MODEL = "_discretisation_model_";
 
+  public static final String KEY_DATA_PROVIDER = "_data_provider_";
+
   /**
    * Data entry holding the {@link org.kalypso.commons.command.ICommandTarget} used to post command to the
    * discretisation model.
@@ -93,4 +95,5 @@ public interface ICommonKeys
   public static final String WIDGET_WITH_STRATEGY = "_widget_with_strategy_";
 
   public static final String KEY_GRAB_DISTANCE_PROVIDER = "_grab_distance_provider_";
+
 }

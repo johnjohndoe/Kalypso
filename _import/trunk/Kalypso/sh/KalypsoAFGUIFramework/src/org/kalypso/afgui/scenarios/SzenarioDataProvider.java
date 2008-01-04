@@ -483,4 +483,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
     return (CommandableWorkspace) pool.getObject( key );
   }
+
+  public IContainer getScenarioFolder( )
+  {
+    return m_scenarioFolder;
+  }
 }

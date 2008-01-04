@@ -52,16 +52,15 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings("unchecked") //$NON-NLS-1$
-public class CalculationUnit2D<ET extends IFENetItem> extends CalculationUnit<ET> implements ICalculationUnit2D<ET>
+@SuppressWarnings("unchecked")
+public class CalculationUnit2D<ET extends IFENetItem> extends CalculationUnit implements ICalculationUnit2D
 {
-
-  public CalculationUnit2D( Feature featureToBind )
+  public CalculationUnit2D( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, (Class<ET>) IFENetItem.class );
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, IFENetItem.class );
   }
 
-  public CalculationUnit2D( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class<ET> wrapperClass )
+  public CalculationUnit2D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<IFENetItem> wrapperClass )
   {
     super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
   }
@@ -70,7 +69,7 @@ public class CalculationUnit2D<ET extends IFENetItem> extends CalculationUnit<ET
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
    */
   @Override
-  public boolean addElementAsRef( ET element )
+  public boolean addElementAsRef( final IFENetItem element )
   {
     boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IContinuityLine2D);
     if( !isPolyElementOrBoundaryLine )

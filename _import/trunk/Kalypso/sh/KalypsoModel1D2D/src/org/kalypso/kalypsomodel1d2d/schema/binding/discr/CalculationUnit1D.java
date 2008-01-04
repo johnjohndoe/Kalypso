@@ -52,15 +52,14 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  * 
  */
-public class CalculationUnit1D<ET extends IFENetItem> extends CalculationUnit<ET> implements ICalculationUnit1D<ET>
+public class CalculationUnit1D extends CalculationUnit implements ICalculationUnit1D
 {
-
   public CalculationUnit1D( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, (Class<ET>) IFENetItem.class );
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, IFENetItem.class );
   }
 
-  public CalculationUnit1D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<ET> wrapperClass )
+  public CalculationUnit1D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<IFENetItem> wrapperClass )
   {
     super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
   }
@@ -69,7 +68,7 @@ public class CalculationUnit1D<ET extends IFENetItem> extends CalculationUnit<ET
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
    */
   @Override
-  public boolean addElementAsRef( final ET element )
+  public boolean addElementAsRef( final IFENetItem element )
   {
     final boolean isElement1dOrLine = (element instanceof IElement1D) || (element instanceof IContinuityLine1D);
     if( isElement1dOrLine )

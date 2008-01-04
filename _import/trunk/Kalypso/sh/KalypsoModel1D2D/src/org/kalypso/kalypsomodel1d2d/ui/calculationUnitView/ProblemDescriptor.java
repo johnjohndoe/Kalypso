@@ -48,27 +48,27 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
-@SuppressWarnings("unchecked") //$NON-NLS-1$
+@SuppressWarnings("unchecked")
 public class ProblemDescriptor implements IProblem
 {
-
   private String messageDescription;
-  private String name;
-  private ICalculationUnit calculationUnit;
-  private IFeatureWrapper2 featureToFocus;
 
-  public ProblemDescriptor(String name, 
-                    String messageDescription, 
-                    ICalculationUnit calculationUnit,
-                    IFeatureWrapper2 featureToFocus)
+  private String name;
+
+  private ICalculationUnit calculationUnit;
+
+  private final IFeatureWrapper2 featureToFocus;
+
+  public ProblemDescriptor( final String name, final String messageDescription, final ICalculationUnit calculationUnit, final IFeatureWrapper2 featureToFocus )
   {
     this.name = name;
-    this.messageDescription =  messageDescription;
-    this.calculationUnit =calculationUnit;
+    this.messageDescription = messageDescription;
+    this.calculationUnit = calculationUnit;
     this.featureToFocus = featureToFocus;
   }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#getMessageDescription()
    */
@@ -88,14 +88,14 @@ public class ProblemDescriptor implements IProblem
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#navigateToProblem(org.kalypso.ogc.gml.map.MapPanel)
    */
-  public void navigateToProblem( MapPanel panel )
+  public void navigateToProblem( final MapPanel panel )
   {
-    //@TODO Madan - Must change the below statement to show 
-    //     the element that should get the Focus.. using showFocusOn() 
-    GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( getParentCalculationUnit() );
+    // @TODO Madan - Must change the below statement to show
+    // the element that should get the Focus.. using showFocusOn()
+    final GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( getParentCalculationUnit() );
     if( boundingBox == null )
     {
-      System.out.println("BBox is null"); //$NON-NLS-1$
+      System.out.println( "BBox is null" ); //$NON-NLS-1$
       return;
     }
     panel.setBoundingBox( boundingBox );
@@ -104,7 +104,7 @@ public class ProblemDescriptor implements IProblem
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setMessageDescription(java.lang.String)
    */
-  public void setMessageDescription( String description )
+  public void setMessageDescription( final String description )
   {
     this.messageDescription = description;
   }
@@ -112,31 +112,32 @@ public class ProblemDescriptor implements IProblem
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setName(java.lang.String)
    */
-  public void setName( String name )
+  public void setName( final String name )
   {
     this.name = name;
   }
-  
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#getParentCalculationUnit()
    */
   public ICalculationUnit getParentCalculationUnit( )
   {
-    return calculationUnit; 
+    return calculationUnit;
   }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setParentCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
    */
-  public void setParentCalculationUnit( ICalculationUnit calculationUnit )
+  public void setParentCalculationUnit( final ICalculationUnit calculationUnit )
   {
     this.calculationUnit = calculationUnit;
   }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setFocusOn(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
-  public IFeatureWrapper2 showFocusOn()
+  public IFeatureWrapper2 showFocusOn( )
   {
     return featureToFocus;
-  }    
+  }
 }

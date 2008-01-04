@@ -43,12 +43,12 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
@@ -57,22 +57,22 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  * @author Patrice Congo
  * 
  */
-public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement<ET> implements ICalculationUnit<ET>
+public class CalculationUnit extends FE1D2DComplexElement<IFENetItem> implements ICalculationUnit
 {
-  private HashSet<String> m_memberIDs;
+  private Set<String> m_memberIDs;
 
-  public CalculationUnit( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class<ET> wrapperClass )
+  public CalculationUnit( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<IFENetItem> wrapperClass )
   {
     super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
   }
 
-  private HashSet<String> getMemberIDs( )
+  private Set<String> getMemberIDs( )
   {
     if( m_memberIDs == null )
     {
       m_memberIDs = new HashSet<String>();
-      final IFeatureWrapperCollection<ET> elements = getElements();
-      for( final IFeatureWrapper2 element : elements )
+      final IFeatureWrapperCollection<IFENetItem> elements = getElements();
+      for( final IFENetItem element : elements )
         m_memberIDs.add( element.getGmlID() );
     }
     return m_memberIDs;
@@ -94,9 +94,9 @@ public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement
 
   public List<IFELine> getContinuityLines( )
   {
-    final IFeatureWrapperCollection<ET> elements = getElements();
+    final IFeatureWrapperCollection<IFENetItem> elements = getElements();
     final List<IFELine> continuityLines = new ArrayList<IFELine>();
-    for( final IFeatureWrapper2 element : elements )
+    for( final IFENetItem element : elements )
       if( element instanceof IFELine )
         continuityLines.add( (IFELine) element );
     return continuityLines;
@@ -105,7 +105,7 @@ public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#contains(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
-  public boolean contains( final IFeatureWrapper2 member )
+  public boolean contains( final IFENetItem member )
   {
     if( member == null )
       return false;
@@ -118,8 +118,8 @@ public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement
   public List<IElement1D> getElements1D( )
   {
     final List<IElement1D> list = new ArrayList<IElement1D>();
-    final IFeatureWrapperCollection<ET> elements = getElements();
-    for( final IFeatureWrapper2 element : elements )
+    final IFeatureWrapperCollection<IFENetItem> elements = getElements();
+    for( final IFENetItem element : elements )
       if( element instanceof IElement1D )
         list.add( (IElement1D) element );
     return list;
@@ -131,10 +131,12 @@ public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement
   public List<IElement2D> getElements2D( )
   {
     final List<IElement2D> list = new ArrayList<IElement2D>();
-    final IFeatureWrapperCollection<ET> elements = getElements();
-    for( final IFeatureWrapper2 element : elements )
+    final IFeatureWrapperCollection<IFENetItem> elements = getElements();
+    for( final IFENetItem element : elements )
+    {
       if( element instanceof IElement2D )
         list.add( (IElement2D) element );
+    }
     return list;
   }
 }
