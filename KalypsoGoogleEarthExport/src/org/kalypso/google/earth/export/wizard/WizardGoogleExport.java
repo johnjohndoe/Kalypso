@@ -82,6 +82,11 @@ public class WizardGoogleExport extends Wizard implements INewWizard
     addPage( m_page );
   }
 
+  public IGoogleEarthExportSettings getExportedSettings( )
+  {
+    return m_page;
+  }
+
   /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
@@ -106,10 +111,5 @@ public class WizardGoogleExport extends Wizard implements INewWizard
       return true;
 
     return false;
-  }
-
-  public IGoogleEarthExportSettings getExportedSettings( )
-  {
-    return m_page;
   }
 }
