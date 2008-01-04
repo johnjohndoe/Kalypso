@@ -29,7 +29,10 @@
 			<gft:columnDescriptor
 				component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"
 				alignment="SWT.LEFT" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM"
-				parseFormat="dd.MM.yyyy HH:mm" />
+				parseFormat="dd.MM.yyyy HH:mm" width="-1"/>
+			<gft:columnDescriptor
+				component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"
+				alignment="SWT.RIGHT" displayFormat="%.1f" width="150"/>
 		</gft:tupleResult>
 		<gft:extensioncontrol property="om:result"
 			extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"
