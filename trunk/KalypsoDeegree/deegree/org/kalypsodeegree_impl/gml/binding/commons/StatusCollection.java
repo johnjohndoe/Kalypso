@@ -40,40 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.binding.commons;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
- * @author Thomas Jung
+ * @author Gernot Belger
  */
-public interface IStatus extends org.eclipse.core.runtime.IStatus, IFeatureWrapper2
+public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> implements IStatusCollection
 {
-  enum SEVERITYTYPE
+  public StatusCollection( final Feature featureCol )
   {
-    ok,
-    info,
-    warning,
-    error,
-    cancel
+    super( featureCol, IGeoStatus.class, QNAME_PROP_STATUS_MEMBER );
   }
-
-  public static final QName QNAME = new QName( NS.COMMON, "Status" );
-
-  public static final QName QNAME_PROP_STATUS_TYPE = new QName( NS.COMMON, "type" );
-
-  public static final QName QNAME_PROP_STATUS_CODE = new QName( NS.COMMON, "code" );
-
-  public static final QName QNAME_PROP_STATUS_EXCEPTION = new QName( NS.COMMON, "exception" );
-
-  public static final QName QNAME_PROP_STATUS_CHILD_MEMBER = new QName( NS.COMMON, "childMember" );
-
-  public IFeatureWrapperCollection<IStatus> getChildrenCollection( );
-
-  public SEVERITYTYPE getSeverityType( );
-
-  public void setSeverityType( SEVERITYTYPE severityType );
-
 }

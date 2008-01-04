@@ -91,7 +91,10 @@
          <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D"/>
          <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial2D"/>
          <adapter
-               type="org.kalypsodeegree_impl.gml.binding.commons.IStatus">
+               type="org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection">
+         </adapter>
+         <adapter
+               type="org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus">
          </adapter>
          <adapter
                type="org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection">

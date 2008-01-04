@@ -46,6 +46,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Abstract helper class to implement 'binding' classes for specific feature (types).
@@ -78,19 +79,24 @@ public class AbstractFeatureBinder implements IFeatureWrapper2
     }
   }
 
+  /**
+   * TODO: remove
+   */
   public Feature getFeature( )
   {
     return m_featureToBind;
   }
-  
+
   /**
+   * TODO: rename to getFeature
+   * 
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getWrappedFeature()
    */
   public Feature getWrappedFeature( )
   {
     return m_featureToBind;
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getGmlID()
    */
@@ -104,25 +110,52 @@ public class AbstractFeatureBinder implements IFeatureWrapper2
     return m_qnameToBind;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
   public String getName( )
   {
     return NamedFeatureHelper.getName( m_featureToBind );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
   public void setName( final String name )
   {
     NamedFeatureHelper.setName( m_featureToBind, name );
   }
 
-  
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( m_featureToBind );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
   public void setDescription( final String desc )
   {
     NamedFeatureHelper.setDescription( m_featureToBind, desc );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   */
+  public GM_Object getLocation( )
+  {
+    return getProperty( NamedFeatureHelper.GML_LOCATION, GM_Object.class );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  public void setLocation( final GM_Object location )
+  {
+    setProperty( NamedFeatureHelper.GML_LOCATION, location );
   }
 
   /**
@@ -154,32 +187,29 @@ public class AbstractFeatureBinder implements IFeatureWrapper2
   {
     return new HashCodeBuilder().append( m_featureToBind.getId() ).append( m_featureToBind.getWorkspace() ).toHashCode();
   }
-  
+
   /**
-   * TODO: also make helper to adapt to given class if it is not yet of the given type
+   * TODO: also make helper to adapt to given class if it is not yet of the given type Returns the property of bind
+   * feature given the property {@link QName}
    * 
-   * Returns the property  of bind feature given the property 
-   * {@link QName}
-   * @param propertyQName the {@link QName} of the property
-   *            to get.
+   * @param propertyQName
+   *            the {@link QName} of the property to get.
    */
-  protected <T>T getProperty( QName propertyQName, Class<T> propClass)
+  protected <T> T getProperty( final QName propertyQName, final Class<T> propClass )
   {
-    Object prop = m_featureToBind.getProperty( propertyQName );
+    final Object prop = m_featureToBind.getProperty( propertyQName );
     try
     {
-      return (T)prop;
+      return (T) prop;
     }
-    catch (ClassCastException e) 
+    catch( final ClassCastException e )
     {
-      throw new RuntimeException(
-          "Property of type["+propClass +"] expected "+
-          "\n\tbut found this type :"+prop.getClass());
+      throw new RuntimeException( "Property of type[" + propClass + "] expected " + "\n\tbut found this type :" + prop.getClass() );
     }
   }
-  
-  protected void setProperty( QName propertyQName, Object newValue )
+
+  protected void setProperty( final QName propertyQName, final Object newValue )
   {
-     m_featureToBind.setProperty( propertyQName, newValue );
+    m_featureToBind.setProperty( propertyQName, newValue );
   }
 }

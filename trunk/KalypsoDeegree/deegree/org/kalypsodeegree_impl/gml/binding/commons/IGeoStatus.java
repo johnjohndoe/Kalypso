@@ -38,46 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.feature.binding;
+package org.kalypsodeegree_impl.gml.binding.commons;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Object;
+import java.util.Date;
+
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.xml.NS;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
- * The better feature wrapper. Use instead of IFeatureWrapper.<br>
- * TODO: rename and implement the {@link Feature}-Interface.
- * 
- * @author Gernot Belger
+ * @author Thomas Jung
  */
-public interface IFeatureWrapper2
+public interface IGeoStatus extends IStatus, IFeatureWrapperCollection<IGeoStatus>
 {
-  /** Returns the id of the bound feature. */
-  public String getGmlID( );
+  public static final QName QNAME = new QName( NS.COMMON, "Status" );
 
-  /** Returns the gml:name property of the bound feature. */
-  public String getName( );
+  public static final QName QNAME_PROP_STATUS_TIME = new QName( NS.COMMON, "time" );
 
-  /** Sets the gml:name property */
-  public void setName( final String name );
+  public static final QName QNAME_PROP_STATUS_SEVERITY = new QName( NS.COMMON, "severity" );
 
-  /** Returns the gml:description property of the bound feature. */
-  public String getDescription( );
+  public static final QName QNAME_PROP_STATUS_CODE = new QName( NS.COMMON, "code" );
 
-  /** Sets the gml_description property */
-  public void setDescription( final String desc );
+  public static final QName QNAME_PROP_STATUS_PLUGIN = new QName( NS.COMMON, "plugin" );
 
-  /**
-   * Return the gml:location property of the bound feature.<br>
-   * REMARK: gml:location is deprecated in the GML3-Schema.
-   */
-  public GM_Object getLocation( );
+  public static final QName QNAME_PROP_STATUS_EXCEPTION = new QName( NS.COMMON, "exception" );
 
-  /**
-   * Sets the gml:location property to the bound feature.<br>
-   * REMARK: gml:location is deprecated in the GML3-Schema.
-   */
-  public void setLocation( final GM_Object location );
+  public static final QName QNAME_PROP_STATUS_CHILD_MEMBER = new QName( NS.COMMON, "childMember" );
 
-  /** Returns the bound feature, which this wrapper class is representing. */
-  public Feature getWrappedFeature( );
+  public Date getTime( );
+
+  public void setTime( final Date time );
+
+  public void setSeverity( int severity );
+
+  public void setMessage( String message );
+
+  public void setCode( int code );
+
+  public void setException( Throwable t );
+
+  public void setPlugin( String pluginId );
 }

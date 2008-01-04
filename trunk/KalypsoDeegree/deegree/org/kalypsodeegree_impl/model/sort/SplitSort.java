@@ -14,6 +14,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -37,7 +38,7 @@ public class SplitSort implements FeatureList
         final Feature fe = (Feature) object;
 
         // HACK: if the workspace is null, we are probably still loading
-        // so do not access the envelope, whichs may cause problems now
+        // so do not access the envelope, which may cause problems now
         final GMLWorkspace workspace = fe.getWorkspace();
         if( workspace == null )
           return null;
