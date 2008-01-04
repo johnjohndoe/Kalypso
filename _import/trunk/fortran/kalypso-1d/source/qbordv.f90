@@ -1,4 +1,4 @@
-!     Last change:  MD   15 Aug 2007    9:43 am
+!     Last change:  MD    4 Jan 2008    3:59 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -344,8 +344,10 @@ If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
     ilen = LEN_TRIM(NAME_PFAD_DATH)
     NAME_OUT_WEHR = NAME_PFAD_DATH(1:ilen) // 'Laengs_QWehre.txt'
     NAME_OUT_QWEHR = NAME_PFAD_DATH(1:ilen) // 'HOW_QWehr_HUW.txt'
+    NAME_OUT_HEWEHR = NAME_PFAD_DATH(1:ilen) // 'EOW_QWehr_EUW.txt'
     NAME_OUT_BRUECKE = NAME_PFAD_DATH(1:ilen) // 'Laengs_QBruecke.txt'
     NAME_OUT_QBRUECKE = NAME_PFAD_DATH(1:ilen) // 'HOW_QBruecke_HUW.txt'
+    NAME_OUT_HEBRUECKE = NAME_PFAD_DATH(1:ilen) // 'EOW_QBruecke_EUW.txt'
 
     UNIT_OUT_WEHR = ju0gfu ()
     OPEN (unit = UNIT_OUT_WEHR, file = NAME_OUT_WEHR, status = 'REPLACE', iostat = istat)
@@ -366,6 +368,17 @@ If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
     end if
     WRITE (UNIT_OUT_QWEHR, '(5x,''Profil'',6x,''Q_OW'',4x,''Q-wehr'',6x,''h_ow'',6x,''h_uw'',3x,''Ü-Art'')')
 
+    UNIT_OUT_HEWEHR = ju0gfu ()
+    OPEN (unit = UNIT_OUT_HEWEHR, file = NAME_OUT_HEWEHR, status = 'REPLACE', iostat = istat)
+    if (istat /= 0) then
+      write (*, 9018) NAME_OUT_HEWEHR
+      9018 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+        & 1X, 'Programm wird beendet!')
+      call stop_programm(0)
+    end if
+    WRITE (UNIT_OUT_HEWEHR, '(5x,''Profil'',6x,''Q_OW'',4x,''Q-wehr'',6x,''E_ow'',6x,''E_uw'',3x,''Ü-Art'')')
+
+
     UNIT_OUT_BRUECKE  = ju0gfu ()
     OPEN (unit = UNIT_OUT_BRUECKE , file = NAME_OUT_BRUECKE , status = 'REPLACE', iostat = istat)
     if (istat /= 0) then
@@ -385,6 +398,15 @@ If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
     end if
     WRITE (UNIT_OUT_QBRUECKE, '(5x,''Profil'',6x,''Q_OW'',6x,''Q-UW'',6x,''h_ow'',6x,''h_uw'',6x,''h_en'')')
 
+    UNIT_OUT_HEBRUECKE  = ju0gfu ()
+    OPEN (unit = UNIT_OUT_HEBRUECKE , file = NAME_OUT_HEBRUECKE , status = 'REPLACE', iostat = istat)
+    if (istat /= 0) then
+      write (*, 9021) NAME_OUT_HEBRUECKE
+      9021 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+         & 1X, 'Programm wird beendet!')
+      call stop_programm(0)
+    end if
+    WRITE (UNIT_OUT_HEBRUECKE, '(5x,''Profil'',6x,''Q_OW'',6x,''Q-UW'',6x,''E_ow'',6x,''E_uw'',6x,''h_ow'')')
   end if
 
 
