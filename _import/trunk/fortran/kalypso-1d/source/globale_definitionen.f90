@@ -1,4 +1,4 @@
-!     Last change:  MD   15 Aug 2007    9:48 am
+!     Last change:  MD    4 Jan 2008    5:09 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.6   '
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 13.12.2007'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.6.1 '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 04.01.2008'
 
 end module VERSION
 
@@ -128,8 +128,10 @@ INTEGER	:: UNIT_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvol
 INTEGER	:: UNIT_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 INTEGER	:: UNIT_OUT_WEHR        ! Ausgabedatei fuer innere Abflussstaffelung am Wehr
 INTEGER	:: UNIT_OUT_QWEHR       ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung ums Wehr
+INTEGER	:: UNIT_OUT_HEWEHR      ! Ausgabedatei fuer Energiehoehe-Abfluss-Beziehung ums Wehr
 INTEGER	:: UNIT_OUT_BRUECKE     ! Ausgabedatei fuer innere Abflussstaffelung an Bruecken
 INTEGER	:: UNIT_OUT_QBRUECKE    ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung an Bruecken
+INTEGER	:: UNIT_OUT_HEBRUECKE   ! Ausgabedatei fuer Energiehoehe-Abfluss-Beziehung an Bruecken
 
 end module IO_UNITS
 
@@ -171,9 +173,10 @@ CHARACTER(LEN=nch80) 			:: NAME_OUT_QB1         ! Laengschnitt im WspWin Blockfo
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 CHARACTER(LEN=nch80) 			:: NAME_OUT_WEHR        ! Ausgabedatei fuer innere Abflussstaffelung am Wehr
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QWEHR       ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung ums Wehr
+CHARACTER(LEN=nch80) 			:: NAME_OUT_HEWEHR      ! Ausgabedatei fuer Energiehoehe-Abfluss-Beziehung ums Wehr
 CHARACTER(LEN=nch80) 			:: NAME_OUT_BRUECKE     ! Ausgabedatei fuer innere Abflussstaffelung an Bruecken
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QBRUECKE    ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung an Bruecken
-
+CHARACTER(LEN=nch80) 			:: NAME_OUT_HEBRUECKE   ! Ausgabedatei fuer Energiehoehe-Abfluss-Beziehung an Bruecken
 end module IO_NAMES
 
 
