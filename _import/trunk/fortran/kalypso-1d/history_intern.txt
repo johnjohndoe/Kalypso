@@ -1317,3 +1317,29 @@ Kalypso 2.0.6       13. Dezember 2007
      existiert und die WSPWIN-Oberfläche verwendet wird.
      
                                                            Wolf Plöger, 13.12.2007 
+
+
+Kalypso 2.0.6.1       04. Januar 2008
+-------------------------------------
+     
+1.)  Fehlerbehebung in Wehrberechnung fuer rundkronige und scharfkantige Wehre: Korrektur 
+     des Ueberfallbeiwertes für rundkronige Wehre in "beiwert" nach Knapp, S. 232 unter 
+     Ruecksicht auf die angesetzte Gleichung fuer Q(vollkommen): Division durch 2/3 und 
+     wurzel(2g). (beiwert)
+     Korrektur der Abgrenzungsgeraden tauo zwischen vollkommen und unvollkommenem Ueberfall
+     (siehe tauu, taoo und taou in "w_ber")
+     
+2.)  Bereitstellen von zwei neuen Ergebnisdateien fuer RV "konstantes Reibungsgefaelle"
+     zur Ausgabe der Energiehoehen-Abfluss-Beziehungen an Bruecken und Wehren EOW_QBreucke_EUW
+     und EOW_QWehre_EUW (qbordv, wspber, w_ber)
+
+3.)  Weiteres Abgrenzungskriterium fuer RV "konstantes Reibungsgefaelle" an den Wehren definiert:
+     für sehr kleine Fließgeschwindigkeiten im Unterwasser (Geschwindigkeitshoehe = v²/2g < 0.0001m)
+     wird keine Berechnung für den Abfluss vorgenommen, sondern direkt die nächst höherer Abfluss-
+     berechnung angestoßen.
+     Ammerkung: Geringe Geschwindigkeitshoehen (<0.0001m) im Unterwasser des Wehres führt zu 
+     Problemen in der Energiehöheniteration fuer das Oberwasser. (w_ber)
+     
+                                                                   Monika Donner, 04.01.2008      
+
+

@@ -429,5 +429,16 @@ Kalypso 2.0.6       13. Dezember 2007
      existiert und die WSPWIN-Oberfläche verwendet wird.
      
                                                            Wolf Plöger, 13.12.2007                                                            
+ 
                                                            
+Kalypso 2.0.6.1      04. Januar 2008
+-------------------------------------
+     
+1.)  Fehlerbehebung in Wehrberechnung fuer rundkronige und scharfkantige Wehre.
+     
+2.)  Bereitstellen von zwei neuen Ergebnisdateien fuer RV "konstantes Reibungsgefaelle"
+     zur Ausgabe der Energiehoehen-Abfluss-Beziehungen an Bruecken und Wehren
+     EOW_QBreucke_EUW und EOW_QWehre_EUW 
+     
+                                                           Monika Donner, 04.01.2008                                                           
                                                           
