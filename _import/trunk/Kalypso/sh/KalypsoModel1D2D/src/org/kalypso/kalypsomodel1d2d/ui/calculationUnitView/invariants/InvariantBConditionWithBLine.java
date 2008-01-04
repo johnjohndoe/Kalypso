@@ -47,10 +47,9 @@ import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
@@ -58,6 +57,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -70,34 +70,33 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class InvariantBConditionWithBLine implements ICalculationValidateInterface
 {
+  private final ICalculationUnit m_calculationUnit;
 
-  private ICalculationUnit calculationUnit;
+  private final CalculationUnitDataModel m_dataModel;
 
-  private CalculationUnitDataModel dataModel;
+  private final List<IProblem> m_invariantErrorMessages = new ArrayList<IProblem>();
 
-  private List<IProblem> invariantErrorMessages = new ArrayList<IProblem>();
-
-  public InvariantBConditionWithBLine( ICalculationUnit calc, CalculationUnitDataModel dataModel )
+  public InvariantBConditionWithBLine( final ICalculationUnit calc, final CalculationUnitDataModel dataModel )
   {
-    this.calculationUnit = calc;
-    this.dataModel = dataModel;
+    m_calculationUnit = calc;
+    m_dataModel = dataModel;
   }
 
   public List<IBoundaryCondition> getBoundaryConditions( )
   {
-    final CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );// dataModel.getData(
+    final CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( m_dataModel );// dataModel.getData(
     // CommandableWorkspace.class,
     // ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE
     // );
     final Feature bcHolderFeature = workspace.getRootFeature();
-    IFlowRelationshipModel flowRelationship = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
-    List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>( (List) flowRelationship );
+    final IFlowRelationshipModel flowRelationship = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
+    final List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>( (List) flowRelationship );
     return conditions;
   }
 
   public double getGrabDistance( )
   {
-    IGrabDistanceProvider grabDistanceProvider = dataModel.getData( IGrabDistanceProvider.class, ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER );
+    final IGrabDistanceProvider grabDistanceProvider = m_dataModel.getData( IGrabDistanceProvider.class, ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER );
     return grabDistanceProvider.getGrabDistance();
   }
 
@@ -110,26 +109,23 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   public void checkAllInvariants( )
   {
     invariant_CheckEachBLhasBC();
-    if( calculationUnit instanceof ICalculationUnit1D )
+    if( m_calculationUnit instanceof ICalculationUnit1D )
     {
-      invariant_CheckForBLExist( (ICalculationUnit1D) calculationUnit );
-      invariant_CheckBC_On_EndNode( (ICalculationUnit1D) calculationUnit );
+      invariant_CheckForBLExist( (ICalculationUnit1D) m_calculationUnit );
+      invariant_CheckBC_On_EndNode( (ICalculationUnit1D) m_calculationUnit );
     }
   }
 
   @SuppressWarnings("unchecked")
-  private void invariant_CheckBC_On_EndNode( ICalculationUnit1D calc )
+  private void invariant_CheckBC_On_EndNode( final ICalculationUnit1D calc )
   {
-
-    final List<IContinuityLine2D> bLines = calc.getContinuityLines();
-
-    List<IFE1D2DElement> elements = calc.getElements();
-    List<IFE1D2DNode> endNodes = new ArrayList<IFE1D2DNode>();
-    for( IFE1D2DElement element : elements )
+    final List<IFENetItem> elements = calc.getElements();
+    final List<IFE1D2DNode> endNodes = new ArrayList<IFE1D2DNode>();
+    for( final IFENetItem element : elements )
     {
       if( element instanceof IElement1D )
       {
-        IElement1D thisElement = (IElement1D) element;
+        final IElement1D thisElement = (IElement1D) element;
         if( EdgeOps.find1DEdgeEndNode( thisElement.getEdge() ) != null )
         {
           endNodes.add( EdgeOps.find1DEdgeEndNode( thisElement.getEdge() ) );
@@ -137,11 +133,11 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
     }
 
-    List<IBoundaryCondition> bConditions_ = CalcUnitOps.getBoundaryConditions( getBoundaryConditions(), calc );
+    final List<IBoundaryCondition> bConditions_ = CalcUnitOps.getBoundaryConditions( getBoundaryConditions(), calc );
     boolean foundEndBLine = false;
-    for( IBoundaryCondition condition_ : bConditions_ )
+    for( final IBoundaryCondition condition_ : bConditions_ )
     {
-      for( IFE1D2DNode endNode : endNodes )
+      for( final IFE1D2DNode endNode : endNodes )
       {
         if( endNode.getPoint().distance( condition_.getPosition() ) < getGrabDistance() )
         {
@@ -150,7 +146,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
       if( !foundEndBLine )
       {
-        invariantErrorMessages.add( new ProblemDescriptor( null, "Add Boundary Line & BC on End Node " + calculationUnit.getName(), calculationUnit, calculationUnit ) );
+        m_invariantErrorMessages.add( new ProblemDescriptor( null, "Add Boundary Line & BC on End Node " + m_calculationUnit.getName(), m_calculationUnit, m_calculationUnit ) );
       }
       foundEndBLine = false;
     }
@@ -158,27 +154,27 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   }
 
   @SuppressWarnings("unchecked")
-  private void invariant_CheckForBLExist( ICalculationUnit1D calc )
+  private void invariant_CheckForBLExist( final ICalculationUnit1D calc )
   {
-    final List<IContinuityLine2D> continuityLine2Ds = calc.getContinuityLines();
+    final List<IFELine> continuityLine2Ds = calc.getContinuityLines();
     if( continuityLine2Ds.size() == 0 )
     {
-      invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line must be present or yet to be assigned " + calc.getName(), calc, calc ) );
+      m_invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line must be present or yet to be assigned " + calc.getName(), calc, calc ) );
     }
   }
 
   @SuppressWarnings("unchecked")
   private void invariant_CheckEachBLhasBC( )
   {
-    final List<IContinuityLine2D> continuityLine2Ds = calculationUnit.getContinuityLines();
-    final List<IBoundaryCondition> boundaryConditions = CalcUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit );
+    final List<IFELine> continuityLine2Ds = m_calculationUnit.getContinuityLines();
+    final List<IBoundaryCondition> boundaryConditions = CalcUnitOps.getBoundaryConditions( getBoundaryConditions(), m_calculationUnit );
 
-    for( IContinuityLine2D line : continuityLine2Ds )
+    for( final IFELine line : continuityLine2Ds )
     {
       boolean hasBc = false;
       try
       {
-        for( IBoundaryCondition bc : boundaryConditions )
+        for( final IBoundaryCondition bc : boundaryConditions )
         {
           if( line.recalculateElementGeometry().distance( bc.getPosition() ) < getGrabDistance() )
           {
@@ -186,14 +182,14 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
           }
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         hasBc = true;
       }
       if( !hasBc )
       {
-        invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line may not have Boundary condition or have not yet been assigned to " + calculationUnit.getName(), calculationUnit, line ) );
+        m_invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line may not have Boundary condition or have not yet been assigned to " + m_calculationUnit.getName(), m_calculationUnit, line ) );
       }
     }
   }
@@ -203,7 +199,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
    */
   public List<IProblem> getBrokenInvariantMessages( )
   {
-    return invariantErrorMessages;
+    return m_invariantErrorMessages;
   }
 
   /**
@@ -211,6 +207,6 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
    */
   public ICalculationUnit getCalculationUnit( )
   {
-    return calculationUnit;
+    return m_calculationUnit;
   }
 }

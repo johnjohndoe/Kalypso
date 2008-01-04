@@ -15,6 +15,7 @@
 
 	<!--  Item Definitions -->
 
+	<!--  TODO: is this really, really, necessary? I don't think so... -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="OrdinalNumber">
 			<gml:name>lfd. Nr.</gml:name>

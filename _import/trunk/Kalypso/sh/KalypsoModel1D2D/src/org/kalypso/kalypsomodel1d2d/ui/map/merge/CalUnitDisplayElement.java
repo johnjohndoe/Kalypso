@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -310,7 +309,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     this.m_isSelected = selected;
   }
 
-  public static final CalUnitDisplayElement createDisplayElement( final ICalculationUnit<IFE1D2DElement> calUnit )
+  public static final CalUnitDisplayElement createDisplayElement( final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" ); //$NON-NLS-1$
     final CalUnitDisplayElement calUnitDisplayElement = new CalUnitDisplayElement( calUnit );

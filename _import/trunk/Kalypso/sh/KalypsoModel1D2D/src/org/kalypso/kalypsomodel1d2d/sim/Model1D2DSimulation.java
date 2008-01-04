@@ -43,32 +43,45 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
@@ -93,7 +106,11 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class Model1D2DSimulation
 {
-  private static final String STRING_DLG_TITLE = Messages.getString( "CalculationUnitPerformComponent.2" );
+  private static final String SIMULATION_LOG_GML = "simulation_log.gml";
+
+  private static final String STRING_DLG__TITLE_PROCESS_RESULTS = "Ergebnisse auswerten";
+
+  private static final String STRING_DLG_TITLE_RMA10S = Messages.getString( "CalculationUnitPerformComponent.2" );
 
   private final ICaseDataProvider<IModel> m_caseDataProvider;
 
@@ -136,7 +153,7 @@ public class Model1D2DSimulation
     }
     catch( final IOException e )
     {
-      MessageDialog.openError( m_shell, STRING_DLG_TITLE, "Temporäres Simulationsverzeichnis konnte nicht erstellt werden: " + tmpDir );
+      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Temporäres Simulationsverzeichnis konnte nicht erstellt werden: " + tmpDir );
     }
     finally
     {
@@ -146,9 +163,11 @@ public class Model1D2DSimulation
   }
 
   /**
-   * First level of calculation:
+   * Second level of calculation:
    * <ul>
    * <li>initialize logging</li>
+   * <li>start level-2</li>
+   * <li>save log file</li>
    * </ul>
    */
   private void process1( final File tmpDir, final File outputDir )
@@ -171,13 +190,13 @@ public class Model1D2DSimulation
     }
     catch( final InvocationTargetException e )
     {
-      MessageDialog.openError( m_shell, STRING_DLG_TITLE, "Simulation-Log konnte nicht initialisiert werden: " + e.getTargetException().toString() );
+      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Simulation-Log konnte nicht initialisiert werden: " + e.getTargetException().toString() );
     }
     catch( final CoreException e )
     {
       // REMARK: this should only happen if the data cannot be retrieved from the caseDataProvider and so should never
       // happen...
-      ErrorDialog.openError( m_shell, STRING_DLG_TITLE, "Fehler bei der Simulation", e.getStatus() );
+      ErrorDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Fehler bei der Simulation", e.getStatus() );
     }
     finally
     {
@@ -185,24 +204,30 @@ public class Model1D2DSimulation
       {
         try
         {
+          /* Close and save the geo log */
           geoLog.close();
           final IStatusCollection statusCollection = geoLog.getStatusCollection();
           final GMLWorkspace workspace = statusCollection.getWrappedFeature().getWorkspace();
-          final File loggerFile = new File( outputDir, "simulation.log" );
+          // REMARK: we directly save the log into the unit-folder, as the results already where moved form the output
+          // directory
+          final File simDir = m_unitFolder.getLocation().toFile();
+          final File loggerFile = new File( simDir, SIMULATION_LOG_GML );
           GmlSerializer.serializeWorkspace( loggerFile, workspace, "UTF-8" );
+          m_unitFolder.refreshLocal( IFolder.DEPTH_ONE, new NullProgressMonitor() );
         }
         catch( final Throwable e )
         {
-          MessageDialog.openError( m_shell, STRING_DLG_TITLE, "Simulation-Log konnte nicht geschrieben werden: " + e.toString() );
+          MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Simulation-Log konnte nicht geschrieben werden: " + e.toString() );
         }
       }
     }
   }
 
   /**
-   * First level of calculation:
+   * third level of calculation:
    * <ul>
    * <li>run rma10s in progress dialog</li>
+   * <li>show rma10s results and ask user how/if to process results</li>
    * <li>run result processing in progress dialog</li>
    * </ul>
    */
@@ -210,33 +235,46 @@ public class Model1D2DSimulation
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
 
+    final IFEDiscretisationModel1d2d discModel = m_caseDataProvider.getModel( IFEDiscretisationModel1d2d.class );
+    final IFlowRelationshipModel flowModel = m_caseDataProvider.getModel( IFlowRelationshipModel.class );
+    final IControlModelGroup controlModelGroup = m_caseDataProvider.getModel( IControlModelGroup.class );
+    final IRoughnessClsCollection roughnessModel = m_caseDataProvider.getModel( IRoughnessClsCollection.class );
+    final IScenarioResultMeta scenarioResultMeta = m_caseDataProvider.getModel( IScenarioResultMeta.class );
+
+    /* Set correct activeControlModel according to selected calcUnit */
+    final IControlModel1D2D controlModel = saveControlModel( controlModelGroup );
+    if( controlModel == null )
+      throw new CoreException( StatusUtilities.createErrorStatus( "Could not find active control model for: " + m_calculationUnit ) );
+
+    final RMA10Calculation calculation = new RMA10Calculation( tmpDir, geoLog, discModel, flowModel, controlModel, roughnessModel, m_scenarioFolder );
+
     /* Process rma10s calculation */
     final ICoreRunnableWithProgress calculationOperation = new ICoreRunnableWithProgress()
     {
       public IStatus execute( IProgressMonitor monitor ) throws CoreException
       {
-        return runCalculationLevel0( tmpDir, geoLog, monitor );
+        return calculation.runCalculation( monitor );
       }
     };
 
-    final IStatus calculationStatus = RunnableContextHelper.execute( workbench.getProgressService(), true, true, calculationOperation );
-    if( calculationStatus.isOK() )
-      MessageDialog.openInformation( m_shell, STRING_DLG_TITLE, Messages.getString( "CalculationUnitMetaTable.16" ) ); //$NON-NLS-1$ 
-    else if( calculationStatus.matches( IStatus.CANCEL ) )
+    final IStatus simulationStatus = RunnableContextHelper.execute( workbench.getProgressService(), true, true, calculationOperation );
+    if( simulationStatus.isOK() )
+      MessageDialog.openInformation( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString( "CalculationUnitMetaTable.16" ) ); //$NON-NLS-1$ 
+    else if( simulationStatus.matches( IStatus.CANCEL ) )
     {
-      MessageDialog.openInformation( m_shell, STRING_DLG_TITLE, "Die Operation wurde durch den Benutzer abgebrochen." ); //$NON-NLS-1$
+      MessageDialog.openInformation( m_shell, STRING_DLG_TITLE_RMA10S, "Die Operation wurde durch den Benutzer abgebrochen." ); //$NON-NLS-1$
       return;
     }
     else
     {
-      ErrorDialog.openError( m_shell, STRING_DLG_TITLE, Messages.getString( "CalculationUnitPerformComponent.3" ), calculationStatus ); //$NON-NLS-1$
-      if( calculationStatus.matches( IStatus.ERROR ) )
+      ErrorDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString( "CalculationUnitPerformComponent.3" ), simulationStatus ); //$NON-NLS-1$
+      if( simulationStatus.matches( IStatus.ERROR ) )
         return;
     }
 
     /* Result processing */
-    final ResultManager resultRunner = new ResultManager( tmpDir, outputDir, "A", startTime, m_caseDataProvider, m_unitFolder, geoLog );
-    final Date[] calculatedSteps = resultRunner.getCalculatedSteps();
+    final ResultManager resultManager = new ResultManager( tmpDir, outputDir, "A", controlModel, flowModel, scenarioResultMeta, geoLog );
+    final Date[] calculatedSteps = resultManager.getCalculatedSteps();
 
     // TODO: unterscheide verschiedene Problemarten:
     // - 'programmier- bzw. datenfehler' rechnung konnte gar nicht gestartet werden
@@ -250,48 +288,35 @@ public class Model1D2DSimulation
     {
       public IStatus execute( IProgressMonitor monitor ) throws CoreException
       {
-        return resultRunner.process( deleteAll, deleteFollowers, userCalculatedSteps, monitor );
+        return processResults( resultManager, deleteAll, deleteFollowers, userCalculatedSteps, startTime, simulationStatus, geoLog, monitor );
       }
     };
 
     final IStatus resultStatus = RunnableContextHelper.execute( workbench.getProgressService(), true, true, resultOperation );
     if( resultStatus.isOK() )
-      MessageDialog.openInformation( m_shell, "Ergebnisse auswerten", "Alle Ergebnisse wurden erfolgreich ausgewertet." ); //$NON-NLS-1$ 
+      MessageDialog.openInformation( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Alle Ergebnisse wurden erfolgreich ausgewertet." ); //$NON-NLS-1$ 
     else if( resultStatus.matches( IStatus.CANCEL ) )
-      MessageDialog.openInformation( m_shell, "Ergebnisse auswerten", "Die Operation wurde durch den Benutzer abgebrochen." ); //$NON-NLS-1$
+      MessageDialog.openInformation( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Die Operation wurde durch den Benutzer abgebrochen." ); //$NON-NLS-1$
     else
-      ErrorDialog.openError( m_shell, "Ergebnisse auswerten", "Fehler beim Auswerten der Ergebnisse", resultStatus ); //$NON-NLS-1$ 
+      ErrorDialog.openError( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Fehler beim Auswerten der Ergebnisse", resultStatus ); //$NON-NLS-1$ 
   }
 
   /**
-   * Very first level of simulation. *
-   * <ul>
-   * <li>Sets the calcUnit to the control-model and saves it</li>
-   * </ul>
+   * Sets the unit to calculate into the Control-Model as active unit, and save all models.<br>
    * 
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   * TODO: this is a bit fishy... Better would be to couple calc-units and its corresponding control-models more
+   * closely. Then no search for and/or setting of active unit should be necessary any more.
    */
-  public IStatus runCalculationLevel0( final File tmpDir, final IGeoLog geoLog, final IProgressMonitor monitor ) throws CoreException
+  private IControlModel1D2D saveControlModel( final IControlModelGroup controlModelGroup ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Simulation wird gestartet", 100 );
-    progress.subTask( "Daten werden gespeichert..." );
-
-    /**
-     * Set the unit to calculate into the Control-Model as active unit, and save all models.<br>
-     * 
-     * TODO: this is a bit fishy... Better would be to couple calc-units and its corresponding control-models more
-     * closely. Then no search for and/or setting of active unit should be necessary any more.
-     */
-    final IControlModelGroup model = m_caseDataProvider.getModel( IControlModelGroup.class );
-    IControlModel1D2D activeControlModel = null;
-    for( final IControlModel1D2D controlModel : model.getModel1D2DCollection() )
+    for( final IControlModel1D2D controlModel : controlModelGroup.getModel1D2DCollection() )
     {
       final ICalculationUnit currentCalcUnit = controlModel.getCalculationUnit();
       if( currentCalcUnit != null )
       {
         if( m_calculationUnit.equals( currentCalcUnit.getGmlID() ) )
         {
-          final Feature feature = model.getModel1D2DCollection().getWrappedFeature();
+          final Feature feature = controlModelGroup.getModel1D2DCollection().getWrappedFeature();
           final FeatureChange change = new FeatureChange( feature, feature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL ), controlModel.getGmlID() );
           final ChangeFeaturesCommand command = new ChangeFeaturesCommand( feature.getWorkspace(), new FeatureChange[] { change } );
           try
@@ -299,59 +324,170 @@ public class Model1D2DSimulation
             final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
             commandableWorkspace.postCommand( command );
           }
-          catch( final Exception e )
+          catch( final Throwable e )
           {
-            e.printStackTrace();
-            return StatusUtilities.createErrorStatus( "Could not set active control model for: " + m_calculationUnit );
+            throw new CoreException( StatusUtilities.createErrorStatus( "Could not set active control model for: " + m_calculationUnit ) );
           }
-          activeControlModel = controlModel;
 
           // Saves ALL models, this is not really necessary but not really a problem, as only
           // dirty models get saved (and probably here only the control model is dirty).
           m_caseDataProvider.saveModel( null );
 
-          // one found control model is enough
-          break;
+          return controlModel;
         }
       }
     }
+    return null;
+  }
 
-    ProgressUtilities.worked( progress, 2 );
-    progress.subTask( "" );
+  protected IStatus processResults( final ResultManager resultManager, final boolean deleteAll, final boolean deleteFollowers, final Date[] steps, final Date startTime, final IStatus simulationStatus, final IGeoLog geoLog, final IProgressMonitor monitor ) throws CoreException
+  {
+    final IControlModel1D2D controlModel = resultManager.getControlModel();
+    final IScenarioResultMeta scenarioMeta = resultManager.getScenarioMeta();
+    final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
+    final File outputDir = resultManager.getOutputDir();
 
-    if( activeControlModel == null )
-      return StatusUtilities.createErrorStatus( "Could not find active control model for: " + m_calculationUnit );
+    final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisauswertung: " + calculationUnit.getName(), 100 );
 
-    /* Reset task name so it shows something more meaningful */
-    final String simMsg = String.format( "Simulation von '%s'", activeControlModel.getName() );
-    progress.setTaskName( simMsg );
+    /* Process Results */
 
-    return runCalculationLevel1( tmpDir, progress.newChild( 98 ), geoLog );
+    // Step 1: Delete existing results and save result-DB (in case of problems while processing)
+    deleteExistingResults( scenarioMeta, calculationUnit, steps, deleteAll, deleteFollowers, progress.newChild( 5 ) );
+
+    // Step 2: Create or find CalcUnitMeta and fill with data
+    final ICalcUnitResultMeta existingCalcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
+    final ICalcUnitResultMeta calcUnitMeta;
+    if( existingCalcUnitMeta == null )
+      calcUnitMeta = scenarioMeta.getChildren().addNew( ICalcUnitResultMeta.QNAME, ICalcUnitResultMeta.class );
+    else
+      calcUnitMeta = existingCalcUnitMeta;
+
+    // Step 3: Process results and add new entries to result-DB
+    final IStatus processResultsStatus = resultManager.processResults( calcUnitMeta, progress.newChild( 90 ) );
+    geoLog.log( processResultsStatus );
+
+    // Step 4:
+    calcUnitMeta.setCalcStartTime( startTime );
+    calcUnitMeta.setCalcUnit( calculationUnit.getGmlID() );
+    calcUnitMeta.setName( calculationUnit.getName() );
+    calcUnitMeta.setDescription( calculationUnit.getDescription() );
+    calcUnitMeta.setPath( new Path( m_unitFolder.getName() ) );
+    calcUnitMeta.setStatus( simulationStatus );
+    calcUnitMeta.setCalcEndTime( new Date() );
+
+    if( processResultsStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
+      return processResultsStatus;
+
+    // Step 5: Add geo log to calcMeta as document
+    final IDocumentResultMeta logMeta = calcUnitMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
+    logMeta.setName( "Simulations-Log" );
+    logMeta.setDescription( "Die Log-Datei der letzten Simulation dieser Berechnungseinheit." );
+    logMeta.setDocumentType( IDocumentResultMeta.DOCUMENTTYPE.log );
+    logMeta.setPath( new Path( SIMULATION_LOG_GML ) );
+
+    // TODO: handle the processResultStatus?
+    // show error message and ask user if result should be kept anyway?
+
+    // Step 5: Move results into workspace and save result-DB
+    return moveResults( outputDir, progress.newChild( 5 ) );
   }
 
   /**
-   * Second level of calculation:
-   * <ul>
-   * <li>initialize rma10calculation and run it</li>
-   * </ul>
+   * Delete all existing results inside the current result database.
    */
-  private IStatus runCalculationLevel1( final File tmpDir, final IProgressMonitor monitor, final IGeoLog geoLog ) throws CoreException
+  private IStatus deleteExistingResults( final IScenarioResultMeta scenarioMeta, final ICalculationUnit calcUnit, final Date[] calculatedSteps, final boolean deleteAll, final boolean deleteFollowers, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+    progress.subTask( "Bestehende Ergebnisse werden gelöscht..." );
 
-    /* Initialize the calculation... */
-    geoLog.formatLog( IStatus.INFO, "Eingangsdaten für Simulation werden gelesen." );
-    progress.subTask( "Eingangsdaten für Simulation werden gelesen..." );
-    final IFEDiscretisationModel1d2d discModel = m_caseDataProvider.getModel( IFEDiscretisationModel1d2d.class );
-    final IFlowRelationshipModel flowModel = m_caseDataProvider.getModel( IFlowRelationshipModel.class );
-    final IControlModelGroup controlModel = m_caseDataProvider.getModel( IControlModelGroup.class );
-    final IRoughnessClsCollection roughnessModel = m_caseDataProvider.getModel( IRoughnessClsCollection.class );
-    final IControlModel1D2D controlModelToCalc = controlModel.getModel1D2DCollection().getActiveControlModel();
+    final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
 
-    ProgressUtilities.worked( progress, 2 );
+    /* If no results available yet, nothing to do. */
+    if( calcUnitMeta == null )
+      return Status.OK_STATUS;
 
-    /* ... and run it! */
-    final RMA10Calculation calculation = new RMA10Calculation( tmpDir, geoLog, discModel, flowModel, controlModelToCalc, roughnessModel, m_scenarioFolder );
-    return calculation.runCalculation( progress.newChild( 50 ) );
+    final Date[] stepsToDelete = findStepsToDelete( calcUnitMeta, calculatedSteps, deleteAll, deleteFollowers );
+    ProgressUtilities.worked( progress, 5 );
+
+    final IStatus result = ResultMeta1d2dHelper.deleteResults( calcUnitMeta, stepsToDelete, progress.newChild( 90 ) );
+    if( !result.isOK() )
+      throw new CoreException( result );
+
+    /* Save result DB */
+    try
+    {
+      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) );
+    }
+    catch( final InvocationTargetException e )
+    {
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Speichern der Ergebnisdatenbank", e.getTargetException() ) );
+    }
+
+    m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 5 ) );
+
+    return result;
   }
+
+  private static Date[] findStepsToDelete( final ICalcUnitResultMeta calcUnitMeta, final Date[] calculatedSteps, final boolean deleteAll, final boolean deleteFollowers )
+  {
+    final Date[] existingSteps = ResultMeta1d2dHelper.getStepDates( calcUnitMeta );
+
+    if( deleteAll )
+      return existingSteps;
+
+    final SortedSet<Date> dates = new TreeSet<Date>();
+
+    /* Always delete all calculated steps */
+    dates.addAll( Arrays.asList( calculatedSteps ) );
+
+    if( deleteFollowers )
+    {
+      /* Delete all steps later than the first calculated */
+      final Date firstCalculated = dates.first();
+      for( final Date date : existingSteps )
+      {
+        if( date.after( firstCalculated ) )
+          dates.add( date );
+      }
+    }
+
+    return dates.toArray( new Date[dates.size()] );
+  }
+
+  private IStatus moveResults( final File outputDir, final IProgressMonitor monitor )
+  {
+    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+    progress.subTask( "Ergebnisdaten werden in Arbeitsbereich verschoben..." );
+
+    try
+    {
+      final File unitWorkspaceDir = m_unitFolder.getLocation().toFile();
+      FileUtils.forceMkdir( unitWorkspaceDir );
+      FileUtilities.moveContents( outputDir, unitWorkspaceDir );
+      ProgressUtilities.worked( progress, 70 );
+
+      m_unitFolder.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 20 ) );
+
+      /* Output dir should now be empty, so there is no sense in keeping it */
+      outputDir.delete();
+
+      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) );
+      m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 10 ) );
+
+      return Status.OK_STATUS;
+    }
+    catch( final IOException e )
+    {
+      return StatusUtilities.createStatus( IStatus.ERROR, "Ergebnisdateien konnten nicht in den Arbeitsbereich verschoben werden", e );
+    }
+    catch( final InvocationTargetException e )
+    {
+      return StatusUtilities.createStatus( IStatus.ERROR, "Ergebnisdateien konnten nicht in den Arbeitsbereich verschoben werden", e.getTargetException() );
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+  }
+
 }

@@ -42,32 +42,23 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -75,23 +66,16 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
-
-import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.<br>
@@ -107,11 +91,6 @@ public class ResultManager
 
   private static final FilenameFilter FILTER_2D = new PrefixSuffixFilter( "", ".2d" );
 
-  /**
-   * Time step id for non-unsteady calculation
-   */
-  private static final int PSEUDO_TIME_STEP_NR = -1;
-
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
 
   private final File m_outputDir;
@@ -123,22 +102,22 @@ public class ResultManager
   /* just for test purposes TODO: still? */
   private final List<ResultType.TYPE> m_parameters = new ArrayList<ResultType.TYPE>();
 
-  private final Date m_startTime;
-
   private final IGeoLog m_geoLog;
 
-  private final ICaseDataProvider<IModel> m_caseDataProvider;
+  private final IControlModel1D2D m_controlModel;
 
-  private final IFolder m_resultFolder;
+  private final IFlowRelationshipModel m_flowModel;
 
-  public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final Date startTime, final ICaseDataProvider<IModel> caseDataProvider, final IFolder resultFolder, final IGeoLog geoLog )
+  private final IScenarioResultMeta m_scenarioMeta;
+
+  public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IScenarioResultMeta scenarioResultMeta, final IGeoLog geoLog )
   {
-    m_caseDataProvider = caseDataProvider;
-    m_resultFolder = resultFolder;
+    m_controlModel = controlModel;
+    m_flowModel = flowModel;
+    m_scenarioMeta = scenarioResultMeta;
     m_inputDir = inputDir;
     m_outputDir = outputDir;
 
-    m_startTime = startTime;
     m_geoLog = geoLog;
     m_resultFilePattern = Pattern.compile( resultFilePattern + "(\\d+)" );
 
@@ -148,125 +127,39 @@ public class ResultManager
     m_parameters.add( ResultType.TYPE.TERRAIN );
   }
 
-  public IStatus process( final boolean deleteAll, final boolean deleteFollowers, final Date[] steps, final IProgressMonitor monitor ) throws CoreException
+  public IStatus processResults( final ICalcUnitResultMeta calcUnitMeta, final IProgressMonitor monitor )
   {
-    final IControlModel1D2D controlModel = m_caseDataProvider.getModel( IControlModelGroup.class ).getModel1D2DCollection().getActiveControlModel();
-    final IFlowRelationshipModel flowModel = m_caseDataProvider.getModel( IFlowRelationshipModel.class );
-    final IScenarioResultMeta scenarioResultMeta = m_caseDataProvider.getModel( IScenarioResultMeta.class );
-
-    final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisauswertung: " + controlModel.getName(), 100 );
-
-    /* Process Results */
-    final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
-
-    // Step 1: Delete existing results and save result-DB (in case of problems while processing)
-    deleteExistingResults( calculationUnit, steps, deleteAll, deleteFollowers, progress.newChild( 5 ) );
-
-    // Step 2: Process results and add new entries to result-DB
-    final IStatus processResultsStatus = processResults( controlModel, flowModel, scenarioResultMeta, progress.newChild( 90 ) );
-    m_geoLog.log( processResultsStatus );
-
-    if( processResultsStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
-      return processResultsStatus;
-
-    // TODO: handle the processResultStatus?
-    // show error message and ask user if result should be kept anyway?
-
-    // Step 3: Move results into workspace and save result-DB
-    return moveResults( m_outputDir, progress.newChild( 5 ) );
-  }
-
-  private IStatus moveResults( final File outputDir, final IProgressMonitor monitor )
-  {
-    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
-    progress.subTask( "Ergebnisdaten werden in Arbeitsbereich verschoben..." );
+    final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisse werden ausgewertet...", 1000 );
+    progress.subTask( "Ergebnisse werden ausgewertet..." );
 
     try
     {
-      final File unitWorkspaceDir = m_resultFolder.getLocation().toFile();
-      FileUtils.forceMkdir( unitWorkspaceDir );
-      FileUtilities.moveContents( outputDir, unitWorkspaceDir );
-      ProgressUtilities.worked( progress, 70 );
+      /* Process all remaining .2d files. Now including min and max files */
+      final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+      progress.setWorkRemaining( existing2dFiles.length );
 
-      m_resultFolder.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 20 ) );
+      final IStatus[] fileStati = new IStatus[existing2dFiles.length];
 
-      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) );
-      m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 10 ) );
+      for( int i = 0; i < fileStati.length; i++ )
+      {
+        final File file = existing2dFiles[i];
+        fileStati[i] = processResultFile( file, m_controlModel, m_flowModel, calcUnitMeta, progress.newChild( 1 ) );
+      }
 
-      return Status.OK_STATUS;
+      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), -1, "", null );
     }
-    catch( final IOException e )
+    catch( final OperationCanceledException e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, "Ergebnisdateien konnten nicht in den Arbeitsbereich verschoben werden", e );
-    }
-    catch( final InvocationTargetException e )
-    {
-      return StatusUtilities.createStatus( IStatus.ERROR, "Ergebnisdateien konnten nicht in den Arbeitsbereich verschoben werden", e.getTargetException() );
+      return StatusUtilities.createStatus( IStatus.CANCEL, "Abbruch durch den Benutzer", e );
     }
     catch( final CoreException e )
     {
       return e.getStatus();
     }
-  }
-
-  private IStatus deleteExistingResults( final ICalculationUnit calcUnit, final Date[] calculatedSteps, final boolean deleteAll, final boolean deleteFollowers, final IProgressMonitor monitor ) throws CoreException
-  {
-    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
-    progress.subTask( "Bestehende Ergebnisse werden gelöscht..." );
-
-    final IScenarioResultMeta scenarioResultMeta = m_caseDataProvider.getModel( IScenarioResultMeta.class );
-    final ICalcUnitResultMeta calcUnitMeta = scenarioResultMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
-
-    /* If no results available yet, nothing to do. */
-    if( calcUnitMeta == null )
-      return Status.OK_STATUS;
-
-    final Date[] stepsToDelete = findStepsToDelete( calcUnitMeta, calculatedSteps, deleteAll, deleteFollowers );
-    ProgressUtilities.worked( progress, 5 );
-
-    final IStatus result = ResultMeta1d2dHelper.deleteResults( calcUnitMeta, stepsToDelete, progress.newChild( 90 ) );
-    if( !result.isOK() )
-      throw new CoreException( result );
-
-    /* Save result db */
-    try
+    catch( final Throwable e )
     {
-      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) );
+      return StatusUtilities.createStatus( IStatus.ERROR, "Unbekannter Fehler", e );
     }
-    catch( final InvocationTargetException e )
-    {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Speichern der Ergebnisdatenbank", e.getTargetException() ) );
-    }
-
-    m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 5 ) );
-
-    return result;
-  }
-
-  private Date[] findStepsToDelete( final ICalcUnitResultMeta calcUnitMeta, final Date[] calculatedSteps, final boolean deleteAll, final boolean deleteFollowers )
-  {
-    final Date[] existingSteps = ResultMeta1d2dHelper.getStepDates( calcUnitMeta );
-
-    if( deleteAll )
-      return existingSteps;
-
-    final SortedSet<Date> dates = new TreeSet<Date>();
-
-    /* Always delete all calculated steps */
-    dates.addAll( Arrays.asList( calculatedSteps ) );
-
-    if( deleteFollowers )
-    {
-      /* Delete all steps later than the first calculated */
-      final Date firstCalculated = dates.first();
-      for( final Date date : existingSteps )
-      {
-        if( date.after( firstCalculated ) )
-          dates.add( date );
-      }
-    }
-
-    return dates.toArray( new Date[dates.size()] );
   }
 
   /* check for already processed files */
@@ -343,81 +236,37 @@ public class ResultManager
     return null;
   }
 
-  private IStatus processResults( final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IScenarioResultMeta scenarioMeta, final IProgressMonitor monitor )
+  public Date[] getCalculatedSteps( )
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisse werden ausgewertet...", 1000 );
-    progress.subTask( "Ergebnisse werden ausgewertet..." );
-
-    try
-    {
-      /* Create meta result workspace */
-      final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
-      final ICalcUnitResultMeta existingCalcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
-      final ICalcUnitResultMeta calcUnitResultMeta;
-      if( existingCalcUnitMeta == null )
-        calcUnitResultMeta = scenarioMeta.getChildren().addNew( ICalcUnitResultMeta.QNAME, ICalcUnitResultMeta.class );
-      else
-        calcUnitResultMeta = existingCalcUnitMeta;
-
-      calcUnitResultMeta.setCalcStartTime( m_startTime );
-      calcUnitResultMeta.setCalcUnit( calculationUnit.getGmlID() );
-      calcUnitResultMeta.setName( calculationUnit.getName() );
-      calcUnitResultMeta.setDescription( calculationUnit.getDescription() );
-      calcUnitResultMeta.setPath( new Path( m_resultFolder.getName() ) );
-
-      ProgressUtilities.worked( monitor, 100 );
-
-      /* Process all remaining .2d files. Now including min and max files */
-      final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
-      progress.setWorkRemaining( existing2dFiles.length );
-
-      final IStatus[] fileStati = new IStatus[existing2dFiles.length];
-
-      for( int i = 0; i < fileStati.length; i++ )
-      {
-        final File file = existing2dFiles[i];
-        fileStati[i] = processResultFile( file, controlModel, flowModel, calcUnitResultMeta, progress.newChild( 1 ) );
-      }
-
-      // TODO: this calcUnitStatus is quite important: we should see to it, that it contains some meaningful message to
-      // the user Probably it should only be set after everything has finished?
-      // TODO: also consider calculation problems
-      final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), -1, "", null );
-      // TODO: distinguish between problems during calculation and problems during processing
-      final IStatus calcUnitStatus = StatusUtilities.createStatus( multiStatus.getSeverity(), "", null );
-
-      calcUnitResultMeta.setCalcEndTime( new Date() );
-      calcUnitResultMeta.setStatus( calcUnitStatus );
-
-      return multiStatus;
-    }
-    catch( final OperationCanceledException e )
-    {
-      return StatusUtilities.createStatus( IStatus.CANCEL, "Abbruch durch den Benutzer", e );
-    }
-    catch( final CoreException e )
-    {
-      return e.getStatus();
-    }
-    catch( final Throwable e )
-    {
-      return StatusUtilities.createStatus( IStatus.ERROR, "Unbekannter Fehler", e );
-    }
-  }
-
-  public Date[] getCalculatedSteps( ) throws CoreException
-  {
-    final IControlModel1D2D controlModel = m_caseDataProvider.getModel( IControlModelGroup.class ).getModel1D2DCollection().getActiveControlModel();
-
     final Set<Date> dates = new TreeSet<Date>();
     final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
     for( final File file : existing2dFiles )
     {
-      final Date stepDate = findStepDate( controlModel, file.getName() );
+      final Date stepDate = findStepDate( m_controlModel, file.getName() );
       if( stepDate != null )
         dates.add( stepDate );
     }
 
     return dates.toArray( new Date[dates.size()] );
+  }
+
+  public IControlModel1D2D getControlModel( )
+  {
+    return m_controlModel;
+  }
+
+  public IFlowRelationshipModel getFlowModel( )
+  {
+    return m_flowModel;
+  }
+
+  public IScenarioResultMeta getScenarioMeta( )
+  {
+    return m_scenarioMeta;
+  }
+
+  public File getOutputDir( )
+  {
+    return m_outputDir;
   }
 }

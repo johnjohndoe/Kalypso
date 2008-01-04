@@ -85,39 +85,49 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
-@SuppressWarnings("unchecked") //$NON-NLS-1$
+@SuppressWarnings("unchecked")
 public class CalculationUnitProblemsComponent
 {
   private FormToolkit toolkit;
+
   private Composite parent;
+
   private CalculationUnitDataModel dataModel;
-  private KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener(){
+
+  private final KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener()
+  {
     public void dataChanged( final String key, final Object newValue )
     {
       Display display = parent.getDisplay();
       final Runnable runnable = new Runnable()
       {
-        
+
         public void run( )
         {
-          if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) ){
-            if (newValue != null){
-            updateThisSection( newValue );
-            }            
+          if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
+          {
+            if( newValue != null )
+            {
+              updateThisSection( newValue );
+            }
           }
         }
 
       };
-      display.syncExec( runnable );      
-    }    
+      display.syncExec( runnable );
+    }
   };
-  
+
   private Composite rootComposite;
+
   private TableViewer problemTableViewer;
+
   private Table problemsTable;
-  private ISelectionChangedListener selectionChangedListener = new ISelectionChangedListener(){
+
+  private final ISelectionChangedListener selectionChangedListener = new ISelectionChangedListener()
+  {
 
     public void selectionChanged( SelectionChangedEvent event )
     {
@@ -132,138 +142,137 @@ public class CalculationUnitProblemsComponent
         Object firstElement = selection.getFirstElement();
         if( firstElement == null )
         {
-          return;//throw new NullPointerException( "Null Value while selection.getFirstElement() :" + firstElement );
+          return;// throw new NullPointerException( "Null Value while selection.getFirstElement() :" + firstElement );
         }
         else
         {
           if( firstElement instanceof IProblem )
           {
-            IProblem problem = (IProblem) firstElement;           
-            
-            MapPanel mapPanel = 
-              dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
-            problem.navigateToProblem( mapPanel );            
+            IProblem problem = (IProblem) firstElement;
+
+            MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+            problem.navigateToProblem( mapPanel );
           }
         }
       }
       catch( Throwable th )
       {
         th.printStackTrace();
-      } 
-      
+      }
+
     }
-    
+
   };
+
   private ICalculationUnit selCalcUnit;
 
-  public void createControl( CalculationUnitDataModel dataModel, FormToolkit toolkit, Composite parent )
+  public void createControl( final CalculationUnitDataModel dataModel, final FormToolkit toolkit, final Composite parent )
   {
-	    this.toolkit = toolkit;
-	    this.parent = parent;
-	    this.dataModel = dataModel;
-	    guiProblemViewer( parent );
-	    dataModel.addKeyBasedDataChangeListener( settingsKeyListener );
-    
+    this.toolkit = toolkit;
+    this.parent = parent;
+    this.dataModel = dataModel;
+    guiProblemViewer( parent );
+    dataModel.addKeyBasedDataChangeListener( settingsKeyListener );
+
   }
 
-  private void guiProblemViewer( Composite composite )
+  private void guiProblemViewer( final Composite composite )
   {
-	    rootComposite = new Composite(composite,SWT.FLAT);
-	    rootComposite.setLayout( new FormLayout());
-	    
-	    FormData formData = new FormData();
-	    formData.top = new FormAttachment(0,0);
-	    formData.left = new FormAttachment(0,0);
-	    rootComposite.setLayoutData( formData );
-	    
-	    Label nameText = new Label(rootComposite, SWT.NONE);
-	    nameText.setText( "Problems :" ); //$NON-NLS-1$
-	    
-	    formData = new FormData();
-	    formData.left = new FormAttachment(0,5);
-	    formData.top = new FormAttachment(0,5);
-	    nameText.setLayoutData( formData );
-	    
-	    Button refreshButton = new Button(rootComposite, SWT.NONE);
-	    Image refreshImage = new Image( rootComposite.getDisplay(),
-	            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-	                    PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-	                    "icons/elcl16/refresh.gif" ).getImageData() );; //$NON-NLS-1$
-        refreshButton.setImage( refreshImage );
-        
-        refreshButton.addSelectionListener( new SelectionAdapter(){
-          @Override
-          public void widgetSelected( SelectionEvent e )
-          {
-            IProgressMonitor monitor = new NullProgressMonitor();
-            IWorkbench workbench = PlatformUI.getWorkbench();
-            IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-            validateInvariants(workbench,activeWorkbenchWindow);
-            //selCalcUnit = (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-            if (getCalculationUnit()!= null)
-            {
-              problemTableViewer.setInput(dataModel.getValidatingMessages(getCalculationUnit()));
-              problemTableViewer.refresh();
-            }            
-          }         
-        });
-        
-        formData = new FormData();
-        formData.left = new FormAttachment(nameText,10);
-        formData.top = new FormAttachment(0,5);        
-        refreshButton.setLayoutData( formData );
-        
-        problemTableViewer = new TableViewer( rootComposite, SWT.FILL | SWT.BORDER );
-        problemsTable = problemTableViewer.getTable();
-        problemTableViewer.setLabelProvider( new ProblemsListLabelProvider());
-        problemTableViewer.setContentProvider( new ArrayContentProvider() );
-        problemTableViewer.addSelectionChangedListener( selectionChangedListener  );
-        problemsTable.setLinesVisible( true );
-        
-        final TableColumn lineColumn = new TableColumn( problemsTable, SWT.LEFT );
-        lineColumn.setWidth( 200 );
-        
-        formData = new FormData();
-        formData.left = new FormAttachment(0,5);
-        formData.top = new FormAttachment(refreshButton,5);
-        formData.right = new FormAttachment(100,-5);
-        problemsTable.setLayoutData( formData );       
+    rootComposite = new Composite( composite, SWT.FLAT );
+    rootComposite.setLayout( new FormLayout() );
+
+    FormData formData = new FormData();
+    formData.top = new FormAttachment( 0, 0 );
+    formData.left = new FormAttachment( 0, 0 );
+    rootComposite.setLayoutData( formData );
+
+    final Label nameText = new Label( rootComposite, SWT.NONE );
+    nameText.setText( "Problems :" ); //$NON-NLS-1$
+
+    formData = new FormData();
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( 0, 5 );
+    nameText.setLayoutData( formData );
+
+    final Button refreshButton = new Button( rootComposite, SWT.NONE );
+    final Image refreshImage = new Image( rootComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/refresh.gif" ).getImageData() );; //$NON-NLS-1$
+    refreshButton.setImage( refreshImage );
+
+    refreshButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final IProgressMonitor monitor = new NullProgressMonitor();
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+        validateInvariants( workbench, activeWorkbenchWindow );
+        // selCalcUnit = (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+        if( getCalculationUnit() != null )
+        {
+          problemTableViewer.setInput( dataModel.getValidatingMessages( getCalculationUnit() ) );
+          problemTableViewer.refresh();
+        }
+      }
+    } );
+
+    formData = new FormData();
+    formData.left = new FormAttachment( nameText, 10 );
+    formData.top = new FormAttachment( 0, 5 );
+    refreshButton.setLayoutData( formData );
+
+    problemTableViewer = new TableViewer( rootComposite, SWT.FILL | SWT.BORDER );
+    problemsTable = problemTableViewer.getTable();
+    problemTableViewer.setLabelProvider( new ProblemsListLabelProvider() );
+    problemTableViewer.setContentProvider( new ArrayContentProvider() );
+    problemTableViewer.addSelectionChangedListener( selectionChangedListener );
+    problemsTable.setLinesVisible( true );
+
+    final TableColumn lineColumn = new TableColumn( problemsTable, SWT.LEFT );
+    lineColumn.setWidth( 200 );
+
+    formData = new FormData();
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( refreshButton, 5 );
+    formData.right = new FormAttachment( 100, -5 );
+    problemsTable.setLayoutData( formData );
   }
-  
-  protected void validateInvariants(IWorkbench workbench, IWorkbenchWindow activeWorkbenchWindow )
+
+  protected void validateInvariants( final IWorkbench workbench, final IWorkbenchWindow activeWorkbenchWindow )
   {
-    final IRunnableWithProgress runnable = new IRunnableWithProgress(){
+    final IRunnableWithProgress runnable = new IRunnableWithProgress()
+    {
 
       public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
       {
         monitor.beginTask( "Starts Validating", 5 ); //$NON-NLS-1$
         IFeatureWrapper2 currentSelection = getCalculationUnit();
-        
+
         try
         {
-          if (currentSelection instanceof ICalculationUnit)
+          if( currentSelection instanceof ICalculationUnit )
           {
             List<IProblem> tempProblemList = new ArrayList<IProblem>();
             ICalculationUnit orgCalc = (ICalculationUnit) currentSelection;
-            InvariantCheckBoundaryConditions checkBC = new InvariantCheckBoundaryConditions(orgCalc,dataModel);
+            InvariantCheckBoundaryConditions checkBC = new InvariantCheckBoundaryConditions( orgCalc, dataModel );
             checkBC.checkAllInvariants();
             tempProblemList.addAll( checkBC.getBrokenInvariantMessages() );
-            InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
+            InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine( orgCalc, dataModel );
             invBConditionBLine.checkAllInvariants();
             tempProblemList.addAll( invBConditionBLine.getBrokenInvariantMessages() );
             dataModel.addValidatingMessage( orgCalc, tempProblemList );
             monitor.worked( 5 );
-            
-            if (currentSelection instanceof ICalculationUnit1D2D)
+
+            if( currentSelection instanceof ICalculationUnit1D2D )
             {
               List<IProblem> tempProblemList1 = new ArrayList<IProblem>();
               ICalculationUnit1D2D calc1D2D = (ICalculationUnit1D2D) currentSelection;
-              InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements(calc1D2D, dataModel);
+              InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements( calc1D2D );
               overlappingElements.checkAllInvariants();
               tempProblemList1.addAll( overlappingElements.getBrokenInvariantMessages() );
               dataModel.addValidatingMessage( calc1D2D, tempProblemList1 );
-              monitor.worked(5);
-            }            
+              monitor.worked( 5 );
+            }
           }
         }
         catch( RuntimeException e )
@@ -272,10 +281,10 @@ public class CalculationUnitProblemsComponent
         }
         finally
         {
-          //monitor.worked( 90 );
+          // monitor.worked( 90 );
           monitor.done();
         }
-      }      
+      }
     };
     try
     {
@@ -284,21 +293,21 @@ public class CalculationUnitProblemsComponent
     catch( final Exception e )
     {
       e.printStackTrace();
-    } 
+    }
   }
 
-  private void updateThisSection( Object newValue )
+  private void updateThisSection( final Object newValue )
   {
-    Assert.throwIAEOnNullParam( newValue, "newValue" );     //$NON-NLS-1$
-    if (newValue instanceof ICalculationUnit) 
-    {       
+    Assert.throwIAEOnNullParam( newValue, "newValue" ); //$NON-NLS-1$
+    if( newValue instanceof ICalculationUnit )
+    {
       selCalcUnit = (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      problemTableViewer.setInput(dataModel.getValidatingMessages(selCalcUnit));
+      problemTableViewer.setInput( dataModel.getValidatingMessages( selCalcUnit ) );
       problemTableViewer.refresh();
-      }
+    }
   }
-  
-  private ICalculationUnit getCalculationUnit()
+
+  private ICalculationUnit getCalculationUnit( )
   {
     return selCalcUnit;
   }

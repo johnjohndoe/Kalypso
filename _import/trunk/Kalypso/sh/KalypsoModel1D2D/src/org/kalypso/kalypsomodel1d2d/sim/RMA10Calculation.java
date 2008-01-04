@@ -143,7 +143,8 @@ public class RMA10Calculation
    */
   public IStatus runCalculation( final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+    final String simMsg = String.format( "Simulation von '%s'", m_controlModel.getName() );
+    final SubMonitor progress = SubMonitor.convert( monitor, simMsg, 100 );
 
     writeRma10Files( progress.newChild( 10 ) );
     copyExecutable( progress.newChild( 1 ) );
