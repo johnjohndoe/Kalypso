@@ -51,11 +51,11 @@
       </indexterm>
 
       <para>Öffnen Sie in der Ansicht "Aktivitäten" den Baum
-      <guimenuitem>Postprocessing &gt; Kartenansicht. </guimenuitem>Mit einem
-      Doppelklick auf <guilabel>Ergebniskarte konfigurieren, </guilabel>öffnen
-      Sie einen Assistenten, mit dem Sie mittels Checkbox auf der linken Seite
-      auswählen können, welche Ergebnisse angezeigt werden sollen. Es stehen
-      im Allgemeinen folgende Ergebnisse zu Verfügung</para>
+      <guimenuitem>Postprocessing &gt; Kartenansicht. </guimenuitem>Durch
+      einen Doppelklick auf <guilabel>Ergebniskarte konfigurieren,
+      </guilabel>öffnen Sie den Assistenten, mit dem Sie Ergebnisse in die
+      Kartenansicht hinzufügen können. Im Allgemeinen stehen folgende
+      Ergebnisse zu Verfügung</para>
 
       <itemizedlist>
         <listitem>
@@ -84,8 +84,43 @@
         </listitem>
       </itemizedlist>
 
-      <para>Zunächst aktivieren Sie die Checkbox derer Ergebnisse, die Sie
-      sich anzeigen lassen wollen.</para>
+      <para>Der Assistent ist in zwei Bereiche unterteilt: </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Auf der linken Seite stellt eine Baumansicht die vorliegenden
+          Ergebnisse dar. Die oberste Ebene des Baumes besteht aus den
+          vorhandenen Teilmodellen. Diesen untergeordnet folgen die
+          berechneten Zeitschritte, welche wiederum die eigentlichen
+          Ergebnisse beinhalten.</para>
+
+          <para>Ausnahme bilden hierbei die Modellhöhen, da diese unabhängig
+          von einzelnen Berechnungen sind.</para>
+
+          <para>Durch Anhaken eines Eintrages werden automatisch alle
+          untergeordneten Elemente ebenfalls angehakt.</para>
+        </listitem>
+      </itemizedlist>
+
+      <itemizedlist>
+        <listitem>
+          <para>Auf der rechten Seite des Assistenten werden Informationen
+          über die aktuell selektierten Einträge des Baumes dargestellt. Je
+          nach Typ des gerade im Baum selektierten Eintrages (Teilmodell-,
+          Zeitschritt- oder Ergebnis-Ebene) werden unterschiedliche
+          Informationen angezeigt.</para>
+
+          <para>Haben Sie ein Ergebnis selektiert, kann in der Info-Ansicht
+          spezifiziert werden, ob das Ergebnis anhand von Isoflächen oder
+          Isolinien angezeigt werden soll. Wenn Sie ein Ergebnis in der Karte
+          darstellen wollen, achten Sie darauf, dass das Ergebnis auch im Baum
+          angehakt ist.</para>
+
+          <para>Jedem Ergebnis wird automatisch eine Standard-Darstellung
+          (Style) zugewiesen, der mittles des Style-Managers individuell
+          verändert werden kann. </para>
+        </listitem>
+      </itemizedlist>
 
       <figure>
         <title>Assistent zur Konfiguration der Ergebniskarte</title>
@@ -97,12 +132,7 @@
         </mediaobject>
       </figure>
 
-      <para>Auf der rechten Seite des Assistenten werden Informationen
-      angezeigt. Je tiefer man sich in der Gliederung befindet, desto
-      detaillierter werden die Informationen. Es kann wieder mittels Checkbox
-      ausgewählt werden ob die Ergebnisse mittels Isoflächen oder Isolinien
-      angezeigt werden sollen. Es können auch beide Boxen aktiviert
-      werden.</para>
+      <para></para>
 
       <figure>
         <title>Anzeigen von Informationen im Assistenten</title>
@@ -114,7 +144,7 @@
         </mediaobject>
       </figure>
 
-      <para>Es besteht die Möglichkeit verschiedene "styles" zu kreieren, zu
+      <para>Es besteht die Möglichkeit verschiedene Styles zu erzeugen, zu
       bearbeiten oder zu löschen.</para>
 
       <para><table>
@@ -140,7 +170,7 @@
                   </mediaobject></entry>
 
                 <entry>ausgewählten Style bearbeiten oder neuen Style
-                kreieren</entry>
+                erzeugen</entry>
               </row>
 
               <row>
@@ -156,11 +186,17 @@
           </tgroup>
         </table></para>
 
-      <para>Sollten Sie einen bereits verwendeten "style" verändern, dann
-      wirkt sich dies auch auf schon vorhande Ergebnisdarstellungen aus.
-      Wünschen Sie einen neuen "style" anzulegen, geben sie Im Feld
-      "Style-Name" einen neuen Namen ein. Es besteht die Möglichkeit
-      festzulegen welcher Wertebereich angezeigt werden soll.</para>
+      <para>Sollten Sie einen bereits verwendeten Style verändern, so wirkt
+      sich dies auch auf schon in der Karte vorhandene Ergebnisdarstellungen
+      aus. Wünschen Sie einen neuen Style anzulegen, so selektieren Sie einen
+      bereits vorhandenen Style und bearbeiten diesen im Style-Manager. Dort
+      geben sie im Feld "Style-Name" einen neuen Namen ein unter dem der Style
+      abgespeichert werden soll. </para>
+
+      <para>Je nach Darstellungsform (Isolinien, Isoflächen) erscheint ein
+      unterschiedliches Fenster. Generell haben Sie die Möglichkeit den
+      darzustellenden Wertebereich im oberen Bereich des Style-Managers
+      anzupassen. </para>
 
       <figure>
         <title>Style bearbeiten oder neu erstellen</title>
@@ -171,6 +207,10 @@
           </imageobject>
         </mediaobject>
       </figure>
+
+      <para>Im unteren Bereich können Sie die einzelnen Attribute für die
+      Linien bzw. Farbflächen ändern. Für die Farbflächendarstellung erfolgt
+      eine Interpolation dieser Attribute.</para>
 
       <para>Der Style Manager wird mit <guilabel>OK </guilabel>beendet.</para>
 
@@ -206,9 +246,8 @@
       Preprocessing bis hin zu den importierten Grundlagenkarten angezeigt
       werden. Werden diese nicht benötigt, können sie genau wie die
       berechneten Ergebnisse in der Ansicht "Gliederung" mittels Checkbox
-      deaktiviert werden. Die Grundlagenkarten befinden sich in der Gliederung
-      unter "fenet" und werden, wenn "fenet" deaktiviert wird, somit
-      automatisch mit deaktiviert.</para>
+      deaktiviert werden. Des weiteren können die Ergebnis-Themen auch
+      komplett aus der Kartenansicht gelöscht werden.</para>
 
       <figure>
         <title>Daten aus dem Preprocessing im Postprocessing anzeigen</title>
@@ -307,15 +346,29 @@
       </indexterm>
 
       <para>Um einen Längsschnitt für Ihr zweidimensionales Modell zu
-      konfugurieren, öffnen Sie in der Ansicht " Aktivitäten" den Baum
+      konfigurieren, öffnen Sie in der Ansicht " Aktivitäten" den Baum
       <guimenuitem>Postprocessing &gt; Längsschnittansicht</guimenuitem>.
       Doppelklicken Sie auf <guilabel> Längsschnitt
       konfigurieren</guilabel>.</para>
 
       <para>Im anschließenden Assistenten ist unter "Gewässerachse" zunächst
-      die entsprechende shape Datei auszuwählen. Unter "Parameter" werden dann
-      die entprechenden Spalten der shape Datei ausgewählt. Klicken Sie auf
-      <guilabel>Next</guilabel>.</para>
+      die entsprechende Shape-Datei auszuwählen, welche die zu verwendende
+      Gewässerachse enthält. Unter "Parameter" werden dann die entprechenden
+      Spalten der Shape-Datei ausgewählt. Generell sollte das Thema ein
+      Linienthema sein, welches aus mehreren Liniensegmenten bestehen kann.
+      Selektieren Sie zunächst anhand welcher Tabellenspalte die vorhandnen
+      Gewässer enthält (Gewässer-ID). Im Anschluss daran wird die
+      darunterliegende Auswahlliste mit den vohandenen Gewässern gefüllt.
+      </para>
+
+      <para>Für jedes Liniensegment muss ein Eintrag der Anfangsstation und
+      Endstation vorhanden sein. Selektieren sie die Tabellenspalten, welche
+      diese Informationen enthalten.</para>
+
+      <para>Abschließend geben Sie Stützpunktweite des Längsschnitts
+      an.</para>
+
+      <para>Klicken Sie auf <guilabel>Next</guilabel>.</para>
 
       <figure>
         <title>Längsschnitteinstellungen</title>
@@ -327,7 +380,7 @@
         </mediaobject>
       </figure>
 
-      <para>Im nächsten Assistenten werden Sie aufgefordert auszuwählen für
+      <para>Im nächsten Assistenten werden Sie aufgefordert auszuwählen, für
       welches Ergebnis Sie sich den Längsschnitt anzeigen lassen
       wollen.</para>
 
@@ -363,6 +416,9 @@
       <para>Handelt es sich um ein zweidimensionales Modell und haben Sie im
       vorherigen Schritt alles richtig gemacht, steht der zuvor konfigurierte
       Längsschnitt hier zur Auswahl.</para>
+
+      <para>Bei einer eindimensionalen Rechnung wird der Längsschintt
+      automatisch erzeugt.</para>
 
       <figure>
         <title>Assistent zum Anzeigen eines Längsschnittes</title>
@@ -456,7 +512,7 @@
       Kartenansicht. </guimenuitem>Mit einem Doppelklick auf
       <guilabel>Ergebniskarte konfigurieren,</guilabel> öffnen Sie den
       Assistenten. Neu hinzugekommen ist nun die Differenz, die Sie zuvor
-      erzeugt haben. </para>
+      erzeugt haben.</para>
 
       <figure>
         <title>Differnz in Ergebniskarte laden</title>
@@ -468,7 +524,7 @@
         </mediaobject>
       </figure>
 
-      <para>Nun kann die Differnez in der Karte angezeigt werden (Siehe <link
+      <para>Nun kann die Differenz in der Karte angezeigt werden (Siehe <link
       linkend="???">1.2 Ergebniskarte anzeigen)</link> Die Differenz kann in
       der Ansicht "Gliederung" mittels Checkbox aktiviert beziehungsweise
       deaktiviert werden.</para>

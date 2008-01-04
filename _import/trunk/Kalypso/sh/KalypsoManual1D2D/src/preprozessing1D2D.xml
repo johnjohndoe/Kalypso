@@ -51,7 +51,7 @@
         </listitem>
 
         <listitem>
-          <para>Esri Shape Files importieren oder</para>
+          <para>Esri Shape Dateien importieren oder</para>
         </listitem>
 
         <listitem>
@@ -60,8 +60,8 @@
       </itemizedlist>
 
       <para>Gegebenenfalls kann auch mehr als nur eine Möglichkeit genutzt
-      werden. Um mehrere Hintergrunddaten zu laden, muss die Aktivität erneut
-      angesteuert werden.</para>
+      werden. Um mehrere Hintergrunddaten zu laden, muss die Aktivität
+      mehrmals angesteuert werden.</para>
 
       <para>Um Hintergrundinformationen bereitzustellen, öffnen Sie in der
       Ansicht "Aktivitäten" den Baum <guimenu>Preprocessing &gt; Daten
@@ -432,6 +432,16 @@
       <para>58.450;3552956.793;5986891.953;5.940</para>
 
       <para>58.450;3552955.954;5986891.761;4.980</para>
+
+      <para>Für einen korrekten Import müssen die Punkte der einzelnen Profile
+      in sortierter Reihenfolge (in Fließrichtung von links nach rechts)
+      vorliegen. Während des Imports werden für jeden Punkt die dazugehörige
+      Profil-Breiten-Koordinate berechnet. Diese ist für den ersten Punkt
+      stehts "0". Für alle folgenden Punkte des Profils wird die
+      Breiten-Koordinate anhand des Abstandes zum vorherigen importierten
+      Punkt ermittelt. Die Breiten-Koordinate des aktuellen Punktes ergibt
+      sich somit aus der Breiten-Koordinate des vorherigen Punktes addiert mit
+      dem Abstand zu diesem.</para>
 
       <para>Um Profildaten zu importieren öffnen Sie in der Ansicht
       "Aktivitäten" den Baum <guimenuitem>Preprocessing &gt; Daten
@@ -1053,32 +1063,44 @@
           <primary>Flussschlauchgenerator Kalypso 1D2D</primary>
         </indexterm>
 
-        <para>Um die den Flussschlauchgenerator zu öffnen, öffnen Sie in der
+        <para>Der Flussschlauchgenerator unterstützt den Anwender bei der
+        Erstellung eines 2D-Netzes im Bereich des Gewässers, wenn dessen Form
+        und Lage anhand von Querprofilen definiert ist. Um mit dem
+        Flussschlauchgenerator arbeiten zu können sind folgende
+        Vorraussetzungen nötig:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Vorhandensein eines Profil-Themas in der Karte. Um die
+            Profildaten im Trippel-Format zu importieren siehe <xref
+            linkend="Kalypso1D2DImportProf" />. Die Uferlinien gehören mit zu
+            den Hintergrunddaten. Wie diese eingeladen werden siehe <xref
+            linkend="Kalypso1D2DImportBackgroundmaps" />.</para>
+          </listitem>
+        </itemizedlist>
+
+        <itemizedlist>
+          <listitem>
+            <para>Definition der Uferlinien entlang des Gewässers anhand eines
+            Linien-Themas (ESRI-Shape-Datei). Die Uferlinien müssen hierbei je
+            Gewässerseite zusammenhängend und von jedem zu verwendeten Profil
+            geschnitten werden. </para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Um den Flussschlauchgenerator zu benutzen, öffnen Sie in der
         Ansicht "Aktivitäten" den Baum <guimenuitem>Preprocessing &gt;
         Netzaufbau &gt; 2D-Netz</guimenuitem>. Aktivieren Sie
         <guimenuitem>Flusschlauchgenerator </guimenuitem>mit einem
         Doppelklick, um den Flussschlauchgenerator und die dazugehörige Karten
-        Werkzeugansicht zu öffnen. Wählen Sie in der Werkzeugansicht das
-        gewünschte Profil aus.</para>
+        Werkzeugansicht zu öffnen. </para>
 
-        <para>Dieses Werkzeug dient der Erstellung des 2D-Netzes im
-        Flussschlauch, dessen Form und Lage anhand von Querprofilen definiert
-        ist. Voraussetzung hierfür ist das Vorhandensein der
-        Profilinformationen nach Trippel-Import und Uferlinien</para>
-
-        <para>Um die Profildaten im Trippel-Format zu importieren siehe <xref
-        linkend="Kalypso1D2DImportProf" />. Die Uferlinien gehören mit zu den
-        Hintergrunddaten. Wie diese eingeladen werden siehe <xref
-        linkend="Kalypso1D2DImportBackgroundmaps" />.</para>
-
-        <para>Wenn Sie die Uferlinien und die Profildaten eingeladen haben und
-        den Flussschlauchgenerator aktiviert haben, dann sollte die Ansicht in
-        etwa so aussehen wie das Beispiel unten. Überprüfen Sie, ob die
-        Grundlagen und die Profile in der Gliederung aktiviert sind.
-        Voraussetzung für ein korrektes Funktionieren des
-        Flussschlauchgenerators ist, dass jedes selektierte Profil von beiden
-        Uferlinien geschnitten wird. Ziehen Sie die Karten Werkzeugansicht so
-        weit auf, bis alle Knöpfe zu sehen sind.</para>
+        <para>Sind die Uferlinien und die Profildaten eingeladen und der
+        Flussschlauchgenerator aktiviert, öffnet sich die Karten Werkzeug
+        Ansicht (siehe Abbildung unten). Überprüfen Sie, ob die Grundlagen und
+        die Profile in der Gliederung aktiviert sind. Ziehen Sie ggf. die
+        Karten Werkzeugansicht so weit auf, bis alle Knöpfe zu sehen
+        sind.</para>
 
         <figure>
           <title>Ansicht Flussschlauchgenerator</title>
@@ -1090,7 +1112,7 @@
           </mediaobject>
         </figure>
 
-        <para>Zunächst wählen Sie unter dem Menüpunkt
+        <para>Als erstes wählen Sie unter dem Menüpunkt
         <guimenuitem>Profile</guimenuitem> das gewünschte Profilthema aus.
         Danach können Sie über den Selektionsknopf <inlinemediaobject>
             <imageobject>
@@ -1100,28 +1122,26 @@
         selektieren, mit denen Sie Ihr 2D-Netz erstellen möchten. Gehen Sie
         hierfür in die Karte und ziehen Sie mit der linken Maustaste ein
         Rechteck auf. Alle Profile, die das Rechteck schneidet, werden
-        selektiert. Als nächstes ist die Anzahl der Profilstützstellen zu
+        selektiert. Ein abermaliges Selektieren bereits selektierter Profile
+        deselektiert diese wieder. </para>
+
+        <para>Alle selektierten Profile werden gelb dargestellt. Es ist nicht
+        notwendig alle Profile auf einmal zu selektieren. Sie können auf
+        gleiche Weise weitere Profile der Selektion hintzufügen oder
+        entfernen.</para>
+
+        <para>Im nächsten Schritt ist die Anzahl der Profilstützstellen zu
         definieren. Die hier angegebene Anzahl gilt global für alle Profile
-        und richtet sich nach der Breite des Gewässers und der Heterogenität
-        der Profilgeometrie.</para>
+        und sollte sich an der Breite des Gewässers und der Heterogenität der
+        Profilgeometrie orientieren.</para>
 
-        <note>
-          <para>Wenn Sie die Anzahl der Stützstellen im Menüpunkt Profile oder
-          Uferlinien während der Bearbeitung erneut verändern, dann erfolgt
-          die Änderung global! D.h. dass eine Neuberechnung anhand der
-          Ausgangsdaten stattfindet und bis dahin vorgenommene Anpassungen
-          z.B. einzelner Segmente verworfen werden!</para>
-        </note>
-
-        <para>Auf dem folgenden Bild ist zu sehen, dass alle selektierten
-        Profile gelb dargestellt werden. Sie müssen nicht alle Profile auf
-        einmal selektieren, sondern Sie könnten mit dem selben Verfahren nun
-        noch weitere Profile selektieren. Wenn Sie sich geirrt haben und die
-        Selektion wieder rückgängig machen wollen, dann öffnen Sie einfach
-        wieder so ein Rechteck über alle selektierten Profile, die nicht mehr
-        markiert sein sollen und sie werden wieder orange dargestellt (nur
-        beim Flussschlauchgenerator ist das Drücken der Strg-Taste um mehrere
-        Selektionsvorgänge nacheinander durchzuführen nicht notwendig).</para>
+        <para><note>
+            <para>Wenn Sie die Anzahl der Stützstellen im Menüpunkt Profile
+            oder Uferlinien während der Bearbeitung erneut verändern, dann
+            erfolgt die Änderung global! D.h. dass eine Neuberechnung anhand
+            der Ausgangsdaten stattfindet und bis dahin vorgenommene
+            Anpassungen z.B. einzelner Segmente verworfen werden!</para>
+          </note></para>
 
         <figure>
           <title>Profilauswahl mit dem Flussschlauchgenerator</title>
@@ -1153,6 +1173,14 @@
         keine Rolle, ansonsten müssen Sie auf das Profilthema achten und
         dementsprechend die zugehörigen Uferlinienen selektieren.</para>
 
+        <para><note>
+            <para>Achten Sie darauf, dass Sie nach erfolgreicher Selektion der
+            beiden Uferlinien bzw. der Profile in der Karte den jeweiligen
+            Selektionsknopf wieder deaktivieren, da ansonsten bei nochmaligem
+            Klick in der Karte die getroffenen Selektionen gelöscht
+            werden.</para>
+          </note></para>
+
         <para>Auch hier haben Sie die Möglichkeit die Anzahl der Stützstellen
         in Fließrichtung zu definieren. Diese können später noch in der
         Segmentansicht für jedes Segment individuell angepasst werden.</para>
@@ -1167,10 +1195,11 @@
           </mediaobject>
         </figure>
 
-        <para>Es sollte nun eine Vorschau zu sehen sein (siehe Abbildung
-        unten). Ist dies nicht der Fall sind die Daten fehlerhaft. Überprüfen
-        Sie ob alle selektierten Profile von beiden Uferlinien geschnitten
-        werden.</para>
+        <para>Sobald alle nötigen Spezifikationen vorliegen, wird automatisch
+        die initiale Berechung der Segmente durchgeführt, eine Vorschau in der
+        Karte generiert (siehe Abbildung unten). Ist dies nicht der Fall sind
+        die Daten fehlerhaft (evtl. Uferlinie nicht zusammehängend, Profile
+        schneiden Uferlinien nicht...). </para>
 
         <figure>
           <title>Netzvorschau</title>
@@ -1182,39 +1211,36 @@
           </mediaobject>
         </figure>
 
-        <para>Sobald alle nötigen Spezifikationen vorliegen findet die
-        Berechung der Segmente statt. Bei der ersten Berechnung werden die
-        selektierten Profile anhand der Methode von DOUGLAS-PEUCKER ausgedünnt
-        und die wesentlichen Profilpunkte beibehalten. Gleichzeitig öffnet
-        sich die Segment- und Profilansicht, in welcher Sie weitere
-        Editiermöglichkeiten für die Uferlinien und die Profilunterteilungen
-        finden.</para>
+        <para>Bei der ersten Berechnung werden die selektierten Profile anhand
+        der Methode von DOUGLAS-PEUCKER ausgedünnt und nur die wesentlichen
+        Profilpunkte als Stützpunkte des 2D-Netzes herangezogen. Gleichzeitig
+        öffnet sich die Segment- und Profilansicht, in welchen Sie weitere
+        Bearbeitungsmöglichkeiten bezüglich der Uferlinien und der
+        Profilunterteilungen haben.</para>
 
         <para>In der <guimenuitem>Segmentansicht</guimenuitem> hat man die
         Möglichkeit zwischen den einzelnen erzeugten Segmenten zu navigieren.
         Ein Segment ist hierbei definiert als der Raum zwischen zwei Profilen.
-        Wenn der automatische Zoom aktiviert ist (Häkchen setzen), dann ist in
-        der Karte das ausgewählte Segment zu sehen. Nach der Auswahl des
+        Ist der automatische Zoom aktiviert , wird die Kartenansicht
+        automatisch zum gerade aktuellen Segment verschoben. Nach Auswahl des
         gewünschten Segments kann für dieses die Anzahl der
-        Uferlinienstützpunkte gewählt werden und der anhand der
-        Uferlinien-Shapedatei erzeugte Uferverlauf nach Betätigen der
-        Editierknöpfe <inlinemediaobject>
+        Uferlinienstützpunkte nochmals individuell angepasst werden und der
+        anhand der Uferlinien-Shapedatei erzeugte Uferverlauf nach Betätigen
+        der Editierknöpfe <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/1D2D/Flussschlauchg_Editieren.png" />
             </imageobject>
-          </inlinemediaobject> angepasst werden. Es können jedoch nur die
-        Stützpunkte zwischen den Profilen editiert werden, da die
-        Schnittstellen der Uferlinien mit den Profilen fest definiert
-        sind.</para>
+          </inlinemediaobject> verändert werden. Über diesen Punkt können nur
+        die Stützpunkte zwischen den Profilen editiert werden. Ein Verändern
+        der Schnittpunkte zwischen Uferlinien und Profile ist lediglich
+        entlang des Profils in der Profilansicht möglich.</para>
 
         <para>In der <guimenuitem>Profilansicht</guimenuitem> werden die
         beiden Profile angezeigt, die das Segment definieren. Die
         Originalprofile werden in orange dargestellt. Das ausgedünnte Profil
-        für das spätere 2D-Netz ist blau. In dieser Ansicht haben Sie die
+        für das spätere 2D-Netz ist blau gekennzeichnet. Hier haben Sie die
         Möglichkeit die Profilunterteilungen durch Ziehen der blauen
-        Stützpunkte individuell der Profilgeometrie anzupassen. Hier gilt
-        wiederum, dass die äußersten Knoten nicht verschoben werden können, da
-        dies die definierten Schnittstellen mit den Uferlinien sind.</para>
+        Stützpunkte individuell der Profilgeometrie anzupassen.</para>
 
         <para>Folgende Funktionen sind in der Profilansicht möglich:</para>
 
@@ -1298,9 +1324,8 @@
                 <entry align="left" valign="middle">Profil wechseln</entry>
 
                 <entry align="left" valign="middle">Zu einem Segment gehören
-                jeweils zwei Profile, die das Segment abschließen. Wenn Sie
-                den Knopf drücken wird jeweils das andere Profil aktiviert und
-                angezeigt.</entry>
+                jeweils zwei Profile. Wenn Sie den Knopf drücken, wechselt die
+                Profilansicht zwischen diesen beiden Profilen.</entry>
               </row>
             </tbody>
           </tgroup>
