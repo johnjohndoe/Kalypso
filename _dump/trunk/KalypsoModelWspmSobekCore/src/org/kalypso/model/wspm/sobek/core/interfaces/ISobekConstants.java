@@ -491,5 +491,4 @@ public class ISobekConstants
 
   public static final QName QN_SBK_STRUCT_LINKS_TO_BRANCH = new QName( ISobekConstants.NS_SOBEK_STRUCTURES, ISobekConstants.F_SBK_STRUCT_LINKS_TO_BRANCH );
 
-
 }

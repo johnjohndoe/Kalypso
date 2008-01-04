@@ -42,27 +42,26 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 
 /**
  * @author thuel2
- *
  */
 public interface ISbkStructPump extends ISbkStructure
 {
 
-  public String getFlowDirection( );
+  public double getCapacity( );
 
   public String getControlPosition( );
 
-  public String getReductionType( );
+  public String getFlowDirection( );
 
   public double getReductionConstant( );
 
-  public double getCapacity( );
+  public String getReductionType( );
 
-  public double getSwitchOnLevelSuctionSide( );
+  public double getSwitchOffLevelPressureSide( );
 
   public double getSwitchOffLevelSuctionSide( );
 
   public double getSwitchOnLevelPressureSide( );
 
-  public double getSwitchOffLevelPressureSide( );
+  public double getSwitchOnLevelSuctionSide( );
 
 }

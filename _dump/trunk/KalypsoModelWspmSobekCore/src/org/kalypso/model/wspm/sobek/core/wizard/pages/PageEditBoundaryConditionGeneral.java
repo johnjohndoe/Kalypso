@@ -81,6 +81,68 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     setDescription( "Enter boundary condition parameters, please." );
   }
 
+  protected void checkPageCompleted( )
+  {
+    if( m_tsBegins.getDateTime() == null )
+    {
+      setMessage( null );
+      setErrorMessage( "Start date not defined" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_tsEnds.getDateTime() == null )
+    {
+      setMessage( null );
+      setErrorMessage( "End date not defined" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_tsEnds.getDateTime().before( m_tsBegins.getDateTime() ) )
+    {
+      setMessage( null );
+      setErrorMessage( "End date is before start date" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    /* check lastfall start and ending dates */
+    final Feature lastfall = m_condition.getLastfall().getFeature();
+    final XMLGregorianCalendar lastfallStart = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
+    final XMLGregorianCalendar lastfallEnd = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_END );
+
+    final GregorianCalendar lastfallGregorianStart = lastfallStart.toGregorianCalendar();
+    final GregorianCalendar lastfallGregorianEnd = lastfallEnd.toGregorianCalendar();
+
+    final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
+
+    if( m_tsBegins.getDateTime().after( lastfallGregorianStart ) )
+    {
+      setMessage( null );
+      setErrorMessage( "Boundary condition starting date is after lastfall starting date! (" + df.format( lastfallGregorianStart.getTime() ) + ")" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_tsEnds.getDateTime().before( lastfallGregorianEnd ) )
+    {
+      setMessage( null );
+      setErrorMessage( "Boundary condition ending date is before lastfall ending date! (" + df.format( lastfallGregorianEnd.getTime() ) + ")" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    setMessage( null );
+    setErrorMessage( null );
+    setPageComplete( true );
+  }
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -158,68 +220,6 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     checkPageCompleted();
   }
 
-  protected void checkPageCompleted( )
-  {
-    if( m_tsBegins.getDateTime() == null )
-    {
-      setMessage( null );
-      setErrorMessage( "Start date not defined" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    if( m_tsEnds.getDateTime() == null )
-    {
-      setMessage( null );
-      setErrorMessage( "End date not defined" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    if( m_tsEnds.getDateTime().before( m_tsBegins.getDateTime() ) )
-    {
-      setMessage( null );
-      setErrorMessage( "End date is before start date" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    /* check lastfall start and ending dates */
-    final Feature lastfall = m_condition.getLastfall().getFeature();
-    final XMLGregorianCalendar lastfallStart = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
-    final XMLGregorianCalendar lastfallEnd = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_END );
-
-    final GregorianCalendar lastfallGregorianStart = lastfallStart.toGregorianCalendar();
-    final GregorianCalendar lastfallGregorianEnd = lastfallEnd.toGregorianCalendar();
-
-    final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
-
-    if( m_tsBegins.getDateTime().after( lastfallGregorianStart ) )
-    {
-      setMessage( null );
-      setErrorMessage( "Boundary condition starting date is after lastfall starting date! (" + df.format( lastfallGregorianStart.getTime() ) + ")" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    if( m_tsEnds.getDateTime().before( lastfallGregorianEnd ) )
-    {
-      setMessage( null );
-      setErrorMessage( "Boundary condition ending date is before lastfall ending date! (" + df.format( lastfallGregorianEnd.getTime() ) + ")" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    setMessage( null );
-    setErrorMessage( null );
-    setPageComplete( true );
-  }
-
   /**
    * @see org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral#getBoundaryNodeType()
    */
@@ -229,19 +229,19 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral#getStartDate()
-   */
-  public GregorianCalendar getStartDate( )
-  {
-    return m_tsBegins.getDateTime();
-  }
-
-  /**
    * @see org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral#getEndDate()
    */
   public GregorianCalendar getEndDate( )
   {
     return m_tsEnds.getDateTime();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral#getStartDate()
+   */
+  public GregorianCalendar getStartDate( )
+  {
+    return m_tsBegins.getDateTime();
   }
 
 }

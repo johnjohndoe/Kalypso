@@ -52,9 +52,14 @@ import org.kalypsodeegree.model.feature.Feature;
 public interface IModelMember
 {
   /**
-   * get all node members
+   * generic interface for deleting a model member (branch, node, ...)
    */
-  public INode[] getNodeMembers( );
+  public void deleteFoo( Feature feature ) throws Exception;
+
+  /**
+   * facade for creating, editing branches
+   */
+  public IBranchMaker getBranchMaker( );
 
   /**
    * get all branch members
@@ -67,24 +72,19 @@ public interface IModelMember
   public ICalculationLink[] getCalculationLinkMembers( );
 
   /**
-   * get all lastfall members
-   */
-  public ILastfall[] getLastfallMembers( );
-
-  /**
-   * facade for creating, editing branches
-   */
-  public IBranchMaker getBranchMaker( );
-
-  /**
    * get this model feature
    */
   public Feature getFeature( );
 
   /**
-   * generic interface for deleting a model member (branch, node, ...)
+   * get all lastfall members
    */
-  public void deleteFoo( Feature feature ) throws Exception;
+  public ILastfall[] getLastfallMembers( );
+
+  /**
+   * get all node members
+   */
+  public INode[] getNodeMembers( );
 
   public INodeUtils getNodeUtils( );
 

@@ -68,27 +68,11 @@ public class Lastfall implements ILastfall
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getName()
-   */
-  public String getName( )
-  {
-    return FeatureUtils.getFeatureName( ISobekConstants.NS_SOBEK, m_lastfall );
-  }
-
-  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getFeature()
    */
   public Feature getFeature( )
   {
     return m_lastfall;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getModel()
-   */
-  public IModelMember getModelMember( )
-  {
-    return m_sobekModelMember;
   }
 
   /**
@@ -113,6 +97,22 @@ public class Lastfall implements ILastfall
       return ((XMLGregorianCalendar) property).toGregorianCalendar();
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getModel()
+   */
+  public IModelMember getModelMember( )
+  {
+    return m_sobekModelMember;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getName()
+   */
+  public String getName( )
+  {
+    return FeatureUtils.getFeatureName( ISobekConstants.NS_SOBEK, m_lastfall );
   }
 
 }

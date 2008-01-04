@@ -70,15 +70,6 @@ public class SobekWizardEditBoundaryNode extends Wizard implements INewWizard
   }
 
   /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-
-  }
-
-  /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
   @Override
@@ -86,6 +77,15 @@ public class SobekWizardEditBoundaryNode extends Wizard implements INewWizard
   {
     m_page = new PageEditBoundaryNode( m_boundaryNode );
     addPage( m_page );
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
+   */
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+
   }
 
   @Override

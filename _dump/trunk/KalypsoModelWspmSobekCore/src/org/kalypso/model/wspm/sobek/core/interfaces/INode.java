@@ -50,6 +50,12 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface INode
 {
+  public enum FLOW_DIRECTION
+  {
+    eOutflowingBranch,
+    eInflowingBranch;
+  }
+
   public enum TYPE
   {
     eBoundaryNode,
@@ -78,29 +84,23 @@ public interface INode
     }
   }
 
-  public enum FLOW_DIRECTION
-  {
-    eOutflowingBranch,
-    eInflowingBranch;
-  }
+  public void delete( ) throws Exception;
 
-  public TYPE getType( );
+  public String getDescription( );
+
+  public Feature getFeature( );
+
+  public String getId( );
+
+  public GM_Point getLocation( );
+
+  IModelMember getModelMember( );
 
   public String getName( );
 
   public String getStationName( );
 
-  public String getDescription( );
-
-  public String getId( );
-
-  public Feature getFeature( );
-
-  public GM_Point getLocation( );
+  public TYPE getType( );
 
   public boolean isEmpty( );
-
-  public void delete( ) throws Exception;
-
-  IModelMember getModelMember( );
 }

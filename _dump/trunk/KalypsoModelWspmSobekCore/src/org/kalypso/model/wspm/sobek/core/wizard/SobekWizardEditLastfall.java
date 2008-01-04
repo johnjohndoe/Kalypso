@@ -76,6 +76,16 @@ public class SobekWizardEditLastfall extends Wizard implements INewWizard
   }
 
   /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
+   */
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    m_page = new PageEditLastfall( m_lastfall );
+    addPage( m_page );
+  }
+
+  /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
@@ -103,16 +113,6 @@ public class SobekWizardEditLastfall extends Wizard implements INewWizard
 
     return true;
 
-  }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    m_page = new PageEditLastfall( m_lastfall );
-    addPage( m_page );
   }
 
 }

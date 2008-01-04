@@ -46,7 +46,6 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -54,53 +53,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class SbkTable implements ISbkTable
 {
-  private final Feature m_table;
-
-  private final Interpolation m_interpolation;
-
-  private final TabularData m_tabularData;
-
-  public SbkTable( final Feature table )
-  {
-    m_table = table;
-    m_interpolation = new Interpolation( table );
-    m_tabularData = new TabularData( table );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable#getInterpolationPeriod()
-   */
-  public String getInterpolationPeriod( )
-  {
-    return getInterpolation().getPeriod();
-  }
-
-  private Interpolation getInterpolation( )
-  {
-    return m_interpolation;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable#getInterpolationType()
-   */
-  public String getInterpolationType( )
-  {
-    return getInterpolation().getType();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable#getInterpolationValue()
-   */
-  public byte getInterpolationValue( )
-  {
-    return getInterpolation().getValue();
-  }
-
-  private TabularData getTabularData( )
-  {
-    return m_tabularData;
-  }
-
   private class Interpolation
   {
     private final String m_period;
@@ -122,9 +74,9 @@ public class SbkTable implements ISbkTable
         m_value = ((Number) 0).byteValue();
     }
 
-    public byte getValue( )
+    public String getPeriod( )
     {
-      return m_value;
+      return m_period;
     }
 
     public String getType( )
@@ -132,9 +84,9 @@ public class SbkTable implements ISbkTable
       return m_type;
     }
 
-    public String getPeriod( )
+    public byte getValue( )
     {
-      return m_period;
+      return m_value;
     }
   }
 
@@ -219,15 +171,54 @@ public class SbkTable implements ISbkTable
 
     }
 
-    public long getRowsCount( )
-    {
-      return m_rowsCount;
-    }
-
     public TupleResult getResult( )
     {
       return m_result;
     }
+
+    public long getRowsCount( )
+    {
+      return m_rowsCount;
+    }
+  }
+
+  private final Interpolation m_interpolation;
+
+  private final TabularData m_tabularData;
+
+  public SbkTable( final Feature table )
+  {
+    m_interpolation = new Interpolation( table );
+    m_tabularData = new TabularData( table );
+  }
+
+  private Interpolation getInterpolation( )
+  {
+    return m_interpolation;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable#getInterpolationPeriod()
+   */
+  public String getInterpolationPeriod( )
+  {
+    return getInterpolation().getPeriod();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable#getInterpolationType()
+   */
+  public String getInterpolationType( )
+  {
+    return getInterpolation().getType();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable#getInterpolationValue()
+   */
+  public byte getInterpolationValue( )
+  {
+    return getInterpolation().getValue();
   }
 
   /**
@@ -236,6 +227,11 @@ public class SbkTable implements ISbkTable
   public long getRowsCount( )
   {
     return getTabularData().getRowsCount();
+  }
+
+  private TabularData getTabularData( )
+  {
+    return m_tabularData;
   }
 
   /**

@@ -56,15 +56,27 @@ public class BranchMaker implements IBranchMaker
 
   private final SobekModelMember m_model;
 
-  public BranchMaker( SobekModelMember model )
+  public BranchMaker( final SobekModelMember model )
   {
     m_model = model;
   }
 
   /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#connectBranches(org.kalypso.model.wspm.sobek.core.interfaces.IBranch[],
+   *      org.kalypsodeegree.model.geometry.GM_Curve)
+   */
+  public void connectBranches( final IBranch[] branches, final GM_Curve curve ) throws Exception
+  {
+    if( branches.length != 2 )
+      throw (new IllegalStateException( "Can only connect two branches!" ));
+
+    FNGmlUtils.connectBranches( m_model, branches, curve );
+  }
+
+  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#createBranch(org.kalypsodeegree.model.geometry.GM_Curve)
    */
-  public void createBranch( GM_Curve curve ) throws Exception
+  public void createBranch( final GM_Curve curve ) throws Exception
   {
     FNGmlUtils.createBranch( m_model, curve, new INode[] {}, TYPE.eConnectionNode, TYPE.eConnectionNode );
   }
@@ -73,7 +85,7 @@ public class BranchMaker implements IBranchMaker
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#createInflowBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch,
    *      org.kalypsodeegree.model.geometry.GM_Curve)
    */
-  public void createInflowBranch( IBranch branch, GM_Curve curve ) throws Exception
+  public void createInflowBranch( final IBranch branch, final GM_Curve curve ) throws Exception
   {
     FNGmlUtils.createInflowBranch( m_model, branch, curve );
   }
@@ -82,7 +94,7 @@ public class BranchMaker implements IBranchMaker
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#createOutflowBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch,
    *      org.kalypsodeegree.model.geometry.GM_Curve)
    */
-  public void createOutflowBranch( IBranch branch, GM_Curve curve ) throws Exception
+  public void createOutflowBranch( final IBranch branch, final GM_Curve curve ) throws Exception
   {
     FNGmlUtils.createOutflowBranch( m_model, branch, curve );
   }
@@ -91,20 +103,8 @@ public class BranchMaker implements IBranchMaker
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#extendBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch,
    *      org.kalypsodeegree.model.geometry.GM_Curve)
    */
-  public void extendBranch( IBranch branch, GM_Curve curve ) throws Exception
+  public void extendBranch( final IBranch branch, final GM_Curve curve ) throws Exception
   {
     FNGmlUtils.extendBranch( m_model, branch, curve );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#connectBranches(org.kalypso.model.wspm.sobek.core.interfaces.IBranch[],
-   *      org.kalypsodeegree.model.geometry.GM_Curve)
-   */
-  public void connectBranches( IBranch[] branches, GM_Curve curve ) throws Exception
-  {
-    if( branches.length != 2 )
-      throw (new IllegalStateException( "Can only connect two branches!" ));
-
-    FNGmlUtils.connectBranches( m_model, branches, curve );
   }
 }

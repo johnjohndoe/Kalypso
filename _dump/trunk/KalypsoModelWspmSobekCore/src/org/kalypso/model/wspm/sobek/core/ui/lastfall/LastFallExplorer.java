@@ -86,8 +86,6 @@ public class LastFallExplorer
 {
   static private final Font fTextBold = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD );
 
-  protected final ISobekModelMember m_modelBuilder;
-
   private static ViewerSorter m_sorter = new ViewerSorter()
   {
     /**
@@ -111,6 +109,8 @@ public class LastFallExplorer
       return super.compare( viewer, e1, e2 );
     }
   };
+
+  protected final ISobekModelMember m_modelBuilder;
 
   public LastFallExplorer( final ISobekModelMember modelBuilder )
   {
@@ -311,6 +311,34 @@ public class LastFallExplorer
     /* selection change listener for en/disabling toolitems */
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      /**
+       * @param path
+       *            path[0] ILastfall, path[1] IBoundaryNode
+       */
+      private boolean hasTimeSeriesObservation( final TreePath[] path )
+      {
+        if( path.length != 1 || path[0].getSegmentCount() != 2 || !(path[0].getSegment( 0 ) instanceof ILastfall) || !(path[0].getSegment( 1 ) instanceof IBoundaryNode) )
+          return false;
+
+        final ILastfall lastfall = (ILastfall) path[0].getSegment( 0 );
+        final IBoundaryNode node = (IBoundaryNode) path[0].getSegment( 1 );
+
+        try
+        {
+          final IBoundaryNodeLastfallCondition condition = node.getLastfallCondition( lastfall );
+
+          if( condition.hasTimeSeriesObservation() )
+            return true;
+
+        }
+        catch( final Exception e )
+        {
+          return false;
+        }
+
+        return false;
+      }
+
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final TreeSelection selection = (TreeSelection) viewer.getSelection();
@@ -340,34 +368,6 @@ public class LastFallExplorer
           delete.setEnabled( false );
           editObs.setEnabled( false );
         }
-      }
-
-      /**
-       * @param path
-       *            path[0] ILastfall, path[1] IBoundaryNode
-       */
-      private boolean hasTimeSeriesObservation( final TreePath[] path )
-      {
-        if( path.length != 1 || path[0].getSegmentCount() != 2 || !(path[0].getSegment( 0 ) instanceof ILastfall) || !(path[0].getSegment( 1 ) instanceof IBoundaryNode) )
-          return false;
-
-        final ILastfall lastfall = (ILastfall) path[0].getSegment( 0 );
-        final IBoundaryNode node = (IBoundaryNode) path[0].getSegment( 1 );
-
-        try
-        {
-          final IBoundaryNodeLastfallCondition condition = node.getLastfallCondition( lastfall );
-
-          if( condition.hasTimeSeriesObservation() )
-            return true;
-
-        }
-        catch( final Exception e )
-        {
-          return false;
-        }
-
-        return false;
       }
     } );
 

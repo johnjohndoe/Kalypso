@@ -128,9 +128,27 @@ import com.vividsolutions.jts.geom.Coordinate;
 public class PiSobekModelUtils
 {
 
+  private static PiSobekModelUtils instance = null;
+
+  public static PiSobekModelUtils getInstance( )
+  {
+    if( PiSobekModelUtils.instance == null )
+      PiSobekModelUtils.instance = new PiSobekModelUtils();
+    return PiSobekModelUtils.instance;
+  }
+
   public Map<String, String> lookUpModelToPi = new HashMap<String, String>()
   {
     static final long serialVersionUID = 1L;
+
+    @Override
+    public String get( Object key )
+    {
+      if( super.containsKey( key ) )
+        return super.get( key );
+
+      throw new IllegalArgumentException( key.toString() + " can't be found in HashMap lookUpModelToPi." );
+    }
 
     /**
      * @see java.util.HashMap#put(java.lang.Object, java.lang.Object)
@@ -149,18 +167,7 @@ public class PiSobekModelUtils
           throw new IllegalArgumentException( value + " is not unique in HashMap lookUpModelToPi." );
       return null;
     }
-
-    @Override
-    public String get( Object key )
-    {
-      if( super.containsKey( key ) )
-        return super.get( key );
-
-      throw new IllegalArgumentException( key.toString() + " can't be found in HashMap lookUpModelToPi." );
-    }
   };
-
-  private static PiSobekModelUtils instance = null;
 
   private PiSobekModelUtils( )
   {
@@ -171,11 +178,38 @@ public class PiSobekModelUtils
 
   }
 
-  public static PiSobekModelUtils getInstance( )
+  public CrossSection createCrossSectionFromCSNode( final ObjectFactory factory, final ICrossSectionNode csNode )
   {
-    if( PiSobekModelUtils.instance == null )
-      PiSobekModelUtils.instance = new PiSobekModelUtils();
-    return PiSobekModelUtils.instance;
+    final CrossSection piCrossSection = factory.createCrossSectionsComplexTypeCrossSection();
+    piCrossSection.setX( csNode.getLocation().getX() );
+    piCrossSection.setY( csNode.getLocation().getY() );
+    piCrossSection.setCrossSectionID( csNode.getId() );
+    piCrossSection.setBranchId( csNode.getLinkToBranch().getId() );
+    piCrossSection.setCrossSectionName( csNode.getName() );
+    piCrossSection.setLabel( csNode.getName() ); // label has to be set but will be ignored by import to Sobek
+    final String description = csNode.getDescription();
+    if( !(description == null) )
+      piCrossSection.setComment( description );
+
+    piCrossSection.setRoughnessType( "Sobek.RoughnessType.StricklerKs" ); // nofdp default kSt
+
+    final IProfil profil = csNode.getProfile();
+    final LinkedList<IProfilPoint> points = profil.getPoints();
+
+    for( final IProfilPoint point : points )
+    {
+      final CrossSectionXdataComplexType csData = factory.createCrossSectionXdataComplexType();
+      csData.setCsy( point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) );
+      csData.setZ( point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
+// TODO get real Roughness from nofdpIDSSProfile
+// csData.setRoughness( point.getValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) );
+      csData.setRoughness( 2.1 );
+      csData.setMark( new BigInteger( "0" ) );
+
+      piCrossSection.getCrossSectionData().add( csData );
+    }
+
+    return piCrossSection;
   }
 
   public Location createLocationFromNode( final ObjectFactory factory, final INode node )
@@ -254,41 +288,7 @@ public class PiSobekModelUtils
     return piBranch;
   }
 
-  public CrossSection createCrossSectionFromCSNode( final ObjectFactory factory, final ICrossSectionNode csNode )
-  {
-    final CrossSection piCrossSection = factory.createCrossSectionsComplexTypeCrossSection();
-    piCrossSection.setX( csNode.getLocation().getX() );
-    piCrossSection.setY( csNode.getLocation().getY() );
-    piCrossSection.setCrossSectionID( csNode.getId() );
-    piCrossSection.setBranchId( csNode.getLinkToBranch().getId() );
-    piCrossSection.setCrossSectionName( csNode.getName() );
-    piCrossSection.setLabel( csNode.getName() ); // label has to be set but will be ignored by import to Sobek
-    final String description = csNode.getDescription();
-    if( !(description == null) )
-      piCrossSection.setComment( description );
-
-    piCrossSection.setRoughnessType( "Sobek.RoughnessType.StricklerKs" ); // nofdp default kSt
-
-    final IProfil profil = csNode.getProfile();
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-
-    for( IProfilPoint point : points )
-    {
-      final CrossSectionXdataComplexType csData = factory.createCrossSectionXdataComplexType();
-      csData.setCsy( point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) );
-      csData.setZ( point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
-// TODO get real Roughness from nofdpIDSSProfile
-// csData.setRoughness( point.getValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) );
-      csData.setRoughness( 2.1 );
-      csData.setMark( new BigInteger( "0" ) );
-
-      piCrossSection.getCrossSectionData().add( csData );
-    }
-
-    return piCrossSection;
-  }
-
-  public Structure createStructureFromSbkStruct( ObjectFactory factory, ISbkStructure sbkStruct )
+  public Structure createStructureFromSbkStruct( final ObjectFactory factory, final ISbkStructure sbkStruct )
   {
     final Structure piStruct = new Structure();
     piStruct.setBranchId( sbkStruct.getLinkToBranch().getId() );
@@ -310,7 +310,7 @@ public class PiSobekModelUtils
     else
       allStructs.add( sbkStruct );
 
-    for( ISbkStructure sbkStructure : allStructs )
+    for( final ISbkStructure sbkStructure : allStructs )
     {
       final StructureDefinition structureDefinition = getStructureDefFromSbkSimpleStruct( factory, sbkStructure );
       structureDefinitions.getStructureDefinition().add( structureDefinition );
@@ -320,103 +320,83 @@ public class PiSobekModelUtils
     return piStruct;
   }
 
-  private StructureDefinition getStructureDefFromSbkSimpleStruct( ObjectFactory factory, ISbkStructure sbkStructure )
+  public TimeSerieComplexType createTimeSeriesFromBNNodeAndLastfall( final ObjectFactory factory, final IBoundaryNode bnNode, final ILastfall lastfall ) throws Exception
   {
-    StructureDefinition structureDefinition = null;
+    final TimeSerieComplexType piTimeSerie = factory.createTimeSerieComplexType();
 
-    if( sbkStructure instanceof SbkStructRiverWeir )
-      structureDefinition = getStructureDefFromSbkRiverWeir( factory, sbkStructure );
-    else if( sbkStructure instanceof SbkStructGeneralStructure )
-      structureDefinition = getStructureDefFromSbkGeneralStructure( factory, sbkStructure );
-    else if( sbkStructure instanceof SbkStructDatabaseStructure )
-      structureDefinition = getStructureDefFromSbkDatabaseStructure( factory, sbkStructure );
-    else if( sbkStructure instanceof SbkStructWeir )
-      structureDefinition = getStructureDefFromSbkWeir( factory, sbkStructure );
-    else if( sbkStructure instanceof SbkStructPump )
-      structureDefinition = getStructureDefFromSbkPump( factory, sbkStructure );
+    final HeaderComplexType headerComplexType = factory.createHeaderComplexType();
+    headerComplexType.setType( TimeSeriesType.INSTANTANEOUS );
+    headerComplexType.setMissVal( Double.NaN );
+
+    final IBoundaryNodeLastfallCondition lastfallCondition = bnNode.getLastfallCondition( lastfall );
+
+    final GregorianCalendar observationStart = lastfallCondition.getObservationStart();
+    final DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
+    final DatatypeFactory dataTypeFactory = datatypeFactory;
+    final XMLGregorianCalendar gregorianStartCalendar = dataTypeFactory.newXMLGregorianCalendar( observationStart );
+    final DateTimeComplexType startDateTimeComplexType = factory.createDateTimeComplexType();
+
+    final XMLGregorianCalendar startTime = datatypeFactory.newXMLGregorianCalendarTime( gregorianStartCalendar.getHour(), gregorianStartCalendar.getMinute(), gregorianStartCalendar.getSecond(), DatatypeConstants.FIELD_UNDEFINED );
+    final XMLGregorianCalendar startDate = datatypeFactory.newXMLGregorianCalendarDate( gregorianStartCalendar.getYear(), gregorianStartCalendar.getMonth(), gregorianStartCalendar.getDay(), DatatypeConstants.FIELD_UNDEFINED );
+    startDateTimeComplexType.setDate( startDate );
+    startDateTimeComplexType.setTime( startTime );
+    headerComplexType.setStartDate( startDateTimeComplexType );
+
+    final GregorianCalendar observationEnd = lastfallCondition.getObservationEnd();
+    final XMLGregorianCalendar gregorianEndCalendar = dataTypeFactory.newXMLGregorianCalendar( observationEnd );
+    final DateTimeComplexType endDateTimeComplexType = factory.createDateTimeComplexType();
+
+    final XMLGregorianCalendar endTime = datatypeFactory.newXMLGregorianCalendarTime( gregorianEndCalendar.getHour(), gregorianEndCalendar.getMinute(), gregorianEndCalendar.getSecond(), DatatypeConstants.FIELD_UNDEFINED );
+    final XMLGregorianCalendar endDate = datatypeFactory.newXMLGregorianCalendarDate( gregorianEndCalendar.getYear(), gregorianEndCalendar.getMonth(), gregorianEndCalendar.getDay(), DatatypeConstants.FIELD_UNDEFINED );
+    endDateTimeComplexType.setDate( endDate );
+    endDateTimeComplexType.setTime( endTime );
+    headerComplexType.setEndDate( endDateTimeComplexType );
+
+    headerComplexType.setLocationId( bnNode.getId() );
+    headerComplexType.setStationName( bnNode.getStationName() );
+
+    final TimeStepComplexType timeStepComplexType = factory.createTimeStepComplexType();
+    timeStepComplexType.setUnit( TimeStepUnitEnumStringType.NONEQUIDISTANT );
+    headerComplexType.setTimeStep( timeStepComplexType );
+
+    final BOUNDARY_TYPE boundaryType = bnNode.getBoundaryType();
+    headerComplexType.setParameterId( lookUpModelToPi.get( boundaryType.toString() ) );
+    piTimeSerie.setHeader( headerComplexType );
+
+    final IObservation<TupleResult> timeSeriesTupple = lastfallCondition.getTimeSeriesObservation();
+    lastfallCondition.getTimeSeriesObservationFeature();
+    final TupleResult tupleResult = timeSeriesTupple.getResult();
+
+    IComponent valueComp = null;
+    final IComponent dateComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE" );
+    if( boundaryType.equals( BOUNDARY_TYPE.eQ ) )
+      valueComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#Q" );
+    else if( boundaryType.equals( BOUNDARY_TYPE.eW ) )
+      valueComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#W" );
     else
-      throw new NotImplementedException();
+      throw new NotImplementedException( "Boundary condition of type " + boundaryType + " can't be transferred by PI format yet." );
 
-    return structureDefinition;
+    final Iterator<IRecord> itrResult = tupleResult.iterator();
+    while( itrResult.hasNext() )
+    {
+      final IRecord record = itrResult.next();
+      final EventComplexType eventComplexType = factory.createEventComplexType();
+
+      final XMLGregorianCalendar gregEventCalendar = (XMLGregorianCalendar) record.getValue( dateComp );
+      final XMLGregorianCalendar date = datatypeFactory.newXMLGregorianCalendarDate( gregEventCalendar.getYear(), gregEventCalendar.getMonth(), gregEventCalendar.getDay(), DatatypeConstants.FIELD_UNDEFINED );
+      final XMLGregorianCalendar time = datatypeFactory.newXMLGregorianCalendarTime( gregEventCalendar.getHour(), gregEventCalendar.getMinute(), gregEventCalendar.getSecond(), DatatypeConstants.FIELD_UNDEFINED );
+
+      eventComplexType.setDate( date );
+      eventComplexType.setTime( time );
+      eventComplexType.setValue( Double.valueOf( (Double) record.getValue( valueComp ) ) );
+
+      piTimeSerie.getEvent().add( eventComplexType );
+    }
+
+    return piTimeSerie;
   }
 
-  private StructureDefinition getStructureDefFromSbkPump( ObjectFactory factory, ISbkStructure sbkStructure )
-  {
-    final ISbkStructPump sbkPump = (ISbkStructPump) sbkStructure;
-    final StructureDefinition structureDefinition = factory.createStructureDefinition();
-
-    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
-    String name = sbkPump.getName();
-    if( name == null )
-      name = "";
-    structureDefinition.setStructureDefinitionId( sbkPump.getId() + "_pump" );
-    structureDefinition.setStructureDefinitionName( name + "_pump" );
-    structureDefinition.setStructureDefinitionType( "Sobek.Structures.Pump" );
-
-    final Parameters parameters = factory.createParameters();
-
-    Parameter parameter = factory.createParameter();
-    parameter.setId( "flowDirection" );
-    parameter.setType( "string" );
-    parameter.getContent().add( sbkPump.getFlowDirection() );
-    parameters.getParameter().add( parameter );
-
-    parameter = factory.createParameter();
-    parameter.setId( "controlPosition" );
-    parameter.setType( "string" );
-    parameter.getContent().add( sbkPump.getControlPosition() );
-    parameters.getParameter().add( parameter );
-
-    parameter = factory.createParameter();
-    parameter.setId( "reductionType" );
-    parameter.setType( "string" );
-    parameter.getContent().add( sbkPump.getReductionType() );
-    parameters.getParameter().add( parameter );
-
-    parameter = factory.createParameter();
-    parameter.setId( "reductionConstant" );
-    parameter.setType( "double" );
-    parameter.getContent().add( Double.toString( sbkPump.getReductionConstant() ) );
-    parameters.getParameter().add( parameter );
-
-    parameter = factory.createParameter();
-    parameter.setId( "capacitySettings" );
-    parameter.setType( "table" );
-    final Table innerTable = factory.createTable();
-    innerTable.setName( "capacitySettings" );
-
-    final Info tableInfo = factory.createInfo();
-    final Columns columns = factory.createColumns();
-    final int colCount = 5;
-    columns.setCount( ((Number) colCount).byteValue() );
-
-    final Column column = factory.createColumn();
-    column.setType( "double" );
-    for( int i = 0; i < colCount; i++ )
-      columns.getColumn().add( column );
-    tableInfo.setColumns( columns );
-
-    innerTable.setInfo( tableInfo );
-
-    final Rows tableRows = factory.createRows();
-    final Row tableRow = factory.createRow();
-    tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
-    tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
-    tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelSuctionSide() ) );
-    tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelPressureSide() ) );
-    tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelPressureSide() ) );
-
-    tableRows.getRow().add( tableRow );
-    innerTable.setRows( tableRows );
-
-    parameter.getContent().add( innerTable );
-    parameters.getParameter().add( parameter );
-
-    structureDefinition.setParameters( parameters );
-    return structureDefinition;
-  }
-
-  private StructureDefinition getStructureDefFromSbkDatabaseStructure( ObjectFactory factory, ISbkStructure sbkStructure )
+  private StructureDefinition getStructureDefFromSbkDatabaseStructure( final ObjectFactory factory, final ISbkStructure sbkStructure )
   {
     final ISbkStructDatabaseStructure sbkDBStruct = (ISbkStructDatabaseStructure) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
@@ -547,7 +527,7 @@ public class PiSobekModelUtils
     return structureDefinition;
   }
 
-  private StructureDefinition getStructureDefFromSbkGeneralStructure( ObjectFactory factory, ISbkStructure sbkStructure )
+  private StructureDefinition getStructureDefFromSbkGeneralStructure( final ObjectFactory factory, final ISbkStructure sbkStructure )
   {
     final ISbkStructGeneralStructure sbkGenStruct = (ISbkStructGeneralStructure) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
@@ -698,7 +678,83 @@ public class PiSobekModelUtils
     return structureDefinition;
   }
 
-  private StructureDefinition getStructureDefFromSbkRiverWeir( ObjectFactory factory, ISbkStructure sbkStructure )
+  private StructureDefinition getStructureDefFromSbkPump( final ObjectFactory factory, final ISbkStructure sbkStructure )
+  {
+    final ISbkStructPump sbkPump = (ISbkStructPump) sbkStructure;
+    final StructureDefinition structureDefinition = factory.createStructureDefinition();
+
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
+    String name = sbkPump.getName();
+    if( name == null )
+      name = "";
+    structureDefinition.setStructureDefinitionId( sbkPump.getId() + "_pump" );
+    structureDefinition.setStructureDefinitionName( name + "_pump" );
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.Pump" );
+
+    final Parameters parameters = factory.createParameters();
+
+    Parameter parameter = factory.createParameter();
+    parameter.setId( "flowDirection" );
+    parameter.setType( "string" );
+    parameter.getContent().add( sbkPump.getFlowDirection() );
+    parameters.getParameter().add( parameter );
+
+    parameter = factory.createParameter();
+    parameter.setId( "controlPosition" );
+    parameter.setType( "string" );
+    parameter.getContent().add( sbkPump.getControlPosition() );
+    parameters.getParameter().add( parameter );
+
+    parameter = factory.createParameter();
+    parameter.setId( "reductionType" );
+    parameter.setType( "string" );
+    parameter.getContent().add( sbkPump.getReductionType() );
+    parameters.getParameter().add( parameter );
+
+    parameter = factory.createParameter();
+    parameter.setId( "reductionConstant" );
+    parameter.setType( "double" );
+    parameter.getContent().add( Double.toString( sbkPump.getReductionConstant() ) );
+    parameters.getParameter().add( parameter );
+
+    parameter = factory.createParameter();
+    parameter.setId( "capacitySettings" );
+    parameter.setType( "table" );
+    final Table innerTable = factory.createTable();
+    innerTable.setName( "capacitySettings" );
+
+    final Info tableInfo = factory.createInfo();
+    final Columns columns = factory.createColumns();
+    final int colCount = 5;
+    columns.setCount( ((Number) colCount).byteValue() );
+
+    final Column column = factory.createColumn();
+    column.setType( "double" );
+    for( int i = 0; i < colCount; i++ )
+      columns.getColumn().add( column );
+    tableInfo.setColumns( columns );
+
+    innerTable.setInfo( tableInfo );
+
+    final Rows tableRows = factory.createRows();
+    final Row tableRow = factory.createRow();
+    tableRow.getCell().add( Double.toString( sbkPump.getCapacity() ) );
+    tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelSuctionSide() ) );
+    tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelSuctionSide() ) );
+    tableRow.getCell().add( Double.toString( sbkPump.getSwitchOnLevelPressureSide() ) );
+    tableRow.getCell().add( Double.toString( sbkPump.getSwitchOffLevelPressureSide() ) );
+
+    tableRows.getRow().add( tableRow );
+    innerTable.setRows( tableRows );
+
+    parameter.getContent().add( innerTable );
+    parameters.getParameter().add( parameter );
+
+    structureDefinition.setParameters( parameters );
+    return structureDefinition;
+  }
+
+  private StructureDefinition getStructureDefFromSbkRiverWeir( final ObjectFactory factory, final ISbkStructure sbkStructure )
   {
     final ISbkStructRiverWeir sbkRiverWeir = (ISbkStructRiverWeir) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
@@ -855,7 +911,27 @@ public class PiSobekModelUtils
     return structureDefinition;
   }
 
-  private StructureDefinition getStructureDefFromSbkWeir( ObjectFactory factory, ISbkStructure sbkStructure )
+  private StructureDefinition getStructureDefFromSbkSimpleStruct( final ObjectFactory factory, final ISbkStructure sbkStructure )
+  {
+    StructureDefinition structureDefinition = null;
+
+    if( sbkStructure instanceof SbkStructRiverWeir )
+      structureDefinition = getStructureDefFromSbkRiverWeir( factory, sbkStructure );
+    else if( sbkStructure instanceof SbkStructGeneralStructure )
+      structureDefinition = getStructureDefFromSbkGeneralStructure( factory, sbkStructure );
+    else if( sbkStructure instanceof SbkStructDatabaseStructure )
+      structureDefinition = getStructureDefFromSbkDatabaseStructure( factory, sbkStructure );
+    else if( sbkStructure instanceof SbkStructWeir )
+      structureDefinition = getStructureDefFromSbkWeir( factory, sbkStructure );
+    else if( sbkStructure instanceof SbkStructPump )
+      structureDefinition = getStructureDefFromSbkPump( factory, sbkStructure );
+    else
+      throw new NotImplementedException();
+
+    return structureDefinition;
+  }
+
+  private StructureDefinition getStructureDefFromSbkWeir( final ObjectFactory factory, final ISbkStructure sbkStructure )
   {
     final ISbkStructWeir sbkWeir = (ISbkStructWeir) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
@@ -903,81 +979,5 @@ public class PiSobekModelUtils
     structureDefinition.setParameters( parameters );
 
     return structureDefinition;
-  }
-
-  public TimeSerieComplexType createTimeSeriesFromBNNodeAndLastfall( ObjectFactory factory, IBoundaryNode bnNode, ILastfall lastfall ) throws Exception
-  {
-    final TimeSerieComplexType piTimeSerie = factory.createTimeSerieComplexType();
-
-    final HeaderComplexType headerComplexType = factory.createHeaderComplexType();
-    headerComplexType.setType( TimeSeriesType.INSTANTANEOUS );
-    headerComplexType.setMissVal( Double.NaN );
-
-    final IBoundaryNodeLastfallCondition lastfallCondition = bnNode.getLastfallCondition( lastfall );
-
-    final GregorianCalendar observationStart = lastfallCondition.getObservationStart();
-    final DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
-    final DatatypeFactory dataTypeFactory = datatypeFactory;
-    final XMLGregorianCalendar gregorianStartCalendar = dataTypeFactory.newXMLGregorianCalendar( observationStart );
-    final DateTimeComplexType startDateTimeComplexType = factory.createDateTimeComplexType();
-
-    final XMLGregorianCalendar startTime = datatypeFactory.newXMLGregorianCalendarTime( gregorianStartCalendar.getHour(), gregorianStartCalendar.getMinute(), gregorianStartCalendar.getSecond(), DatatypeConstants.FIELD_UNDEFINED );
-    final XMLGregorianCalendar startDate = datatypeFactory.newXMLGregorianCalendarDate( gregorianStartCalendar.getYear(), gregorianStartCalendar.getMonth(), gregorianStartCalendar.getDay(), DatatypeConstants.FIELD_UNDEFINED );
-    startDateTimeComplexType.setDate( startDate );
-    startDateTimeComplexType.setTime( startTime );
-    headerComplexType.setStartDate( startDateTimeComplexType );
-
-    final GregorianCalendar observationEnd = lastfallCondition.getObservationEnd();
-    final XMLGregorianCalendar gregorianEndCalendar = dataTypeFactory.newXMLGregorianCalendar( observationEnd );
-    final DateTimeComplexType endDateTimeComplexType = factory.createDateTimeComplexType();
-
-    final XMLGregorianCalendar endTime = datatypeFactory.newXMLGregorianCalendarTime( gregorianEndCalendar.getHour(), gregorianEndCalendar.getMinute(), gregorianEndCalendar.getSecond(), DatatypeConstants.FIELD_UNDEFINED );
-    final XMLGregorianCalendar endDate = datatypeFactory.newXMLGregorianCalendarDate( gregorianEndCalendar.getYear(), gregorianEndCalendar.getMonth(), gregorianEndCalendar.getDay(), DatatypeConstants.FIELD_UNDEFINED );
-    endDateTimeComplexType.setDate( endDate );
-    endDateTimeComplexType.setTime( endTime );
-    headerComplexType.setEndDate( endDateTimeComplexType );
-
-    headerComplexType.setLocationId( bnNode.getId() );
-    headerComplexType.setStationName( bnNode.getStationName() );
-
-    final TimeStepComplexType timeStepComplexType = factory.createTimeStepComplexType();
-    timeStepComplexType.setUnit( TimeStepUnitEnumStringType.NONEQUIDISTANT );
-    headerComplexType.setTimeStep( timeStepComplexType );
-
-    final BOUNDARY_TYPE boundaryType = bnNode.getBoundaryType();
-    headerComplexType.setParameterId( lookUpModelToPi.get( boundaryType.toString() ) );
-    piTimeSerie.setHeader( headerComplexType );
-
-    final IObservation<TupleResult> timeSeriesTupple = lastfallCondition.getTimeSeriesObservation();
-    lastfallCondition.getTimeSeriesObservationFeature();
-    final TupleResult tupleResult = timeSeriesTupple.getResult();
-
-    IComponent valueComp = null;
-    final IComponent dateComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE" );
-    if( boundaryType.equals( BOUNDARY_TYPE.eQ ) )
-      valueComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#Q" );
-    else if( boundaryType.equals( BOUNDARY_TYPE.eW ) )
-      valueComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#W" );
-    else
-      throw new NotImplementedException( "Boundary condition of type " + boundaryType + " can't be transferred by PI format yet." );
-
-    final Iterator<IRecord> itrResult = tupleResult.iterator();
-    while( itrResult.hasNext() )
-    {
-      final IRecord record = itrResult.next();
-      final EventComplexType eventComplexType = factory.createEventComplexType();
-
-      final XMLGregorianCalendar gregEventCalendar = (XMLGregorianCalendar) record.getValue( dateComp );
-      final XMLGregorianCalendar date = datatypeFactory.newXMLGregorianCalendarDate( gregEventCalendar.getYear(), gregEventCalendar.getMonth(), gregEventCalendar.getDay(), DatatypeConstants.FIELD_UNDEFINED );
-      final XMLGregorianCalendar time = datatypeFactory.newXMLGregorianCalendarTime( gregEventCalendar.getHour(), gregEventCalendar.getMinute(), gregEventCalendar.getSecond(), DatatypeConstants.FIELD_UNDEFINED );
-
-      eventComplexType.setDate( date );
-      eventComplexType.setTime( time );
-      eventComplexType.setValue( Double.valueOf( (Double) record.getValue( valueComp ) ) );
-
-      piTimeSerie.getEvent().add( eventComplexType );
-    }
-
-    return piTimeSerie;
   }
 }

@@ -145,6 +145,17 @@ public class Branch implements IBranch
   }
 
   /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getDescription()
+   */
+  public String getDescription( )
+  {
+    final Object description = m_branch.getProperty( ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
+    if( description == null )
+      return null;
+    return (String) description;
+  }
+
+  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getFeature()
    */
   public Feature getFeature( )
@@ -174,6 +185,14 @@ public class Branch implements IBranch
   public INode getLowerNode( )
   {
     return getNode( ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getModelMember()
+   */
+  public IModelMember getModelMember( )
+  {
+    return m_model;
   }
 
   /**
@@ -243,24 +262,5 @@ public class Branch implements IBranch
   public void setUpperNode( final INode node ) throws Exception
   {
     FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + node.getFeature().getId() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getDescription()
-   */
-  public String getDescription( )
-  {
-    final Object description = m_branch.getProperty( ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
-    if( description == null )
-      return null;
-    return (String) description;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getModelMember()
-   */
-  public IModelMember getModelMember( )
-  {
-    return m_model;
   }
 }

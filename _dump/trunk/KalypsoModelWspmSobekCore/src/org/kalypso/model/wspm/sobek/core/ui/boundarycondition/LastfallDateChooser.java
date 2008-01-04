@@ -71,6 +71,11 @@ public class LastfallDateChooser
     m_calendar = calendar;
   }
 
+  public void addModifyListener( final Runnable runnable )
+  {
+    m_listener.add( runnable );
+  }
+
   public void draw( final Composite container, final GridData gridData )
   {
     final Composite composite = new Composite( container, SWT.NONE );
@@ -121,19 +126,14 @@ public class LastfallDateChooser
     } );
   }
 
-  protected void processListener( )
-  {
-    for( final Runnable listener : m_listener )
-      listener.run();
-  }
-
   public GregorianCalendar getDateTime( )
   {
     return m_calendar;
   }
 
-  public void addModifyListener( final Runnable runnable )
+  protected void processListener( )
   {
-    m_listener.add( runnable );
+    for( final Runnable listener : m_listener )
+      listener.run();
   }
 }

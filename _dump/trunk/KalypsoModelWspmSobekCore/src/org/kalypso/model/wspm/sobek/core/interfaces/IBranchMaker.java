@@ -47,18 +47,18 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  */
 public interface IBranchMaker
 {
+  void connectBranches( IBranch[] branchesToExtend, GM_Curve curve ) throws Exception;
+
   /**
    * Creates an SOBEK branch gml representation - a branch consists of two linkage points and a branch with an river
    * line geometry
    */
   void createBranch( GM_Curve curve ) throws Exception;
 
-  void createOutflowBranch( IBranch branch, GM_Curve curve ) throws Exception;
-
   void createInflowBranch( IBranch branch, GM_Curve curve ) throws Exception;
 
-  void extendBranch( IBranch branch, GM_Curve curve ) throws Exception;
+  void createOutflowBranch( IBranch branch, GM_Curve curve ) throws Exception;
 
-  void connectBranches( IBranch[] branchesToExtend, GM_Curve curve ) throws Exception;
+  void extendBranch( IBranch branch, GM_Curve curve ) throws Exception;
 
 }

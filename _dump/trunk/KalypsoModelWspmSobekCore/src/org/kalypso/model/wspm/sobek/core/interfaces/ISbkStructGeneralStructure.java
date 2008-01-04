@@ -42,53 +42,52 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 
 /**
  * @author thuel2
- *
  */
 public interface ISbkStructGeneralStructure extends ISbkStructure
 {
 
-  public double getWidthUpstream( );
-
-  public double getWidthStructureLeft( );
-
-  public double getWidthStructure( );
-
-  public double getWidthStructureRight( );
-
-  public double getWidthDownstream( );
-
-  public double getBedLevelUpstream( );
-
-  public double getBedLevelStructureLeft( );
+  public double getBedLevelDownstream( );
 
   public double getBedLevelStructure( );
 
+  public double getBedLevelStructureLeft( );
+
   public double getBedLevelStructureRight( );
 
-  public double getGateHeight( );
-
-  public double getPosFreeGateFlowCoeff( );
-
-  public double getBedLevelDownstream( );
-
-  public double getPosDrownedGateFlowCoeff( );
-
-  public double getPosFreeWeirFlowCoeff( );
-
-  public double getPosDrownedWeirFlowCoeff( );
-
-  public double getPosContractionCoeff( );
-
-  public double getNegFreeGateFlowCoeff( );
-
-  public double getNegDrownedGateFlowCoeff( );
-
-  public double getNegFreeWeirFlowCoeff( );
+  public double getBedLevelUpstream( );
 
   public double getExtraResistence( );
 
+  public double getGateHeight( );
+
   public double getNegContractionCoeff( );
 
+  public double getNegDrownedGateFlowCoeff( );
+
   public double getNegDrownedWeirFlowCoeff( );
+
+  public double getNegFreeGateFlowCoeff( );
+
+  public double getNegFreeWeirFlowCoeff( );
+
+  public double getPosContractionCoeff( );
+
+  public double getPosDrownedGateFlowCoeff( );
+
+  public double getPosDrownedWeirFlowCoeff( );
+
+  public double getPosFreeGateFlowCoeff( );
+
+  public double getPosFreeWeirFlowCoeff( );
+
+  public double getWidthDownstream( );
+
+  public double getWidthStructure( );
+
+  public double getWidthStructureLeft( );
+
+  public double getWidthStructureRight( );
+
+  public double getWidthUpstream( );
 
 }

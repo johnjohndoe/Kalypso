@@ -56,6 +56,14 @@ import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 public class LastfallTreeContentProvider implements ITreeContentProvider
 {
   /**
+   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+   */
+  public void dispose( )
+  {
+    // atm nothing to do...
+  }
+
+  /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren( final Object parentElement )
@@ -64,6 +72,17 @@ public class LastfallTreeContentProvider implements ITreeContentProvider
       return getLastfallChildren( (ILastfall) parentElement );
 
     throw new IllegalStateException( "Only Lastfalls can have children." );
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+   */
+  public Object[] getElements( final Object inputElement )
+  {
+    if( inputElement instanceof ILastfall[] )
+      return (ILastfall[]) inputElement;
+
+    throw new NotImplementedException();
   }
 
   /**
@@ -104,25 +123,6 @@ public class LastfallTreeContentProvider implements ITreeContentProvider
     }
 
     return false;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
-  public Object[] getElements( final Object inputElement )
-  {
-    if( inputElement instanceof ILastfall[] )
-      return (ILastfall[]) inputElement;
-
-    throw new NotImplementedException();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
-  public void dispose( )
-  {
-    // atm nothing to do...
   }
 
   /**

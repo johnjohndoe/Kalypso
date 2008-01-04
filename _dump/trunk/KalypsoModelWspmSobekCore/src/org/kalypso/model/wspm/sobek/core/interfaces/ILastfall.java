@@ -49,14 +49,14 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface ILastfall
 {
-  String getName( );
-
-  public IModelMember getModelMember( );
-
   public Feature getFeature( );
 
   GregorianCalendar getLastfallEnd( );
 
   GregorianCalendar getLastfallStart( );
+
+  public IModelMember getModelMember( );
+
+  String getName( );
 
 }

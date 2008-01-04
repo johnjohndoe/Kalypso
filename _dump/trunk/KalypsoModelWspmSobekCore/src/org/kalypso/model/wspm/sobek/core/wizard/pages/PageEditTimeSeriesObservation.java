@@ -140,13 +140,9 @@ public class PageEditTimeSeriesObservation extends WizardPage
 
       IComponentUiHandler handler;
       if( DATE_AXIS.equals( qname ) )
-      {
         handler = new ComponentUiDateHandler( component, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
-      }
       else
-      {
         handler = new ComponentUiStringHandler( component, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
-      }
 
       myHandlers.add( handler );
     }

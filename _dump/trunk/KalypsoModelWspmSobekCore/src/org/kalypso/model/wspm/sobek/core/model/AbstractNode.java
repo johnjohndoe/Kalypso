@@ -57,6 +57,25 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public abstract class AbstractNode implements INode
 {
+  public static INode createNode( final IModelMember model, final TYPE nodeType, final GM_Point point ) throws Exception
+  {
+    final IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
+
+    IFeatureType targetFeatureType;
+    if( TYPE.eBoundaryNode.equals( nodeType ) )
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE );
+    else if( TYPE.eConnectionNode.equals( nodeType ) )
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE );
+    else if( TYPE.eCrossSectionNode.equals( nodeType ) )
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
+    else if( TYPE.eLinkageNode.equals( nodeType ) )
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
+    else
+      throw new IllegalStateException( "Can't handle node type" + nodeType.name() );
+
+    return FNNodeUtils.createNode( model, targetFeatureType, point, nodeType );
+  }
+
   private final Feature m_node;
 
   private final IModelMember m_model;
@@ -67,9 +86,23 @@ public abstract class AbstractNode implements INode
     m_node = node;
   }
 
-  protected IModelMember getModel( )
+  // $ANALYSIS-IGNORE
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
   {
-    return m_model;
+    if( obj instanceof INode )
+    {
+      final INode node = (INode) obj;
+      final EqualsBuilder equalsBuilder = new EqualsBuilder();
+      equalsBuilder.append( getFeature(), node.getFeature() );
+
+      return equalsBuilder.isEquals();
+    }
+
+    return super.equals( obj );
   }
 
   /**
@@ -104,6 +137,19 @@ public abstract class AbstractNode implements INode
     return (GM_Point) getFeature().getDefaultGeometryProperty();
   }
 
+  protected IModelMember getModel( )
+  {
+    return m_model;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
+   */
+  public IModelMember getModelMember( )
+  {
+    return m_model;
+  }
+
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getName()
    */
@@ -120,25 +166,6 @@ public abstract class AbstractNode implements INode
     return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_STATION_NAME );
   }
 
-  // $ANALYSIS-IGNORE
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof INode )
-    {
-      final INode node = (INode) obj;
-      final EqualsBuilder equalsBuilder = new EqualsBuilder();
-      equalsBuilder.append( getFeature(), node.getFeature() );
-
-      return equalsBuilder.isEquals();
-    }
-
-    return super.equals( obj );
-  }
-
   /**
    * @see java.lang.Object#hashCode()
    */
@@ -146,32 +173,5 @@ public abstract class AbstractNode implements INode
   public int hashCode( )
   {
     return HashCodeBuilder.reflectionHashCode( this );
-  }
-
-  public static INode createNode( final IModelMember model, final TYPE nodeType, final GM_Point point ) throws Exception
-  {
-    final IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
-
-    IFeatureType targetFeatureType;
-    if( TYPE.eBoundaryNode.equals( nodeType ) )
-      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE );
-    else if( TYPE.eConnectionNode.equals( nodeType ) )
-      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE );
-    else if( TYPE.eCrossSectionNode.equals( nodeType ) )
-      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
-    else if( TYPE.eLinkageNode.equals( nodeType ) )
-      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
-    else
-      throw new IllegalStateException( "Can't handle node type" + nodeType.name() );
-
-    return FNNodeUtils.createNode( model, targetFeatureType, point, nodeType );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getModelMember()
-   */
-  public IModelMember getModelMember( )
-  {
-    return m_model;
   }
 }

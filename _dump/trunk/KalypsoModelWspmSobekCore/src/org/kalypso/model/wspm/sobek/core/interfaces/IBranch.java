@@ -48,23 +48,23 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  */
 public interface IBranch
 {
-  String getName( );
+  String getDescription( );
+
+  Feature getFeature( );
 
   GM_Curve getGeometryProperty( );
 
   String getId( );
 
-  INode getUpperNode( );
-
   INode getLowerNode( );
 
-  Feature getFeature( );
+  IModelMember getModelMember( );
 
-  void setUpperNode( INode upperNode ) throws Exception;
+  String getName( );
+
+  INode getUpperNode( );
 
   void setLowerNode( INode lowerNode ) throws Exception;
 
-  String getDescription( );
-
-  IModelMember getModelMember( );
+  void setUpperNode( INode upperNode ) throws Exception;
 }

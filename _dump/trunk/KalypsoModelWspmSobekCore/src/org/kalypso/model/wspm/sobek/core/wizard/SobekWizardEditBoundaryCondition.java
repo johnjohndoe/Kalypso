@@ -87,22 +87,6 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
   }
 
   /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    try
-    {
-      m_condition = m_node.getLastfallCondition( m_lastfall );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  /**
    * @see org.eclipse.jface.wizard.IWizard#addPages()
    */
   @Override
@@ -115,6 +99,27 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
 
       m_timeSeries = new PageEditBoundaryConditionTimeSeries( (ISobekModelMember) m_lastfall.getModelMember(), m_condition, m_general );
       addPage( m_timeSeries );
+    }
+  }
+
+  public IBoundaryNodeLastfallCondition getBoundaryNodeLastfallCondition( )
+  {
+    return m_condition;
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
+   */
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    try
+    {
+      m_condition = m_node.getLastfallCondition( m_lastfall );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
     }
   }
 
@@ -135,11 +140,6 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
       return true;
 
     return false;
-  }
-
-  public IBoundaryNodeLastfallCondition getBoundaryNodeLastfallCondition( )
-  {
-    return m_condition;
   }
 
 }

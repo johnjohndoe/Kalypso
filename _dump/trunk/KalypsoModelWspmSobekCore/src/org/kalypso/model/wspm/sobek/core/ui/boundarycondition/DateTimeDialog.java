@@ -144,6 +144,11 @@ public class DateTimeDialog extends TitleAreaDialog
     return composite;
   }
 
+  public GregorianCalendar getDateTime( )
+  {
+    return m_gregorianCalendar;
+  }
+
   private void preSetDateTime( final GregorianCalendar calendar, final DateTime dateTime )
   {
     dateTime.setDay( calendar.get( Calendar.DAY_OF_MONTH ) );
@@ -152,6 +157,11 @@ public class DateTimeDialog extends TitleAreaDialog
     dateTime.setHours( calendar.get( Calendar.HOUR ) );
     dateTime.setMinutes( calendar.get( Calendar.MINUTE ) );
     dateTime.setSeconds( calendar.get( Calendar.SECOND ) );
+  }
+
+  public void setDateTime( final GregorianCalendar dateTime )
+  {
+    m_preSettedDateTime = dateTime;
   }
 
   protected void setDateTime( final SWTCalendar calendar, final DateTime time )
@@ -166,15 +176,5 @@ public class DateTimeDialog extends TitleAreaDialog
     final int seconds = time.getSeconds();
 
     m_gregorianCalendar = new GregorianCalendar( year, month, day, hours, minutes, seconds );
-  }
-
-  public GregorianCalendar getDateTime( )
-  {
-    return m_gregorianCalendar;
-  }
-
-  public void setDateTime( final GregorianCalendar dateTime )
-  {
-    m_preSettedDateTime = dateTime;
   }
 }

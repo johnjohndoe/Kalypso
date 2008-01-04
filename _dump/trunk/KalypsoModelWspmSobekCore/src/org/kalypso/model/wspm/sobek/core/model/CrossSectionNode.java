@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
-import org.eclipse.osgi.internal.profile.Profile;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
@@ -66,22 +65,6 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
   public void delete( ) throws Exception
   {
     FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
-   */
-  public TYPE getType( )
-  {
-    return TYPE.eCrossSectionNode;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
-   */
-  public boolean isEmpty( )
-  {
-    return true;
   }
 
   /**
@@ -121,5 +104,21 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
     final WspmProfile wspmProfile = new WspmProfile( f );
     final IProfil profil = wspmProfile.getProfil();
     return profil;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  public TYPE getType( )
+  {
+    return TYPE.eCrossSectionNode;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
+   */
+  public boolean isEmpty( )
+  {
+    return true;
   }
 }

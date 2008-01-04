@@ -67,22 +67,6 @@ public class SbkStructure extends AbstractNode implements ISbkStructure
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
-   */
-  public TYPE getType( )
-  {
-    return TYPE.eSbkStructure;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
-   */
-  public boolean isEmpty( )
-  {
-    return true;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure#getLinkToBranch()
    */
   public IBranch getLinkToBranch( )
@@ -100,6 +84,22 @@ public class SbkStructure extends AbstractNode implements ISbkStructure
     if( result == null )
       return null;
     return result;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  public TYPE getType( )
+  {
+    return TYPE.eSbkStructure;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
+   */
+  public boolean isEmpty( )
+  {
+    return true;
   }
 
 }

@@ -65,6 +65,18 @@ public class LastfallTreeLabelProvider extends LabelProvider
   }
 
   /**
+   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+   */
+  @Override
+  public Image getImage( final Object element )
+  {
+    if( element instanceof ILastfall )
+      return new Image( null, getClass().getResourceAsStream( "icons/tree_lastfall.gif" ) );
+
+    return new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) );
+  }
+
+  /**
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
@@ -138,18 +150,6 @@ public class LastfallTreeLabelProvider extends LabelProvider
         }
     }
 
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-   */
-  @Override
-  public Image getImage( final Object element )
-  {
-    if( element instanceof ILastfall )
-      return new Image( null, getClass().getResourceAsStream( "icons/tree_lastfall.gif" ) );
-
-    return new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) );
   }
 
 // /**

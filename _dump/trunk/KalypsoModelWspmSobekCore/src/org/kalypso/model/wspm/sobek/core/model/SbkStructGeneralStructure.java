@@ -47,7 +47,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author thuel2
- *
  */
 public class SbkStructGeneralStructure extends SbkStructure implements ISbkStructGeneralStructure
 {
@@ -63,7 +62,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_BED_LEVEL_DOWNSTREAM );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -75,7 +74,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_BED_LEVEL_STRUCTURE );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -87,7 +86,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_BED_LEVEL_STRUCTURE_LEFT );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -99,7 +98,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_BED_LEVEL_STRUCTURE_RIGHT );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -111,7 +110,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_BED_LEVEL_UPSTREAM );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -123,7 +122,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_EXTRA_RESISTENCE );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -135,7 +134,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_GATE_HEIGHT );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -147,7 +146,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_NEG_CONTRACTION_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -159,7 +158,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_NEG_DROWNED_GATE_FLOW_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -171,7 +170,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_NEG_DROWNED_WEIR_FLOW_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -183,7 +182,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_NEG_FREE_GATE_FLOW_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -195,7 +194,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_NEG_FREE_WEIR_FLOW_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -207,7 +206,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_POS_CONTRACTION_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -219,7 +218,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_POS_DROWNED_GATE_FLOW_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -231,7 +230,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_POS_DROWNED_WEIR_FLOW_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -243,7 +242,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_POS_FREE_GATE_FLOW_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -255,7 +254,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_POS_FREE_WEIR_FLOW_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -267,7 +266,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_WIDTH_DOWNSTREAM );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -279,7 +278,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_WIDTH_STRUCTURE );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -291,7 +290,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_WIDTH_STRUCTURE_LEFT );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -303,7 +302,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_WIDTH_STRUCTURE_RIGHT );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -315,7 +314,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE_WIDTH_UPSTREAM );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }

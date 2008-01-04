@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 
 /**
  * @author thuel2
- *
  */
 public interface ISbkStructCompundStructure extends ISbkStructure
 {

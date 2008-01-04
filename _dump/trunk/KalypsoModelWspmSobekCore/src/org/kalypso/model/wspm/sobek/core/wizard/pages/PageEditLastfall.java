@@ -83,6 +83,115 @@ public class PageEditLastfall extends WizardPage
     setDescription( "Enter name and description for the Calculation Case which will be created, please." );
   }
 
+  protected void checkPageCompleted( )
+  {
+    if( m_name.getText() == null || "".equals( m_name.getText().trim() ) )
+    {
+      setMessage( null );
+      setErrorMessage( "Name not defined" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_dateBegin.getDateTime() == null )
+    {
+      setMessage( null );
+      setErrorMessage( "Start of Simulation not defined" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_dateEnd.getDateTime() == null )
+    {
+      setMessage( null );
+      setErrorMessage( "End of Simulation not defined" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_dateEnd.getDateTime().before( m_dateBegin.getDateTime() ) )
+    {
+      setMessage( null );
+      setErrorMessage( "End date is before simulation start date" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_pre.getText() == null || "".equals( m_pre.getText().trim() ) )
+    {
+      setMessage( null );
+      setErrorMessage( "Pre simulation time not defined" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_timeStep.getText() == null || "".equals( m_timeStep.getText().trim() ) )
+    {
+      setMessage( null );
+      setErrorMessage( "Timestep not defined" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    if( m_multiplier.getText() == null || "".equals( m_multiplier.getText().trim() ) )
+    {
+      setMessage( null );
+      setErrorMessage( "Timestep multiplier not defined" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    try
+    {
+      Integer.valueOf( m_pre.getText() );
+    }
+    catch( final NumberFormatException e )
+    {
+      setMessage( null );
+      setErrorMessage( "Pre simulation time is not an integer" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    try
+    {
+      Integer.valueOf( m_timeStep.getText() );
+    }
+    catch( final NumberFormatException e )
+    {
+      setMessage( null );
+      setErrorMessage( "Timestep is not an integer" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    try
+    {
+      Integer.valueOf( m_multiplier.getText() );
+    }
+    catch( final NumberFormatException e )
+    {
+      setMessage( null );
+      setErrorMessage( "Timestep multiplier is not an integer" );
+      setPageComplete( false );
+
+      return;
+    }
+
+    setMessage( null );
+    setErrorMessage( null );
+    setPageComplete( true );
+  }
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -200,113 +309,12 @@ public class PageEditLastfall extends WizardPage
     checkPageCompleted();
   }
 
-  protected void checkPageCompleted( )
+  public String getLastfallDescription( )
   {
-    if( m_name.getText() == null || "".equals( m_name.getText().trim() ) )
-    {
-      setMessage( null );
-      setErrorMessage( "Name not defined" );
-      setPageComplete( false );
+    if( m_description.getText() == null )
+      return "";
 
-      return;
-    }
-
-    if( m_dateBegin.getDateTime() == null )
-    {
-      setMessage( null );
-      setErrorMessage( "Start of Simulation not defined" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    if( m_dateEnd.getDateTime() == null )
-    {
-      setMessage( null );
-      setErrorMessage( "End of Simulation not defined" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    if( m_dateEnd.getDateTime().before( m_dateBegin.getDateTime() ) )
-    {
-      setMessage( null );
-      setErrorMessage( "End date is before simulation start date" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    if( m_pre.getText() == null || "".equals( m_pre.getText().trim() ) )
-    {
-      setMessage( null );
-      setErrorMessage( "Pre simulation time not defined" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    if( m_timeStep.getText() == null || "".equals( m_timeStep.getText().trim() ) )
-    {
-      setMessage( null );
-      setErrorMessage( "Timestep not defined" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    if( m_multiplier.getText() == null || "".equals( m_multiplier.getText().trim() ) )
-    {
-      setMessage( null );
-      setErrorMessage( "Timestep multiplier not defined" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    try
-    {
-      Integer.valueOf( m_pre.getText() );
-    }
-    catch( final NumberFormatException e )
-    {
-      setMessage( null );
-      setErrorMessage( "Pre simulation time is not an integer" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    try
-    {
-      Integer.valueOf( m_timeStep.getText() );
-    }
-    catch( final NumberFormatException e )
-    {
-      setMessage( null );
-      setErrorMessage( "Timestep is not an integer" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    try
-    {
-      Integer.valueOf( m_multiplier.getText() );
-    }
-    catch( final NumberFormatException e )
-    {
-      setMessage( null );
-      setErrorMessage( "Timestep multiplier is not an integer" );
-      setPageComplete( false );
-
-      return;
-    }
-
-    setMessage( null );
-    setErrorMessage( null );
-    setPageComplete( true );
+    return m_description.getText();
   }
 
   public String getLastfallName( )
@@ -314,12 +322,9 @@ public class PageEditLastfall extends WizardPage
     return m_name.getText();
   }
 
-  public String getLastfallDescription( )
+  public String getLastfallPreSimulationTime( )
   {
-    if( m_description.getText() == null )
-      return "";
-
-    return m_description.getText();
+    return m_pre.getText();
   }
 
   public GregorianCalendar getLastfallSimulationBegin( )
@@ -330,11 +335,6 @@ public class PageEditLastfall extends WizardPage
   public GregorianCalendar getLastfallSimulationEnd( )
   {
     return m_dateEnd.getDateTime();
-  }
-
-  public String getLastfallPreSimulationTime( )
-  {
-    return m_pre.getText();
   }
 
   public String getLastfallSimulationTimeStep( )

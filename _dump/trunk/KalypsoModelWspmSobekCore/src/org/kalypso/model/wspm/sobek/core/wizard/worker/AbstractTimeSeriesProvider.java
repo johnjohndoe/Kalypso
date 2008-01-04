@@ -62,6 +62,20 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public abstract class AbstractTimeSeriesProvider implements ITimeSeriesProvider
 {
+  public static ITimeSeriesProvider createProvider( final BOUNDARY_CONDITION_TYPE type, final PageEditBoundaryConditionGeneral general, final PageEditBoundaryConditionTimeSeries timeSeries )
+  {
+    switch( type )
+    {
+      case eConstant:
+        return new ConstantTimeSeriesProvider( general, timeSeries );
+      case eZml:
+        return new ZmlTimeSeriesProvider( general, timeSeries );
+
+      default:
+        throw new NotImplementedException();
+    }
+  }
+
   private final IBoundaryConditionGeneral m_general;
 
   private final PageEditBoundaryConditionTimeSeries m_pageTS;
@@ -90,23 +104,9 @@ public abstract class AbstractTimeSeriesProvider implements ITimeSeriesProvider
     return changes;
   }
 
-  public static ITimeSeriesProvider createProvider( final BOUNDARY_CONDITION_TYPE type, final PageEditBoundaryConditionGeneral general, final PageEditBoundaryConditionTimeSeries timeSeries )
+  protected BOUNDARY_TYPE getBoundaryNodeType( )
   {
-    switch( type )
-    {
-      case eConstant:
-        return new ConstantTimeSeriesProvider( general, timeSeries );
-      case eZml:
-        return new ZmlTimeSeriesProvider( general, timeSeries );
-
-      default:
-        throw new NotImplementedException();
-    }
-  }
-
-  protected GregorianCalendar getStartDate( )
-  {
-    return m_general.getStartDate();
+    return m_general.getBoundaryNodeType();
   }
 
   protected GregorianCalendar getEndDate( )
@@ -114,18 +114,18 @@ public abstract class AbstractTimeSeriesProvider implements ITimeSeriesProvider
     return m_general.getEndDate();
   }
 
-  protected PageEditBoundaryConditionTimeSeries getPageTS( )
-  {
-    return m_pageTS;
-  }
-
   protected ILastfall getLastfall( )
   {
     return m_pageTS.getLastfall();
   }
 
-  protected BOUNDARY_TYPE getBoundaryNodeType( )
+  protected PageEditBoundaryConditionTimeSeries getPageTS( )
   {
-    return m_general.getBoundaryNodeType();
+    return m_pageTS;
+  }
+
+  protected GregorianCalendar getStartDate( )
+  {
+    return m_general.getStartDate();
   }
 }

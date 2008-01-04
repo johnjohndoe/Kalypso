@@ -81,27 +81,28 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class NodeUtils implements INodeUtils
 {
+  public static Feature createBoundaryNodeLastfallCondition( final ILastfall lastfall, final IBoundaryNode boundaryNode ) throws Exception
+  {
+    final IRelationType prop = (IRelationType) boundaryNode.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
+    final IFeatureType targetType = prop.getTargetFeatureType();
+    final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+
+    final CommandableWorkspace cw = boundaryNode.getModelMember().getWorkspace();
+    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( cw, targetType, boundaryNode.getFeature(), prop, -1, null, selectionManager );
+    cw.postCommand( command );
+
+    /* set linked lastfall! */
+    final Feature condition = command.getNewFeature();
+    FeatureUtils.updateLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, "#" + lastfall.getFeature().getId() );
+
+    return command.getNewFeature();
+  }
+
   private final ISobekModelMember m_model;
 
   public NodeUtils( final ISobekModelMember model )
   {
     m_model = model;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils#switchBoundaryConnectionNode(org.kalypsodeegree.model.feature.Feature)
-   */
-  public void switchBoundaryConnectionNode( final Feature node ) throws Exception
-  {
-    final QName nqn = node.getFeatureType().getQName();
-
-    /* which node type? */
-    if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( nqn ) )
-      connectionNodeToBoundaryNode( new ConnectionNode( m_model, node ) );
-    else if( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE.equals( nqn ) )
-      boundaryNodeToConnectionNode( new BoundaryNode( m_model, node ) );
-    else
-      throw new NotImplementedException();
   }
 
   private void boundaryNodeToConnectionNode( final BoundaryNode bn ) throws Exception
@@ -190,6 +191,22 @@ public class NodeUtils implements INodeUtils
     }.schedule();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils#switchBoundaryConnectionNode(org.kalypsodeegree.model.feature.Feature)
+   */
+  public void switchBoundaryConnectionNode( final Feature node ) throws Exception
+  {
+    final QName nqn = node.getFeatureType().getQName();
+
+    /* which node type? */
+    if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( nqn ) )
+      connectionNodeToBoundaryNode( new ConnectionNode( m_model, node ) );
+    else if( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE.equals( nqn ) )
+      boundaryNodeToConnectionNode( new BoundaryNode( m_model, node ) );
+    else
+      throw new NotImplementedException();
+  }
+
   private void updateBranchNode( final IBranch branch, final INode node ) throws Exception
   {
     final GM_Curve curve = branch.getGeometryProperty();
@@ -199,22 +216,5 @@ public class NodeUtils implements INodeUtils
       branch.setUpperNode( node );
     else if( curve.getEndPoint().intersects( pn ) )
       branch.setLowerNode( node );
-  }
-
-  public static Feature createBoundaryNodeLastfallCondition( final ILastfall lastfall, final IBoundaryNode boundaryNode ) throws Exception
-  {
-    final IRelationType prop = (IRelationType) boundaryNode.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
-    final IFeatureType targetType = prop.getTargetFeatureType();
-    final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-
-    final CommandableWorkspace cw = boundaryNode.getModelMember().getWorkspace();
-    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( cw, targetType, boundaryNode.getFeature(), prop, -1, null, selectionManager );
-    cw.postCommand( command );
-
-    /* set linked lastfall! */
-    final Feature condition = command.getNewFeature();
-    FeatureUtils.updateLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, "#" + lastfall.getFeature().getId() );
-
-    return command.getNewFeature();
   }
 }

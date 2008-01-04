@@ -67,16 +67,6 @@ public class SobekWizardEditTimeSeriesObservation extends Wizard implements INew
   }
 
   /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
-  @Override
-  public boolean performFinish( )
-  {
-// ObservationFeatureFactory.toFeature( myObs, fConflictAttributeTable );
-    return false;
-  }
-
-  /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
@@ -84,6 +74,16 @@ public class SobekWizardEditTimeSeriesObservation extends Wizard implements INew
   {
     m_page = new PageEditTimeSeriesObservation( m_condition );
     addPage( m_page );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
+  @Override
+  public boolean performFinish( )
+  {
+// ObservationFeatureFactory.toFeature( myObs, fConflictAttributeTable );
+    return false;
   }
 
 }

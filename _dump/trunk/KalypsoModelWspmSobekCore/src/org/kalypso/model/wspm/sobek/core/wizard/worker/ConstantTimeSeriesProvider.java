@@ -66,20 +66,18 @@ public class ConstantTimeSeriesProvider extends AbstractTimeSeriesProvider
     super( settings, pageTS );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.wizard.worker.ITimeSeriesProvider#getBasicChanges()
-   */
-  @Override
-  public Map<QName, Object> getBasicChanges( )
+  private void addResult( final TupleResult result, final GregorianCalendar calendar, final Double value )
   {
-    /* set unused values null */
-    final Map<QName, Object> changes = super.getBasicChanges();
+    /* if wq-relation -> components must have the order date, w, q otherwise -> date, w or q */
+    final IComponent[] components = result.getComponents();
 
-    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, getPageTS().getConstValue() );
-    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, getPageTS().getConstValueIntervall() );
-    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_TYPE, IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eConstant.toGmlString() );
+    final IRecord record = result.createRecord();
+    record.setValue( components[0], new XMLGregorianCalendarImpl( calendar ) );
 
-    return changes;
+    for( int i = 1; i < components.length; i++ )
+      record.setValue( components[i], value );
+
+    result.add( record );
   }
 
   /**
@@ -109,17 +107,19 @@ public class ConstantTimeSeriesProvider extends AbstractTimeSeriesProvider
 
   }
 
-  private void addResult( final TupleResult result, final GregorianCalendar calendar, final Double value )
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.wizard.worker.ITimeSeriesProvider#getBasicChanges()
+   */
+  @Override
+  public Map<QName, Object> getBasicChanges( )
   {
-    /* if wq-relation -> components must have the order date, w, q otherwise -> date, w or q */
-    final IComponent[] components = result.getComponents();
+    /* set unused values null */
+    final Map<QName, Object> changes = super.getBasicChanges();
 
-    final IRecord record = result.createRecord();
-    record.setValue( components[0], new XMLGregorianCalendarImpl( calendar ) );
+    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, getPageTS().getConstValue() );
+    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, getPageTS().getConstValueIntervall() );
+    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_TYPE, IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eConstant.toGmlString() );
 
-    for( int i = 1; i < components.length; i++ )
-      record.setValue( components[i], value );
-
-    result.add( record );
+    return changes;
   }
 }

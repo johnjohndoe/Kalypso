@@ -48,7 +48,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
@@ -107,32 +107,42 @@ public class FNCreateCrossSectionNode extends AbstractWidget
     getMapPanel().setMessage( "select profile by drawing a rectangle with help of left mouse button..." );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
-  @Override
-  public void moved( final Point p )
+  protected Feature getCrossSection( )
   {
-    m_currentPoint = p;
+    final Feature[] crossSections = m_snapPainter.getLastSnappedCrossSections();
 
-    /* Repaint. */
-    final MapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaint();
+    if( crossSections.length == 0 )
+      return null;
+    else if( crossSections.length == 1 )
+      return crossSections[0];
+    else if( crossSections.length > 1 )
+    {
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final SelectCrossSectionDialog dialog = new SelectCrossSectionDialog( shell, crossSections );
+
+      if( Window.OK == dialog.open() )
+        return dialog.getSelectedCrossSection();
+    }
+
+    return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
-  @Override
-  public void paint( final Graphics g )
+  protected SnappedBranch getSnappedBranch( final GM_Point point )
   {
-    if( m_snapPainter != null && m_currentPoint != null )
+    final SnappedBranch[] snapped = m_snapPainter.getSnapPoint( getMapPanel(), point );
+    if( snapped.length == 0 )
+      return null;
+    else if( snapped.length == 1 )
+      return snapped[0];
+    else if( snapped.length > 1 )
     {
-      final Point point = m_snapPainter.paint( g, getMapPanel(), m_currentPoint );
-      if( point != null )
-        m_currentPoint = point;
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final SelectSnappedBranchDialog dialog = new SelectSnappedBranchDialog( shell, snapped );
+
+      if( Window.OK == dialog.open() )
+        return dialog.getSelectedCrossSection();
     }
+    return null;
   }
 
   /**
@@ -172,42 +182,32 @@ public class FNCreateCrossSectionNode extends AbstractWidget
     }.schedule();
   }
 
-  protected SnappedBranch getSnappedBranch( final GM_Point point )
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
+   */
+  @Override
+  public void moved( final Point p )
   {
-    final SnappedBranch[] snapped = m_snapPainter.getSnapPoint( getMapPanel(), point );
-    if( snapped.length == 0 )
-      return null;
-    else if( snapped.length == 1 )
-      return snapped[0];
-    else if( snapped.length > 1 )
-    {
-      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-      final SelectSnappedBranchDialog dialog = new SelectSnappedBranchDialog( shell, snapped );
+    m_currentPoint = p;
 
-      if( Dialog.OK == dialog.open() )
-        return dialog.getSelectedCrossSection();
-    }
-    return null;
+    /* Repaint. */
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
+      panel.repaint();
   }
 
-  protected Feature getCrossSection( )
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
   {
-    final Feature[] crossSections = m_snapPainter.getLastSnappedCrossSections();
-
-    if( crossSections.length == 0 )
-      return null;
-    else if( crossSections.length == 1 )
-      return crossSections[0];
-    else if( crossSections.length > 1 )
+    if( m_snapPainter != null && m_currentPoint != null )
     {
-      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-      final SelectCrossSectionDialog dialog = new SelectCrossSectionDialog( shell, crossSections );
-
-      if( Dialog.OK == dialog.open() )
-        return dialog.getSelectedCrossSection();
+      final Point point = m_snapPainter.paint( g, getMapPanel(), m_currentPoint );
+      if( point != null )
+        m_currentPoint = point;
     }
-
-    return null;
   }
 
   protected void performFinish( final IBranch branch, final Feature crossSection, final GM_Point snapPoint )

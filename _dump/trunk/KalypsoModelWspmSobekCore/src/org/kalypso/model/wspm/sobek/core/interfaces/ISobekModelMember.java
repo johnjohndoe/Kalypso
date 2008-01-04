@@ -64,14 +64,7 @@ public interface ISobekModelMember extends IModelMember
     eBoundaryConditions
   }
 
-  /**
-   * @param targetDir
-   *            directory into which result is written
-   * @param target
-   *            part of a Sobek model that shall be written into an XML file (with fixed filename)
-   */
-
-  public void writePi( final URL targetDir, final TARGET target ) throws IOException, GM_Exception, DatatypeConfigurationException, Exception;
+  public IProject getMappedProject( );
 
   public IRepositoryContainer getRepositoryContainer( );
 
@@ -81,6 +74,13 @@ public interface ISobekModelMember extends IModelMember
    */
   public void writePi( URL targetDir ) throws IOException, GM_Exception, DatatypeConfigurationException, Exception;
 
-  public IProject getMappedProject( );
+  /**
+   * @param targetDir
+   *            directory into which result is written
+   * @param target
+   *            part of a Sobek model that shall be written into an XML file (with fixed filename)
+   */
+
+  public void writePi( final URL targetDir, final TARGET target ) throws IOException, GM_Exception, DatatypeConfigurationException, Exception;
 
 }

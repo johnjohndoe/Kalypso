@@ -58,19 +58,19 @@ public class ConnectionNode extends AbstractConnectionNode implements IConnectio
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
-   */
-  public TYPE getType( )
-  {
-    return INode.TYPE.eConnectionNode;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#delete()
    */
   public void delete( ) throws Exception
   {
     FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  public TYPE getType( )
+  {
+    return INode.TYPE.eConnectionNode;
   }
 
   /**

@@ -52,6 +52,14 @@ public class KalypsoModelWspmSobekCorePlugin extends Plugin
   // The shared instance.
   private static KalypsoModelWspmSobekCorePlugin plugin = null;
 
+  /**
+   * Returns the shared instance.
+   */
+  public static KalypsoModelWspmSobekCorePlugin getDefault( )
+  {
+    return KalypsoModelWspmSobekCorePlugin.plugin;
+  }
+
   public KalypsoModelWspmSobekCorePlugin( )
   {
     KalypsoModelWspmSobekCorePlugin.plugin = this;
@@ -74,14 +82,6 @@ public class KalypsoModelWspmSobekCorePlugin extends Plugin
   {
     super.stop( context );
     KalypsoModelWspmSobekCorePlugin.plugin = null;
-  }
-
-  /**
-   * Returns the shared instance.
-   */
-  public static KalypsoModelWspmSobekCorePlugin getDefault( )
-  {
-    return KalypsoModelWspmSobekCorePlugin.plugin;
   }
 
 }

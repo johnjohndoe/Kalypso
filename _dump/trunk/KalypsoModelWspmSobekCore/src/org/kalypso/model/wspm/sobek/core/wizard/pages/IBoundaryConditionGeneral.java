@@ -52,8 +52,8 @@ public interface IBoundaryConditionGeneral
 
   IBoundaryNode.BOUNDARY_TYPE getBoundaryNodeType( );
 
-  GregorianCalendar getStartDate( );
-
   GregorianCalendar getEndDate( );
+
+  GregorianCalendar getStartDate( );
 
 }

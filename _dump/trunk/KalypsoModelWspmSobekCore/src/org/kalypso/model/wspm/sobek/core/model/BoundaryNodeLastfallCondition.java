@@ -88,6 +88,22 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
   }
 
   /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getConstantValue()
+   */
+  public Double getConstantValue( )
+  {
+    return (Double) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getConstantValueInterveal()
+   */
+  public Integer getConstantValueInterveal( )
+  {
+    throw new NotImplementedException();
+  }
+
+  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getFeature()
    */
   public Feature getFeature( )
@@ -104,51 +120,13 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getTimeseriesLink()
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getLastUsedType()
    */
-  public TimeseriesLinkType getTimeseriesLink( )
+  public BOUNDARY_CONDITION_TYPE getLastUsedType( )
   {
-    return (TimeseriesLinkType) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES );
-  }
+    final String name = (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_TYPE );
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#isConstantValueNode()
-   */
-  public boolean isConstantValueNode( )
-  {
-    final Object objValue = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
-    if( objValue instanceof Double )
-      return true;
-
-    return false;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#isTimeSeriesNode()
-   */
-  public boolean isTimeSeriesNode( )
-  {
-    final Object lnkTS = getTimeseriesLink();
-    if( lnkTS instanceof TimeseriesLinkType )
-      return true;
-
-    return false;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getConstantValue()
-   */
-  public Double getConstantValue( )
-  {
-    return (Double) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getConstantValueInterveal()
-   */
-  public Integer getConstantValueInterveal( )
-  {
-    throw new NotImplementedException();
+    return BOUNDARY_CONDITION_TYPE.getType( name );
   }
 
   /**
@@ -176,18 +154,11 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#setTimeSeriesLink(org.kalypso.zml.obslink.TimeseriesLinkType)
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getTimeseriesLink()
    */
-  public void setTimeSeriesLink( final TimeseriesLinkType lnk )
+  public TimeseriesLinkType getTimeseriesLink( )
   {
-    try
-    {
-      FeatureUtils.updateFeature( getLastfall().getModelMember().getWorkspace(), getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnk );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    return (TimeseriesLinkType) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES );
   }
 
   /**
@@ -196,18 +167,6 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
   public IObservation<TupleResult> getTimeSeriesObservation( )
   {
     return ObservationFeatureFactory.toObservation( getTimeSeriesObservationFeature() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#hasTimeSeriesObservation()
-   */
-  public Boolean hasTimeSeriesObservation( )
-  {
-    final Feature obs = getTimeSeriesObservationFeature();
-    if( obs == null )
-      return false;
-
-    return true;
   }
 
   /**
@@ -223,12 +182,53 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#getLastUsedType()
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#hasTimeSeriesObservation()
    */
-  public BOUNDARY_CONDITION_TYPE getLastUsedType( )
+  public Boolean hasTimeSeriesObservation( )
   {
-    final String name = (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_TYPE );
+    final Feature obs = getTimeSeriesObservationFeature();
+    if( obs == null )
+      return false;
 
-    return BOUNDARY_CONDITION_TYPE.getType( name );
+    return true;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#isConstantValueNode()
+   */
+  public boolean isConstantValueNode( )
+  {
+    final Object objValue = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
+    if( objValue instanceof Double )
+      return true;
+
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#isTimeSeriesNode()
+   */
+  public boolean isTimeSeriesNode( )
+  {
+    final Object lnkTS = getTimeseriesLink();
+    if( lnkTS instanceof TimeseriesLinkType )
+      return true;
+
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition#setTimeSeriesLink(org.kalypso.zml.obslink.TimeseriesLinkType)
+   */
+  public void setTimeSeriesLink( final TimeseriesLinkType lnk )
+  {
+    try
+    {
+      FeatureUtils.updateFeature( getLastfall().getModelMember().getWorkspace(), getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnk );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }

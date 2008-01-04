@@ -48,7 +48,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author thuel2
- *
  */
 public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverWeir
 {
@@ -64,7 +63,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_CREST_HEIGHT );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -74,8 +73,8 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
    */
   public String getCrestShape( )
   {
- // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
-    return (String)getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_CREST_SHAPE );
+    // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
+    return (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_CREST_SHAPE );
   }
 
   /**
@@ -85,7 +84,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_CREST_WIDTH );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -97,43 +96,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_NEG_CORRECTION_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
-
-    return Double.NaN;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructRiverWeir#getNegSubmergeLimit()
-   */
-  public double getNegSubmergeLimit( )
-  {
-    final Object property = getFeature().getProperty( ISobekConstants. QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_NEG_SUBMERGE_LIMIT);
-    if( property instanceof Double )
-      return (((Double)property).doubleValue());
-
-    return Double.NaN;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructRiverWeir#getPosCorrectionCeoff()
-   */
-  public double getPosCorrectionCeoff( )
-  {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_POS_CORRECTION_COEFF );
-    if( property instanceof Double )
-      return (((Double)property).doubleValue());
-
-    return Double.NaN;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructRiverWeir#getPosSubmergeLimit()
-   */
-  public double getPosSubmergeLimit( )
-  {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_POS_SUBMERGE_LIMIT );
-    if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -145,9 +108,33 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_NEG_REDUCTION_FACTORS );
     if( property instanceof Feature )
-      return new SbkTable((Feature)property);
-    
+      return new SbkTable( (Feature) property );
+
     return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructRiverWeir#getNegSubmergeLimit()
+   */
+  public double getNegSubmergeLimit( )
+  {
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_NEG_SUBMERGE_LIMIT );
+    if( property instanceof Double )
+      return (((Double) property).doubleValue());
+
+    return Double.NaN;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructRiverWeir#getPosCorrectionCeoff()
+   */
+  public double getPosCorrectionCeoff( )
+  {
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_POS_CORRECTION_COEFF );
+    if( property instanceof Double )
+      return (((Double) property).doubleValue());
+
+    return Double.NaN;
   }
 
   /**
@@ -157,8 +144,20 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_POS_REDUCTION_FACTORS );
     if( property instanceof Feature )
-      return new SbkTable((Feature)property);
-    
+      return new SbkTable( (Feature) property );
+
     return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructRiverWeir#getPosSubmergeLimit()
+   */
+  public double getPosSubmergeLimit( )
+  {
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_POS_SUBMERGE_LIMIT );
+    if( property instanceof Double )
+      return (((Double) property).doubleValue());
+
+    return Double.NaN;
   }
 }

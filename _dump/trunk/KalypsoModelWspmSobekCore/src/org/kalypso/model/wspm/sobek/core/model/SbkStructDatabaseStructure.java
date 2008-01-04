@@ -48,7 +48,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author thuel2
- *
  */
 public class SbkStructDatabaseStructure extends SbkStructure implements ISbkStructDatabaseStructure
 {
@@ -64,41 +63,9 @@ public class SbkStructDatabaseStructure extends SbkStructure implements ISbkStru
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_CREST_HEIGHT );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getInterpolationType()
-   */
-  public String getInterpolationType( )
-  {
-    // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
-    return (String)getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_INTERPOLATION_TYPE );
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getNumOfGateValues()
-   */
-  public double getNumOfGateValues( )
-  {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_NUMBER_GATE_VALUES );
-    if( property instanceof Double )
-      return (((Double)property).doubleValue());
-
-    return Double.NaN;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getSecondAxisValueType()
-   */
-  public String getSecondAxisValueType( )
-  {
-    // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
-    return (String)getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_SECOND_AXIS_VALUE_TYPE );
-
   }
 
   /**
@@ -106,10 +73,10 @@ public class SbkStructDatabaseStructure extends SbkStructure implements ISbkStru
    */
   public ISbkTable getDatabase( )
   {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_DATABASE_MEMBER);
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_DATABASE_MEMBER );
     if( property instanceof Feature )
-      return new SbkTable((Feature)property);
-    
+      return new SbkTable( (Feature) property );
+
     return null;
   }
 
@@ -120,8 +87,40 @@ public class SbkStructDatabaseStructure extends SbkStructure implements ISbkStru
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_DATABASE_USAGE_MEMBER );
     if( property instanceof Feature )
-      return new SbkTable((Feature)property);
-    
+      return new SbkTable( (Feature) property );
+
     return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getInterpolationType()
+   */
+  public String getInterpolationType( )
+  {
+    // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
+    return (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_INTERPOLATION_TYPE );
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getNumOfGateValues()
+   */
+  public double getNumOfGateValues( )
+  {
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_NUMBER_GATE_VALUES );
+    if( property instanceof Double )
+      return (((Double) property).doubleValue());
+
+    return Double.NaN;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getSecondAxisValueType()
+   */
+  public String getSecondAxisValueType( )
+  {
+    // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
+    return (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_SECOND_AXIS_VALUE_TYPE );
+
   }
 }

@@ -46,13 +46,13 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 public interface ISbkStructWeir extends ISbkStructure
 {
 
-  public String getFlowDirection( );
-
   public double getCrestLevel( );
 
   public double getCrestWidth( );
 
   public double getDischargeCoeffCE( );
+
+  public String getFlowDirection( );
 
   public double getLateralContractionCoeffCW( );
 

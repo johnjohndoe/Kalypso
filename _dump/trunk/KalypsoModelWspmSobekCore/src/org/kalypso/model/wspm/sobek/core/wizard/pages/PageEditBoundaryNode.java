@@ -74,6 +74,32 @@ public class PageEditBoundaryNode extends WizardPage
     setDescription( "Enter boundary node parameters, please." );
   }
 
+  protected void checkPageCompleted( )
+  {
+    if( m_name.getText() == null )
+    {
+      setMessage( null );
+      setErrorMessage( "Name not defined." );
+      setPageComplete( false );
+
+      return;
+    }
+
+    final StructuredSelection selection = (StructuredSelection) m_type.getSelection();
+    if( selection.getFirstElement() == null )
+    {
+      setMessage( null );
+      setErrorMessage( "Boundary Node type not set." );
+      setPageComplete( false );
+
+      return;
+    }
+
+    setMessage( null );
+    setErrorMessage( null );
+    setPageComplete( true );
+  }
+
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -122,43 +148,17 @@ public class PageEditBoundaryNode extends WizardPage
     checkPageCompleted();
   }
 
-  protected void checkPageCompleted( )
-  {
-    if( m_name.getText() == null )
-    {
-      setMessage( null );
-      setErrorMessage( "Name not defined." );
-      setPageComplete( false );
-
-      return;
-    }
-
-    final StructuredSelection selection = (StructuredSelection) m_type.getSelection();
-    if( selection.getFirstElement() == null )
-    {
-      setMessage( null );
-      setErrorMessage( "Boundary Node type not set." );
-      setPageComplete( false );
-
-      return;
-    }
-
-    setMessage( null );
-    setErrorMessage( null );
-    setPageComplete( true );
-  }
-
-  public String getBoundaryName( )
-  {
-    return m_name.getText();
-  }
-
   public String getBoundaryDescription( )
   {
     if( m_description.getText() == null )
       return "";
 
     return m_description.getText();
+  }
+
+  public String getBoundaryName( )
+  {
+    return m_name.getText();
   }
 
   public String getBoundaryType( )

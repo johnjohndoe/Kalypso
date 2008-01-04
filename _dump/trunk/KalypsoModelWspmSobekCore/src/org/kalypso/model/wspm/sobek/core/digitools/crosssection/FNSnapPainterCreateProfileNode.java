@@ -84,6 +84,13 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
 
   }
 
+  private void discoverBranchGeometries( final ISobekModelMember model )
+  {
+    final IBranch[] branches = model.getBranchMembers();
+    for( final IBranch branch : branches )
+      m_curves.put( branch, branch.getGeometryProperty() );
+  }
+
   private void discoverCrossSections( final CommandableWorkspace workspace )
   {
     final Feature root = workspace.getRootFeature();
@@ -111,13 +118,6 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
           m_profiles.put( profile, (GM_Curve) geometry );
       }
     }
-  }
-
-  private void discoverBranchGeometries( final ISobekModelMember model )
-  {
-    final IBranch[] branches = model.getBranchMembers();
-    for( final IBranch branch : branches )
-      m_curves.put( branch, branch.getGeometryProperty() );
   }
 
   public Feature[] getLastSnappedCrossSections( )

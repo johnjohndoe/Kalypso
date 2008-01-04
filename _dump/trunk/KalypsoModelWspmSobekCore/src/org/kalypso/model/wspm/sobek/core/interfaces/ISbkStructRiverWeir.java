@@ -40,29 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-
 /**
  * @author thuel2
- *
  */
 public interface ISbkStructRiverWeir extends ISbkStructure
 {
 
   public double getCrestLevel( );
 
-  public double getCrestWidth( );
-
   public String getCrestShape( );
 
-  public double getPosCorrectionCeoff( );
-
-  public double getPosSubmergeLimit( );
+  public double getCrestWidth( );
 
   public double getNegCorrectionCeoff( );
 
+  public ISbkTable getNegReductionFactors( );
+
   public double getNegSubmergeLimit( );
+
+  public double getPosCorrectionCeoff( );
 
   public ISbkTable getPosReductionFactors( );
 
-  public ISbkTable getNegReductionFactors( );
+  public double getPosSubmergeLimit( );
 }

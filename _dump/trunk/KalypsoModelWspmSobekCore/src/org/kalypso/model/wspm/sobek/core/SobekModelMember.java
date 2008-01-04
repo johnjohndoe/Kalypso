@@ -104,28 +104,7 @@ import org.xml.sax.SAXException;
  */
 public final class SobekModelMember implements ISobekModelMember
 {
-  private final Feature m_modelMember;
-
   private static ISobekModelMember m_model = null;
-
-  private final IRepositoryContainer m_reposContainer;
-
-  private final IWorkspaceInterface m_workspace;
-
-  private SobekModelMember( final IWorkspaceInterface workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
-  {
-    m_workspace = workspace;
-    m_reposContainer = reposContainer;
-
-    if( modelMember == null )
-      throw new IllegalStateException( "modelMember is null" );
-
-    if( !ISobekConstants.QN_SOBEK_MODEL.equals( modelMember.getFeatureType().getQName() ) )
-      throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL_MEMBER );
-
-    m_modelMember = modelMember;
-    SobekModelMember.m_model = this;
-  }
 
   public static ISobekModelMember getModel( )
   {
@@ -149,6 +128,60 @@ public final class SobekModelMember implements ISobekModelMember
       SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
 
     return SobekModelMember.m_model;
+  }
+
+  private final Feature m_modelMember;
+
+  private final IRepositoryContainer m_reposContainer;
+
+  private final IWorkspaceInterface m_workspace;
+
+  private SobekModelMember( final IWorkspaceInterface workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
+  {
+    m_workspace = workspace;
+    m_reposContainer = reposContainer;
+
+    if( modelMember == null )
+      throw new IllegalStateException( "modelMember is null" );
+
+    if( !ISobekConstants.QN_SOBEK_MODEL.equals( modelMember.getFeatureType().getQName() ) )
+      throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL_MEMBER );
+
+    m_modelMember = modelMember;
+    SobekModelMember.m_model = this;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#deleteFoo(org.kalypsodeegree.model.feature.Feature)
+   */
+  public void deleteFoo( final Feature feature ) throws Exception
+  {
+    final QName qn = feature.getFeatureType().getQName();
+
+    if( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH.equals( qn ) )
+      new Branch( this, feature ).delete();
+    else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qn ) )
+      FeatureUtils.deleteFeature( m_workspace.getCommandableWorkspace(), feature );
+    else
+      throw new NotImplementedException();
+  }
+
+  private IBoundaryNode[] getBoundaryNodeMembers( )
+  {
+    final INode[] allNodes = getNodeMembers();
+    final List<IBoundaryNode> boundaryCondNodes = new ArrayList<IBoundaryNode>();
+    for( final INode node : allNodes )
+      if( node instanceof IBoundaryNode )
+        boundaryCondNodes.add( (IBoundaryNode) node );
+    return boundaryCondNodes.toArray( new IBoundaryNode[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getBranchMaker()
+   */
+  public IBranchMaker getBranchMaker( )
+  {
+    return new BranchMaker( this );
   }
 
   /**
@@ -182,6 +215,38 @@ public final class SobekModelMember implements ISobekModelMember
   }
 
   /**
+   * returns nodes that are somehow connection nodes (connection, linkage, boundary condition)
+   */
+  private INode[] getConnectionNodeTypeNodeMembers( )
+  {
+
+    final INode[] allNodes = getNodeMembers();
+    final List<INode> connNodes = new ArrayList<INode>();
+    for( final INode node : allNodes )
+      if( (node instanceof IBoundaryNode) || (node instanceof IConnectionNode) || (node instanceof ILinkageNode) )
+        connNodes.add( node );
+    return connNodes.toArray( new INode[] {} );
+  }
+
+  /**
+   *
+   */
+  private ICrossSectionNode[] getCrossSectionNodeMembers( )
+  {
+    final INode[] allNodes = getNodeMembers();
+    final List<ICrossSectionNode> crossSectionsNodes = new ArrayList<ICrossSectionNode>();
+    for( final INode node : allNodes )
+      if( node instanceof ICrossSectionNode )
+        crossSectionsNodes.add( (ICrossSectionNode) node );
+    return crossSectionsNodes.toArray( new ICrossSectionNode[] {} );
+  }
+
+  public Feature getFeature( )
+  {
+    return m_modelMember;
+  }
+
+  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getLastfallMembers()
    */
   public ILastfall[] getLastfallMembers( )
@@ -199,6 +264,17 @@ public final class SobekModelMember implements ISobekModelMember
     }
 
     return myLastfalls.toArray( new ILastfall[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#getMappedProject()
+   */
+  public IProject getMappedProject( )
+  {
+    if( m_workspace == null )
+      return null;
+    else
+      return m_workspace.getMappedProject();
   }
 
   /**
@@ -222,31 +298,50 @@ public final class SobekModelMember implements ISobekModelMember
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getBranchMaker()
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getNodeUtils()
    */
-  public IBranchMaker getBranchMaker( )
+  public INodeUtils getNodeUtils( )
   {
-    return new BranchMaker( this );
-  }
-
-  public Feature getFeature( )
-  {
-    return m_modelMember;
+    return new NodeUtils( this );
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#deleteFoo(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#getRepositoryContainer()
    */
-  public void deleteFoo( final Feature feature ) throws Exception
+  public IRepositoryContainer getRepositoryContainer( )
   {
-    final QName qn = feature.getFeatureType().getQName();
+    return m_reposContainer;
+  }
 
-    if( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH.equals( qn ) )
-      new Branch( this, feature ).delete();
-    else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qn ) )
-      FeatureUtils.deleteFeature( m_workspace.getCommandableWorkspace(), feature );
+  private ISbkStructure[] getSbkStructures( )
+  {
+    final INode[] allNodes = getNodeMembers();
+    final List<ISbkStructure> structureNodes = new ArrayList<ISbkStructure>();
+    for( final INode node : allNodes )
+      if( node instanceof ISbkStructure )
+        structureNodes.add( (ISbkStructure) node );
+    return structureNodes.toArray( new ISbkStructure[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getWorkspace()
+   */
+  public CommandableWorkspace getWorkspace( )
+  {
+    if( m_workspace == null )
+      return null;
     else
-      throw new NotImplementedException();
+      return m_workspace.getCommandableWorkspace();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#writePi(java.net.URL)
+   */
+  public void writePi( final URL targetDir ) throws Exception
+  {
+    final TARGET[] values = TARGET.values();
+    for( final TARGET target : values )
+      writePi( targetDir, target );
   }
 
   // $ANALYSIS-IGNORE
@@ -434,100 +529,5 @@ public final class SobekModelMember implements ISobekModelMember
         }
       }
     }
-  }
-
-  /**
-   * returns nodes that are somehow connection nodes (connection, linkage, boundary condition)
-   */
-  private INode[] getConnectionNodeTypeNodeMembers( )
-  {
-
-    final INode[] allNodes = getNodeMembers();
-    final List<INode> connNodes = new ArrayList<INode>();
-    for( final INode node : allNodes )
-      if( (node instanceof IBoundaryNode) || (node instanceof IConnectionNode) || (node instanceof ILinkageNode) )
-        connNodes.add( node );
-    return connNodes.toArray( new INode[] {} );
-  }
-
-  private IBoundaryNode[] getBoundaryNodeMembers( )
-  {
-    final INode[] allNodes = getNodeMembers();
-    final List<IBoundaryNode> boundaryCondNodes = new ArrayList<IBoundaryNode>();
-    for( final INode node : allNodes )
-      if( node instanceof IBoundaryNode )
-        boundaryCondNodes.add( (IBoundaryNode) node );
-    return boundaryCondNodes.toArray( new IBoundaryNode[] {} );
-  }
-
-  private ISbkStructure[] getSbkStructures( )
-  {
-    final INode[] allNodes = getNodeMembers();
-    final List<ISbkStructure> structureNodes = new ArrayList<ISbkStructure>();
-    for( final INode node : allNodes )
-      if( node instanceof ISbkStructure )
-        structureNodes.add( (ISbkStructure) node );
-    return structureNodes.toArray( new ISbkStructure[] {} );
-  }
-
-  /**
-   *
-   */
-  private ICrossSectionNode[] getCrossSectionNodeMembers( )
-  {
-    final INode[] allNodes = getNodeMembers();
-    final List<ICrossSectionNode> crossSectionsNodes = new ArrayList<ICrossSectionNode>();
-    for( final INode node : allNodes )
-      if( node instanceof ICrossSectionNode )
-        crossSectionsNodes.add( (ICrossSectionNode) node );
-    return crossSectionsNodes.toArray( new ICrossSectionNode[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getNodeUtils()
-   */
-  public INodeUtils getNodeUtils( )
-  {
-    return new NodeUtils( this );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#getRepositoryContainer()
-   */
-  public IRepositoryContainer getRepositoryContainer( )
-  {
-    return m_reposContainer;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#writePi(java.net.URL)
-   */
-  public void writePi( final URL targetDir ) throws Exception
-  {
-    final TARGET[] values = TARGET.values();
-    for( final TARGET target : values )
-      writePi( targetDir, target );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getWorkspace()
-   */
-  public CommandableWorkspace getWorkspace( )
-  {
-    if( m_workspace == null )
-      return null;
-    else
-      return m_workspace.getCommandableWorkspace();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#getMappedProject()
-   */
-  public IProject getMappedProject( )
-  {
-    if( m_workspace == null )
-      return null;
-    else
-      return m_workspace.getMappedProject();
   }
 }

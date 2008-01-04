@@ -68,6 +68,22 @@ public interface IBoundaryNodeLastfallCondition
       return BOUNDARY_CONDITION_TYPE.eZml;
     }
 
+    public String toGmlString( )
+    {
+      final BOUNDARY_CONDITION_TYPE type = BOUNDARY_CONDITION_TYPE.valueOf( name() );
+      switch( type )
+      {
+        case eConstant:
+          return "const";
+
+        case eZml:
+          return "zml";
+
+        default:
+          throw new NotImplementedException();
+      }
+    }
+
     @Override
     public String toString( )
     {
@@ -84,51 +100,35 @@ public interface IBoundaryNodeLastfallCondition
           throw new NotImplementedException();
       }
     }
-
-    public String toGmlString( )
-    {
-      final BOUNDARY_CONDITION_TYPE type = BOUNDARY_CONDITION_TYPE.valueOf( name() );
-      switch( type )
-      {
-        case eConstant:
-          return "const";
-
-        case eZml:
-          return "zml";
-
-        default:
-          throw new NotImplementedException();
-      }
-    }
   }
 
-  ILastfall getLastfall( );
-
   IBoundaryNode getBoundaryNode( );
-
-  Feature getFeature( );
-
-  boolean isTimeSeriesNode( );
-
-  boolean isConstantValueNode( );
-
-  TimeseriesLinkType getTimeseriesLink( );
-
-  void setTimeSeriesLink( TimeseriesLinkType lnk );
-
-  public GregorianCalendar getObservationStart( );
-
-  public GregorianCalendar getObservationEnd( );
-
-  public BOUNDARY_CONDITION_TYPE getLastUsedType( );
 
   public Double getConstantValue( );
 
   public Integer getConstantValueInterveal( );
+
+  Feature getFeature( );
+
+  ILastfall getLastfall( );
+
+  public BOUNDARY_CONDITION_TYPE getLastUsedType( );
+
+  public GregorianCalendar getObservationEnd( );
+
+  public GregorianCalendar getObservationStart( );
+
+  TimeseriesLinkType getTimeseriesLink( );
 
   public IObservation<TupleResult> getTimeSeriesObservation( );
 
   public Feature getTimeSeriesObservationFeature( );
 
   public Boolean hasTimeSeriesObservation( );
+
+  boolean isConstantValueNode( );
+
+  boolean isTimeSeriesNode( );
+
+  void setTimeSeriesLink( TimeseriesLinkType lnk );
 }

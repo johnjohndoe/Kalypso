@@ -74,28 +74,6 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
-   */
-  public TYPE getType( )
-  {
-    return TYPE.eBoundaryNode;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
-   */
-  public boolean isEmpty( )
-  {
-    final IBranch[] inflowingBranches = getInflowingBranches();
-    final IBranch[] outflowingBranches = getOutflowingBranches();
-
-    if( inflowingBranches.length == 0 && outflowingBranches.length == 0 )
-      return true;
-
-    return false;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode#getBoundaryType()
    */
   public BOUNDARY_TYPE getBoundaryType( )
@@ -147,6 +125,28 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
 
     final Feature condition = NodeUtils.createBoundaryNodeLastfallCondition( lastfall, this );
     return new BoundaryNodeLastfallCondition( lastfall, this, condition );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  public TYPE getType( )
+  {
+    return TYPE.eBoundaryNode;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
+   */
+  public boolean isEmpty( )
+  {
+    final IBranch[] inflowingBranches = getInflowingBranches();
+    final IBranch[] outflowingBranches = getOutflowingBranches();
+
+    if( inflowingBranches.length == 0 && outflowingBranches.length == 0 )
+      return true;
+
+    return false;
   }
 
 }

@@ -42,21 +42,20 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 
 /**
  * @author thuel2
- *
  */
 public interface ISbkStructDatabaseStructure extends ISbkStructure
 {
 
   public double getCrestHeight( );
 
-  public double getNumOfGateValues( );
-
-  public String getSecondAxisValueType( );
-
-  public String getInterpolationType( );
-
   public ISbkTable getDatabase( );
 
   public ISbkTable getDatabaseUsage( );
+
+  public String getInterpolationType( );
+
+  public double getNumOfGateValues( );
+
+  public String getSecondAxisValueType( );
 
 }

@@ -89,7 +89,7 @@ public class FNBranchExpander
     /* collect all branches which intersects m_curve */
     final Map<IBranch, GM_Curve> collected = new HashMap<IBranch, GM_Curve>();
 
-    IBranch[] branches = m_member.getBranchMembers();
+    final IBranch[] branches = m_member.getBranchMembers();
 
     for( final IBranch branch : branches )
     {
@@ -99,7 +99,7 @@ public class FNBranchExpander
         collected.put( branch, curve );
     }
 
-    Set<Entry<IBranch, GM_Curve>> entrySet = collected.entrySet();
+    final Set<Entry<IBranch, GM_Curve>> entrySet = collected.entrySet();
     if( entrySet.size() == 2 )
     {
       m_branchesToExtend = collected.keySet().toArray( new IBranch[] {} );
@@ -139,7 +139,7 @@ public class FNBranchExpander
   public void finish( ) throws Exception
   {
     final EXPAND_TYPE type = determineExpandType();
-    IBranchMaker maker = m_member.getBranchMaker();
+    final IBranchMaker maker = m_member.getBranchMaker();
 
     switch( type )
     {

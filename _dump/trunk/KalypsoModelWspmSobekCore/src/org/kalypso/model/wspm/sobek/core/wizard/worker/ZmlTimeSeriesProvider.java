@@ -83,27 +83,21 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
     super( settings, pageTS );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.wizard.worker.ITimeSeriesProvider#getBasicChanges()
-   */
-  @Override
-  public Map<QName, Object> getBasicChanges( )
+  @SuppressWarnings("deprecation")
+  private void addResult( final TupleResult result, final Date date, final List<Double> myValues )
   {
-    final Map<QName, Object> changes = super.getBasicChanges();
+    /* if wq-relation -> components must have the order date, w, q otherwise -> date, w or q */
+    final IComponent[] components = result.getComponents();
 
-    /* set time series link */
-    final TimeseriesLinkType lnkTimeSeries = new TimeseriesLinkType();
+    final GregorianCalendar calendar = new GregorianCalendar( date.getYear(), date.getMonth(), date.getDay(), date.getHours(), date.getMinutes(), date.getSeconds() );
 
-    m_item = getPageTS().getZmlObservationItem();
-    final String identifier = m_item.getIdentifier();
-    lnkTimeSeries.setHref( identifier );
+    final IRecord record = result.createRecord();
+    record.setValue( components[0], new XMLGregorianCalendarImpl( calendar ) );
 
-    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnkTimeSeries );
+    for( int i = 0; i < myValues.size(); i++ )
+      record.setValue( components[i + 1], myValues.get( i ) );
 
-    /* type */
-    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_TYPE, IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eZml.toGmlString() );
-
-    return changes;
+    result.add( record );
   }
 
   /**
@@ -167,21 +161,36 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
     }
   }
 
-  @SuppressWarnings("deprecation")
-  private void addResult( final TupleResult result, final Date date, final List<Double> myValues )
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.wizard.worker.ITimeSeriesProvider#getBasicChanges()
+   */
+  @Override
+  public Map<QName, Object> getBasicChanges( )
   {
-    /* if wq-relation -> components must have the order date, w, q otherwise -> date, w or q */
-    final IComponent[] components = result.getComponents();
+    final Map<QName, Object> changes = super.getBasicChanges();
 
-    final GregorianCalendar calendar = new GregorianCalendar( date.getYear(), date.getMonth(), date.getDay(), date.getHours(), date.getMinutes(), date.getSeconds() );
+    /* set time series link */
+    final TimeseriesLinkType lnkTimeSeries = new TimeseriesLinkType();
 
-    final IRecord record = result.createRecord();
-    record.setValue( components[0], new XMLGregorianCalendarImpl( calendar ) );
+    m_item = getPageTS().getZmlObservationItem();
+    final String identifier = m_item.getIdentifier();
+    lnkTimeSeries.setHref( identifier );
 
-    for( int i = 0; i < myValues.size(); i++ )
-      record.setValue( components[i + 1], myValues.get( i ) );
+    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnkTimeSeries );
 
-    result.add( record );
+    /* type */
+    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_TYPE, IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eZml.toGmlString() );
+
+    return changes;
+  }
+
+  private IAxis getDateAxis( final IAxis[] axisList )
+  {
+    for( final IAxis axis : axisList )
+      if( Date.class.equals( axis.getDataClass() ) )
+        return axis;
+
+    throw new IllegalStateException( "No time series date axis defined!" );
   }
 
   /**
@@ -223,14 +232,5 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
         throw new IllegalStateException( "Time series value axis not found." );
 
     return myAxis;
-  }
-
-  private IAxis getDateAxis( final IAxis[] axisList )
-  {
-    for( final IAxis axis : axisList )
-      if( Date.class.equals( axis.getDataClass() ) )
-        return axis;
-
-    throw new IllegalStateException( "No time series date axis defined!" );
   }
 }

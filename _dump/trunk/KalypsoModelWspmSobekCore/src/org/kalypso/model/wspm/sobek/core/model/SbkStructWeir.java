@@ -57,25 +57,25 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#getCrestHeight()
-   */
-  public double getCrestWidth( )
-  {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_WIDTH );
-    if( property instanceof Double )
-      return (((Double)property).doubleValue());
-
-    return Double.NaN;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#getCrestLevel()
    */
   public double getCrestLevel( )
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_HEIGHT );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
+
+    return Double.NaN;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#getCrestHeight()
+   */
+  public double getCrestWidth( )
+  {
+    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_WIDTH );
+    if( property instanceof Double )
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -87,7 +87,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_DISCHARGE_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
@@ -98,7 +98,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   public String getFlowDirection( )
   {
     // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
-    return (String)getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_FLOW_DIRECTION );
+    return (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_FLOW_DIRECTION );
   }
 
   /**
@@ -108,7 +108,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_LATERAL_CONTRACTION_COEFF );
     if( property instanceof Double )
-      return (((Double)property).doubleValue());
+      return (((Double) property).doubleValue());
 
     return Double.NaN;
   }
