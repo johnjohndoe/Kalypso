@@ -115,7 +115,7 @@ public class SldLoader extends AbstractLoader
     }
     catch( final Exception e )
     {
-      throw new LoaderException( e );
+      throw new LoaderException( "Failed to load SLD: " + source, e );
     }
     finally
     {

@@ -101,8 +101,6 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
 
     for( final MTRMColumn col : m_model.getColumnKeySet() )
       m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, -1, true );
-
-    m_tableViewer.refreshColumnProperties();
   }
 
   /**
@@ -143,8 +141,6 @@ public class MultiTupleResultContentProvider implements IStructuredContentProvid
   public void onColumnAdded( final MTRMColumn col )
   {
     m_tableViewer.addColumn( col.getKeyName(), col.toString(), 100, -1, true );
-    m_tableViewer.refreshColumnProperties();
-
     m_tableViewer.refresh();
   }
 

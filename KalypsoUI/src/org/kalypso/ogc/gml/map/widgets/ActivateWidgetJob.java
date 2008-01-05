@@ -26,7 +26,7 @@ public final class ActivateWidgetJob extends UIJob
 
   private final IWorkbenchPart m_activePart;
 
-  public ActivateWidgetJob( Display jobDisplay, String name, IWidget widget, MapPanel mapPanel, IWorkbenchPart activePart )
+  public ActivateWidgetJob( final Display jobDisplay, final String name, final IWidget widget, final MapPanel mapPanel, final IWorkbenchPart activePart )
   {
     super( jobDisplay, name );
     m_widget = widget;
@@ -47,7 +47,7 @@ public final class ActivateWidgetJob extends UIJob
       else
         m_mapPanel.getWidgetManager().setActualWidget( m_widget );
     }
-    catch( PartInitException e )
+    catch( final PartInitException e )
     {
       return e.getStatus();
     }

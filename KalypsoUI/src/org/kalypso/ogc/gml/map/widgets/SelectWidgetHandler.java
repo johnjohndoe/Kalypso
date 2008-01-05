@@ -8,6 +8,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
@@ -20,7 +21,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.osgi.framework.Bundle;
 
@@ -52,6 +55,8 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
   @Override
   public Object execute( final ExecutionEvent event )
   {
+    final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
+
     // TODO: this gets called twice if radio buttons are involved
     // it would be nice to find out the check state of the command
     // Maybe use Command#setState / #getState to do this?
@@ -79,7 +84,13 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     }
 
     final IWidget widget = getWidgetFromBundle( pluginParameter, widgetParameter );
-    final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
+    if( widget == null )
+    {
+      final String msg = String.format( "Widget cannot be selected. PluginParameter: %s   WidgetParameter: %s", pluginParameter, widgetParameter );
+      final IStatus status = StatusUtilities.createWarningStatus( msg );
+      KalypsoGisPlugin.getDefault().getLog().log( status );
+      return status;
+    }
 
     final IWorkbenchPart activePart = (IWorkbenchPart) applicationContext.getVariable( ISources.ACTIVE_PART_NAME );
     final Shell shell = (Shell) applicationContext.getVariable( ISources.ACTIVE_SHELL_NAME );
@@ -88,14 +99,16 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     if( mapPanel == null )
       return StatusUtilities.createWarningStatus( "No map panel available" );
 
-    if( mapPanel != null && widget != null )
-    {
-      final UIJob job = new ActivateWidgetJob( display, "Widget auswählen", widget, mapPanel, activePart );
-      // Probably not necessary
-      final AbstractMapPart abstractMapPart = (AbstractMapPart) activePart;
-      job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
-      job.schedule();
-    }
+    /* Always make sure that the map was fully loaded */
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "", "" ) )
+      return null;
+
+    final UIJob job = new ActivateWidgetJob( display, "Widget auswählen", widget, mapPanel, activePart );
+    // Probably not necessary
+    final AbstractMapPart abstractMapPart = (AbstractMapPart) activePart;
+    job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
+    job.schedule();
+
     return null;
   }
 
