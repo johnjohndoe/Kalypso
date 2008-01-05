@@ -56,7 +56,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -103,7 +105,7 @@ public class UtilMap
   }
 
   /**
-   * Get First Theme which is showing elements substituable to the specified QName (i.e. substituting it).
+   * Get First Theme which is showing elements substitutable to the specified QName (i.e. substituting it).
    */
   static public IKalypsoFeatureTheme findEditableTheme( final IMapModell mapModel, final QName editElementQName )
   {
@@ -145,24 +147,15 @@ public class UtilMap
   private static List<IKalypsoFeatureTheme> loadKalypsoFeatureThemes( final IMapModell mapModel )
   {
     final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
+
+    // PROBLEM: block the ui and freezes the application
     PlatformUI.getWorkbench().getDisplay().syncExec( waitForFeaturesLoading( mapModel ) );
 
-    final IKalypsoTheme[] themes = mapModel.getAllThemes();
-
-    for( IKalypsoTheme theme : themes )
-    {
-      if( PREDICATE.decide( theme ) )
-        result.add( (IKalypsoFeatureTheme) theme );
-      else if( theme instanceof IMapModell )
-      {
-        final IKalypsoTheme[] allThemes = ((IMapModell) theme).getAllThemes();
-        for( final IKalypsoTheme kalypsoTheme : allThemes )
-        {
-          if( PREDICATE.decide( kalypsoTheme ) )
-            result.add( (IKalypsoFeatureTheme) kalypsoTheme );
-        }
-      }
-    }
+    final KalypsoThemeVisitor kalypsoThemeVisitor = new KalypsoThemeVisitor( PREDICATE );
+    mapModel.accept( kalypsoThemeVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+    final IKalypsoTheme[] foundThemes = kalypsoThemeVisitor.getFoundThemes();
+    for( final IKalypsoTheme kalypsoTheme2 : foundThemes )
+      result.add( (IKalypsoFeatureTheme) kalypsoTheme2 );
 
     return result;
   }
@@ -173,7 +166,9 @@ public class UtilMap
    * 
    * @param mapModel
    *            map model from which the themes should be loaded
+   * @deprecated Use {@link org.kalypso.ogc.gml.mapmodel.MapModellHelper} instead
    */
+  @Deprecated
   private static Runnable waitForFeaturesLoading( final IMapModell mapModel )
   {
     final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
