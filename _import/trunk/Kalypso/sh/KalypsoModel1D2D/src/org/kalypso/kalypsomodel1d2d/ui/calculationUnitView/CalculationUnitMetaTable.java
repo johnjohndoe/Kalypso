@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
@@ -57,21 +60,21 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -91,13 +94,13 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * Calculation unit widget component that shows the table of existing calculation units, with the corresponding buttons
  * 
+ * TODO: get images from central point in order to have them disposed
+ * 
  * @author Madanagopal
  * @author Dejan Antanaskovic
  */
 public abstract class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 {
-  private TableViewer tableViewer;
-
   private final KeyBasedDataModel m_dataModel;
 
   private Image image;
@@ -106,29 +109,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   private Image imageUp;
 
-  private Composite m_parent;
-
-  final private SelectionListener moveUpListener = new SelectionAdapter()
-  {
-    @Override
-    public void widgetSelected( SelectionEvent event )
-    {
-      moveSelection( -1 );
-      tableViewer.refresh();
-    }
-  };
-
-  final private SelectionListener moveDownListener = new SelectionAdapter()
-  {
-    @Override
-    public void widgetSelected( SelectionEvent event )
-    {
-      moveSelection( 1 );
-      tableViewer.refresh();
-    }
-  };
-
-  final private ISelectionChangedListener elevationModelSelectListener = new ISelectionChangedListener()
+  final private ISelectionChangedListener m_selectListener = new ISelectionChangedListener()
   {
     @SuppressWarnings("synthetic-access")
     public void selectionChanged( SelectionChangedEvent event )
@@ -157,26 +138,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     }
   };
 
-  private String[] buttonsList;
-
-  private final KeyBasedDataModelChangeListener dataModelListener = new KeyBasedDataModelChangeListener()
-  {
-    public void dataChanged( String key, Object newValue )
-    {
-      if( ICommonKeys.KEY_FEATURE_WRAPPER_LIST.equals( key ) )
-      {
-        updateOnNewInput( newValue );
-      }
-      else if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
-      {
-        updateOnNewSelection( newValue );
-      }
-      else
-      {
-        // uninteresting key
-      }
-    }
-  };
+  private final Set<String> m_buttonsList = new HashSet<String>();
 
   private Button m_btnDeleteCalcUnit;
 
@@ -186,68 +148,101 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   private Button m_btnRunCalculation;
 
-  public CalculationUnitMetaTable( final KeyBasedDataModel dataModel )
+  public CalculationUnitMetaTable( final KeyBasedDataModel dataModel, final String... buttonsList )
   {
     m_dataModel = dataModel;
+
+    m_buttonsList.addAll( Arrays.asList( buttonsList ) );
   }
 
-  public void createControl( final Composite parent )
+  public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_parent = parent;
-    guiSelectFromList( parent );
-    m_dataModel.addKeyBasedDataChangeListener( dataModelListener );
-  }
+    final Composite composite = toolkit.createComposite( parent, SWT.NONE );
+    final GridLayout gridLayout = new GridLayout( 2, false );
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    composite.setLayout( gridLayout );
 
-  private void guiSelectFromList( final Composite parent )
-  {
-    FormData formData;
-
-    formData = new FormData();
-    formData.left = new FormAttachment( 0, 10 );
-    formData.top = new FormAttachment( 0, 5 );
-    formData.bottom = new FormAttachment( 100, 0 );
-
-    tableViewer = new TableViewer( parent, SWT.FILL | SWT.BORDER );
+    final TableViewer tableViewer = createTableControl( composite, toolkit );
     final Table table = tableViewer.getTable();
+    toolkit.adapt( table );
+    table.setLinesVisible( true );
+    table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    final Display display = parent.getDisplay();
+    m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
+    {
+      public void dataChanged( final String key, final Object newValue )
+      {
+        if( ICommonKeys.KEY_FEATURE_WRAPPER_LIST.equals( key ) )
+        {
+          updateOnNewInput( display, tableViewer, newValue );
+        }
+        else if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
+        {
+          updateOnNewSelection( display, tableViewer, newValue );
+        }
+        else
+        {
+          // uninteresting key
+        }
+      }
+    } );
+
+    return composite;
+  }
+
+  private TableViewer createTableControl( final Composite parent, final FormToolkit toolkit )
+  {
+    final DefaultTableViewer tableViewer = new DefaultTableViewer( parent, SWT.FULL_SELECTION | SWT.NONE );
+
+    tableViewer.addColumn( "Name", "Name", null, 100, 100, false, SWT.LEFT, false ); //$NON-NLS-1$
+
     tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setLabelProvider( getLabelProvider( parent.getDisplay() ) );
-    table.setLinesVisible( true );
-    table.setLayoutData( formData );
-
-    final TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
-    lineColumn.setWidth( 100 );
 
     tableViewer.setInput( setInputContentProvider() );
-    tableViewer.addSelectionChangedListener( this.elevationModelSelectListener );
+    tableViewer.addSelectionChangedListener( m_selectListener );
 
-    formData = new FormData();
-    formData.left = new FormAttachment( table, 5 );
-    formData.bottom = new FormAttachment( 100, 0 );
-    formData.top = new FormAttachment( 0, 5 );
-
-    final Composite btnComposite = new Composite( parent, SWT.NONE );
+    final Composite btnComposite = toolkit.createComposite( parent, SWT.NONE );
     btnComposite.setLayout( new GridLayout( 1, false ) );
-    btnComposite.setLayoutData( formData );
-    if( searchForThisString( ICalculationUnitButtonIDs.BTN_MOVE_UP ) )
+    btnComposite.setLayoutData( new GridData() );
+    if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_UP ) )
     {
       final Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
       imageUp = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).getImageData() ); //$NON-NLS-1$
       moveUpBtn.setImage( imageUp );
-      moveUpBtn.addSelectionListener( this.moveUpListener );
+      moveUpBtn.addSelectionListener( new SelectionAdapter()
+      {
+        @Override
+        public void widgetSelected( final SelectionEvent event )
+        {
+          moveSelection( -1 );
+          tableViewer.refresh();
+        }
+      } );
 
       moveUpBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) : "Move Up #" ); //$NON-NLS-1$
     }
 
-    if( searchForThisString( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) )
+    if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) )
     {
       final Button moveDownBtn = new Button( btnComposite, SWT.PUSH );
       imageDown = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_down.gif" ).getImageData() ); //$NON-NLS-1$
       moveDownBtn.setImage( imageDown );
-      moveDownBtn.addSelectionListener( this.moveDownListener );
+      moveDownBtn.addSelectionListener( new SelectionAdapter()
+      {
+        @Override
+        public void widgetSelected( final SelectionEvent event )
+        {
+          moveSelection( 1 );
+          tableViewer.refresh();
+        }
+      } );
       moveDownBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) : "Move Down #" ); //$NON-NLS-1$
     }
 
-    if( searchForThisString( ICalculationUnitButtonIDs.BTN_SHOW_AND_MAXIMIZE ) )
+    if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_SHOW_AND_MAXIMIZE ) )
     {
       m_btnMaximizeCalcUnit = new Button( btnComposite, SWT.PUSH );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/17_show_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
@@ -265,7 +260,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
       m_btnMaximizeCalcUnit.setEnabled( false );
     }
 
-    if( searchForThisString( ICalculationUnitButtonIDs.BTN_REMOVE ) )
+    if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_REMOVE ) )
     {
       m_btnDeleteCalcUnit = new Button( btnComposite, SWT.PUSH );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
@@ -293,7 +288,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
       m_btnDeleteCalcUnit.setEnabled( false );
     }
 
-    if( searchForThisString( ICalculationUnitButtonIDs.BTN_ADD ) )
+    if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_ADD ) )
     {
       m_btnCreateCalcUnit = new Button( btnComposite, SWT.PUSH );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
@@ -318,7 +313,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
       m_btnCreateCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_ADD" ) ); //$NON-NLS-1$
     }
 
-    if( searchForThisString( ICalculationUnitButtonIDs.BTN_CLICK_TO_CALCULATE ) )
+    if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_CLICK_TO_CALCULATE ) )
     {
       m_btnRunCalculation = new Button( btnComposite, SWT.PUSH );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/startCalculation.gif" ).getImageData() ); //$NON-NLS-1$
@@ -335,10 +330,11 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
       m_btnRunCalculation.setEnabled( false );
     }
 
-    final TextCellEditor textCellEditor = new TextCellEditor( table );
+    final TextCellEditor textCellEditor = new TextCellEditor( tableViewer.getTable() );
     final CellEditor[] editors = new CellEditor[] { textCellEditor };
     tableViewer.setCellEditors( editors );
-    tableViewer.setColumnProperties( new String[] { "Name" } ); //$NON-NLS-1$
+
+    return tableViewer;
   }
 
   protected abstract boolean showDescription( );
@@ -368,21 +364,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     mapPanel.setBoundingBox( boundingBox );
   }
 
-  public void setRequiredButtons( final String... buttonsList )
-  {
-    this.buttonsList = buttonsList;
-  }
-
-  public boolean searchForThisString( final String searchStr )
-  {
-    for( final String i : buttonsList )
-    {
-      if( i.compareTo( searchStr ) == 0 )
-        return true;
-    }
-    return false;
-  }
-
   private void setCurrentSelection( final IFeatureWrapper2 firstElement )
   {
     m_dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, firstElement );
@@ -401,7 +382,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
   /**
    * Update the gui components to reflect the table new input
    */
-  final void updateOnNewInput( final Object input )
+  final void updateOnNewInput( final Display display, final TableViewer tableViewer, final Object input )
   {
     final Runnable changeInputRunnable = new Runnable()
     {
@@ -419,21 +400,20 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
           tableViewer.setInput( input );
         }
         IFeatureWrapper2 currentSelection = getCurrentSelection();
-        updateOnNewSelection( currentSelection );
+        updateOnNewSelection( display, tableViewer, currentSelection );
       }
     };
-    final Display display = m_parent.getDisplay();
     display.syncExec( changeInputRunnable );
   }
 
-  final void updateOnNewSelection( final Object currentSelection )
+  final void updateOnNewSelection( final Display display, final TableViewer tableViewer, final Object currentSelection )
   {
     final Runnable runnable = new Runnable()
     {
       @SuppressWarnings("synthetic-access")
       public void run( )
       {
-        refreshTableView();
+        tableViewer.refresh();
         boolean isEnabled = currentSelection instanceof IFeatureWrapper2;
         if( m_btnDeleteCalcUnit != null )
           m_btnDeleteCalcUnit.setEnabled( isEnabled );
@@ -443,20 +423,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
           m_btnRunCalculation.setEnabled( isEnabled );
       }
     };
-    final Display display = m_parent.getDisplay();
-    display.syncExec( runnable );
-  }
-
-  final void refreshTableView( )
-  {
-    final Runnable runnable = new Runnable()
-    {
-      public void run( )
-      {
-        tableViewer.refresh();
-      }
-    };
-    final Display display = m_parent.getDisplay();
     display.syncExec( runnable );
   }
 

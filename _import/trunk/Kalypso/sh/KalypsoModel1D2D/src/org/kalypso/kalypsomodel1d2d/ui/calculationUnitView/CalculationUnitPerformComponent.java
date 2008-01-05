@@ -59,9 +59,7 @@ public class CalculationUnitPerformComponent extends CalculationUnitMetaTable im
 {
   public CalculationUnitPerformComponent( final CalculationUnitDataModel dataModel )
   {
-    super( dataModel );
-
-    setRequiredButtons( BTN_SHOW_AND_MAXIMIZE, BTN_CLICK_TO_CALCULATE );
+    super( dataModel, BTN_SHOW_AND_MAXIMIZE, BTN_CLICK_TO_CALCULATE );
   }
 
   @Override
@@ -117,7 +115,6 @@ public class CalculationUnitPerformComponent extends CalculationUnitMetaTable im
   protected void moveSelection( final int delta )
   {
     // TODO Auto-generated method stub
-
   }
 
   /**

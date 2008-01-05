@@ -46,22 +46,26 @@ import java.util.List;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
@@ -77,6 +81,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
@@ -94,49 +99,90 @@ public class CalculationUnitLogComponent
     m_dataModel = dataModel;
   }
 
-  public void createControl( final FormToolkit toolkit, final Composite parent )
+  public Control createControl( final FormToolkit toolkit, final Composite parent )
   {
-    final TableViewer guiProblemViewer = guiProblemViewer( parent, toolkit );
-
-    final CalculationUnitDataModel dataModel = m_dataModel;
-    dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
-    {
-      public void dataChanged( final String key, final Object newValue )
-      {
-        final Display display = parent.getDisplay();
-        final Runnable runnable = new Runnable()
-        {
-          public void run( )
-          {
-            if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) && newValue instanceof ICalculationUnit )
-            {
-              final List<IGeoStatus> list = findGeoStatusCollection( (ICalculationUnit) newValue );
-              if( list != null )
-                guiProblemViewer.setInput( list );
-              else
-                guiProblemViewer.setInput( new String[] { "Keine Log-Datei vorhanden" } );
-            }
-          }
-        };
-        display.syncExec( runnable );
-      }
-    } );
-  }
-
-  private TableViewer guiProblemViewer( final Composite parent, final FormToolkit toolkit )
-  {
-    final Composite rootComposite = toolkit.createComposite( parent );
+    final Composite rootComposite = toolkit.createComposite( parent, SWT.NONE );
     rootComposite.setLayout( new GridLayout() );
 
-    final TableViewer logTableViewer = new TableViewer( rootComposite, SWT.BORDER );
+    guiProblemViewer( rootComposite, toolkit );
+
+    return rootComposite;
+  }
+
+  private void guiProblemViewer( final Composite parent, final FormToolkit toolkit )
+  {
+    final Label noLogLabel = toolkit.createLabel( parent, "Kein Log vorhanden." );
+    final GridData noLogGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    noLogLabel.setLayoutData( noLogGridData );
+    noLogLabel.setToolTipText( "Vermutlich wurde noch keine Berechnung durchgeführt." );
+
+    final DefaultTableViewer logTableViewer = new DefaultTableViewer( parent, SWT.FULL_SELECTION | SWT.BORDER );
 
     final Table table = logTableViewer.getTable();
+    toolkit.adapt( table );
+
+    table.setHeaderVisible( true );
     table.setLinesVisible( true );
+    final GridData tableGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    // TODO: change label provider!
-    logTableViewer.setLabelProvider( new LabelProvider() );
+    final FeatureWrapperLabelProvider labelProvider = new FeatureWrapperLabelProvider( logTableViewer )
+    {
+      /**
+       * Get the IDE image at path.
+       * 
+       * @param path
+       * @return Image
+       */
+      @SuppressWarnings("restriction")
+      private Image getIDEImage( String constantName )
+      {
+        return JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( constantName ) );
+      }
 
+      /**
+       * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnImage(java.lang.Object, int)
+       */
+      @SuppressWarnings("restriction")
+      @Override
+      public Image getColumnImage( Object element, int columnIndex )
+      {
+        if( columnIndex == 0 )
+        {
+          final IGeoStatus status = (IGeoStatus) element;
+          switch( status.getSeverity() )
+          {
+            case IGeoStatus.ERROR:
+              return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
+
+            case IGeoStatus.WARNING:
+              return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
+
+            case IGeoStatus.INFO:
+              return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH );
+
+            default:
+              return null;
+          }
+        }
+
+        return super.getColumnImage( element, columnIndex );
+      }
+
+      /**
+       * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnText(java.lang.Object, int)
+       */
+      @Override
+      public String getColumnText( Object element, int columnIndex )
+      {
+        if( columnIndex == 0 )
+          return "";
+
+        return super.getColumnText( element, columnIndex );
+      }
+    };
+
+    logTableViewer.setLabelProvider( labelProvider );
     logTableViewer.setContentProvider( new ArrayContentProvider() );
     logTableViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -146,10 +192,46 @@ public class CalculationUnitLogComponent
       }
     } );
 
-    final TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
-    lineColumn.setWidth( 200 );
+    logTableViewer.addColumn( IGeoStatus.QNAME_PROP_STATUS_SEVERITY.toString(), "Art", null, -1, 0, false, SWT.LEFT, false );
+    logTableViewer.addColumn( NamedFeatureHelper.GML_DESCRIPTION.toString(), "Beschreibung", null, 500, -1, false, SWT.LEFT, true );
+    logTableViewer.addColumn( IGeoStatus.QNAME_PROP_STATUS_TIME.toString(), "Zeit", null, -1, -1, false, SWT.LEFT, false );
 
-    return logTableViewer;
+    noLogLabel.setVisible( false );
+    noLogGridData.exclude = true;
+    table.setVisible( false );
+    tableGridData.exclude = true;
+
+    /* Data change events */
+    final CalculationUnitDataModel dataModel = m_dataModel;
+    dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
+    {
+      public void dataChanged( final String key, final Object newValue )
+      {
+        if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) && newValue instanceof ICalculationUnit )
+        {
+          final List<IGeoStatus> list = findGeoStatusCollection( (ICalculationUnit) newValue );
+          if( list == null )
+          {
+            table.setVisible( false );
+            noLogLabel.setVisible( true );
+            noLogGridData.exclude = false;
+            tableGridData.exclude = true;
+            logTableViewer.setInput( new Object[] {} );
+          }
+          else
+          {
+            table.setVisible( true );
+            noLogLabel.setVisible( false );
+            noLogGridData.exclude = true;
+            tableGridData.exclude = false;
+            ViewerUtilities.setInput( logTableViewer, list, false );
+          }
+
+          parent.layout();
+        }
+      }
+    } );
+
   }
 
   protected void handleSelectionChanged( final SelectionChangedEvent event )
@@ -190,6 +272,7 @@ public class CalculationUnitLogComponent
           final IDocumentResultMeta doc = (IDocumentResultMeta) resultMeta;
           if( doc.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.log )
           {
+            // HACK at the moment, the log has no unique identifier, so we use the end of the file name
             if( doc.getPath().toString().endsWith( "log.gml" ) )
             {
               final IPath fullPath = doc.getFullPath();
