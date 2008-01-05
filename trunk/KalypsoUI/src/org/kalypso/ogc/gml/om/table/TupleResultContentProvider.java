@@ -128,7 +128,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
       cellEditors[i] = handler.createCellEditor( m_tableViewer.getTable() );
     }
 
-    m_tableViewer.refreshColumnProperties();
     m_tableViewer.setCellEditors( cellEditors );
   }
 

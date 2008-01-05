@@ -85,7 +85,7 @@ public class MapModellHelper
   }
 
   /**
-   * Waitsfor a {@link MapPanel} to be completely loaded. A progress dialog opens if this operation takes long.<br>
+   * Waits for a {@link MapPanel} to be completely loaded. A progress dialog opens if this operation takes long.<br>
    * If an error occurs, an error dialog will be shown.
    * 
    * @return <code>false</code> if any error happened, the map is not garantueed to be loaded in this case.
