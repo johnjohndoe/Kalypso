@@ -44,20 +44,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
@@ -79,9 +76,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public class SelectedCalculationComponent
 {
-  private TableViewer m_subCalcUnitsTableViewer;
-
-  private Table m_subCalcUnitsTable;
+  private DefaultTableViewer m_subCalcUnitsTableViewer;
 
   private Text m_txtCalcUnitName;
 
@@ -102,7 +97,7 @@ public class SelectedCalculationComponent
     m_dataModel = dataModel;
   }
 
-  public void createControl( final FormToolkit toolkit, final Composite parent )
+  public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
@@ -122,7 +117,13 @@ public class SelectedCalculationComponent
         display.syncExec( runnable );
       }
     } );
-    createGUI( toolkit, parent );
+
+    final Composite rootComposite = toolkit.createComposite( parent, SWT.NONE );
+    rootComposite.setLayout( new GridLayout( 2, false ) );
+
+    createGUI( rootComposite, toolkit );
+
+    return rootComposite;
   }
 
   protected void updateThisSection( final Object newValue )
@@ -133,7 +134,7 @@ public class SelectedCalculationComponent
     m_txtNumberOfElements2D.setText( "0" );
     m_numberOfContinuityLines.setText( "0" );
     m_numberOfBoundaryConditions.setText( "0" );
-    m_subCalcUnitsTable.clearAll();
+    m_subCalcUnitsTableViewer.setInput( new ICalculationUnit1D2D[] {} );
 
     if( newValue instanceof ICalculationUnit1D )
     {
@@ -178,78 +179,47 @@ public class SelectedCalculationComponent
     return conditions;
   }
 
-  private void createGUI( final FormToolkit toolkit, final Composite parent )
+  private void createGUI( final Composite parent, final FormToolkit toolkit )
   {
-    final Composite rootComposite = new Composite( parent, SWT.FLAT );
-    rootComposite.setLayout( new GridLayout( 1, false ) );
-    GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
-
-    final Composite optionsComposite = new Composite( rootComposite, SWT.FLAT );
-    optionsComposite.setLayout( new GridLayout( 2, false ) );
-
-    final Label selectedProjectName = new Label( optionsComposite, SWT.RIGHT );
-    selectedProjectName.setText( Messages.getString( "SelectedCalculationComponent.11" ) );
-    m_txtCalcUnitName = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    toolkit.createLabel( parent, Messages.getString( "SelectedCalculationComponent.11" ) );
+    m_txtCalcUnitName = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER );
     m_txtCalcUnitName.setEditable( false );
-    m_txtCalcUnitName.setLayoutData( gridData );
+    m_txtCalcUnitName.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
-    final Label labelName = new Label( optionsComposite, SWT.RIGHT );
-    labelName.setText( Messages.getString( "SelectedCalculationComponent.12" ) );
-    m_txtCalcUnitType = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    toolkit.createLabel( parent, Messages.getString( "SelectedCalculationComponent.12" ) );
+    m_txtCalcUnitType = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER );
     m_txtCalcUnitType.setEditable( false );
-    gridData = new GridData( GridData.FILL_HORIZONTAL );
-    m_txtCalcUnitType.setLayoutData( gridData );
+    m_txtCalcUnitType.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
-    final Label element1DLabel = new Label( optionsComposite, SWT.RIGHT );
-    element1DLabel.setText( Messages.getString( "SelectedCalculationComponent.13" ) );
-    m_txtNumberOfElements1D = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    toolkit.createLabel( parent, Messages.getString( "SelectedCalculationComponent.13" ) );
+    m_txtNumberOfElements1D = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER );
     m_txtNumberOfElements1D.setEditable( false );
-    gridData = new GridData( GridData.FILL_HORIZONTAL );
-    m_txtNumberOfElements1D.setLayoutData( gridData );
+    m_txtNumberOfElements1D.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
-    final Label element2DLabel = new Label( optionsComposite, SWT.RIGHT );
-    element2DLabel.setText( Messages.getString( "SelectedCalculationComponent.14" ) );
-    m_txtNumberOfElements2D = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    toolkit.createLabel( parent, Messages.getString( "SelectedCalculationComponent.14" ) );
+    m_txtNumberOfElements2D = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER );
     m_txtNumberOfElements2D.setEditable( false );
-    gridData = new GridData( GridData.FILL_HORIZONTAL );
-    m_txtNumberOfElements2D.setLayoutData( gridData );
+    m_txtNumberOfElements2D.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
-    final Label boundaryUpLabel = new Label( optionsComposite, SWT.RIGHT );
-    boundaryUpLabel.setText( Messages.getString( "SelectedCalculationComponent.16" ) );
-    m_numberOfContinuityLines = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
-    m_numberOfContinuityLines.setLayoutData( gridData );
+    toolkit.createLabel( parent, Messages.getString( "SelectedCalculationComponent.16" ) );
+    m_numberOfContinuityLines = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER );
+    m_numberOfContinuityLines.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     m_numberOfContinuityLines.setEditable( false );
 
-    final Label boundaryConditionsLabel = new Label( optionsComposite, SWT.RIGHT );
-    boundaryConditionsLabel.setText( Messages.getString( "SelectedCalculationComponent.18" ) );
-    m_numberOfBoundaryConditions = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
-    m_numberOfBoundaryConditions.setLayoutData( gridData );
+    toolkit.createLabel( parent, Messages.getString( "SelectedCalculationComponent.18" ) );
+    m_numberOfBoundaryConditions = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER );
+    m_numberOfBoundaryConditions.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     m_numberOfBoundaryConditions.setEditable( false );
 
-    final Composite subCalculationComposite = new Composite( rootComposite, SWT.FLAT );
-    subCalculationComposite.setLayout( new FormLayout() );
-
-    final Label titleSubCalculation = new Label( subCalculationComposite, SWT.NONE );
-    titleSubCalculation.setText( Messages.getString( "SelectedCalculationComponent.0" ) );
-    FormData formData = new FormData();
-    formData.top = new FormAttachment( optionsComposite, 5 );
-    titleSubCalculation.setLayoutData( formData );
-
-    m_subCalcUnitsTableViewer = new TableViewer( subCalculationComposite, SWT.FILL | SWT.BORDER );
-    m_subCalcUnitsTable = m_subCalcUnitsTableViewer.getTable();
+    final Label subUnitLabel = toolkit.createLabel( parent, Messages.getString( "SelectedCalculationComponent.0" ), SWT.BEGINNING );
+    subUnitLabel.setLayoutData( new GridData( SWT.LEFT, SWT.BEGINNING, false, false ) );
+    m_subCalcUnitsTableViewer = new DefaultTableViewer( parent, SWT.FILL | SWT.BORDER );
+    final Table subCalcUnitsTable = m_subCalcUnitsTableViewer.getTable();
+    subCalcUnitsTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 1, 1 ) );
+    subCalcUnitsTable.setLinesVisible( false );
     m_subCalcUnitsTableViewer.setContentProvider( new ArrayContentProvider() );
-    m_subCalcUnitsTableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( subCalculationComposite.getDisplay() ) );
-    m_subCalcUnitsTable.setLinesVisible( false );
+    m_subCalcUnitsTableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( parent.getDisplay() ) );
 
-    final TableColumn lineColumn = new TableColumn( m_subCalcUnitsTable, SWT.LEFT );
-    lineColumn.setWidth( 200 );
-
-    formData = new FormData();
-    formData.top = new FormAttachment( titleSubCalculation, 5 );
-    formData.left = new FormAttachment( 0, 5 );
-    formData.bottom = new FormAttachment( 100, 0 );
-    formData.width = 200;
-    m_subCalcUnitsTable.setLayoutData( formData );
+    m_subCalcUnitsTableViewer.addColumn( "name", "title", null, 100, 100, false, SWT.LEFT, false );
   }
-
 }

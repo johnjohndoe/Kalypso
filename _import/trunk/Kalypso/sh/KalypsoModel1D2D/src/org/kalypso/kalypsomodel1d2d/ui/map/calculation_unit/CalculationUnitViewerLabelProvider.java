@@ -49,75 +49,69 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ListLabelProvider;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+
 /**
  * @author Madanagopal
- *
+ * 
  */
 public class CalculationUnitViewerLabelProvider extends ListLabelProvider
 {
+  private final Display m_display;
 
+  private final Image calc1DImage;
 
-  private Display display;
+  private final Image calc2DImage;
 
-  public CalculationUnitViewerLabelProvider(Display display){
-    
-    this.display = display;
-  }
-  
-  Image calc1DImage = new Image(
-           display,
-          KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-            "icons/elcl16/1d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
+  private final Image calc1D2DImage;
 
-  Image calc2DImage = new Image(
-      display,
-      KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-        PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/2d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
-  
-  Image calc1D2DImage = new Image(
-      display,
-      KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-        PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/1d_2d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
- 
-  @Override
-  public Image getImage( Object element )
+  public CalculationUnitViewerLabelProvider( final Display display )
   {
-    if( element instanceof ICalculationUnit1D )     
+    m_display = display;
+
+    // TODO: these images never get disposed!
+
+    calc1DImage = new Image( m_display, KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/1d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
+
+    calc2DImage = new Image( m_display, KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/2d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
+
+    calc1D2DImage = new Image( m_display, KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/1d_2d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
+  }
+
+  @Override
+  public Image getImage( final Object element )
+  {
+    if( element instanceof ICalculationUnit1D )
       return calc1DImage;
-    else if( element instanceof ICalculationUnit2D )     
+    else if( element instanceof ICalculationUnit2D )
       return calc2DImage;
-    else if( element instanceof ICalculationUnit1D2D )     
+    else if( element instanceof ICalculationUnit1D2D )
       return calc1D2DImage;
     else
     {
       throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
-  
-  @Override
-  public String getText( Object element )
-  {
-  if( element instanceof IFeatureWrapper2 )
-  {
 
-    String name = ((IFeatureWrapper2) element).getName();
-    if( name != null )
+  @Override
+  public String getText( final Object element )
+  {
+    if( element instanceof IFeatureWrapper2 )
     {
-      return name;
+
+      final String name = ((IFeatureWrapper2) element).getName();
+      if( name != null )
+      {
+        return name;
+      }
+      else
+      {
+        return ((IFeatureWrapper2) element).getGmlID();
+      }
     }
     else
     {
-      return ((IFeatureWrapper2) element).getGmlID();
+      throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
-  else
-  {
-    throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-  }
-  }
-  
-  
+
 }

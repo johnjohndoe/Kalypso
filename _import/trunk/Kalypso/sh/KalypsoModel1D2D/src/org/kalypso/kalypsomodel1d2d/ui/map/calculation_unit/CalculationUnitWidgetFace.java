@@ -41,9 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -68,79 +65,58 @@ class CalculationUnitWidgetFace
 
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    parent.setLayout( new FillLayout() );
-    final Composite rootPanel = new Composite( parent, SWT.FILL );
-    rootPanel.setLayout( new FillLayout() );
-    final ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
-
-    scrolledForm.getBody().setLayout( new TableWrapLayout() );
+    final ScrolledForm scrolledForm = toolkit.createScrolledForm( parent );
+    final Composite body = scrolledForm.getBody();
+    body.setLayout( new TableWrapLayout() );
 
     // Calculation Unit Section
-    final Section calculationUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    final Section calculationUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
 
     calculationUnitSection.setText( Messages.getString( "CalculationUnitWidgetFace.0" ) ); //$NON-NLS-1$
-    TableWrapData tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    TableWrapData tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
     calculationUnitSection.setLayoutData( tableWrapData );
     calculationUnitSection.setExpanded( true );
 
     // Creates Section for "Calculation Settings Unit"
-    final Section calculationSettingsSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    final Section calculationSettingsSection = toolkit.createSection( body, Section.TITLE_BAR );
     calculationSettingsSection.setText( Messages.getString( "CalculationUnitWidgetFace.1" ) ); //$NON-NLS-1$
-    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
     calculationSettingsSection.setLayoutData( tableWrapData );
     calculationSettingsSection.setExpanded( true );
 
     // Creates Section for "Calculation Elements Unit"
-    final Section calculationElementUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    final Section calculationElementUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
     calculationElementUnitSection.setText( Messages.getString( "CalculationUnitWidgetFace.2" ) ); //$NON-NLS-1$
-    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.FILL_GRAB, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
     calculationElementUnitSection.setLayoutData( tableWrapData );
     calculationElementUnitSection.setExpanded( true );
 
-    final Composite sectionFirstComposite = createCalculationUnit( calculationUnitSection, toolkit );
-    createCalculationSettingsSection( calculationSettingsSection, sectionFirstComposite, toolkit );
+    createCalculationUnit( calculationUnitSection, toolkit );
+    createCalculationSettingsSection( calculationSettingsSection, toolkit );
     createCalculationElements( calculationElementUnitSection, toolkit );
 
-    return rootPanel;
+    return body;
   }
 
-  private final Composite createCalculationUnit( final Section workStatusSection, final FormToolkit toolkit )
+  private final void createCalculationUnit( final Section workStatusSection, final FormToolkit toolkit )
   {
-    workStatusSection.setLayout( new FillLayout() );
-    final Composite sectionFirstComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
-    workStatusSection.setClient( sectionFirstComposite );
-    final FormLayout formLayout = new FormLayout();
-    sectionFirstComposite.setLayout( formLayout );
-    final FormData formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( 0, 5 );
-    sectionFirstComposite.setLayoutData( formData );
-
     final CalculationUnitComponent calcGUI = new CalculationUnitComponent( m_dataModel );
-    calcGUI.createControl( sectionFirstComposite );
-
-    return sectionFirstComposite;
+    final Control client = calcGUI.createControl( workStatusSection, toolkit );
+    workStatusSection.setClient( client );
   }
 
-  private void createCalculationSettingsSection( final Section settingsSection, final Composite sectionFirstComposite, final FormToolkit toolkit )
+  private void createCalculationSettingsSection( final Section settingsSection, final FormToolkit toolkit )
   {
     final Composite sectionSecondComposite = toolkit.createComposite( settingsSection, SWT.FLAT );
-    settingsSection.setLayout( new FillLayout() );
     settingsSection.setClient( sectionSecondComposite );
 
-    final FormLayout formLayout = new FormLayout();
-    sectionSecondComposite.setLayout( formLayout );
-    final FormData formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( sectionFirstComposite, 5 );
-    // formData.bottom = new FormAttachment( sectionThirdComposite, -5 );
-    sectionSecondComposite.setLayoutData( formData );
+    sectionSecondComposite.setLayout( new FormLayout() );
 
     final CalculationUnitAdministerComponent calcComplexSelectionGUI = new CalculationUnitAdministerComponent( m_dataModel );
     calcComplexSelectionGUI.createControl( sectionSecondComposite );
@@ -148,20 +124,8 @@ class CalculationUnitWidgetFace
 
   private void createCalculationElements( final Section elementStatusSection, final FormToolkit toolkit )
   {
-    elementStatusSection.setLayout( new FillLayout() );
-
-    final Composite sectionThirdComposite = toolkit.createComposite( elementStatusSection, SWT.FLAT );
-    elementStatusSection.setClient( sectionThirdComposite );
-    final FormLayout formLayout = new FormLayout();
-    sectionThirdComposite.setLayout( formLayout );
-
-    final FormData formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( sectionThirdComposite, 5 );
-    formData.bottom = new FormAttachment( 100, -5 );
-    sectionThirdComposite.setLayoutData( formData );
-
     final SelectedCalculationComponent calcElementGUI = new SelectedCalculationComponent( m_dataModel );
-    calcElementGUI.createControl( toolkit, sectionThirdComposite );
+    final Control client = calcElementGUI.createControl( elementStatusSection, toolkit );
+    elementStatusSection.setClient( client );
   }
 }

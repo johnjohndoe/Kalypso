@@ -58,7 +58,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCm
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * 
@@ -70,9 +69,7 @@ public class CalculationUnitComponent extends CalculationUnitMetaTable implement
 {
   public CalculationUnitComponent( final CalculationUnitDataModel model )
   {
-    super( model );
-
-    setRequiredButtons( BTN_SHOW_AND_MAXIMIZE, BTN_REMOVE, BTN_ADD );
+    super( model, BTN_SHOW_AND_MAXIMIZE, BTN_REMOVE, BTN_ADD );
   }
 
   /**
@@ -112,7 +109,6 @@ public class CalculationUnitComponent extends CalculationUnitMetaTable implement
         {
           super.process();
           // reset with list from model
-          IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
           List<ICalculationUnit> calUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
           dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
           // set current selection to null
@@ -133,14 +129,12 @@ public class CalculationUnitComponent extends CalculationUnitMetaTable implement
   protected List<ICalculationUnit> setInputContentProvider( )
   {
     final KeyBasedDataModel dataModel = getDataModel();
-    Object inputData = dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    if( inputData == null )
-    {
-      inputData = new ArrayList<IFeatureWrapper2>();
+    final Object inputData = dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+
+    if( inputData != null )
       return (List<ICalculationUnit>) inputData;
-    }
-    final List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    return calcList;
+
+    return new ArrayList<ICalculationUnit>();
   }
 
   /**
