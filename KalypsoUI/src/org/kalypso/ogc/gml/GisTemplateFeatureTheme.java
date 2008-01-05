@@ -342,8 +342,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           for( final String propName : propertyNames )
             m_theme.setProperty( propName, properties.get( propName ) );
 
-          // TODO is this really necessary?
-          invalidate( getFullExtent() );
           for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
             addStyle( style );
 
@@ -393,12 +391,18 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     }
     catch( final Throwable e )
     {
-      // alles abfangen, damit der Pool trotzdem weitermacht
-      e.printStackTrace();
-      // TODO: change status
+      final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, "Theme konnte nicht initialisiert werden: " + e.toString(), e );
+      KalypsoGisPlugin.getDefault().getLog().log( errorStatus );
+      setStatus( status );
+      return;
     }
 
-    invalidate( getFullExtent() );
+    // REMARK: accessing the full extent here may cause dead lock due to access to pool via x-linked features at this
+    // point.
+    // Also: Causes the map to hang during loading, so we don't do it, even if now the map always gets repaintet, even
+    // if the theme extent does not cover the map. invalidate( getFullExtent() );
+    invalidate( null );
+
     fireContextChanged();
     setStatus( status );
   }
@@ -709,7 +713,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
-  public void styleChanged( KalypsoUserStyle source )
+  public void styleChanged( final KalypsoUserStyle source )
   {
     fireStatusChanged();
   }
