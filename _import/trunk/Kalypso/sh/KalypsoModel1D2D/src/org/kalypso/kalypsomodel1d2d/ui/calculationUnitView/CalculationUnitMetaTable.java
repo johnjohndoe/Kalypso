@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -51,13 +52,15 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -78,10 +81,15 @@ import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -99,15 +107,30 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * @author Madanagopal
  * @author Dejan Antanaskovic
  */
-public abstract class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
+public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 {
+  /**
+   * Helper class to dispose the image of a button once the button gets diposed.
+   * 
+   * @author Gernot Belger
+   */
+  private final class DisposeButtonImageListener implements DisposeListener
+  {
+    private Button m_button;
+
+    public DisposeButtonImageListener( final Button button )
+    {
+      m_button = button;
+    }
+
+    public void widgetDisposed( final DisposeEvent e )
+    {
+      m_button.getImage().dispose();
+      m_button = null;
+    }
+  }
+
   private final KeyBasedDataModel m_dataModel;
-
-  private Image image;
-
-  private Image imageDown;
-
-  private Image imageUp;
 
   final private ISelectionChangedListener m_selectListener = new ISelectionChangedListener()
   {
@@ -199,7 +222,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     tableViewer.addColumn( "Name", "Name", null, 100, 100, false, SWT.LEFT, false ); //$NON-NLS-1$
 
     tableViewer.setContentProvider( new ArrayContentProvider() );
-    tableViewer.setLabelProvider( getLabelProvider( parent.getDisplay() ) );
+    tableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( parent.getDisplay() ) );
 
     tableViewer.setInput( setInputContentProvider() );
     tableViewer.addSelectionChangedListener( m_selectListener );
@@ -210,8 +233,9 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_UP ) )
     {
       final Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
-      imageUp = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).getImageData() ); //$NON-NLS-1$
+      final Image imageUp = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).getImageData() ); //$NON-NLS-1$
       moveUpBtn.setImage( imageUp );
+      moveUpBtn.addDisposeListener( new DisposeButtonImageListener( moveUpBtn ) );
       moveUpBtn.addSelectionListener( new SelectionAdapter()
       {
         @Override
@@ -222,14 +246,15 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
         }
       } );
 
-      moveUpBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) : "Move Up #" ); //$NON-NLS-1$
+      moveUpBtn.setToolTipText( "Move Up #" );
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) )
     {
       final Button moveDownBtn = new Button( btnComposite, SWT.PUSH );
-      imageDown = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_down.gif" ).getImageData() ); //$NON-NLS-1$
+      final Image imageDown = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_down.gif" ).getImageData() ); //$NON-NLS-1$
       moveDownBtn.setImage( imageDown );
+      moveDownBtn.addDisposeListener( new DisposeButtonImageListener( moveDownBtn ) );
       moveDownBtn.addSelectionListener( new SelectionAdapter()
       {
         @Override
@@ -239,14 +264,15 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
           tableViewer.refresh();
         }
       } );
-      moveDownBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) : "Move Down #" ); //$NON-NLS-1$
+      moveDownBtn.setToolTipText( "Move Down #" );
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_SHOW_AND_MAXIMIZE ) )
     {
       m_btnMaximizeCalcUnit = new Button( btnComposite, SWT.PUSH );
-      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/17_show_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
+      final Image image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/17_show_calculationunit.gif" ).getImageData() );
       m_btnMaximizeCalcUnit.setImage( image );
+      m_btnMaximizeCalcUnit.addDisposeListener( new DisposeButtonImageListener( m_btnMaximizeCalcUnit ) );
       m_btnMaximizeCalcUnit.addSelectionListener( new SelectionAdapter()
       {
         @SuppressWarnings("synthetic-access")
@@ -263,8 +289,9 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_REMOVE ) )
     {
       m_btnDeleteCalcUnit = new Button( btnComposite, SWT.PUSH );
-      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
+      final Image image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
       m_btnDeleteCalcUnit.setImage( image );
+      m_btnDeleteCalcUnit.addDisposeListener( new DisposeButtonImageListener( m_btnDeleteCalcUnit ) );
       m_btnDeleteCalcUnit.addSelectionListener( new SelectionAdapter()
       {
         @Override
@@ -291,8 +318,9 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_ADD ) )
     {
       m_btnCreateCalcUnit = new Button( btnComposite, SWT.PUSH );
-      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
+      final Image image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
       m_btnCreateCalcUnit.setImage( image );
+      m_btnCreateCalcUnit.addDisposeListener( new DisposeButtonImageListener( m_btnCreateCalcUnit ) );
       m_btnCreateCalcUnit.addSelectionListener( new SelectionAdapter()
       {
         @Override
@@ -316,14 +344,15 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_CLICK_TO_CALCULATE ) )
     {
       m_btnRunCalculation = new Button( btnComposite, SWT.PUSH );
-      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/startCalculation.gif" ).getImageData() ); //$NON-NLS-1$
+      final Image image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/startCalculation.gif" ).getImageData() ); //$NON-NLS-1$
+      m_btnRunCalculation.addDisposeListener( new DisposeButtonImageListener( m_btnRunCalculation ) );
       m_btnRunCalculation.setImage( image );
       m_btnRunCalculation.addSelectionListener( new SelectionAdapter()
       {
         @Override
         public void widgetSelected( final SelectionEvent event )
         {
-          handleRunPressed( parent, event );
+          handleRunPressed( event );
         }
       } );
       m_btnRunCalculation.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_CLICK_TO_CALCULATE" ) ); //$NON-NLS-1$
@@ -337,19 +366,57 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     return tableViewer;
   }
 
-  protected abstract boolean showDescription( );
+  protected void deleteSelected( )
+  {
+    final KeyBasedDataModel dataModel = getDataModel();
+    final ICalculationUnit calcUnitToDel = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    if( calcUnitToDel != null )
+    {
+      final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
+      final DeleteCalculationUnitCmd delCmd = new DeleteCalculationUnitCmd( model1d2d, calcUnitToDel )
+      {
+        /**
+         * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnit#process()
+         */
+        @Override
+        public void process( ) throws Exception
+        {
+          super.process();
+          // reset with list from model
+          List<ICalculationUnit> calUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
+          dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
+          // set current selection to null
+          dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, null );
+        }
+      };
+      KeyBasedDataModelUtil.postCommand( dataModel, delCmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+    }
+  }
 
-  protected abstract IBaseLabelProvider getLabelProvider( final Display display );
+  protected void moveSelection( @SuppressWarnings("unused")
+  final int delta )
+  {
+    throw new UnsupportedOperationException();
+  }
 
-  protected abstract void deleteSelected( ) throws Exception;
+  protected void createFeatureWrapper( )
+  {
+    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
-  protected abstract void moveSelection( final int delta );
+    final CreateCalculationUnitWizard calculationWizard = new CreateCalculationUnitWizard( getDataModel() );
+    final WizardDialog wizardDialog = new WizardDialog( shell, calculationWizard );
+    wizardDialog.open();
+  }
 
-  protected abstract String getBtnDescription( final String key );
+  @SuppressWarnings("unchecked")
+  protected List<ICalculationUnit> setInputContentProvider( )
+  {
+    final Object inputData = getDataModel().getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    if( inputData != null )
+      return (List<ICalculationUnit>) inputData;
 
-  public abstract void createFeatureWrapper( );
-
-  protected abstract List<ICalculationUnit> setInputContentProvider( );
+    return new ArrayList<ICalculationUnit>();
+  }
 
   private void maximizeSelected( )
   {
@@ -426,7 +493,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     display.syncExec( runnable );
   }
 
-  protected void handleRunPressed( final Composite parent, final SelectionEvent event )
+  protected void handleRunPressed( final SelectionEvent event )
   {
     final ICalculationUnit calculationUnit = getDataModel().getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
 
@@ -453,6 +520,9 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
       final Model1D2DSimulation runnable = new Model1D2DSimulation( shell, caseDataProvider, scenarioFolder, unitFolder, calculationUnit.getGmlID() );
       runnable.process();
+
+      // Force fire a data change event here, so the log get updated now
+      getDataModel().fireDataChanged( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, calculationUnit );
     }
   }
 

@@ -104,7 +104,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * 
  * @author Gernot Belger
  */
-public class Model1D2DSimulation
+public class Model1D2DSimulation implements ISimulation1D2DConstants
 {
   private static final String SIMULATION_LOG_GML = "simulation_log.gml";
 
@@ -181,12 +181,7 @@ public class Model1D2DSimulation
       // Additionally, everything is logged into the log of the KalypsoModel1D2D-Plug-In
       geoLog = new GeoLog( model1d2dlog );
 
-      final IGeoStatus logStatus = geoLog.formatLog( IStatus.INFO, "Start der Simulation" );
-      final Date startTime = logStatus.getTime();
-
-      process2( tmpDir, outputDir, startTime, geoLog );
-
-      geoLog.formatLog( IStatus.INFO, "Ende der Simulation" );
+      process2( tmpDir, outputDir, geoLog );
     }
     catch( final InvocationTargetException e )
     {
@@ -231,7 +226,7 @@ public class Model1D2DSimulation
    * <li>run result processing in progress dialog</li>
    * </ul>
    */
-  public void process2( final File tmpDir, final File outputDir, final Date startTime, final IGeoLog geoLog ) throws CoreException
+  public void process2( final File tmpDir, final File outputDir, final IGeoLog geoLog ) throws CoreException
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
 
@@ -251,54 +246,100 @@ public class Model1D2DSimulation
     /* Process rma10s calculation */
     final ICoreRunnableWithProgress calculationOperation = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( IProgressMonitor monitor ) throws CoreException
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
         return calculation.runCalculation( monitor );
       }
     };
 
+    final IGeoStatus logStatus = geoLog.formatLog( IStatus.INFO, CODE_RUNNING, "Start der Simulation" );
+    final Date startTime = logStatus.getTime();
     final IStatus simulationStatus = RunnableContextHelper.execute( workbench.getProgressService(), true, true, calculationOperation );
-    if( simulationStatus.isOK() )
-      MessageDialog.openInformation( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString( "CalculationUnitMetaTable.16" ) ); //$NON-NLS-1$ 
-    else if( simulationStatus.matches( IStatus.CANCEL ) )
-    {
-      MessageDialog.openInformation( m_shell, STRING_DLG_TITLE_RMA10S, "Die Operation wurde durch den Benutzer abgebrochen." ); //$NON-NLS-1$
+
+    /* Evaluate result of simulation */
+    final ResultManager resultManager = new ResultManager( tmpDir, outputDir, "A", controlModel, flowModel, scenarioResultMeta, geoLog );
+    final Date[] calculatedSteps = resultManager.findCalculatedSteps();
+
+    final ProcessResultsBean processBean = evaluateSimulationResult( simulationStatus, calculatedSteps, controlModel, geoLog );
+    if( processBean == null )
       return;
-    }
-    else
-    {
-      ErrorDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString( "CalculationUnitPerformComponent.3" ), simulationStatus ); //$NON-NLS-1$
-      if( simulationStatus.matches( IStatus.ERROR ) )
-        return;
-    }
 
     /* Result processing */
-    final ResultManager resultManager = new ResultManager( tmpDir, outputDir, "A", controlModel, flowModel, scenarioResultMeta, geoLog );
-    final Date[] calculatedSteps = resultManager.getCalculatedSteps();
-
-    // TODO: unterscheide verschiedene Problemarten:
-    // - 'programmier- bzw. datenfehler' rechnung konnte gar nicht gestartet werden
-    // - keine Ergebnisse
-    // - teilergebnisse
-    final boolean deleteAll = false;
-    final boolean deleteFollowers = true;
-    final Date[] userCalculatedSteps = calculatedSteps;
-
     final ICoreRunnableWithProgress resultOperation = new ICoreRunnableWithProgress()
     {
       public IStatus execute( IProgressMonitor monitor ) throws CoreException
       {
-        return processResults( resultManager, deleteAll, deleteFollowers, userCalculatedSteps, startTime, simulationStatus, geoLog, monitor );
+        return processResults( resultManager, processBean, startTime, simulationStatus, geoLog, monitor );
       }
     };
 
+    geoLog.formatLog( IStatus.INFO, CODE_RUNNING, "Start der Ergebnisauswertung" );
     final IStatus resultStatus = RunnableContextHelper.execute( workbench.getProgressService(), true, true, resultOperation );
     if( resultStatus.isOK() )
-      MessageDialog.openInformation( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Alle Ergebnisse wurden erfolgreich ausgewertet." ); //$NON-NLS-1$ 
+    {
+      geoLog.formatLog( IStatus.OK, CODE_RUNNING, "Ergebnisauswertung erfolgreich beendet" );
+      MessageDialog.openInformation( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Alle Ergebnisse wurden erfolgreich ausgewertet." );
+    }
     else if( resultStatus.matches( IStatus.CANCEL ) )
-      MessageDialog.openInformation( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Die Operation wurde durch den Benutzer abgebrochen." ); //$NON-NLS-1$
+    {
+      geoLog.formatLog( IStatus.WARNING, CODE_RUNNING, "Ergebnisauswertung durch den Benutzer abgebrochen." );
+      MessageDialog.openInformation( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Die Operation wurde durch den Benutzer abgebrochen." );
+    }
     else
-      ErrorDialog.openError( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Fehler beim Auswerten der Ergebnisse", resultStatus ); //$NON-NLS-1$ 
+    {
+      geoLog.formatLog( IStatus.ERROR, CODE_RUNNING, "Ergebnisauswertung mit Fehler beendet." );
+      geoLog.log( resultStatus );
+      ErrorDialog.openError( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Fehler beim Auswerten der Ergebnisse", resultStatus );
+    }
+  }
+
+  private ProcessResultsBean evaluateSimulationResult( final IStatus simulationStatus, final Date[] calculatedSteps, final IControlModel1D2D controlModel, final IGeoLog geoLog )
+  {
+    // TODO: distinguish different type of problems:
+    // - exe/data errors: calculation could not be started at all
+    // - no results
+    // - some results
+
+    // TODO: show dialog to user where he can
+    // - choose, which steps to process
+    // - choose, which results to be deleted
+
+    if( simulationStatus.isOK() )
+    {
+      geoLog.formatLog( IStatus.OK, CODE_RUNNING, "Simulation erfolgreich beendet" );
+      MessageDialog.openInformation( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString( "CalculationUnitMetaTable.16" ) ); //$NON-NLS-1$
+    }
+    else if( simulationStatus.matches( IStatus.CANCEL ) )
+    {
+      geoLog.formatLog( IStatus.WARNING, CODE_RUNNING, "Simulation durch den Benutzer abgebrochen." );
+      MessageDialog.openInformation( m_shell, STRING_DLG_TITLE_RMA10S, "Die Operation wurde durch den Benutzer abgebrochen." ); //$NON-NLS-1$
+      return null;
+    }
+    else
+    {
+      geoLog.log( simulationStatus );
+      ErrorDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString( "CalculationUnitPerformComponent.3" ), simulationStatus ); //$NON-NLS-1$
+      if( simulationStatus.matches( IStatus.ERROR ) )
+      {
+        geoLog.formatLog( IStatus.ERROR, CODE_RUNNING, "Simulation mit Fehler beendet. Abbruch der Ergebnisauswertung." );
+        return null;
+      }
+      else if( simulationStatus.matches( IStatus.WARNING ) )
+      {
+        geoLog.formatLog( IStatus.WARNING, CODE_RUNNING, "Simulation mit Warnung beendet. Ergebnisauswertung wird durchgeführt." );
+        // Only a warning: fall through to continue result processing
+      }
+    }
+
+    final ProcessResultsBean bean = new ProcessResultsBean();
+
+    // Remark: if not restart, always delete everything, in that
+    // case do not ask the user either
+    bean.deleteAll = !controlModel.getRestart();
+    bean.deleteFollowers = true;
+    bean.userCalculatedSteps = calculatedSteps;
+
+    return bean;
   }
 
   /**
@@ -340,7 +381,7 @@ public class Model1D2DSimulation
     return null;
   }
 
-  protected IStatus processResults( final ResultManager resultManager, final boolean deleteAll, final boolean deleteFollowers, final Date[] steps, final Date startTime, final IStatus simulationStatus, final IGeoLog geoLog, final IProgressMonitor monitor ) throws CoreException
+  protected IStatus processResults( final ResultManager resultManager, final ProcessResultsBean processBean, final Date startTime, final IStatus simulationStatus, final IGeoLog geoLog, final IProgressMonitor monitor ) throws CoreException
   {
     final IControlModel1D2D controlModel = resultManager.getControlModel();
     final IScenarioResultMeta scenarioMeta = resultManager.getScenarioMeta();
@@ -352,7 +393,8 @@ public class Model1D2DSimulation
     /* Process Results */
 
     // Step 1: Delete existing results and save result-DB (in case of problems while processing)
-    deleteExistingResults( scenarioMeta, calculationUnit, steps, deleteAll, deleteFollowers, progress.newChild( 5 ) );
+    geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Bestehende Ergebnisse werden gelöscht." );
+    deleteExistingResults( scenarioMeta, calculationUnit, processBean, progress.newChild( 5 ) );
 
     // Step 2: Create or find CalcUnitMeta and fill with data
     final ICalcUnitResultMeta existingCalcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
@@ -378,6 +420,13 @@ public class Model1D2DSimulation
     if( processResultsStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
       return processResultsStatus;
 
+    if( processResultsStatus.matches( IStatus.WARNING | IStatus.INFO ) )
+    {
+      if( ErrorDialog.openError( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Ergebnisauswertung wurde mit Warnung beendet.\nSollen die Ergebnisse übernommen werden?", processResultsStatus, IStatus.WARNING
+          | IStatus.INFO ) == ErrorDialog.CANCEL )
+        return processResultsStatus;
+    }
+
     // Step 5: Add geo log to calcMeta as document
     final IDocumentResultMeta logMeta = calcUnitMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
     logMeta.setName( "Simulations-Log" );
@@ -385,17 +434,15 @@ public class Model1D2DSimulation
     logMeta.setDocumentType( IDocumentResultMeta.DOCUMENTTYPE.log );
     logMeta.setPath( new Path( SIMULATION_LOG_GML ) );
 
-    // TODO: handle the processResultStatus?
-    // show error message and ask user if result should be kept anyway?
-
     // Step 5: Move results into workspace and save result-DB
+    geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Ergebnisse werden in Arbeitsbereich verschoben und Ergebnisdatenbank aktualisiert." );
     return moveResults( outputDir, progress.newChild( 5 ) );
   }
 
   /**
    * Delete all existing results inside the current result database.
    */
-  private IStatus deleteExistingResults( final IScenarioResultMeta scenarioMeta, final ICalculationUnit calcUnit, final Date[] calculatedSteps, final boolean deleteAll, final boolean deleteFollowers, final IProgressMonitor monitor ) throws CoreException
+  private IStatus deleteExistingResults( final IScenarioResultMeta scenarioMeta, final ICalculationUnit calcUnit, final ProcessResultsBean processBean, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
     progress.subTask( "Bestehende Ergebnisse werden gelöscht..." );
@@ -406,7 +453,7 @@ public class Model1D2DSimulation
     if( calcUnitMeta == null )
       return Status.OK_STATUS;
 
-    final Date[] stepsToDelete = findStepsToDelete( calcUnitMeta, calculatedSteps, deleteAll, deleteFollowers );
+    final Date[] stepsToDelete = findStepsToDelete( calcUnitMeta, processBean );
     ProgressUtilities.worked( progress, 5 );
 
     final IStatus result = ResultMeta1d2dHelper.deleteResults( calcUnitMeta, stepsToDelete, progress.newChild( 90 ) );
@@ -428,19 +475,19 @@ public class Model1D2DSimulation
     return result;
   }
 
-  private static Date[] findStepsToDelete( final ICalcUnitResultMeta calcUnitMeta, final Date[] calculatedSteps, final boolean deleteAll, final boolean deleteFollowers )
+  private static Date[] findStepsToDelete( final ICalcUnitResultMeta calcUnitMeta, final ProcessResultsBean processBean )
   {
     final Date[] existingSteps = ResultMeta1d2dHelper.getStepDates( calcUnitMeta );
 
-    if( deleteAll )
+    if( processBean.deleteAll )
       return existingSteps;
 
     final SortedSet<Date> dates = new TreeSet<Date>();
 
     /* Always delete all calculated steps */
-    dates.addAll( Arrays.asList( calculatedSteps ) );
+    dates.addAll( Arrays.asList( processBean.userCalculatedSteps ) );
 
-    if( deleteFollowers )
+    if( processBean.deleteFollowers && !dates.isEmpty() )
     {
       /* Delete all steps later than the first calculated */
       final Date firstCalculated = dates.first();

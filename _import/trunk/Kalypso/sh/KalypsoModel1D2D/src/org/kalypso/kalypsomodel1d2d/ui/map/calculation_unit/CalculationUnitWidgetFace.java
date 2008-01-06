@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable;
 
 /**
  * @author Patrice Congo
@@ -106,7 +107,7 @@ class CalculationUnitWidgetFace
 
   private final void createCalculationUnit( final Section workStatusSection, final FormToolkit toolkit )
   {
-    final CalculationUnitComponent calcGUI = new CalculationUnitComponent( m_dataModel );
+    final CalculationUnitMetaTable calcGUI = new CalculationUnitMetaTable( m_dataModel, CalculationUnitMetaTable.BTN_SHOW_AND_MAXIMIZE, CalculationUnitMetaTable.BTN_REMOVE, CalculationUnitMetaTable.BTN_ADD );
     final Control client = calcGUI.createControl( workStatusSection, toolkit );
     workStatusSection.setClient( client );
   }

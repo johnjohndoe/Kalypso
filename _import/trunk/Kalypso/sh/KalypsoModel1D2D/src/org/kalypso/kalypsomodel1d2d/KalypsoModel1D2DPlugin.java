@@ -29,6 +29,8 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+
+    m_imageProvider = new PluginImageProvider( this );
   }
 
   /**
@@ -39,6 +41,9 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
   {
     super.stop( context );
     plugin = null;
+
+    m_imageProvider.resetTmpFiles();
+    m_imageProvider = null;
   }
 
   /**

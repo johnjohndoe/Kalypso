@@ -40,12 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -66,22 +65,24 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
@@ -124,7 +125,7 @@ public class CalculationUnitLogComponent
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
     final GridData tableGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    table.setLayoutData( tableGridData );
 
     final FeatureWrapperLabelProvider labelProvider = new FeatureWrapperLabelProvider( logTableViewer )
     {
@@ -152,6 +153,12 @@ public class CalculationUnitLogComponent
           final IGeoStatus status = (IGeoStatus) element;
           switch( status.getSeverity() )
           {
+            case IGeoStatus.OK:
+              return KalypsoModel1D2DPlugin.getImageProvider().getImage( KalypsoModel1D2DUIImages.IMGKEY.OK );
+
+              // case IGeoStatus.CANCEL:
+              // return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_INCOMPLETE_TSK );
+
             case IGeoStatus.ERROR:
               return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
 
@@ -192,9 +199,9 @@ public class CalculationUnitLogComponent
       }
     } );
 
-    logTableViewer.addColumn( IGeoStatus.QNAME_PROP_STATUS_SEVERITY.toString(), "Art", null, -1, 0, false, SWT.LEFT, false );
-    logTableViewer.addColumn( NamedFeatureHelper.GML_DESCRIPTION.toString(), "Beschreibung", null, 500, -1, false, SWT.LEFT, true );
-    logTableViewer.addColumn( IGeoStatus.QNAME_PROP_STATUS_TIME.toString(), "Zeit", null, -1, -1, false, SWT.LEFT, false );
+    logTableViewer.addColumn( IGeoStatus.QNAME_PROP_STATUS_SEVERITY.toString(), "Art", null, 30, 0, false, SWT.CENTER, false );
+    logTableViewer.addColumn( NamedFeatureHelper.GML_DESCRIPTION.toString(), "Beschreibung", null, 500, 0, false, SWT.LEFT, true );
+    logTableViewer.addColumn( IGeoStatus.QNAME_PROP_STATUS_TIME.toString(), "Zeit", null, 150, 0, false, SWT.LEFT, false );
 
     noLogLabel.setVisible( false );
     noLogGridData.exclude = true;
@@ -210,13 +217,13 @@ public class CalculationUnitLogComponent
         if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) && newValue instanceof ICalculationUnit )
         {
           final List<IGeoStatus> list = findGeoStatusCollection( (ICalculationUnit) newValue );
-          if( list == null )
+          if( list == null || list.isEmpty() )
           {
             table.setVisible( false );
             noLogLabel.setVisible( true );
             noLogGridData.exclude = false;
             tableGridData.exclude = true;
-            logTableViewer.setInput( new Object[] {} );
+            ViewerUtilities.setInput( logTableViewer, new Object[] {}, false );
           }
           else
           {
@@ -247,10 +254,19 @@ public class CalculationUnitLogComponent
       final IGeoStatus status = (IGeoStatus) firstElement;
       final GM_Object location = status.getLocation();
 
-      if( location != null )
+      final MapPanel mapPanel = m_dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+
+      if( location instanceof GM_Point )
       {
-        final MapPanel mapPanel = m_dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
-        mapPanel.setBoundingBox( location.getEnvelope() );
+        final GM_Envelope panedBBox = mapPanel.getBoundingBox().getPaned( (GM_Point) location );
+        final GM_Envelope scaledEnvelope = GeometryUtilities.scaleEnvelope( panedBBox, 0.7 );
+        mapPanel.setBoundingBox( scaledEnvelope );
+      }
+      else if( location != null )
+      {
+        final GM_Envelope env = GeometryUtilities.getEnvelope( location );
+        final GM_Envelope envelope = env.getBuffer( env.getWidth() / 10 );
+        mapPanel.setBoundingBox( envelope );
       }
     }
   }
@@ -263,32 +279,36 @@ public class CalculationUnitLogComponent
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
       final IScenarioResultMeta scenarioMeta = dataProvider.getModel( IScenarioResultMeta.class );
       final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
+      if( calcUnitMeta == null )
+        return null;
 
-      final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
-      for( final IResultMeta resultMeta : children )
-      {
-        if( resultMeta instanceof IDocumentResultMeta )
-        {
-          final IDocumentResultMeta doc = (IDocumentResultMeta) resultMeta;
-          if( doc.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.log )
-          {
-            // HACK at the moment, the log has no unique identifier, so we use the end of the file name
-            if( doc.getPath().toString().endsWith( "log.gml" ) )
-            {
-              final IPath fullPath = doc.getFullPath();
-              final IFile logFile = scenarioFolder.getFile( fullPath );
-              final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( logFile ), null );
-              return (List<IGeoStatus>) workspace.getRootFeature().getAdapter( IStatusCollection.class );
-            }
-          }
-        }
-      }
+      final IFolder calcUnitFolder = scenarioFolder.getFolder( calcUnitMeta.getFullPath() );
+      final IResource logResource = calcUnitFolder.findMember( "simulation_log.gml" );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( logResource ), null );
+      return (List<IGeoStatus>) workspace.getRootFeature().getAdapter( IStatusCollection.class );
+
+      // final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
+      // for( final IResultMeta resultMeta : children )
+      // {
+      // if( resultMeta instanceof IDocumentResultMeta )
+      // {
+      // final IDocumentResultMeta doc = (IDocumentResultMeta) resultMeta;
+      // if( doc.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.log )
+      // {
+      // // HACK at the moment, the log has no unique identifier, so we use the end of the file name
+      // if( doc.getPath().toString().endsWith( "log.gml" ) )
+      // {
+      // final IPath fullPath = doc.getFullPath();
+      // final IFile logFile = scenarioFolder.getFile( fullPath );
+      // final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( logFile ), null
+      // );
+      // return (List<IGeoStatus>) workspace.getRootFeature().getAdapter( IStatusCollection.class );
+      // }
+      // }
+      // }
+      // }
     }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final Exception e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
     }

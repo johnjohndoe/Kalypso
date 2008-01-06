@@ -83,7 +83,7 @@ import org.kalypso.observation.result.TupleResult;
  * 
  * @author Gernot Belger
  */
-public class ResultManager
+public class ResultManager implements ISimulation1D2DConstants
 {
   public static final Date STEADY_DATE = new Date( 0 );
 
@@ -146,11 +146,24 @@ public class ResultManager
         fileStati[i] = processResultFile( file, m_controlModel, m_flowModel, calcUnitMeta, progress.newChild( 1 ) );
       }
 
-      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), -1, "", null );
+      final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "", null );
+      if( multiStatus.isOK() )
+        return StatusUtilities.createStatus( IStatus.OK, CODE_POST, "Alle Ergebnisse wurden erfolgreich ausgewertet.", null );
+
+      if( multiStatus.matches( IStatus.CANCEL ) )
+        return StatusUtilities.createStatus( IStatus.WARNING, CODE_POST, "Abbruch duch den Benutzer.", null );
+
+      if( multiStatus.matches( IStatus.WARNING ) )
+        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "Warnmeldungen beim Auswerten der Ergebnisse.", null );
+
+      if( multiStatus.matches( IStatus.ERROR ) )
+        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "Fehler beim Auswerten Ergebnisse.", null );
+
+      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "Unbekanntes Problem bei der Ergebnisauswertung.", null );
     }
     catch( final OperationCanceledException e )
     {
-      return StatusUtilities.createStatus( IStatus.CANCEL, "Abbruch durch den Benutzer", e );
+      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_POST, "Abbruch durch den Benutzer", e );
     }
     catch( final CoreException e )
     {
@@ -158,12 +171,10 @@ public class ResultManager
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, "Unbekannter Fehler", e );
+      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, "Unbekannter Fehler", e );
     }
   }
 
-  /* check for already processed files */
-  // TODO: care for status of each processed file -> step result status!
   private IStatus processResultFile( final File file, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final ICalcUnitResultMeta calcUnitResultMeta, final IProgressMonitor monitor ) throws CoreException
   {
     try
@@ -179,7 +190,7 @@ public class ResultManager
       if( stepDate == null )
         return Status.OK_STATUS;
 
-      m_geoLog.formatLog( IStatus.INFO, "Ergebnisauswertung - %s", resultFileName );
+      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Ergebnisauswertung - %s", resultFileName );
 
       // start a job for each unknown 2d file.
       final String outDirName;
@@ -236,7 +247,7 @@ public class ResultManager
     return null;
   }
 
-  public Date[] getCalculatedSteps( )
+  public Date[] findCalculatedSteps( )
   {
     final Set<Date> dates = new TreeSet<Date>();
     final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );

@@ -106,19 +106,19 @@ public class GeoLog implements IGeoLog
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#formatLog(int, java.lang.String, java.lang.Object[])
+   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#formatLog(int, int, java.lang.String, java.lang.Object[])
    */
-  public IGeoStatus formatLog( final int severity, final String message, final Object... args )
+  public IGeoStatus formatLog( final int severity, final int code, final String message, final Object... args )
   {
     final String msg = String.format( message, args );
-    return log( severity, msg, -1, null, null );
+    return log( severity, code, msg, null, null );
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#log(int, java.lang.String, int,
+   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#log(int, int, java.lang.String,
    *      org.kalypsodeegree.model.geometry.GM_Object, java.lang.Throwable)
    */
-  public IGeoStatus log( final int severity, final String message, final int code, final GM_Object location, final Throwable t )
+  public IGeoStatus log( final int severity, final int code, final String message, final GM_Object location, final Throwable t )
   {
     final Date now = new Date();
 
@@ -159,6 +159,7 @@ public class GeoLog implements IGeoLog
     final IGeoStatus newStatus = collection.addNew( IGeoStatus.QNAME );
 
     final int severity = status.getSeverity();
+
     final String message = status.getMessage();
     final int code = status.getCode();
     final GM_Object location = status instanceof IGeoStatus ? ((IGeoStatus) status).getLocation() : null;

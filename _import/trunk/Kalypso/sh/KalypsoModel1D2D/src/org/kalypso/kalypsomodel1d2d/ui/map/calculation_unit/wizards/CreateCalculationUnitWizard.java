@@ -44,10 +44,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -57,7 +54,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 
-public class CreateCalculationUnitWizard extends Wizard implements INewWizard
+public class CreateCalculationUnitWizard extends Wizard
 {
   private CreateCalculationUnitWizardPage m_page;
 
@@ -66,13 +63,13 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
   public CreateCalculationUnitWizard( final KeyBasedDataModel dataModel )
   {
     m_dataModel = dataModel;
-    super.setWindowTitle( Messages.getString("CreateCalculationUnitWizard.0") ); //$NON-NLS-1$
+    super.setWindowTitle( Messages.getString( "CreateCalculationUnitWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
   public void addPages( )
   {
-    m_page = new CreateCalculationUnitWizardPage( Messages.getString("CreateCalculationUnitWizard.1"), Messages.getString("CreateCalculationUnitWizard.2") ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page = new CreateCalculationUnitWizardPage( Messages.getString( "CreateCalculationUnitWizard.1" ), Messages.getString( "CreateCalculationUnitWizard.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_page );
   }
 
@@ -92,6 +89,10 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
       public void process( ) throws Exception
       {
         super.process();
+
+        // TODO: this is not the right place!
+        // Move it outside where this wizard is executed
+
         // reset list of calculation units
         final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
         final List<ICalculationUnit> calcUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
@@ -103,16 +104,6 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
     };
     KeyBasedDataModelUtil.postCommand( m_dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
     return true;
-  }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
-  {
-    // TODO Auto-generated method stub
-
   }
 
 }

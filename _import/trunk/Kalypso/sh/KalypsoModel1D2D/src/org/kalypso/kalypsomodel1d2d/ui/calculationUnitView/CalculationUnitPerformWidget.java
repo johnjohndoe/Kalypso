@@ -68,6 +68,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -89,8 +90,6 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   private final String m_toolTip;
 
   private IWidget m_strategy;
-
-  private Model1d2dCalUnitTheme m_calcUnitTheme;
 
   public CalculationUnitPerformWidget( )
   {
@@ -152,8 +151,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model ) );
       m_dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
 
-      m_calcUnitTheme = new Model1d2dCalUnitTheme( Messages.getString( "CalculationUnitPerformWidget.2" ), mapModell ); //$NON-NLS-1$
-      mapModell.insertTheme( m_calcUnitTheme, 0 );
+      // TODO: ulgy! This also causes a whole map repaint if selection in this widget changes
+      // Directly paint this stuff onto the map? Drawback: in that case, no buffering occurs so it is also slow...
+      final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( Messages.getString( "CalculationUnitPerformWidget.2" ), mapModell ); //$NON-NLS-1$
+      mapModell.insertTheme( calcUnitTheme, 0 );
 
       final CalculationUnitDataModel dataModel = m_dataModel;
       dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
@@ -162,13 +163,13 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
         {
           if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
           {
-            m_calcUnitTheme.setCalculationUnit( (ICalculationUnit) newValue );
+            calcUnitTheme.setCalculationUnit( (ICalculationUnit) newValue );
             KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
           }
         }
       } );
 
-      // command manager since it is use in the dirty pool object framework
+      // command manager since it is used in the dirty pool object framework
       // the commandable workspace of the target theme is taken
       // TODO: that cannot work, as the models workspace is not a commandable workspace
       m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, model.getWrappedFeature().getWorkspace() );
@@ -181,7 +182,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
 
       final IFlowRelationshipModel bcModel = Util.getModel( IFlowRelationshipModel.class );// (IFlowRelationshipModel)
 
-      m_calcUnitTheme.setModelBoundaryConditions( bcModel );
+      calcUnitTheme.setModelBoundaryConditions( bcModel );
     }
     catch( final CoreException e )
     {
@@ -254,8 +255,12 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       final IMapModell mapModell = mapPanel.getMapModell();
       if( mapModell != null )
       {
-        // TODO check if theme exists; if not, "removeTheme" causes NPE
-        mapModell.removeTheme( m_calcUnitTheme );
+        final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+        for( final IKalypsoTheme kalypsoTheme : allThemes )
+        {
+          if( kalypsoTheme instanceof Model1d2dCalUnitTheme )
+            mapModell.removeTheme( kalypsoTheme );
+        }
       }
     }
     catch( final Exception e )

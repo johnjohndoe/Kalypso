@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 
 /**
@@ -49,6 +50,29 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
  */
 public class KalypsoModel1D2DUIImages
 {
+  public enum IMGKEY implements ImageKey
+  {
+    OK("icons/elcl16/ok.gif");
+
+    private final String m_imagePath;
+
+    private IMGKEY( final String imagePath )
+    {
+      m_imagePath = imagePath;
+    }
+
+    /**
+     * @see org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey#getImagePath()
+     */
+    public String getImagePath( )
+    {
+      return m_imagePath;
+    }
+
+  }
+
+  // TODO: change all constants below to enum constants and use the plug-in image provider
+
   public static final ImageDescriptor ID_CHANGE = id( "icons/elcl16/change.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor ID_PLAY = id( "icons/elcl16/nav_go.gif" ); //$NON-NLS-1$

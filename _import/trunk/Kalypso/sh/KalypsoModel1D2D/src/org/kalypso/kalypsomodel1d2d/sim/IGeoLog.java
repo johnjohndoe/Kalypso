@@ -62,14 +62,14 @@ public interface IGeoLog
    * 
    * @see java.util.Formatter#format(String, Object...)
    */
-  IGeoStatus formatLog( int severity, String message, Object... args );
+  IGeoStatus formatLog( int severity, int code, String message, Object... args );
 
   /**
    * Add a logging message to this log. From the given parameters a {@link IGeoStatus} will be created and returned.
    * 
    * @return The newly created {@link IGeoStatus}.
    */
-  IGeoStatus log( int severity, String message, int code, GM_Object location, Throwable t );
+  IGeoStatus log( int severity, int code, String message, GM_Object location, Throwable t );
 
   void log( IStatus status );
 

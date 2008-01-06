@@ -68,13 +68,13 @@ public class KeyBasedDataModel
   public KeyBasedDataModel( final String[] keys, final IDataModelCheck modelCheck )
   {
     Assert.throwIAEOnNullParam( keys, "keys" );
+
     final String[] tempKeys = new String[keys.length];
-    String currentKey;
     try
     {
       for( int i = keys.length - 1; i >= 0; i-- )
       {
-        currentKey = keys[i];
+        final String currentKey = keys[i];
         tempKeys[i] = Assert.throwIAEOnNullOrEmpty( currentKey );
       }
     }
@@ -150,25 +150,21 @@ public class KeyBasedDataModel
     key = Assert.throwIAEOnNullOrEmpty( key );
     final int pos = findPosition( key );
     if( pos == NO_POS )
-    {
       throw new IllegalArgumentException( "Key not available:" + "\n\tCurrent key=" + key + "\n\tavailablekeys=" + Arrays.asList( m_keys ) );
-    }
-    else
-    {
-      m_data[pos] = newEntry;
-      if( m_dataChecks[pos] != null )
-      {
-        m_dataChecks[pos].update( key, newEntry, this );
-      }
-      if( m_modelCheck != null )
-      {
-        m_modelCheck.update( key, newEntry, this );
-      }
-      if( doNotify )
-      {
-        fireDataChanged( key, newEntry );
-      }
-    }
+
+    // Don't notify or check if value does not change
+    if( m_data[pos] == newEntry )
+      return;
+
+    m_data[pos] = newEntry;
+    if( m_dataChecks[pos] != null )
+      m_dataChecks[pos].update( key, newEntry, this );
+
+    if( m_modelCheck != null )
+      m_modelCheck.update( key, newEntry, this );
+
+    if( doNotify )
+      fireDataChanged( key, newEntry );
   }
 
   public void setDataCheck( String key, final IDataModelCheck newEntry )
@@ -195,6 +191,7 @@ public class KeyBasedDataModel
     m_modelCheck = modelCheck;
   }
 
+  // TODO: ?!? Use hashmap for such stuff! This is potentially slow
   private final int findPosition( final String key )
   {
     for( int i = 0; i < m_keys.length; i++ )
