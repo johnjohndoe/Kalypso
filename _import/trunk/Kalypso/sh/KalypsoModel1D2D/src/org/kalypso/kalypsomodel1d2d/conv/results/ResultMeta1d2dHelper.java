@@ -219,7 +219,7 @@ public class ResultMeta1d2dHelper
 
     for( final IResultMeta child : childs )
     {
-      monitor.subTask( child.getName() );
+      monitor.subTask( "Lösche " + child.getName() );
 
       if( child instanceof IStepResultMeta )
       {

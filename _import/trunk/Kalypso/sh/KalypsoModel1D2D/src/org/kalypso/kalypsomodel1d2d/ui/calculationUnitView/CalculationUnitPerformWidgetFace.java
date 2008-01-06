@@ -104,7 +104,7 @@ public class CalculationUnitPerformWidgetFace
 
   private void createCalculationUnitSection( final Section selectCalcUnitSection, final FormToolkit toolkit )
   {
-    final CalculationUnitPerformComponent calcSelect = new CalculationUnitPerformComponent( m_dataModel );
+    final CalculationUnitMetaTable calcSelect = new CalculationUnitMetaTable( m_dataModel, CalculationUnitMetaTable.BTN_SHOW_AND_MAXIMIZE, CalculationUnitMetaTable.BTN_CLICK_TO_CALCULATE );
     final Control client = calcSelect.createControl( selectCalcUnitSection, toolkit );
     selectCalcUnitSection.setClient( client );
   }
