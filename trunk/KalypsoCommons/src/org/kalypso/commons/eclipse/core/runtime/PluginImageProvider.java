@@ -61,10 +61,10 @@ import org.kalypso.contribs.java.io.StreamUtilities;
 /**
  * This class is a helper class to provide images from a central place.
  * <p>
- * It is intended to be used by every plugin which contributes images.
+ * It is intended to be used by every plug-in which contributes images.
  * </p>
  * <p>
- * This class is not intended to be subclassed. Each ui-plugin should have one instance.
+ * This class is not intended to be sub-classed. Each UI-plug-in should have one instance.
  * </p>
  * 
  * @author Gernot Belger
@@ -91,7 +91,7 @@ public class PluginImageProvider
   }
 
   /**
-   * Deletes alls previously via {@link #getTmpURL(ImageKey)} created temporary image files.
+   * Deletes all previously via {@link #getTmpURL(ImageKey)} created temporary image files.
    * <p>
    * Should be called on every startup
    * </p>
@@ -102,17 +102,13 @@ public class PluginImageProvider
   }
 
   /**
-   * Util method for image re-use in Intro Plugin.
+   * Utility method for image re-use Plug-in.
    * 
    * @param key
    * @return
    */
   public Image getImage( final ImageKey key )
   {
-    // INTRO: Image registry should not have the same life span
-    // as the intro plug-in. It should be disposed when
-    // presentation is disposed, otherwise images will
-    // stay around once Inro has been loaded.
     registerImage( key );
 
     return getImageRegistry().get( key.name() );
@@ -150,7 +146,7 @@ public class PluginImageProvider
     return AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( m_plugin ), path );
   }
 
-  /** Returns the image descriptor for the fiven key. Does not create an image. */
+  /** Returns the image descriptor for the given key. Does not create an image. */
   public ImageDescriptor getImageDescriptor( final ImageKey key )
   {
     final String path = key.getImagePath();
