@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public interface ICapabilitiesLoader
 {
   /**
-   * This function inits this laoder. It must be called before calling getCapabilitiesStream().
+   * This function inits this loader. It must be called before calling getCapabilitiesStream().
    * 
    * @param baseURL
    *            The service URL.
