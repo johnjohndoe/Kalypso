@@ -228,9 +228,6 @@ public class ResultManager implements ISimulation1D2DConstants
       final String countStr = matcher.group( 1 );
       final int step = Integer.parseInt( countStr );
 
-      // find TIME
-      // final boolean isRestart = controlModel.getRestart();
-      // final Integer restartStep = controlModel.getIaccyc();
       final IObservation<TupleResult> obs = controlModel.getTimeSteps();
       final TupleResult timeSteps = obs.getResult();
       final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );

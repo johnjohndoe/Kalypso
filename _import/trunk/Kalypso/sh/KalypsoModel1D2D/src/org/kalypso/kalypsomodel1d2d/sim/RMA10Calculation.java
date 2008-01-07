@@ -44,9 +44,9 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -55,11 +55,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Building1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
@@ -71,11 +73,15 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * 
+ * Represents a calculation with a rma10s.exe. Helps generation of the ASCII input files and to start the process.
  */
-public class RMA10Calculation
+public class RMA10Calculation implements ISimulation1D2DConstants
 {
   public static final String MODEL_2D = "model.2d";
 
@@ -122,7 +128,7 @@ public class RMA10Calculation
     final String version = m_controlModel.getVersion();
 
     if( version.equals( "Version3.5" ) )
-      return RMA10SimModelConstants.SIM_EXE_FILE_3_5;
+      return ISimulation1D2DConstants.SIM_EXE_FILE_3_5;
 
     throw new CoreException( StatusUtilities.createErrorStatus( "Rechenkern-Version nicht unterstützt: " + version ) );
   }
@@ -157,16 +163,16 @@ public class RMA10Calculation
 
     try
     {
-      m_log.formatLog( IStatus.INFO, "Schreibe RMA10s-ASCII Dateien für FE-Simulation" );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe RMA10s-ASCII Dateien für FE-Simulation" );
 
       /* Read restart data */
-      m_log.formatLog( IStatus.INFO, "Restart-Daten werden gelesen" );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Restart-Daten werden gelesen" );
       progress.subTask( "Schreibe ASCII-Daten: Restart-Daten werden gelesen..." );
       final RestartNodes m_restartNodes = RestartNodes.createRestartNodes( m_scenarioFolder, m_controlModel );
       ProgressUtilities.worked( progress, 20 );
 
       /* .2d File */
-      m_log.formatLog( IStatus.INFO, "Schreibe Finite Elemente Netz" );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe Finite Elemente Netz" );
       monitor.subTask( "Schreibe ASCII-Daten: Finite Elemente Netz..." );
       final File modelFile = new File( m_tmpDir, MODEL_2D );
       final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
@@ -175,26 +181,26 @@ public class RMA10Calculation
       ProgressUtilities.worked( progress, 20 );
 
       /* Control File */
-      m_log.formatLog( IStatus.INFO, "Schreibe Randbedingungen und Berechnungssteuerung" );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe Randbedingungen und Berechnungssteuerung" );
       progress.subTask( "Schreibe ASCII-Daten: Randbedingungen und Berechnungssteuerung..." );
-      final File r10file = new File( m_tmpDir, RMA10SimModelConstants.R10_File );
+      final File r10file = new File( m_tmpDir, ISimulation1D2DConstants.R10_File );
       final BuildingIDProvider buildingProvider = converter2D.getBuildingProvider();
       final Control1D2DConverter controlConverter = new Control1D2DConverter( m_controlModel, m_flowRelationshipModel, m_roughnessModel, converter2D, buildingProvider );
       controlConverter.writeR10File( r10file );
       ProgressUtilities.worked( progress, 20 );
 
       /* Building File */
-      m_log.formatLog( IStatus.INFO, "Schreibe Bauwerke" );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe Bauwerke" );
       progress.subTask( "Schreibe ASCII-Daten: Bauwerke..." );
-      final File buildingFile = new File( m_tmpDir, RMA10SimModelConstants.BUILDING_File );
+      final File buildingFile = new File( m_tmpDir, ISimulation1D2DConstants.BUILDING_File );
       final Building1D2DConverter buildingConverter = new Building1D2DConverter( buildingProvider );
       buildingConverter.writeBuildingFile( buildingFile );
       ProgressUtilities.worked( progress, 20 );
 
       /* W/Q BC File */
-      m_log.formatLog( IStatus.INFO, "Schreibe W/Q-Randbedingungen" );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe W/Q-Randbedingungen" );
       progress.subTask( "Schreibe ASCII-Daten: W/Q-Randbedingungen..." );
-      final File bcWQFile = new File( m_tmpDir, RMA10SimModelConstants.BC_WQ_File );
+      final File bcWQFile = new File( m_tmpDir, ISimulation1D2DConstants.BC_WQ_File );
       final WQboundaryConditions1D2DConverter bc1D2DConverter = new WQboundaryConditions1D2DConverter( controlConverter.getBoundaryConditionsIDProvider() );
       bc1D2DConverter.writeWQbcFile( bcWQFile );
       ProgressUtilities.worked( progress, 20 );
@@ -202,7 +208,7 @@ public class RMA10Calculation
     catch( final IOException e )
     {
       final String msg = String.format( "Fehler beim Schreiben einer RMA10s-ASCII Datei: %s", e.getLocalizedMessage() );
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, CODE_PRE, msg, e ) );
     }
     finally
     {
@@ -214,10 +220,10 @@ public class RMA10Calculation
   {
     try
     {
-      m_log.formatLog( IStatus.INFO, "Kopiere Rechenkern in temporäres Verzeichnis..." );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Kopiere Rechenkern in temporäres Verzeichnis..." );
       monitor.subTask( "Kopiere Rechenkern in temporäres Verzeichnis..." );
 
-      final String exeResource = RMA10SimModelConstants.RMA10S_BASE + getKalypso1D2DKernelPath();
+      final String exeResource = ISimulation1D2DConstants.RMA10S_BASE + getKalypso1D2DKernelPath();
       final File destFile = new File( m_tmpDir, RMA10S_KALYPSO_EXE );
       final URL exeUrl = getClass().getResource( exeResource );
       FileUtils.copyURLToFile( exeUrl, destFile );
@@ -225,7 +231,7 @@ public class RMA10Calculation
     catch( final IOException e )
     {
       final String msg = String.format( "Fehler beim Kopieren der rma10s.exe aus den Programm-Resourcen: %s", e.toString() );
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, CODE_PRE, msg, e ) );
     }
     finally
     {
@@ -239,11 +245,16 @@ public class RMA10Calculation
    */
   private IStatus startCalcCore( final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+    final IObservation<TupleResult> obs = m_controlModel.getTimeSteps();
+    final TupleResult timeSteps = obs.getResult();
+    final int numberOfSteps = timeSteps.size(); // TODO: adjust by restart?!
+
+    final SubMonitor progress = SubMonitor.convert( monitor, numberOfSteps );
     progress.subTask( "RMA10s wird ausgeführt..." );
 
     /* Create the result folder for the .exe file, must be same as in Control-Converter */
-    new File( m_tmpDir, Control1D2DConverter.RESULT_DIR_NAME ).mkdirs();
+    final File resultDir = new File( m_tmpDir, Control1D2DConverter.RESULT_DIR_NAME );
+    resultDir.mkdirs();
 
     FileOutputStream logOS = null;
     FileOutputStream errorOS = null;
@@ -258,30 +269,57 @@ public class RMA10Calculation
       final ICancelable progressCancelable = new ProgressCancelable( progress );
       // TODO: somehow monitor progress of executable via its output...
 
-      m_log.formatLog( IStatus.INFO, "RMA10s wird ausgeführt: %s", commandString );
+      final ItrReadJob itrReadJob = new ItrReadJob( "Read Output.itr", new File( resultDir, "Output.itr" ) );
+      itrReadJob.setPriority( Job.INTERACTIVE );
+      itrReadJob.setSystem( true );
+      itrReadJob.schedule( 2000 );
 
-      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 500, null );
+      final Runnable idleRunnable = new Runnable()
+      {
+        private int m_stepNr = -1;
 
-      // TODO: read other outputs: error-log; iteration-log
+        public void run( )
+        {
+          int stepNr = itrReadJob.getStepNr();
+          if( stepNr != m_stepNr )
+          {
+            m_stepNr = stepNr;
+            progress.subTask( "RMA10s wird ausgeführt - Schritt " + stepNr );
+            progress.worked( 1 );
+          }
+        }
+      };
+
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA10s wird ausgeführt: %s", commandString );
+      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, idleRunnable );
+
+      // TODO: read other outputs: error-log
+
+      try
+      {
+        itrReadJob.join();
+      }
+      catch( final InterruptedException e )
+      {
+        final IStatus itrStatus = StatusUtilities.createStatus( IStatus.WARNING, "Fehler beim Auswerten des Iterations-Log", e );
+        m_log.log( itrStatus );
+      }
 
       // Check for success
       final File errorFile = findErrorFile( m_tmpDir );
       if( errorFile == null )
-      {
-        m_log.formatLog( IStatus.INFO, "Simulation wurde erfolgreich beendet." );
         return StatusUtilities.createOkStatus( "Simulation wurde erfolgreich beendet." );
-      }
 
       /* ERROR: return contents of error file as error message */
       final String errorMessage = FileUtils.readFileToString( errorFile, Charset.defaultCharset().name() );
-      final String message = String.format( "Fehlermeldung vom Rechenkern (ERROR.DAT):%n---%n%s%n---%n%n", errorMessage );
-      m_log.formatLog( IStatus.WARNING, message );
+      final IStatus errorStatus = errorToStatus( errorMessage );
 
-      return StatusUtilities.createWarningStatus( message );
+      final String message = String.format( "Fehlermeldung vom Rechenkern (ERROR.DAT):%n%s", errorStatus.getMessage() );
+      return StatusUtilities.createStatus( IStatus.WARNING, CODE_RMA10S, message, null );
     }
     catch( final Throwable e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Ausführen der " + RMA10S_KALYPSO_EXE, e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, CODE_RMA10S, "Fehler beim Ausführen der " + RMA10S_KALYPSO_EXE, e );
       throw new CoreException( status );
     }
     finally
@@ -312,10 +350,27 @@ public class RMA10Calculation
     return null;
   }
 
-  public Date[] getCalculatedSteps( )
+  private IStatus errorToStatus( final String errorMessage )
   {
+    final String[] lines = errorMessage.split( "\n" );
+    if( lines.length != 7 )
+      return StatusUtilities.createStatus( IStatus.ERROR, CODE_RMA10S, "RMA10s Fehlerausgabe konnte nicht geparst werden: " + errorMessage, null );
 
-    // TODO Auto-generated method stub
-    return null;
+    final int severity = IStatus.ERROR; // at the moment, all outputs are ERROR's
+    final String message = lines[0];
+
+    final GM_Object location;
+    if( lines[5].length() < 52 )
+      location = null;
+    else
+    {
+      final BigDecimal rw = new BigDecimal( lines[5].substring( 13, 26 ).trim() );
+      final BigDecimal hw = new BigDecimal( lines[5].substring( 38, 51 ).trim() );
+
+      location = GeometryFactory.createGM_Point( rw.doubleValue(), hw.doubleValue(), KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+    }
+
+    return m_log.log( severity, CODE_RMA10S, message, location, null );
   }
+
 }
