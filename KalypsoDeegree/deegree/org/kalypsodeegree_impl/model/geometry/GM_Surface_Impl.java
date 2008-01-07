@@ -82,7 +82,10 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Surface interface from package jago.model.
@@ -754,5 +757,27 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     {
       throw new GM_Exception( e.getLocalizedMessage(), e );
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    Debug.debugMethodBegin( this, "transformSurface" );
+
+    final int cnt = size();
+    final GM_SurfacePatch[] patches = new GM_SurfacePatch[cnt];
+
+    for( int i = 0; i < cnt; i++ )
+    {
+      patches[i] = (GM_SurfacePatch) get( i ).transform( trans, targetOGCCS );
+    }
+
+    // at the moment only polygons made of one patch are supported
+    // TODO: change it!
+    Debug.debugMethodEnd();
+    return GeometryFactory.createGM_Surface( patches[0] );
   }
 }

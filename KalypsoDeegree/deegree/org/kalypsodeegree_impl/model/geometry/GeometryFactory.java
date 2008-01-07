@@ -80,6 +80,7 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -296,6 +297,22 @@ final public class GeometryFactory
       in = new GM_Position[interior.length][];
       for( int j = 0; j < in.length; j++ )
         in[j] = positionsFromDoubles( interior[j], dim );
+    }
+
+    return createGM_SurfacePatch( ext, in, new GM_SurfaceInterpolation_Impl(), crs );
+  }
+
+  public static GM_SurfacePatch createGM_SurfacePatch( final GM_Ring exterior, final GM_Ring[] interior, final CS_CoordinateSystem crs ) throws GM_Exception
+  {
+    final GM_Position[] ext = exterior.getPositions();
+    final GM_Position[][] in;
+    if( interior == null || interior.length == 0 )
+      in = null;
+    else
+    {
+      in = new GM_Position[interior.length][];
+      for( int j = 0; j < in.length; j++ )
+        in[j] = interior[j].getPositions();
     }
 
     return createGM_SurfacePatch( ext, in, new GM_SurfaceInterpolation_Impl(), crs );
@@ -1088,6 +1105,14 @@ final public class GeometryFactory
     return myList.toArray( new GM_Position[] {} );
   }
 
+  public static GM_Triangle_Impl createGM_Triangle( final GM_Position[] pos, final CS_CoordinateSystem crs ) throws GM_Exception
+  {
+    if( pos.length != 3 )
+      return null;
+
+    return new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+  }
+
   public static GM_Triangle_Impl createGM_Triangle( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     return new GM_Triangle_Impl( pos1, pos2, pos3, crs );
@@ -1135,4 +1160,14 @@ final public class GeometryFactory
     return new GM_Ring_Impl( positions, crs );
   }
 
+  public static GM_TriangulatedSurface createGM_TriangulatedSurface( GM_Triangle[] triangles, CS_CoordinateSystem targetOGCCS ) throws GM_Exception
+  {
+    GM_TriangulatedSurface triangulatedSurface = createGM_TriangulatedSurface( targetOGCCS );
+
+    for( GM_Triangle triangle : triangles )
+    {
+      triangulatedSurface.add( triangle );
+    }
+    return triangulatedSurface;
+  }
 }

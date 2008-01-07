@@ -61,6 +61,7 @@
 package org.kalypsodeegree.model.geometry;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -207,4 +208,10 @@ public interface GM_Object extends IAdaptable
   public void invalidate( );
 
   public Object clone( ) throws CloneNotSupportedException;
+
+  /**
+   * handles the geo-coordinate-transformation for a {@link GM_Object}
+   */
+  public GM_Object transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception;
+
 }

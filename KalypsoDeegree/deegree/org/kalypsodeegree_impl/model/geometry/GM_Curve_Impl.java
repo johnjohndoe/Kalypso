@@ -74,7 +74,10 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Curve interface from package jago.model.
@@ -808,6 +811,36 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     ret = "segments = " + m_segments + "\n";
     ret += ("envelope = " + getEnvelope() + "\n");
     return ret;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    Debug.debugMethodBegin( this, "transformCurve" );
+
+    final GM_CurveSegment[] newcus = new GM_CurveSegment[getNumberOfCurveSegments()];
+
+    for( int i = 0; i < getNumberOfCurveSegments(); i++ )
+    {
+      final GM_CurveSegment cus = getCurveSegmentAt( i );
+      GM_Position[] pos = cus.getPositions();
+
+      // transformed positions-array
+      GM_Position[] newpos = new GM_Position[pos.length];
+
+      for( int j = 0; j < pos.length; j++ )
+      {
+        newpos[j] = pos[j].transform( trans, targetOGCCS );
+      }
+      newcus[i] = GeometryFactory.createGM_CurveSegment( newpos, targetOGCCS );
+    }
+
+    Debug.debugMethodEnd();
+    return GeometryFactory.createGM_Curve( newcus );
+
   }
 
 }
