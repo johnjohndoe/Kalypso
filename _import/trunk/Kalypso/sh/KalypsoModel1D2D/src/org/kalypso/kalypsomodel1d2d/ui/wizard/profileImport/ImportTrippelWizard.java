@@ -130,7 +130,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     /* Do import */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+      public IStatus execute( final IProgressMonitor monitor )
       {
         monitor.beginTask( Messages.getString( "ImportTrippelWizard.13" ), 2 ); //$NON-NLS-1$
 
@@ -141,7 +141,9 @@ public class ImportTrippelWizard extends Wizard implements IWizard
 
           /* get file name from wizard */
           final File trippelFile = m_ProfilePage.getFile();
-          List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+          final String separator = m_ProfilePage.getSeparator();
+          
+          List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile,separator, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
 
           monitor.worked( 1 );
 
