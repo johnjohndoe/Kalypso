@@ -271,6 +271,7 @@ public class ProcessHelper
         }
 
         if( idleWorker != null )
+        {
           try
           {
             idleWorker.run();
@@ -279,6 +280,7 @@ public class ProcessHelper
           {
             t.printStackTrace();
           }
+        }
 
         Thread.sleep( sleepTime );
       }
