@@ -190,6 +190,8 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_separatorCombo.addKeyListener( this );
     
     m_separatorCombo.setItems( SEPARATOR );
+    m_separatorCombo.select( 0 );
+    
     setControl( m_topComposite );
   }
 
