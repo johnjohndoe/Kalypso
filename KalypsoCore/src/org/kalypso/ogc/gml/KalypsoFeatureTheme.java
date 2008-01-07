@@ -85,7 +85,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /* Preserve order of styles. */
   private final Map<KalypsoUserStyle, UserStylePainter> m_styleDisplayMap = new LinkedHashMap<KalypsoUserStyle, UserStylePainter>();
 
-  private final CommandableWorkspace m_workspace;
+  private CommandableWorkspace m_workspace;
 
   private final IFeatureType m_featureType;
 
@@ -135,14 +135,17 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( final KalypsoUserStyle element : styles )
       removeStyle( element );
 
-    m_workspace.removeModellListener( this );
+    if( m_workspace != null )
+    {
+      m_workspace.removeModellListener( this );
+      m_workspace = null;
+    }
 
     super.dispose();
   }
 
   private void setDirty( )
   {
-
     invalidate( getFullExtent() );
   }
 
