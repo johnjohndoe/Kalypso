@@ -174,7 +174,10 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_checkCRS.setLayoutData( data );
     m_checkCRS.addSelectionListener( this );
     m_checkCRS.addKeyListener( this );
-
+    
+    final Label dummy1 = new Label( m_group, SWT.NONE );
+    
+    
     final Label seperatorLabel = new Label( m_group, SWT.NONE );
     seperatorLabel.setText( "Trennzeichen:" );
 
