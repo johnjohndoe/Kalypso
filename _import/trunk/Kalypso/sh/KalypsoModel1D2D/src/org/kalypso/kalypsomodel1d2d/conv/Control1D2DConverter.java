@@ -68,7 +68,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation.KIND;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.kalypsomodel1d2d.sim.RMA10SimModelConstants;
+import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
@@ -175,9 +175,9 @@ public class Control1D2DConverter
       formatter.format( "RESTART%n" ); //$NON-NLS-1$
 
     /* Write W/Q file, even if it is empty. */
-    formatter.format( "STFLFIL %s%n", RMA10SimModelConstants.BC_WQ_File ); //$NON-NLS-1$
+    formatter.format( "STFLFIL %s%n", ISimulation1D2DConstants.BC_WQ_File ); //$NON-NLS-1$
     /* We always write a building file, even if it is empty. */
-    formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.BUILDING_File ); //$NON-NLS-1$
+    formatter.format( "INCSTR  %s%n", ISimulation1D2DConstants.BUILDING_File ); //$NON-NLS-1$
 
     formatter.format( "ENDFIL%n" ); //$NON-NLS-1$
 
