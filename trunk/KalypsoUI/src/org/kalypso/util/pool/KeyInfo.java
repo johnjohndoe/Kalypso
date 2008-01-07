@@ -96,8 +96,10 @@ public final class KeyInfo extends Job implements ILoaderListener
 
     synchronized( this )
     {
-      if( m_object != null )
+      if( m_object != null ) {
         m_loader.release( m_object );
+        m_object = null;
+      }
     }
   }
 

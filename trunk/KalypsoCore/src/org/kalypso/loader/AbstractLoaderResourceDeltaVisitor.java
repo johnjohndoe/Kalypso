@@ -50,6 +50,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.IKalypsoCoreConstants;
 
 /**
@@ -78,7 +79,7 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
 
   /**
    * TRICKY: manchmal hat der Pfad der Resource zwei slashes, manchmal nicht. Deswegen dieser Methode: sie ersetzt die
-   * "//" mit "/" wenn es notwendig ist. Der PFad wird letztendlich als key für der Map benutzt, um zu prüfen ob eine
+   * "//" mit "/" wenn es notwendig ist. Der Pfad wird letztendlich als key für der Map benutzt, um zu prüfen ob eine
    * Resource schon da ist.
    * 
    * @param resource
@@ -108,6 +109,25 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
       final IResource resource = m_objectMap.get( o );
 
       m_resourceMap.remove( pathFor( resource ) );
+
+      // HACK: The m_object map has the object as key.
+      // A shape adds more than one resource with the same object (workspace), so only the last is stored.
+      // The m_resourceMap however has the resources as key and the workspace as value.
+      // This means all resources are stored.
+      // This leads to a bug, where only the last (in case of the shape it is the .shx file) will be removed.
+      // The other resources will remain in the map.
+      // This solves it, but is an ugly hack.
+      String pathFor = pathFor( resource );
+      if( pathFor.endsWith( ".shx" ) )
+      {
+        String path = pathFor.substring( 0, pathFor.length() - 4 );
+        String shpPath = path + ".shp";
+        String dbfPath = path + ".dbf";
+
+        m_resourceMap.remove( shpPath );
+        m_resourceMap.remove( dbfPath );
+      }
+
       m_objectMap.remove( o );
     }
   }

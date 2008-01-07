@@ -60,7 +60,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
    * @param commandManager
    * @param rule
    * @param bUndo
-   *          falls true is die Undo-Action, sonst die Redo-Action
+   *            falls true is die Undo-Action, sonst die Redo-Action
    */
   public UndoRedoAction( final ICommandManager commandManager, final ISchedulingRule rule, final boolean bUndo )
   {
@@ -87,14 +87,17 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
   @Override
   public void run( )
   {
-    if( ( m_isUndo && m_commandManager.canUndo() ) || ( !m_isUndo && m_commandManager.canRedo() ) )
+    if( (m_isUndo && m_commandManager.canUndo()) || (!m_isUndo && m_commandManager.canRedo()) )
       new CommandJob( null, m_commandManager, m_rule, null, m_isUndo ? CommandJob.UNDO : CommandJob.REDO );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     if( m_commandManager != null )
+    {
       m_commandManager.removeCommandManagerListener( this );
+      m_commandManager = null;
+    }
   }
 
   private void refresh( final ICommandManager cm )
@@ -104,7 +107,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
     if( cm != null )
     {
       enabled = m_isUndo ? cm.canUndo() : cm.canRedo();
-      text = m_isUndo ? ( "Undo: " + cm.getUndoDescription() ) : ( "Redo: " + cm.getRedoDescription() );
+      text = m_isUndo ? ("Undo: " + cm.getUndoDescription()) : ("Redo: " + cm.getRedoDescription());
     }
 
     setEnabled( enabled );
