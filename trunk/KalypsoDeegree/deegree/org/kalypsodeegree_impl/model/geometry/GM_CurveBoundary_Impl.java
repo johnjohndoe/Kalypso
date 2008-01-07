@@ -69,6 +69,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -285,4 +286,17 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   {
     return "point1: [" + m_sp + "] - point2: [" + m_ep + "]";
   }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    final GM_Position transStartPos = getStartPoint().transform( trans, targetOGCCS );
+    final GM_Position transEndPos = getEndPoint().transform( trans, targetOGCCS );
+
+    return new GM_CurveBoundary_Impl( targetOGCCS, transStartPos, transEndPos );
+  }
+
 }

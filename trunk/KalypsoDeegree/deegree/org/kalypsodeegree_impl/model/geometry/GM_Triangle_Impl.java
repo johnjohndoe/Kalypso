@@ -195,4 +195,5 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
 
     throw new IllegalStateException();
   }
+
 }

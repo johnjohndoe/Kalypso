@@ -53,6 +53,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -62,6 +63,8 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -585,5 +588,26 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
     }
 
     return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    Debug.debugMethodBegin( this, "transformTriangulatedSurface" );
+
+    final int cnt = size();
+    final GM_Triangle[] triangles = new GM_Triangle[cnt];
+
+    for( int i = 0; i < cnt; i++ )
+    {
+      triangles[i] = (GM_Triangle) get( i ).transform( trans, targetOGCCS );
+    }
+
+    Debug.debugMethodEnd();
+    return GeometryFactory.createGM_TriangulatedSurface( triangles, targetOGCCS );
+
   }
 }

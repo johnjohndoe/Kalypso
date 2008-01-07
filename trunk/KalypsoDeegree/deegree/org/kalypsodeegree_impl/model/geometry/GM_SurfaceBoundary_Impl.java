@@ -70,6 +70,9 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.tools.Debug;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_SurfaceBoundary interface.
@@ -346,5 +349,31 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
     {
       gmobj.invalidate();
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    Debug.debugMethodBegin( this, "transformSurface" );
+
+    /* exterior ring */
+    final GM_Ring ex = getExteriorRing();
+    final GM_Ring transEx = (GM_Ring) ex.transform( trans, targetOGCCS );
+
+    /* interior rings */
+    final GM_Ring[] in = getInteriorRings();
+    final GM_Ring[] transIn = new GM_Ring[in.length];
+
+    for( int j = 0; j < in.length; j++ )
+    {
+      transIn[j] = (GM_Ring) in[j].transform( trans, targetOGCCS );
+    }
+
+    Debug.debugMethodEnd();
+    return new GM_SurfaceBoundary_Impl( transEx, transIn );
+
   }
 }

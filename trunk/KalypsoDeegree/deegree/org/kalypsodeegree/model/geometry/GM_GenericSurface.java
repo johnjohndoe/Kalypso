@@ -61,6 +61,7 @@
 
 package org.kalypsodeegree.model.geometry;
 
+
 /**
  * The interface defines the basis of surfaces and surface patches
  * <p>
@@ -73,7 +74,6 @@ package org.kalypsodeegree.model.geometry;
  */
 public interface GM_GenericSurface
 {
-
   /**
    * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
    */

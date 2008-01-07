@@ -66,7 +66,10 @@ import java.util.List;
 
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -316,5 +319,25 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     }
 
     return new GM_MultiPoint_Impl( myPoints.toArray( new GM_Point[] {} ) );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    Debug.debugMethodBegin( this, "transformMultiPoint" );
+
+    final GM_Point[] points = new GM_Point[getSize()];
+
+    for( int i = 0; i < getSize(); i++ )
+    {
+      points[i] = (GM_Point) getPointAt( i ).transform( trans, targetOGCCS );
+    }
+
+    Debug.debugMethodEnd();
+    return GeometryFactory.createGM_MultiPoint( points );
+
   }
 }

@@ -71,6 +71,8 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -275,7 +277,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     final GM_Point gmp = getCurveAt( 0 ).getCentroid();
 
     final double[] cen = new double[gmp.getAsArray().length];
-    
+
     final int dimSize = Math.min( cen.length, getCoordinateDimension() );
 
     for( int i = 0; i < size; i++ )
@@ -283,13 +285,13 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
       cnt += getCurveAt( i ).getNumberOfCurveSegments();
 
       final double[] pos = getCurveAt( i ).getCentroid().getAsArray();
-      
+
       // pos.length is always 2, so we have ArrayIndexOutOfBoundsException always when dimSize > 2
       // TODO consider this
-      
+
       final int dimSize2 = Math.min( pos.length, dimSize );
       for( int j = 0; j < dimSize2; j++ )
-//      for( int j = 0; j < dimSize; j++ )
+// for( int j = 0; j < dimSize; j++ )
       {
         cen[j] += pos[j];
       }
@@ -361,5 +363,24 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     }
 
     return new GM_MultiCurve_Impl( myCurves.toArray( new GM_Curve[] {} ) );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    Debug.debugMethodBegin( this, "transformMultiCurve" );
+
+    final GM_Curve[] curves = new GM_Curve[getSize()];
+
+    for( int i = 0; i < getSize(); i++ )
+    {
+      curves[i] = (GM_Curve) getCurveAt( i ).transform( trans, targetOGCCS );
+    }
+
+    Debug.debugMethodEnd();
+    return GeometryFactory.createGM_MultiCurve( curves );
   }
 }

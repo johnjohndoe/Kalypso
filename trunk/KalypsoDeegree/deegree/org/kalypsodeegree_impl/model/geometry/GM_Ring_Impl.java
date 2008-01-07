@@ -75,6 +75,8 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -435,5 +437,26 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
     m_sp = null;
 
     super.invalidate();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    Debug.debugMethodBegin( this, "transformRing" );
+
+    GM_Position[] pos = getPositions();
+    GM_Position[] transPos = new GM_Position[pos.length];
+
+    for( int i = 0; i < pos.length; i++ )
+    {
+      transPos[i] = pos[i].transform( trans, targetOGCCS );
+    }
+
+    Debug.debugMethodEnd();
+    return GeometryFactory.createGM_Ring( transPos, targetOGCCS );
+
   }
 }

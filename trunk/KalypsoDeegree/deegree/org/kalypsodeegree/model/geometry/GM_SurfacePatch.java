@@ -61,6 +61,7 @@
 
 package org.kalypsodeegree.model.geometry;
 
+import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -127,4 +128,10 @@ public interface GM_SurfacePatch extends GM_GenericSurface
    */
 
   /* #GM_GenericCurve lnkGM_GenericCurve; */
+
+  /**
+   * handles the geo-coordinate-transformation for a {@link GM_Object}
+   */
+  public GM_GenericSurface transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception;
+
 }

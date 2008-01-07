@@ -60,10 +60,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.geometry;
 
+import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.opengis.cs.CS_CoordinateSystem;
+
 /**
  * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is
  * derived from the CRS or coordinate dimension of the container.
- * 
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -77,23 +79,23 @@ public interface GM_Position
   /**
    * returns the x-value of the point
    */
-  public double getX();
+  public double getX( );
 
   /**
    * returns the y-value of the point
    */
-  public double getY();
+  public double getY( );
 
   /**
    * returns the z-value of the point
    */
-  public double getZ();
+  public double getZ( );
 
   /**
    * returns the x- and y-value of the point as a two dimensional array the first field contains the x- the second field
    * the y-value.
    */
-  public double[] getAsArray();
+  public double[] getAsArray( );
 
   /**
    * translates the coordinates of the position. the first coordinate of the position will be translated by the first
@@ -102,4 +104,9 @@ public interface GM_Position
   public void translate( double[] d );
 
   public double getDistance( GM_Position position );
+
+  /**
+   * handles the geo-coordinate-transformation for a {@link GM_Object}
+   */
+  public GM_Position transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception;
 }

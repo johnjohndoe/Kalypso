@@ -68,8 +68,10 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_GenericSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -514,4 +516,30 @@ class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
 
     throw (new IllegalStateException());
   }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public GM_SurfacePatch transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    /* exterior ring */
+    final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
+    final GM_Ring transExRing = (GM_Ring) exRing.transform( trans, targetOGCCS );
+
+    /* interior rings */
+    final GM_Position[][] interiors = getInteriorRings();
+    if( interiors == null )
+      return GeometryFactory.createGM_SurfacePatch( transExRing, null, targetOGCCS );
+    final GM_Ring[] transInRings = new GM_Ring[interiors.length];
+
+    for( int j = 0; j < interiors.length; j++ )
+    {
+      final GM_Ring inRing = GeometryFactory.createGM_Ring( interiors[j], getCoordinateSystem() );
+      transInRings[j] = (GM_Ring) inRing.transform( trans, targetOGCCS );
+    }
+
+    return GeometryFactory.createGM_SurfacePatch( transExRing, transInRings, targetOGCCS );
+  }
+
 }

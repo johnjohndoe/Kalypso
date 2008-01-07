@@ -62,9 +62,7 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * The interface defines the access to curve boundaries
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -75,12 +73,11 @@ package org.kalypsodeegree.model.geometry;
  */
 public interface GM_CurveBoundary extends GM_PrimitiveBoundary
 {
-
   /** gets the start position of a boundary */
-  public GM_Position getStartPoint();
+  public GM_Position getStartPoint( );
 
   /** gets the end position of a boundary */
-  public GM_Position getEndPoint();
+  public GM_Position getEndPoint( );
 
   /**
    * @link aggregationByValue
