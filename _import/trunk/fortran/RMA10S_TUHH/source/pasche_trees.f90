@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Sep 2007    4:49 pm
+!     Last change:  WP   17 Dec 2007    4:39 pm
 !--------------------------------------------------------------------------------------------
 ! This code, pasche_trees.f90,determines the impact of tree vegetation
 ! for hydrodynamic simulations in the library 'Kalypso-2D'.
@@ -122,7 +122,7 @@ end do
 
 all_elements: do i = 1, ne
 
-  if (imat(i) <= 0 .or. abst(i) < 0.0001) then
+  if (imat(i) <= 0 .or. abst(i) < 0.0001 .or. imat(i) == 89) then
 
     ! Deactivated element or element without trees
     c_wr(i) = 1.30

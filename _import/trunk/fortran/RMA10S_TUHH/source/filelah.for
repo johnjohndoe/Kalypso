@@ -1,4 +1,4 @@
-C     Last change:  WP   31 Aug 2007    6:08 pm
+C     Last change:  WP    8 Jan 2008   11:11 am
 cipk  last update SEP 05 2006 FIX AMASSOUT BUG
 cipk  last update MAY 30 2006 add MASS OUTPUT OPTION
 cipk  last update june 28 2005 add time series option
@@ -73,43 +73,45 @@ CIPK DEC00      DATA VOID/-1.E20/
       LIN=2
       LOUT=3
 
-!NiS,mar06,com: In dependency of the switch NT, two general jobs are possible for file.subroutine
-!               NT = 1: First call (called from RMA10.program); the general files are read and opened
-!               NT = 2: Second call (called from input.subroutine); output file LOUT is opened
-!-
-      !NiS,mar06,com: Second call
-      IF( NT .EQ. 2) THEN
+!nis,comment
+!In dependency of the switch NT, two general jobs are possible for file.subroutine
+!NT = 1: First call (called from RMA10.program); the general files are read and opened
+!NT = 2: Second call (called from input.subroutine); output file LOUT is opened
+
+      !Second call
+      IF (NT == 2) THEN
         CLOSE (LOUT)
-        FNAME=FNAM(1:LNNAM) // '.out'
-        OPEN(LOUT,FILE=FNAME,STATUS='UNKNOWN')
+        FNAME = FNAM (1:LNNAM) // '.out'
+        OPEN (LOUT, FILE = FNAME, STATUS = 'UNKNOWN')
         RETURN
-      !NiS,mar06,com: First call
+
+      !First call
       ELSE
+      
+        !Adding some missing unit number initializations
+        !meteorological data
+        MMET = 0
+        !tidalgraph
+        IHUNIT = 0
+        !Q-graph for continuity line
+        IQUNIT = 0
+        !Q-graph for element inflow
+        IQEUNIT = 0
+        !tidal coefficient graph
+        KEY = 0
+        !wind data graph
+        IWINDIN = 0
+        !-
 
-      !nis,jun07: Adding some missing unit number initializations
-      !meteorological data
-      mmet = 0
-      !tidalgraph
-      IHUNIT = 0
-      !Q-graph for continuity line
-      IQUNIT = 0
-      !Q-graph for element inflow
-      IQEUNIT = 0
-      !tidal coefficient graph
-      KEY = 0
-      !wind data graph
-      IWINDIN = 0
-      !-
-
+        !Adding unit initializations for KALYPSO-format
+        !Kalypso-2D input file
+        IKALYPSOFM = 0 
 
 CIPK MAY02
 C......IWVIN  = INPUT WAVE DATA FILE
         IWVIN=0
 C......IWVFC  = INPUT SURFACE STRESS FILE
         IWVFC=0
-!NiS,apr06: adding KALYPSO-2D unit initializations:
-        IKALYPSOFM = 0 !Kalypso-2D input file
-!-
 C......JBEDOT = OUTPUT BED DATA FILE
         JBEDOT=0
         IFILE=0
@@ -200,13 +202,9 @@ cipk jun01  this is logic to determine the driectory of the initial r10 file
 
         write(*,*) 'lnnnam',lnnnam
         write(*,'(a)') fnam0(1:lnnnam)
+
       if(lnnnam .gt. 0) then
         fnamd=fnam0(1:lnnnam)
-
-cWP Jan 2006, Intel FORTRAN subroutine, not available in Lahey FORTRAN
-cWP Jan 2006, seems to have no function at all ??!!
-cWP        statud = CHANGEDIRQQ(fnamd)
-
       endif
 
   200 CONTINUE
@@ -219,7 +217,7 @@ cipk sep99
 cipk sep99 add test for blank initial characters
 
         DO K=1,96
-          IF(FNAMIN(K:K) .NE. ' ') THEN 
+          IF(FNAMIN(K:K) .NE. ' ') THEN
             KS=K
             GO TO 201
           ENDIF
@@ -228,7 +226,8 @@ cipk sep99 add test for blank initial characters
   201   DO K=KS,96
           FNAME(K-KS+1:K-KS+1)=FNAMIN(K:K)
         ENDDO
- 
+
+
 !NiS,mar06,com: Start of test for file type; first 8 digits show type
 
         IF(ID .EQ. 'OUTFIL  ') THEN
@@ -238,9 +237,11 @@ cipk sep99 add test for blank initial characters
           FNAM6=FNAM(1:LNNAM) // '.ech'
           OPEN(LOUT,FILE=FNAM6,STATUS='UNKNOWN')
           FNAM1=FNAM(1:LNNAM) // '.itr'
-          !nis,dec06: chosen unit number for LITR
+          !TODO:
+          !Find a good unit number and not 1234
+          !Chosen unit number for LITR
           LITR = 1234
-          !-
+
           OPEN(LITR,FILE=FNAM1,STATUS='UNKNOWN')
 CIPK SEP04
           FNAMMES=FNAM(1:LNNAM)// 'MESS.OUT'
@@ -296,9 +297,9 @@ cipk oct99 add iostat test
           IF (LEN(TRIM(FNAME)) > 32) THEN
             CLOSE (75)
             OPEN(75,FILE='ERROR.OUT')
-            WRITE(75,*) ' ERROR - MODELL NAME TO LONG; ONLY 32 DIGITS',
+            WRITE(75,*) ' ERROR - MODEL NAME TO LONG; ONLY 32 DIGITS',
      +                  ' ALLOWED'
-            WRITE(*,*)  ' ERROR - MODELL NAME TO LONG; ONLY 32 DIGITS',
+            WRITE(*,*)  ' ERROR - MODEL NAME TO LONG; ONLY 32 DIGITS',
      +                  ' ALLOWED'
             WRITE(75,*) '   EXECUTION TERMINATED'
             WRITE(*,*) '   EXECUTION TERMINATED'
@@ -317,23 +318,32 @@ cipk oct99 add iostat test
             WRITE(*,*) '   EXECUTION TERMINATED'
             STOP
           ENDIF
+
           !If additional CONTROL-line, read data
           itefreq = 0 !Set default value
           READ (FNAMIN,*,iostat = ioerr) ct, iaccyc, modellaus, itefreq
-          IF (ioerr .EQ.-1 .or. itefreq .eq.0) THEN
-            WRITE(*   , *) 'no results after iteration will be written'
-            WRITE(Lout, *) 'no results after iteration will be written'
+
+          IF (ioerr == -1 .or. itefreq == 0) THEN
+            WRITE(*   , 7002)
+            WRITE(Lout, 7002)
+ 7002 FORMAT (1x, 'no results after iteration will be written')
             ioerr = 0
+
           ELSE
-            WRITE (*,*) 'Output file will be written every',itefreq,
-     +                  'st/nd/th iteration.'
-            WRITE (Lout,*) 'Output file will be written every',itefreq,
-     +                  'st/nd/th iteration.'
+            WRITE (   *, 7003) itefreq
+            WRITE (Lout, 7003) itefreq
+ 7003 format ('Output file will be written every', i2,
+     +        'st/nd/rd/th iteration')
           ENDIF
+
+          !TODO
+          !What is this for?
           itefreq = itefreq
-          !Determine the unit number of output file; Hope this unit is not used yet, but
-          !testing yields, that this number is free.
+
+          !TODO
+          !Is unit no. 77 good or bad
           IKALYPSOFM = 77
+
           !Restarting is also predetermined. It is dependent on the time step to start from. If
           !the timestep to start from is (iaccyc == 1), then no restart file is taken because it
           !is started from the first step. If the value (iaccyc > 1), then restarting is forced:
@@ -745,9 +755,9 @@ CIPK AUG02 ADD SMS FORMAT OUTPUT
           FNAM25=FNAME
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .EQ. 'SWANFL  ') THEN
-	    SWANFL=FNAME
+          SWANFL=FNAME
           ISWANR=1
-	    FNAM26=FNAME
+          FNAM26=FNAME
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ELSEIF(ID .eq. 'OUTBNICE') THEN
           IBEDOT=103
@@ -898,7 +908,7 @@ CIPK      START FORMING HEADER
         HEADER(J:J)=' '
       ENDDO
       HEADER(1:10)='RMA10     '
-      CALL DATE_AND_TIME(DATEC,TIMEC,ZONEC,DTI)
+      CALL DATE_AND_TIME (DATEC,TIMEC,ZONEC,DTI)
       HEADER(11:20)=DATEC
       HEADER(21:30)=TIMEC
       HEADER(31:40)=ZONEC

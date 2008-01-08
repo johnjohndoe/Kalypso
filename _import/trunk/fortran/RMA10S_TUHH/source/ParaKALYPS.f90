@@ -1,4 +1,4 @@
-!     Last change:  WP   28 Nov 2007    2:00 pm
+!     Last change:  WP    8 Jan 2008   11:06 am
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -78,6 +78,9 @@ REAL (KIND = 8), DIMENSION (1:50, 1:350) :: LineCorrectionKS, LineCorrectionAxAy
 INTEGER, allocatable:: IsNodeOfElement(:,:)
 
 REAL (KIND = 8), ALLOCATABLE, dimension (:):: lambdaKS, lambdaP, lambdaDunes, lambdaTot
+
+!nis,jan08: New output control paramters
+INTEGER :: WriteNodeBlock     ! (==1: Writes the nodal values into output.out file; ==0: Writes no nodal values into output.out)
 
 
 END MODULE 

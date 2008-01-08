@@ -1,4 +1,4 @@
-C     Last change:  WP   28 Nov 2007    1:58 pm
+C     Last change:  WP   15 Dec 2007    5:33 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -46,7 +46,7 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 c     Initialisation of values
 
       NBS=5000000
-	MFW=1000
+      MFW=1000
       NBSS=NBS
       LBMAX=NBSS
       MFWW=MFW
@@ -105,7 +105,7 @@ C        READ(DLIN,'(I8)') MAXSTP
       ENDIF
       GO TO 200
   250 CONTINUE
-	WRITE(LOUT,6012) MAXP
+      WRITE(LOUT,6012) MAXP
       WRITE(LOUT,6013) MAXE
       WRITE(LOUT,6000) MFWW
       WRITE(LOUT,6001) NBSS
@@ -135,11 +135,11 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
  6014 FORMAT(' MAXIMUM NUMBER OF LAYERS   SET TO             ',I8)
  6015 FORMAT(' MAXIMUM NUMBER OF SED LAYERS  SET TO          ',I8)
       MFW=MFWW
-	NBS=NBSS
+      NBS=NBSS
 
       ALLOCATE (EQ(MFWW,MFWW),LHED(MFWW),QQ(MFWW),PVKOL(MFWW)
      + ,LDEST(MFWW),QR(MFWW))
-	ALLOCATE (LHS(NBS),QS(NBS))
+      ALLOCATE (LHS(NBS),QS(NBS))
 
 
       ALLOCATE (CORD(MAXP,3),VEL(7,MAXP),AO(MAXP),AORIG(MAXP))
@@ -399,8 +399,8 @@ CIPK MAR01
         THL(J)=0.
         DO K=1,NLAYMX
           THLAY(J,K)=1.0
-	  ENDDO
-	ENDDO
+        ENDDO
+      ENDDO
       DO J = 1, MAXP
         IBN(J)=0
         IBNA(J)=0
@@ -503,8 +503,8 @@ cipk sep06
         BEDORIG(J)=0.
         DEPINCR(J)=0.
 CIPK JUN05
-	  WHGT(J)=-10000.
-	  TRANSEL(J)=-10000.
+        WHGT(J)=-10000.
+        TRANSEL(J)=-10000.
         NSPL(J)=0
         NSTRT(J,1)=0
         NSTRT(J,2)=0
@@ -547,18 +547,18 @@ CIPK SEP02
         ICETHKOL(J)=0.
 CIPK MAY02
         STRESS(J,1)=0.
-  	  STRESS(J,2)=0.
+        STRESS(J,2)=0.
         STR10(J)=0.
-	  STR11(J)=0.
-	  STR20(J)=0.
-	  STR21(J)=0.
+        STR11(J)=0.
+        STR20(J)=0.
+        STR21(J)=0.
 CIPK SEP02
         WAVEHT(J)=0.
         WAVEDR(J)=0.
         PEAKPRD(J)=0.
-	  TTHICK(J)=0.
-	  DELBED(J)=0.
-	  ELEVB(J)=0.
+        TTHICK(J)=0.
+        DELBED(J)=0.
+        ELEVB(J)=0.
         DO K = 1, 4
           NDROP(J,K)=0
         ENDDO
@@ -573,7 +573,7 @@ CIPK SEP02
           VOLD(K,J) = 0.0
           V2OL(K,J)=0.0
           NBCKP(J,K)=0
-	  ENDDO
+        ENDDO
 CIPK NOV97
         HDET(J)=0.
         HDOT(J)=0.
@@ -582,7 +582,7 @@ CIPK NOV97
         DO K=1,20
           NOP(J,K)=0
           NOPSS(J,K)=0
-	  ENDDO
+        ENDDO
         IMAT(J)=0
 !NiS,apr06: increased number of variables:
 !        DO K=1,14
@@ -650,9 +650,9 @@ CIPK NOV97
             MANTAB(J,K,L)=0
           ENDDO
         ENDDO
-	  EDD1(J)=1.0
-	  EDD2(J)=0.0
-	  EDD3(J)=0.
+        EDD1(J)=1.0
+        EDD2(J)=0.0
+        EDD3(J)=0.
         ZMANN(J)=0.
         CHEZ(J)=0.
         TH(J)=0.0
@@ -664,19 +664,19 @@ CIPK NOV97
 cipk nov99
         DFCT(J)=0.0
 CIPK MAR01
-	  ELMMIN(J)=0.0
-	  MANMIN(J)=0.0
-	  ELMMAX(J)=0.0
-	  MANMAX(J)=0.0
-	  DRAGX(J)=0.0
-	  DRAGY(J)=0.
+        ELMMIN(J)=0.0
+        MANMIN(J)=0.0
+        ELMMAX(J)=0.0
+        MANMAX(J)=0.0
+        DRAGX(J)=0.0
+        DRAGY(J)=0.
 cipk jan02
         SIDFF(J)=0.0
 
       ENDDO
       DO I=1,MAXP
         ISTLIN(I)=0.
-	ENDDO
+      ENDDO
       DO I=1,20
         STQA(I)=0.
         STQC(I)=0.
@@ -721,7 +721,6 @@ CIPK MAR01
       ALLOCATE (CNIKU(MaxE), DURCHBAUM(MaxE), ABST(MaxE))
       ALLOCATE (C_WR(MaxE))
       ALLOCATE (mh(MaxE), mvx(MaxE), mvy(MaxE), mvxvy(MaxE))
-      ALLOCATE (rausv(4,MaxP))
       DO j=1, MaxE
         CNIKU(j)     = 0.0
         DURCHBAUM(j) = 0.0
@@ -956,6 +955,7 @@ CIPK MAR01
       !-
 
       ALLOCATE (minvel (1:3, 1:maxp), maxvel (1:3, 1:maxp))
+      ALLOCATE (rausv(1:4, MaxP))
       allocate (minrausv (1:MaxP), maxrausv (1:MaxP))
       do i = 1, maxp
         minrausv (i) = 100000.0d0
@@ -963,6 +963,9 @@ CIPK MAR01
         do j = 1, 3
           maxvel (j, i) = 0.0d0
           minvel (j, i) = 100000.0d0
+        end do
+        do j = 1, 4
+          rausv (j, i) = 0.0d0
         end do
       end do
 
@@ -981,4 +984,4 @@ CIPK MAR01
       !-
 
       RETURN
-	END
+      END

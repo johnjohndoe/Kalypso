@@ -1,4 +1,4 @@
-C     Last change:  WP    9 Nov 2007    8:07 am
+C     Last change:  WP    8 Jan 2008   11:11 am
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -439,15 +439,25 @@ cipk MAR03 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTART FILES
 cipk mar06 allow for output file rewind      
         READ(DLIN,'(3I8)') IOUTFREQ,IOUTRST,IOUTRWD
         call ginpt(lin,id,dlin)
-	  WRITE(LOUT,6024) IOUTFREQ,IOUTRST,IOUTRWD
-	  IF(IOUTRWD .EQ. 0) IOUTRWD=NCYC+1
-	  IF(IOUTFREQ .EQ. 0) IOUTFREQ=1
-	  IF(IOUTRST .EQ. 0) IOUTRST=10
-	ELSE
-	  IOUTFREQ=1
-	  IOUTRST=10
-	  IOUTRWD=NCYC+1
+        WRITE(LOUT,6024) IOUTFREQ,IOUTRST,IOUTRWD
+        IF(IOUTRWD .EQ. 0) IOUTRWD=NCYC+1
+        IF(IOUTFREQ .EQ. 0) IOUTFREQ=1
+        IF(IOUTRST .EQ. 0) IOUTRST=10
+      ELSE
+        IOUTFREQ=1
+        IOUTRST=10
+        IOUTRWD=NCYC+1
       ENDIF
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      !nis,jan08: New control line for additional output options
+      if (ID(1:2) == 'C7') then
+        read (DLIN, '(I8)') WriteNodeBlock
+        call ginpt (lin, id, dlin)
+      !Set the standard values
+      else
+        WriteNodeBlock = 0
+      end if
 
 CIPK ADD ICNSV AND IAVEL AND MAKE ORDER OPTIONAL
       ICNSV=0
@@ -709,12 +719,12 @@ cipk aug01 add Multi PWR line option
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JAN03 ADD DATA LINE FOR EQUILIBRIUM TEMPERATURE FORMULATION
       
-	METEQ=0
+      METEQ=0
       IF(ID(1:3) .EQ. 'EQT') THEN
         READ(DLIN,'(3F8.0)') EQTEMP,XKRAT,EXTING
         WRITE(LOUT,6107)
         WRITE(LOUT,6108) EQTEMP,XKRAT,EXTING
-	  METEQ=1
+        METEQ=1
         call ginpt(lin,id,dlin)
       ENDIF
 CIPK HAN03 END ADDITION
@@ -745,95 +755,82 @@ C-
 !-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       NMAT=0
-   25 CONTINUE
-      IF(ID(1:3) .EQ. 'ED1') THEN
-        READ(DLIN,5030) J,(ORT(J,K),K=1,7)
-        write(*,*) 'read ed1'
 
-        IF(NMAT .LT. J) NMAT=J
-        NDATLN=NDATLN+1
-!NiS,apr06: After adding the option of vegetation roughness calculation, the user must be
-!           informed about wrong combination of Parameters; the new concept says, that, if
-!           the value (ORT(J,5) == -1.0) there are equivalent sand roughnesses applied. These
-!           correspond with the vegetation roughness calculation (Pasche/Lindner). The other
-!           roughness approaches (MANNING-parameter; CHEZY-parameter) do not correspond. If
-!           the user wants to calculate with vegetation roughnesses, the IPASCHE-switch is
-!           set to 1 (see above). If so, all the ORT(J,5) parameters MUST be -1.0 to show, that
-!           an additional line is read in for the definition of the element material class:
-        IF (IVEGETATION ==1 .and. ORT(J,5) /= -1.0) THEN
-          write ( *,6810) !Error message, see below!
-          write (75,6810)
-          stop
-        END IF
-!-
-CIPK NOV97      READ(LIN,7000) ID,DLIN
-        call ginpt(lin,id,dlin)
+      ElementCharacteristics: Do
+        IF(ID(1:3) .EQ. 'ED1') THEN
+          READ(DLIN,5030) J,(ORT(J,K),K=1,7)
+          write(*,*) 'read ed1'
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        IF(ID(1:3) .EQ. 'ED2') THEN
-cipk nov97  add extra friction
-CIPK NOV98 ADD SURFACE FICTION
-          READ(DLIN,5031) (ORT(J,K),K=8,14)
-          write(*,*) 'read ed2'
-cipk mar98 
-          if(ort(j,12) .eq. 0.) ort(j,12)=1.
+          IF(NMAT .LT. J) NMAT=J
           NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
           call ginpt(lin,id,dlin)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          IF(ID(1:3) .EQ. 'ED2') THEN
+cipk nov97  add extra friction
+CIPK NOV98 ADD SURFACE FICTION
+            READ(DLIN,5031) (ORT(J,K),K=8,14)
+            write(*,*) 'read ed2'
+cipk mar98 
+            if(ort(j,12) .eq. 0.) ort(j,12)=1.
+            NDATLN=NDATLN+1
+CIPK NOV97      READ(LIN,7000) ID,DLIN
+            call ginpt(lin,id,dlin)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk dec03 add element dependence IEDSW
-  	  IF(ID(1:3) .EQ. 'ED3') THEN
-        READ(DLIN,5032) IT1,TT1,TT2
-!NiS,apr06: comment added
-        write(*,*) 'read ed3'
-!-
-        call ginpt(lin,id,dlin)
-        IF(IEDSW .LT. 0) THEN
-          IEDSW1(J)=IT1
-        ENDIF
-	    IF(TT1 .GT. 0.) THEN
-          TBFACT1(J)=TT1
-	    ENDIF
-	    IF(TT2 .GT. 0.) THEN
-	      TBMIN1(J)=TT2
-        ENDIF
-      ELSEIF(IEDSW .LT. 0) THEN
+            IF(ID(1:3) .EQ. 'ED3') THEN
+              READ(DLIN,5032) IT1,TT1,TT2
+              call ginpt(lin,id,dlin)
+              IF(IEDSW .LT. 0) THEN
+                IEDSW1(J)=IT1
+              ENDIF
+              IF(TT1 .GT. 0.) THEN
+                TBFACT1(J)=TT1
+              ENDIF
+              IF(TT2 .GT. 0.) THEN
+                TBMIN1(J)=TT2
+              ENDIF
+            ELSEIF(IEDSW .LT. 0) THEN
 cipk sep04
-        CLOSE(75)
-        OPEN(75,FILE='ERROR.OUT')
-        WRITE(75,*) 'ERROR -- EXPECTED ED3 DATA LINE'
-        WRITE(*,*) 'ERROR -- EXPECTED ED3 DATA LINE'
-        STOP
-	  ENDIF
+              CLOSE(75)
+              OPEN(75,FILE='ERROR.OUT')
+              WRITE(75,*) 'ERROR -- EXPECTED ED3 DATA LINE'
+              WRITE(*,*) 'ERROR -- EXPECTED ED3 DATA LINE'
+              STOP
+            ENDIF
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,apr06: add element type specifications for equivalent sand roughness and vegetation calculation
-          IF (ID(1:3) == 'ED4') THEN
-!NiS,apr06: commenat added
-            write(*,*) 'read ed4'
-!-
-            !NiS,apr06: The line can be read in the way given here, if the ORT(J,5)-value is
-            !           not equal to -1.0, it has no effect!
-            READ(DLIN,5033) (ORT(J,K), K=15,17)
-            write(*,*) j,(ORT(J,K), K=15,17)
-            call ginpt(lin,id,dlin)
-          ELSEIF(IVEGETATION == 1 .OR. ORT(J,5) == -1.0) THEN
+            IF (ID(1:3) == 'ED4') THEN
+              !comment:
+              !As IPK suggested, the Darcy coefficient is used, if the ED4-line is present. If not, then the other approach is applied
+              !It must be only checked for vegetation, that Darcy approach is used.
+              !read parameters for vegetation and roughness of Darcy approach
+              READ (DLIN, 5033) (ORT (J, K), K = 15, 17)
+              !reset Manning's N or Chezy coefficient
+              ort (j, 5) = -1.0
+              call ginpt(lin,id,dlin)
+
+            ELSEIF (IVEGETATION == 1 .and. ID(1:3) /= 'ED4') THEN
+              CLOSE(75)
+              OPEN(75,FILE='ERROR.OUT')
+              WRITE(75,*) 'ERROR -- EXPECTED ED4 DATA LINE'
+              WRITE(*,*) 'ERROR -- EXPECTED ED4 DATA LINE'
+              STOP 'LOOKING FOR ED4 LINE'
+            ENDIF
+          ELSE
+cipk sep04
             CLOSE(75)
             OPEN(75,FILE='ERROR.OUT')
-            WRITE(75,*) 'ERROR -- EXPECTED ED4 DATA LINE'
-            WRITE(*,*) 'ERROR -- EXPECTED ED4 DATA LINE'
-            STOP
+            WRITE(75,*) 'ED2 LINE MISSING'
+            STOP 'LOOKING FOR ED2 LINE'
           ENDIF
-!-
-          GO TO 25
-        ELSE
-cipk sep04
-          CLOSE(75)
-          OPEN(75,FILE='ERROR.OUT')
-          WRITE(75,*) 'ED2 LINE MISSING'
-          STOP 'LOOKING FOR ED2 LINE'
+        else
+          EXIT ElementCharacteristics
         ENDIF
-      ENDIF 
+      ENDDO ElementCharacteristics
+
       IF(NMAT .EQ. 0) THEN
 cipk sep04
         CLOSE(75)
@@ -856,26 +853,26 @@ cipk nov98 change limit to 13
       ENDDO
 
 CIPK DEC03 OUTPUT ED3 LINE
-	IF(IEDSW .EQ. -1) THEN
-	  WRITE(LOUT,6043) 
-	  DO  J=1,NMAT
-	    IF(ORT(J,1) .NE. 0) THEN
-	      WRITE(LOUT,6044) J,IEDSW1(J),TBFACT1(J),TBMIN1(J)
-	    ENDIF
-        ENDDO 
-	ELSE
-	  IT1=0
-        DO J=1,NMAT
-	    IF(ORT(J,1) .NE. 0) THEN
-	      IF(TBFACT1(J) .NE. 0.  .OR.  TBMIN1(J) .NE. 0.) THEN
-	        IF(IT1 .EQ. 0) THEN
-           	  WRITE(LOUT,6045)
-                IT1=1 
-	        ENDIF
-  	        WRITE(LOUT,6046) J,TBFACT1(J),TBMIN1(J)
-	      ENDIF
+      IF(IEDSW .EQ. -1) THEN
+        WRITE(LOUT,6043)
+        DO  J=1,NMAT
+          IF(ORT(J,1) .NE. 0) THEN
+            WRITE(LOUT,6044) J,IEDSW1(J),TBFACT1(J),TBMIN1(J)
           ENDIF
-	  ENDDO
+        ENDDO 
+      ELSE
+        IT1=0
+        DO J=1,NMAT
+          IF(ORT(J,1) .NE. 0) THEN
+            IF(TBFACT1(J) .NE. 0.  .OR.  TBMIN1(J) .NE. 0.) THEN
+              IF(IT1 .EQ. 0) THEN
+             	  WRITE(LOUT,6045)
+                IT1=1 
+              ENDIF
+              WRITE(LOUT,6046) J,TBFACT1(J),TBMIN1(J)
+            ENDIF
+          ENDIF
+        ENDDO
       ENDIF
 
 
@@ -884,8 +881,8 @@ cipk dec03     Copy to all element types
       IF(IEDSW .GE. 0) THEN
         DO N=1,NMAT
           IEDSW1(N)=IEDSW
-	    IF(TBFACT1(N) .EQ. 0.) TBFACT1(N)=TBFACT
-	    IF(TBMIN1(N) .EQ. 0.) TBMIN1(N)=TBMIN
+          IF(TBFACT1(N) .EQ. 0.) TBFACT1(N)=TBFACT
+          IF(TBMIN1(N) .EQ. 0.) TBMIN1(N)=TBMIN
           IF(TBFACT1(N) .EQ. 0.) TBFACT1(N)=0.2
         ENDDO
       ENDIF
@@ -897,73 +894,73 @@ Cipk mar01  add data for variable Manning n and drag force
 c
       N=0
 CIPK SEP04
-	NH=0
-	NH1=0
+      NH=0
+      NH1=0
    35 CONTINUE
       IF(id(1:3) .eq. 'MAN') THEN
        READ(DLIN,'(I8,4F8.0)') J,ELMMIN(J),MANMIN(J),ELMMAX(J),MANMAX(J)
         IF(N .EQ. 0) THEN
-	    WRITE(LOUT,6032)
-	    N=1
-	  ENDIF
-	  WRITE(LOUT,6033) J,ELMMIN(J),MANMIN(J),ELMMAX(J),MANMAX(J)
-	  CALL GINPT (LIN,ID,DLIN)
-	  GO TO 35
+          WRITE(LOUT,6032)
+          N=1
+        ENDIF
+        WRITE(LOUT,6033) J,ELMMIN(J),MANMIN(J),ELMMAX(J),MANMAX(J)
+        CALL GINPT (LIN,ID,DLIN)
+        GO TO 35
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK SEP04  ADD MAH and MAT OPTIONS
       ELSEIF(id(1:3) .eq. 'MAH') THEN
-       READ(DLIN,'(2I8,4F8.0)') J,IMAN(J),(HMAN(J,K),K=1,4)
-	  IF(IMAN(J) .EQ. 1) THEN
+        READ(DLIN,'(2I8,4F8.0)') J,IMAN(J),(HMAN(J,K),K=1,4)
+        IF(IMAN(J) .EQ. 1) THEN
           HMAN(J,1)=0.02
-	    HMAN(J,2)=2.0
-	    HMAN(J,3)=0.026
-	    HMAN(J,4)=0.08
-	  ELSEIF(IMAN(J) .EQ. 2) THEN
+          HMAN(J,2)=2.0
+          HMAN(J,3)=0.026
+          HMAN(J,4)=0.08
+        ELSEIF(IMAN(J) .EQ. 2) THEN
           HMAN(J,1)=0.04
-	    HMAN(J,2)=4.0
-	    HMAN(J,3)=0.040
-	    HMAN(J,4)=0.166667
-	  ELSEIF(IMAN(J) .EQ. 3) THEN
+          HMAN(J,2)=4.0
+          HMAN(J,3)=0.040
+          HMAN(J,4)=0.166667
+        ELSEIF(IMAN(J) .EQ. 3) THEN
           HMAN(J,1)=0.04
-	    HMAN(J,2)=2.0
-	    HMAN(J,3)=0.040
-	    HMAN(J,4)=0.166667
-	  ENDIF
+          HMAN(J,2)=2.0
+          HMAN(J,3)=0.040
+          HMAN(J,4)=0.166667
+        ENDIF
         IF(NH .EQ. 0) THEN
-	    WRITE(LOUT,6052)
-	    N=1
-	  ENDIF
-	  WRITE(LOUT,6053) J,IMAN(J),(HMAN(J,K),K=1,4)
-	  CALL GINPT (LIN,ID,DLIN)
-	  GO TO 35
+          WRITE(LOUT,6052)
+          N=1
+        ENDIF
+        WRITE(LOUT,6053) J,IMAN(J),(HMAN(J,K),K=1,4)
+        CALL GINPT (LIN,ID,DLIN)
+        GO TO 35
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ELSEIF(id(1:3) .eq. 'MAT') THEN
        READ(DLIN,'(I8,8F8.0)') J,(MANTAB(J,K,1),MANTAB(J,K,2),K=1,4)
         IF(NH1 .EQ. 0) THEN
-	    WRITE(LOUT,6054)
-	    N=1
-	  ENDIF
-	  WRITE(LOUT,6055) J,(MANTAB(J,K,1),MANTAB(J,K,2),K=1,4)
-	  CALL GINPT (LIN,ID,DLIN)
-	  GO TO 35
+          WRITE(LOUT,6054)
+          N=1
+        ENDIF
+        WRITE(LOUT,6055) J,(MANTAB(J,K,1),MANTAB(J,K,2),K=1,4)
+        CALL GINPT (LIN,ID,DLIN)
+        GO TO 35
 
-	ENDIF
+      ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       N=0
    36 CONTINUE
       IF(id(1:3) .eq. 'DRG') THEN
-	  READ(DLIN,'(I8,4F8.0)') J,DRAGX(J),DRAGY(J)
+        READ(DLIN,'(I8,4F8.0)') J,DRAGX(J),DRAGY(J)
         IF(N .EQ. 0) THEN
-	    WRITE(LOUT,6041)
-	    N=1
-	  ENDIF
-	  WRITE(LOUT,6042) J,DRAGX(J),DRAGY(J)
-	  CALL GINPT (LIN,ID,DLIN)
-	  GO TO 36
-	ENDIF
+          WRITE(LOUT,6041)
+          N=1
+        ENDIF
+        WRITE(LOUT,6042) J,DRAGX(J),DRAGY(J)
+        CALL GINPT (LIN,ID,DLIN)
+        GO TO 36
+      ENDIF
 
 C
 cipk feb01 reading of continuity lines moved to GETGEO
@@ -1046,7 +1043,7 @@ C-
             IF(ID=='ECL') THEN
               write ( *,6901)
               write (75,6901)
-	      CALL GINPT(lin,ID,DLIN)
+              CALL GINPT(lin,ID,DLIN)
             ELSE
               CLOSE(75)
               OPEN(75,'ERROR.dat')
@@ -2435,15 +2432,15 @@ CIPK JAN03
  7000 FORMAT(A8,A72,a8)
 CIPK JAN03 END CHANGES
       do i=1,8
-	  if(id(i:i) .eq. char(9)) go to 200
-	enddo
-	do i=1,72
-	  if(dlin(i:i) .eq. char(9)) go to 200
-	enddo
+        if(id(i:i) .eq. char(9)) go to 200
+      enddo
+      do i=1,72
+        if(dlin(i:i) .eq. char(9)) go to 200
+      enddo
 cipk jan03
-	do i=1,8
-	  if(dlinextra(i:i) .eq. char(9)) go to 200
-	enddo
+      do i=1,8
+        if(dlinextra(i:i) .eq. char(9)) go to 200
+      enddo
       IF(ID(1:3) .EQ. 'com') GO TO 100
       IF(ID(1:3) .EQ. 'COM') GO TO 100
       IF(ID(1:3) .EQ. 'Com') GO TO 100
@@ -2455,8 +2452,8 @@ cipk jan00 add * as a possible label
 cipk sep04
       CLOSE(75)
       OPEN(75,FILE='ERROR.OUT')
-	write(*,*) 'Error Tab character found in the following line'
-	write(75,*) 'Error Tab character found in the following line'
+      write(*,*) 'Error Tab character found in the following line'
+      write(75,*) 'Error Tab character found in the following line'
       write(75,7000) id,dlin
       write(*,7000) id,dlin
       stop

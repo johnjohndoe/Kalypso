@@ -1,4 +1,4 @@
-C     Last change:  WP   30 Nov 2007   11:43 am
+C     Last change:  WP   17 Dec 2007    4:51 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -61,7 +61,7 @@ cipk aug98 add character statement
 ! djw 02/11/04  - Hook for WBM Routines
 
 !EFa jun07, necessary for autoconverge
-      extranita=50.
+      extranita = 50.
       temp_iteqv = 0.
       temp_iteqs = 0.
       temp_itlvl = 0.
@@ -474,7 +474,7 @@ CIPK NOV97      IF(NCONV .EQ. 1) GO TO 350
           IF (IKALYPSOFM /= 0) THEN
             WRITE(*,*)' Entering write_Kalypso',
      +                ' steady state, after Iteration = ',maxn
-            call generate2DFileName('stat', niti, 0, 0, maxn, modellaus,
+            call generate2DFileName('stat', niti, 0, maxn, modellaus,
      +                                modellein, modellrst, ct, nb,
      +                                outputFileName, inputFileName)
             CALL write_KALYPSO (outputFileName, 'resu')
@@ -573,7 +573,7 @@ CIPK MAR00
         MAXN = 0.
         WRITE(*,*)' Entering write_Kalypso',
      +            ' for STEADY STATE SOLUTION.'
-        call generate2DFileName('stat', niti, 0, 0, maxn, modellaus,
+        call generate2DFileName('stat', niti, 0, maxn, modellaus,
      +                           modellein, modellrst, ct, nb,
      +                           outputFileName, inputFileName)
         CALL write_KALYPSO (outputFileName, 'resu')
@@ -683,16 +683,17 @@ C-
           !NiS,may06: This part of the if-clause is for simulating the update of the boundary conditions. The purpose is to read through
           !           time step date lines, that are not interesting, when starting from a later time step than the first. After reading through
           !           that data, the next time step can be read, as long as firstly the wanted starting cycle exceeds the current cycle number.
+          ICYC = ICYC + 1
           CALL INPUTD(IBIN)
           WRITE(*,*) 'cycle main loop'
           CYCLE Main_dynamic_Loop
           !-
         ELSE
 CIPK MAR06  REWIND OUTPUT FILE AT SPECIFIED INTERVAL
-      IF(MOD(N,IOUTRWD) .EQ. 0) THEN
-        REWIND LOUT
-      ENDIF 
-      write(*,*) 'starting cycle',n
+        IF(MOD(N,IOUTRWD) .EQ. 0) THEN
+           REWIND LOUT
+         ENDIF
+         write(*,*) 'starting cycle',n
 CIPK JUN02
         MAXN=1
         IT=N
@@ -1191,7 +1192,7 @@ C      END OF ITERATION LOOP
      +                ' dynamic at time step ', icyc+iaccyc-1,
      +                ' after Iteration = ',maxn
             call generate2DFileName
-     +         ('inst', niti, icyc, iaccyc, maxn, modellaus, modellein,
+     +         ('inst', niti, icyc, maxn, modellaus, modellein,
      +         modellrst, ct, nb, outputFileName, inputFileName)
             CALL write_KALYPSO (outputFileName, 'resu')
             WRITE(*,*)'back from write_kalypso'
@@ -1349,17 +1350,17 @@ c      14   VSING subscript(7)  water column potential by node
               WRITE(*,*)' Entering write_Kalypso',
      +            ' after dynamic time step ', icyc+iaccyc-1
               call generate2DFileName
-     +          ('inst', niti, icyc, iaccyc, maxn, modellaus, modellein,
+     +          ('inst', niti, icyc, maxn, modellaus, modellein,
      +          modellrst, ct, nb, outputFileName, inputFileName)
               CALL write_KALYPSO (outputFileName, 'resu')
               WRITE (*,*)'back from write_kalypso'
               !every timestep min and max result files are overwritten to have the last
               call generate2DFileName
-     +          ('mini', 0, icyc, iaccyc, maxn, modellaus, modellein,
+     +          ('mini', 0, icyc, maxn, modellaus, modellein,
      +          modellrst, ct, nb, outputFileName, inputFileName)
               call write_Kalypso (outputFileName, 'mini')
               call generate2DFileName
-     +          ('maxi', 0, icyc, iaccyc, maxn, modellaus, modellein,
+     +          ('maxi', 0, icyc, maxn, modellaus, modellein,
      +          modellrst, ct, nb, outputFileName, inputFileName)
               call write_Kalypso (outputFileName, 'maxi')
             END IF

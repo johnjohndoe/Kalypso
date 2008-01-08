@@ -1,4 +1,4 @@
-C     Last change:  WP    8 Nov 2007    9:22 am
+C     Last change:  WP    8 Jan 2008    8:40 am
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -331,29 +331,51 @@ CAUG93IPK  WRITE(*,6011) J,EAVG(J),EMAX(J),NMX(J),IVAR(J,1),IVAR(J,2),ICYC
           WRITE(*,6010) J,EAVG(J),EMAX(J),NMX(J),IVAR(J,1),IVAR(J,2)
         ENDIF
   200 CONTINUE
-      IF(ITIMS .EQ. 0) THEN
-        ITIMS=1
-        WRITE(LITR,6041)
+
+      !Writing header lines of iteration output file
+      IF(ITIMS == 0) THEN
+        ITIMS = 1
+        WRITE (LITR, 6041)
       ENDIF
- 6041 FORMAT('                                MAX CHANGES
-     +                                                           AVE CHA
-     +NGES'/
-     +       '    TIME STEP IT  NSZF     X-VEL NODE     Y-VEL NODE     D
-     +EPTH NODE       SAL NODE      TEMP NODE       SED NODE    X-VEL   
-     + Y-VEL    DEPTH      SAL     TEMP      SED')
-      IF(MAXN .EQ. 1) WRITE(LITR,'(2X)')
+ 6041 FORMAT( '#', 21x,
+     + '<--', 6x, 'MAX CHANGES', 96x, '-->',
+     + '<--', 6x, 'AVE CHANGES', 40x, '-->'/
+     + '#', 3x, 'TIME STEP IT  NSZF',
+     + 5x, 'X-VEL   NODE',
+     + 5x, 'Y-VEL   NODE',
+     + 5x, 'DEPTH   NODE',
+     + 7x, 'SAL   NODE',
+     + 6x, 'TEMP   NODE',
+     + 7x, 'SED   NODE',
+     + 5x, 'Z-VEL   NODE',
+     + 4x, 'X-VEL',
+     + 4x, 'Y-VEL',
+     + 4x, 'DEPTH',
+     + 6x, 'SAL',
+     + 5x, 'TEMP',
+     + 6x, 'SED',
+     + 5x, 'Z-VEL')
+
+      !empty line before next time step iteration block and title of that block
+      IF(MAXN == 1) THEN
+        WRITE (LITR, '(a)') '#'
+        IF (icyc == 0) THEN
+          WRITE (LITR, '(a)') '# steady block'
+        ELSE
+          WRITE (LITR, '(a,i5,a)') '# ', icyc, '. time step block'
+        ENDIF
+      ENDIF
+
+!Write iteration output per iteration
+!TOASK
+!Changed format descriptor from 6 to 7. What is actually the 7th degree of freedom?
 CIPK MAY02 EXPAND TO 7
       WRITE(LITR,6040)TET,ICYC,MAXN,NSZF,(EMAX(J),NMX(J),J=1,7),
      +   (EAVG(J),J=1,7)
-
-!TOASK
-!NiS,mar06: Change of format-descriptor because number of descriptors does
-!           not fit the number of written Variables; increasing number
-!           from 6 to 7
 ! 6040 FORMAT(F8.1,I5,I3,I6,6(F10.4,I5),6(F9.4))
- 6040  FORMAT(F8.1,I5,I3,I6,7(F10.4,I5),7(F9.4))
+ 6040  FORMAT(F8.1,I5,I3,I6,7(F10.4,I7),7(F9.4))
 
-
+!TODEL?
 C      NKCONV(MAXN)=NCONV
 C      IF(NCONV .EQ. 1) THEN
 C        DO 205 MB=MAXN-1,1,-1
@@ -366,6 +388,7 @@ C            ENDIF
 C          ENDIF
 C  205   CONTINUE
 C
+
 CIPK AUG01     TEST FOR CONVERGENCE THIS ITERATION, IF SO ARE WE FULLY CONVERGED?
       IF(NCONV .EQ. 1) THEN
 CIPK MAY02 EXPAND TO 7
@@ -388,12 +411,13 @@ C        IF(NCONV .EQ. 2) GO TO 207
         ENDIF
 CIPK FEB03    RESET ALL FOR NON-CONVERGENCE
       ELSE
-	  DO MB=1,7
-	    IF(NCNV(MB) .NE. 9999) THEN
-	      NCNV(MB)=1
-	    ENDIF
-	  ENDDO
+        DO MB=1,7
+          IF(NCNV(MB) .NE. 9999) THEN
+            NCNV(MB)=1
+          ENDIF
+        ENDDO
       ENDIF
+
 !*************************************************************************DJW 04/08/04
 !
 !     Checks Salinity Values against maximum and minimum permissible values and resets
@@ -402,18 +426,21 @@ CIPK FEB03    RESET ALL FOR NON-CONVERGENCE
 !*************************************************************************
 cipk feb07
       SalLowPerm = 0.0000
-	SalHighPerm = 250
+      SalHighPerm = 250
       Do J = 1,NP
-	  If (Vel(4,J).LT.SalLowPerm) Then
+        IF (Vel(4,J).LT.SalLowPerm) THEN
           Vel(4,J) = SalLowPerm
-        End If
-	  If (Vel(4,J).GT.SalHighPerm) Then ! djw Salinity High Overide can be commented out if a crash is to be forced to 
-          Vel(4,J) = SalHighPerm          ! Enable debugging
-	  End If
-	End Do
+        ENDIF
+        !djw Salinity High Overide can be commented out if a crash is to be forced to
+        IF (Vel(4,J).GT.SalHighPerm) THEN
+          !Enable debugging
+          Vel(4,J) = SalHighPerm          
+        ENDIF
+      ENDDO
 !*************************************************************************END DJW 04/08/04
 
   207 CONTINUE
+
       write(*,*) nconv,conv(1),conv(2),conv(3)
 C
 C...... DRPOUT forms list of equations eligible for dropout

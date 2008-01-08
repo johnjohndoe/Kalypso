@@ -1,4 +1,4 @@
-C     Last change:  WP   22 Nov 2007    8:00 pm
+C     Last change:  WP    4 Jan 2008   12:41 pm
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -218,7 +218,7 @@ CIPK JUL02
       ENDIF
 
       !EFa jul07, initialization for stage-flow boundaries
-      CALL STFLTAB(M,SRFEL,DFDH,FF,0)
+      CALL STFLTAB (M, SRFEL, DFDH, FF, 0)
       !-
 
 CIPK JUL01
@@ -251,21 +251,8 @@ cipk feb01  skip out for zero lines
           NA=LINE(J,1)
           IF(NDEP(NA) .LT. 2) THEN
             !nis,feb07: Allow for continuity checks at nodes with polynomial approach
-            !get check value
-            testProd = 1.0
-            testSum  = 0.0
-
-            PolyPos = findPolynom (polyRangeQ (NA, :),
-     +                             vel(3, NA), PolySplitsQ(na))
-            !Testsum and Testproduct
-            AddMultTest: do i = 0, 12
-              testSum  = testSum + qpoly(PolyPos, NA, i)
-              if (qpoly(PolyPos, NA,i) == 0) CYCLE AddMultTest
-              testProd = testProd * qpoly(PolyPos, NA, i)
-            end do AddMultTest
-
             !Proceed on nodes of polynomial approach
-            if (testSum /= 0 .or. testProd /= 1) then
+            if (width (na) == 0.0) then
 
               PolyPos = findPolynom (polyRangeA (NA, :), vel(3, NA),
      +                               PolySplitsA (na))

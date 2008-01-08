@@ -1,4 +1,4 @@
-C     Last change:  WP   27 Sep 2007    5:25 pm
+C     Last change:  WP   14 Dec 2007   10:37 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 cipk  last update Aug 06 2002 expand dlin to 80 char
@@ -260,7 +260,17 @@ cipk apr96 save data to a scratch file
 C
 C...... Go to read boundary conditions along line and wind data
 C
+      if (iaccyc <= icyc) then
         CALL SBGEN(IBIN)
+      ELSEIF (iaccyc > icyc) then
+        WRITE(*,*) 'Jump over input data of time step', icyc
+        findEndStep: do
+          call ginpt(ibin, id, dlin)
+          if (ID(1:7) == 'ENDSTEP') EXIT findEndStep
+        end do findEndStep
+
+      end if
+
 c-
 c
 C Fixed salinity nodes 

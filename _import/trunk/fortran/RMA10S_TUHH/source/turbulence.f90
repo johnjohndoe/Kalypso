@@ -1,4 +1,4 @@
-!     Last change:  NIS  16 Aug 2007    7:56 pm
+!     Last change:  WP   14 Dec 2007    9:25 am
 !----------------------------------------------------------------------------
 ! This code, turbulence.f90, computes the turbulence parameter nu_T for all
 ! finite elements depending on chosen turbulence model as specified by
@@ -34,10 +34,10 @@
 ! Research Associate
 !
 !
-SUBROUTINE turbulence(nn, iturb, mineddy,			&
-		    & eexxyy1, eexxyy2, eexxyy3, eexxyy4,       &
-                    & epsxx,   epsxz,   epszx,   epszz, 	&
-                    & roavg,p_bottom,p_prandtl,ffact,vecq,h,    &
+SUBROUTINE turbulence(nn, iturb, mineddy,			                 &
+		                  & eexxyy1, eexxyy2, eexxyy3, eexxyy4,    &
+                    & epsxx,   epsxz,   epszx,   epszz, 	    &
+                    & roavg,p_bottom,p_prandtl,ffact,vecq,h, &
                     & drdx, drdz, dsdx, dsdz, gscal)
 !
 !
@@ -62,9 +62,9 @@ implicit none
 
 ! Calling variables
 INTEGER, INTENT(IN) ::          	nn, iturb
-REAL, INTENT(IN) ::                     mineddy
-REAL, INTENT(IN) ::   			eexxyy1,eexxyy2,eexxyy3,eexxyy4
-REAL, INTENT(IN) ::                     roavg, p_bottom, p_prandtl, ffact, vecq
+REAL, INTENT(IN)    ::                     mineddy
+REAL, INTENT(IN)    ::   			eexxyy1,eexxyy2,eexxyy3,eexxyy4
+REAL, INTENT(IN)    ::                     roavg, p_bottom, p_prandtl, ffact, vecq
 REAL (KIND = 8), INTENT(IN) ::          h
 REAL, INTENT(IN) ::                     drdx, drdz, dsdx, dsdz
 REAL (kind = 8), INTENT(IN) ::          gscal

@@ -1,4 +1,4 @@
-!     Last change:  WP   28 Nov 2007    2:40 pm
+!     Last change:  WP   14 Dec 2007   12:01 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -492,11 +492,11 @@ END SUBROUTINE write_KALYPSO
 !**********************************************************
 
 
-SUBROUTINE Generate2DFileName (sort, niti_local, timeStep, startStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
+SUBROUTINE Generate2DFileName (sort, niti_local, timeStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
            &                   resultName, inputName)
 
 implicit none
-INTEGER, INTENT (IN) :: timeStep, startStep, iteration, restartUnit
+INTEGER, INTENT (IN) :: timeStep, iteration, restartUnit
 INTEGER, INTENT (IN) :: niti_local
 character (LEN = 96), INTENT (OUT) :: resultName, inputName
 CHARACTER (LEN = 32), INTENT (IN)  :: outsuffix, inname, rstname
@@ -524,33 +524,12 @@ if (sort == 'inst' .or. sort == 'stat') then
         WRITE (inputName,'(a)') 'none, new 2D-Calculation'
       ENDIF
 
-    !for dynamic solutions after first time step
-    ELSEIF (timeStep == 1 .and. startStep <= 1) THEN
-      !output for dynamic solutions after first time step
-      WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep, '.', outsuffix
-      !Restart file information after user specified restart
-      IF (niti_local == 0 .and. restartUnit > 0) THEN
-        WRITE (inputName,'(a)') rstname
-        !No Restart, bloody new calculation; 'Teichlösung'
-      ELSEIF (niti_local == 0 .AND. restartUnit == 0) THEN
-        WRITE (inputName,'(a)') 'none, new 2D-Calculation'
-      !Starting from steady state solution, that was calculated before
-      ELSE
-        WRITE (inputName,'(a,a1,a)') 'steady','.', outsuffix
-      ENDIF
-
-    !for dynamic solution after first timestep run restarted later time step than first
-    ELSEIF (timeStep == 1 .AND. startStep > 1) THEN
-      !output file
-      WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep + startStep - 1, '.', outsuffix
-      !Restart file information
-      WRITE (inputName, '(a)') inname
     !for dynamic solution after calculated time step, that is not the first in current run
     ELSE
       !output file
-      WRITE (inputName,'(a,i4.4,a1,a)')  prefix, timeStep + startStep - 2, '.', outsuffix
+      WRITE (inputName,'(a,i4.4,a1,a)')  prefix, timeStep, '.', outsuffix
       !Starting from the solution of time step before
-      WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep + startStep - 1, '.', outsuffix
+      WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep, '.', outsuffix
     ENDIF
 
   !after iteration step, if wanted

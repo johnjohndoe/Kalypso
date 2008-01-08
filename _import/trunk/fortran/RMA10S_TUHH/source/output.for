@@ -1,4 +1,4 @@
-C     Last change:  WP    8 Nov 2007    9:20 am
+C     Last change:  WP    8 Jan 2008   11:14 am
 CIPK  LAST UPDATE OCT 4 2002 ADD ICE THICKNESS TO OUTPUT
 CIPK  LAST UPDATE JAN 12 20010 CHANGE AME TO AME1
 CIPK  LAST UPDATE MAR 22 2000 ADD WSLL
@@ -123,28 +123,30 @@ CIPK OCT02
 !-
 
 CIPK OCT02
-      IF(ICESW .EQ. 0) THEN
+      !nis,jan08: Write output data for every node in output.out only, if the user explicitly wants it (Control line C7)
+      IF (WriteNodeBlock == 1) then
+        IF(ICESW .EQ. 0) THEN
 
-        IF(LSAND .GT. 0) THEN
-          WRITE(LOUT,6018)
-          WRITE(LOUT,6019) (LAB(J),(XVEL(K,J),K=1,9),
-     1    J=LP,NP)
-	  ELSE
-          WRITE(LOUT,6118)
-          WRITE(LOUT,6119) (LAB(J),(XVEL(K,J),K=1,8),
-     1    J=LP,NP)
-        ENDIF
-      ELSE
-	  IF(LSAND .GT. 0) THEN
-          WRITE(LOUT,6038)
-          WRITE(LOUT,6039) (LAB(J),(XVEL(K,J),K=1,10),
-     1    J=LP,NP)
+          IF(LSAND .GT. 0) THEN
+            WRITE(LOUT,6018)
+            WRITE(LOUT,6019) (LAB(J),(XVEL(K,J),K=1,9),
+     1      J=LP,NP)
+          ELSE
+            WRITE(LOUT,6118)
+            WRITE (LOUT, 6119) (LAB(J), (XVEL(K,J), K= 1,8), J = LP,NP)
+          ENDIF
         ELSE
-          WRITE(LOUT,6138)
-          WRITE(LOUT,6139) (LAB(J),(XVEL(K,J),K=1,8),XVEL(10,J),
-     1    J=LP,NP)
+          IF(LSAND .GT. 0) THEN
+            WRITE(LOUT,6038)
+            WRITE(LOUT,6039) (LAB(J),(XVEL(K,J),K=1,10),
+     1      J=LP,NP)
+          ELSE
+            WRITE(LOUT,6138)
+            WRITE(LOUT,6139) (LAB(J),(XVEL(K,J),K=1,8),XVEL(10,J),
+     1      J=LP,NP)
+          ENDIF
         ENDIF
-      ENDIF
+      endif
 C
 C..... Define flows for 1-D element node locations
 C

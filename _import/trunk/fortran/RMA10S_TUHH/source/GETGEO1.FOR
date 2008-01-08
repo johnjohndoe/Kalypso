@@ -1,4 +1,4 @@
-C     Last change:  WP   22 Nov 2007    8:28 pm
+C     Last change:  WP   11 Dec 2007    5:14 pm
 CNis  LAST UPDATE MAR  XX 2006 Adding capabilities for Kalypso-2D-network-files
 CIPK  LAST UPDATE JUNE 25 2005 RESET LOWER LIMIT
       SUBROUTINE GETGEO1
@@ -14,7 +14,7 @@ cipk aug05      INCLUDE 'BLK10.COM'
 !NiS,mar06: adding declaration of hand-over-parameters between subroutines
       INTEGER :: n,m,a,LT, PA, PQ, PB
 !-
-      MAXP=0
+      MAXP = 0
       MAXE = 0
 !NiS,may06: Initialize MaxA and MaxT for Kalypso-2D format input file
       MaxA = 0
@@ -30,7 +30,7 @@ cipk aug05      INCLUDE 'BLK10.COM'
       MaxLT = 0
 !-
 
-      NCLL=0
+      NCLL = 0
 C-
 C-.....READ EXTERNALLY GENERATED GEOMETRY FILE.....
 C-
@@ -60,7 +60,7 @@ cipk jun03 add RM1 input capabilities
 !Add midside node for polynom approach
           !NiS,mar06: Additional parameter 'A' in comparison to other read-subroutines; the parameter gives back the number of arcs
           !nis,feb07: Add the counter of midside nodes of Flow1DFE elements
-          call RDKALYPS(N,M,A,PA, PQ, PB,LT,1)
+          call RDKALYPS (N, M, A, PA, PQ, PB, LT, 1)
           !call RDKALYPS(N,M,A,LT,FFFMS,AddMS,1)
           !-
           REWIND IFILE
@@ -107,43 +107,41 @@ cipk feb01 lahey version        READ (IFILE,ERR=63)
       endif
       !-
 
-      MELL=M+1                                         	!the setting of maximum dimensions of the geometry data into the variables MaxE and MaxP
-CIPK JUN05 SET LOWER LIMIT                              !provides the oportunity to dimension the allocatable arrays for the geometry input.
-      IF(MELL .LT. 1000) MELL=1000                     	!The way taken here is not very elegant, because firstly the variable MELL seems not be
-      MAXE=MELL                                        	!used in another place and secondlyit can be replaced by just one statement concerning
-      MAXP=N+1                                         	!MaxE, that is:
-      							!MAXE=MAX(1000,M+1);
-                                                        !the usage of MELL is no more necessary because it was
-                                                        !oringinary the maximum value for the number of elements, set in a (old) module; as it is
-                                                        !mentioned in the latest documentation so far; borders are now set dynamic, so MELL is no
-                                                        !more necessary and should be replaced. If this value is still used somewhere there might
-                                                        !occur some problems with the execution of the compiled program, therefore it will be left
-                                                        !here.
-                                                        !Nis,mar06,comment
+      !the setting of maximum dimensions of the geometry data into the variables MaxE and MaxP
+      MELL = M + 1
 
-!NiS,mar06: if the input file is in KALYPSO-2D format the size of allocatable arc array is not neglectable
+!TOASK: Why lower limit
+CIPK JUN05 SET LOWER LIMIT
+      !deactivate lower limit
+      !IF(MELL .LT. 1000) MELL = 1000
+      MAXE = MELL
+      MAXP = N + 1
+
+      !nis,comment
+      !the usage of MELL is no more necessary because it was
+      !oringinary the maximum value for the number of elements, set in a (old) module; as it is
+      !mentioned in the latest documentation so far; borders are now set dynamic, so MELL is no
+      !more necessary and should be replaced. If this value is still used somewhere there might
+      !occur some problems with the execution of the compiled program, therefore it will be left
+      !here.
+
+
+!if the input file is in KALYPSO-2D format the size of allocatable arc array is not neglectable
         if (igeo==2) then
-          MAXA=A+1
-          !nis,dec06: Adding 1D-2D-Transitionline-array counter
-          MaxLT=LT
+          MAXA = A + 1
+          !Adding 1D-2D-Transitionline-array counter
+          MaxLT = LT
           MaxPolyA = PA
           MaxPolyQ = PQ
           MaxPolyB = PB
           !-
-          !nis,feb07: Adding counter of midside nodes of Flow1DFE elements
-          !WRITE(*, *) 'No. of MS nodes of FFF-elts: '!, FFFMS,' + ',AddMS
-          !-
         else
-          MAXA=0
-          !nis,dec06: Adding 1D-2D-Transitionline-array counter
-          MaxLT=0
+          MAXA = 0
+          !Adding 1D-2D-Transitionline-array counter
+          MaxLT = 0
           MaxPolyA = 1
           MaxPolyQ = 1
           MaxPolyB = 1
-          !-
-          !nis,feb07: Adding counter of midside nodes of Flow1DFE elements; dummy value zero
-          !FFFMS = 0
-          !AddMS = 0
           !-
         end if
 !-

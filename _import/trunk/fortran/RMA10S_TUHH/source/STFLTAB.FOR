@@ -1,3 +1,4 @@
+C     Last change:  WP    7 Dec 2007    1:19 pm
 CIPK  LAST UPDATE SEP 06 2004 ADD ERROR FILE
 CIPK  LAST UPDATE AUG 8 2004   ADD ERROR TEST FOR STAGE FLOW TABLE
 CIPK  NEW ROUTINE AUG 26 2002
@@ -37,6 +38,10 @@ CIPK SEP04
           STOP
         ENDIF
         CALL GINPT(INSFL,IDT,DLINT)
+
+        !only if the file is emptyly present
+        if (IDT(1:6) == 'ENDDAT') RETURN
+
   250   IF(IDT(1:3) .EQ. 'CTL') THEN
           READ(DLINT,'(I8)') IDTBL(NTBL)
         ELSE

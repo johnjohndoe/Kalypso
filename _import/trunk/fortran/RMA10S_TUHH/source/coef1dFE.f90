@@ -1,4 +1,4 @@
-!Last change:  WP   22 Nov 2007    8:11 pm
+!Last change:  WP   17 Dec 2007    7:58 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -432,9 +432,15 @@ do i = 1, 2
 
   !test for valid water depth range
   if (h < hhmin(n) .and. ntx == 1) then
-    WRITE (*,*) 'waterdepth at node', n, 'less than Hmin'
+    WRITE (*,*) 'waterdepth at node', n, 'less than Hmin', vel(3, n), hhmin(n)
+!    WRITE (*,*) PolySplitsA(n), (PolyRangeA(n, j), j=1, PolySplitsA(n))
+!    WRITE (*,*) PolySplitsQ(n), (PolyRangeQ(n, j), j=1, PolySplitsQ(n))
+!    WRITE (*,*) PolySplitsB(n), (PolyRangeQ(n, j), j=1, PolySplitsB(n))
   ELSEIF (h > hhmax (n) .and. ntx == 1) then
-    WRITE (*,*) 'waterdepth at node', n, 'greater than Hmax'
+    WRITE (*,*) 'waterdepth at node', n, 'greater than Hmax', vel(3, n), hhmax(n)
+!    WRITE (*,*) PolySplitsA(n), (PolyRangeA(n, j), j=1, PolySplitsA(n))
+!    WRITE (*,*) PolySplitsQ(n), (PolyRangeQ(n, j), j=1, PolySplitsQ(n))
+!    WRITE (*,*) PolySplitsB(n), (PolyRangeQ(n, j), j=1, PolySplitsB(n))
   end if
 
   !look for the position of the polynomial

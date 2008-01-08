@@ -1,4 +1,4 @@
-!     Last change:  WP   29 Nov 2007   11:49 am
+!     Last change:  WP   17 Dec 2007    7:27 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -950,7 +950,7 @@ INTEGER                :: node1, node2                 !temporary node spaces fo
 INTEGER                :: temparc(5)                   !reading an arc at the option of KSWIT=1, when the ARC-array is not yet assigned
 INTEGER                :: arcs_without_midside         !counting the number of arcs that have no explicitly defined midside to increase the number of
                                 		       !MAXP at the end of the dimensioning run for array allocation in initl.subroutine
-INTEGER 	       :: midsidenode_max              !comparison variable for the highest necessary node number, so it can be tested, whether
+INTEGER 	              :: midsidenode_max              !comparison variable for the highest necessary node number, so it can be tested, whether
                                       		       !the node list is complete
 !NiS,apr06: NEW SWITCH AND FILE READING CONTROL OPTIONS
 INTEGER                :: KSWIT                        !Switch for Run-option of this subroutine;
@@ -986,11 +986,11 @@ COMMON / vnach / cvva, cvga, cvvo, cvgo, cvzu, cvfe, cvarccnt
 ! INITIALISIERUNGSBLOCK -----------------------------------------------------------------------
 
 IF (KSWIT==1) THEN        !In the first case the value MAXA has to be found, the allocation of
-  MAXA=0                  !arc(i,j) is not necessary for the first run, so that it is allocated
-  maxe=0                  !EFa Nov06
-  ALLOCATE(arc(MAXA,5))   !just pro forma, it is deallocated at the end of this run.
+  MAXA = 0                  !arc(i,j) is not necessary for the first run, so that it is allocated
+  MAXE = 0                  !EFa Nov06
+  ALLOCATE (arc (MAXA, 5))   !just pro forma, it is deallocated at the end of this run.
 ELSE                      !In the second run, the value of MAXA is known and the arc-array is
-  ALLOCATE(arc(MAXA,5))   !allocated again; it is deallocated at the end of the run.
+  ALLOCATE (arc (MAXA, 5))   !allocated again; it is deallocated at the end of the run.
 ENDIF                     !NiS,mar06
 arcs_without_midside = 0
 midsidenode_max = 0
@@ -1038,12 +1038,12 @@ cvfe = 0
 
 !NiS,mar06: temparc is an array for reading arc informations in the dimensioning run (KSWIT.eq.1)
 DO i=1,5
-  temparc(i)=0
+  temparc (i) = 0
 ENDDO
 
 !NiS,mar06: changed allocation of arc; the former allocation with the number of nodes was too big, so the MaxA (for maximum number of arcs) is used:
 !           changed mnd to MaxA; additionally the array is firstly initialized, when the geometry is read (KSWIT.eq.0)
-IF (KSWIT==0) THEN
+IF (KSWIT == 0) THEN
   outer1: DO i = 1, MaxA
     inner1: DO j = 1, 5
       arc (i, j) = 0
@@ -1073,9 +1073,9 @@ ELSE
 ENDIF
 
 !INQUIRE(unit_nr, opened=inquiretest)
-INQUIRE(unit_nr, form=inquiretest)
-WRITE(*,*) 'inquiretest',inquiretest
-WRITE(*,*) 'unit_nr',unit_nr
+INQUIRE (unit_nr, form = inquiretest)
+WRITE (*,*) 'inquiretest: ', inquiretest
+WRITE (*,*) 'unit_nr: ', unit_nr
 REWIND (unit_nr)
 !-
 
@@ -1176,8 +1176,8 @@ reading: do
         read (linie, '(a2,i10)') id_local, i
       else
         read (linie, '(a2,i10,2f20.7)') id_local, i, hhmin(i), hhmax(i)
-        PolyRangeQ (i, 1) = hhmax (i)
-        PolyRangeA (i, 1) = hhmax (i)
+!        PolyRangeQ (i, 1) = hhmax (i)
+!        PolyRangeA (i, 1) = hhmax (i)
       endif
     end if
 
@@ -1391,8 +1391,8 @@ reading: do
     IF (linie (1:2) .eq.'FE') then
       !NiS,mar06: Find out maximum ELEMENT number
       IF (KSWIT == 1) THEN
-        READ (linie, '(a2,i10)') id_local,i
-        IF (i.gt.elcnt) elcnt = i
+        READ (linie, '(a2,i10)') id_local, i
+        IF (i > elcnt) elcnt = i
       ELSE
         cvfe = 1
         !NiS,mar06: changed id to id_local; global conflict
@@ -1665,8 +1665,8 @@ IF (KSWIT == 1) THEN
   WRITE(*,*) ' arcs without midside node: ', arcs_without_midside
   nodecnt = nodecnt + arcs_without_midside
 
-  REWIND(IFILE)
-  DEALLOCATE(arc)                                                       !the pro forma allocation of arc(i,j) is stopped
+  REWIND (IFILE)
+  DEALLOCATE (arc)                                                       !the pro forma allocation of arc(i,j) is stopped
   RETURN                                                    	        !If the dimension reading option is chosen (that means KSWIT=1), this
                                                                         !subroutine can be returned at this point.
 

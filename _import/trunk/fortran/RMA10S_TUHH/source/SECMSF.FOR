@@ -1,3 +1,4 @@
+C     Last change:  WP   11 Dec 2007    5:14 pm
       SUBROUTINE SECOND(TA)
       SAVE
 C This version is for microsoft fortran
@@ -11,9 +12,9 @@ C This version is for microsoft fortran
 c      CALL GETTIM(IHR,IMIN,ISEC,IHUN)
 c      TA=3600.*IHR+60.*IMIN+ISEC+ FLOAT(IHUN)/100.
       IF(ITIM .EQ. 0) THEN
-	TOLD=TADBL
-	ITIM=1
+        TOLD=TADBL
+        ITIM=1
       ENDIF
-        TA=TADBL-TOLD
+      TA=TADBL-TOLD
       RETURN
       END

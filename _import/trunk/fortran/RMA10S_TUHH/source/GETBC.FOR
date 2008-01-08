@@ -6,7 +6,7 @@ cipk  last update Mar 23 1998
 cipk  last update Nov 26 1997
 cipk  last update Oct 29 1996
 CIPK  LAST UPDATE OCT 16 1996
-C     Last change:  WP   22 Nov 2007    8:28 pm
+C     Last change:  WP   15 Dec 2007    5:33 pm
 cipk  last updated April 25 1996
 CIPK  LAST UPDATED SEP7 1995
       SUBROUTINE GETBC(IBIN)
@@ -206,7 +206,16 @@ cipk apr96 save data to a scratch file
 C
 C...... Go to read boundary conditions along line and wind data
 C
-      CALL SBGEN(IBIN)
+      if (iaccyc <= icyc .or. iaccyc == 1 .or. iaccyc == 0) then
+        CALL SBGEN(IBIN)
+      ELSEIF (iaccyc > icyc) then
+        WRITE(*,*) 'Jump over steady boundary conditions input data'
+        findEndStep: do
+          call ginpt(ibin, id, dlin)
+          if (ID(1:7) == 'ENDSTEP') EXIT findEndStep
+        end do findEndStep
+
+      end if
 
 cipk jun05 save nfix and test for weir data
 
