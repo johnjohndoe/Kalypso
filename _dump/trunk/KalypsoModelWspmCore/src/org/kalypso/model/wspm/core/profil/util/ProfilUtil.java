@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil.util;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -137,6 +138,68 @@ public class ProfilUtil
   public static final boolean comparePoints( final IProfilPointProperty property, final IProfilPoint point1, final IProfilPoint point2 )
   {
     return comparePoints( new IProfilPointProperty[] { property }, point1, point2 );
+  }
+
+  /**
+   * mirror the profiles points (axis 0.0)
+   */
+  public static final void flipProfile( final IProfil profile )
+  {
+    final LinkedList<IProfilPoint> points = profile.getPoints();
+    for( final IProfilPoint point : points )
+    {
+      if( point.hasProperty( IWspmConstants.POINT_PROPERTY_BREITE ) )
+      {
+        final Double breite = point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, -breite );
+      }
+      if( point.hasProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) )
+      {
+        final Double hoehe = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+        point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, -hoehe );
+      }
+    }
+    Collections.reverse( points );
+    IProfilPoint previousPoint = null;
+    for( final IProfilPoint point : points )
+    {
+      if( previousPoint == null )
+      {
+        previousPoint = point;
+        continue;
+      }
+
+      if( point.hasProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
+      {
+        final Double value = point.getValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+        previousPoint.setValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, value );
+      }
+
+      if( point.hasProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+      {
+        final Double value = point.getValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+        previousPoint.setValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, value );
+      }
+
+      if( point.hasProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
+      {
+        final Double value = point.getValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+        previousPoint.setValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, value );
+      }
+
+      if( point.hasProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
+      {
+        final Double value = point.getValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+        previousPoint.setValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, value );
+      }
+
+      if( point.hasProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
+      {
+        final Double value = point.getValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
+        previousPoint.setValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, value );
+      }
+      previousPoint = point;
+    }
   }
 
   public static final IProfilPoint splitSegment( final IProfil profile, IProfilPoint startPoint, IProfilPoint endPoint )
