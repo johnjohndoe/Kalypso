@@ -522,17 +522,20 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   public boolean isBorder( )
   {
     final IFE1D2DEdge inv;
+    int noOfInvertedOnes = 0;
+    //TODO: This is not possible, because isBorder() is implemented in EdgeInv.java;
+    //      besides that this function method is supposed to only check the 'normal' arcs
     if( this instanceof IEdgeInv )
       inv = ((IEdgeInv) this).getInverted();
     else
       inv = getEdgeInv();
+    
+    if (inv instanceof IEdgeInv)
+      noOfInvertedOnes = inv.getContainers().size();
 
     final IFeatureWrapperCollection<IFE1D2DElement> containers = getContainers();
-
-    if( inv == null && containers.size() == 2 )
-      return false;
-
-    if( inv != null && containers.size() == 1 )
+    
+    if (containers.size() + noOfInvertedOnes == 2) 
       return false;
 
     return true;
