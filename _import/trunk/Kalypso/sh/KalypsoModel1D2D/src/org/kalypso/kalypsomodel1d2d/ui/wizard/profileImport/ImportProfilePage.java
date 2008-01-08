@@ -46,7 +46,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.rmi.RemoteException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -70,7 +69,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -85,7 +83,9 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   // constants
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
-  private static final String[] SEPARATOR = new String[] { ",", ";" };
+  private static final String TAB = "<TAB>";
+
+  private static final String[] SEPARATOR = new String[] { ",", ";", TAB };
 
   // widgets
   private Group m_group;
@@ -111,6 +111,8 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   private String m_;
 
   private Combo m_separatorCombo;
+
+  private String m_seperator;
 
   /**
    * @param pageName
@@ -174,10 +176,9 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_checkCRS.setLayoutData( data );
     m_checkCRS.addSelectionListener( this );
     m_checkCRS.addKeyListener( this );
-    
+
     final Label dummy1 = new Label( m_group, SWT.NONE );
-    
-    
+
     final Label seperatorLabel = new Label( m_group, SWT.NONE );
     seperatorLabel.setText( "Trennzeichen:" );
 
@@ -188,10 +189,10 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_separatorCombo.setLayoutData( sepData );
     m_separatorCombo.addSelectionListener( this );
     m_separatorCombo.addKeyListener( this );
-    
+
     m_separatorCombo.setItems( SEPARATOR );
     m_separatorCombo.select( 0 );
-    
+
     setControl( m_topComposite );
   }
 
@@ -271,10 +272,18 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     }
 
     // separator
-    if(m_separatorCombo.getText()==null)
+    final String sepText = m_separatorCombo.getText();
+    if( sepText == null )
       pageComplete = false;
-    
-    setPageComplete( pageComplete );
+    else
+    {
+      if( sepText.equals( TAB ) )
+        m_seperator = "\t";
+      else
+        m_seperator = sepText;
+
+      setPageComplete( pageComplete );
+    }
   }
 
   // SelectionListener
@@ -285,6 +294,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   {
     Button b;
     Combo c;
+    Combo d;
     if( e.widget instanceof Button )
     {
       b = (Button) e.widget;
@@ -320,6 +330,14 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
             setPageComplete( true );
           }
         }
+        else if( e.widget == m_separatorCombo )
+        {
+          d = (Combo) e.widget;
+          if( d == m_separatorCombo )
+          {
+            setPageComplete( true );
+          }
+        }
       }
     }
     validate();
@@ -340,10 +358,11 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     return m_filePath;
   }
 
-  public String getSeparator()
+  public String getSeparator( )
   {
-    return m_separatorCombo.getText();
+    return m_seperator;
   }
+
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */

@@ -190,7 +190,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     final Feature networkFeature = network.getWrappedFeature();
     addedFeatures.add( networkFeature );
 
-    /* Set user friendly name and descrption */
+    /* Set user friendly name and description */
     final String desc = String.format( Messages.getString( "ImportTrippelWizard.19" ), m_ProfilePage.getFileName(), ImportTrippelWizard.DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
     network.setName( FileUtilities.nameWithoutExtension( m_ProfilePage.getFileName() ) );
     network.setDescription( desc );
