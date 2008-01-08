@@ -63,7 +63,6 @@ import com.vividsolutions.jts.geom.Point;
  * small refactoring Lanu and nofdp uses this helper!
  * 
  * @author kuch
- * 
  */
 public class ImportTrippleHelper
 {
@@ -73,7 +72,7 @@ public class ImportTrippleHelper
    * @param trippleFile
    *            file with profile tripples
    */
-  public static List<IProfil> importTrippelData( final File trippleFile, final String profileType )
+  public static List<IProfil> importTrippelData( final File trippleFile, final String separator, final String profileType )
   {
     if( trippleFile == null )
       return new ArrayList<IProfil>();
@@ -89,7 +88,6 @@ public class ImportTrippleHelper
       fileReader = new BufferedReader( new InputStreamReader( new FileInputStream( trippleFile ) ) );
 
       String line = null;
-      final String separator = ";"; //$NON-NLS-1$
       StringTokenizer tokenizer;
 
       /* parameter */
