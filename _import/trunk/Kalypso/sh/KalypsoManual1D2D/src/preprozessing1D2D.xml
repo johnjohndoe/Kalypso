@@ -417,9 +417,12 @@
       Profildaten im Trippelformat dar. Hierzu sind die Profildaten in einer
       Textdatei im folgenden Format aufzubereiten:</para>
 
-      <para>Fluss-Km; x-Koordinate; y-Koordinate; z-Koordinate</para>
+      <para>Fluss-Km, x-Koordinate, y-Koordinate, z-Koordinate</para>
 
-      <para>Beispiel:</para>
+      <para>Im Import-Dialog kann zwischen verschiedenen Trennzeichen gewählt
+      werden (",", ";", Tabulator).</para>
+
+      <para>Beispiel für Strichpunkt-Trennung:</para>
 
       <para>58.450;3552967.118;5986894.321;6.180</para>
 
@@ -450,8 +453,9 @@
       aktivieren. Klicken Sie im Assistenten auf
       <guibutton>Durchsuchen...</guibutton> und wählen Sie die entsprechende
       <filename>*.txt </filename>Datei aus. Anschließend ist das zugehörige
-      Koordinatensystem zu bestimmen. Um den Import abzuschließen, klicken Sie
-      auf <guibutton>Fertig stellen</guibutton>.</para>
+      Koordinatensystem zu bestimmen und das in der Profildatei verwendete
+      Trennzeichen auszuwählen. Um den Import abzuschließen, klicken Sie auf
+      <guibutton>Fertig stellen</guibutton>.</para>
 
       <figure>
         <title>Assistent zum Import von Profildaten</title>
@@ -1084,7 +1088,7 @@
             <para>Definition der Uferlinien entlang des Gewässers anhand eines
             Linien-Themas (ESRI-Shape-Datei). Die Uferlinien müssen hierbei je
             Gewässerseite zusammenhängend und von jedem zu verwendeten Profil
-            geschnitten werden. </para>
+            geschnitten werden.</para>
           </listitem>
         </itemizedlist>
 
@@ -1093,7 +1097,7 @@
         Netzaufbau &gt; 2D-Netz</guimenuitem>. Aktivieren Sie
         <guimenuitem>Flusschlauchgenerator </guimenuitem>mit einem
         Doppelklick, um den Flussschlauchgenerator und die dazugehörige Karten
-        Werkzeugansicht zu öffnen. </para>
+        Werkzeugansicht zu öffnen.</para>
 
         <para>Sind die Uferlinien und die Profildaten eingeladen und der
         Flussschlauchgenerator aktiviert, öffnet sich die Karten Werkzeug
@@ -1123,7 +1127,7 @@
         hierfür in die Karte und ziehen Sie mit der linken Maustaste ein
         Rechteck auf. Alle Profile, die das Rechteck schneidet, werden
         selektiert. Ein abermaliges Selektieren bereits selektierter Profile
-        deselektiert diese wieder. </para>
+        deselektiert diese wieder.</para>
 
         <para>Alle selektierten Profile werden gelb dargestellt. Es ist nicht
         notwendig alle Profile auf einmal zu selektieren. Sie können auf
@@ -1199,7 +1203,7 @@
         die initiale Berechung der Segmente durchgeführt, eine Vorschau in der
         Karte generiert (siehe Abbildung unten). Ist dies nicht der Fall sind
         die Daten fehlerhaft (evtl. Uferlinie nicht zusammehängend, Profile
-        schneiden Uferlinien nicht...). </para>
+        schneiden Uferlinien nicht...).</para>
 
         <figure>
           <title>Netzvorschau</title>
