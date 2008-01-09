@@ -185,6 +185,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
 
                   final ICoverage newCoverage = GeoGridUtilities.addCoverage( dstAnnualCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
                   newCoverage.setName( Messages.getString( "DamagePotentialCalculationHandler.14" ) + srcAnnualCoverages.getReturnPeriod() + " [" + count + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                  // TODO: check for right time zone?
                   newCoverage.setDescription( Messages.getString( "DamagePotentialCalculationHandler.17" ) + new Date().toString() ); //$NON-NLS-1$
 
                   inputGrid.dispose();

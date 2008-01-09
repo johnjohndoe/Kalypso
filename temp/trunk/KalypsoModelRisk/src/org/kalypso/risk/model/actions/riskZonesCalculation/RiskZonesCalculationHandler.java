@@ -80,7 +80,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
         }
         // remove existing (invalid) coverages from the model
         rasterModel.getRiskZonesCoverage().clear();
-        
+
         controlModel.resetStatistics();
 
         final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
@@ -107,6 +107,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
                 inputGrid.dispose();
 
                 coverage.setName( "Risikozonen [" + count + "]" );
+                // TODO: check for right time zone?
                 coverage.setDescription( Messages.getString( "RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
                 count++;
 
