@@ -42,12 +42,12 @@ package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.Phenomenon;
@@ -57,10 +57,8 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-
 /**
- * Constructs a simple timeserie with a time columnd and a value column.
+ * Constructs a simple timeserie with a time column and a value column.
  * 
  * @author Gernot Belger
  */
@@ -135,7 +133,7 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
       IAxis valueAxis;
       // System.out.println(model.getAxisList()[0].getDataClass());
       // System.out.println(model.getAxisList()[1].getDataClass());
-      // TODO: this is dangerous, tere is a utility class to find the axes
+      // TODO: this is dangerous, there is a utility class to find the axes
       if( model.getAxisList()[0].getDataClass().equals( Date.class ) )
       {
         dateAxis = model.getAxisList()[0];
@@ -151,13 +149,13 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
       for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
       {
         final Date date = (Date) model.getElement( cntFrom, dateAxis );
-        if( m_wizardPageZmlChooser.getFromDate().before( date ) ||  m_wizardPageZmlChooser.getFromDate().equals( date ))
+        if( m_wizardPageZmlChooser.getFromDate().before( date ) || m_wizardPageZmlChooser.getFromDate().equals( date ) )
           break;
       }
       for( cntTo = cntFrom; cntTo < model.getCount(); cntTo++ )
       {
         final Date date = (Date) model.getElement( cntTo, dateAxis );
-        if( m_wizardPageZmlChooser.getToDate().before( date ))
+        if( m_wizardPageZmlChooser.getToDate().before( date ) )
         {
           cntTo--;
           break;
@@ -168,9 +166,9 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
         final Double doubleValue = (Double) model.getElement( i, valueAxis );
         final BigDecimal value = BigDecimal.valueOf( doubleValue );
         final IRecord record = result.createRecord();
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime( (Date) model.getElement( i, dateAxis ) );
-        record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendar ) );
+        Date date = (Date) model.getElement( i, dateAxis );
+
+        record.setValue( domainComponent, DateUtilities.toXMLGregorianCalendar( date ) );
         record.setValue( valueComponent, value );
         result.add( record );
       }

@@ -59,4 +59,10 @@ public interface IFlowRelationshipModel extends IFeatureWrapperCollection<IFlowR
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth );
 
   public IFlowRelationship[] findFlowrelationships( final GM_Position position, final double searchRectWidth );
+
+  /**
+   * narrows the possible search results. Only {@link IFlowRelationship} specified in an array (as QNames) are
+   * considered.
+   */
+  public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchDistance, final Class< ? extends IFlowRelationshipModel>[] flowRelationTypes );
 }

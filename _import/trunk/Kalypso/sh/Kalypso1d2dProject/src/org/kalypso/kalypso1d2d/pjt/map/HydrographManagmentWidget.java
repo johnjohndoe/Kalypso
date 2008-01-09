@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -94,6 +95,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
@@ -484,6 +486,8 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
+        if( m_theme == null )
+          return StatusUtilities.createInfoStatus( "Kein Ganglinienthema vorhanden." );
 
         m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
 
@@ -513,6 +517,9 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
   protected void handleprocessHydrograph( final SelectionEvent event )
   {
     final Shell shell = event.display.getActiveShell();
+
+    if( m_hydrographs == null )
+      MessageDialog.openInformation( shell, "Daten für Ganglinien auslesen", "Kein Ganglinienthema vorhanden." );
 
     /* get the current calc unit results */
     final Map<IPath, Date> results = m_hydrographs.getResults();

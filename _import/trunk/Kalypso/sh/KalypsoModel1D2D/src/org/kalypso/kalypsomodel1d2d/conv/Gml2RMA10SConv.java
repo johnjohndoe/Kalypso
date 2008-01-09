@@ -422,7 +422,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         final double x = node.getPoint().getX();
         final double y = node.getPoint().getY();
 
-        final String msg = String.format( "Kein Höhendaten: [%.3f, %.3f]", x, y ); //$NON-NLS-1$
+        final String msg = String.format( "Keine Höhendaten: [%.3f, %.3f]", x, y ); //$NON-NLS-1$
         // TODO: georefed error msg
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
       }
@@ -437,7 +437,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
       if( DiscretisationModelUtils.is1DNode( node ) )
       {
         /* Node parameters */
-        final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), 0.1 );
+        final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IKingFlowRelation.class, ITeschkeFlowRelation.class };
+
+        final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), 0.1, flowRelationTypes );
         if( relationship == null )
           throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "Gml2RMA10SConv.11" ) + node.getGmlID() ) ); //$NON-NLS-1$
 

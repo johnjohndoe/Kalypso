@@ -140,7 +140,7 @@ public class FlowRelationUtilitites
     {
       try
       {
-        final GM_Curve geometry = ((IFELine)modelElement).getGeometry();
+        final GM_Curve geometry = ((IFELine) modelElement).getGeometry();
         final CS_CoordinateSystem coordinateSystem = geometry.getCoordinateSystem();
         final GM_Position[] positions = geometry.getAsLineString().getPositions();
         for( int i = 0; i < positions.length; i++ )
@@ -210,11 +210,10 @@ public class FlowRelationUtilitites
   public static IBuildingFlowRelation findBuildingElement1D( final IElement1D element, final IFlowRelationshipModel model )
   {
     final GM_Position flowPosition = getFlowPositionFromElement( element );
-    
-    // TODO consider better search procedure here
-    // for example, for Bille model with search rect of 0.0 (strict location) only one weir was found, 
-    // with 0.001 four of them, and all seven only with 0.01
-    final IFlowRelationship flowRel = model.findFlowrelationship( flowPosition, 0.01 );
+
+    final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IBuildingFlowRelation.class };
+
+    final IFlowRelationship flowRel = model.findFlowrelationship( flowPosition, 0.01, flowRelationTypes );
     if( flowRel instanceof IBuildingFlowRelation )
       return (IBuildingFlowRelation) flowRel;
 

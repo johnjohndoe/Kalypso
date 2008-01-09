@@ -80,6 +80,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
@@ -373,7 +374,11 @@ public class Control1D2DConverter
       if( nitn > 0 )
       {
         /* Unsteady state: a block for each time step */
-        Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( componentTime )).toGregorianCalendar();
+
+        // TODO: check for right time zone
+        XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( componentTime );
+
+        Calendar lastStepCal = cal.toGregorianCalendar();
         int stepCount = 1;
         for( ; iterator.hasNext(); stepCount++ )
         {
@@ -396,8 +401,13 @@ public class Control1D2DConverter
     }
   }
 
+  /**
+   * writes out the time steps. <BR>
+   * IMPORTANT: we write the dates in the time zone according to the kalypso-preferences!
+   */
   private void writeTimeStep( final Formatter formatter, final String message, final Calendar calculationStep, final Calendar lastStepCal, final float uRVal, final int niti ) throws CoreException, IOException
   {
+
     final String dashes = StringUtils.repeat( "-", message.length() ); //$NON-NLS-1$
     formatter.format( "com %s%n", dashes ); //$NON-NLS-1$
     formatter.format( "com %s%n", message ); //$NON-NLS-1$
@@ -409,19 +419,28 @@ public class Control1D2DConverter
     final int dayOfYear;
     final double ihre;
 
+    Calendar kalypsoCalendarStep = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+
     // unsteady
     if( calculationStep != null )
     {
-      dayOfYear = calculationStep.get( Calendar.DAY_OF_YEAR );
-      year = calculationStep.get( Calendar.YEAR );
+      // REMARK: we write the date in the kalypso-preferences time zone!
+      kalypsoCalendarStep.setTime( calculationStep.getTime() );
+      dayOfYear = kalypsoCalendarStep.get( Calendar.DAY_OF_YEAR );
+      year = kalypsoCalendarStep.get( Calendar.YEAR );
 
-      timeStepInterval = calculationStep.getTimeInMillis() - lastStepCal.getTimeInMillis();
+      // REMARK: we write the date in the kalypso-preferences time zone!
+      final Calendar kalypsoCallendarPreviousStep = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+      kalypsoCallendarPreviousStep.setTime( lastStepCal.getTime() );
+
+      timeStepInterval = kalypsoCalendarStep.getTimeInMillis() - kalypsoCallendarPreviousStep.getTimeInMillis();
       timeStepHours = (double) timeStepInterval / (60 * 60 * 1000);
-      ihre = getTimeInPercentage( calculationStep );
+      ihre = getTimeInPercentage( kalypsoCalendarStep );
     }
     // steady don´t need startdate
     else
     {
+      kalypsoCalendarStep = null;
       dayOfYear = 0;
       year = 0;
       timeStepHours = 0;
@@ -437,11 +456,11 @@ public class Control1D2DConverter
       formatBC( formatter, uRVal, niti );
 
     // order is important, first QC than HC, SQC and EFE
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
-    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
 
     FormatterUtils.checkIoException( formatter );
 
@@ -474,7 +493,9 @@ public class Control1D2DConverter
     FormatterUtils.checkIoException( formatter );
   }
 
-  /** Formats the lines for one type of boundary condition (QC or HC or ... ). */
+  /**
+   * Formats the lines for one type of boundary condition (QC or HC or ... ).
+   */
   private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final String bcAbscissaComponentType, final String bcOrdinateComponentType ) throws IOException
   {
     for( final IBoundaryCondition boundaryCondition : m_unitBoundaryConditions )

@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -62,7 +63,7 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return m_title;
   }
@@ -70,19 +71,18 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
   /**
    * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createObservationFromSource(java.io.File, boolean)
    */
-  public IObservation createObservationFromSource( File file, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( File file, TimeZone timeZone, boolean continueWithErrors ) throws Exception
   {
     return createObservationFromSource( file );
   }
 
-  
   public IObservation createObservationFromSource( final File file ) throws Exception
   {
     final InputStreamReader reader;
 
     IObservation obsOut;
 
-    //    reader = new FileReader( file );
+    // reader = new FileReader( file );
     reader = new InputStreamReader( new FileInputStream( file ), TubigConst.TUBIG_CODEPAGE );
 
     obsOut = TubigConverter.tubig2Zml( reader, m_axisTypeValue, TubigUtils.getFileNameWOExt( file ) );
@@ -91,16 +91,12 @@ public class NativeObservationTubigAdapter implements INativeObservationAdapter
     return obsOut;
   }
 
-  public IAxis[] createAxis()
+  public IAxis[] createAxis( )
   {
     final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
     TimeserieUtils.getUnit( m_axisTypeValue );
-    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils
-        .getUnit( m_axisTypeValue ), Double.class, false );
-    final IAxis[] axis = new IAxis[]
-    {
-        dateAxis,
-        valueAxis };
+    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
+    final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;
   }
 }

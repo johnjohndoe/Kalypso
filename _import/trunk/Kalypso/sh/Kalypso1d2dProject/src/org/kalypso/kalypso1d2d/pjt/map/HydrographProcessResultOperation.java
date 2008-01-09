@@ -146,6 +146,8 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
 
         /* get the date for which this result is valid */
         final GregorianCalendar calendar = new GregorianCalendar();
+
+        // TODO: check for right time zone
         calendar.setTime( date );
 
         /* get the node result gml */
@@ -171,6 +173,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
           {
             final GM_Point point = (GM_Point) location;
 
+            // TODO: check for right time zone
             progress.subTask( "Zeitschritt (" + count + "/" + resultSize + "), " + date.toString() + " - weise Ergebnis zu (" + hyd + "/" + m_hydrographs.size() + "..." );
             addResult( obsMap, calendar, nodeList, point );
           }

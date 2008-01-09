@@ -200,7 +200,7 @@ public class ResultManager implements ISimulation1D2DConstants
       else if( stepDate == MAXI_DATE )
         outDirName = "maxi";
       else
-        outDirName = String.format( "timestep-%1$te.%1$tm.%1$tY_%1$tH#%1$tM", stepDate );
+        outDirName = String.format( "timestep-%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ", stepDate );
 
       final File resultOutputDir = new File( m_outputDir, outDirName );
       resultOutputDir.mkdirs();
@@ -230,6 +230,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
       final IObservation<TupleResult> obs = controlModel.getTimeSteps();
       final TupleResult timeSteps = obs.getResult();
+
       final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
       final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
       return DateUtilities.toDate( stepCal );

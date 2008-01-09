@@ -104,6 +104,46 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
     return flowRelations;
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Position,
+   *      double, javax.xml.namespace.QName[])
+   */
+  public IFlowRelationship findFlowrelationship( GM_Position position, final double searchDistance, final Class< ? extends IFlowRelationshipModel>[] flowRelationTypes )
+  {
+    final List<Feature> foundFeatures = findFeatures( position, searchDistance );
+    if( foundFeatures.isEmpty() )
+      return null;
+
+    double min = Double.MAX_VALUE;
+    IFlowRelationship nearest = null;
+    for( final Feature feature : foundFeatures )
+    {
+      final IFlowRelationship curNode = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
+      final Class< ? extends IFlowRelationship> clas = curNode.getClass();
+      if( !checkRealtionType( flowRelationTypes, clas ) )
+        continue;
+
+      final double curDist = position.getDistance( curNode.getPosition().getPosition() );
+      if( min > curDist )
+      {
+        nearest = curNode;
+        min = curDist;
+      }
+    }
+    return nearest;
+  }
+
+  private boolean checkRealtionType( Class< ? extends IFlowRelationshipModel>[] flowRelationTypes, Class< ? > clas )
+  {
+    for( int i = 0; i < flowRelationTypes.length; i++ )
+    {
+      if( flowRelationTypes[i].isAssignableFrom( clas ) )
+        return true;
+    }
+    return false;
+  }
+
+  // ATTENTION: this method returns possibly more features than expected
   private List<Feature> findFeatures( GM_Position position, double searchRectWidth )
   {
     // TODO: the problem is, that the flow relations get found via the specification of a search radius, because they
@@ -120,6 +160,9 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
     final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
 
     final List<Feature> foundFeatures = nodeList.query( reqEnvelope, null );
+
+    // TODO: check, which of these feature are really within searchRectwidth
+
     return foundFeatures;
   }
 

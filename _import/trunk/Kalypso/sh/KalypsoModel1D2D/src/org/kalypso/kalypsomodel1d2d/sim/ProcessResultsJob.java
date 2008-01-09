@@ -82,6 +82,7 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -143,7 +144,7 @@ public class ProcessResultsJob extends Job
     else if( m_stepDate == ResultManager.MAXI_DATE )
       timeStepName = "Maximalwerte";
     else
-      timeStepName = String.format( "Zeitschritt - %1$te.%1$tm.%1$tY %1$tH:%1$tM", m_stepDate );
+      timeStepName = String.format( "Zeitschritt - %1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", m_stepDate );
 
     monitor.beginTask( "Ergebnisse werden ausgewertet - " + timeStepName, 10 );
     monitor.subTask( "Ergebnisse werden ausgewertet - " + timeStepName );
@@ -426,7 +427,8 @@ public class ProcessResultsJob extends Job
   private static void addToResultDB( final IStepResultMeta stepResultMeta, final Date stepDate, final File outputDir, final Date time )
   {
     // TODO: retrieve time zone from central plugin preferences
-    final DateFormat dateFormatter = DateFormat.getDateTimeInstance();
+    final DateFormat dateFormatter = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
+    dateFormatter.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
 
     if( ResultManager.STEADY_DATE.equals( stepDate ) )
     {
@@ -444,11 +446,12 @@ public class ProcessResultsJob extends Job
     }
     else
     {
-      final String dateString = dateFormatter.format( time );
+      // TODO: check for right time zone
+      final String dateString = dateFormatter.format( stepDate );
       stepResultMeta.setName( String.format( "Zeitschritt (%s)", dateString ) );
       stepResultMeta.setDescription( "instationärer Rechenlauf zum Zeitpunkt: " + dateString );
       stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.unsteady );
-      stepResultMeta.setStepTime( time );
+      stepResultMeta.setStepTime( stepDate );
     }
 
     stepResultMeta.setPath( new Path( outputDir.getName() ) );

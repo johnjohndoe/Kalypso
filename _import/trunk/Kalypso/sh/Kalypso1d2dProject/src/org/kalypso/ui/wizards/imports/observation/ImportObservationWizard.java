@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -205,9 +206,9 @@ public class ImportObservationWizard extends Wizard implements INewWizard
   public void addPages( )
   {
     super.addPages();
+    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen", m_timeseriesFolder ); //$NON-NLS-1$
     m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" ); //$NON-NLS-1$
 
-    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen", m_timeseriesFolder ); //$NON-NLS-1$
     addPage( m_page1 );
     addPage( m_page2 );
 
@@ -235,8 +236,11 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       final ObservationImportSelection selection = (ObservationImportSelection) m_page1.getSelection();
       final File fileSource = selection.getFileSource();
       final File fileTarget = selection.getFileTarget();
+
+      final TimeZone timezone = m_page1.getTimezone();
+
       final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
-      IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource, false );
+      IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource, timezone, false );
       if( srcObservation == null )
       {
         final MessageBox messageBox = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
@@ -245,7 +249,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
         if( messageBox.open() == SWT.NO )
           return true;
         else
-          srcObservation = nativaAdapter.createObservationFromSource( fileSource, true );
+          srcObservation = nativaAdapter.createObservationFromSource( fileSource, timezone, true );
       }
 
       final IAxis[] axesSrc = m_page2.getAxisMappingSrc();
@@ -328,9 +332,9 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
-      
+
       final IObservation newObservation = new SimpleObservation( href, id, name, false, null, metadata, axesNew, newTuppelModel );
-      
+
       final Observation type = ZmlFactory.createXML( newObservation, null );
       // create new Observation...
 

@@ -97,8 +97,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     {
       final Feature feature = getFeature();
       final Object property = feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
-      final IObservation<TupleResult> obs = (IObservation<TupleResult>) ((Feature) property).getAdapter( IObservation.class );
-      return obs;
+      return (IObservation<TupleResult>) ((Feature) property).getAdapter( IObservation.class );
     }
     catch( final Throwable th )
     {

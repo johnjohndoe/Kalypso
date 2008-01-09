@@ -239,11 +239,13 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
         gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor );
 
+        // TODO: check for right time zone?
         desc = String.format( "Daten importiert:%nHerkunft: %s %nDatum: %2$te.%2$tm.%2$tY %2$tk:%2$tM", sourceLocation.toExternalForm(), sourceDate );
 
         ref.setDescription( desc );
         ref.setMin( minmaxVisitor.getMin() );
         ref.setMax( minmaxVisitor.getMax() );
+        // TODO: check for right time zone?
         ref.setUpdateDate( sourceDate );
         ref.setTin( gmSurface );
 
@@ -306,12 +308,13 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
           monitor.subTask( "aktualisiere Metadaten (min/max/...)" );
 
           gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor );
-
+          // TODO: check for right time zone?
           desc = String.format( "Daten importiert:%nHerkunft: %s %nDatum: %2$te.%2$tm.%2$tY %2$tk:%2$tM", sourceLocation.toExternalForm(), sourceDate );
 
           ref.setDescription( desc );
           ref.setMin( minmaxVisitor.getMin() );
           ref.setMax( minmaxVisitor.getMax() );
+          // TODO: check for right time zone?
           ref.setUpdateDate( sourceDate );
           ref.setTin( gmSurface );
         }

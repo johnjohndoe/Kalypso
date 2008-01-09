@@ -47,14 +47,13 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Provides algorithm to convert from a bce2d model to a 1d2d discretisation model
@@ -185,15 +184,13 @@ public class RMA10S2GmlConv
         final int year = Integer.parseInt( yearString );
         final BigDecimal hours = new BigDecimal( hourString );
 
-        final Calendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "UTM" ) ); //$NON-NLS-1$
+        // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
+        final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() ); //$NON-NLS-1$
         calendar.clear();
         calendar.set( year, 0, 1 );
 
         final BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
         final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) );
-
-        // final int wholeHours = (int) Math.floor( hours.doubleValue() );
-        // final int wholeMinutes = (int) Math.round( (hours - wholeHours) * 60 );
 
         calendar.add( Calendar.HOUR, wholeHours.intValue() );
         calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );

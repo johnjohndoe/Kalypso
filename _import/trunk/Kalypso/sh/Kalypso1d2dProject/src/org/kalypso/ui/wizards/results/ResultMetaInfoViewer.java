@@ -41,7 +41,6 @@
 package org.kalypso.ui.wizards.results;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -60,6 +59,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author Thomas Jung
@@ -67,7 +67,6 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public class ResultMetaInfoViewer extends Viewer
 {
-  private static final DateFormat INFO_DF = SimpleDateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
 
   /*
    * fonts
@@ -196,6 +195,9 @@ public class ResultMetaInfoViewer extends Viewer
       scenarioDescription = null;
     }
 
+    final DateFormat dateFormat = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
+    dateFormat.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+
     final ICalcUnitResultMeta calcUnitResult = getCalcUnitResultMeta( result );
     if( calcUnitResult != null )
     {
@@ -204,8 +206,8 @@ public class ResultMetaInfoViewer extends Viewer
 
       final Date calcStartTime = calcUnitResult.getCalcStartTime();
       final Date calcEndTime = calcUnitResult.getCalcEndTime();
-      calcStart = calcStartTime == null ? "-" : INFO_DF.format( calcStartTime );
-      calcEnd = calcEndTime == null ? "-" : INFO_DF.format( calcEndTime );
+      calcStart = calcStartTime == null ? "-" : dateFormat.format( calcStartTime );
+      calcEnd = calcEndTime == null ? "-" : dateFormat.format( calcEndTime );
     }
 
     final IStepResultMeta stepResult = getStepResultMeta( result );
@@ -215,7 +217,7 @@ public class ResultMetaInfoViewer extends Viewer
       stepDescription = stepResult.getDescription();
       stepType = stepResult.getStepType().toString();
       final Date stepResultTime = stepResult.getStepTime();
-      stepTime = stepResultTime == null ? "-" : INFO_DF.format( stepResultTime );
+      stepTime = stepResultTime == null ? "-" : dateFormat.format( stepResultTime );
     }
 
     IDocumentResultMeta docResult = null;

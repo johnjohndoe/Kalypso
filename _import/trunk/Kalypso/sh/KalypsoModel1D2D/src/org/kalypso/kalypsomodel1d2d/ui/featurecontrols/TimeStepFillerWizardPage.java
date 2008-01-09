@@ -126,6 +126,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
       {
         try
         {
+          // TODO: check for right time zone
           m_dateFrom = DATETIMEFORMAT.parse( m_dateTimeFrom.getText() );
           if( getStartDate().after( getFinishDate() ) )
           {
@@ -149,6 +150,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
         getWizard().getContainer().updateButtons();
       }
     } );
+    // TODO: check for right time zone
     m_dateTimeFrom.setText( DATEFORMAT.format( new Date() ) );
     m_dateTimeFrom.setLayoutData( gridFillHorizontal );
 
@@ -167,6 +169,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
         if( calendarDialog.open() == Window.OK )
         {
           m_dateFrom = calendarDialog.getDate();
+          // TODO: check for right time zone
           m_dateTimeFrom.setText( DATETIMEFORMAT.format( m_dateFrom ) );
         }
       }
@@ -183,6 +186,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
       {
         try
         {
+          // TODO: check for right time zone
           m_dateTo = DATETIMEFORMAT.parse( m_dateTimeTo.getText() );
           if( getStartDate().after( getFinishDate() ) )
           {
@@ -205,6 +209,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
       }
     } );
 
+    // TODO: check for right time zone
     m_dateTimeTo.setText( DATETIMEFORMAT.format( new Date() ) );
     m_dateTimeTo.setLayoutData( gridFillHorizontal );
 
@@ -223,6 +228,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
         if( calendarDialog.open() == Window.OK )
         {
           m_dateTo = calendarDialog.getDate();
+          // TODO: check for right time zone
           m_dateTimeTo.setText( DATETIMEFORMAT.format( m_dateTo ) );
         }
       }

@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**
@@ -91,6 +92,11 @@ public abstract class ZmlChooserControl
   private IObservation m_observation;
 
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+
+  static
+  {
+    DATE_FORMAT.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+  }
 
   public ZmlChooserControl( final IFolder importFolder )
   {
@@ -175,10 +181,12 @@ public abstract class ZmlChooserControl
     m_dateFromTxt.setEnabled( false );
     m_dateFromTxt.addModifyListener( new ModifyListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
         try
         {
+          // TODO: check for right time zone
           m_dateFrom = DATE_FORMAT.parse( m_dateFromTxt.getText() );
           dateIntervalChanged();
           setComplete( true );
@@ -199,6 +207,7 @@ public abstract class ZmlChooserControl
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -206,6 +215,7 @@ public abstract class ZmlChooserControl
         if( calendarDialog.open() == Window.OK )
         {
           m_dateFrom = calendarDialog.getDate();
+          // TODO: check for right time zone
           m_dateFromTxt.setText( DATE_FORMAT.format( m_dateFrom ) );
           dateIntervalChanged();
         }
@@ -228,10 +238,12 @@ public abstract class ZmlChooserControl
     m_dateToTxt.setEnabled( false );
     m_dateToTxt.addModifyListener( new ModifyListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
         try
         {
+          // TODO: check for right time zone
           m_dateTo = DATE_FORMAT.parse( m_dateToTxt.getText() );
           dateIntervalChanged();
           setComplete( true );
@@ -253,6 +265,7 @@ public abstract class ZmlChooserControl
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -260,6 +273,7 @@ public abstract class ZmlChooserControl
         if( calendarDialog.open() == Window.OK )
         {
           m_dateTo = calendarDialog.getDate();
+          // TODO: check for right time zone
           m_dateToTxt.setText( DATE_FORMAT.format( m_dateTo ) );
           dateIntervalChanged();
         }
@@ -291,6 +305,7 @@ public abstract class ZmlChooserControl
 
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
         // always remove items first (we don't know which selection we get)
@@ -335,8 +350,9 @@ public abstract class ZmlChooserControl
             e.printStackTrace();
             dateRange = new DateRange( new Date( 1, 1, 1 ), null );
           }
-          m_subTitle.setText( dateRange.toString() );
+          m_subTitle.setText( getDateRangeAsString( dateRange ) );
           m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( dateRange ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+
           m_dateFromTxt.setText( DATE_FORMAT.format( m_dateFrom ) );
           m_dateToTxt.setText( DATE_FORMAT.format( m_dateTo ) );
           m_dateFromTxt.setEnabled( true );
@@ -366,8 +382,19 @@ public abstract class ZmlChooserControl
   {
     m_diagView.removeAllItems();
     final DateRange range = new DateRange( m_dateFrom, m_dateTo );
-    m_subTitle.setText( range.toString() );
+    m_subTitle.setText( getDateRangeAsString( range ) );
     m_diagView.addObservation( new PlainObsProvider( m_observation, new ObservationRequest( range ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+  }
+
+  /**
+   * helper method, that returns the {@link DateRange} as a {@link String} considering the specified timezone.
+   */
+  private String getDateRangeAsString( final DateRange range )
+  {
+    final String fromTxt = DATE_FORMAT.format( range.getFrom() );
+    final String toTxt = DATE_FORMAT.format( range.getTo() );
+
+    return fromTxt + " - " + toTxt;
   }
 
   public Date getFromDate( )
