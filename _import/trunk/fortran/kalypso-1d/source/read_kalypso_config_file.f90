@@ -274,8 +274,16 @@ else if (INDEX(part1,'USE_EXTREM_ROUGH')/=0) then
   else if (INDEX(part2,'true')/=0) then
     USE_EXTREM_ROUGH = .true.
   else
-    write (*,*) 'Keine Zuweisung fuer MIT_WEHREN. Abbruch.'
-    stop
+    USE_EXTREM_ROUGH = .false.
+  end if
+
+else if (INDEX(part1,'CALC_KM_INTERN')/=0) then
+  if (INDEX(part2,'false')/=0) then
+    CALC_KM_INTERN = .false.
+  else if (INDEX(part2,'true')/=0) then
+    CALC_KM_INTERN = .true.
+  else
+    CALC_KM_INTERN = .true.
   end if
 
 end if

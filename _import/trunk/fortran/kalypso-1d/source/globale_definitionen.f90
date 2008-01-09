@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jan 2008    5:09 pm
+!     Last change:  MD   15 Aug 2007    9:48 am
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.6.1 '
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 04.01.2008'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.6.2 '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 07.01.2008'
 
 end module VERSION
 
@@ -58,7 +58,7 @@ save
 INTEGER, parameter :: nch80 = 250      ! Max. Laenge von Zeichenketten, z.B. Dateinamen
 INTEGER, parameter :: merg = 50        ! Max. Anzahl von Abflussereignissen
 INTEGER, parameter :: maxkla = 1000    ! Max. Anzahl von Punkten pro Profil
-INTEGER, parameter :: maxger = 1000    ! Max. Anzahl von Profilen
+INTEGER, parameter :: maxger = 750    ! Max. Anzahl von Profilen
 INTEGER, parameter :: maxabfluesse = 100    ! Max. Anzahl von Abfluessen bei stat.-ungl. Berechnung
 INTEGER, parameter :: ipro = 16        ! Max. Anzahl von Bloecken in Profildatei (? WP)
 INTEGER, parameter :: itmax = 99       ! Max. Anzahl von Iterationen in versch. Subroutinen
@@ -436,6 +436,7 @@ CHARACTER(LEN=6) :: REIBUNGSVERLUST             ! = TRAPEZ
 LOGICAL :: MIT_BRUECKEN
 LOGICAL :: MIT_WEHREN
 LOGICAL :: USE_EXTREM_ROUGH
+LOGICAL :: CALC_KM_INTERN
 
 CHARACTER(LEN=nch80) :: ABFLUSSEREIGNIS
 CHARACTER(LEN=nch80) :: EINZELVERLUSTE

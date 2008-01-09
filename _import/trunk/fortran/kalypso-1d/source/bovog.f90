@@ -4,7 +4,6 @@
 ! and functions of the hydrodynamic modell for
 ! 1D steady state calculations: KALYPSO-1D
 !
-! Subroutines:
 ! - bovog1
 !
 ! Copyright (C) 2004  ULF TESCHKE & WOLF PLOEGER.
@@ -42,17 +41,6 @@
 
 !-----------------------------------------------------------------------
 SUBROUTINE bovog1 (nbv, qvar, rqmax, rqmin)
-!
-! IN DIESER SUBROUTINE WEITERHIN VERWENDETE VARIABLEN
-! ---------------------------------------------------
-! Br_konv
-! Cwsub
-! cwun    --      Formwiderstandsbeiwert eines einzeln stehenden
-!                 Kreiszylinders
-! dp      --      Bewuchsparameter
-! rep     --      Reynoldszahl für Bewuchs
-! vrep    --      mittlere Geschwindigkeit in der Bewuchszone
-!
 !
 ! AUFGERUFENE ROUTINEN
 ! --------------------
@@ -135,7 +123,7 @@ REAL  	:: qges (6), rkf (6), rkv (6), rnf (6), rnv (6), qqg (6), bges (6)
 REAL 	:: bgg (maxger), wspgef (6), wspg (maxger, 6), hwg (maxger)
 REAL  	:: bg (maxger, 6), hr (maxger)
 
-INTEGER ianf (merg), iend (merg), ikenntg (merg)
+INTEGER :: ianf (merg), iend (merg), ikenntg (merg)
 
 
 ! ------------------------------------------------------------------
@@ -152,18 +140,20 @@ IF (ikitg.eq.0) then
   ianftg = 1
   iendtg = 1
 
-ELSEIF (stat (nbv) .le.anftg (1) ) then
+ELSE IF (stat (nbv) .le.anftg (1) ) then
+
   WRITE (UNIT_OUT_LOG_KM, '(''kein Teilgebiet im Abschnitt!!'')')
   WRITE (UNIT_OUT_LOG_KM, '(''K-M Parameter wird nicht bestimmt!'')')
   GOTO 2000
-ELSEIF (stat (1) .ge.anftg (ikg) ) then
+
+ELSE IF (stat (1) .ge. anftg (ikg) ) then
 
   ianf (ikg) = 1
   iend (ikg) = nbv
   ianftg = ikg
   iendtg = ikg
 
-ELSEIF (ikg.eq.1) then
+ELSE IF (ikg.eq.1) then
   i_b = 0
   DO j3 = 1, nbv - 1
     IF (anftg (1) .le.stat (j3) .and.i_b.eq.0) then
@@ -223,7 +213,7 @@ ELSE
         ENDIF
         GOTO 330
       !**    ende
-      ELSEIF (anftg (j4) .le.stat (j3) .and.anftg (j4) .gt.stat (j3 - 1) ) then
+      ELSE IF (anftg (j4) .le.stat (j3) .and.anftg (j4) .gt.stat (j3 - 1) ) then
         it1 = it1 + 1
         iend (j4 - 1) = j3 - 1
         IF (it1.eq.1) then
@@ -257,11 +247,12 @@ IF (it1.eq.iteil) then
   GOTO 2000
 ENDIF
 
+write (*,*) 'In BOVOG. Zeile 250. ianftg = ', ianftg, '  iendtg = ', iendtg
 
 DO 500 jj = ianftg, iendtg
   nteil = numitg (jj)
 
-WRITE (UNIT_OUT_LOG_KM, '('''',/////////////////////t12,                    &
+  WRITE (UNIT_OUT_LOG_KM, '('''',/////////////////////t12,  &
    &     ''auswertung fuer gerinneabschnitt '',i5)') nteil
 
   IF (ikenntg (jj) .eq.1) then
@@ -274,18 +265,21 @@ WRITE (UNIT_OUT_LOG_KM, '('''',/////////////////////t12,                    &
   ianfp = ianf (jj)
   iendp = iend (jj)
 
+  write (*,*) 'In BOVOG. Zeile 268. ianfp = ', ianfp, '  iendp = ', iendp
+
   !**   17.11.98 Csocsan
   n_prof = iendp - ianfp + 1
   lz = 0
   DO ll = ianfp, iendp
     lz = lz + 1
+    !write (*,*) 'In BOVOG. Zeile 281. ll = ', ll, '  lz = ', lz 
     xsp (lz) = stat (ll) * 1000.0
     hsohle (lz) = sohlp (ll)
   END DO
   xww = 0.0
   yww = 0.0
 
-  CALL linreg (xsp, hsohle, lz, byx, xq, yq, xww, yww)
+  CALL linreg (xsp, hsohle, lz, byx, xq, yq, xww, yww, maxger)
 
   slhngg = abs (byx)
   !***   ende
@@ -295,7 +289,7 @@ WRITE (UNIT_OUT_LOG_KM, '('''',/////////////////////t12,                    &
     IF (l.eq.ianfp) then
       st_o = stat (l + 1) - stat (l)
       st_u = 0.0
-    ELSEIF (l.eq.iendp) then
+    ELSE IF (l.eq.iendp) then
       st_o = 0.0
       st_u = stat (l) - stat (l - 1)
     ELSE

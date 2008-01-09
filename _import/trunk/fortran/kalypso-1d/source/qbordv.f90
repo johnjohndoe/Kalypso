@@ -420,6 +420,18 @@ If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
 
   ianz = ifix ( (MAX_Q - MIN_Q) / DELTA_Q + 0.1)
   ianz = ianz + 1
+  
+  !WP Check array definition 09.01.2007
+  if (ianz > maxabfluesse) then
+    write (*, 9022) ianz, maxabfluesse
+    write (UNIT_OUT_LOG, 9022) ianz, maxabfluesse
+    9022 format (/1X, 'Fehler:', /, &
+                & 1X, '-------', /, &
+                & 1X, 'Anzahl der angegebenen Abfluesse ist = ', I4, /, &
+                & 1X, 'Maximal moegliche Abfluesse sind     = ', I4, /, &
+                & 1X, 'Programm wird beendet!')
+    call stop_programm(0)
+  end if
 
   ! Zuweisung der Anzahl der Abfluesse zu dem globalen Modul MOD_ERG
   anz_q = ianz
@@ -836,7 +848,9 @@ IF (km.eq.'j') then
 
   ! ---------------------------------------------------------------
   ! AUFRUF KM-VERFAHREN
-  CALL bovog1 (nbv, DELTA_Q, MAX_Q, MIN_Q)
+  if (CALC_KM_INTERN) then
+    CALL bovog1 (nbv, DELTA_Q, MAX_Q, MIN_Q)
+  end if  
   ! ---------------------------------------------------------------
 
   CLOSE (UNIT_OUT_GER)

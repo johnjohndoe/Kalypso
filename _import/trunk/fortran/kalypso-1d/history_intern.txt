@@ -1316,8 +1316,6 @@ Kalypso 2.0.6       13. Dezember 2007
      für die Berechnung festgelegt werden. Die Datei wird nur gelesen, wenn sie
      existiert und die WSPWIN-Oberfläche verwendet wird.
      
-                                                           Wolf Plöger, 13.12.2007 
-
 
 Kalypso 2.0.6.1       04. Januar 2008
 -------------------------------------
@@ -1342,4 +1340,17 @@ Kalypso 2.0.6.1       04. Januar 2008
      
                                                                    Monika Donner, 04.01.2008      
 
+                                                           
+Kalypso 2.0.6.2     09. Januar 2008
+-------------------------------------                                                           
+
+1.)  Zusätzliche Option in "Kalypso_add.cfg": Es kann nun auch der Parameter
+     CALC_KM_INTERN auf "true" oder "false" gesetzt werden und so die interne
+     Kalinin-Miljukow-Berechnung ausgeschaltet werden, da teilweise fehlerhaft.
+
+2.)  Reduktion der maximalen Gerinneabschnitte auf 750. Maximalen Abflüsse
+     sind weiter bei 100, könnten aber auch reduziert werden um signifikante 
+     Reduktion der Speicherbelegung zu erreichen.
+     
+                                                           Wolf Plöger, 09.01.2008
 

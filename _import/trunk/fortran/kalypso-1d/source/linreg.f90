@@ -39,14 +39,26 @@
 !***********************************************************************
 
 
-SUBROUTINE linreg (zln, wr, nt, bbyx, zlnqur, wquer, xwsp, ywsp)
+! ----------------------------------------------------------------------
+SUBROUTINE linreg (zln, wr, nt, bbyx, zlnqur, wquer, xwsp, ywsp, maxger)
 !
 ! LINREG fuehrt eine lineare regression durch
+! 
+! Last change: Wolf Ploeger, 19 Dez. 2007
 !                                                                       
-! ------------------------------------------------------------------
+! ----------------------------------------------------------------------
 
-REAL(8) sxsum, sysum, sxysum, sxy1, sxye, zlnsum, wsum
-DIMENSION zln ( * ), wr ( * )
+! Calling variables
+INTEGER, INTENT(IN) :: nt, maxger
+REAL, DIMENSION(1:maxger), INTENT(INOUT) :: zln, wr
+!DIMENSION zln ( * ), wr ( * )
+
+REAL, INTENT(OUT) :: bbyx, zlnqur, wquer
+REAL, INTENT(INOUT) :: xwsp, ywsp
+
+! Local variables
+REAL(KIND=8) :: sxsum, sysum, sxysum, sxy1, sxye, zlnsum, wsum
+
 
 
 zlnsum = 0.

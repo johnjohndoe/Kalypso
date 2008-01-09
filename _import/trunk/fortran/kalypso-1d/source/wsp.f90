@@ -1724,6 +1724,7 @@ end if
 !WP der Datei Kalypso_add.cfg festegelgt werden, werden jetzt aber
 !WP mit Werten vorbelegt.
 
+CALC_KM_INTERN = .true.
 USE_EXTREM_ROUGH = .false.
 !VERZOEGERUNGSVERLUST = 'NON '
 !BERECHNUNGSMODUS = 'REIB_KONST'
@@ -1759,7 +1760,7 @@ write (*,1020) PROJEKTPFAD, STRANGDATEI, BERECHNUNGSMODUS, FLIESSGESETZ, &
              & ANFANGSSTATION, ENDSTATION, ART_RANDBEDINGUNG, &
              & ANFANGSWASSERSPIEGEL, GEFAELLE, &
              & VERZOEGERUNGSVERLUST, ITERATIONSART, REIBUNGSVERLUST, &
-             & MIT_BRUECKEN, MIT_WEHREN, USE_EXTREM_ROUGH, &
+             & MIT_BRUECKEN, MIT_WEHREN, USE_EXTREM_ROUGH, CALC_KM_INTERN, &
              & ABFLUSSEREIGNIS, &
              & EINZELVERLUSTE, &
              & MIN_Q, MAX_Q, DELTA_Q, DURCHFLUSS_EINHEIT
@@ -1780,7 +1781,8 @@ write (*,1020) PROJEKTPFAD, STRANGDATEI, BERECHNUNGSMODUS, FLIESSGESETZ, &
              & 1X, 'REIBUNGSVERLUST      = ', A6, //, &
              & 1X, 'MIT_BRUECKEN    = ', L1,/, &
              & 1X, 'MIT_WEHREN      = ', L1, /, &
-             & 1X, 'MIT_EXTREM_RAUH = ', L1, //, &
+             & 1X, 'MIT_EXTREM_RAUH = ', L1, /, &
+             & 1X, 'CALC_KM_INTERN  = ', L1, //, &
              & 1X, 'ABFLUSSEREIGNIS = ', A, /, &
              & 1X, 'EINZELVERLUSTE  = ', A, //, &
              & 1X, 'MIN_Q   = ', F10.4, /, &
