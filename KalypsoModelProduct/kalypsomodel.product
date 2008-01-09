@@ -13,15 +13,13 @@
    <configIni use="custom" path="/KalypsoModelProduct/etc/config.ini"/>
 
    <launcherArgs>
+      <programArgs>-nl
+de_DE</programArgs>
       <programArgsWin>-configuration
 @user.home/KalypsoConfiguration
 -data
-@user.home/KalypsoWorkspace
--nl
-de_DE</programArgsWin>
-      <vmArgs>-Xmx512m</vmArgs>
-      <vmArgsWin>-Xmx1300m
-kalypso.model.product.expert=true</vmArgsWin>
+@user.home/KalypsoWorkspace</programArgsWin>
+      <vmArgs>-Xmx1300m</vmArgs>
    </launcherArgs>
 
    <windowImages i16="/KalypsoModelProduct/etc/applicationicons/icon_16.gif" i32="/KalypsoModelProduct/etc/applicationicons/icon_32.gif" i48="/KalypsoModelProduct/etc/applicationicons/icon_48.gif" i64="/KalypsoModelProduct/etc/applicationicons/icon_64.gif" i128="/KalypsoModelProduct/etc/applicationicons/icon_128.gif"/>
