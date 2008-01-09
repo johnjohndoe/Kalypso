@@ -50,7 +50,7 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -100,9 +100,11 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
   private final IGeoLog m_log;
 
-  private final IFolder m_scenarioFolder;
+  private final IContainer m_scenarioFolder;
 
-  public RMA10Calculation( final File tmpDir, final IGeoLog geoLog, final IFEDiscretisationModel1d2d discModel, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IRoughnessClsCollection roughnessModell, final IFolder scenarioFolder )
+  private IStatus m_simulationStatus;
+
+  public RMA10Calculation( final File tmpDir, final IGeoLog geoLog, final IFEDiscretisationModel1d2d discModel, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IRoughnessClsCollection roughnessModell, final IContainer folder )
   {
     m_tmpDir = tmpDir;
     m_log = geoLog;
@@ -110,7 +112,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     m_flowRelationshipModel = flowModel;
     m_roughnessModel = roughnessModell;
     m_controlModel = controlModel;
-    m_scenarioFolder = scenarioFolder;
+    m_scenarioFolder = folder;
   }
 
   public IFlowRelationshipModel getFlowModel( )
@@ -147,14 +149,56 @@ public class RMA10Calculation implements ISimulation1D2DConstants
    * <li>read .2d files and process them to the output directory</li>
    * </ul>
    */
-  public IStatus runCalculation( final IProgressMonitor monitor ) throws CoreException
+  public IStatus runCalculation( final IProgressMonitor monitor )
   {
-    final String simMsg = String.format( "Simulation von '%s'", m_controlModel.getName() );
-    final SubMonitor progress = SubMonitor.convert( monitor, simMsg, 100 );
+    m_log.formatLog( IStatus.INFO, CODE_RUNNING, "Start der Simulation" );
 
-    writeRma10Files( progress.newChild( 10 ) );
-    copyExecutable( progress.newChild( 1 ) );
-    return startCalcCore( progress.newChild( 89 ) );
+    final IStatus simulationStatus = doRunCalculation( monitor );
+    m_simulationStatus = evaluateSimulationResult( simulationStatus );
+
+    m_log.log( m_simulationStatus );
+
+    return m_simulationStatus;
+  }
+
+  private IStatus doRunCalculation( final IProgressMonitor monitor )
+  {
+    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+
+    try
+    {
+      writeRma10Files( progress.newChild( 10 ) );
+      copyExecutable( progress.newChild( 1 ) );
+      return startCalcCore( progress.newChild( 89 ) );
+    }
+    catch( final CoreException ce )
+    {
+      return ce.getStatus();
+    }
+  }
+
+  private IStatus evaluateSimulationResult( final IStatus simulationStatus )
+  {
+    // TODO: distinguish different type of problems:
+    // - exe/data errors: calculation could not be started at all
+    // - no results
+    // - some results
+
+    // TODO: show dialog to user where he can
+    // - choose, which steps to process
+    // - choose, which results to be deleted
+
+    if( simulationStatus.isOK() )
+      return StatusUtilities.createStatus( IStatus.OK, CODE_RUNNING, "Simulation erfolgreich beendet", null );
+
+    if( simulationStatus.matches( IStatus.CANCEL ) )
+      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_RUNNING, "Simulation durch Benutzer abgebrochen.", null );
+
+    if( simulationStatus.matches( IStatus.ERROR ) )
+      return StatusUtilities.createStatus( IStatus.ERROR, CODE_RUNNING, "Simulation mit Fehler beendet. Ergebnisauswertung nicht möglich.", null );
+
+    // if( simulationStatus.matches( IStatus.WARNING ) )
+    return StatusUtilities.createStatus( IStatus.WARNING, CODE_RUNNING, "Simulation mit Warnung beendet.", null );
   }
 
   private void writeRma10Files( final IProgressMonitor monitor ) throws CoreException
@@ -254,7 +298,9 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
     /* Create the result folder for the .exe file, must be same as in Control-Converter */
     final File resultDir = new File( m_tmpDir, Control1D2DConverter.RESULT_DIR_NAME );
+    final File itrDir = new File( m_tmpDir, "iterObs" );
     resultDir.mkdirs();
+    itrDir.mkdirs();
 
     FileOutputStream logOS = null;
     FileOutputStream errorOS = null;
@@ -269,35 +315,22 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       final ICancelable progressCancelable = new ProgressCancelable( progress );
       // TODO: somehow monitor progress of executable via its output...
 
-      final ItrReadJob itrReadJob = new ItrReadJob( "Read Output.itr", new File( resultDir, "Output.itr" ) );
+      final ItrReadJob itrReadJob = new ItrReadJob( "Read Output.itr", new File( resultDir, "Output.itr" ), numberOfSteps, itrDir, progress );
       itrReadJob.setPriority( Job.INTERACTIVE );
       itrReadJob.setSystem( true );
-      itrReadJob.schedule( 2000 );
-
-      final Runnable idleRunnable = new Runnable()
-      {
-        private int m_stepNr = -1;
-
-        public void run( )
-        {
-          int stepNr = itrReadJob.getStepNr();
-          if( stepNr != m_stepNr )
-          {
-            m_stepNr = stepNr;
-            progress.subTask( "RMA10s wird ausgeführt - Schritt " + stepNr );
-            progress.worked( 1 );
-          }
-        }
-      };
+      itrReadJob.schedule();
 
       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA10s wird ausgeführt: %s", commandString );
-      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, idleRunnable );
+      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, null );
 
       // TODO: read other outputs: error-log
 
       try
       {
+        /* Stop the itr read job and then read the file one last time, it should be complete now... */
+        itrReadJob.cancel();
         itrReadJob.join();
+        itrReadJob.readFile();
       }
       catch( final InterruptedException e )
       {

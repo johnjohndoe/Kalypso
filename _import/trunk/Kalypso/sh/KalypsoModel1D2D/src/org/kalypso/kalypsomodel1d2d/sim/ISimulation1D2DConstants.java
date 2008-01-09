@@ -77,6 +77,8 @@ public interface ISimulation1D2DConstants
 
   public static final String RESULT_2d_ZIP_ID = "RESULT_2d_ZIP";
 
+  public static final String SIMULATION_LOG_GML = "simulation_log.gml";
+
   // ////////////////
   // Status Codes //
   // ////////////////

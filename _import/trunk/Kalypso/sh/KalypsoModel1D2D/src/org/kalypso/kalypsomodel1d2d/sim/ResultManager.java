@@ -278,4 +278,9 @@ public class ResultManager implements ISimulation1D2DConstants
   {
     return m_outputDir;
   }
+
+  public IGeoLog getGeoLog( )
+  {
+    return m_geoLog;
+  }
 }

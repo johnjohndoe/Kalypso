@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.IStatus;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
@@ -74,4 +76,11 @@ public interface IGeoLog
   void log( IStatus status );
 
   IStatusCollection getStatusCollection( );
+
+  /**
+   * Time of the first log entry this log receives.
+   * 
+   * @return <code>null</code>, if nothing was logged yet.
+   */
+  Date getStartTime( );
 }

@@ -45,7 +45,7 @@ import java.util.List;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -65,11 +65,10 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.sim.StatusComposite;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
@@ -130,18 +129,6 @@ public class CalculationUnitLogComponent
     final FeatureWrapperLabelProvider labelProvider = new FeatureWrapperLabelProvider( logTableViewer )
     {
       /**
-       * Get the IDE image at path.
-       * 
-       * @param path
-       * @return Image
-       */
-      @SuppressWarnings("restriction")
-      private Image getIDEImage( String constantName )
-      {
-        return JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( constantName ) );
-      }
-
-      /**
        * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnImage(java.lang.Object, int)
        */
       @SuppressWarnings("restriction")
@@ -151,26 +138,12 @@ public class CalculationUnitLogComponent
         if( columnIndex == 0 )
         {
           final IGeoStatus status = (IGeoStatus) element;
-          switch( status.getSeverity() )
-          {
-            case IGeoStatus.OK:
-              return KalypsoModel1D2DPlugin.getImageProvider().getImage( KalypsoModel1D2DUIImages.IMGKEY.OK );
 
-              // case IGeoStatus.CANCEL:
-              // return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_INCOMPLETE_TSK );
+          // Special treatment for cancel: show as warning
+          if( status.matches( IStatus.CANCEL ) )
+            return StatusComposite.getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
 
-            case IGeoStatus.ERROR:
-              return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
-
-            case IGeoStatus.WARNING:
-              return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
-
-            case IGeoStatus.INFO:
-              return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH );
-
-            default:
-              return null;
-          }
+          return StatusComposite.getStatusImage( status );
         }
 
         return super.getColumnImage( element, columnIndex );
@@ -315,4 +288,5 @@ public class CalculationUnitLogComponent
 
     return null;
   }
+
 }

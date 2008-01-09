@@ -70,6 +70,8 @@ public class GeoLog implements IGeoLog
 
   private final IStatusCollection m_statusCollection;
 
+  private Date m_startTime;
+
   /**
    * @param log
    *            If non <code>null</code>, all logged stati are additionally logged into this log. Also, newly created
@@ -132,11 +134,20 @@ public class GeoLog implements IGeoLog
     newStatus.setLocation( location );
     newStatus.setException( t );
 
-    // log to real ILog
-    if( m_log != null )
-      m_log.log( newStatus );
+    logOthers( now, newStatus );
 
     return newStatus;
+  }
+
+  /** Log to external log and remember start time. */
+  private void logOthers( final Date time, final IStatus status )
+  {
+    // log to real ILog
+    if( m_log != null )
+      m_log.log( status );
+
+    if( m_startTime != null )
+      m_startTime = time;
   }
 
   /**
@@ -144,11 +155,10 @@ public class GeoLog implements IGeoLog
    */
   public void log( final IStatus status )
   {
-    // log to real ILog
-    if( m_log != null )
-      m_log.log( status );
+    final Date now = new Date();
+    logOthers( now, status );
 
-    addAndCloneStatus( new Date(), status, m_statusCollection );
+    addAndCloneStatus( now, status, m_statusCollection );
   }
 
   /**
@@ -178,6 +188,14 @@ public class GeoLog implements IGeoLog
       addAndCloneStatus( time, child, newStatus );
 
     return newStatus;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.sim.IGeoLog#getStartTime()
+   */
+  public Date getStartTime( )
+  {
+    return m_startTime;
   }
 
 }

@@ -43,8 +43,8 @@ package org.kalypso.kalypsomodel1d2d.conv.results;
 import java.io.File;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -71,7 +71,7 @@ public class RestartNodes
 {
   private static final CS_CoordinateSystem COORDINATE_SYSTEM = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
-  public static RestartNodes createRestartNodes( final IFolder scenarioFolder, final IControlModel1D2D controlModel ) throws CoreException
+  public static RestartNodes createRestartNodes( final IContainer folder, final IControlModel1D2D controlModel ) throws CoreException
   {
     final List<IRestartInfo> restartInfos = controlModel.getRestartInfos();
 
@@ -82,7 +82,7 @@ public class RestartNodes
       if( restartFilePath == null )
         continue;
 
-      final IFile ifile = scenarioFolder.getFile( restartFilePath );
+      final IFile ifile = folder.getFile( restartFilePath );
       final File file = ifile.getLocation().toFile();
       restartNodes.addResultFile( file );
     }
