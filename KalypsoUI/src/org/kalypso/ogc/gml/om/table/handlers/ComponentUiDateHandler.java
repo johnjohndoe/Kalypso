@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -49,6 +50,7 @@ import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.om.table.celleditor.DateTimeCellEditor;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Handles XMLGreogorianCalendar types.
@@ -96,11 +98,19 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
   {
     if( value instanceof XMLGregorianCalendar )
     {
-      final Date date = DateUtilities.toDate( (XMLGregorianCalendar) value );
-      return super.getStringRepresentation( date );
+      final XMLGregorianCalendar xmlCal = (XMLGregorianCalendar) value;
+      final Date date = DateUtilities.toDate( xmlCal );
+
+      if( date == null )
+        return String.format( getNullFormat() );
+
+      Calendar instance = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+      instance.setTime( date );
+      String displayFormat = getDisplayFormat();
+
+      return String.format( displayFormat, instance );
     }
 
     return "<No Date>";
   }
-
 }

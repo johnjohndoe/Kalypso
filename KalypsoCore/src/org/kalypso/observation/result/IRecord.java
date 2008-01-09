@@ -50,17 +50,23 @@ public interface IRecord
   /**
    * @return the <code>TupleResult</code> that owns this record
    */
-  public TupleResult getOwner();
+  public TupleResult getOwner( );
 
   /**
    * @return the value for the given component (can be null)
-   * @throws IllegalArgumentException if the component is unknown to this record
+   * @throws IllegalArgumentException
+   *             if the component is unknown to this record
    */
   public Object getValue( IComponent comp );
 
   /**
-   * Sets the value for the given component
-   * @throws IllegalArgumentException if the component is unknown to this record
+   * Sets the value for the given component<br>
+   * ATTENTION: only ment to be called by {@link TupleResult} itself! Else sorting may fail...<br>
+   * TODO: check if this could be made default visible, or if the record may inform its owner to sort itself... (make
+   * sure its not called twice)
+   * 
+   * @throws IllegalArgumentException
+   *             if the component is unknown to this record
    */
   public void setValue( IComponent comp, Object value );
 }

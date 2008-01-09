@@ -69,7 +69,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationDatAdapter implements INativeObservationAdapter
 {
-  private DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
+  private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
   // Tag1 Zeit1 N - Ombrometer Fuhlsbuettel [mm]
   // 01.01.1971 07:30:00 0,1
@@ -94,14 +94,17 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
 
   public IObservation createObservationFromSource( File source ) throws Exception
   {
-    return createObservationFromSource( source, true );
+    return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( File source, TimeZone timeZone, boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
-//  TODO: allgemein setzten im Import dialog!
-    TimeZone timeZone = TimeZone.getTimeZone( "UTC" );
+
+    /* this is due to backwards compatibility */
+    if( timeZone == null )
+      timeZone = TimeZone.getTimeZone( "GMT+1" );
+
     m_grapDateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
@@ -124,7 +127,7 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
 
     // ignore first row (not data here, by DAT format)
     reader.readLine();
-    
+
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )

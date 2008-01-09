@@ -71,7 +71,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
 {
-  private DateFormat m_dwdMDDateFormat = new SimpleDateFormat( "ddMMyyyyHHmmss" );
+  private final DateFormat m_dwdMDDateFormat = new SimpleDateFormat( "ddMMyyyyHHmmss" );
 
   public static Pattern m_dwdMDfirstHeaderPattern = Pattern.compile( "[\\d]{5}[\\d\\w\\s]{15}(.{30}).+?" );
 
@@ -107,14 +107,17 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
 
   public IObservation createObservationFromSource( File source ) throws Exception
   {
-    return createObservationFromSource( source, true );
+    return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( File source, TimeZone timeZone, boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
-    // TODO: Allgemein setzten im Import dialog!
-    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
+
+    /* this is due to backwards compatibility */
+    if( timeZone == null )
+      timeZone = TimeZone.getTimeZone( "GMT+1" );
+
     m_dwdMDDateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
@@ -192,7 +195,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
               String label = matcher.group( 3 ).trim();
               if( label.equals( "" ) )
               {
-                valueLine = matcher.group( 4 ) ;
+                valueLine = matcher.group( 4 );
                 long startDate = date.getTime();
                 for( int i = 0; i < 12; i++ )
                 {
@@ -204,7 +207,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
                 }
               }
               // No precipitation the whole day (24 hours * 12 values = 288 values)
-              else if( label.equals( "N" ))
+              else if( label.equals( "N" ) )
               {
                 Double value = 0.0;
                 long startDate = date.getTime();
@@ -215,7 +218,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
                   dateCollector.add( valueDate );
                 }
               }
-              else if( label.equals( "A" ))
+              else if( label.equals( "A" ) )
               {
                 Double value = 9999.0;
                 long startDate = date.getTime();

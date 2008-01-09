@@ -70,7 +70,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationCSVAdapter implements INativeObservationAdapter
 {
-  private DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
+  private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
   // public static Pattern m_csvPattern = Pattern
   // .compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9\\.]+)" );
@@ -93,14 +93,17 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
 
   public IObservation createObservationFromSource( File source ) throws Exception
   {
-    return createObservationFromSource( source, true );
+    return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( File source, TimeZone timeZone, boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
-//  TODO: allgemein setzten im Import dialog!
-    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
+
+    /* this is due to backwards compatibility */
+    if( timeZone == null )
+      timeZone = TimeZone.getTimeZone( "GMT+1" );
+
     m_grapDateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();

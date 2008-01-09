@@ -131,7 +131,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
 
   /**
    * Set the timezone for the rendering component. This is the timezone into which the dates should be displayed in the
-   * table. It allows you to override the default behaviour which is uses the locale setting.
+   * table. It allows you to override the default behavior which is uses the locale setting.
    */
   public void setTimeZone( final TimeZone tz )
   {

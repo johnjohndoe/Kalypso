@@ -137,12 +137,14 @@ public class ObservationPlot extends XYPlot
   /** maps the series to their datasets */
   private transient final Map<XYCurveSerie, CurveDataset> m_serie2dataset = new HashMap<XYCurveSerie, CurveDataset>();
 
-  private transient Map<Double, AlarmLevelPlotElement> m_yConsts = new HashMap<Double, AlarmLevelPlotElement>();
+  private transient final Map<Double, AlarmLevelPlotElement> m_yConsts = new HashMap<Double, AlarmLevelPlotElement>();
 
-  private transient Map<Long, Marker> m_markers = new HashMap<Long, Marker>();
+  private transient final Map<Long, Marker> m_markers = new HashMap<Long, Marker>();
 
   /** is true as soon as one background image has been set */
   private boolean m_bgImageSet = false;
+
+  private TimeZone m_timezone;
 
   /**
    * Constructor.
@@ -167,7 +169,7 @@ public class ObservationPlot extends XYPlot
       addCurve( (DiagViewCurve) curves[i] );
 
     setNoDataMessage( "Keine Daten vorhanden" );
-    
+
     setTimezone( view.getTimezone() );
   }
 
@@ -191,6 +193,9 @@ public class ObservationPlot extends XYPlot
     {
       throw new SensorException( e );
     }
+
+    // TODO: if date axis: set timezone
+    setTimezone( vAxis );
 
     vAxis.setInverted( diagAxis.isInverted() );
 
@@ -723,28 +728,29 @@ public class ObservationPlot extends XYPlot
 
   public void setTimezone( final TimeZone timezone )
   {
+    m_timezone = timezone;
+
     for( int i = 0; i < getDomainAxisCount(); i++ )
     {
       final ValueAxis axis = getDomainAxis( i );
-      if( axis instanceof DateAxis )
-      {
-        final DateAxis da = (DateAxis) axis;
-        final DateFormat df = da.getDateFormatOverride() != null ? da.getDateFormatOverride() : DateFormat.getDateTimeInstance();
-        df.setTimeZone( timezone );
-        da.setDateFormatOverride( df );
-      }
+      setTimezone( axis );
     }
 
     for( int i = 0; i < getRangeAxisCount(); i++ )
     {
       final ValueAxis axis = getRangeAxis( i );
-      if( axis instanceof DateAxis )
-      {
-        final DateAxis da = (DateAxis) axis;
-        final DateFormat df = da.getDateFormatOverride() != null ? da.getDateFormatOverride() : DateFormat.getDateTimeInstance();
-        df.setTimeZone( timezone );
-        da.setDateFormatOverride( df );
-      }
+      setTimezone( axis );
+    }
+  }
+
+  private void setTimezone( final ValueAxis axis )
+  {
+    if( axis instanceof DateAxis )
+    {
+      final DateAxis da = (DateAxis) axis;
+      final DateFormat df = da.getDateFormatOverride() != null ? da.getDateFormatOverride() : DateFormat.getDateTimeInstance();
+      df.setTimeZone( m_timezone );
+      da.setDateFormatOverride( df );
     }
   }
 }

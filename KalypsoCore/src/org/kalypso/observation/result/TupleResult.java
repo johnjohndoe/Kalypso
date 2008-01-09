@@ -346,9 +346,12 @@ public class TupleResult implements List<IRecord>
    */
   public IRecord set( final int index, final IRecord element )
   {
+    final IRecord result = m_records.set( index, element );
     // TODO: inform listeners
 
-    return m_records.set( index, element );
+    sort();
+
+    return result;
   }
 
   /**
@@ -364,6 +367,11 @@ public class TupleResult implements List<IRecord>
    */
   public List<IRecord> subList( final int fromIndex, final int toIndex )
   {
+    // TODO: problem:
+    // - listeners do not get informed
+    // - sorting is not maintained
+    // TODO: implement a special sub-list
+
     return m_records.subList( fromIndex, toIndex );
   }
 
@@ -372,6 +380,7 @@ public class TupleResult implements List<IRecord>
    */
   public Object[] toArray( )
   {
+    // TODO: should not be necessary
     sort();
 
     return m_records.toArray();
@@ -408,6 +417,8 @@ public class TupleResult implements List<IRecord>
   {
     return m_components.toArray( new IComponent[m_components.size()] );
   }
+
+  // TODO: check if addin/removing components has mipact on sorting
 
   /**
    * Adds a component to this tuple result. Does nothing if an equal component was already added.
