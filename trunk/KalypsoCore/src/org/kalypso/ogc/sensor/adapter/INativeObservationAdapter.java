@@ -41,20 +41,20 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 
 /**
- * 
  * @author doemming
  */
 public interface INativeObservationAdapter extends IExecutableExtension
 {
   public abstract IObservation createObservationFromSource( File file ) throws Exception;
 
-  public abstract IObservation createObservationFromSource( File file, boolean continueWithErrors ) throws Exception;
+  public abstract IObservation createObservationFromSource( File file, final TimeZone timeZone, boolean continueWithErrors ) throws Exception;
 
-  public abstract IAxis[] createAxis();
+  public abstract IAxis[] createAxis( );
 }

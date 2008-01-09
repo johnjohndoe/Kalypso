@@ -66,9 +66,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
- * @author huebsch
- * 
- * adapter for Timeseries in 'dwd' format (5 minutes values dayly blocks) Kopfsatz 5-Minuten-Datei (neue
+ * @author huebsch adapter for Timeseries in 'dwd' format (5 minutes values dayly blocks) Kopfsatz 5-Minuten-Datei (neue
  *         Struktur) Feld-Nr. 1 2 3 4 5 Inhalt 77 Stations-nummer Datumjj/mm/tt gemesseneNiederschlagshöhe(in 1/10 mm)
  *         Tagessumme der 5-Min-Werte(in 1/1000 mm)Kalendertag! ch. v. b. 1-2 4-8 10-15 17-20 22-27 Anz. ch. 2 5 6 4 6
  *         Ein Datenblock besteht aus 18 Datensätzen: Datensatz 5-Minuten-Datei (neue Struktur) Feld-Nr. 1-16 Inhalt 16
@@ -108,13 +106,17 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
 
   public IObservation createObservationFromSource( File source ) throws Exception
   {
-    return createObservationFromSource( source, true );
+    return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( File source, TimeZone timeZone, boolean continueWithErrors ) throws Exception
   {
     SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" );
-    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
+
+    /* this is due to backwards compatibility */
+    if( timeZone == null )
+      timeZone = TimeZone.getTimeZone( "GMT+1" );
+
     format.setTimeZone( timeZone );
     m_dateFormat = format;
     final MetadataList metaDataList = new MetadataList();
@@ -184,8 +186,8 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             // TODO: Write status
             if( value > 99.997 )
             {
-               System.out.println( "Messfehler" );
-               value = 0.0;
+              System.out.println( "Messfehler" );
+              value = 0.0;
             }
             // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
             // Rohdaten benötigt)

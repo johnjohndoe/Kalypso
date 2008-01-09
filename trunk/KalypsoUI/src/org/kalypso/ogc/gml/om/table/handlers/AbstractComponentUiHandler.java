@@ -107,7 +107,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   public String getStringRepresentation( final Object value )
   {
     if( value == null )
-      return String.format( m_nullFormat, value );
+      return String.format( m_nullFormat );
 
     return String.format( m_displayFormat, value );
   }

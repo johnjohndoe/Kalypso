@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.kalypso.ogc.sensor.IAxis;
@@ -72,7 +73,7 @@ public class NativeObservationZmlAdapter implements INativeObservationAdapter
     return parseXML;
   }
 
-  public IObservation createObservationFromSource( final File source, final boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     return createObservationFromSource( source );
   }

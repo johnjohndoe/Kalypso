@@ -13,11 +13,13 @@
 
    <extension
          point="org.kalypso.core.nativeObsAdapter">
+      <!--
       <adapter
             axisType="ZML"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationZmlAdapter"
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationZmlAdapter.label">
       </adapter>
+      -->
       <adapter
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.n.label"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"

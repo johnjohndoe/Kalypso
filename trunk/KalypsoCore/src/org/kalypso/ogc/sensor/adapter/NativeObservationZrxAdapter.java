@@ -72,9 +72,9 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationZrxAdapter implements INativeObservationAdapter
 {
-  private DateFormat m_zrxDateFormat = new SimpleDateFormat( "yyyyMMddHHmm" );
+  private final DateFormat m_zrxDateFormat = new SimpleDateFormat( "yyyyMMddHHmm" );
 
-  private DateFormat m_zrxDateFormatSec = new SimpleDateFormat( "yyyyMMddHHmmss" );
+  private final DateFormat m_zrxDateFormatSec = new SimpleDateFormat( "yyyyMMddHHmmss" );
 
   public static Pattern m_zrxHeaderPattern = Pattern.compile( "#.*" );
 
@@ -100,18 +100,18 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
 
   public IObservation createObservationFromSource( final File source ) throws Exception
   {
-    return createObservationFromSource( source, true );
+    return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( final File source, final boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
     metaDataList.put( ObservationConstants.MD_ORIGIN, source.getAbsolutePath() );
-    // TODO: allgemein setzten im Import dialog!
-//    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
-    TimeZone timeZone = TimeZone.getTimeZone( "UTC" );
-// TimeZone timeZone = TimeZone.getDefault( );
-// metaDataList.put( TimeserieConstants.MD_TIMEZONE, timeZone.getID() );
+
+    /* this is due to backwards compatibility */
+    if( timeZone == null )
+      timeZone = TimeZone.getTimeZone( "GMT+1" );
+
     m_zrxDateFormat.setTimeZone( timeZone );
     m_zrxDateFormatSec.setTimeZone( timeZone );
     // create axis

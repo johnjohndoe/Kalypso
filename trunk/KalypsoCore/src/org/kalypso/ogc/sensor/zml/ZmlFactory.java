@@ -197,12 +197,12 @@ public class ZmlFactory
    * 
    * @see ZmlFactory#parseXML(InputSource, String, URL)
    * @param url
-   *          the url specification of the zml
+   *            the url specification of the zml
    * @param identifier
-   *          [optional] ID für Repository
+   *            [optional] ID für Repository
    * @return IObservation object
    * @throws SensorException
-   *           in case of parsing or creation problem
+   *             in case of parsing or creation problem
    */
   public static IObservation parseXML( final URL url, final String identifier ) throws SensorException
   {
@@ -268,11 +268,11 @@ public class ZmlFactory
    * Parse the XML and create an IObservation instance.
    * 
    * @param source
-   *          contains the zml
+   *            contains the zml
    * @param identifier
-   *          [optional] the identifier of the resulting observation
+   *            [optional] the identifier of the resulting observation
    * @param context
-   *          [optional] the context of the source in order to resolve relative url
+   *            [optional] the context of the source in order to resolve relative url
    */
   public static IObservation parseXML( final InputSource source, final String identifier, final URL context ) throws SensorException
   {
@@ -308,7 +308,7 @@ public class ZmlFactory
           value = md.getData().replaceAll( XMLUtilities.CDATA_BEGIN_REGEX, "" ).replaceAll( XMLUtilities.CDATA_END_REGEX, "" );
         else
           value = "";
-        if( md.getName().equals( TimeserieConstants.MD_TIMEZONE ) && md.getValue().length()>0)
+        if( md.getName().equals( TimeserieConstants.MD_TIMEZONE ) && md.getValue().length() > 0 )
           timeZone = TimeZone.getTimeZone( md.getValue() );
         metadata.put( md.getName(), value );
       }
@@ -340,8 +340,8 @@ public class ZmlFactory
           format = getProperties().getProperty( type + "_format" );
 
         parser = getParserFactory().createParser( type, format );
-//        if( parser instanceof DateParser && timeZone != null )
-//          ((DateParser) parser).setTimezone( timeZone );
+        if( parser instanceof DateParser && timeZone != null )
+          ((DateParser) parser).setTimezone( timeZone );
 
         values = createValues( context, tmpAxis, parser, data );
       }
@@ -412,13 +412,13 @@ public class ZmlFactory
    * Parses the values and create the corresponding objects.
    * 
    * @param context
-   *          context into which the original file exists
+   *            context into which the original file exists
    * @param axisType
-   *          binding object for axis
+   *            binding object for axis
    * @param parser
-   *          configured parser enabled for parsing the values according to axis spec
+   *            configured parser enabled for parsing the values according to axis spec
    * @param data
-   *          [optional] contains the data-block if observation is block-inline
+   *            [optional] contains the data-block if observation is block-inline
    * @return corresponding values depending on value axis type
    * @throws ParserException
    * @throws MalformedURLException
@@ -450,7 +450,7 @@ public class ZmlFactory
    * Create an XML-Observation ready for marshalling.
    * 
    * @param timezone
-   *          the timezone into which dates should be converted before serialized
+   *            the timezone into which dates should be converted before serialized
    */
   public static Observation createXML( final IObservation obs, final IRequest args, TimeZone timezone ) throws FactoryException
   {
@@ -485,7 +485,7 @@ public class ZmlFactory
         if( mdKey.equals( TimeserieConstants.MD_TIMEZONE ) )
         {
           timeZonePresent = true;
-//          mdValue = timezone.getID(); // override with our timezone
+// mdValue = timezone.getID(); // override with our timezone
         }
 
         // TRICKY: if this looks like an xml-string then pack it
@@ -668,7 +668,7 @@ public class ZmlFactory
    * Helper method for simply writing the observation to a file
    * 
    * @throws SensorException
-   *           if an IOException or a FactoryException is thrown internally
+   *             if an IOException or a FactoryException is thrown internally
    */
   public static void writeToFile( final IObservation obs, final File file ) throws SensorException
   {
@@ -777,7 +777,7 @@ public class ZmlFactory
   /**
    * @param observation
    * @param request
-   *          may be <code>null</code>
+   *            may be <code>null</code>
    * @return string made for clipboard
    * @throws SensorException
    */

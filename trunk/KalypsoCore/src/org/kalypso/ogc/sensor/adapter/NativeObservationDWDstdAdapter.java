@@ -70,7 +70,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
 {
-  private DateFormat m_dwdSTDDateFormat = new SimpleDateFormat( "yyyyMMdd" );
+  private final DateFormat m_dwdSTDDateFormat = new SimpleDateFormat( "yyyyMMdd" );
 
   public static Pattern m_dwdSTDPattern = Pattern.compile( "\\s\\s\\s\\s([0-9]{5})([0-9]{4}[0-9]{2}[0-9]{2})(.+?)" );
 
@@ -92,14 +92,17 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
 
   public IObservation createObservationFromSource( File source ) throws Exception
   {
-    return createObservationFromSource( source, true );
+    return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( File source, TimeZone timeZone, boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
-    // TODO: allgemein setzten im Import dialog!
-    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
+
+    /* this is due to backwards compatibility */
+    if( timeZone == null )
+      timeZone = TimeZone.getTimeZone( "GMT+1" );
+
     m_dwdSTDDateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
