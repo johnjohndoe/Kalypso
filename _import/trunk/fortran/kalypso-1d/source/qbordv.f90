@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jan 2008    3:59 pm
+!     Last change:  MD    9 Jan 2008    7:04 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -593,7 +593,7 @@ If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
   END DO
   !JK ENDE BERECHNUNGSSCHLEIFE BORDVOLL-------------------------
 
-  write (*, 1010)
+  write (UNIT_OUT_LOG, 1010)
   1010 format (//1X, 'Kontrolle der berechneten Abfluesse', /, &
                & 1X, '-----------------------------------')
 
@@ -680,12 +680,12 @@ If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
     IF (ikenn.ne.0) then
       WRITE (UNIT_OUT_LOG, 1004) ikenn, qschritt(ikenn)
       1004 format (/1X, '--> Bordvoll beim ',I4,'-ten Schritt mit Q-Bordvoll = ', F12.3, ' m3/s.')
-      write (*,1005) stat(ji), qschritt(ikenn)
+      write (UNIT_OUT_LOG,1005) stat(ji), qschritt(ikenn)
       1005 format (/1X, 'Bei Station ', F12.4, ' liegt bordvoller Abfluss bei Q = ', F12.3, ' m3/s')
     ELSE
       WRITE (UNIT_OUT_LOG, 1006)
       1006 format (/1X, '--> Bordvoller Abfluss nicht gefunden!')
-      write (*, 1007) stat(ji)
+      write (UNIT_OUT_LOG, 1007) stat(ji)
       1007 format (/1X, 'Achtung! Bordvoller Abfluss bei Station ', F12.4, ' nicht gefunden!')
     ENDIF
 
@@ -813,7 +813,7 @@ IF (km.eq.'j') then
 
   ilen = LEN_TRIM(NAME_OUT_WSL)
   NAME_OUT_GER = NAME_OUT_WSL(1:ilen) // '.ger'
-  write (*,*) 'NAME_OUT_GER = ', NAME_OUT_GER
+  !write (*,*) 'NAME_OUT_GER = ', NAME_OUT_GER
 
   UNIT_OUT_GER = ju0gfu ()
   OPEN (UNIT=UNIT_OUT_GER, FILE=NAME_OUT_GER, STATUS='REPLACE', ACTION='WRITE', IOSTAT=istat)
@@ -826,7 +826,7 @@ IF (km.eq.'j') then
   ilen = LEN_TRIM(NAME_PFAD_DATH)
   ilen2 = LEN_TRIM(FLUSSNAME)
   NAME_OUT_LOG_KM = NAME_PFAD_DATH(1:ilen) // 'out.'// FLUSSNAME(1:ilen2)
-  write (*,*) 'NAME_OUT_LOG_KM = ', NAME_OUT_LOG_KM
+  !write (*,*) 'NAME_OUT_LOG_KM = ', NAME_OUT_LOG_KM
 
   UNIT_OUT_LOG_KM = ju0gfu ()
   OPEN (UNIT=UNIT_OUT_LOG_KM, FILE=NAME_OUT_LOG_KM, STATUS='REPLACE', ACTION='WRITE', IOSTAT=istat)
@@ -865,7 +865,7 @@ ENDIF
 ! ------------------------------------------------------------------
 
 
-write (*,9000)
+write (UNIT_OUT_LOG,9000)
 9000 format (///1X, 'Der Abflusslaengsschnitt fuer die Bordvoll-Berechnung wird erstellt.', /, &
              & /1X, 'Es werden 2 Dateien angelegt:', /, &
              &  1X, '   1. Datei (*.qb1):  Hydrologische Laengsschnitt ', /, &

@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jan 2008    3:51 pm
+!     Last change:  MD    9 Jan 2008    4:25 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -362,6 +362,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
   IF (it1000.gt.it1000max) then
     !JK   SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, '('' Konvergenz in der Schleife 1000 nicht gefunden !'')')
+    WRITE (*, '('' Keine Konvergenz in der Wehrberechnung: '')')
+    WRITE (*, '(''   Abbruch in Schleife 1000 bei Energiehoehen-Iteration!'')')
 
     !JK   WAR SCHON DEAKTIVIERT, 02.05.00, JK
     !**   print*,'keine Konvergenz in der Wehrberechnung!'
@@ -521,8 +523,8 @@ DO 1000 WHILE(dif_e.gt.0.0001)
     it2000 = it2000 + 1
 
     IF (it2000.gt.itmax) then   ! itmax = 99 in DIM_VARIABLES
-      PRINT * , 'keine Konvergenz in der Wehrberechnung!'
-      PRINT * , 'Schleife2000 -> STOP '
+      WRITE (*, '('' Keine Konvergenz in der Wehrberechnung: '')')
+      WRITE (*, '(''   Abbruch in Schleife 2000 bei Abfluss-Iteration!'')')
       STOP 'programende'
     ENDIF
 

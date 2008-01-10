@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jan 2008    4:05 pm
+!     Last change:  MD    9 Jan 2008    4:55 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1156,9 +1156,9 @@ Hauptschleife: DO i = 1, maxger
             CALL intdat (staso, ifehl)
 
             IF (ifehl.ne.0) then
-              WRITE (UNIT_OUT_LOG, '('' Programmabbruch wegen Konvergenzprobleme in Profil a  '')')
-              WRITE (UNIT_OUT_LOG, '('' Profil "a" (Bruecke):='',f10.4)') stat (nprof)
-              WRITE (UNIT_OUT_LOG, '('' Programmabbruch --> STOP '')')
+              WRITE (*, '('' Programmabbruch wegen Konvergenzprobleme in Profil a  '')')
+              WRITE (*, '('' Profil "a" (Bruecke):='',f10.4)') stat (nprof)
+              WRITE (*, '('' Programmabbruch --> STOP '')')
               STOP
             ENDIF
 
@@ -1456,9 +1456,8 @@ Hauptschleife: DO i = 1, maxger
           READ (UNIT_EIN_STR, '(a)', end = 5000) dummy
           CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
           IF (ifehl.ne.0.or.ianz.eq.0) then
-            PRINT * , 'Fehlerhaftes Format in der Profil.dat-datei.'
-            PRINT * , 'Es wurde keine Station gelesen.'
-            PRINT * , 'Eingelesen wurde : ', dummy
+            WRITE (*, '('' Fehlerhaftes Format in der Profil.dat-datei.'')')
+            WRITE (*, '('' Es wurde keine Station gelesen.'')')
             STOP 0
           ENDIF
 
@@ -1770,9 +1769,9 @@ Hauptschleife: DO i = 1, maxger
         CALL intdat (staso, ifehl)
 
         IF (ifehl.ne.0) then
-          WRITE (UNIT_OUT_LOG, '('' Programmabbruch wegen Konvergenzprobleme in Profil a  '')')
-          WRITE (UNIT_OUT_LOG, '('' Profil "a" (Bruecke):='',f10.4)') stat (nprof)
-          WRITE (UNIT_OUT_LOG, '('' Programmabbruch --> STOP '')')
+          WRITE (*, '('' Programmabbruch wegen Konvergenzprobleme in Profil a  '')')
+          WRITE (*, '('' Profil "a" (Bruecke):='',f10.4)') stat (nprof)
+          WRITE (*, '('' Programmabbruch --> STOP '')')
           STOP
         ENDIF
 

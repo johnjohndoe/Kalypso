@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Jun 2006    3:22 pm
+!     Last change:  MD    9 Jan 2008    4:53 pm
 !--------------------------------------------------------------------------
 ! This code, globale_funktionen.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -278,8 +278,9 @@ REAL function GET_A_NL(c_wr_un, d_p, I_R, v, anf, g)
 ! LITERATUR: BWK-MERKBLATT 1, 1999, S.30
 !---------------------------------------------------------------------------------------
 
-implicit none
+USE IO_UNITS
 
+implicit none
 ! calling variables
 REAL, INTENT(IN) :: c_wr_un    ! Widerstandsbeiwert
 REAL, INTENT(IN) :: d_p        ! Durchmesser des Bewuchselementes
@@ -317,7 +318,7 @@ iteration_a_NL: do			! Iteration bis Konvergenzkriterium für a_NL erfüllt ist
   if (i > 100) then       		! Keine Konvergenz nach 100 Iterationen
     GET_A_NL = anf                      ! Der Wert 0.0 zeigt dem aufrufenden Programm
 
-    write (*,1000) GET_A_NL
+    write (UNIT_OUT_LOG,1000) GET_A_NL
     1000 format (1X, 'Achtung: Keine Konvergenz bei der Berechnung der Nachlauflaenge!', /, &
                & 1X, 'Es wird angenommen: A_NL = ', F10.4)
 

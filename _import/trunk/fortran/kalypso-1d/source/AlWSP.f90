@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Jun 2006   12:14 pm
+!     Last change:  MD    9 Jan 2008    6:35 pm
 !--------------------------------------------------------------------------
 ! This code, AlWSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -178,7 +178,7 @@ RETURN
 
 6 CONTINUE
 
-WRITE (0, '(a)') 'Parameter max2 ist zu klein'
+WRITE (UNIT_OUT_LOG, '(a)') 'Parameter max2 ist zu klein'
 ifehl = 1
 RETURN
 
@@ -194,6 +194,7 @@ SUBROUTINE algeb (ib, ifehl, medu, info)
 !                          ib=1 : 1.Ergenzungsmenge                     
 !                          ib=2 : 2.Ergenzungsmenge                     
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -207,12 +208,11 @@ CALL konve (1, ib, ifehl, medu, info)
 
 IF (info.eq.1) then
   k = 1
-  PRINT * , 'Gebiet :', k
+  WRITE (UNIT_OUT_LOG, * ) 'Gebiet :', k
   ff = 0
   DO j = 1, m (k)
-    PRINT * , ' '
-    PRINT * , j, '. konvexes Polygon'
-    WRITE ( * , '(i5,2f10.3)') (i, x (i, j, k) , y (i, j, k) , i =0, n (j, k) )
+    WRITE (UNIT_OUT_LOG, '(a)') 'konvexes Polygon'
+    WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (i, x (i, j, k) , y (i, j, k) , i =0, n (j, k) )
     CALL flaec (1, n (j, k), f, j, k)
     ff = ff + f
 
@@ -227,11 +227,10 @@ CALL konve (2, ib, ifehl, medu, info)
 IF (info.eq.1) then
   k = 2
   ff = 0
-  PRINT * , 'Gebiet :', k
+  WRITE (UNIT_OUT_LOG, * ) 'Gebiet :', k
   DO j = 1, m (k)
-    PRINT * , ' '
-    PRINT * , j, '. konvexes Polygon'
-    WRITE ( * , '(i5,2f10.3)') (i, x (i, j, k) , y (i, j, k) , i =0, n (j, k) )
+    WRITE (UNIT_OUT_LOG, '(a)') 'konvexes Polygon'
+    WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (i, x (i, j, k) , y (i, j, k) , i =0, n (j, k) )
     CALL flaec (1, n (j, k), f, j, k)
     ff = ff + f
   END DO
@@ -284,24 +283,24 @@ IF (jj.eq.2) j = 3
 IF (jj.eq.3) j = 2
 
 IF (jj.eq.1) then
-  IF (info.eq.1) print * , ' '
-IF (info.eq.1) print  * , 'Schnittmenge      :'
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') ' '
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Schnittmenge      :'
   typ = 's81'
   lay = 301
 ENDIF
 IF (jj.eq.2) then
-  IF (info.eq.1) print * , ' '
-  IF (info.eq.1) print * , 'Ergenzungsmenge 1 :'
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') ' '
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Ergenzungsmenge 1 :'
   typ = 's51'
   lay = 302
 ENDIF
 IF (jj.eq.3) then
-  IF (info.eq.1) print * , ' '
-  IF (info.eq.1) print * , 'Ergenzungsmenge 2 :'
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') ' '
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Ergenzungsmenge 2 :'
   typ = 's77'
   lay = 303
 ENDIF
-IF (info.eq.1) print  * , 'Layer :', lay, ' Linientyp :  ', typ
+IF (info.eq.1) WRITE (UNIT_OUT_LOG, *) 'Layer :', lay, ' Linientyp :  ', typ
 
 n3 (j) = 0
 ii = 0
@@ -311,7 +310,7 @@ DO 1 i1 = 1, m (1)
   DO 2 i2 = 1, m (2)
     n3 (j) = n3 (j) + 1
     IF (n3 (j) .gt.min2) then
-      PRINT * , 'Im MENGF ist der Parameter min2 zu klein'
+      WRITE (UNIT_OUT_LOG, '(a)') 'Im MENGF ist der Parameter min2 zu klein'
       ifehl = 1
       RETURN
     ENDIF
@@ -355,8 +354,8 @@ DO k = 1, n3 (j)
 
   CALL imron (k, j)
   IF (info.eq.1) then
-    WRITE (*  , * ) '----------- Flache: ', fs (k, j)
-    WRITE ( * , '(i5,2f20.6)') (i, xs (i, k, j) , ys (i, k, j) , i = 0, ns (k, j) )
+    WRITE (UNIT_OUT_LOG, * ) '----------- Flache: ', fs (k, j)
+    WRITE (UNIT_OUT_LOG, '(i5,2f20.6)') (i, xs (i, k, j) , ys (i, k, j) , i = 0, ns (k, j) )
   ENDIF
 
 END DO
@@ -369,6 +368,7 @@ END SUBROUTINE mengf
 SUBROUTINE inpuf (k)
 
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 ! Calling variables
 INTEGER :: k
@@ -584,6 +584,7 @@ END SUBROUTINE flaec
 SUBROUTINE konve (k, im, ifehl, medu, info)
 
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -621,7 +622,7 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
       mal1 = mal1 + 1 
       IF (mal1.gt.1000) then 
         ifehl = 1 
-        PRINT * , 'mal1 ist zu gross' 
+        WRITE (UNIT_OUT_LOG, '(a)') 'mal1 ist zu gross'
         RETURN 
       ENDIF 
       m0 = m (k) 
@@ -631,9 +632,8 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
     7   CONTINUE 
         mal2 = mal2 + 1 
         IF (mal2 .gt. min2) then 
-!      write(0,'(a11,4i7)') 'k,im,j,m(k)',k,im,j,m(k)                   
-          WRITE (0, '(a)') 'mal2 ist zu gross' 
-          WRITE ( * , '(a)') 'mal2 ist zu gross' 
+!      write(0,'(a11,4i7)') 'k,im,j,m(k)',k,im,j,m(k)
+          WRITE (UNIT_OUT_LOG, '(a)') 'mal2 ist zu gross'
           RETURN 
         ENDIF 
                                                                         
@@ -700,7 +700,7 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
     3 END DO 
                                                                         
       IF (m (k) .gt.min2) then 
-        PRINT * , 'Im KONVEX ist der Parameter min2'
+        WRITE (UNIT_OUT_LOG, '(a)') 'Im KONVEX ist der Parameter min2'
         ifehl = 1
         RETURN 
       ENDIF 
@@ -716,7 +716,7 @@ END SUBROUTINE konve
 SUBROUTINE zuord (ex, ey, j, iaus, k, ifehl, iw, ii)
 
 USE DIM_VARIABLEN
-
+USE IO_UNITS
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
 
@@ -771,6 +771,8 @@ END SUBROUTINE zuord
 !----------------------------------------------------------------------------------------
 SUBROUTINE winha (x1, y1, x2, y2, x3, y3, ex, ey, i, ifehl)
 
+USE IO_UNITS
+
 ifehl = 0
                                                                         
       i = 0 
@@ -779,7 +781,7 @@ ifehl = 0
       ef = sqrt (e**2 + f**2) 
                                                                         
       IF (ef.lt.1.0e-06) then 
-        PRINT * , 'ef=', ef 
+        WRITE (UNIT_OUT_LOG, *) 'ef=', ef
 !      write(0,'(a3,f10.7)') 'ef=',ef                                   
         PRINT *, x1, y1, x2, y2 
         ifehl = 1 
@@ -792,7 +794,7 @@ ifehl = 0
       h = y3 - y2 
       gh = sqrt (g**2 + h**2) 
       IF (gh.lt.1.0e-06) then 
-        PRINT * , 'gh<<', gh 
+        WRITE (UNIT_OUT_LOG, *) 'gh<<', gh
 !      write(0,'(a3,f10.7)') 'gh=',gh                                   
         ifehl = 1 
         RETURN 
@@ -868,6 +870,7 @@ END SUBROUTINE kreuf
 SUBROUTINE zwpol (it, u, v, j, k)
 
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -926,6 +929,7 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 SUBROUTINE extre (k, info)
 ! Diese Routine findet Extremwerte
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 COMMON / ex / nm (2), xmn, ymn, xmx, ymx, rw, rv, rd
@@ -970,11 +974,10 @@ DIMENSION xmi (2), ymi (2), xma (2), yma (2)
       rw = (xmx - xmn) / rd 
       rv = (ymx - ymn) / rd 
                                                                         
-      IF (info.eq.1) then 
-        PRINT * , ' ' 
-        WRITE ( * , '(4(6x,a4))') 'xmin', 'ymin', 'xmax', 'ymax' 
-                                                                        
-        WRITE ( * , '(4f10.3)') xmn, ymn, xmx, ymx 
+      IF (info.eq.1) then
+        WRITE (UNIT_OUT_LOG, '(a)') ' '
+        WRITE (UNIT_OUT_LOG, '(4(6x,a4))') 'xmin', 'ymin', 'xmax', 'ymax'
+        WRITE (UNIT_OUT_LOG, '(4f10.3)') xmn, ymn, xmx, ymx
       ENDIF 
                                                                         
       RETURN 
@@ -1038,6 +1041,7 @@ END SUBROUTINE imron
 SUBROUTINE ergen (j, ifehl, info)
 ! Diese Routine konstruiert Ergaenzungsmengen
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 COMMON / ex / nm (2), xmn, ymn, xmx, ymx, rw, rv, rd
@@ -1078,8 +1082,8 @@ COMMON / ex / nm (2), xmn, ymn, xmx, ymx, rw, rv, rd
         y (n1, 1, j) = y (n (1, j), 1, j) 
       ENDIF 
                                                                         
-      IF (n1.gt.mpts) then 
-        PRINT * , 'Im ERGEN ist der Parameter mpts zu klein'
+      IF (n1.gt.mpts) then
+        WRITE (UNIT_OUT_LOG, '(a)') 'Im ERGEN ist der Parameter mpts zu klein'
         ifehl = 1
         RETURN 
       ENDIF 
@@ -1089,10 +1093,10 @@ COMMON / ex / nm (2), xmn, ymn, xmx, ymx, rw, rv, rd
       y (0, 1, j) = y (n1 - 1, 1, j) 
                                                                         
       IF (info.eq.1) then 
-        PRINT * , '....' 
-        WRITE ( * , '(i5,2f10.3)') (i, x (i, 1, j) , y (i, 1, j) , i =  &
+        WRITE (UNIT_OUT_LOG, '(a)') '....'
+        WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (i, x (i, 1, j) , y (i, 1, j) , i =  &
         0, n (1, j) )                                                   
-        PRINT * , '....' 
+        WRITE (UNIT_OUT_LOG, '(a)') '....'
       ENDIF 
                                                                         
       RETURN 
@@ -1105,6 +1109,7 @@ SUBROUTINE prinf (ifehl, info)
 !                           j=1        : Schnittmengen                  
 !                           j=2 oder 3 : Ergenzungsmengen               
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), fs (min2, 3)
@@ -1131,18 +1136,18 @@ DIMENSION e (3)
       p1 = abs (f1 - e (1) - e (2) ) * 100. 
       p2 = abs (f2 - e (1) - e (3) ) * 100. 
       p = (p1 + p2) / (f1 + f2) 
-      IF (info.eq.1) then 
-        PRINT * , ' ----------------------------------' 
-      PRINT * , '|          Flaecheninhalt          |' 
-      PRINT * , '|   Gebiet 1              Gebiet 2 |' 
-      WRITE ( * , '(a1,f10.1,12x,f10.1,a3)') '|', f1, f2, '  |' 
-      PRINT * , '|   S-Menge   E1-Menge   E2-Menge  |' 
-      WRITE ( * , '(a1,f10.1,f10.1,f10.1,a5)') '|', e, '    |' 
-        PRINT * , ' ----------------------------------' 
+      IF (info.eq.1) then
+        WRITE (UNIT_OUT_LOG, '(a)') ' ----------------------------------'
+        WRITE (UNIT_OUT_LOG, '(a)') '|          Flaecheninhalt          |'
+        WRITE (UNIT_OUT_LOG, '(a)') '|   Gebiet 1              Gebiet 2 |'
+        WRITE (UNIT_OUT_LOG , '(a1,f10.1,12x,f10.1,a3)') '|', f1, f2, '  |'
+        WRITE (UNIT_OUT_LOG, '(a)') '|   S-Menge   E1-Menge   E2-Menge  |'
+        WRITE (UNIT_OUT_LOG , '(a1,f10.1,f10.1,f10.1,a5)') '|', e, '    |'
+        WRITE (UNIT_OUT_LOG, '(a)') ' ----------------------------------'
                                                                         
 !      else if(p.gt.0.1.or.info.eq.1) then                              
       ENDIF 
-      IF (p.gt.0.1) write ( * , '(a14,f10.2,a1)') 'Gesamtfehler :', p, '%'
+      IF (p.gt.0.1) write (UNIT_OUT_LOG, '(a14,f10.2,a1)') 'Gesamtfehler :', p, '%'
       RETURN 
       END SUBROUTINE prinf                          
                                                                         
@@ -1152,6 +1157,7 @@ DIMENSION e (3)
 SUBROUTINE dainf (ifehl, lin, info)
 ! Das Programm prueft die Eingabedaten
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -1160,18 +1166,18 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
                                                                         
       DO 1 j = 1, 2 
         IF (n (0, j) .gt.mpts) then 
-          PRINT * , 'Fuer die', j, '.Datei :'
-          PRINT * , 'Im DAINF ist Parameter mpts zu klein' 
+          WRITE (UNIT_OUT_LOG, *) 'Fuer die', j, '.Datei :'
+          WRITE (UNIT_OUT_LOG, '(a)') 'Im DAINF ist Parameter mpts zu klein'
           ifehl = 1
           RETURN 
         ELSEIF (n (0, j) .eq.0) then 
-          PRINT * , 'Fuer die', j, '.Datei :' 
-          PRINT * , 'Anzahl der Punkte ist 0' 
+          WRITE (UNIT_OUT_LOG, *) 'Fuer die', j, '.Datei :'
+          WRITE (UNIT_OUT_LOG, '(a)') 'Anzahl der Punkte ist 0'
           ifehl = 1 
           RETURN 
         ELSEIF (n (0, j) .lt.0) then 
-          PRINT * , 'Fuer die', j, '.Datei :' 
-          PRINT * , 'Unzulaessiger Bloedsinn' 
+          WRITE (UNIT_OUT_LOG, *) 'Fuer die', j, '.Datei :'
+          WRITE (UNIT_OUT_LOG, '(a)') 'Unzulaessiger Bloedsinn'
           ifehl = 1 
           RETURN 
         ENDIF 
@@ -1181,14 +1187,14 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
         yn = y (n (0, j), 0, j) 
         a = sqrt ( (xn - x1) **2 + (yn - y1) **2) 
         IF (a.lt.1.0e-03) then 
-          IF (info.eq.1) print * , j, '.Datei beschreibt eine Flaeche' 
+          IF (info.eq.1) WRITE (UNIT_OUT_LOG, *) j, '.Datei beschreibt eine Flaeche'
         ELSE 
-          IF (info.eq.1) print * , j, '.Datei beschreibt eine Linie' 
+          IF (info.eq.1) WRITE (UNIT_OUT_LOG, *) j, '.Datei beschreibt eine Linie'
           lin = lin + j 
         ENDIF 
     1 END DO 
       IF (lin.gt.2) then 
-      PRINT * , '    Zwei Linien ? Das kann nur ein Fehler sein !' 
+        WRITE (UNIT_OUT_LOG, '(a)')' Zwei Linien ? Das kann nur ein Fehler sein !'
         ifehl = 1 
         RETURN 
       ENDIF 
@@ -1223,7 +1229,9 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
 !----------------------------------------------------------------------------------------
 SUBROUTINE kreul (x1, y1, x2, y2, x3, y3, x4, y4, u, v, in, gen, info)
-                                                                        
+
+USE IO_UNITS
+                                                                       
 !     u=x3+r*(x4-x3)                                                    
 !     v=y3+r*(y4-y3)                                                    
 !     u=x1+R*(x2-x1)                                                    
@@ -1241,9 +1249,9 @@ SUBROUTINE kreul (x1, y1, x2, y2, x3, y3, x4, y4, u, v, in, gen, info)
                                                                         
       s21 = sqrt ( (x2 - x1) **2 + (y2 - y1) **2) 
       IF (s21.lt.gen) then 
-        IF (info.eq.1) then 
-          PRINT * , '1.Strecke ist ein Punkt' 
-          PRINT * , 's21=', s21 
+        IF (info.eq.1) then
+          WRITE (UNIT_OUT_LOG, '(a)') '1.Strecke ist ein Punkt'
+          WRITE (UNIT_OUT_LOG, * ) 's21=', s21
         ENDIF 
         in = - 1 
         RETURN 
@@ -1252,8 +1260,8 @@ SUBROUTINE kreul (x1, y1, x2, y2, x3, y3, x4, y4, u, v, in, gen, info)
       s43 = sqrt ( (x4 - x3) **2 + (y4 - y3) **2) 
       IF (s43.lt.gen) then 
         IF (info.eq.1) then 
-          PRINT * , 's43=', s43 
-          PRINT * , '2.Strecke ist ein Punkt' 
+          WRITE (UNIT_OUT_LOG, * ) 's43=', s43
+          WRITE (UNIT_OUT_LOG, '(a)') '2.Strecke ist ein Punkt'
         ENDIF 
         in = - 2 
         RETURN 
@@ -1328,6 +1336,7 @@ SUBROUTINE mengl (ifehl, medu, info)
 !                                                        Gebietes
 
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 ! Calling variables
 INTEGER :: ifehl
@@ -1350,12 +1359,12 @@ l = 0
 
 l = l + 1
 IF (l.ge.1000) then
-  PRINT * , 'Mehr als 999 Schnittpunkte <-- Fehler'
+  WRITE (UNIT_OUT_LOG, '(a)') 'Mehr als 999 Schnittpunkte <-- Fehler'
   ifehl = 1
   RETURN
 ENDIF
 IF (n (1, 1) .gt.mpts) then
-  PRINT * , 'Im MANGL ist Parameter mpts zu klein'
+  WRITE (UNIT_OUT_LOG, '(a)') 'Im MANGL ist Parameter mpts zu klein'
   ifehl = 1
   RETURN
 ENDIF
@@ -1424,7 +1433,7 @@ DO 7 j = 1, 3
       k = k + 1
       IF (k.gt.mpts) then
         ifehl = 1
-        PRINT * , 'Im MENGL ist der Parameter mpts zu klein'
+        WRITE (UNIT_OUT_LOG, '(a)') 'Im MENGL ist der Parameter mpts zu klein'
         RETURN
       ENDIF
       IF (k.eq.1) l = l + 1
@@ -1441,29 +1450,29 @@ DO 7 j = 1, 3
   n3 (j) = l
 
   IF (j.eq.1) then
-    IF (info.eq.1) print * , ' '
-    IF (info.eq.1) print  * , 'Linienstuecke innerhalb des Gebietes'
+    IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') ' '
+    IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Linienstuecke innerhalb des Gebietes'
     typ = 's81'
     lay = 301
   ENDIF
   IF (j.eq.2) then
-    IF (info.eq.1) print * , ' '
-    IF (info.eq.1) print  * , 'Linienstuecke ausserhalb des Gebietes'
+    IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') ' '
+    IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Linienstuecke ausserhalb des Gebietes'
     typ = 's51'
     lay = 302
   ENDIF
   IF (j.eq.3) then
-    IF (info.eq.1) print * , ' '
-    IF (info.eq.1) print  * , 'Linienstuecke auf der Grenze des Gebietes'
+    IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') ' '
+    IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Linienstuecke auf der Grenze des Gebietes'
     typ = 's77'
     lay = 303
   ENDIF
 
-  IF (info.eq.1) print * , 'Layer :', lay, ' Typ : ', typ
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, *) 'Layer :', lay, ' Typ : ', typ
   DO 8 j1 = 1, n3 (j)
     CALL imron (j1, j)
-    IF (info.eq.1) print * , ' '
-    IF (info.eq.1) write ( * , '(i5,2f10.3)') (i, xs (i, j1, j) , &
+    IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') ' '
+    IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (i, xs (i, j1, j) , &
     ys (i, j1, j) , i = 0, ns (j1, j) )
 
     fs (j1, j) = 0.
@@ -1496,6 +1505,7 @@ SUBROUTINE punla (n1, n2, x, y, x0, y0, in, gen, ifehl)
 !  halb des gebietes (x,y) liegt.
 
 USE DIM_VARIABLEN
+
 
 ! Calling variables
 INTEGER, INTENT(IN) 	:: n1, n2
@@ -1666,6 +1676,7 @@ SUBROUTINE mengen (ifehl, medu, info, ipru, korr, iboo)
 !      Wenn ifehl = 1, dann gibt's nichtkorregierbare Fehler            
                                                                         
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -1673,7 +1684,7 @@ CALL initi (ifehl)
 
 IF (ipru.eq.1) then
 
-  IF (info.eq.1) print * , 'Linien werden geprueft'
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Linien werden geprueft'
 
   CALL check (2, korr, info, ifehl)
 
@@ -1681,11 +1692,11 @@ IF (ipru.eq.1) then
 
 ELSEIF (ipru.eq.2) then
 
-  IF (info.eq.1) print * , 'Linien werden geprueft'
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Linien werden geprueft'
 
   CALL check (2, korr, info, ifehl)
 
-  IF (info.eq.1) print * , 'Keine Berechnung'
+  IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Keine Berechnung'
 
   RETURN
 
@@ -1737,6 +1748,7 @@ END SUBROUTINE mengen
 SUBROUTINE check (k, kor, info, ifehl)
 
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -1747,7 +1759,7 @@ DO j = 1, k
 
   IF (n (0, j) .eq.0) then
     ifehl = 1
-    PRINT * , 'Ich wuerde vorschlagen, zwei Gebiete anzugeben'
+    WRITE (UNIT_OUT_LOG, '(a)') 'Ich wuerde vorschlagen, zwei Gebiete anzugeben'
     RETURN
   ENDIF
 
@@ -1842,7 +1854,7 @@ DO j = 1, k
 
 END DO
 
-IF (info.eq.1) print  * , 'Es gab insgesamt', ife, ' Fehler im Sheet'
+IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Es gab insgesamt', ife, ' Fehler im Sheet'
 
 
 END SUBROUTINE check                                                     
@@ -1857,23 +1869,23 @@ SUBROUTINE vergl (ver, j, info)
 !                Die Routine macht die Punkte, die sich ein bisschen    
 !                (weniger als <ver>) unterscheiden, gleich              
 USE DIM_VARIABLEN
-
+USE IO_UNITS
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
-      DO 1 i1 = 0, n (0, j) - 1 
-        DO 1 i2 = i1 + 1, n (0, j) 
-          s = sqrt ( (x (i1, 0, j) - x (i2, 0, j) ) **2 + (y (i1, 0, j) &
-          - y (i2, 0, j) ) **2)                                         
-          IF (s.le.ver) then 
-            IF (info.eq.1) then 
-      PRINT * , 'Punkte :', i1, i2, ' in der', j, '.Datei sind gleich' 
-            ENDIF 
-            x (i2, 0, j) = x (i1, 0, j) 
-            y (i2, 0, j) = y (i1, 0, j) 
-          ENDIF 
-    1 CONTINUE 
-      RETURN 
-      END SUBROUTINE vergl                          
+  DO 1 i1 = 0, n (0, j) - 1
+    DO 1 i2 = i1 + 1, n (0, j)
+      s = sqrt ( (x (i1, 0, j) - x (i2, 0, j) ) **2 + (y (i1, 0, j) &
+      - y (i2, 0, j) ) **2)
+      IF (s.le.ver) then
+        IF (info.eq.1) then
+          WRITE (UNIT_OUT_LOG, *) 'Punkte :', i1, i2, ' in der', j, '.Datei sind gleich'
+        ENDIF
+        x (i2, 0, j) = x (i1, 0, j)
+        y (i2, 0, j) = y (i1, 0, j)
+      ENDIF
+1 CONTINUE
+  RETURN
+  END SUBROUTINE vergl
                                                                         
 
 
@@ -1889,7 +1901,7 @@ SUBROUTINE dista (dis, j, idi, kor, info)
 !                         2. Wenn kor=1, werden Fehler korregiert       
 
 USE DIM_VARIABLEN
-
+USE IO_UNITS
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
       idi = 0 
@@ -1910,23 +1922,23 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
                                                                         
         idi = idi + 1 
         IF (info.eq.1) then 
-          PRINT * , 'Punkt :' 
-          PRINT * , 'x=', u, ' y=', v 
-          PRINT * , 'im', j, '. Gebiet ist doppelt' 
+          WRITE (UNIT_OUT_LOG, '(a)') 'Punkt :'
+          WRITE (UNIT_OUT_LOG, *) 'x=', u, ' y=', v
+          WRITE (UNIT_OUT_LOG, *) 'im', j, '. Gebiet ist doppelt'
         ENDIF 
     1 END DO 
       n (0, j) = k 
                                                                         
       IF (idi.gt.0.and.info.eq.1) then 
-        PRINT * , ' ' 
-        PRINT * , 'In der Datei', j, ' gibt es Doppelpunkte :', idi 
-        IF (kor.eq.1) print * , 'Ich habe es korrigiert !!!' 
+        WRITE (UNIT_OUT_LOG, '(a)') ' '
+        WRITE (UNIT_OUT_LOG, *) 'In der Datei', j, ' gibt es Doppelpunkte :', idi
+        IF (kor.eq.1) WRITE (UNIT_OUT_LOG, '(a)')  'Ich habe es korrigiert !!!'
       ENDIF 
                                                                         
       s = sqrt ( (x (2, 0, j) - x (1, 0, j) ) **2 + (y (2, 0, j)        &
       - y (1, 0, j) ) **2)                                              
       IF (n (0, j) .le.2.and.s.lt.dis) then 
-        PRINT * , j, '.Datei hat nur einen Punkt ?' 
+        WRITE (UNIT_OUT_LOG, *)  j, '.Datei hat nur einen Punkt ?'
         idi = idi + 1 
         kor = - 1 
       ENDIF 
@@ -1945,6 +1957,7 @@ SUBROUTINE posit (pos, j, ipo, kor, ifehl, info)
 !----------------------------------------------------------------------------------------
 
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 REAL, INTENT(IN) :: pos      	! Kuerzeste Distanz zwischen einem Punkt und
                                 ! einer Strecke
@@ -1985,7 +1998,7 @@ mal = mal + 1
 
 IF (mal .ge. 100) then
 
-  write (*,1000)
+  WRITE (UNIT_OUT_LOG,1000)
   1000 format (1X, 'In Subroutine POSIT gibt es mehr als 100 Beruehrungen!')
 
   ifehl = 1
@@ -2088,6 +2101,7 @@ SUBROUTINE powin (pow, j, iwi, kor, ifehl, info)
 !*** pasche 23.11.99       include '.\include\darsc'                    
 !     Sz                                                                
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -2098,7 +2112,7 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
     3 CONTINUE 
       mal = mal + 1 
       IF (mal.ge.1000) then 
-        PRINT * , 'Im POWIN gibt es Fehler' 
+        WRITE (*, '(a)') 'In POWIN gibt es Fehler'
         ifehl = 1 
         RETURN 
       ENDIF 
@@ -2116,9 +2130,9 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
                                                                         
         IF (s.lt.pow) then 
           iwi = iwi + 1 
-          IF (info.eq.1) print * , 'Am Punkt 1 gibt es Nullwinkel' 
+          IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Am Punkt 1 gibt es Nullwinkel'
           IF (kor.ne.0) then 
-            IF (info.eq.1) print * , 'Datei wird korregiert ' 
+            IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Datei wird korregiert '
             DO 4 i = 1, n (0, j) - 2 
               x (i, 0, j) = x (i + 1, 0, j) 
               y (i, 0, j) = y (i + 1, 0, j) 
@@ -2138,12 +2152,12 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
         s = sqrt ( (x2 - x1) **2 + (y2 - y1) **2) 
         IF (s.lt.pow) then 
           iwi = iwi + 1 
-      IF (info.eq.1) print  * , 'Am Punkt', i1, ' gibt es Nullwinkel' 
+      IF (info.eq.1) WRITE (UNIT_OUT_LOG,*) 'Am Punkt', i1, ' gibt es Nullwinkel'
           IF (kor.eq.0) then 
 !                                                                       
             GOTO 1 
           ELSE 
-            IF (info.eq.1) print * , 'Datei wird korregiert' 
+            IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Datei wird korregiert'
             DO 2 i = i1 - 1, n (0, j) - 2 
               x (i, 0, j) = x (i + 2, 0, j) 
               y (i, 0, j) = y (i + 2, 0, j) 
@@ -2173,6 +2187,7 @@ SUBROUTINE schni (sch, j, isc, kor, ifehl, info)
 !*** pasche 23.11.99       include '.\include\darsc'                    
 !     Sz                                                                
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -2183,7 +2198,7 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
     3 CONTINUE 
       mal = mal + 1 
       IF (mal.ge.1000) then 
-        PRINT * , 'Im SCHNI gibt es Fehler' 
+        WRITE (*, '(a)') 'In SCHNI gibt es Fehler'
         ifehl = 1 
         RETURN 
       ENDIF 
@@ -2216,8 +2231,8 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
           IF (sr.ge.ss) goto 2 
           isc = isc + 1 
           IF (info.eq.1) then 
-            PRINT * , 'Im Gebiet', j 
-            PRINT * , 'Strecken :', i1, i1 + 1, i2, i2 + 1, ' ueberschneiden sich'
+            WRITE (UNIT_OUT_LOG, *) 'Im Gebiet', j
+            WRITE (UNIT_OUT_LOG, *) 'Strecken :', i1, i1 + 1, i2, i2 + 1, ' ueberschneiden sich'
           ENDIF 
           IF (kor.eq.0) then 
                                                                         
@@ -2226,7 +2241,7 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
                                                                         
             CALL herei (i1 + 1, u, v, j) 
             CALL herei (i2 + 2, u, v, j) 
-      IF (info.eq.1) print  * , 'Schnittpunkt wird in die Datei eingeschlossen'
+      IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Schnittpunkt wird in die Datei eingeschlossen'
             GOTO 3 
           ENDIF 
                                                                         
@@ -2256,6 +2271,7 @@ SUBROUTINE punkt (pun, j, ipu, kor, ifehl, info)
 !*** pasche 23.11.99       include '.\include\darsc'                    
 !     Sz                                                                
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -2268,7 +2284,7 @@ DIMENSION ph (4)
     3 CONTINUE 
       mal = mal + 1 
       IF (mal.ge.1000) then 
-        PRINT * , 'Im PUNKT gibt es Fehler' 
+        WRITE (*,'(a)') 'In PUNKT gibt es Fehler'
         ifehl = 1 
         RETURN 
       ENDIF 
@@ -2309,16 +2325,16 @@ DIMENSION ph (4)
           CALL verfl (ph, ipu) 
           IF (ipu.eq.0) goto 2 
           IF (info.eq.1) then 
-            PRINT * , ' ' 
-            PRINT * , 'Im Punkt :' 
-            PRINT * , 'x=', x (i1, 0, j) , ' y=', y (i1, 0, j) 
-            PRINT * , 'kreuzt die Linie', j, ' sich selbst' 
+            WRITE (UNIT_OUT_LOG, '(a)') ' '
+            WRITE (UNIT_OUT_LOG, '(a)') 'Im Punkt :'
+            WRITE (UNIT_OUT_LOG, *) 'x=', x (i1, 0, j) , ' y=', y (i1, 0, j)
+            WRITE (UNIT_OUT_LOG, *) 'kreuzt die Linie', j, ' sich selbst'
           ENDIF 
           IF (kor.eq.0) then 
                                                                         
             GOTO 1 
           ELSE 
-            IF (info.eq.1) print  * , 'Fehler werden automatisch korrigiert'
+            IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Fehler werden automatisch korrigiert'
             CALL invep (i1, i2, j) 
             GOTO 3 
           ENDIF 
@@ -2451,6 +2467,7 @@ SUBROUTINE strec (pun, j, ili, kor, ifehl, info)
 !*** pasche 23.11.99       include '.\include\darsc'                    
 !     Sz                                                                
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
@@ -2461,7 +2478,7 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
     3 CONTINUE 
       mal = mal + 1 
       IF (mal.ge.1000) then 
-        PRINT * , 'Im LINIE gibt es Fehler' 
+        WRITE (*, '(a)') 'In LINIE gibt es Fehler'
         ifehl = 1 
         RETURN 
       ENDIF 
@@ -2509,14 +2526,14 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
             ENDIF 
             IF (irot.ne.jrot) then 
               ili = ili + 1 
-              IF (info.eq.1) print  * , 'Fehler in der Drehrichtung des Untergebietes'
+              IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'Fehler in der Drehrichtung des Untergebietes'
               u = (x (i1 + 1, 0, j) + x (i1 + 0, 0, j) ) / 2. 
               v = (y (i1 + 1, 0, j) + y (i1 + 0, 0, j) ) / 2. 
               IF (kor.eq.0) then 
                 GOTO 1
               ELSE 
                 CALL invep (i1 + 1, i2, j) 
-                IF (info.eq.1) print * , 'wird korregiert !!!' 
+                IF (info.eq.1) WRITE (UNIT_OUT_LOG, '(a)') 'wird korregiert !!!'
                 GOTO 3 
               ENDIF 
             ENDIF 
@@ -2604,6 +2621,7 @@ SUBROUTINE prinl (ifehl, info, lin)
 !   3) n3(3),ns(min,3),xs(0:mpts,min,3),ys(0:mpts,min,3) - auf der Grenze 
 !                                                        Gebietes
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), fs (min2, 3)
@@ -2614,34 +2632,34 @@ DIMENSION e (3)
       g = 0. 
       DO 1 j = 1, 3 
         IF (j.eq.1.and.n3 (j) .gt.0.and.info.eq.1) then 
-          PRINT * , ' --------------------------------------------' 
-          PRINT * , '| Linie innerhalb des Gebietes besteht aus : |' 
-          WRITE ( * , '(a1,i5,10x,a10,19x,a1)') '|', n3 (j) , ' Strecken', '|'
+          WRITE (UNIT_OUT_LOG, '(a)')' --------------------------------------------'
+          WRITE (UNIT_OUT_LOG, '(a)')'| Linie innerhalb des Gebietes besteht aus : |'
+          WRITE (UNIT_OUT_LOG, '(a1,i5,10x,a10,19x,a1)') '|', n3 (j) , ' Strecken', '|'
         ENDIF 
         IF (j.eq.2.and.n3 (j) .gt.0.and.info.eq.1) then 
-          PRINT * , ' --------------------------------------------' 
-          PRINT * , '| Linie ausserhalb des Gebietes besteht aus :|' 
-          WRITE ( * , '(a1,i5,10x,a10,19x,a1)') '|', n3 (j) , ' Strecken', '|'
+          WRITE (UNIT_OUT_LOG, '(a)') ' --------------------------------------------'
+          WRITE (UNIT_OUT_LOG, '(a)') '| Linie ausserhalb des Gebietes besteht aus :|'
+          WRITE (UNIT_OUT_LOG, '(a1,i5,10x,a10,19x,a1)') '|', n3 (j) , ' Strecken', '|'
         ENDIF 
         IF (j.eq.3.and.n3 (j) .gt.0.and.info.eq.1) then 
-          PRINT * , ' --------------------------------------------' 
-          PRINT * , '| Linie auf der Grenze besteht aus :         |'
-          WRITE ( * , '(a1,i5,10x,a10,19x,a1)') '|', n3 (j) , ' Strecken', '|'
+          WRITE (UNIT_OUT_LOG, '(a)') ' --------------------------------------------'
+          WRITE (UNIT_OUT_LOG, '(a)')'| Linie auf der Grenze besteht aus :         |'
+          WRITE (UNIT_OUT_LOG, '(a1,i5,10x,a10,19x,a1)') '|', n3 (j) , ' Strecken', '|'
         ENDIF 
         e (j) = 0. 
         DO 2 i = 1, n3 (j) 
           e (j) = e (j) + fs (i, j) 
     2   END DO 
         IF (n3 (j) .gt.0.and.info.eq.1) then 
-      WRITE ( * , '(a28,f10.3,6x,a2)') '| und hat die Gesamtlaenge :', e(j) , ' |'
-          PRINT * , ' --------------------------------------------' 
+          WRITE (UNIT_OUT_LOG, '(a28,f10.3,6x,a2)') '| und hat die Gesamtlaenge :', e(j) , ' |'
+          WRITE (UNIT_OUT_LOG, '(a)') ' --------------------------------------------'
         ENDIF 
         g = g + e (j) 
     1 END DO 
                                                                         
       IF (g.le.1.0e-06) then 
         ifehl = 1 
-        PRINT * , 'Linie ist total Pleite' 
+        WRITE (UNIT_OUT_LOG, '(a)') 'Linie ist total Pleite'
         RETURN 
       ENDIF 
                                                                         
@@ -2657,13 +2675,13 @@ DIMENSION e (3)
                                                                         
       IF (h.le.1.0e-06) then 
         ifehl = 1 
-        PRINT * , 'Linie ist total Pleite' 
+        WRITE (UNIT_OUT_LOG, '(a)')'Linie ist total Pleite'
         RETURN 
       ENDIF 
                                                                         
       p = abs (h - g) * 100.0 / h 
       IF (p.gt.0.1.or.info.eq.1) then 
-        WRITE ( * , '(a14,f10.2,a1)') 'Gesamtfehler :', p, '%' 
+        WRITE (UNIT_OUT_LOG, '(a14,f10.2,a1)') 'Gesamtfehler :', p, '%'
       ENDIF 
       RETURN 
       END SUBROUTINE prinl                          
@@ -2674,6 +2692,7 @@ DIMENSION e (3)
 SUBROUTINE unkon (ie, ifehl)
 ! Programm konstruiert aus vielen angrenzenden Gebieten ein Gebiet
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), fs (min2, 3)
 
@@ -2685,8 +2704,8 @@ COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), 
       mal = mal + 1 
       IF (mal.gt.1000) then 
         ifehl = 1 
-        PRINT * , 'Fehler in UNCON' 
-        RETURN 
+        WRITE (*, '(a)') 'Fehler in UNCON'
+        RETURN
       ENDIF 
       k = 0 
       DO 1 k1 = 1, n3 (ie) - 1 
@@ -2720,7 +2739,7 @@ COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), 
         mal3 = mal3 + 1 
         IF (mal3.gt.1000) then 
           ifehl = 1 
-          PRINT * , 'mal3 ist zu gross' 
+          WRITE (UNIT_OUT_LOG, '(a)') 'mal3 ist zu gross'
           GOTO 8 
         ENDIF 
                                                                         
@@ -2893,6 +2912,7 @@ COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), 
 SUBROUTINE einfu (ifehl, k1, k2, ie)
 
 USE DIM_VARIABLEN
+USE IO_UNITS
 
 COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), fs (min2, 3)
 
@@ -2905,7 +2925,7 @@ COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), 
                                                                         
         IF (ns (k2, ie) .gt.mpts) then 
           ifehl = 1
-          PRINT * , 'Fehler in EINFU' 
+          WRITE (*, '(a)') 'Fehler in EINFU'
           RETURN 
         ENDIF 
                                                                         
@@ -2967,7 +2987,7 @@ COMMON / s3 / n3 (3), ns (min2, 3), xs (0:mpts, min2, 3), ys (0:mpts, min2, 3), 
 SUBROUTINE vorko (k)
 
 USE DIM_VARIABLEN
-
+USE IO_UNITS
 COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
 
 !      write(0,'(a)') 'Input  0'                                        
@@ -2980,7 +3000,7 @@ COMMON / io / m (2), n (0:min2, 2), x (0:mpts, 0:min2, 2), y (0:mpts, 0:min2, 2)
     7 CONTINUE 
       malv = malv + 1 
       IF (malv.gt.1000) then 
-        WRITE (0, '(a)') 'malv ist zu gross' 
+        WRITE (UNIT_OUT_LOG, '(a)') 'malv ist zu gross'
       ENDIF 
       m0 = m (k) 
 !      write(0,'(a5,i5)') 'm(k)=',m(k)                                  
