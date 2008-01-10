@@ -48,7 +48,10 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -76,11 +79,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
@@ -104,7 +111,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 {
   /**
-   * Helper class to dispose the image of a button once the button gets diposed.
+   * Helper class to dispose the image of a button once the button gets disposed.
    * 
    * @author Gernot Belger
    */
@@ -360,12 +367,39 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     return tableViewer;
   }
 
-  protected void deleteSelected( )
+  protected IStatus deleteSelected( )
   {
     final KeyBasedDataModel dataModel = getDataModel();
     final ICalculationUnit calcUnitToDel = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
     if( calcUnitToDel != null )
     {
+      // TODO: check for existing results
+      try
+      {
+        /* get result meta */
+        final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class );
+
+        /* find calc model */
+        final ICalcUnitResultMeta calcUnitResultMeta = scenarioResultMeta.findCalcUnitMetaResult( calcUnitToDel.getGmlID() );
+        if( calcUnitResultMeta != null )
+        {
+          /* there are results */
+
+          // TODO: generate warning for user
+          /* delete results */
+          IStatus status = ResultMeta1d2dHelper.removeResult( calcUnitResultMeta );
+          if( status != Status.OK_STATUS )
+            return StatusUtilities.createErrorStatus( "Fehler beim Löschen der Ergebnisse des Teilmodells " + calcUnitToDel.getName() );
+        }
+      }
+      catch( CoreException e )
+      {
+        e.printStackTrace();
+        return StatusUtilities.statusFromThrowable( e, "Fehler beim Löschen der Ergebnisse des Teilmodells " + calcUnitToDel.getName() );
+      }
+
+      /* delete calc unit */
       final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
       final DeleteCalculationUnitCmd delCmd = new DeleteCalculationUnitCmd( model1d2d, calcUnitToDel )
       {
@@ -384,7 +418,9 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         }
       };
       KeyBasedDataModelUtil.postCommand( dataModel, delCmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+
     }
+    return Status.OK_STATUS;
   }
 
   protected void moveSelection( @SuppressWarnings("unused")

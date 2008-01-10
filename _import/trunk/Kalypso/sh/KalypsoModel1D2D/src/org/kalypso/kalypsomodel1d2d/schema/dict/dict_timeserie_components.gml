@@ -67,7 +67,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Waterlevel">
 			<gml:description>Wasserstand [NN+m]</gml:description>
-			<gml:name>h [NN+m]</gml:name>
+			<gml:name>Wasserstand [NN+m]</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -131,7 +131,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Velocity">
 			<gml:description>Geschwindigkeit [m/s]</gml:description>
-			<gml:name>Geeschwindigkeit [m/s]</gml:name>
+			<gml:name>Geschwindigkeit [m/s]</gml:name>
 			<swe:property xlink:href="#phenomenonVelocity" />
 			<swe:representation>
 				<swe:SimpleType>

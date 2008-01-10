@@ -56,8 +56,8 @@ public interface IScenarioResultMeta extends IResultMeta
    * tries to find a calculation unit in the result meta
    * 
    * @param calcUnitGmlID
-   *            calc unit, that has to be find.
-   * @returns calc unit result meta entry or null if none can be found
+   *            calc unit, that has to be found.
+   * @returns calc unit result meta entry or null, if none can be found
    */
   public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID );
 
