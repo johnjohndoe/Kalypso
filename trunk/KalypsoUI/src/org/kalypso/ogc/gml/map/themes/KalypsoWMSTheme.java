@@ -84,7 +84,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   private Image m_buffer;
 
   /**
-   * This variable stroes the legend, if any.
+   * This variable stores the legend, if any.
    */
   private Image m_legend;
 
