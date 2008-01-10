@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jan 2008    4:15 pm
+!     Last change:  MD   10 Jan 2008   11:01 am
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -238,7 +238,14 @@ INTEGER :: i_alph
 !HB   *****************************************************************
 
 LOGICAL :: lexist, lopen
-                                                                        
+
+! ---------------------------------------------------------------------------------
+! Varaiblen und Funktion fuer lesen der Agrumente hinter Kalypso1d.exe
+! MD 10.01.2008, ab Version 2.0.6.3
+character argv*10         ! Argumente als Character
+integer iiarg, narg       ! Zaehler der Argumente und Anzahl der Argumente
+integer iargc             ! Feste Funktion in Lahey und G95 (aber KEINE StandardFunktion)
+! ---------------------------------------------------------------------------------
 
 ! ------------------------------------------------------------------
 ! Initialisierungen
@@ -304,27 +311,69 @@ WRITE ( *, 1000) VERSIONNR, VERSIONDATE, HHMM, MMTTJJ
 
 
 ! ---------------------------------------------------------------------------------
+! Lesen der Agrumente hinter der Kalypso1d.exe
+! ---------------------------------------------------------------------------------
+! MD 10.01.2008, ab Version 2.0.6.3
+! Aenderung bei der Entscheidung zum RUN_MODUS
+!
+! Aufruf der EXE z.B.: >>  D:\Kalypso-1D.exe -n -D:\kalypso-1D.ini
+!   = Aufruf mit Argumente
+!   --> dann RUN_MODUS = 'KALYPSO'
+!
+! Aufruf der EXE z.B.: >>  D:\Kalypso-1D.exe
+!   = Aufruf ohne Argumente
+!   --> dann RUN_MODUS = 'WSPWIN'
+! ---------------------------------------------------------------------------------
+
+narg = iargc()            ! Abzaehlen der Argumente
+if (narg > 0) then
+  do iiarg = 1, narg             ! Abpruefen der Einzelenen Agumente
+     call getarg(iiarg, argv)    ! Feste Funktion in Lahey und G95 (aber KEINE StandardFunktion)
+
+     if (iiarg .eq. 1) then
+        antwort = argv
+        write (*, '(a)') 'Aufruf der Kalypso.exe fuer KALYPSO-WSPM'
+     elseif (iiarg .eq. 2) then
+        pfadconfigdatei = argv
+     end if
+
+     write( *, '( i2, 1x, a )' ) iiarg, argv
+  end do
+
+else  !Aufruf der exe ohne Argumente: MODUS KALYPSO (alt), WSPWIN oder manueller Modus
+  write (*, 1001)
+  1001 format (//1X, 'Organisierung der Eingabedaten durch Maskeneingabe ?')
+  READ  (* , '(a)') antwort
+  write (*, *) antwort
+
+  CALL lcase (antwort)
+endif
+
+
+! ---------------------------------------------------------------------------------
 ! 1. Zeile in BAT.001
 ! -------------------
 ! WP 18.05.2005, ab Version 1.0.8
 ! Aenderung bei der Maskeneingabe! Es wird angenommen, dass
 ! die Eingabe IMMER durch eine Maske (was auch immer das heißt)
 ! durchgefuehrt wird. Damit gilt dann immer ANTWORT = 'J'!
-! Die Subroutine SELECT wird nie wieder aufgerufen und damit komplett
-! geloescht!
-write (*, 1001)
-1001 format (//1X, 'Organisierung der Eingabedaten durch Maskeneingabe ?')
-READ ( * , '(a)') antwort
-write (*, *) antwort
+! Die Subroutine SELECT wird nie wieder aufgerufen und damit komplett geloescht!
 
-CALL lcase (antwort)
-if (antwort == 'n') then
+if (antwort == 'n' .and. narg > 0) then  ! Wenn Aufruf der exe mit Argument
+  RUN_MODUS = 'KALYPSO'
+  call read_config_file(ADJUSTL(pfadconfigdatei),LEN_TRIM(pfadconfigdatei))
+
+  IF (BERECHNUNGSMODUS == 'BF_NON_UNI' .or. BERECHNUNGSMODUS == 'REIB_KONST') then
+    km   = 'j'  !MD  Kalinin - Miljukov - Parameter werden erstellt (Deaktivieren??)
+    idr1 = 'j'  !MD  WQ-Dateien sollen erstellt werden
+    idr2 = 'j'  !MD  Ergebnislisten sollen erstellt werden
+  end if
+
+elseif (antwort == 'n') then            ! Wenn Aufruf der exe ohne Argument
   RUN_MODUS = 'KALYPSO'
   read (*,*) pfadconfigdatei
   call read_config_file(ADJUSTL(pfadconfigdatei),LEN_TRIM(pfadconfigdatei))
 
-  !MD  if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
-  !MD  neue Berechnungsvarainte mit konstanten Reibungsgefaelle
   IF (BERECHNUNGSMODUS == 'BF_NON_UNI' .or. BERECHNUNGSMODUS == 'REIB_KONST') then
     km   = 'j'  !MD  Kalinin - Miljukov - Parameter werden erstellt (Deaktivieren??)
     idr1 = 'j'  !MD  WQ-Dateien sollen erstellt werden
@@ -332,8 +381,9 @@ if (antwort == 'n') then
   end if
 
 else
-  RUN_MODUS = 'WSPWIN '
+  RUN_MODUS = 'WSPWIN '    !Aus der Oberflaeche antwort = 'j'
 end if
+
 
 
 ! ---------------------------------------------------------------------------------
