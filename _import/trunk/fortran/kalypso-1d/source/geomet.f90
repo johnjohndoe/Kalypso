@@ -1,4 +1,4 @@
-!     Last change:  WP   24 May 2006    2:33 pm
+!     Last change:  MD    9 Jan 2008    6:57 pm
 !--------------------------------------------------------------------------
 ! This code, geomet.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -75,8 +75,6 @@ SUBROUTINE geomet (hr, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
 !**   ------------------------------------------------------------------
 !**   VEREINBARUNGSTEIL                                                 
 !**   ------------------------------------------------------------------
-                                                                        
-                                                                        
 !WP 01.02.2005
 USE DIM_VARIABLEN
 USE IO_UNITS
@@ -97,7 +95,6 @@ REAL m
 COMMON / flaechen / ad, aue, apl, apg, hss, hue, hpl, hp  
 
 
-
 ! COMMON-Block /BRUECK/ ------------------------------------------------------------
 INTEGER 	:: iwl, iwr, nuk, nok
 INTEGER 	:: iokl, iokr           ! Gelaende Oberkante Grenze
@@ -107,9 +104,6 @@ CHARACTER(LEN=1):: ibridge
 COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
        & hokmax, hsuw, raub, breite, xk, hokmin, ibridge
 ! ----------------------------------------------------------------------------------
-
-
-
 
 
 !      **************************************************************
@@ -161,14 +155,25 @@ write (UNIT_OUT_LOG, 5000) hr, hdif, hsohl, nknot, il, ir, q
 ifehl2 = 0
 
 IF (hukmax .gt. hokmin) then
-  PRINT * , 'die bedingungen fuer die berechnung der '
-  PRINT * , 'bruecken mit impuls sind nicht gegeben, '
-  PRINT * , 'da die max. hoehe der brueckenuk groesser ist'
-  PRINT * , 'als das mininmum der bruecken-ok zwischen den'
-  PRINT * , 'beiden widerlagern (--> gemischter abfluss !)'
-  PRINT *
-  PRINT * , '--> empfehlung: neustart des programms, '
-PRINT * , '    berechnung der bruecke nach hec'
+  WRITE (UNIT_OUT_LOG, '(a)') 'Die Bedingungen fuer die Brueckenberechnung mit Impuls sind nicht gegeben, '
+  WRITE (UNIT_OUT_LOG, '(a)') ' da maximale Hoehe der BrueckenUK groesser ist als die'
+  WRITE (UNIT_OUT_LOG, '(a)') ' minimale Hoehe derBruecken OK zwischen den beiden Widerlagern '
+  WRITE (UNIT_OUT_LOG, '(a)') ' (--> gemischter Abfluss !)'
+  WRITE (UNIT_OUT_LOG, '(a)')
+  WRITE (UNIT_OUT_LOG, '(a)') '--> Empfehlungen:  '
+  WRITE (UNIT_OUT_LOG, '(a)') '    1) Kontrolle des Brueckenprofils !'
+  WRITE (UNIT_OUT_LOG, '(a)') '    2) Pruefen der BrueckenUK und der BrueckenOK !'
+  WRITE (UNIT_OUT_LOG, '(a)') '    3) Senken neben der Bruecke entfernen !'
+
+  WRITE (*, '(a)') 'Bedingungen fuer Brueckenberechnung mit Impuls sind nicht gegeben, '
+  WRITE (*, '(a)') ' Maximale Hoehe der BrueckenUK > minimale Hoehe der Bruecken OK'
+  WRITE (*, '(a)') ' (--> gemischter Abfluss !)'
+  WRITE (*, '(a)')
+  WRITE (*, '(a)') '--> Empfehlungen:  '
+  WRITE (*, '(a)') '    1) Kontrolle des Brueckenprofils !'
+  WRITE (*, '(a)') '    2) Pruefen der BrueckenUK und der BrueckenOK !'
+  WRITE (*, '(a)') '    3) Senken neben der Bruecke entfernen !'
+
 ENDIF
 
 
@@ -189,7 +194,7 @@ END DO
 nknotn = nknot
                                                                         
 IF ( (hr - hsohl) .le. 0.0001) then
-  PRINT * , 'wasserspiegel unterhalb tiefster sohle in impuls'
+  WRITE (*, '(a)') ' Wasserspiegel unterhalb tiefstem Sohlpunkt in impuls'
   STOP
 ENDIF
                                                                         
@@ -602,23 +607,21 @@ IF (isr.eq.0) isr = nknotn
 igew = 0
 !JK    UNSINNIGE ABFRAGE --> TRITT NIE EIN, DA igew=0 GESETZT----       
 IF (igew.eq.1) then
-  PRINT *
-  PRINT *
-  PRINT * , '**************************************************'
-  PRINT * , '* ermittelt in impuls :                          *'
-  PRINT * , '*                                                *'
-  PRINT * , '* hr       = ', hr
-  PRINT * , '* nknotn   = ', nknotn
-  PRINT * , '* x1n(isl) = ', x1n (isl)
-  PRINT * , '* x1n(isr) = ', x1n (isr)
-  PRINT * , '* x1n(il)  = ', x1n (il)
-  PRINT * , '* x1n(ir)  = ', x1n (ir)
-  PRINT *
-  PRINT * , '* hsohl    = ', hsohl
-  PRINT * , '* hukmax   = ', hukmax
-  PRINT * , '* hokmin   = ', hokmin
-  PRINT * , '* xmitte   = ', xmitte
-  PRINT * , '**************************************************'
+  WRITE (UNIT_OUT_LOG, '(a)')
+  WRITE (UNIT_OUT_LOG, '(a)') '**************************************************'
+  WRITE (UNIT_OUT_LOG, '(a)') '* ermittelt in impuls :                          *'
+  WRITE (UNIT_OUT_LOG, '(a)')'*                                                *'
+  WRITE (UNIT_OUT_LOG, *) '* hr       = ', hr
+  WRITE (UNIT_OUT_LOG, *) '* nknotn   = ', nknotn
+  WRITE (UNIT_OUT_LOG, *) '* x1n(isl) = ', x1n (isl)
+  WRITE (UNIT_OUT_LOG, *) '* x1n(isr) = ', x1n (isr)
+  WRITE (UNIT_OUT_LOG, *) '* x1n(il)  = ', x1n (il)
+  WRITE (UNIT_OUT_LOG, *) '* x1n(ir)  = ', x1n (ir)
+  WRITE (UNIT_OUT_LOG, *) '* hsohl    = ', hsohl
+  WRITE (UNIT_OUT_LOG, *) '* hukmax   = ', hukmax
+  WRITE (UNIT_OUT_LOG, *) '* hokmin   = ', hokmin
+  WRITE (UNIT_OUT_LOG, *)'* xmitte   = ', xmitte
+  WRITE (UNIT_OUT_LOG, '(a)')'**************************************************'
 ENDIF                                                             
 !JK    ENDE UNSINN-----------------------------------------------       
                                                                         
@@ -714,8 +717,8 @@ END DO Ueberschreiben
 !  ****************************************
                                                                         
 IF (nukn.lt.2) then
-  PRINT * , 'anzahl der punkte nukn<2 , nukn=', nukn
-  PRINT * , 'stop in impuls'
+  WRITE (*, *) 'Anzahl der punkte nukn<2 , nukn=', nukn
+  WRITE (*, '(a)') 'stop in impuls'
   STOP
 ENDIF
 
@@ -744,7 +747,7 @@ hko (npl2, 2) = hko (1, 2)
 gen = 0.0001
 
 ! ueberpruefen der flaecheninhalte der beiden linien:
-IF (igra.ne.0) print * , 'gelaende-wsp'
+IF (igra.ne.0) WRITE (UNIT_OUT_LOG, '(a)')  'gelaende-wsp'
 CALL schwpkt (maxkla, npl1, xl, hl, xx, hh, ah, igra, gen)
 
 IF (ah.lt. - 0.01) then
@@ -770,7 +773,7 @@ DO i = 1, npl2
   hl (i) = hko (i, 2)
 END DO
 
-IF (igra.ne.0) print * , 'gelaende- buk (-5!)'
+IF (igra.ne.0) WRITE (UNIT_OUT_LOG, '(a)') 'gelaende- buk (-5!)'
 CALL schwpkt (maxkla, npl2, xl, hl, xx, hh, ah, igra, gen)
 
 
@@ -783,11 +786,11 @@ IF (ah.gt.0.01) then
 
   !JK  NOCH IMMER UNSINNIGE ABFRAGE??---------------------------
   IF (igew.eq.1) then
-    PRINT * , '**************************************'
-    WRITE ( * , '(i5,2f10.3)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
-    PRINT * , '**************************************'
-    WRITE ( * , '(i5,2f10.3)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
-    PRINT * , '**************************************'
+    WRITE (UNIT_OUT_LOG, '(a)')  '**************************************'
+    WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (ii, xko (ii, 1) , hko (ii, 1) , ii = 1, na1)
+    WRITE (UNIT_OUT_LOG, '(a)') '**************************************'
+    WRITE (UNIT_OUT_LOG, '(i5,2f10.3)') (ii, xko (ii, 2) , hko (ii, 2) , ii = 1, na2)
+    WRITE (UNIT_OUT_LOG, '(a)')  '**************************************'
   ENDIF
   !JK ENDE UNSINN??--------------------------------------------
 
@@ -807,7 +810,7 @@ IF (ah.gt.0.01) then
   CALL alg1 (igraf, ifehl)
 
   IF (ifehl.eq.1) then
-    write (*,1006)
+    write (UNIT_OUT_LOG,1006)
     1006 format (1X, 'Polygonzuege im algebra nicht fehlerfrei abgearbeitet!' )
 
     ifehl1 = 1
@@ -833,7 +836,7 @@ IF (ah.gt.0.01) then
   ENDIF
 
   IF (kr0.eq.0) then
-    write (*,1010)
+    write (UNIT_OUT_LOG,1010)
     1010 format (1X, 'KR0 = 0 --> kein Durchflussquerschnitt!')
 
     ifehl2 = 1
@@ -893,7 +896,7 @@ IF (ah.gt.0.01) then
       !**  rhy=rhy+sqrt(rd1*rd1+rd2*rd2)
     END DO
 
-    IF (igra.ne.0) WRITE (*,*) ' Durchflussquerschnitt:'
+    IF (igra.ne.0) write (*,*) ' Durchflussquerschnitt:'
 
     !JK  KONTROLLE FLAECHENINHALT
     CALL schwpkt (maxkla, npl, xl, hl, xss, hs (i), as (i), igra, gen)
@@ -934,7 +937,7 @@ ENDIF
 IF (a.gt.0.) then
   hss = hss / a
 ELSE
-  PRINT * , 'durchflossener querschnitt = 0!'
+  write (*,*) 'Durchflossener Querschnitt = 0!'
   hss = 0.
   ifehl2 = 1
   !JK  ZU FEHLER-, DATENUEBERGABE
@@ -967,14 +970,14 @@ hss = hr - hss
           IF (npl.lt.3) goto 73 
 
           IF (igra.ne.0) then 
-            PRINT * , 'pfeiler- und widerlagerquerschnitt : ' 
+            write (*,*) 'Pfeiler- und Widerlagerquerschnitt : '
           ENDIF 
                                                                         
           CALL schwpkt (maxkla, npl, xl, hl, xss, hps (i), ap (i), igra, gen)
                                                                         
           IF (ap (i) .lt. - 0.01) then 
-            PRINT * , 'fehler: flaeche ap(i) < 0!' 
-            PRINT * , 'stop in impuls' 
+            write (*,*) 'Fehler: Flaeche ap(i) < 0!'
+            write (*,*) 'Stop in impuls'
             STOP 
           ENDIF 
                                                                         
@@ -1030,12 +1033,12 @@ hss = hr - hss
                                                                         
                                                                         
         ! Ueberpruefen des Flaecheninhalts:
-        IF (igra.ne.0) print * , 'bereich 1: isl-il, gelaende-hr' 
+        IF (igra.ne.0) write (UNIT_OUT_LOG,*) 'bereich 1: isl-il, gelaende-hr'
                                                                         
         CALL schwpkt (maxkla, npl1, xl, hl, xx, hh, ah, igra, gen) 
         IF (ah.lt. - 0.01) then 
-          PRINT * , 'negative flaeche ah ' 
-          PRINT * , '--> stop in impuls' 
+          write (*,*) 'negative flaeche ah '
+          write (*,*) '--> Stop in impuls'
           STOP 
         ELSEIF (ah.le.0.01) then 
           !JK  ZU BEREICH 2: von ir bis isr
@@ -1082,13 +1085,13 @@ hss = hr - hss
         END DO
                                                                         
         ! Ueberpruefen des flaecheninhalts:
-        IF (igra.ne.0) print * , 'bereich 1: isl-il, hok-hmax' 
+        IF (igra.ne.0) write (*,*) 'bereich 1: isl-il, hok-hmax'
                                                                         
         CALL schwpkt (maxkla, npl2, xl, hl, xx, hh, ah, igra, gen) 
                                                                         
         IF (ah.lt. - 0.01) then 
-          PRINT * , 'negative flaeche ah ' 
-          PRINT * , '--> stop in impuls' 
+          write (*,*) 'negative flaeche ah '
+          write (*,*) '--> stop in impuls'
           STOP 
         ELSEIF (ah.le.0.01) then 
           !JK  ZU BEREICH 2: von ir bis isr
@@ -1157,7 +1160,7 @@ hss = hr - hss
 
             IF (npl.lt.3) goto 379 
 
-            IF (igra.ne.0) print * , 'ueberstroemte flaeche :' 
+            IF (igra.ne.0) write (*,*) 'ueberstroemte flaeche :'
                                                                         
             CALL schwpkt (maxkla, npl, xl, hl, xss, hs (i), as (i), igra, gen)
                                                                         
@@ -1171,8 +1174,8 @@ hss = hr - hss
             END DO
                                                                         
             IF (as (i) .lt. - 0.01) then 
-              PRINT * , 'flaeche as(i) < 0 ! ' 
-              PRINT * , 'stop in impuls !' 
+              write (*,*) 'Flaeche as(i) < 0 ! '
+              write (*,*) 'Stop in impuls !'
               STOP 
             ENDIF 
                                                                         
@@ -1242,13 +1245,13 @@ hss = hr - hss
         hl (npl1) = hl (1) 
                                                                         
         ! Ueberpruefen des flaecheninhalts:
-        IF (igra.ne.0) print * , 'bereich 2: isr-ir, gelaende-hr' 
+        IF (igra.ne.0) write (*,*) 'bereich 2: isr-ir, gelaende-hr'
                                                                         
         CALL schwpkt (maxkla, npl1, xl, hl, xx, hh, ah, igra, gen) 
                                                                         
         IF (ah.lt. - 0.01) then 
-          PRINT * , 'negative flaeche ah ' 
-          PRINT * , '--> stop in impuls' 
+          write (*,*) 'negative flaeche ah '
+          write (*,*) '--> stop in impuls'
           STOP 
         ELSEIF (ah.le.0.01) then 
           !JK     ZU BEREICH 3: mitte, von il bis ir
@@ -1295,13 +1298,13 @@ hss = hr - hss
         END DO
                                                                         
         ! Ueberpruefen des flaecheninhalts:
-        IF (igra.ne.0) print * , 'bereich 2: isr-ir, hok-hmax' 
+        IF (igra.ne.0) write (*,*) 'bereich 2: isr-ir, hok-hmax'
                                                                         
         CALL schwpkt (maxkla, npl2, xl, hl, xx, hh, ah, igra, gen) 
                                                                         
         IF (ah.lt. - 0.01) then 
-          PRINT * , 'negative flaeche ah ' 
-          PRINT * , '--> stop in impuls' 
+          write (*,*) 'negative flaeche ah '
+          write (*,*) '--> stop in impuls'
           STOP 
         ELSEIF (ah.le.0.01) then 
           !JK             ZU BEREICH 3: mitte, von il bis ir
@@ -1368,13 +1371,13 @@ hss = hr - hss
               IF (xl (ii) .gt.xma0) xma0 = xl (ii) 
             END DO
                                                                         
-            IF (igra.ne.0) print * , 'bereich 2: aue' 
+            IF (igra.ne.0) write (*,*) 'bereich 2: aue'
             CALL schwpkt (maxkla, npl, xl, hl, xss, hs (i), as (i),     &
             igra, gen)                                                  
                                                                         
             IF (as (i) .lt. - 0.01) then 
-              PRINT * , 'flaeche as(i) < 0 ! ' 
-              PRINT * , 'stop in impuls !' 
+              write (*,*) 'flaeche as(i) < 0 ! '
+              write (*,*) 'stop in impuls !'
               STOP 
             ENDIF 
                                                                         
@@ -1442,13 +1445,13 @@ hss = hr - hss
         END DO
                                                                         
         ! Ueberpruefen des flaecheninhalts:
-        IF (igra.ne.0) print * , 'bereich 3: il-ir, hok-hsohl' 
+        IF (igra.ne.0) write (*,*) 'bereich 3: il-ir, hok-hsohl'
                                                                         
         CALL schwpkt (maxkla, npl1, xl, hl, xx, hh, ah, igra, gen) 
                                                                         
         IF (ah.lt. - 0.01) then 
-          PRINT * , 'negative flaeche ah ' 
-          PRINT * , '--> stop in impuls' 
+          write (*,*) 'negative flaeche ah '
+          write (*,*) '--> stop in impuls'
           STOP 
         ELSEIF (ah.le.0.01) then 
           !JK    ZU ZUSAMMENSETZEN DER 3 BEREICHE
@@ -1476,12 +1479,12 @@ hss = hr - hss
         END DO
                                                                         
         ! Ueberpruefen des Flaecheninhalts:
-        IF (igra.ne.0) print * , 'bereich 3: il-ir, hukmax-hr' 
+        IF (igra.ne.0) write (*,*) 'bereich 3: il-ir, hukmax-hr'
         CALL schwpkt (maxkla, npl2, xl, hl, xx, hh, ah, igra, gen) 
                                                                         
         IF (ah.lt. - 0.01) then 
-          PRINT * , 'negative flaeche ah ' 
-          PRINT * , '--> stop in impuls' 
+          write (*,*) 'negative flaeche ah '
+          write (*,*) '--> stop in impuls'
           STOP 
         ELSEIF (ah.le.0.01) then 
           !JK  ZU ZUSAMMENSETZEN DER 3 BEREICHE
@@ -1542,13 +1545,13 @@ hss = hr - hss
             IF (npl.lt.3) goto 579 
 
             !JK   UEBERPRUEFEN FLAECHENINHALT
-            IF (igra.ne.0) print * , 'angestroemte platte:' 
+            IF (igra.ne.0) write (*,*) 'angestroemte platte:'
             CALL schwpkt (maxkla, npl, xl, hl, xss, hs (i), as (i),     &
             igra, gen)                                                  
                                                                         
             IF (as (i) .lt. - 0.01) then 
-              PRINT * , 'flaeche as(i) < 0 ! ' 
-              PRINT * , 'stop in impuls !' 
+              write (*,*) 'flaeche as(i) < 0 ! '
+              write (*,*) 'stop in impuls !'
               STOP 
             ENDIF 
                                                                         
@@ -1580,13 +1583,13 @@ hss = hr - hss
             END DO
                                                                         
             !JK    UEBERRUEFEN FLAECHENINHALT
-            IF (igra.ne.0) print  * , 'ueberstroemte flaeche fluszschl.:'
+            IF (igra.ne.0) write (*,*) 'ueberstroemte flaeche fluszschl.:'
 
             CALL schwpkt (maxkla, npl, xl, hl, xss, hs (i), as (i), igra, gen)
                                                                         
             IF (as (i) .lt. - 0.01) then 
-              PRINT * , 'flaeche as(i) < 0 ! ' 
-              PRINT * , 'stop in impuls !' 
+              write (*,*) 'flaeche as(i) < 0 ! '
+              write (*,*) 'stop in impuls !'
               STOP 
             ENDIF 
                                                                         
@@ -1662,14 +1665,14 @@ hss = hr - hss
  9999 IF (x1n (isohln) .eq.x1 (isohl) .and.h1n (isohln) .eq.h1 (isohl) ) then
         CONTINUE 
       ELSE 
-        PRINT * , 'fehler bei der einordnung der schnittpunkte in proflinie'
-        PRINT * , 'pn(isohln) /= p(isohl) !!!!' 
-        PRINT * , 'neu: isohln=', isohln 
-        PRINT * , '     xn    =', x1n (isohln)
-        PRINT * , '     hn    =', h1n (isohln)
-        PRINT * , 'alt: isohl =', isohl 
-        PRINT * , '     x     =', x1 (isohl)
-        PRINT * , '     h     =', h1 (isohl)
+        write (UNIT_OUT_LOG,*) 'fehler bei der einordnung der schnittpunkte in proflinie'
+        write (UNIT_OUT_LOG,*) 'pn(isohln) /= p(isohl) !!!!'
+        write (UNIT_OUT_LOG,*) 'neu: isohln=', isohln
+        write (UNIT_OUT_LOG,*) '     xn    =', x1n (isohln)
+        write (UNIT_OUT_LOG,*) '     hn    =', h1n (isohln)
+        write (UNIT_OUT_LOG,*) 'alt: isohl =', isohl
+        write (UNIT_OUT_LOG,*) '     x     =', x1 (isohl)
+        write (UNIT_OUT_LOG,*) '     h     =', h1 (isohl)
       ENDIF 
                                                                         
 
