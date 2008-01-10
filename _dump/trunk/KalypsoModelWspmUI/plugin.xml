@@ -234,6 +234,20 @@
                label="Profileigenschaften ändern">
          </action>
       </objectContribution>
+            <objectContribution
+            adaptable="false"
+            id="org.kalypso.model.wspm.ui.objectContribution.flipProfile"
+            objectClass="org.kalypsodeegree.model.feature.Feature">
+         <filter
+               name="featureType"
+               value="org.kalypso.model.wspmprofile#Profile"/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.FlipProfileAction"
+               icon="icons/obj16/flipProfile.gif"
+               id="org.kalypso.model.wspm.ui.action.FlipProfileAction"
+               label="Profil spiegeln"
+               tooltip="spiegelt das Profil anhand der Breitenkoordinate"/>
+      </objectContribution>
       <objectContribution
             adaptable="false"
             id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
@@ -279,7 +293,7 @@
                label="In neuer Karte anzeigen"
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
-               tooltip="Erzeugt eine neue Karte welche die selektierten Profile anzeigt."/>
+               tooltip="Erzeugt eine neue Karte, welche die selektierten Profile anzeigt."/>
       </objectContribution>
       <objectContribution
             adaptable="false"

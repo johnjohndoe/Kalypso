@@ -153,11 +153,6 @@ public class ProfilUtil
         final Double breite = point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
         point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, -breite );
       }
-      if( point.hasProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) )
-      {
-        final Double hoehe = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-        point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, -hoehe );
-      }
     }
     Collections.reverse( points );
     IProfilPoint previousPoint = null;
