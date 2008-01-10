@@ -453,5 +453,28 @@ Kalypso 2.0.6.2     09. Januar 2008
      sind weiter bei 100, könnten aber auch reduziert werden um signifikante 
      Reduktion der Speicherbelegung zu erreichen.
      
-                                                           Wolf Plöger, 09.01.2008                                                               
+                                                           Wolf Plöger, 09.01.2008     
+
+
+Kalypso 2.0.6.3     10. Januar 2008
+-------------------------------------                                                           
+
+1.)  Neue Option zum Anstossen des Rechenkerns mittels angehängter Argumente beim
+     Aufruf der Kalypso1d.exe. Bei diesem Aufruf muss das erste Argument ein "n" sein fuer 
+     den Modus Kalypso und das zweite Argument der Pfad der INI-datei:
+         z.B.: "D:\FlussXX\Kalypso-1D.exe n D:\FlussXX\kalypso-1D.ini"
+
+     Diese neue Option ist nur auf einen Start in der KalypsoWSPM Umgebung geeignet!
+     Alle alten Projekte bzw. Oberflächen egal ob in KalypsoWSPM, WspWin oder Manuell
+     können wie gehabt aufgrufen werden.
+     (Betroffene Routinen: wsp)
+
+2.)  Nicht relevante Meldungen und Hinweise wurden begonnen in die LOG-Datei zuschreiben 
+     lediglich Fehlermeldungen, Hinweise vor einem Programmabbruch und Hinweise zum Status
+     der Berechnungen verbleiben in der error2.log bzw. werden im Dos-Fenster (WspWin) bzw. 
+     in der Konsole (WSPM) ausgegeben.
+     (Betroffene Routinen: qbordv, w_ber, wspber, globale_funktion, AIWSP, geomet)
+
+     
+                                                           Monika Donner, 10.01.2008                                                          
                                                            
