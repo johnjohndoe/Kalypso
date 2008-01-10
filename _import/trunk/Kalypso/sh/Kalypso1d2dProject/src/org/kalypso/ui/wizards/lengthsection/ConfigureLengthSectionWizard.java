@@ -75,6 +75,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -126,7 +127,9 @@ public class ConfigureLengthSectionWizard extends Wizard
 
     // select time step page
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebnis für Längsschnitt auswählen", null, resultFilter, null );
+    final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
+
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebnis für Längsschnitt auswählen", null, resultFilter, comparator, null );
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 

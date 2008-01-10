@@ -62,6 +62,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
 /**
@@ -93,7 +94,9 @@ public class SelectLengthSectionWizard extends Wizard
   public void addPages( )
   {
     final LengthSectionViewerFilter resultFilter = new LengthSectionViewerFilter();
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Längsschnitt anzeigen", null, resultFilter, null );
+    final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
+
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Längsschnitt anzeigen", null, resultFilter, comparator, null );
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 

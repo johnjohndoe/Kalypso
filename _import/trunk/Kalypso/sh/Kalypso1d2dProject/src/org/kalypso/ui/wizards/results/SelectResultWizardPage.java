@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -81,9 +82,12 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
   private Object[] m_checkedElements = null;
 
-  public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final IThemeConstructionFactory factory )
+  private final ViewerComparator m_comparator;
+
+  public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final ViewerComparator comparator, final IThemeConstructionFactory factory )
   {
     super( pageName, title, titleImage );
+    m_comparator = comparator;
 
     m_factory = factory;
     m_filter = filter;
@@ -125,8 +129,8 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     m_treeViewer = new CheckboxTreeViewer( panel, SWT.BORDER );
     m_treeViewer.setContentProvider( new WorkbenchContentProvider() );
     m_treeViewer.setLabelProvider( new WorkbenchLabelProvider() );
-    m_treeViewer.addFilter( m_filter ); // easy-peasy :-)
-    // m_treeViewer.setSorter( sorter ); TODO get sorter via constructor of page
+    m_treeViewer.addFilter( m_filter );
+    m_treeViewer.setComparator( m_comparator );
     m_treeViewer.setInput( m_resultRoot );
 
     /* The next two lines are needed so that checking children of checked elements always works. */

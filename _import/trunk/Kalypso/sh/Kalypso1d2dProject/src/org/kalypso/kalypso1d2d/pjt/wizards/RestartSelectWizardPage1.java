@@ -74,6 +74,7 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.ui.wizards.imports.wspmrestart.ImportWspmRestartWizard;
 import org.kalypso.ui.wizards.results.IThemeConstructionFactory;
+import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -88,9 +89,9 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
 
   private final ICaseDataProvider<IModel> m_modelProvider;
 
-  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final IThemeConstructionFactory factory, final IFolder scenarioFolder, final ICaseDataProvider<IModel> modelProvider )
+  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory, final IFolder scenarioFolder, final ICaseDataProvider<IModel> modelProvider )
   {
-    super( pageName, title, titleImage, filter, factory );
+    super( pageName, title, titleImage, filter, comparator, factory );
 
     m_scenarioFolder = scenarioFolder;
     m_modelProvider = modelProvider;

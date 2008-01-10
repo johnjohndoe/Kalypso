@@ -44,10 +44,14 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -70,6 +74,10 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * 
@@ -93,6 +101,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
   private final KeyBasedDataModelChangeListener calThemeUpdater = new KeyBasedDataModelChangeListener()
   {
+    @SuppressWarnings("synthetic-access")
     public void dataChanged( String key, Object newValue )
     {
       if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
@@ -132,6 +141,14 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, commandPoster );
     final IMapModell mapModell = mapPanel.getMapModell();
     final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModell );
+
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+
+    m_dataModel.setData( ICommonKeys.KEY_DATA_PROVIDER, modelProvider );
+
     m_dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
     m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model1d2d ) );
     m_dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );

@@ -67,6 +67,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
@@ -120,8 +121,9 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   {
     setWindowTitle( Messages.getString( "RestartSelectWizard.0" ) ); //$NON-NLS-1$
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
+    final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "RestartSelectWizard.8" ), null, resultFilter, null, m_scenarioFolder, m_modelProvider ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "RestartSelectWizard.8" ), null, resultFilter, comparator, null, m_scenarioFolder, m_modelProvider ); //$NON-NLS-1$ //$NON-NLS-2$
     configureRestartSelectPage();
     m_restartSelectWizardPage1.setResultMeta( m_resultModel );
 

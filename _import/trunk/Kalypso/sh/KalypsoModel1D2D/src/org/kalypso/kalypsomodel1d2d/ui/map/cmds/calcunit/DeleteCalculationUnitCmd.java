@@ -282,7 +282,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           controlModelToActivate = controlModel;
       }
     }
-    if( invalidActiveModel )
+    if( invalidActiveModel && controlModelToActivate != null )
       controlModel1D2DCollection.setActiveControlModel( controlModelToActivate );
 
     if( controlModel1D2D == null )

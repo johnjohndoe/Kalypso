@@ -108,7 +108,8 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
   public void addPages( )
   {
     final NonCalcUnitResultViewerFilter resultFilter = new NonCalcUnitResultViewerFilter();
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Teilmodelle für Ganglinienerstellung auswählen", null, resultFilter, null );
+    final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Teilmodelle für Ganglinienerstellung auswählen", null, resultFilter, comparator, null );
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 

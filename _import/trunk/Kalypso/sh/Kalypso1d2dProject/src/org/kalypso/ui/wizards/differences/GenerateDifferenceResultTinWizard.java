@@ -78,6 +78,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DO
 import org.kalypso.kalypsomodel1d2d.sim.MinMaxCatcher;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.ThemeConstructionFactory;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
@@ -128,12 +129,14 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
     // select master document page
     final NonTinDocumentResultViewerFilter resultFilter = new NonTinDocumentResultViewerFilter();
-    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, "Ergebnis-Minuend auswählen", null, resultFilter, null );
-    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, "Ergebnis-Subtrahend auswählen", null, resultFilter, null );
+    final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
+
+    final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, "Ergebnis-Minuend auswählen", null, resultFilter, comparator, null );
+    final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, "Ergebnis-Subtrahend auswählen", null, resultFilter, comparator, null );
 
     final DocumentResultViewerFilter resultFilter2 = new DocumentResultViewerFilter();
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, "Ziel auswählen", null, resultFilter2, themeConstructionFactory );
+    final SelectResultWizardPage selectDestinationResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_DESTINATION_RESULTS_NAME, "Ziel auswählen", null, resultFilter2, comparator, themeConstructionFactory );
 
     selectMasterResultWizardPage.setResultMeta( m_resultModel );
     selectSlaveResultWizardPage.setResultMeta( m_resultModel );

@@ -97,8 +97,10 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
   public void addPages( )
   {
     final NonMapDataResultViewerFilter resultFilter = new NonMapDataResultViewerFilter();
+    final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
+
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, themeConstructionFactory );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, resultComparator, themeConstructionFactory );
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
