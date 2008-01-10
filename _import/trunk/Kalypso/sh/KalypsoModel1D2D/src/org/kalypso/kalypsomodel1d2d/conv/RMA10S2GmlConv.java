@@ -307,7 +307,7 @@ public class RMA10S2GmlConv
   {
     Matcher matcher = null;
     // ZU 1 2 0.0000000 0.0000000 -0.0000036 0.0000045
-    final Pattern fourParamLinePattern = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s*" ); //$NON-NLS-1$
+    final Pattern fourParamLinePattern = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s*" ); //$NON-NLS-1$
     matcher = fourParamLinePattern.matcher( line );
     try
     {

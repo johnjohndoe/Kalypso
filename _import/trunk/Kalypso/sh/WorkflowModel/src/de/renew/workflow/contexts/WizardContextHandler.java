@@ -16,10 +16,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.eclipse.ui.wizards.IWizardRegistry;
 
@@ -59,8 +60,8 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IWorkbench workbench = (workbenchWindow).getWorkbench();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbench workbench = PlatformUI.getWorkbench();
     if( m_wizardType != null && m_wizardId != null )
     {
       // FIXME: This is not good!!! As these wizards are also registered within the export/import/new extension-points,
@@ -86,7 +87,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
       try
       {
         final IWorkbenchWizard wizard = wizardDescriptor.createWizard();
-        final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
+        final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
         wizard.init( workbench, StructuredSelection.EMPTY );
 
         if( wizardDialog.open() == Window.OK && wizard instanceof IDialogWithResult )

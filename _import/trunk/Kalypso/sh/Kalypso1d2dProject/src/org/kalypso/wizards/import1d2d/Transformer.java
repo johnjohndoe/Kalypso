@@ -9,7 +9,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler;
@@ -17,7 +16,6 @@ import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 
 /**
  * Provides the mechanism for transforming a 2D-Ascii model into a 1d 2d gml model
@@ -26,7 +24,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
  */
 public class Transformer implements ICoreRunnableWithProgress
 {
-  private DataContainer m_data;
+  private final DataContainer m_data;
 
   public Transformer( final DataContainer data )
   {
@@ -49,8 +47,8 @@ public class Transformer implements ICoreRunnableWithProgress
         return Status.CANCEL_STATUS;
       monitor.done();
       /* post empty command(s) in order to make pool dirty. */
-//      m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString("Transformer.0"), false ) ); //$NON-NLS-1$
-      
+      // m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString("Transformer.0"),
+      // false ) ); //$NON-NLS-1$
 
     }
     catch( Exception e )
