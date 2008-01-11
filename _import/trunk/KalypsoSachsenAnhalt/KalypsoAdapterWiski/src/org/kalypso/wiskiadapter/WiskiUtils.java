@@ -2,10 +2,13 @@ package org.kalypso.wiskiadapter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
 
@@ -28,22 +31,43 @@ public final class WiskiUtils
 
   private static Properties PROPS = null;
 
-  private WiskiUtils()
+  private static Calendar calSrc = Calendar.getInstance();
+
+  private static Calendar calDest = Calendar.getInstance();
+
+  private WiskiUtils( )
   {
-  // not to be instanciated
+    // not to be instantiated
+  }
+
+  /**
+   * Convert a date from one timezone to another timezone<br>
+   * REMARK: do not move this method into a common utility method (like DateUtilities), as such stuff should never be
+   * done normally (java.lang.Date's are always UTC internally).
+   */
+  public final static Date convert( final Date d, final TimeZone source, final TimeZone dest )
+  {
+    calSrc.setTimeZone( source );
+    calDest.setTimeZone( dest );
+
+    calSrc.setTimeInMillis( d.getTime() );
+
+    calDest.clear();
+    calDest.set( calSrc.get( Calendar.YEAR ), calSrc.get( Calendar.MONTH ), calSrc.get( Calendar.DAY_OF_MONTH ), calSrc.get( Calendar.HOUR_OF_DAY ), calSrc.get( Calendar.MINUTE ), calSrc.get( Calendar.SECOND ) );
+
+    return calDest.getTime();
   }
 
   /**
    * Reads the properties from the configuration file in resources/config.ini
    */
-  public static Properties getProperties()
+  public static Properties getProperties( )
   {
     // lazy loading
     if( PROPS != null )
       return PROPS;
 
-    final InputStream ins = WiskiRepository.class
-        .getResourceAsStream( "/org/kalypso/wiskiadapter/resources/config.ini" );
+    final InputStream ins = WiskiRepository.class.getResourceAsStream( "/org/kalypso/wiskiadapter/resources/config.ini" );
 
     PROPS = new Properties();
     try
@@ -52,7 +76,7 @@ public final class WiskiUtils
 
       return PROPS;
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
       throw new IllegalStateException( e.getLocalizedMessage() );
@@ -62,12 +86,12 @@ public final class WiskiUtils
       IOUtils.closeQuietly( ins );
     }
   }
-  
+
   public static String getProperty( final String key )
   {
     return getProperties().getProperty( key );
   }
-  
+
   public static String getProperty( final String key, final String defaultValue )
   {
     return getProperties().getProperty( key, defaultValue );
@@ -76,7 +100,7 @@ public final class WiskiUtils
   /**
    * Forces the properties to be reloaded for the next call to getProperties()
    */
-  public static void forcePropertiesReload()
+  public static void forcePropertiesReload( )
   {
     PROPS = null;
   }
@@ -90,7 +114,7 @@ public final class WiskiUtils
    */
   public static String[] parseCommonInfoList( final HashMap commonInfoList, final String columnName )
   {
-    final List resultList = (List)commonInfoList.get( KiWWDataProviderInterface.KEY_RESULT_LIST );
+    final List resultList = (List) commonInfoList.get( KiWWDataProviderInterface.KEY_RESULT_LIST );
 
     return parseResultList( resultList, columnName );
   }
@@ -108,8 +132,8 @@ public final class WiskiUtils
     int i = 0;
     for( final Iterator it = resultList.iterator(); it.hasNext(); )
     {
-      final HashMap map = (HashMap)it.next();
-      results[i++] = (String)map.get( columnName );
+      final HashMap map = (HashMap) it.next();
+      results[i++] = (String) map.get( columnName );
     }
 
     return results;

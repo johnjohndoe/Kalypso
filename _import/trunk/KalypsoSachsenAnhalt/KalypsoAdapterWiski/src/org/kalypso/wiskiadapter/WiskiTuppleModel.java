@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.kalypso.commons.conversion.units.IValueConverter;
-import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
@@ -29,6 +28,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   private final IValueConverter m_vc;
 
   private final TimeZone m_tzWiski;
+
   private final TimeZone m_tzKalypso;
 
   public WiskiTuppleModel( final IAxis[] axes, final LinkedList data, final IValueConverter conv, final TimeZone tzSrc, final TimeZone tzDest )
@@ -36,10 +36,10 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     super( axes );
 
     m_vc = conv;
-    
+
     m_tzWiski = tzSrc;
     m_tzKalypso = tzDest;
-    
+
     m_data = data;
     m_values = new Double[m_data.size()];
     m_kalypsoStati = new Integer[m_data.size()];
@@ -51,7 +51,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
    */
-  public int getCount()
+  public int getCount( )
   {
     return m_data.size();
   }
@@ -59,13 +59,13 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
-  public Object getElement( int index, IAxis axis ) throws SensorException
+  public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     switch( getPositionFor( axis ) )
     {
       case 0:
-        final Date dWiski = (Date)( (HashMap)m_data.get( index ) ).get( "timestamp" );
-        final Date dKalypso = DateUtilities.convert( dWiski, m_tzWiski, m_tzKalypso );
+        final Date dWiski = (Date) ((HashMap) m_data.get( index )).get( "timestamp" );
+        final Date dKalypso = WiskiUtils.convert( dWiski, m_tzWiski, m_tzKalypso );
         return dKalypso;
       case 1:
         return getValue( index );
@@ -76,11 +76,11 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     }
   }
 
-  private Double getValue( int index )
+  private Double getValue( final int index )
   {
     if( m_values[index] == null )
     {
-      double value = ( (Number)( (HashMap)m_data.get( index ) ).get( "tsc_value0" ) ).doubleValue();
+      double value = ((Number) ((HashMap) m_data.get( index )).get( "tsc_value0" )).doubleValue();
 
       if( m_vc != null )
         value = m_vc.convert( value );
@@ -91,14 +91,14 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     return m_values[index];
   }
 
-  private Integer getKalypsoStatus( int index )
+  private Integer getKalypsoStatus( final int index )
   {
     if( m_kalypsoStati[index] == null )
     {
-      final String status = (String)( (HashMap)m_data.get( index ) ).get( "QUALITY" );
+      final String status = (String) ((HashMap) m_data.get( index )).get( "QUALITY" );
 
-      //      if( !status.equals("U") )
-      //        System.out.println(status);
+      // if( !status.equals("U") )
+      // System.out.println(status);
 
       m_kalypsoStati[index] = WiskiUtils.wiskiStatus2Kalypso( status );
 
@@ -107,7 +107,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     return m_kalypsoStati[index];
   }
 
-  private void setValue( int index, Double value )
+  private void setValue( final int index, final Double value )
   {
     m_values[index] = value;
 
@@ -116,22 +116,22 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     if( m_vc != null )
       v = m_vc.reverse( v );
 
-    ( (HashMap)m_data.get( index ) ).put( "tsc_value0", new Double( v ) );
+    ((HashMap) m_data.get( index )).put( "tsc_value0", new Double( v ) );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
-  public void setElement( int index, Object element, IAxis axis ) throws SensorException
+  public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
   {
     switch( getPositionFor( axis ) )
     {
       case 0:
         throw new SensorException( "Kann Datum nicht setzen" );
       case 1:
-        setValue( index, (Double)element );
+        setValue( index, (Double) element );
       case 2:
-        m_kalypsoStati[index] = (Integer)element;
+        m_kalypsoStati[index] = (Integer) element;
       default:
         throw new SensorException( "Position von Achse " + axis + " ist ungültig" );
     }
@@ -140,15 +140,15 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
-  public int indexOf( Object element, IAxis axis ) throws SensorException
+  public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     if( getPositionFor( axis ) == 0 )
     {
-      final Date date = (Date)element;
+      final Date date = (Date) element;
 
       for( final Iterator it = m_data.iterator(); it.hasNext(); )
       {
-        final HashMap map = (HashMap)it.next();
+        final HashMap map = (HashMap) it.next();
         if( date.equals( map.get( "timestamp" ) ) )
           return m_data.indexOf( map );
       }
