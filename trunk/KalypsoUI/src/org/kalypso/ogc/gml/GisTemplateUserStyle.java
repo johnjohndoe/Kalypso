@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.loader.IPooledObject;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -66,7 +65,7 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  * 
  * @author doemming
  */
-public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListener, IPooledObject, IWorkbenchAdapter
+public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListener, IWorkbenchAdapter
 {
   private final PoolableObjectType m_styleKey;
 
@@ -101,6 +100,8 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
+    m_loaded = true;
+
     if( KeyComparator.getInstance().compare( m_styleKey, key ) == 0 && newValue != null )
     {
       try
@@ -118,7 +119,6 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
       {
         e.printStackTrace();
       }
-      m_loaded = true;
 
       fireStyleChanged();
     }
@@ -131,7 +131,6 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   {
     if( KeyComparator.getInstance().compare( m_styleKey, key ) == 0 )
     {
-      m_loaded = false;
       m_userStyle = createDummyStyle( "Pool object was invalidated..." );
 
       fireStyleChanged();
@@ -202,10 +201,10 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     try
     {
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-      Object object = pool.getObject( m_styleKey );
+      final Object object = pool.getObject( m_styleKey );
       pool.saveObject( object, monitor );
     }
-    catch( LoaderException e )
+    catch( final LoaderException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
