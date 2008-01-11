@@ -64,7 +64,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -108,7 +107,7 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  * 
  * @author Belger
  */
-public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, ICommandTarget, IKalypsoFeatureTheme, IPooledObject, IKalypsoSaveableTheme, IKalypsoUserStyleListener
+public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, ICommandTarget, IKalypsoFeatureTheme, IKalypsoSaveableTheme, IKalypsoUserStyleListener
 {
   protected static final Logger LOGGER = Logger.getLogger( GisTemplateFeatureTheme.class.getName() );
 
@@ -309,9 +308,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
-    // if( m_disposed ) // if disposed, do not register any more objects at the pool
-    // LOGGER.info( "Theme already disposed: " + this ); //$NON-NLS-1$
-    // LOGGER.info( "Object loaded: " + key + " - Object: " + newValue ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_loaded = true;
+
     try
     {
       if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
@@ -385,7 +383,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
               addStyle( kus );
             }
           }
-          m_loaded = true;
         }
       }
     }
@@ -412,7 +409,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    m_loaded = false;
     if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
     {
       // clear the theme
@@ -512,8 +508,11 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   public boolean isLoaded( )
   {
     for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
+    {
       if( !style.isLoaded() )
         return false;
+    }
+
     return m_loaded;
   }
 

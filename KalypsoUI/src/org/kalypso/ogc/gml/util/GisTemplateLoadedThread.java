@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
-import org.kalypso.loader.IPooledObject;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -52,8 +51,10 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
  * Danach macht er etwas (d.h. führt ein übergebenen Runnable aus) und beendet sich.
  * </p>
  * 
+ * @deprecated Use {@link org.kalypso.ogc.gml.mapmodel.MapModellHelper} instead.
  * @author belger
  */
+@Deprecated
 public class GisTemplateLoadedThread extends Thread
 {
   private final IMapModell m_modell;
@@ -100,15 +101,10 @@ public class GisTemplateLoadedThread extends Thread
 
     final IKalypsoTheme[] themes = m_modell.getAllThemes();
 
-    for( int i = 0; i < themes.length; i++ )
+    for( final IKalypsoTheme theme : themes )
     {
-      final IKalypsoTheme theme = themes[i];
-
-      if( theme instanceof IPooledObject )
-      {
-        if( !((IPooledObject) theme).isLoaded() )
-          return false;
-      }
+      if( !theme.isLoaded() )
+        return false;
     }
     return true;
   }

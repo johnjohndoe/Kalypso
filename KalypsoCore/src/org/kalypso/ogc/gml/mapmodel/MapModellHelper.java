@@ -61,7 +61,6 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeLoadStatusVisitor;
-import org.kalypso.ogc.gml.mapmodel.visitor.LoadStatusPredicate;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -112,7 +111,7 @@ public class MapModellHelper
       {
         monitor.beginTask( "Karte wird geladen...", IProgressMonitor.UNKNOWN );
 
-        Thread.sleep( 500 );
+        Thread.sleep( 250 );
 
         while( true )
         {
@@ -124,8 +123,7 @@ public class MapModellHelper
             final IMapModell modell = mapPanel.getMapModell();
             if( modell != null && modell.isLoaded() )
             {
-              final LoadStatusPredicate predicate = new LoadStatusPredicate();
-              final KalypsoThemeLoadStatusVisitor visitor = new KalypsoThemeLoadStatusVisitor( predicate );
+              final KalypsoThemeLoadStatusVisitor visitor = new KalypsoThemeLoadStatusVisitor();
               modell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
 
               if( visitor.isLoaded() == true )
