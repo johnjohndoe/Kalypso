@@ -194,10 +194,10 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
 
   protected void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final T caze )
   {
-    for( final IActiveContextChangeListener<T> l : m_activeContextChangeListeners )
-    {
+    // Convert to array to avoid concurrent modification exceptions
+    final IActiveContextChangeListener<T>[] listeners = m_activeContextChangeListeners.toArray( new IActiveContextChangeListener[m_activeContextChangeListeners.size()] );
+    for( final IActiveContextChangeListener<T> l : listeners )
       l.activeContextChanged( newProject, caze );
-    }
   }
 
   public void setCurrentCase( final T caze ) throws CoreException

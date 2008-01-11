@@ -138,7 +138,11 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
 
       // Step 1: Delete existing results and save result-DB (in case of problems while processing)
       m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Bestehende Ergebnisse werden gelöscht." );
-      deleteExistingResults( scenarioMeta, calculationUnit, m_processBean, progress.newChild( 5 ) );
+      final IStatus deleteStatus = deleteExistingResults( scenarioMeta, calculationUnit, m_processBean, progress.newChild( 5 ) );
+      if( deleteStatus.matches( IStatus.CANCEL ) )
+        return deleteStatus;
+      if( !deleteStatus.isOK() )
+        m_geoLog.log( deleteStatus );
 
       // Step 2: Create or find CalcUnitMeta and fill with data
       final ICalcUnitResultMeta existingCalcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
@@ -212,8 +216,8 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     ProgressUtilities.worked( progress, 5 );
 
     final IStatus result = ResultMeta1d2dHelper.deleteResults( calcUnitMeta, stepsToDelete, progress.newChild( 90 ) );
-    if( !result.isOK() )
-      throw new CoreException( result );
+
+    // REMARK: we save the result DB, even if deletion fails; in doubt, the new results will just overwrite the old ones
 
     /* Save result DB */
     try
