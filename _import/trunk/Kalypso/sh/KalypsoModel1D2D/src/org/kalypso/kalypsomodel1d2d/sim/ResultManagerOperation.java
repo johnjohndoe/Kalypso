@@ -54,7 +54,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.command.EmptyCommand;
@@ -66,8 +65,8 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 
@@ -144,47 +143,21 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       if( !deleteStatus.isOK() )
         m_geoLog.log( deleteStatus );
 
-      // Step 2: Create or find CalcUnitMeta and fill with data
-      final ICalcUnitResultMeta existingCalcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
-      final ICalcUnitResultMeta calcUnitMeta;
-      if( existingCalcUnitMeta == null )
-        calcUnitMeta = scenarioMeta.getChildren().addNew( ICalcUnitResultMeta.QNAME, ICalcUnitResultMeta.class );
-      else
-        calcUnitMeta = existingCalcUnitMeta;
-
-      // Step 3: Process results and add new entries to result-DB
+      // Step 2: Process results and add new entries to result-DB
+      final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
       final IStatus processResultsStatus = m_resultManager.processResults( calcUnitMeta, progress.newChild( 90 ) );
       m_geoLog.log( processResultsStatus );
 
-      // Step 4:
-      calcUnitMeta.setCalcStartTime( m_geoLog.getStartTime() );
-      calcUnitMeta.setCalcUnit( calculationUnit.getGmlID() );
-      calcUnitMeta.setName( calculationUnit.getName() );
-      calcUnitMeta.setDescription( calculationUnit.getDescription() );
-      calcUnitMeta.setPath( new Path( m_unitFolder.getName() ) );
+      // Step 3: Fill in result of calculation
       calcUnitMeta.setStatus( m_simulationStatus );
       calcUnitMeta.setCalcEndTime( new Date() );
 
       if( processResultsStatus.matches( IStatus.ERROR | IStatus.CANCEL ) )
         return processResultsStatus;
 
-      // TODO: ask user, if processing produced a warning
-      // if( processResultsStatus.matches( IStatus.WARNING | IStatus.INFO ) )
-      // {
-      // if( ErrorDialog.openError( m_shell, STRING_DLG__TITLE_PROCESS_RESULTS, "Ergebnisauswertung wurde mit Warnung
-      // beendet.\nSollen die Ergebnisse übernommen werden?", processResultsStatus, IStatus.WARNING
-      // | IStatus.INFO ) == ErrorDialog.CANCEL )
-      // return processResultsStatus;
-      // }
+      // TODO: move this outside this method...?
 
-      // Step 5: Add geo log to calcMeta as document
-      final IDocumentResultMeta logMeta = calcUnitMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
-      logMeta.setName( "Simulations-Log" );
-      logMeta.setDescription( "Die Log-Datei der letzten Simulation dieser Berechnungseinheit." );
-      logMeta.setDocumentType( IDocumentResultMeta.DOCUMENTTYPE.log );
-      logMeta.setPath( new Path( SIMULATION_LOG_GML ) );
-
-      // Step 5: Move results into workspace and save result-DB
+      // Step 4: Move results into workspace and save result-DB
       m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Ergebnisse werden in Arbeitsbereich verschoben und Ergebnisdatenbank aktualisiert." );
       return moveResults( outputDir, progress.newChild( 5 ) );
     }
@@ -269,7 +242,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     {
       final File unitWorkspaceDir = m_unitFolder.getLocation().toFile();
       FileUtils.forceMkdir( unitWorkspaceDir );
-      FileUtilities.moveContents( outputDir, unitWorkspaceDir );
+      FileUtilities.moveContents( outputDir, unitWorkspaceDir, true );
       ProgressUtilities.worked( progress, 70 );
 
       m_unitFolder.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 20 ) );

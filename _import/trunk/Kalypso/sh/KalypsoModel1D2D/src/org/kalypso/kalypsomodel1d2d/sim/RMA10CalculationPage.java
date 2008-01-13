@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -51,14 +53,19 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 
 /**
  * @author Gernot Belger
  */
 public class RMA10CalculationPage extends WizardPage implements IWizardPage
 {
+  private static final String SETTING_START_RESULT_PROCESSING = "startResultProcessing";
+
   private final RMA10Calculation m_calculation;
 
   private IStatus m_simulationStatus;
@@ -66,6 +73,8 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
   private StatusComposite m_statusComp;
 
   protected boolean m_startResultProcessing = false;
+
+  private Button m_startResultProcessingCheck;
 
   protected RMA10CalculationPage( final String pageName, final RMA10Calculation calculation )
   {
@@ -83,17 +92,33 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
    */
   public void createControl( final Composite parent )
   {
+    /* Load dialog settings */
+    final IDialogSettings dialogSettings = getDialogSettings();
+    if( dialogSettings != null )
+      m_startResultProcessing = dialogSettings.getBoolean( SETTING_START_RESULT_PROCESSING );
+
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout() );
 
     /* Status composite */
-    m_statusComp = new StatusComposite( composite, SWT.NONE );
-    m_statusComp.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
+    final Group statusGroup = new Group( composite, SWT.NONE );
+    statusGroup.setLayout( new GridLayout() );
+    statusGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    statusGroup.setText( "Simulationsergebnis" );
+    m_statusComp = new StatusComposite( statusGroup, StatusComposite.DETAILS );
+    m_statusComp.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, "Simulation wurde noch nicht durchgeführt", null ) );
 
-    /* Control flags */
-    final Button startResultProcessingCheck = new Button( composite, SWT.CHECK );
-    startResultProcessingCheck.setText( "Sofort mit Ergebnisauswertung starten" );
-    startResultProcessingCheck.setToolTipText( "Falls gesetzt, wird nach der Simulation sofort mit der Ergebnisauswertug aller Zeitschritte gestartet." );
+    final Group tweakGroup = new Group( composite, SWT.NONE );
+    tweakGroup.setLayout( new GridLayout() );
+    tweakGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    tweakGroup.setText( "Einstellungen" );
+
+    m_startResultProcessingCheck = new Button( tweakGroup, SWT.CHECK );
+    final Button startResultProcessingCheck = m_startResultProcessingCheck;
+    startResultProcessingCheck.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
+    startResultProcessingCheck.setText( "Sofort mit der Ergebnisauswertung starten" );
+    startResultProcessingCheck.setToolTipText( "Falls gesetzt, wird nach der Simulation sofort mit der Ergebnisauswertung aller Zeitschritte gestartet." );
     startResultProcessingCheck.setSelection( m_startResultProcessing );
     startResultProcessingCheck.addSelectionListener( new SelectionAdapter()
     {
@@ -104,12 +129,20 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
       public void widgetSelected( final SelectionEvent e )
       {
         m_startResultProcessing = startResultProcessingCheck.getSelection();
+
+        if( dialogSettings != null )
+          dialogSettings.put( SETTING_START_RESULT_PROCESSING, m_startResultProcessing );
       }
     } );
 
     /* Iteration viewer */
-    final Composite iterComp = new Composite( composite, SWT.NONE );
-    iterComp.setLayout( new GridLayout( 2, false ) );
+    final Group iterGroup = new Group( composite, SWT.NONE );
+    iterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final GridLayout iterLayout = new GridLayout();
+    iterGroup.setLayout( iterLayout );
+    iterGroup.setText( "Iterationsverlauf" );
+
+    final Composite iterComp = new IterationComposite( m_calculation, iterGroup, SWT.NONE );
     iterComp.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     setControl( composite );
@@ -122,7 +155,8 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
   public void runCalculation( )
   {
-    setMessage( "Simulation in Arbeit..." );
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, "Simulation läuft...", null ) );
+    setMessage( "Simulation läuft..." );
 
     final RMA10Calculation calculation = m_calculation;
     final ICoreRunnableWithProgress calculationOperation = new ICoreRunnableWithProgress()
@@ -133,36 +167,29 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
       }
     };
 
-    m_simulationStatus = RunnableContextHelper.execute( getContainer(), true, true, calculationOperation );
+    final IWizardContainer container = getContainer();
+    if( container instanceof WizardDialog2 )
+    {
+      /* Do not block the UI while simulation is running... */
+      final WizardDialog2 wd2 = (WizardDialog2) container;
+      m_simulationStatus = wd2.executeUnblocked( true, calculationOperation );
+    }
+    else
+      m_simulationStatus = RunnableContextHelper.execute( container, true, true, calculationOperation );
 
-    setMessage( "Drücken Sie auf 'Weiter', um die Simulationsergebnisse auszuwerten." );
+    if( m_simulationStatus.matches( IStatus.CANCEL ) )
+      setMessage( "Simulation abgebrochen.", WARNING );
+    else if( m_simulationStatus.matches( IStatus.WARNING ) )
+      setMessage( "Simulation mit Warnung beendet. Drücken Sie auf 'Weiter', um die Simulationsergebnisse auszuwerten.", WARNING );
+    else if( m_simulationStatus.matches( IStatus.ERROR ) )
+      setMessage( "Simulation mit Fehler beendet. Ergebnisauswertung nicht möglich.", ERROR );
+    else
+      setMessage( "Drücken Sie auf 'Weiter', um die Simulationsergebnisse auszuwerten." );
 
     m_statusComp.setStatus( m_simulationStatus );
-  }
 
-  // private static int convertSeverity( final int severity )
-  // {
-  // switch( severity )
-  // {
-  // case IStatus.CANCEL:
-  // return IMessageProvider.NONE;
-  //
-  // case IStatus.ERROR:
-  // return IMessageProvider.ERROR;
-  //
-  // case IStatus.INFO:
-  // return IMessageProvider.INFORMATION;
-  //
-  // case IStatus.OK:
-  // return IMessageProvider.INFORMATION;
-  //
-  // case IStatus.WARNING:
-  // return IMessageProvider.WARNING;
-  //
-  // default:
-  // return IMessageProvider.NONE;
-  // }
-  // }
+    m_startResultProcessingCheck.setEnabled( false );
+  }
 
   public IStatus getSimulationStatus( )
   {

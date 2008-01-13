@@ -38,49 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.sim;
+package org.kalypso.kalypsomodel1d2d.ui.geolog;
 
-import java.util.Date;
-
-import org.eclipse.core.runtime.IStatus;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
-import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 
 /**
- * A common log facility into which {@link IGeoStatus}'es may be logged.
+ * A content provider showing a list/array of stati.
  * 
  * @author Gernot Belger
  */
-public interface IGeoLog
+public class StatusContentProvider extends ArrayContentProvider
 {
-  /**
-   * Closes the log and releases all used resources.
-   */
-  void close( );
 
-  /**
-   * Formats the message and logs the result as {@link #log(int, String, -1, null, null)}
-   * 
-   * @see java.util.Formatter#format(String, Object...)
-   */
-  IGeoStatus formatLog( int severity, int code, String message, Object... args );
-
-  /**
-   * Add a logging message to this log. From the given parameters a {@link IGeoStatus} will be created and returned.
-   * 
-   * @return The newly created {@link IGeoStatus}.
-   */
-  IGeoStatus log( int severity, int code, String message, GM_Object location, Throwable t );
-
-  void log( IStatus status );
-
-  IStatusCollection getStatusCollection( );
-
-  /**
-   * Time of the first log entry this log receives.
-   * 
-   * @return <code>null</code>, if nothing was logged yet.
-   */
-  Date getStartTime( );
 }

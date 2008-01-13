@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -51,7 +52,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 
@@ -90,7 +94,6 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
       setMessage( "Alte Ergebnisdaten liegen vor.\nWenn Sie fortfahren werden diese unwiderruflich gelöscht.", WARNING );
     else
       setMessage( "Drücken Sie 'Start', um die Ergebnisse auszuwerten." );
-
   }
 
   /**
@@ -102,14 +105,25 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     composite.setLayout( new GridLayout() );
 
     /* Status composite */
-    m_statusComp = new StatusComposite( composite, SWT.NONE );
+    final Group statusGroup = new Group( composite, SWT.NONE );
+    statusGroup.setLayout( new GridLayout() );
+    statusGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    statusGroup.setText( "Auswertungsergebnis" );
+
+    m_statusComp = new StatusComposite( statusGroup, StatusComposite.DETAILS );
     m_statusComp.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, "Ergebnisauswertung wurde noch nicht durchgeführt", null ) );
 
     /* Control flags */
+    final Group tweakGroup = new Group( composite, SWT.NONE );
+    tweakGroup.setLayout( new GridLayout() );
+    tweakGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    tweakGroup.setText( "Einstellungen" );
+
     final IControlModel1D2D controlModel = m_resultManager.getControlModel();
     m_deleteAllResults = !controlModel.getRestart();
 
-    final Button deleteAllCheck = new Button( composite, SWT.CHECK );
+    final Button deleteAllCheck = new Button( tweakGroup, SWT.CHECK );
     deleteAllCheck.setText( "Alle vorhandenen Ergebnisse löschen" );
     deleteAllCheck.setToolTipText( "Falls gesetzt, werden ALLE vorhandenen Ergebnisse gelöscht." );
     deleteAllCheck.setSelection( m_deleteAllResults );
@@ -139,6 +153,9 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   public void runResultProcessing( )
   {
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, "Ergebnisauswertung läuft...", null ) );
+    setMessage( "Ergebnisauswertung läuft..." );
+
     final ProcessResultsBean bean = new ProcessResultsBean();
 
     // Remark: if not restart, always delete everything, in that
@@ -151,11 +168,24 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     /* Result processing */
     final ResultManagerOperation operation = new ResultManagerOperation( m_resultManager, m_unitFolder, m_simulationStatus, bean, m_caseDataProvider );
 
-    m_resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    final IWizardContainer container = getContainer();
+    if( container instanceof WizardDialog2 )
+    {
+      final WizardDialog2 wd2 = (WizardDialog2) container;
+      m_resultStatus = wd2.executeUnblocked( true, operation );
+    }
+    else
+      m_resultStatus = RunnableContextHelper.execute( container, true, true, operation );
 
-    m_statusComp.setStatus( m_resultStatus );
+    /* The user may have changed the page meanwhile, return now to this page */
+    if( container.getShell() != null )
+    {
+      container.showPage( this );
 
-    setMessage( "Ergebnisauswertung beendet. Drücken Sie 'Beenden', um den Dialog zu schliesen." );
+      m_statusComp.setStatus( m_resultStatus );
+
+      setMessage( "Ergebnisauswertung beendet. Drücken Sie 'Beenden', um den Dialog zu schliesen." );
+    }
   }
 
   public IStatus getResultStatus( )

@@ -54,14 +54,16 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Building1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
@@ -71,6 +73,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.observation.IObservation;
@@ -83,8 +86,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class RMA10Calculation implements ISimulation1D2DConstants
 {
-  public static final String MODEL_2D = "model.2d";
-
   /** Name of rma10s.exe used for calculation */
   private static final String RMA10S_KALYPSO_EXE = "RMA10sKalypso.exe";
 
@@ -103,6 +104,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
   private final IContainer m_scenarioFolder;
 
   private IStatus m_simulationStatus;
+
+  private IterationInfo m_iterationInfo;
 
   public RMA10Calculation( final File tmpDir, final IGeoLog geoLog, final IFEDiscretisationModel1d2d discModel, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IRoughnessClsCollection roughnessModell, final IContainer folder )
   {
@@ -195,10 +198,12 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       return StatusUtilities.createStatus( IStatus.CANCEL, CODE_RUNNING, "Simulation durch Benutzer abgebrochen.", null );
 
     if( simulationStatus.matches( IStatus.ERROR ) )
-      return StatusUtilities.createStatus( IStatus.ERROR, CODE_RUNNING, "Simulation mit Fehler beendet. Ergebnisauswertung nicht möglich.", null );
+      return simulationStatus;
 
     // if( simulationStatus.matches( IStatus.WARNING ) )
-    return StatusUtilities.createStatus( IStatus.WARNING, CODE_RUNNING, "Simulation mit Warnung beendet.", null );
+    return simulationStatus; // StatusUtilities.createStatus( IStatus.WARNING, CODE_RUNNING, "Simulation mit Warnung
+    // beendet.",
+    // null );
   }
 
   private void writeRma10Files( final IProgressMonitor monitor ) throws CoreException
@@ -289,11 +294,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
    */
   private IStatus startCalcCore( final IProgressMonitor monitor ) throws CoreException
   {
-    final IObservation<TupleResult> obs = m_controlModel.getTimeSteps();
-    final TupleResult timeSteps = obs.getResult();
-    final int numberOfSteps = timeSteps.size(); // TODO: adjust by restart?!
-
-    final SubMonitor progress = SubMonitor.convert( monitor, numberOfSteps );
+    final SubMonitor progress = SubMonitor.convert( monitor, getMaxNumberOfSteps() );
     progress.subTask( "RMA10s wird ausgeführt..." );
 
     /* Create the result folder for the .exe file, must be same as in Control-Converter */
@@ -315,28 +316,27 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       final ICancelable progressCancelable = new ProgressCancelable( progress );
       // TODO: somehow monitor progress of executable via its output...
 
-      final ItrReadJob itrReadJob = new ItrReadJob( "Read Output.itr", new File( resultDir, "Output.itr" ), numberOfSteps, itrDir, progress );
-      itrReadJob.setPriority( Job.INTERACTIVE );
-      itrReadJob.setSystem( true );
-      itrReadJob.schedule();
+      final Runnable idleRunnable = new Runnable()
+      {
+        public void run( )
+        {
+          updateIteration( progress );
+        }
+      };
+
+      /* Initialize Iteration Job */
+      m_iterationInfo = new IterationInfo( new File( resultDir, OUTPUT_ITR ), itrDir, m_controlModel );
 
       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA10s wird ausgeführt: %s", commandString );
-      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, null );
+      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, idleRunnable );
 
-      // TODO: read other outputs: error-log
+      // TODO: read other outputs:
+      // - error-log
+      // - border conditions-log
 
-      try
-      {
-        /* Stop the itr read job and then read the file one last time, it should be complete now... */
-        itrReadJob.cancel();
-        itrReadJob.join();
-        itrReadJob.readFile();
-      }
-      catch( final InterruptedException e )
-      {
-        final IStatus itrStatus = StatusUtilities.createStatus( IStatus.WARNING, "Fehler beim Auswerten des Iterations-Log", e );
-        m_log.log( itrStatus );
-      }
+      /* Update the iteration one last time, it should be complete now... */
+      updateIteration( progress );
+      m_iterationInfo.finish(); // save the last observation
 
       // Check for success
       final File errorFile = findErrorFile( m_tmpDir );
@@ -347,8 +347,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       final String errorMessage = FileUtils.readFileToString( errorFile, Charset.defaultCharset().name() );
       final IStatus errorStatus = errorToStatus( errorMessage );
 
-      final String message = String.format( "Fehlermeldung vom Rechenkern (ERROR.DAT):%n%s", errorStatus.getMessage() );
-      return StatusUtilities.createStatus( IStatus.WARNING, CODE_RMA10S, message, null );
+      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_RMA10S, new IStatus[] { errorStatus }, "Fehlermeldung vom Rechenkern (ERROR.DAT)", null );
     }
     catch( final Throwable e )
     {
@@ -361,6 +360,32 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       IOUtils.closeQuietly( errorOS );
 
       ProgressUtilities.done( progress );
+    }
+  }
+
+  private int getMaxNumberOfSteps( )
+  {
+    final IObservation<TupleResult> obs = m_controlModel.getTimeSteps();
+    final TupleResult timeSteps = obs.getResult();
+    return timeSteps.size(); // TODO: adjust by restart?!
+  }
+
+  /**
+   * Will be called while the rma10s process is running.<br>
+   * Updates the calculation progress monitor and reads the Output.itr.
+   */
+  protected void updateIteration( final IProgressMonitor monitor )
+  {
+    final int oldStepNr = m_iterationInfo.getStepNr();
+
+    m_iterationInfo.readIterFile();
+
+    final int stepNr = m_iterationInfo.getStepNr();
+    if( oldStepNr != stepNr )
+    {
+      final String msg = String.format( "RMA10s wird ausgeführt - Schritt %d (%d)", stepNr, getMaxNumberOfSteps() );
+      monitor.subTask( msg );
+      monitor.worked( stepNr - oldStepNr );
     }
   }
 
@@ -385,11 +410,14 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
   private IStatus errorToStatus( final String errorMessage )
   {
+    // TODO: error or warning depends, if any steps where calculated; the rma10s should determine if result processing
+    // makes sense
+
     final String[] lines = errorMessage.split( "\n" );
     if( lines.length != 7 )
-      return StatusUtilities.createStatus( IStatus.ERROR, CODE_RMA10S, "RMA10s Fehlerausgabe konnte nicht geparst werden: " + errorMessage, null );
+      return StatusUtilities.createStatus( IStatus.WARNING, CODE_RMA10S, errorMessage, null );
 
-    final int severity = IStatus.ERROR; // at the moment, all outputs are ERROR's
+    final int severity = IStatus.WARNING;
     final String message = lines[0];
 
     final GM_Object location;
@@ -404,6 +432,16 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     }
 
     return m_log.log( severity, CODE_RMA10S, message, location, null );
+  }
+
+  public IterationInfo getIterationInfo( )
+  {
+    return m_iterationInfo;
+  }
+
+  public IStatus getSimulationStatus( )
+  {
+    return m_simulationStatus;
   }
 
 }

@@ -43,18 +43,21 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -63,7 +66,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
@@ -71,12 +78,9 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
@@ -118,12 +122,13 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
   public void process( )
   {
     File tmpDir = null;
+    File outputDir = null;
 
     try
     {
       tmpDir = SimulationUtilitites.createSimulationTmpDir( "rma10s" + m_calculationUnit );
+      outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + m_calculationUnit );
 
-      final File outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + m_calculationUnit );
       FileUtils.forceMkdir( outputDir );
 
       process1( tmpDir, outputDir );
@@ -134,8 +139,13 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     }
     finally
     {
-      if( tmpDir != null && !Boolean.valueOf( Platform.getDebugOption( IKalypsoSimulationUIConstants.DEBUG_KEEP_SIM_FILES ) ) )
-        FileUtilities.deleteRecursive( tmpDir );
+      if( !Boolean.valueOf( Platform.getDebugOption( IKalypsoSimulationUIConstants.DEBUG_KEEP_SIM_FILES ) ) )
+      {
+        if( tmpDir != null )
+          FileUtilities.deleteRecursive( tmpDir );
+        if( outputDir != null )
+          FileUtilities.deleteRecursive( outputDir );
+      }
     }
   }
 
@@ -170,37 +180,12 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
       // happen...
       ErrorDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Fehler bei der Simulation", e.getStatus() );
     }
-    finally
-    {
-      if( geoLog != null )
-      {
-        try
-        {
-          /* Close and save the geo log */
-          geoLog.close();
-          final IStatusCollection statusCollection = geoLog.getStatusCollection();
-          final GMLWorkspace workspace = statusCollection.getWrappedFeature().getWorkspace();
-          // REMARK: we directly save the log into the unit-folder, as the results already where moved form the output
-          // directory
-          final File simDir = m_unitFolder.getLocation().toFile();
-          final File loggerFile = new File( simDir, SIMULATION_LOG_GML );
-          GmlSerializer.serializeWorkspace( loggerFile, workspace, "UTF-8" );
-          m_unitFolder.refreshLocal( IFolder.DEPTH_ONE, new NullProgressMonitor() );
-        }
-        catch( final Throwable e )
-        {
-          MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Simulation-Log konnte nicht geschrieben werden: " + e.toString() );
-        }
-      }
-    }
   }
 
   /**
    * third level of calculation:
    * <ul>
-   * <li>run rma10s in progress dialog</li>
-   * <li>show rma10s results and ask user how/if to process results</li>
-   * <li>run result processing in progress dialog</li>
+   * <li>run rma10s in wizard</li>
    * </ul>
    */
   public void process2( final File tmpDir, final File outputDir, final IGeoLog geoLog ) throws CoreException
@@ -216,13 +201,47 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     if( controlModel == null )
       throw new CoreException( StatusUtilities.createErrorStatus( "Could not find active control model for: " + m_calculationUnit ) );
 
+    /* Initialize result meta */
+    final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
+    final ICalcUnitResultMeta existingCalcUnitMeta = scenarioResultMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
+    final ICalcUnitResultMeta calcUnitMeta;
+    if( existingCalcUnitMeta == null )
+      calcUnitMeta = scenarioResultMeta.getChildren().addNew( ICalcUnitResultMeta.QNAME, ICalcUnitResultMeta.class );
+    else
+      calcUnitMeta = existingCalcUnitMeta;
+
+    calcUnitMeta.setCalcStartTime( geoLog.getStartTime() );
+    calcUnitMeta.setCalcUnit( calculationUnit.getGmlID() );
+    calcUnitMeta.setName( calculationUnit.getName() );
+    calcUnitMeta.setDescription( calculationUnit.getDescription() );
+    calcUnitMeta.setPath( new Path( m_unitFolder.getName() ) );
+    calcUnitMeta.setCalcEndTime( new Date() );
+
+    // Add geo log to calcMeta as document
+    final IDocumentResultMeta logMeta = calcUnitMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
+    logMeta.setName( "Simulations-Log" );
+    logMeta.setDescription( "Die Log-Datei der letzten Simulation dieser Berechnungseinheit." );
+    logMeta.setDocumentType( IDocumentResultMeta.DOCUMENTTYPE.log );
+    logMeta.setPath( new Path( SIMULATION_LOG_GML ) );
+
     final RMA10Calculation calculation = new RMA10Calculation( tmpDir, geoLog, discModel, flowModel, controlModel, roughnessModel, m_scenarioFolder );
     final ResultManager resultManager = new ResultManager( tmpDir, outputDir, "A", controlModel, flowModel, scenarioResultMeta, geoLog );
 
     final RMA10CalculationWizard calcWizard = new RMA10CalculationWizard( calculation, resultManager, m_unitFolder, m_caseDataProvider, geoLog );
     calcWizard.setWindowTitle( STRING_DLG_TITLE_RMA10S );
+    calcWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "rma10simulation" ) );
     final WizardDialog2 calcDialog = new WizardDialog2( m_shell, calcWizard );
-    calcDialog.open();
+    calcDialog.setRememberSize( true );
+    if( calcDialog.open() == Window.OK )
+    {
+      // save log
+
+      // move results and save them
+
+      // TODO: maybe just save log and result stuff depending on wizard result?
+      // PROBLEM: if the user cancels during result processing, maybe old result already have been deleted...
+    }
+
   }
 
   /**

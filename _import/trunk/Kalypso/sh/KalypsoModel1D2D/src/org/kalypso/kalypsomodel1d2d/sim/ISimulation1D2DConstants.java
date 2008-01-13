@@ -40,11 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.util.Date;
+
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
  */
 public interface ISimulation1D2DConstants
 {
+  public static final String OUTPUT_ITR = "Output.itr";
+
+  public static final String MODEL_2D = "model.2d";
+
   public static final String OUTPUT_DIR_NAME = "Ergebnisse";
 
   public static final String RESOURCEBASE = "resource/";
@@ -58,6 +64,12 @@ public interface ISimulation1D2DConstants
   public static final String BC_WQ_File = "wqusw.txt";
 
   public static final String SIM_EXE_FILE_3_5 = "RMA10S35Kalypso.exe";
+
+  /** The date representing the steady calculation step */
+  public static final Date STEADY_DATE = new Date( 0 );
+
+  /** The date representing the maximum calculation step */
+  public static final Date MAXI_DATE = new Date( 1 );
 
   // input
   public static final String DISCRETISATIOMODEL_ID = "DiscretisationModel";

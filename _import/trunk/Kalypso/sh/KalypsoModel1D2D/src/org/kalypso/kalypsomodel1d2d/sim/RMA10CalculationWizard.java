@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -52,7 +57,11 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Button;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
@@ -61,7 +70,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * 
  * @author Gernot Belger
  */
-public class RMA10CalculationWizard extends Wizard implements IWizard
+public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulation1D2DConstants
 {
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
@@ -77,8 +86,11 @@ public class RMA10CalculationWizard extends Wizard implements IWizard
 
   private final IGeoLog m_geoLog;
 
+  private final IContainer m_unitFolder;
+
   public RMA10CalculationWizard( final RMA10Calculation calculation, final ResultManager resultManager, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog )
   {
+    m_unitFolder = unitFolder;
     m_geoLog = geoLog;
     m_calcPage = new RMA10CalculationPage( "calcPage", calculation );
     m_resultPage = new RMA10ResultPage( "resultPage", resultManager, unitFolder, caseDataProvider );
@@ -144,7 +156,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard
     addPage( m_calcPage );
   }
 
-  private boolean runCalculation( )
+  private IStatus runCalculation( )
   {
     m_calcPage.runCalculation();
 
@@ -154,12 +166,28 @@ public class RMA10CalculationWizard extends Wizard implements IWizard
     addPage( m_resultPage );
     getContainer().updateButtons();
 
+    if( simulationStatus.matches( IStatus.ERROR ) )
+    {
+      // HACK: disable cancel, after result processing, as canceling will not change anything from now on
+      final IWizardContainer container = getContainer();
+      if( container instanceof WizardDialog2 )
+      {
+        final Button cancelButton = ((WizardDialog2) container).getButton( IDialogConstants.CANCEL_ID );
+        cancelButton.setEnabled( false );
+        final Button nextButton = ((WizardDialog2) container).getButton( IDialogConstants.NEXT_ID );
+        nextButton.setEnabled( false );
+      }
+
+      setFinishText( IDialogConstants.FINISH_LABEL );
+
+      return simulationStatus;
+    }
+
     /* If result processing starts immediately, show that page */
     if( m_calcPage.getStartResultProcessing() )
       getContainer().showPage( m_resultPage );
 
-    /* If canceled, cancel the whole dialog at once. */
-    return simulationStatus.matches( IStatus.CANCEL );
+    return simulationStatus;
   }
 
   private boolean runResultProcessing( )
@@ -181,6 +209,11 @@ public class RMA10CalculationWizard extends Wizard implements IWizard
   @Override
   public boolean canFinish( )
   {
+    final IStatus simulationStatus = m_calcPage.getSimulationStatus();
+
+    if( simulationStatus != null && simulationStatus.matches( IStatus.ERROR ) )
+      return true;
+
     final boolean canFinish = super.canFinish();
 
     if( !canFinish )
@@ -188,7 +221,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard
 
     final IWizardPage currentPage = getContainer().getCurrentPage();
     /* Do not let run result processing on calc page */
-    if( currentPage == m_calcPage && m_calcPage.getSimulationStatus() != null )
+    if( currentPage == m_calcPage && simulationStatus != null )
       return false;
 
     return canFinish;
@@ -200,34 +233,59 @@ public class RMA10CalculationWizard extends Wizard implements IWizard
   @Override
   public boolean performFinish( )
   {
+    final IWizardContainer container = getContainer();
+
     if( m_calcPage.getSimulationStatus() == null )
     {
-      final boolean closeWizard = runCalculation();
+      final IStatus simulationStatus = runCalculation();
 
-      getContainer().updateButtons();
+      /* On cancel, directly close the dialog */
+      if( simulationStatus.matches( IStatus.CANCEL ) )
+      {
+        saveLog();
+        return true;
+      }
 
-      /* If result processing starts immediately, fall through to result processing */
+      /* On error, don't close, show the error message */
+      if( simulationStatus.matches( IStatus.ERROR ) )
+        return false;
+
+      /* We could start result processing: immediately do it, if user wishes to */
       if( !m_calcPage.getStartResultProcessing() )
-        return closeWizard;
+        return false;
+
+      // fall through to result processing
+    }
+
+    /* On finish after simulation error, close the dialog */
+    if( m_calcPage.getSimulationStatus().matches( IStatus.ERROR ) )
+    {
+      saveLog();
+      return true;
     }
 
     if( m_resultPage.getResultStatus() == null )
     {
       final boolean closeWizard = runResultProcessing();
+      if( closeWizard )
+      {
+        saveLog();
+        return true;
+      }
 
-      getContainer().updateButtons();
+      container.updateButtons();
 
-      // HACK: disable cancel, after result processing, as cancelling does not change anythin now
-      final IWizardContainer container = getContainer();
+      // HACK: disable cancel, after result processing, as canceling will not change anything from now on
       if( container instanceof WizardDialog2 )
       {
         final Button button = ((WizardDialog2) container).getButton( IDialogConstants.CANCEL_ID );
         button.setEnabled( false );
       }
 
-      // TODO: if close wizard after result processing: fall through
-      return closeWizard;
+      return false;
     }
+
+    saveLog();
 
     return true;
   }
@@ -244,7 +302,39 @@ public class RMA10CalculationWizard extends Wizard implements IWizard
       m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, "Ergebnisauswertung durch Benutzer abgebrochen.", null, null );
     }
 
-    return super.performCancel();
+    /* Only save log on cancel if something happened, else, everything stays as before. */
+    // TODO: still a problem: if the user only simulates, the log shows the simulation, but results are still like
+    // before.
+    if( m_calcPage.getSimulationStatus() != null )
+      saveLog();
+
+    return true;
+  }
+
+  private void saveLog( )
+  {
+    try
+    {
+      /* Close and save the geo log */
+      m_geoLog.close();
+      final IStatusCollection statusCollection = m_geoLog.getStatusCollection();
+      final GMLWorkspace workspace = statusCollection.getWrappedFeature().getWorkspace();
+      // REMARK: we directly save the log into the unit-folder, as the results already where moved from the output
+      // directory
+      // REMARK2: the calc unit meta may be not set, but the simulation log is written anyway... Probably we should
+      // change this?
+      if( !m_unitFolder.exists() && m_unitFolder instanceof IFolder )
+        ((IFolder) m_unitFolder).create( true, true, new NullProgressMonitor() );
+
+      final File simDir = m_unitFolder.getLocation().toFile();
+      final File loggerFile = new File( simDir, SIMULATION_LOG_GML );
+      GmlSerializer.serializeWorkspace( loggerFile, workspace, "UTF-8" );
+      m_unitFolder.refreshLocal( IFolder.DEPTH_ONE, new NullProgressMonitor() );
+    }
+    catch( final Throwable e )
+    {
+      MessageDialog.openError( getShell(), getWindowTitle(), "Simulation-Log konnte nicht gespeichert werden: " + e.toString() );
+    }
   }
 
 }

@@ -43,37 +43,87 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.StatusDialog;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 
 /**
- * A composite, showing an {@link org.eclipse.core.runtime.IStatus}.
+ * A composite, showing an {@link org.eclipse.core.runtime.IStatus}.<br> *
+ * <dl>
+ * <dt><b>Styles:</b></dt>
+ * <dd>DETAILS</dd>
+ * <dt><b>Events:</b></dt>
+ * <dd>(none)</dd>
+ * </dl>
  * 
  * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class StatusComposite extends Composite
 {
+  /**
+   * Style constant: if set, a details button is shown.
+   */
+  public static final int DETAILS = SWT.SEARCH;
+
   private final Label m_statusImgLabel;
 
   private final Label m_statusMessageLabel;
+
+  private IStatus m_status;
+
+  private final Button m_detailsButton;
 
   public StatusComposite( final Composite parent, final int style )
   {
     super( parent, style );
 
-    super.setLayout( new GridLayout( 2, false ) );
+    final GridLayout gridLayout = new GridLayout( 3, false );
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+
+    super.setLayout( gridLayout );
 
     m_statusImgLabel = new Label( this, SWT.NONE );
+    m_statusImgLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     m_statusMessageLabel = new Label( this, SWT.NONE );
-    m_statusMessageLabel.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
+    m_statusMessageLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    if( (style & DETAILS) != 0 )
+    {
+      m_detailsButton = new Button( this, SWT.PUSH );
+      m_detailsButton.setText( "&Details" );
+      m_detailsButton.addSelectionListener( new SelectionAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        @Override
+        public void widgetSelected( final SelectionEvent e )
+        {
+          detailsButtonPressed();
+        }
+      } );
+    }
+    else
+      m_detailsButton = null;
+  }
+
+  protected void detailsButtonPressed( )
+  {
+    final StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, "Details" );
+    statusTableDialog.open();
   }
 
   /**
@@ -87,8 +137,25 @@ public class StatusComposite extends Composite
 
   public void setStatus( final IStatus status )
   {
-    m_statusImgLabel.setImage( getStatusImage( status ) );
-    m_statusMessageLabel.setText( status.getMessage() );
+    m_status = status;
+
+    if( isDisposed() )
+      return;
+
+    if( status == null )
+    {
+      m_statusImgLabel.setImage( null );
+      m_statusMessageLabel.setText( "" );
+      if( m_detailsButton != null )
+        m_detailsButton.setEnabled( false );
+    }
+    else
+    {
+      m_statusImgLabel.setImage( getStatusImage( status ) );
+      m_statusMessageLabel.setText( status.getMessage() );
+      if( m_detailsButton != null )
+        m_detailsButton.setEnabled( status.isMultiStatus() );
+    }
 
     layout();
   }
@@ -101,7 +168,6 @@ public class StatusComposite extends Composite
    * @param path
    * @return Image
    */
-  @SuppressWarnings("restriction")
   public static Image getIDEImage( final String constantName )
   {
     return JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( constantName ) );

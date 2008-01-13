@@ -71,6 +71,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -85,10 +86,6 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class ResultManager implements ISimulation1D2DConstants
 {
-  public static final Date STEADY_DATE = new Date( 0 );
-
-  public static final Date MAXI_DATE = new Date( 1 );
-
   private static final FilenameFilter FILTER_2D = new PrefixSuffixFilter( "", ".2d" );
 
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
@@ -221,7 +218,6 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private Date findStepDate( final IControlModel1D2D controlModel, final String resultFileName )
   {
-    // start a job for each unknown 2d file.
     final Matcher matcher = m_resultFilePattern.matcher( resultFileName );
     if( matcher.matches() )
     {

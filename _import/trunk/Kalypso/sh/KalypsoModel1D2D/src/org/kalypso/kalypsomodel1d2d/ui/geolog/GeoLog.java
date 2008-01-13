@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.sim;
+package org.kalypso.kalypsomodel1d2d.ui.geolog;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
