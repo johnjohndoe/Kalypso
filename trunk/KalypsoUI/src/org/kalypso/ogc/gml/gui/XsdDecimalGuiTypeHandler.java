@@ -42,6 +42,13 @@ package org.kalypso.ogc.gml.gui;
 
 import java.math.BigDecimal;
 
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
@@ -57,20 +64,47 @@ public class XsdDecimalGuiTypeHandler extends XsdBaseGuiTypeHandler
    * @param handler
    *            The base type handler.
    */
-  public XsdDecimalGuiTypeHandler( XsdBaseTypeHandler< ? > handler )
+  public XsdDecimalGuiTypeHandler( final XsdBaseTypeHandler< ? > handler )
   {
     super( handler );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
+   */
+  @Override
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  {
+    final String fmt;
+    if( format == null )
+    {
+      // bit of a HACK: set format according to fraction digits, if any are set.
+      // Maybe change this later to support fraction digits within the modifier stuff
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final IRestriction[] restrictions = vpt.getRestriction();
+      final Integer fractionDigits = RestrictionUtilities.findFractionDigits( restrictions );
+      if( fractionDigits == null )
+        fmt = null;
+      else
+        fmt = "%." + fractionDigits + "f";
+    }
+    else
+      fmt = format;
+
+    return super.createFeatureModifier( ftp, selectionManager, fcl, fmt );
   }
 
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element instanceof BigDecimal )
     {
-      BigDecimal decimal = (BigDecimal) element;
+      final BigDecimal decimal = (BigDecimal) element;
       return String.format( "%.2f", decimal.doubleValue() ).replace( ",", "." );
     }
 

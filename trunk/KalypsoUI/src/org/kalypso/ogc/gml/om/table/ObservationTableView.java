@@ -77,10 +77,10 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
     m_viewer.getTable().setHeaderVisible( true );
     m_viewer.getTable().setLinesVisible( true );
 
-    m_tupleResultContentProvider = new TupleResultContentProvider( new IComponentUiHandler[] {} );
+    final IComponentUiHandler[] handler = new IComponentUiHandler[] {};
+    m_tupleResultContentProvider = new TupleResultContentProvider( handler );
     m_viewer.setContentProvider( m_tupleResultContentProvider );
-
-    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider.getHandlers() );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( handler );
     m_viewer.setLabelProvider( m_tupleResultLabelProvider );
     m_viewer.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
 

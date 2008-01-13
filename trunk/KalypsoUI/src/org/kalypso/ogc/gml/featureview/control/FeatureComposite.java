@@ -87,9 +87,11 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.i18n.Messages;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -128,6 +130,7 @@ import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.filterencoding.AbstractOperation;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -490,6 +493,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       String format = null;
       if( objFormat instanceof String )
         format = (String) objFormat;
+      else if( objFormat instanceof Node )
+        format = XMLTools.getStringValue( ((Node) objFormat) );
 
       final TextFeatureControl tfc = new TextFeatureControl( feature, vpt, format, plugin.createFeatureTypeCellEditorFactory(), this, m_selectionManager );
 
@@ -752,7 +757,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       // If also the provider is null, a default provider is used.
       final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( columnProviderId );
-      return provider.createComponentHandler( obsFeature );
+
+      if( obsFeature == null )
+        return new IComponentUiHandler[] {};
+
+      final IComponent[] components = ObservationFeatureFactory.componentsFromFeature( obsFeature );
+      return provider.createComponentHandler( components );
     }
     else
       return TupleResultFeatureControl.toHandlers( obsFeature, descriptors );

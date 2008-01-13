@@ -117,15 +117,18 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     m_handlers = handlers;
   }
 
-  public static IComponentUiHandler[] toHandlers( final Feature feature, final ColumnDescriptor[] descriptors )
+  /**
+   * Creates the component UI handlers for given descriptors.
+   */
+  public static IComponentUiHandler[] toHandlers( final Feature obsFeature, final ColumnDescriptor[] descriptors )
   {
     final List<IComponentUiHandler> handlers = new ArrayList<IComponentUiHandler>( descriptors.length );
 
-    if( feature == null )
+    if( obsFeature == null )
       return new IComponentUiHandler[0];
 
     /* result definition */
-    final Feature resultDefinition = (Feature) feature.getProperty( new QName( NS.OM, "resultDefinition" ) );
+    final Feature resultDefinition = (Feature) obsFeature.getProperty( new QName( NS.OM, "resultDefinition" ) );
     final GMLWorkspace workspace = resultDefinition.getWorkspace();
 
     /* Directly read components from feature, without converting the whole stuff into an observation */
@@ -176,7 +179,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     m_tupleResultContentProvider = new TupleResultContentProvider( m_handlers );
     m_lastLineContentProvider = new LastLineContentProvider( m_tupleResultContentProvider );
-    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider.getHandlers() );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_handlers );
     m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
 
     if( m_viewerFilter != null )

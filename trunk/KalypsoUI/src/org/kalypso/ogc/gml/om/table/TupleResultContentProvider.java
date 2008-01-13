@@ -46,6 +46,7 @@ import java.util.Set;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -67,10 +68,18 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 
   public TupleResultContentProvider( final IComponentUiHandler[] componentHandlers )
   {
-    m_componentHandlers = new IComponentUiHandler[componentHandlers.length + 1];
+    m_componentHandlers = addFakeHandler( componentHandlers );
+  }
 
-    m_componentHandlers[0] = new ComponentUiFirstColumnHandler();
-    System.arraycopy( componentHandlers, 0, m_componentHandlers, 1, componentHandlers.length );
+  /* default */
+  static IComponentUiHandler[] addFakeHandler( final IComponentUiHandler[] componentHandlers )
+  {
+    final IComponentUiHandler[] handlerWithFake = new IComponentUiHandler[componentHandlers.length + 1];
+
+    handlerWithFake[0] = new ComponentUiFirstColumnHandler();
+    System.arraycopy( componentHandlers, 0, handlerWithFake, 1, componentHandlers.length );
+
+    return handlerWithFake;
   }
 
   /**
@@ -110,6 +119,8 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     for( int i = 0; i < m_componentHandlers.length; i++ )
     {
       final IComponentUiHandler handler = m_componentHandlers[i];
+
+      // TODO: we should handle the case, where the table does not contain the desired component
 
       final IComponent component = handler.getComponent();
 
@@ -206,7 +217,38 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    */
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
-    m_tableViewer.refresh();
+    // TODO: Performance optimization needed for lots of single changes...
+
+    final DefaultTableViewer tableViewer = m_tableViewer;
+    final Control control = tableViewer.getControl();
+    if( !control.isDisposed() )
+    {
+      control.getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          if( !control.isDisposed() )
+          {
+            switch( type )
+            {
+              case ADDED:
+                // TODO: optimize, depending on event (events must deliver more information)
+                // we need the insert positions here... or the viewer should have an sorter?
+// tableViewer.add( records );
+// tableViewer.reveal( records[records.length - 1] );
+                tableViewer.refresh();
+                /* Total Refresh may shift the table, so current selection is no more visible */
+                // TODO: how to fix this?
+                break;
+
+              case REMOVED:
+                tableViewer.remove( records );
+                break;
+            }
+          }
+        }
+      } );
+    }
   }
 
   /**
@@ -215,8 +257,8 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    */
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-// refreshColumns( );
-// m_tableViewer.refresh();
+    refreshColumns();
+    m_tableViewer.refresh();
   }
 
   public IComponentUiHandler[] getHandlers( )

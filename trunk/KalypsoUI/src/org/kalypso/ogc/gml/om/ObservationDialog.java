@@ -83,9 +83,9 @@ public class ObservationDialog extends ResizableDialog
     viewer.getTable().setHeaderVisible( true );
     viewer.getTable().setLinesVisible( true );
 
-    final TupleResultContentProvider cp = new TupleResultContentProvider( new IComponentUiHandler[] {} );
-    viewer.setContentProvider( cp );
-    viewer.setLabelProvider( new TupleResultLabelProvider( cp.getHandlers() ) );
+    final IComponentUiHandler[] handler = new IComponentUiHandler[] {};
+    viewer.setContentProvider( new TupleResultContentProvider( handler ) );
+    viewer.setLabelProvider( new TupleResultLabelProvider( handler ) );
 
     viewer.setInput( m_obs.getResult() );
 
