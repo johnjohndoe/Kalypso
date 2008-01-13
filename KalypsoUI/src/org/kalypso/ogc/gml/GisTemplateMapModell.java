@@ -43,13 +43,13 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -246,10 +246,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       gismapview.setLayers( layersType );
 
       monitor.worked( 100 );
-      // Gismapview gismapview = GisTemplateHelper.emptyGisView(bbox); //CK
-      // final List layerList = (List)gismapview.getLayers(); //CK
-      int count = 0;
 
+      int count = 0;
       for( final IKalypsoTheme theme : themes )
       {
         final StyledLayerType layer = GisTemplateHelper.addLayer( layerList, theme, count++, bbox, srsName, monitor );
@@ -266,6 +264,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
         file.setContents( bis, false, true, new SubProgressMonitor( monitor, 900 ) );
       else
         file.create( bis, false, new SubProgressMonitor( monitor, 900 ) );
+
+      bis.close();
     }
     catch( final Throwable e )
     {
@@ -275,16 +275,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     {
       monitor.done();
 
-      if( bis != null )
-        try
-        {
-          bis.close();
-        }
-        catch( final IOException e1 )
-        {
-          // never occurs with a byteinputstream
-          e1.printStackTrace();
-        }
+      IOUtils.closeQuietly( bis );
     }
   }
 
