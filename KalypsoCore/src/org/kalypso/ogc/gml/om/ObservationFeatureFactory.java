@@ -555,8 +555,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    */
   public Class[] getAdapterList( )
   {
-    final Class[] classes = { IObservation.class };
-    return classes;
+    return new Class[] { IObservation.class };
   }
 
   public static FeatureComponent createDictionaryComponent( final Feature obsFeature, final String dictUrn )

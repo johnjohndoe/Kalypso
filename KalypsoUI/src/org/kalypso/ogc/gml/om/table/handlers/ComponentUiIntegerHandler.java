@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -49,14 +49,13 @@ import org.eclipse.swt.widgets.Table;
 import org.kalypso.observation.result.IComponent;
 
 /**
- * Handles decimal values (i.e. BigDecimal in java).
+ * Handles integer (xml) values (i.e. BigInteger in java).
  * 
- * @author Dirk Kuch
  * @author Gernot Belger
  */
-public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
+public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
 {
-  public ComponentUiDecimalHandler( final IComponent component, final boolean editable, final boolean resizeable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public ComponentUiIntegerHandler( final IComponent component, final boolean editable, final boolean resizeable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     super( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
   }
@@ -91,6 +90,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
     if( "".equals( value.toString().trim() ) ) // so we can delete rows!
       return null;
 
-    return new BigDecimal( value.toString().replace( ",", "." ) );
+    return new BigInteger( value.toString() );
   }
+
 }
