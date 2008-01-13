@@ -57,7 +57,7 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
 
   public TupleResultLabelProvider( final IComponentUiHandler[] handlers )
   {
-    m_handlers = handlers;
+    m_handlers = TupleResultContentProvider.addFakeHandler( handlers );
   }
 
   /**
@@ -81,7 +81,7 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
    */
   public boolean isLabelProperty( final Object element, final String property )
   {
-    // TODO: ask content provider if this is a valid property
+    // Maybe ask content provider if this is a valid property?
     return true;
   }
 
@@ -112,21 +112,16 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
     if( element instanceof IRecord )
     {
       final IRecord record = (IRecord) element;
-      final IComponent component = getComponent( columnIndex );
+      final IComponentUiHandler handler = m_handlers[columnIndex];
+      final IComponent component = handler.getComponent();
       if( component == null )
         return "";
 
       final Object value = record.getValue( component );
 
-      final IComponentUiHandler handler = m_handlers[columnIndex];
       return handler.getStringRepresentation( value );
     }
 
     return "";
-  }
-
-  private IComponent getComponent( final int columnIndex )
-  {
-    return m_handlers[columnIndex].getComponent();
   }
 }

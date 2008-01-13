@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class TextFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
@@ -84,7 +84,6 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   {
     super( feature, ftp );
 
-// m_modifier = new StringModifier( ftp, "%s" );
     m_modifier = factory.createFeatureModifier( ftp, format, manager, fcl );
   }
 
