@@ -49,10 +49,6 @@ import org.eclipse.swt.SWT;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.ogc.gml.om.FeatureComponent;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Default implementation of {@link IComponentUiHandlerProvider}.<br/> Creates columns for all components of the given
@@ -62,27 +58,14 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerProvider
 {
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider#createComponentHandler(org.kalypsodeegree.model.feature.Feature)
-   */
-  public IComponentUiHandler[] createComponentHandler( final Feature obsFeature )
+  public IComponentUiHandler[] createComponentHandler( final IComponent[] components )
   {
-    if( obsFeature == null )
-      return new IComponentUiHandler[0];
-
-    final Feature resultDefinition = (Feature) obsFeature.getProperty( new QName( NS.OM, "resultDefinition" ) );
-    final GMLWorkspace workspace = resultDefinition.getWorkspace();
-    final List< ? > components = (List< ? >) resultDefinition.getProperty( new QName( NS.SWE, "component" ) );
-
     final List<IComponentUiHandler> result = new ArrayList<IComponentUiHandler>();
 
-    final int widthPercent = components.isEmpty() ? 100 : (int) (100.0 / components.size());
+    final int widthPercent = components.length == 0 ? 100 : (int) (100.0 / components.length);
 
-    for( final Object object : components )
+    for( final IComponent component : components )
     {
-      final Feature componentFeature = FeatureHelper.getFeature( workspace, object );
-      final IComponent component = new FeatureComponent( componentFeature );
-
       final IComponentUiHandler handlerForComponent = handlerForComponent( component, widthPercent );
       if( handlerForComponent != null )
         result.add( handlerForComponent );
@@ -112,6 +95,9 @@ public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerPro
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "decimal" ) ) )
       return new ComponentUiDecimalHandler( component, editable, resizeable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
+
+    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "integer" ) ) )
+      return new ComponentUiIntegerHandler( component, editable, resizeable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%d", "", null );
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "string" ) ) )
       return new ComponentUiStringHandler( component, editable, resizeable, columnLabel, SWT.LEFT, columnWidth, columnWidthPercent, "%s", "", null );

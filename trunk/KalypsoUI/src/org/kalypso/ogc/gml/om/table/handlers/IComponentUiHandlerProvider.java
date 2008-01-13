@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * A factory for creating {@link IComponentUiHandler}'s.
@@ -49,5 +49,5 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IComponentUiHandlerProvider
 {
-  IComponentUiHandler[] createComponentHandler( Feature obsFeature );
+  public IComponentUiHandler[] createComponentHandler( final IComponent[] components );
 }

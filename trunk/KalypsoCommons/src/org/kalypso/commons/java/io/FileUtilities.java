@@ -629,37 +629,44 @@ public class FileUtilities
    * @throws IOException
    *             If the move failed.
    */
-  public static void moveContents( final File sourceDir, final File destDir ) throws IOException
+  public static void moveContents( final File sourceDir, final File destDir, final boolean deleteExisting ) throws IOException
   {
     final File[] children = sourceDir.listFiles();
     if( children == null )
       throw new IOException( "Invalid directory for move: " + sourceDir );
 
     for( final File child : children )
-      move( child, destDir );
+      move( child, destDir, deleteExisting );
   }
 
   /**
    * Moves one single file/dir into another directory.
    * 
+   * @param deleteExisting
+   *            If <code>true</code>, the destDir will be deleted before removal, if existant.
    * @throws IOException
    *             If the move failed.
    */
-  public static void move( final File source, final File destDir ) throws IOException
+  public static void move( final File source, final File destDir, final boolean deleteExisting ) throws IOException
   {
     // TODO: probably platform dependend.
     // Handle the following problems:
-    // - file will be moved onto another file system (in that case copy/delete ist probably better)
+    // - file will be moved onto another file system (in that case copy/delete is probably better)
 
     final File destFile = new File( destDir, source.getName() );
 
     if( destFile.exists() )
     {
-      final String message = String.format( "Unable move file %s into %s. Destination file already exsits: %s", source, destDir, destFile );
-      throw new IOException( message );
+      if( deleteExisting )
+        FileUtils.forceDelete( destFile );
+      else
+      {
+        final String message = String.format( "Unable move file %s into %s. Destination file already exists: %s", source, destDir, destFile );
+        throw new IOException( message );
+      }
     }
 
-    boolean success = source.renameTo( destFile );
+    final boolean success = source.renameTo( destFile );
     if( !success )
     {
       final String message = String.format( "Unable move file %s into %s.", source, destDir );

@@ -67,6 +67,8 @@ public class ComponentUiHandlerFactory
       return new ComponentUiDoubleHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "decimal" ) ) )
       return new ComponentUiDecimalHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+    else if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "integer" ) ) )
+      return new ComponentUiIntegerHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "string" ) ) )
       return new ComponentUiStringHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
 
