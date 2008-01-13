@@ -31,6 +31,7 @@
         </gft:label>
         <gft:text editable="true" property="prof:station" tooltip="Gewässerstation des Profils" style="SWT.BORDER">
             <gft:gridData widthHint="200" horizontalSpan="1" horizontalAlignment="GridData.BEGINNING"/>
+            <gft:format>%.4f</gft:format>
         </gft:text>
         <gft:label visible="false" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
