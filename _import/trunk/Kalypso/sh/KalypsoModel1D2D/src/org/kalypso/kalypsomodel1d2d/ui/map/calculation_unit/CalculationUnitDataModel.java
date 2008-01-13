@@ -68,24 +68,13 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
 
   public ICalculationUnit getSelectedCalculationUnit( )
   {
-    final Object data2 = getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    return (ICalculationUnit) data2;
+    return (ICalculationUnit) getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
 
-  public void setSelectedCalculationUnit( final ICalculationUnit calculationUnit )
+  public ICalculationUnit[] getCalculationUnits( )
   {
-    setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, calculationUnit );
-  }
-
-  public List<ICalculationUnit> getCalculationUnits( )
-  {
-    final Object data2 = getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    return (List<ICalculationUnit>) data2;
-  }
-
-  public void setSelectedCalculationUnit( final List<ICalculationUnit> calculationUnits )
-  {
-    setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calculationUnits );
+    final List<ICalculationUnit> data = (List<ICalculationUnit>) getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    return data.toArray( new ICalculationUnit[data.size()] );
   }
 
   public void setValidatingMessages( final ICalculationUnit key, final List<IProblem> strList )

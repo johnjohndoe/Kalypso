@@ -55,7 +55,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  * The default implementation of the {@link IFE1D2DComplexElement} interface.
  * 
  * @author Patrice Congo
- * 
  */
 public class FE1D2DComplexElement<ET extends IFeatureWrapper2> extends AbstractFeatureBinder implements IFE1D2DComplexElement<ET>
 {
@@ -74,7 +73,7 @@ public class FE1D2DComplexElement<ET extends IFeatureWrapper2> extends AbstractF
    * @param eleClass
    *            the base wrapper class for the elements
    */
-  public FE1D2DComplexElement( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class<ET> wrapperClass )
+  public FE1D2DComplexElement( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<ET> wrapperClass )
   {
     super( featureToBind, qnameToBind );
     elements = Util.<ET> get( featureToBind, qnameToBind, elementListPropQName, wrapperClass, true );
@@ -94,6 +93,7 @@ public class FE1D2DComplexElement<ET extends IFeatureWrapper2> extends AbstractF
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
    */
+  @Override
   public Feature getWrappedFeature( )
   {
     return getFeature();
@@ -102,13 +102,13 @@ public class FE1D2DComplexElement<ET extends IFeatureWrapper2> extends AbstractF
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
-  public boolean addElementAsRef( ET element )
+  public boolean addElementAsRef( final ET element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     return elements.addRef( element );
   }
 
-  public boolean addFlowRelationAsRef( IFlowRelationship element )
+  public boolean addFlowRelationAsRef( final IFlowRelationship element )
   {
     return addElementAsRef( (ET) element );
   }

@@ -184,7 +184,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     m_undoDesc = m_calcUnitToDelete.getDescription();
     if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
     {
-      final IFeatureWrapperCollection<ICalculationUnit> subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getSubUnits();
+      final IFeatureWrapperCollection<ICalculationUnit> subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getChangedSubUnits();
       m_undoChildUnits = subUnits.toArray( new ICalculationUnit[0] );
     }
     final Collection<ICalculationUnit1D2D> parentUnits = CalcUnitOps.getParentUnit( m_calcUnitToDelete, m_model1d2d );
@@ -220,7 +220,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
       // delete links to child units
       if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
-        ((ICalculationUnit1D2D) m_calcUnitToDelete).getSubUnits().clear();
+        ((ICalculationUnit1D2D) m_calcUnitToDelete).getChangedSubUnits().clear();
 
       // delete links to elements
       for( final IFeatureWrapper2 element : m_undoElements )
@@ -384,14 +384,14 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     // set subunits
     if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
     {
-      final IFeatureWrapperCollection subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getSubUnits();
+      final IFeatureWrapperCollection subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getChangedSubUnits();
       for( final ICalculationUnit subUnit : m_undoChildUnits )
         subUnits.addRef( subUnit );
     }
 
     // set parent units
     for( final ICalculationUnit1D2D parentUnit : m_undoParentUnits )
-      parentUnit.getSubUnits().addRef( m_calcUnitToDelete );
+      parentUnit.getChangedSubUnits().addRef( m_calcUnitToDelete );
 
     final Feature[] changedFeatureArray = getChangedFeatureArray();
     fireProcessChanges( changedFeatureArray, true );

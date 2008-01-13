@@ -40,14 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommandManager;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -60,37 +64,40 @@ import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataM
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddSubCalcUnitsToCalcUnit1D2DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveSubCalcUnitsFromCalcUnit1D2DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 
 /**
  * @author Madanagopal
  * @author Dejan Antanaskovic
- * 
+ * @author Gernot Belger
  */
-public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWizard
+public class CalculationUnitPropertyWizard extends Wizard
 {
   private final CalculationUnitDataModel m_dataModel;
 
-  private IStructuredSelection m_selection;
+  private final CalculationUnitPropertyWizardPage m_wizardPage;
 
-  private CreateSubCalculationUnitCopyWizardPage m_wizardPage;
+  private final ICalculationUnit m_parentCalcUnit;
 
-  private ICalculationUnit1D2D m_calcUnit1D2D;
-
-  public CreateSubCalculationUnitCopyWizard( final CalculationUnitDataModel dataModel )
+  public CalculationUnitPropertyWizard( final CalculationUnitDataModel dataModel )
   {
     m_dataModel = dataModel;
+
+    m_parentCalcUnit = m_dataModel.getSelectedCalculationUnit();
+    final ICalculationUnit[] calculationUnits = m_dataModel.getCalculationUnits();
+
+    m_wizardPage = new CalculationUnitPropertyWizardPage( m_parentCalcUnit, calculationUnits );
+
+    setWindowTitle( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.0" ) ); //$NON-NLS-1$
   }
 
   @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.0" ) ); //$NON-NLS-1$
-    m_wizardPage = new CreateSubCalculationUnitCopyWizardPage( m_dataModel );
     addPage( m_wizardPage );
-    m_wizardPage.init( m_selection );
   }
 
   /**
@@ -99,62 +106,74 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
   @Override
   public boolean performFinish( )
   {
-    if( checkSubUnitsInterconnection( m_wizardPage.getInputListCalSubUnits() ) )
+    final ICalculationUnit[] newSubUnits = m_wizardPage.getSelectedSubUnits();
+    if( checkSubUnitsInterconnection( newSubUnits ) )
     {
-      m_calcUnit1D2D = (ICalculationUnit1D2D) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      final RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( new ArrayList<ICalculationUnit>( m_calcUnit1D2D.getSubUnits() ), m_calcUnit1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
+      try
       {
-        @Override
-        public void process( )
+        final ICommandManager commandManager = m_dataModel.getData( ICommandManager.class, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+        final Feature calcUnitFeature = m_parentCalcUnit.getWrappedFeature();
+
+        final String newName = m_wizardPage.getChangedName();
+        if( !ObjectUtils.equals( m_parentCalcUnit.getName(), newName ) )
         {
-          try
-          {
-            super.process();
-          }
-          catch( Exception e )
-          {
-            e.printStackTrace();
-          }
-          m_dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
+          final List<String> nameList = new ArrayList<String>();
+          nameList.add( newName );
+          final ChangeFeatureCommand changeNameCmd = new ChangeFeatureCommand( calcUnitFeature, calcUnitFeature.getFeatureType().getProperty( NamedFeatureHelper.GML_NAME ), nameList );
+          commandManager.postCommand( changeNameCmd );
         }
 
-      };
-      final AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd = new AddSubCalcUnitsToCalcUnit1D2DCmd( m_wizardPage.getInputListCalSubUnits(), m_calcUnit1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
-      {
-
-        @Override
-        public void process( )
+        if( m_parentCalcUnit instanceof ICalculationUnit1D )
         {
-          try
+          final ICalculationUnit1D calcUnit1D = (ICalculationUnit1D) m_parentCalcUnit;
+          final int newInterpolationCount = m_wizardPage.getChangedInterpolationCount();
+          if( !ObjectUtils.equals( calcUnit1D.getInterpolationCount(), newInterpolationCount ) )
           {
-            super.process();
+            final ChangeFeatureCommand changeNameCmd = new ChangeFeatureCommand( calcUnitFeature, calcUnitFeature.getFeatureType().getProperty( ICalculationUnit1D.QNAME_PROP_INTERP_COUNT ), new BigInteger( ""
+                + newInterpolationCount ) );
+            commandManager.postCommand( changeNameCmd );
           }
-          catch( Exception e )
-          {
-            e.printStackTrace();
-          }
-          m_dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
         }
-      };
-      KeyBasedDataModelUtil.postCommand( m_dataModel, cmdToRemove, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-      KeyBasedDataModelUtil.postCommand( m_dataModel, cmdToAdd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+
+        if( m_parentCalcUnit instanceof ICalculationUnit1D2D )
+        {
+          final ICalculationUnit1D2D calcUnit1D2D = (ICalculationUnit1D2D) m_parentCalcUnit;
+          final IFeatureWrapperCollection<ICalculationUnit> subUnits = calcUnit1D2D.getChangedSubUnits();
+
+          final RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( subUnits.toArray( new ICalculationUnit[subUnits.size()] ), calcUnit1D2D );
+          final AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd = new AddSubCalcUnitsToCalcUnit1D2DCmd( newSubUnits, calcUnit1D2D );
+
+          commandManager.postCommand( cmdToRemove );
+          commandManager.postCommand( cmdToAdd );
+        }
+      }
+      catch( final Exception e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+        ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Verändern der Berechnungseinheit", status );
+      }
+
       return true;
     }
     else
     {
-      MessageDialog.openWarning( getShell(), Messages.getString("CreateSubCalculationUnitCopyWizard.1"), Messages.getString("CreateSubCalculationUnitCopyWizard.2") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning( getShell(), Messages.getString( "CreateSubCalculationUnitCopyWizard.1" ), Messages.getString( "CreateSubCalculationUnitCopyWizard.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
   }
 
-  private boolean checkSubUnitsInterconnection( final ArrayList<ICalculationUnit> inputListCalSubUnits )
+  private boolean checkSubUnitsInterconnection( final ICalculationUnit[] inputListCalSubUnits )
   {
     final List<ICalculationUnit> connectedUnits = new ArrayList<ICalculationUnit>();
     for( final ICalculationUnit currentUnit : inputListCalSubUnits )
+    {
       if( internalCheckInterconnection( connectedUnits, currentUnit ) )
         connectedUnits.add( currentUnit );
       else
         return false;
+    }
+
     return true;
   }
 
@@ -258,14 +277,4 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
 
     return false;
   }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    this.m_selection = selection;
-  }
-
 }

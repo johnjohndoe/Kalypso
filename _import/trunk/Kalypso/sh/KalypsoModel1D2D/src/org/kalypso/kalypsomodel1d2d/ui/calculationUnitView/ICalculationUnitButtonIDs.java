@@ -42,14 +42,21 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
 public interface ICalculationUnitButtonIDs
 {
   public final String BTN_MOVE_UP = "MOVE_UP";
+
   public final String BTN_MOVE_DOWN = "MOVE_DOWN";
+
   public final String BTN_SHOW_AND_MAXIMIZE = "SHOW_AND_MAXIMIZE";
+
   public final String BTN_REMOVE = "REMOVE";
+
   public final String BTN_ADD = "ADD";
+
+  public final String BTN_EDIT = "EDIT";
+
   public final String BTN_CLICK_TO_CALCULATE = "CLICK_TO_CALCULATE";
 }

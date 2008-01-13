@@ -45,6 +45,8 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -60,15 +62,18 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author Madanagopal
@@ -90,7 +95,7 @@ public class SelectedCalculationComponent
 
   private Text m_numberOfContinuityLines;
 
-  private final KeyBasedDataModel m_dataModel;
+  private final CalculationUnitDataModel m_dataModel;
 
   public SelectedCalculationComponent( final CalculationUnitDataModel dataModel )
   {
@@ -99,11 +104,12 @@ public class SelectedCalculationComponent
 
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
+    final CalculationUnitDataModel dataModel = m_dataModel;
+    final Display display = parent.getDisplay();
+    dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
       public void dataChanged( final String key, final Object newValue )
       {
-        final Display display = parent.getDisplay();
         final Runnable runnable = new Runnable()
         {
           public void run( )
@@ -118,10 +124,37 @@ public class SelectedCalculationComponent
       }
     } );
 
+    final IFEDiscretisationModel1d2d discModel = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final GMLWorkspace workspace = discModel.getWrappedFeature().getWorkspace();
+    final ModellEventListener modelListener = new ModellEventListener()
+    {
+      public void onModellChange( final ModellEvent modellEvent )
+      {
+        final Runnable runnable = new Runnable()
+        {
+          public void run( )
+          {
+            final ICalculationUnit selectedCalculationUnit = dataModel.getSelectedCalculationUnit();
+            updateThisSection( selectedCalculationUnit );
+          }
+        };
+        display.syncExec( runnable );
+      }
+    };
+    workspace.addModellListener( modelListener );
+
     final Composite rootComposite = toolkit.createComposite( parent, SWT.NONE );
     rootComposite.setLayout( new GridLayout( 2, false ) );
 
     createGUI( rootComposite, toolkit );
+
+    rootComposite.addDisposeListener( new DisposeListener()
+    {
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        workspace.removeModellListener( modelListener );
+      }
+    } );
 
     return rootComposite;
   }
@@ -136,31 +169,32 @@ public class SelectedCalculationComponent
     m_numberOfBoundaryConditions.setText( "0" );
     m_subCalcUnitsTableViewer.setInput( new ICalculationUnit1D2D[] {} );
 
+    final ICalculationUnit calcUnit = (ICalculationUnit) newValue;
+    if( calcUnit != null )
+    {
+      m_txtCalcUnitName.setText( calcUnit.getName() );
+      m_numberOfContinuityLines.setText( String.valueOf( calcUnit.getContinuityLines().size() ) );
+      m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), calcUnit ) ) );
+    }
+
     if( newValue instanceof ICalculationUnit1D )
     {
-      m_txtCalcUnitName.setText( ((ICalculationUnit) newValue).getName() );
       m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.5" ) );
       m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements1D().size() ) );
-      m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit) newValue).getContinuityLines().size() ) );
-      m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue ) ) );
+      m_subCalcUnitsTableViewer.setInput( new Object[] {} );
     }
     else if( newValue instanceof ICalculationUnit2D )
     {
-      m_txtCalcUnitName.setText( ((ICalculationUnit) newValue).getName() );
       m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.6" ) );
       m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements2D().size() ) );
-      m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit) newValue).getContinuityLines().size() ) );
-      m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue ) ) );
+      m_subCalcUnitsTableViewer.setInput( new Object[] {} );
     }
     else if( newValue instanceof ICalculationUnit1D2D )
     {
-      m_txtCalcUnitName.setText( ((ICalculationUnit) newValue).getName() );
       m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.7" ) );
       m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements1D().size() ) );
       m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements2D().size() ) );
-      m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit) newValue).getContinuityLines().size() ) );
-      m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue ) ) );
-      m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D) newValue).getSubUnits().toArray() );
+      m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D) newValue).getChangedSubUnits().toArray() );
     }
   }
 

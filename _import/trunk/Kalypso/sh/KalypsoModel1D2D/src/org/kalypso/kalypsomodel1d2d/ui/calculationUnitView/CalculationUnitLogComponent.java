@@ -47,11 +47,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -59,16 +60,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
-import org.kalypso.kalypsomodel1d2d.sim.StatusComposite;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.StatusDialog;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.StatusLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
@@ -80,7 +80,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -126,43 +125,7 @@ public class CalculationUnitLogComponent
     final GridData tableGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     table.setLayoutData( tableGridData );
 
-    final FeatureWrapperLabelProvider labelProvider = new FeatureWrapperLabelProvider( logTableViewer )
-    {
-      /**
-       * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnImage(java.lang.Object, int)
-       */
-      @SuppressWarnings("restriction")
-      @Override
-      public Image getColumnImage( Object element, int columnIndex )
-      {
-        if( columnIndex == 0 )
-        {
-          final IGeoStatus status = (IGeoStatus) element;
-
-          // Special treatment for cancel: show as warning
-          if( status.matches( IStatus.CANCEL ) )
-            return StatusComposite.getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
-
-          return StatusComposite.getStatusImage( status );
-        }
-
-        return super.getColumnImage( element, columnIndex );
-      }
-
-      /**
-       * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnText(java.lang.Object, int)
-       */
-      @Override
-      public String getColumnText( Object element, int columnIndex )
-      {
-        if( columnIndex == 0 )
-          return "";
-
-        return super.getColumnText( element, columnIndex );
-      }
-    };
-
-    logTableViewer.setLabelProvider( labelProvider );
+    StatusLabelProvider.configureTableViewer( logTableViewer );
     logTableViewer.setContentProvider( new ArrayContentProvider() );
     logTableViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -172,9 +135,19 @@ public class CalculationUnitLogComponent
       }
     } );
 
-    logTableViewer.addColumn( IGeoStatus.QNAME_PROP_STATUS_SEVERITY.toString(), "Art", null, 30, 0, false, SWT.CENTER, false );
-    logTableViewer.addColumn( NamedFeatureHelper.GML_DESCRIPTION.toString(), "Beschreibung", null, 500, 0, false, SWT.LEFT, true );
-    logTableViewer.addColumn( IGeoStatus.QNAME_PROP_STATUS_TIME.toString(), "Zeit", null, 150, 0, false, SWT.LEFT, false );
+    logTableViewer.addDoubleClickListener( new IDoubleClickListener()
+    {
+      public void doubleClick( final DoubleClickEvent event )
+      {
+        final IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+        final IStatus status = (IStatus) sel.getFirstElement();
+        if( status != null )
+        {
+          final StatusDialog dialog = new StatusDialog( parent.getShell(), status, "Details" );
+          dialog.open();
+        }
+      }
+    } );
 
     noLogLabel.setVisible( false );
     noLogGridData.exclude = true;

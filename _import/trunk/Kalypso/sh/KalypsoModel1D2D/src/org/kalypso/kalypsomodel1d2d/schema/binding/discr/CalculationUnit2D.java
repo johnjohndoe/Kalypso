@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  */
 @SuppressWarnings("unchecked")
-public class CalculationUnit2D<ET extends IFENetItem> extends CalculationUnit implements ICalculationUnit2D
+public class CalculationUnit2D extends CalculationUnit implements ICalculationUnit2D
 {
   public CalculationUnit2D( final Feature featureToBind )
   {

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -47,14 +48,12 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
-import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ListLabelProvider;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
- * 
  */
-public class CalculationUnitViewerLabelProvider extends ListLabelProvider
+public class CalculationUnitViewerLabelProvider extends LabelProvider
 {
   private final Display m_display;
 
@@ -82,14 +81,13 @@ public class CalculationUnitViewerLabelProvider extends ListLabelProvider
   {
     if( element instanceof ICalculationUnit1D )
       return calc1DImage;
-    else if( element instanceof ICalculationUnit2D )
+
+    if( element instanceof ICalculationUnit2D )
       return calc2DImage;
-    else if( element instanceof ICalculationUnit1D2D )
+    if( element instanceof ICalculationUnit1D2D )
       return calc1D2DImage;
-    else
-    {
-      throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
+
+    throw new UnsupportedOperationException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override
@@ -97,21 +95,14 @@ public class CalculationUnitViewerLabelProvider extends ListLabelProvider
   {
     if( element instanceof IFeatureWrapper2 )
     {
-
       final String name = ((IFeatureWrapper2) element).getName();
       if( name != null )
-      {
         return name;
-      }
-      else
-      {
-        return ((IFeatureWrapper2) element).getGmlID();
-      }
+
+      return ((IFeatureWrapper2) element).getGmlID();
     }
-    else
-    {
-      throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
+
+    throw new UnsupportedOperationException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
 }

@@ -90,7 +90,7 @@ public class CalculationUnit1D2D extends CalculationUnit implements ICalculation
     m_featureToBind = featureToBind;
     m_qnameToBind = qnameToBind;
     m_subUnitPropQName = subUnitPropQName;
-    m_subCalculationUnits = Util.<ICalculationUnit> get( m_featureToBind, m_qnameToBind, m_subUnitPropQName, ICalculationUnit.class, true );
+    m_subCalculationUnits = Util.get( m_featureToBind, m_qnameToBind, m_subUnitPropQName, ICalculationUnit.class, true );
     m_elements = new FeatureWrapperCollection( m_featureToBind, IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
     ((FeatureWrapperCollection) m_elements).addSecondaryWrapper( IFELine.class );
     m_elements.clear();
@@ -102,7 +102,7 @@ public class CalculationUnit1D2D extends CalculationUnit implements ICalculation
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D#getSubUnits()
    */
-  public IFeatureWrapperCollection<ICalculationUnit> getSubUnits( )
+  public IFeatureWrapperCollection<ICalculationUnit> getChangedSubUnits( )
   {
     return m_subCalculationUnits;
   }

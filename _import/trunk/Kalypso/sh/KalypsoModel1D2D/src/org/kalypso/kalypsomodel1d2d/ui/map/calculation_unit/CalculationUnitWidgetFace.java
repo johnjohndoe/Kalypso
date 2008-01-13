@@ -107,7 +107,7 @@ class CalculationUnitWidgetFace
 
   private final void createCalculationUnit( final Section workStatusSection, final FormToolkit toolkit )
   {
-    final CalculationUnitMetaTable calcGUI = new CalculationUnitMetaTable( m_dataModel, CalculationUnitMetaTable.BTN_SHOW_AND_MAXIMIZE, CalculationUnitMetaTable.BTN_REMOVE, CalculationUnitMetaTable.BTN_ADD );
+    final CalculationUnitMetaTable calcGUI = new CalculationUnitMetaTable( m_dataModel, CalculationUnitMetaTable.BTN_SHOW_AND_MAXIMIZE, CalculationUnitMetaTable.BTN_REMOVE, CalculationUnitMetaTable.BTN_ADD, CalculationUnitMetaTable.BTN_EDIT );
     final Control client = calcGUI.createControl( workStatusSection, toolkit );
     workStatusSection.setClient( client );
   }

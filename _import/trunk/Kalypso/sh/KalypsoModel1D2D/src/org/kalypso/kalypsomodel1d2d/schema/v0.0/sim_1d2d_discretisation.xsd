@@ -184,7 +184,6 @@
 				real edge these 3 node muss have different geometric
 				properties. ==Single point edge are also possible, in
 				that case the all
-
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -333,10 +332,6 @@
 	<xs:element name="edge" type="wb1d2d:EdgePropertyType" />
 
 	<xs:complexType name="EdgePropertyType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">
-			</xs:documentation>
-		</xs:annotation>
 		<xs:sequence>
 			<xs:element ref="wb1d2d:Edge" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
@@ -403,16 +398,11 @@
 	<xs:element name="CalculationUnit" type="wb1d2d:CalculationUnitType"
 		substitutionGroup="wb1d2d:ComplexElement" abstract="true" />
 	<xs:complexType name="CalculationUnitType" abstract="true">
-		<xs:annotation>
-			<xs:documentation></xs:documentation>
-		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="wb1d2d:ComplexElementType">
 				<xs:sequence>
 					<xs:element ref="wb1d2d:element" minOccurs="0"
 						maxOccurs="unbounded" />
-					<xs:element ref="op1d2d:boundaryCondition"
-						minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -447,9 +437,14 @@
 		<xs:complexContent>
 			<xs:extension base="wb1d2d:CalculationUnitType">
 				<xs:sequence>
-					<!--xs:element 
-						ref="wb1d2d:element1D"
-						minOccurs="0" maxOccurs="unbounded"/ -->
+					<xs:element name="interpolationPolynomeCount" type="xs:nonNegativeInteger" default="0" nillable="false">
+						<xs:annotation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Interpolation</xs:label>
+								<xs:tooltip>Anzahl der zu interpolierenden Stützstellen pro 1D-Element</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>					
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

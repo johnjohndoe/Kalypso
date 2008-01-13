@@ -52,4 +52,11 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 public interface ICalculationUnit1D extends ICalculationUnit
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D" ); //$NON-NLS-1$
+
+  public static final QName QNAME_PROP_INTERP_COUNT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "interpolationPolynomeCount" ); //$NON-NLS-1$
+
+  /**
+   * The number of interpolation points for each 1d-element (IP line of .2d file).
+   */
+  public int getInterpolationCount( );
 }

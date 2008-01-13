@@ -76,7 +76,7 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
 
     final ICalculationUnit1D2D calcUnit1d2d = (ICalculationUnit1D2D) calcUnit;
 
-    final List<ICalculationUnit> subUnits = calcUnit1d2d.getSubUnits();
+    final List<ICalculationUnit> subUnits = calcUnit1d2d.getChangedSubUnits();
     for( final ICalculationUnit subUnit : subUnits )
     {
       ICalculationUnit2D thisCalcUnit;

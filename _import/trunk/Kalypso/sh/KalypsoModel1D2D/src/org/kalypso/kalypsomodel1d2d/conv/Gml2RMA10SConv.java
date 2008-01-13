@@ -60,7 +60,9 @@ import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -610,6 +612,15 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final String msg = Messages.getString( "Gml2RMA10SConv.43" ) + element1D.getGmlID();
           throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
         }
+
+        // TODO: find 1D-calc unit in which this element resides
+        // TODO write new lp line
+        final ICalculationUnit1D calcUnit1D = find1dCalcUnit( m_calculationUnit, element1D );
+        if( calcUnit1D != null )
+        {
+          final int interpolationCount = calcUnit1D.getInterpolationCount();
+          formatter.format( "IP%10d%10d%n", id, interpolationCount );
+        }
       }
       else if( element instanceof IPolyElement )
       {
@@ -657,6 +668,45 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     // write edges
     writeEdgeSet( formatter, edgeSet );
+  }
+
+  /**
+   * Finds the first 1D-Calculation unit which contains the given element.<br>
+   * Recursively searches within sub-units of 1d2d units.
+   */
+  private static ICalculationUnit1D find1dCalcUnit( final ICalculationUnit calcUnit, final IElement1D element1D )
+  {
+    if( calcUnit == null )
+      return null;
+
+    if( calcUnit instanceof ICalculationUnit1D )
+    {
+      // TODO: check, if this is not too slow
+      if( calcUnit.contains( element1D ) )
+        return (ICalculationUnit1D) calcUnit;
+
+      return null;
+    }
+
+    /* This should never happen... */
+    if( calcUnit instanceof ICalculationUnit2D )
+      return null;
+
+    if( calcUnit instanceof ICalculationUnit1D2D )
+    {
+      final ICalculationUnit1D2D calcUnit1d2d = (ICalculationUnit1D2D) calcUnit;
+      final List<ICalculationUnit> subUnits = calcUnit1d2d.getChangedSubUnits();
+      for( final ICalculationUnit calculationUnit : subUnits )
+      {
+        final ICalculationUnit1D foundUnit = find1dCalcUnit( calculationUnit, element1D );
+        if( foundUnit != null )
+          return foundUnit;
+      }
+
+      return null;
+    }
+
+    throw new UnsupportedOperationException();
   }
 
   private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y ) throws IOException

@@ -92,7 +92,6 @@ public class KeyBasedDataModel
 
   public Object getData( String key )
   {
-
     key = Assert.throwIAEOnNullOrEmpty( key );
     final int pos = findPosition( key );
     if( pos == NO_POS )

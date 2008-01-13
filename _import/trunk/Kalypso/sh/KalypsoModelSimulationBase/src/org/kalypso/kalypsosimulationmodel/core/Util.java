@@ -441,7 +441,8 @@ public class Util
 
     if( prop == null )
     {
-      // create the property tha is still missing
+      // TODO: this will never happen! also the create constructor below is crap!
+      // create the property thas is still missing
       if( doCreate )
       {
         col = new FeatureWrapperCollection<T>( feature, featureQName, listPropQName, bindingInterface );

@@ -157,7 +157,7 @@ public class ResultMeta1d2dHelper
    */
   public static IStatus removeResult( final IResultMeta resultMeta )
   {
-    if( removeResultMetaFile( resultMeta ) != Status.OK_STATUS )
+    if( !removeResultMetaFile( resultMeta ).isOK() )
       return StatusUtilities.createErrorStatus( "removeResult: could not delete files." );
 
     final IResultMeta parent = resultMeta.getParent();
@@ -211,13 +211,12 @@ public class ResultMeta1d2dHelper
     final Set<Date> toDelete = new HashSet<Date>( Arrays.asList( stepsToDelete ) );
 
     final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
-    final IResultMeta[] childs = children.toArray( new IResultMeta[children.size()] );
 
-    monitor.beginTask( "Ergebnisdaten löschen", childs.length );
+    monitor.beginTask( "Ergebnisdaten löschen", children.size() );
 
     final Set<IStatus> stati = new HashSet<IStatus>();
 
-    for( final IResultMeta child : childs )
+    for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
     {
       monitor.subTask( "Lösche " + child.getName() );
 

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import java.math.BigInteger;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -65,6 +67,18 @@ public class CalculationUnit1D extends CalculationUnit implements ICalculationUn
   }
 
   /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D#getInterpolationCount()
+   */
+  public int getInterpolationCount( )
+  {
+    final BigInteger integer = getProperty( QNAME_PROP_INTERP_COUNT, BigInteger.class );
+    if( integer == null )
+      return 0;
+
+    return integer.intValue();
+  }
+
+  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
    */
   @Override
@@ -73,6 +87,7 @@ public class CalculationUnit1D extends CalculationUnit implements ICalculationUn
     final boolean isElement1dOrLine = (element instanceof IElement1D) || (element instanceof IContinuityLine1D);
     if( isElement1dOrLine )
       return super.addElementAsRef( element );
+
     return false;
   }
 }

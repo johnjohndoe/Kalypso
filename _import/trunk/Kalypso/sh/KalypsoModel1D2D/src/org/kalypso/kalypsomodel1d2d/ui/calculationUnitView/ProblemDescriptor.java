@@ -48,25 +48,24 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Madanagopal
- * 
  */
 @SuppressWarnings("unchecked")
 public class ProblemDescriptor implements IProblem
 {
-  private String messageDescription;
+  private String m_messageDescription;
 
-  private String name;
+  private String m_name;
 
-  private ICalculationUnit calculationUnit;
+  private ICalculationUnit m_calculationUnit;
 
-  private final IFeatureWrapper2 featureToFocus;
+  private final IFeatureWrapper2 m_featureToFocus;
 
   public ProblemDescriptor( final String name, final String messageDescription, final ICalculationUnit calculationUnit, final IFeatureWrapper2 featureToFocus )
   {
-    this.name = name;
-    this.messageDescription = messageDescription;
-    this.calculationUnit = calculationUnit;
-    this.featureToFocus = featureToFocus;
+    m_name = name;
+    m_messageDescription = messageDescription;
+    m_calculationUnit = calculationUnit;
+    m_featureToFocus = featureToFocus;
   }
 
   /**
@@ -74,7 +73,7 @@ public class ProblemDescriptor implements IProblem
    */
   public String getMessageDescription( )
   {
-    return messageDescription;
+    return m_messageDescription;
   }
 
   /**
@@ -82,7 +81,7 @@ public class ProblemDescriptor implements IProblem
    */
   public String getName( )
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -106,7 +105,7 @@ public class ProblemDescriptor implements IProblem
    */
   public void setMessageDescription( final String description )
   {
-    this.messageDescription = description;
+    m_messageDescription = description;
   }
 
   /**
@@ -114,7 +113,7 @@ public class ProblemDescriptor implements IProblem
    */
   public void setName( final String name )
   {
-    this.name = name;
+    m_name = name;
   }
 
   /**
@@ -122,7 +121,7 @@ public class ProblemDescriptor implements IProblem
    */
   public ICalculationUnit getParentCalculationUnit( )
   {
-    return calculationUnit;
+    return m_calculationUnit;
   }
 
   /**
@@ -130,7 +129,7 @@ public class ProblemDescriptor implements IProblem
    */
   public void setParentCalculationUnit( final ICalculationUnit calculationUnit )
   {
-    this.calculationUnit = calculationUnit;
+    this.m_calculationUnit = calculationUnit;
   }
 
   /**
@@ -138,6 +137,6 @@ public class ProblemDescriptor implements IProblem
    */
   public IFeatureWrapper2 showFocusOn( )
   {
-    return featureToFocus;
+    return m_featureToFocus;
   }
 }

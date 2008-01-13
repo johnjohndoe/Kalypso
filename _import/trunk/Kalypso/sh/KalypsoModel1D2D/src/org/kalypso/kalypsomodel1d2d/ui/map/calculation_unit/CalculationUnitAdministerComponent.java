@@ -40,26 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.swt.widgets.DisposeButtonImageListener;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateSubCalculationUnitCopyWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 
@@ -70,29 +65,15 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListe
  */
 public class CalculationUnitAdministerComponent
 {
-  private Composite m_parent;
+  private final CalculationUnitDataModel m_dataModel;
 
-  private Composite m_rootComposite;
+  protected static final ImageDescriptor IMAGEDATA_ADDREMOVE_ELEMENTS_1D = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/01_add_1D.gif" ); //$NON-NLS-1$
 
-  private CalculationUnitDataModel m_dataModel;
+  protected static final ImageDescriptor IMAGEDATA_ADDREMOVE_ELEMENTS_2D = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/02_add_2D.gif" ); //$NON-NLS-1$
 
-  private Button m_btnAddRemoveElements;
+  protected static final ImageDescriptor IMAGEDATA_ADDREMOVE_CONTILINES = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/03_add_conti.gif" ); //$NON-NLS-1$
 
-  private Button m_btnAddRemoveContinuityLines;
-
-  private Button m_btnAddRemoveBoundaryConditions;
-
-  private Button m_btnAddRemoveSubUnits;
-
-  private static final ImageData IMAGEDATA_ADDREMOVE_ELEMENTS_1D = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/01_add_1D.gif" ).getImageData(); //$NON-NLS-1$
-
-  private static final ImageData IMAGEDATA_ADDREMOVE_ELEMENTS_2D = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/02_add_2D.gif" ).getImageData(); //$NON-NLS-1$
-
-  private static final ImageData IMAGEDATA_ADDREMOVE_CONTILINES = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/03_add_conti.gif" ).getImageData(); //$NON-NLS-1$
-
-  private static final ImageData IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/13_flowrelation_add_NodalBC.gif" ).getImageData(); //$NON-NLS-1$
-
-  private static final ImageData IMAGEDATA_ADDREMOVE_SUBUNITS = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData(); //$NON-NLS-1$
+  protected static final ImageDescriptor IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/13_flowrelation_add_NodalBC.gif" ); //$NON-NLS-1$
 
   public CalculationUnitAdministerComponent( final CalculationUnitDataModel model )
   {
@@ -101,143 +82,107 @@ public class CalculationUnitAdministerComponent
 
   public void createControl( final Composite parent )
   {
-    m_parent = parent;
-    m_rootComposite = new Composite( m_parent, SWT.FLAT );
+    final CalculationUnitDataModel dataModel = m_dataModel;
+
+    final Composite rootComposite = new Composite( parent, SWT.FLAT );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 4;
     gridLayout.makeColumnsEqualWidth = true;
-    m_rootComposite.setLayout( gridLayout );
+    rootComposite.setLayout( gridLayout );
 
-    m_btnAddRemoveElements = new Button( m_rootComposite, SWT.PUSH );
-    m_btnAddRemoveElements.setLayoutData( new GridData( GridData.BEGINNING ) );
-    m_btnAddRemoveElements.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_ELEMENTS_1D ) );
-    m_btnAddRemoveElements.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.5" ) ); //$NON-NLS-1$
-    m_btnAddRemoveElements.addSelectionListener( new SelectionListener()
+    final Button btnAddRemoveElements = new Button( rootComposite, SWT.PUSH );
+    btnAddRemoveElements.setImage( IMAGEDATA_ADDREMOVE_ELEMENTS_1D.createImage() );
+    DisposeButtonImageListener.hookToButton( btnAddRemoveElements );
+    btnAddRemoveElements.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.5" ) ); //$NON-NLS-1$
+    btnAddRemoveElements.addSelectionListener( new SelectionAdapter()
     {
-      public void widgetSelected( SelectionEvent e )
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
-        final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) m_dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
-        widgetWithStrategy.setStrategy( new AddRemoveElementToCalcUnitWidget( m_dataModel ) );
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        // TODO Auto-generated method stub
+        final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
+        widgetWithStrategy.setStrategy( new AddRemoveElementToCalcUnitWidget( dataModel ) );
       }
     } );
 
-    m_btnAddRemoveContinuityLines = new Button( m_rootComposite, SWT.PUSH );
-    m_btnAddRemoveContinuityLines.setLayoutData( new GridData( GridData.BEGINNING ) );
-    m_btnAddRemoveContinuityLines.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_CONTILINES ) );
-    m_btnAddRemoveContinuityLines.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.6" ) ); //$NON-NLS-1$
-    m_btnAddRemoveContinuityLines.addSelectionListener( new SelectionListener()
+    final Button btnAddRemoveContinuityLines = new Button( rootComposite, SWT.PUSH );
+    btnAddRemoveContinuityLines.setImage( IMAGEDATA_ADDREMOVE_CONTILINES.createImage() );
+    DisposeButtonImageListener.hookToButton( btnAddRemoveContinuityLines );
+    btnAddRemoveContinuityLines.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.6" ) ); //$NON-NLS-1$
+    btnAddRemoveContinuityLines.addSelectionListener( new SelectionAdapter()
     {
-      public void widgetSelected( SelectionEvent e )
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
-        final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) m_dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
-        widgetWithStrategy.setStrategy( new AddRemoveContinuityLineToCalcUnitWidget( m_dataModel ) );
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        // TODO Auto-generated method stub
+        final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
+        widgetWithStrategy.setStrategy( new AddRemoveContinuityLineToCalcUnitWidget( dataModel ) );
       }
     } );
 
-    m_btnAddRemoveSubUnits = new Button( m_rootComposite, SWT.PUSH );
-    m_btnAddRemoveSubUnits.setLayoutData( new GridData( GridData.BEGINNING ) );
-    m_btnAddRemoveSubUnits.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_SUBUNITS ) );
-    m_btnAddRemoveSubUnits.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.8" ) ); //$NON-NLS-1$
-    m_btnAddRemoveSubUnits.addSelectionListener( new SelectionListener()
+    final Button btnAddRemoveBoundaryConditions = new Button( rootComposite, SWT.PUSH );
+    btnAddRemoveBoundaryConditions.setImage( IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS.createImage() );
+    DisposeButtonImageListener.hookToButton( btnAddRemoveBoundaryConditions );
+    btnAddRemoveBoundaryConditions.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.7" ) ); //$NON-NLS-1$
+    btnAddRemoveBoundaryConditions.addSelectionListener( new SelectionAdapter()
     {
-      public void widgetSelected( SelectionEvent e )
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
-        final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        final CreateSubCalculationUnitCopyWizard calculationSubWizard = new CreateSubCalculationUnitCopyWizard( m_dataModel );
-        final WizardDialog wizardDialog = new WizardDialog( shell, calculationSubWizard );
-        wizardDialog.open();
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        // TODO Auto-generated method stub
+        final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
+        widgetWithStrategy.setStrategy( new AddRemoveBoundaryConditionToCalcUnitWidget( dataModel ) );
       }
     } );
 
-    m_btnAddRemoveBoundaryConditions = new Button( m_rootComposite, SWT.PUSH );
-    m_btnAddRemoveBoundaryConditions.setLayoutData( new GridData( GridData.BEGINNING ) );
-    m_btnAddRemoveBoundaryConditions.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS ) );
-    m_btnAddRemoveBoundaryConditions.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.7" ) ); //$NON-NLS-1$
-    m_btnAddRemoveBoundaryConditions.addSelectionListener( new SelectionListener()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) m_dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
-        widgetWithStrategy.setStrategy( new AddRemoveBoundaryConditionToCalcUnitWidget( m_dataModel ) );
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        // TODO Auto-generated method stub
-      }
-    } );
-
-    m_btnAddRemoveElements.setEnabled( false );
-    m_btnAddRemoveContinuityLines.setEnabled( false );
-    m_btnAddRemoveBoundaryConditions.setEnabled( false );
-    m_btnAddRemoveSubUnits.setEnabled( false );
+    btnAddRemoveElements.setEnabled( false );
+    btnAddRemoveContinuityLines.setEnabled( false );
+    btnAddRemoveBoundaryConditions.setEnabled( false );
 
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void dataChanged( final String key, final Object newValue )
       {
-        final Display display = m_parent.getDisplay();
+        final Display display = parent.getDisplay();
         final Runnable runnable = new Runnable()
         {
           public void run( )
           {
             if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
             {
-              if( newValue != null )
+              if( newValue == null )
               {
-                if( newValue instanceof ICalculationUnit1D )
-                {
-                  m_btnAddRemoveElements.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_ELEMENTS_1D ) );
-                  m_btnAddRemoveElements.setEnabled( true );
-                  m_btnAddRemoveContinuityLines.setEnabled( true );
-                  m_btnAddRemoveBoundaryConditions.setEnabled( true );
-                  m_btnAddRemoveSubUnits.setEnabled( false );
-                }
-                else if( newValue instanceof ICalculationUnit2D )
-                {
-                  m_btnAddRemoveElements.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_ELEMENTS_2D ) );
-                  m_btnAddRemoveElements.setEnabled( true );
-                  m_btnAddRemoveContinuityLines.setEnabled( true );
-                  m_btnAddRemoveBoundaryConditions.setEnabled( true );
-                  m_btnAddRemoveSubUnits.setEnabled( false );
-                }
-                else if( newValue instanceof ICalculationUnit1D2D )
-                {
-                  m_btnAddRemoveElements.setEnabled( false );
-                  m_btnAddRemoveContinuityLines.setEnabled( false );
-                  m_btnAddRemoveBoundaryConditions.setEnabled( true );
-                  m_btnAddRemoveSubUnits.setEnabled( true );
-                }
-                else
-                {
-                  m_btnAddRemoveElements.setEnabled( false );
-                  m_btnAddRemoveContinuityLines.setEnabled( false );
-                  m_btnAddRemoveBoundaryConditions.setEnabled( false );
-                  m_btnAddRemoveSubUnits.setEnabled( false );
-                }
+                btnAddRemoveElements.setEnabled( false );
+                btnAddRemoveContinuityLines.setEnabled( false );
+                btnAddRemoveBoundaryConditions.setEnabled( false );
               }
               else
               {
-                m_btnAddRemoveElements.setEnabled( false );
-                m_btnAddRemoveContinuityLines.setEnabled( false );
-                m_btnAddRemoveBoundaryConditions.setEnabled( false );
-                m_btnAddRemoveSubUnits.setEnabled( false );
+                if( newValue instanceof ICalculationUnit1D )
+                {
+                  btnAddRemoveElements.getImage().dispose();
+                  btnAddRemoveElements.setImage( IMAGEDATA_ADDREMOVE_ELEMENTS_1D.createImage() );
+                  btnAddRemoveElements.setEnabled( true );
+                  btnAddRemoveContinuityLines.setEnabled( true );
+                  btnAddRemoveBoundaryConditions.setEnabled( true );
+                }
+                else if( newValue instanceof ICalculationUnit2D )
+                {
+                  btnAddRemoveElements.getImage().dispose();
+                  btnAddRemoveElements.setImage( IMAGEDATA_ADDREMOVE_ELEMENTS_2D.createImage() );
+                  btnAddRemoveElements.setEnabled( true );
+                  btnAddRemoveContinuityLines.setEnabled( true );
+                  btnAddRemoveBoundaryConditions.setEnabled( true );
+                }
+                else if( newValue instanceof ICalculationUnit1D2D )
+                {
+                  btnAddRemoveElements.setEnabled( false );
+                  btnAddRemoveContinuityLines.setEnabled( false );
+                  btnAddRemoveBoundaryConditions.setEnabled( true );
+                }
+                else
+                {
+                  btnAddRemoveElements.setEnabled( false );
+                  btnAddRemoveContinuityLines.setEnabled( false );
+                  btnAddRemoveBoundaryConditions.setEnabled( false );
+                }
               }
             }
           }

@@ -109,6 +109,9 @@ public class CalculationUnit extends FE1D2DComplexElement<IFENetItem> implements
   {
     if( member == null )
       return false;
+
+    // FIXME: !This will not always work! the memberIDs is not updated, if an element is added....!
+
     return getMemberIDs().contains( member.getGmlID() );
   }
 

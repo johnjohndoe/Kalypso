@@ -168,7 +168,7 @@ public class CalcUnitOps
       if( ce instanceof ICalculationUnit1D2D )
       {
         final ICalculationUnit1D2D parent = (ICalculationUnit1D2D) ce;
-        if( parent.getSubUnits().contains( calculationUnit ) )
+        if( parent.getChangedSubUnits().contains( calculationUnit ) )
         {
           parents.add( parent );
         }
@@ -232,14 +232,14 @@ public class CalcUnitOps
     contributingBBox.add( calUnit.getElements().getWrappedList().getBoundingBox() );
     if( calUnit instanceof ICalculationUnit1D2D )
     {
-      final LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>( ((ICalculationUnit1D2D) calUnit).getSubUnits() );
+      final LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>( ((ICalculationUnit1D2D) calUnit).getChangedSubUnits() );
       while( !subUnits.isEmpty() )
       {
         final ICalculationUnit removed = subUnits.remove( 0 );
         contributingBBox.add( removed.getElements().getWrappedList().getBoundingBox() );
         if( removed instanceof ICalculationUnit1D2D )
         {
-          subUnits.addAll( ((ICalculationUnit1D2D) removed).getSubUnits() );
+          subUnits.addAll( ((ICalculationUnit1D2D) removed).getChangedSubUnits() );
         }
       }
     }
@@ -293,7 +293,7 @@ public class CalcUnitOps
     {
       final ICalculationUnit currentSubUnit = subUnits.remove( 0 );
       if( currentSubUnit instanceof ICalculationUnit1D2D )
-        subUnits.addAll( ((ICalculationUnit1D2D) currentSubUnit).getSubUnits() );
+        subUnits.addAll( ((ICalculationUnit1D2D) currentSubUnit).getChangedSubUnits() );
       if( list.contains( currentSubUnit.getGmlID() ) )
         return true;
     }
@@ -357,8 +357,11 @@ public class CalcUnitOps
   {
     int count = 0;
     for( final IBoundaryCondition condition : conditions )
+    {
       if( isBoundaryConditionOf( unit, condition ) )
         count++;
+    }
+
     return count;
   }
 

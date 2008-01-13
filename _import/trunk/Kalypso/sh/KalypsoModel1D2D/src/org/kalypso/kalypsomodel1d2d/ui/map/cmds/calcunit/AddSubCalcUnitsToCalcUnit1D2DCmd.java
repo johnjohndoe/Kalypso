@@ -40,63 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Madanagopal
- * 
  */
-public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCommand
+public class AddSubCalcUnitsToCalcUnit1D2DCmd implements ICommand
 {
+  private final ICalculationUnit[] m_subUnitsToAdd;
 
-  private List<ICalculationUnit> m_subCalcUnits;
+  private final ICalculationUnit1D2D m_parentCalcUnit;
 
-  private IFEDiscretisationModel1d2d m_model1d2d;
-
-  private boolean m_commandProcessed = false;
-
-  private ICalculationUnit1D2D m_parentCalcUnit;
-
-  public AddSubCalcUnitsToCalcUnit1D2DCmd( final List<ICalculationUnit> calcUnitsToInclude, final ICalculationUnit1D2D parentCalculationUnit, final IFEDiscretisationModel1d2d model1d2d )
-
+  public AddSubCalcUnitsToCalcUnit1D2DCmd( final ICalculationUnit[] calcUnitsToInclude, final ICalculationUnit1D2D parentCalculationUnit )
   {
-    m_subCalcUnits = calcUnitsToInclude;
+    m_subUnitsToAdd = calcUnitsToInclude;
     m_parentCalcUnit = parentCalculationUnit;
-    m_model1d2d = model1d2d;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
-   */
-  public IFeatureWrapper2[] getChangedFeature( )
-  {
-    if( m_commandProcessed )
-    {
-      final List<IFeatureWrapper2> changedFeature = new ArrayList<IFeatureWrapper2>();
-      changedFeature.addAll( m_subCalcUnits );
-      changedFeature.add( m_parentCalcUnit );
-      return changedFeature.toArray( new IFeatureWrapper2[changedFeature.size()] );
-    }
-    else
-      return new IFeatureWrapper2[] {};
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
-   */
-  public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
-  {
-    return m_model1d2d;
   }
 
   /**
@@ -120,35 +83,21 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
    */
   public void process( ) throws Exception
   {
-    if( !m_commandProcessed )
+    for( final ICalculationUnit subCalcUnit : m_subUnitsToAdd )
     {
-      try
-      {
-        for( final ICalculationUnit subCalcUnit : m_subCalcUnits )
-        {
-          m_parentCalcUnit.getSubUnits().addRef( subCalcUnit );
-          m_parentCalcUnit.getElements().clear();
-        }
-        fireProcessChanges();
-      }
-      catch( Exception th )
-      {
-        th.printStackTrace();
-        throw th;
-      }
+      m_parentCalcUnit.getChangedSubUnits().addRef( subCalcUnit );
+      // / ... the next line is dubious
+      m_parentCalcUnit.getElements().clear();
     }
-  }
 
-  private void fireProcessChanges( )
-  {
-    final IFeatureWrapper2[] elementsToAdd = getChangedFeature();
-    final List<Feature> features = new ArrayList<Feature>();
-    for( final IFeatureWrapper2 element : elementsToAdd )
-      features.add( element.getWrappedFeature() );
+    final Feature[] changedFeatures = new Feature[m_subUnitsToAdd.length];
+
+    for( int i = 0; i < changedFeatures.length; i++ )
+      changedFeatures[i] = m_subUnitsToAdd[i].getWrappedFeature();
+
     final GMLWorkspace workspace = m_parentCalcUnit.getWrappedFeature().getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getWrappedFeature(), features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_parentCalcUnit.getWrappedFeature(), changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
     workspace.fireModellEvent( event );
-    m_commandProcessed = true;
   }
 
   /**
@@ -156,7 +105,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
    */
   public void redo( ) throws Exception
   {
-    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -164,7 +113,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
    */
   public void undo( ) throws Exception
   {
-    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException();
   }
 
 }

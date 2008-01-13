@@ -59,7 +59,7 @@ public interface ICalculationUnit1D2D extends ICalculationUnit
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D2D" );
 
-  public IFeatureWrapperCollection<ICalculationUnit> getSubUnits( );
+  public IFeatureWrapperCollection<ICalculationUnit> getChangedSubUnits( );
 
   public List<IFENetItem> query( final GM_Envelope envelope );
 }

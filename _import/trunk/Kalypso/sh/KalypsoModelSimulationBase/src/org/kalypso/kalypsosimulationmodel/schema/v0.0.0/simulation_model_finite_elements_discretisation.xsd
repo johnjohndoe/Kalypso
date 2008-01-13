@@ -141,7 +141,7 @@
 			<xs:documentation xml:lang="en">
 				A directed nod holds a reference to an edge and has a
 				direction property element. No attribute is used due to
-				Kalpso limitations.
+				Kalypso limitations.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -183,7 +183,7 @@
 	<xs:complexType name="FEAbstractNodeType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-				Abtracts type for the finite elements nodes. Its
+				Abstract type for the finite elements nodes. Its
 				container property links it to the containing super
 				elements an _FEEdge.
 			</xs:documentation>
