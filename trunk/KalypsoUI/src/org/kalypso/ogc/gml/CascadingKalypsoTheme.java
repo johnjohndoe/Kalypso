@@ -43,14 +43,13 @@ package org.kalypso.ogc.gml;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -65,39 +64,15 @@ import org.xml.sax.InputSource;
 /**
  * @author Stefan Kurzbach
  */
-// TODO: implementing IMapModell here is an ugly hack to show the layers in the outline view
-// do not do such a thing. Instead let each theme return a content-provider, so the structure is delegated to the
-// themes.
 public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 {
-  /**
-   * @author Stefan Kurzbach
-   */
-  protected final class GmtFileChangeListener implements IResourceChangeListener
+  private final IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
   {
-    /**
-     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-     */
-    public void resourceChanged( final IResourceChangeEvent event )
+    public void resourceChanged( IResourceChangeEvent event )
     {
-      if( m_file == null )
-        return;
-      final IResourceDelta rootDelta = event.getDelta();
-      final IResourceDelta fileDelta = rootDelta.findMember( m_file.getFullPath() );
-      if( fileDelta == null )
-        return;
-      if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
-        try
-        {
-          startLoadJob();
-        }
-        catch( final Exception e )
-        {
-          // TODO something useful; set status to theme
-          e.printStackTrace();
-        }
+      handleResourceChanged( event );
     }
-  }
+  };
 
   private static URL resolveUrl( final URL context, final String viewRefUrl ) throws CoreException
   {
@@ -113,9 +88,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   private final String m_mapViewRefUrl;
 
-  private IResourceChangeListener m_resourceChangeListener;
-
-  IFile m_file;
+  private final IFile m_file;
 
   public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws Exception
   {
@@ -141,7 +114,6 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     m_file = ResourceUtilities.findFileFromURL( url );
     if( m_file != null )
     {
-      m_resourceChangeListener = new GmtFileChangeListener();
       m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener, IResourceChangeEvent.POST_CHANGE );
       startLoadJob();
     }
@@ -151,7 +123,20 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   public void createGismapTemplate( final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
   {
-    getInnerMapModel().createGismapTemplate( bbox, srsName, getName(), monitor, m_file );
+    if( m_file != null )
+    {
+      try
+      {
+        /* Remove resource listener while saving: prohibits unnecessary reloading when file is saved */
+        m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
+
+        getInnerMapModel().createGismapTemplate( bbox, srsName, getName(), monitor, m_file );
+      }
+      finally
+      {
+        m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener, IResourceChangeEvent.POST_CHANGE );
+      }
+    }
   }
 
   /**
@@ -211,14 +196,10 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   protected void startLoadJob( ) throws Exception
   {
-    // Do not do such a thing, if the resources are not fresh, something else is wrong!
-    // Apart from, that this causes a scheduling rule conflict so no map ican be opened in expert mode
-// m_file.refreshLocal( IResource.DEPTH_ZERO, null );
-    final InputSource inputSource = new InputSource( m_file.getContents() );
-    Gismapview innerGisView;
     try
     {
-      innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
+      final InputSource inputSource = new InputSource( m_file.getContents() );
+      final Gismapview innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
       final String innerName = innerGisView.getName();
       if( innerName != null )
       {
@@ -229,9 +210,34 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       fireContextChanged();
       fireStatusChanged();
     }
-    catch( final JAXBException e )
+    catch( final Throwable e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Konnte " + m_file.getName() + " nicht laden." ) );
+      final IStatus status = StatusUtilities.statusFromThrowable( e, "Konnte " + m_file.getName() + " nicht laden." );
+      setStatus( status );
+      throw new CoreException( status );
+    }
+  }
+
+  protected void handleResourceChanged( final IResourceChangeEvent event )
+  {
+    if( m_file == null )
+      return;
+
+    final IResourceDelta rootDelta = event.getDelta();
+    final IResourceDelta fileDelta = rootDelta.findMember( m_file.getFullPath() );
+    if( fileDelta == null )
+      return;
+    if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
+    {
+      try
+      {
+        startLoadJob();
+      }
+      catch( final Exception e )
+      {
+        // TODO something useful; set status to theme
+        e.printStackTrace();
+      }
     }
   }
 }
