@@ -308,7 +308,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // Override the default TableViewerEditor:
     // - multi-selection is enabled
     // - there is a focused cell
-    // - right-klick opens context-menu everywhere
+    // - right-click opens context-menu everywhere
     // - single-click starts editing
     final FocusCellHighlighter focusHighlighter = new FocusCellOwnerDrawHighlighter( this );
     m_focusCellManager = new TableViewerFocusCellManager( this, focusHighlighter );

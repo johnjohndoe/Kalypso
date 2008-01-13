@@ -71,6 +71,11 @@
                id="org.kalypso.gmlschema.functionProperty.getLineLength"
                name="Get Line Length">
          </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.ListSizePropertyFunction"
+               id="org.kalypsodeegree_impl.model.feature.function.ListSizePropertyFunction"
+               name="List Size">
+         </function>
      </extension>
      <extension
            point="org.kalypso.deegree.featureRule">

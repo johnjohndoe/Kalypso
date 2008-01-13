@@ -246,11 +246,14 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
        * AbtractFeatureBinder, and this will therefore work, i guess, only for AbstractFeatureBinder childs. i will have
        * a look during the move IfeatureWrapper to kalypso deegree
        */
+
+      // Why backwards??: because of remove below...
       for( int i = size() - 1; i >= 0; i-- )
       {
         final FWCls cls = get( i );
         if( cls == null )
         {
+          // FIXME: this is no good! This fixing of a bad model should not happen here, this is too dangerous!
           // bad link removing it
           System.out.println( "removing bad link:" + m_featureList.get( i ) );
           remove( i );
