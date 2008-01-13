@@ -100,6 +100,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       return StatusUtilities.createWarningStatus( "No map panel available" );
 
     /* Always make sure that the map was fully loaded */
+    // TODO: this is too slow here!
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "", "" ) )
       return null;
 
