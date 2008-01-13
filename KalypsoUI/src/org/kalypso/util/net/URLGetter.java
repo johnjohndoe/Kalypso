@@ -47,6 +47,7 @@ import java.net.URL;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.StatusLine;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -62,10 +63,10 @@ public class URLGetter implements ICoreRunnableWithProgress
   {
     try
     {
-      HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut, new URL( url.getProtocol() + "://" + url.getHost() ) );
+      final HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut, new URL( url.getProtocol() + "://" + url.getHost() ) );
       return new URLGetter( client, url );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
     }
@@ -168,15 +169,12 @@ public class URLGetter implements ICoreRunnableWithProgress
         e1.printStackTrace();
       }
 
-      String statusText = "";
-      try
-      {
-        statusText = method.getStatusText();
-      }
-      catch( final Exception e )
-      {
+      final String statusText;
+      final StatusLine statusLine = method.getStatusLine();
+      if( statusLine == null )
         statusText = "Verbindung wird aufgebaut ...";
-      }
+      else
+        statusText = method.getStatusText();
 
       monitor.subTask( statusText );
       monitor.worked( 1 );
