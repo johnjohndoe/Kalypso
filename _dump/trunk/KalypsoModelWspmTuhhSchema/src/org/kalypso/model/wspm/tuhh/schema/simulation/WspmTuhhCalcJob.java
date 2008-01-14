@@ -83,24 +83,12 @@ public class WspmTuhhCalcJob implements ISimulation
 {
   public static final String CALCJOB_SPEC = "WspmTuhhCalcJob_spec.xml";
 
-  // Timeout beim Rechnen([ms])
-  public static final int PROCESS_TIMEOUT = 10 * 60 * 1000;
-
   /**
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
   public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final long lTimeout;
-    if( inputProvider.hasID( "TIMEOUT" ) )
-    {
-      final Integer timeoutMins = (Integer) inputProvider.getInputForID( "TIMEOUT" );
-      lTimeout = timeoutMins == null ? PROCESS_TIMEOUT : timeoutMins.intValue() * 60 * 1000;
-    }
-    else
-      lTimeout = PROCESS_TIMEOUT;
-
     final URL modellGmlURL = (URL) inputProvider.getInputForID( "MODELL_GML" );
     final String calcXPath = (String) inputProvider.getInputForID( "CALC_PATH" );
     final String epsThinning = (String) inputProvider.getInputForID( "EPS_THINNING" );
@@ -115,9 +103,7 @@ public class WspmTuhhCalcJob implements ISimulation
 
     PrintWriter pwSimuLog = null;
     InputStream zipInputStream = null;
-    final OutputStream strmKernelLog = null;
     OutputStream strmKernelErr = null;
-    PrintWriter pwInParams = null;
     InputStream mapContentStream = null;
     PrintWriter mapWriter = null;
     try
@@ -188,21 +174,7 @@ public class WspmTuhhCalcJob implements ISimulation
       resultEater.addResult( "KernelErr", fleKernelErr );
       strmKernelErr = new BufferedOutputStream( new FileOutputStream( fleKernelErr ) );
 
-      // TODO input.txt und start.bat sollen noch raus (nach Umstellung des Rechenkerns durch Wolf)
-      // input.txt: n, prof/calc.properties
-      final File fleInParams = new File( tmpDir, "input.txt" );
-      pwInParams = new PrintWriter( new BufferedWriter( new FileWriter( fleInParams ) ) );
-      pwInParams.println( "n" );
-      pwInParams.println( "\"" + tmpDir.getAbsolutePath() + File.separator + "kalypso-1D.ini" + "\"" );
-
-      pwInParams.close();
-
-      // generate start.bat
-      final File fleBat = new File( tmpDir, "start.bat" );
-      final PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
-      pwBat.println( "\"" + tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe" + "\" < " + "\"" + fleInParams.getAbsolutePath() + "\"" );
-      pwBat.close();
-      final String sCmd = "\"" + fleBat.getAbsolutePath() + "\"";
+      final File iniFile = new File( tmpDir, "kalypso-1D.ini" );
 
       monitor.setProgress( 20 );
 
@@ -213,7 +185,9 @@ public class WspmTuhhCalcJob implements ISimulation
         return;
 
       // start calculation; the out-stream gets copied into the simulation.log and the system.out
-      ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, lTimeout, osSimuLog, strmKernelErr, null );
+      final File exeFile = new File( tmpDir, "Kalypso-1D.exe" );
+      final String sCmd = "\"" + exeFile.getAbsolutePath() + "\" n \"" + iniFile.getAbsolutePath() + "\"";
+      ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, 0, osSimuLog, strmKernelErr, null );
 
       if( log.checkCanceled() )
         return;
@@ -229,28 +203,32 @@ public class WspmTuhhCalcJob implements ISimulation
       {
         resultEater.addResult( "ControlFile", ctrlFile );
 
-        log.log( false, " - Kontroll-Datei erzeugt." );
+        log.log( false, " - Kontroll-Datei kopiert" );
       }
+      else
+        log.log( false, " - Kontroll-Datei fehlt" );
 
       final File beiwerteFile = new File( dathDir, "Beiwerte.aus" );
       if( beiwerteFile.exists() )
       {
         resultEater.addResult( "BeiwerteAus", beiwerteFile );
-        log.log( false, " - Beiwerte-Datei erzeugt." );
+        log.log( false, " - Beiwerte-Datei kopiert" );
       }
+      else
+        log.log( false, " - Beiwerte-Datei fehlt" );
 
       final File lambdaFile = new File( dathDir, "lambda_i.txt" );
       if( lambdaFile.exists() )
       {
         resultEater.addResult( "LambdaI", lambdaFile );
-        log.log( false, " - LambdaI-Datei erzeugt." );
+        log.log( false, " - LambdaI-Datei kopiert" );
       }
+      log.log( false, " - LambdaI-Datei fehlt" );
 
       if( log.checkCanceled() )
         return;
 
       final MODE calcMode = calculation.getCalcMode();
-
       if( log.checkCanceled() )
         return;
 
@@ -264,6 +242,8 @@ public class WspmTuhhCalcJob implements ISimulation
           final IStatus lsResult = lsProcessor.process( log );
           if( lsResult.getSeverity() == IStatus.ERROR )
           {
+            log.log( false, " - Längsschnitt konnte nicht gelesen werden" );
+            log.log( false, "Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs." );
             monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs." );
             return;
           }
@@ -417,7 +397,7 @@ public class WspmTuhhCalcJob implements ISimulation
         case REIB_KONST:
         {
           /* Process length sections */
-          /* Parse Q_LangSchnitt.txt into severel length-sections */
+          /* Parse Q_LangSchnitt.txt into several length-sections */
           final File lsOutDir = new File( tmpDir, "LengthSections" );
           lsOutDir.mkdirs();
           resultEater.addResult( "resultListsNonUni", lsOutDir );
@@ -426,6 +406,8 @@ public class WspmTuhhCalcJob implements ISimulation
           final IStatus lsResult = lsProcessor.process( log );
           if( lsResult.getSeverity() == IStatus.ERROR )
           {
+            log.log( false, " - Längsschnitte konnten nicht gelesen werden" );
+            log.log( false, "Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs." );
             monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs." );
             return;
           }
@@ -439,7 +421,7 @@ public class WspmTuhhCalcJob implements ISimulation
 
           /* Calculate and fetch Polynomes */
           final File polynomeTmpDir = new File( tmpDir, "polynome" );
-          PolynomeHelper.processPolynomes( polynomeTmpDir, dathDir, log, lTimeout, resultEater, calculation );
+          PolynomeHelper.processPolynomes( polynomeTmpDir, dathDir, log, 0, resultEater, calculation );
 
           break;
         }
@@ -454,9 +436,7 @@ public class WspmTuhhCalcJob implements ISimulation
     {
       IOUtils.closeQuietly( pwSimuLog );
       IOUtils.closeQuietly( zipInputStream );
-      IOUtils.closeQuietly( strmKernelLog );
       IOUtils.closeQuietly( strmKernelErr );
-      IOUtils.closeQuietly( pwInParams );
       IOUtils.closeQuietly( mapContentStream );
       IOUtils.closeQuietly( mapWriter );
     }
