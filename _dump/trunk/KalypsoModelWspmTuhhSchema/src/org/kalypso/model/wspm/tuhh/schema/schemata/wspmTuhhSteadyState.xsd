@@ -924,6 +924,84 @@
 							</restriction>
 						</simpleType>
 					</element>
+					<element name="autoSlopeDetection" type="boolean" default="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ausreisser ignorieren</label>
+								<tooltip>Die automatische Erkennung des ersten Steigungswechsels bei der Polynomgenerierung wird nicht verwendet.
+Die angegebenen Bordvoll-Punkte in der Q_LangSchnitt.txt gelten als Grenze zwischen Polynom1 und Polynom 2.
+Zulässiger Wertebereich: [J/ N]</tooltip>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="runoffSlope" default="02.0000">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Steigung Abfluss</label>
+								<tooltip><![CDATA[Wert wird nur berücksichtigt, wenn AutoSteigung = J. 
+Ansatz des Q-Polynoms2 sobald die Veränderung der Steigung um den Faktor 2 und größer.
+Zulässiger Wertebereich: [1,002, 100[]]></tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="decimal">
+								<fractionDigits value="4"></fractionDigits>
+								<minInclusive value="1.002"></minInclusive>
+								<maxExclusive value="100"></maxExclusive>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="areaSlope" default="02.0000">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Steigung Fläche</label>
+								<tooltip><![CDATA[Wert wird nur berücksichtigt, wenn AutoSteigung = J. 
+Ansatz des A-Polynoms2 sobald die Veränderung der Steigung um den Faktor 2 und größer.
+Zulässiger Wertebereich: [1,002, 100[]]></tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="decimal">
+								<fractionDigits value="4"></fractionDigits>
+								<minInclusive value="1.002"></minInclusive>
+								<maxExclusive value="100"></maxExclusive>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="alphaSlope" default="02.0000">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Steigung Alpha</label>
+								<tooltip><![CDATA[Wert wird nur berücksichtigt, wenn AutoSteigung = J. 
+Ansatz des Alpha-Polynoms2 sobald die Veränderung der Steigung um den Faktor 2 und größer.
+Zulässiger Wertebereich: [1,002, 100[]]></tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="decimal">
+								<fractionDigits value="4"></fractionDigits>
+								<minInclusive value="1.002"></minInclusive>
+								<maxExclusive value="100"></maxExclusive>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="weightSplinePoint" default="1.0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wichtung Spline-Punkt</label>
+								<tooltip><![CDATA[Wichtungsfaktor für den Endpunkt von Polynom1 und dem Startpunkt von Polynom2 zur Verbesserung der Splinefunktion.
+Für Wichtungsfaktor = 1 werden alle Stützstellen gleichmäßig gewichtet.
+Zulässiger Wertebereich: [1, 10000[]]></tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="decimal">
+								<fractionDigits value="4"></fractionDigits>
+								<minInclusive value="1"></minInclusive>
+								<maxExclusive value="100"></maxExclusive>
+							</restriction>
+						</simpleType>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>

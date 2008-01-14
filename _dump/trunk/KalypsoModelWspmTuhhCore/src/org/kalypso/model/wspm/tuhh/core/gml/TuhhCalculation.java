@@ -422,44 +422,12 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
   }
 
   /** Only valid for REIB_KONST mode. */
-  public int getPolynomialDeegree( )
+  public PolynomeProperties getPolynomeProperties( )
   {
     final Feature polyFeature = (Feature) getFeature().getProperty( QNAME_PROP_POLYNOME_MEMBER );
-    final Integer value = (Integer) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "degree" ) );
-    if( value == null )
-      return 4;
+    if( polyFeature == null )
+      return null;
 
-    return value;
-  }
-
-  /** Only valid for REIB_KONST mode. */
-  public boolean isPolynomialTriple( )
-  {
-    final Feature polyFeature = (Feature) getFeature().getProperty( QNAME_PROP_POLYNOME_MEMBER );
-    final Boolean value = (Boolean) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "trippleIt" ) );
-    if( value == null )
-      return false;
-
-    return value;
-  }
-
-  public boolean getPolynomialIgnoreOutlier( )
-  {
-    final Feature polyFeature = (Feature) getFeature().getProperty( QNAME_PROP_POLYNOME_MEMBER );
-    final Boolean value = (Boolean) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "ignoreOutlier" ) );
-    if( value == null )
-      return false;
-
-    return value;
-  }
-
-  public double getAlphaLimit( )
-  {
-    final Feature polyFeature = (Feature) getFeature().getProperty( QNAME_PROP_POLYNOME_MEMBER );
-    final BigDecimal value = (BigDecimal) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "alphaLimit" ) );
-    if( value == null )
-      return 01.40;
-
-    return value.doubleValue();
+    return new PolynomeProperties( polyFeature );
   }
 }

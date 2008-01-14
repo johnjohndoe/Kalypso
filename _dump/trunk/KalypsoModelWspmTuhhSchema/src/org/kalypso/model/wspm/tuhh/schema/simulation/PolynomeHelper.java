@@ -42,9 +42,7 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -52,12 +50,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -74,11 +72,12 @@ import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
@@ -197,14 +196,8 @@ public class PolynomeHelper
     if( monitor.isCanceled() )
       return;
 
-    /* Start the polynome1d process */
-    final File exeFile = new File( tmpDir, "Polynome1d.exe" );
-    final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\"";
-
     final File logFile = new File( tmpDir, "Polynome1d.log" );
-    // resultEater.addResult( "Polynome1DLog", logFile );
     final File errFile = new File( tmpDir, "Polynome1d.err" );
-    // resultEater.addResult( "Polynome1DErr", errFile );
 
     OutputStream logStream = null;
     OutputStream errStream = null;
@@ -213,6 +206,9 @@ public class PolynomeHelper
       logStream = new BufferedOutputStream( new FileOutputStream( logFile ) );
       errStream = new BufferedOutputStream( new FileOutputStream( errFile ) );
 
+      /* Start the polynome1d process */
+      final File exeFile = new File( tmpDir, "Polynome1d.exe" );
+      final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\"";
       ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, timeout, logStream, errStream, null );
 
       logStream.close();
@@ -267,59 +263,57 @@ public class PolynomeHelper
   {
     final File steuerFile = new File( tmpDir, "steuerpoly.ini" );
 
-    PrintWriter pw = null;
-
     try
     {
       final double startStation = calculation.getStartStation().doubleValue();
       final double endStation = calculation.getStartStation().doubleValue();
 
       /* Polynomial Parameters */
-      final MODE calcMode = calculation.getCalcMode();
+      final PolynomeProperties pps = calculation.getPolynomeProperties();
+      final int polynomialDeegree = pps.getPolynomialDeegree();
+      final boolean ignoreOutlier = pps.getPolynomialIgnoreOutlier();
+      final boolean isTriple = pps.isPolynomialTriple();
+      final double alphaLimit = pps.getAlphaLimit();
+      final boolean autoSlopeDetection = pps.getAutoSlopeDetection();
+      final BigDecimal runoffSlope = pps.getPolynomialRunoffSlope();
+      final BigDecimal areaSlope = pps.getPolynomialAreaSlope();
+      final BigDecimal alphaSlope = pps.getPolynomialAlphaSlope();
+      final BigDecimal weightSplinePoint = pps.getPolynomialWeightSplinePoint();
 
-      final boolean ignoreOutlier;
-      final boolean isTriple;
-      final double alphaLimit;
+      // Programming Language C (PRC) locale in order to format with decimal '.'
+      final Formatter formatter = new Formatter( steuerFile, Charset.defaultCharset().name(), Locale.PRC );
 
-      // TODO: fetch other parameters from calculation
-      if( calcMode == calculation.getCalcMode() )
-      {
-        ignoreOutlier = calculation.getPolynomialIgnoreOutlier();
-        isTriple = calculation.isPolynomialTriple();
-        alphaLimit = calculation.getAlphaLimit();
-      }
-      else
-      {
-        ignoreOutlier = false;
-        isTriple = true;
-        alphaLimit = 1.4;
-      }
+      formatter.format( "Steuerdatei fuer die Polynomfunktionen je Profil%n" );
+      formatter.format( "-------------------------------------------------%n" );
+      formatter.format( "02 Längsschnitt(Pfad) 01Eingang\\%s%n", QLANG_FILE_NAME );
+      formatter.format( "03 PolyGrad(2,3,4) %d%n", polynomialDeegree );
+      formatter.format( "04 DreiTeil(J/N) %1s%n", isTriple ? "J" : "N" );
+      formatter.format( "05 PolyReduce(J/N) J%n" );
+      formatter.format( "06 ProfIntervall(J/N) N%n" );
+      formatter.format( "07 StartProf(0000.0000) %.4f%n", startStation );
+      formatter.format( "08 EndProf(0000.0000) %.4f%n", endStation );
+      formatter.format( "09 AusgabeJeFunktion(J/N) J%n" );
+      formatter.format( "10 AusgabeWspWerte(J/N) J%n" );
+      formatter.format( "11 AusgabeKontrolle(J/N) J%n" );
+      formatter.format( "12 AusgabeFile(Pfad) 02Ausgang\\%n" );
+      formatter.format( "13 Ausreisser(J/N) %1s%n", ignoreOutlier ? "J" : "N" );
+      formatter.format( "14 Impulsstrom(00.0000) %.4f%n", alphaLimit );
+      formatter.format( "15 AutoSteigung(J/N) %1s%n", autoSlopeDetection ? "J" : "N" );
+      formatter.format( "16 Q_Steigung(00.0000) %.4f%n", runoffSlope );
+      formatter.format( "17 A_Steigung(00.0000) %.4f%n", areaSlope );
+      formatter.format( "18 Alp_Steigung(00.0000) %.4f%n", alphaSlope );
+      formatter.format( "19 WichtungSplinePkt(0000.00) %.2f%n", weightSplinePoint );
 
-      pw = new PrintWriter( new BufferedWriter( new OutputStreamWriter( new FileOutputStream( steuerFile ) ) ) );
+      formatter.close();
 
-      pw.println( "Steuerdatei fuer die Polynomfunktionen je Profil" );
-      pw.println( "-------------------------------------------------" );
-      pw.printf( "02 Längsschnitt(Pfad) 01Eingang\\%s%n", QLANG_FILE_NAME );
-      pw.println( "03 PolyGrad(2,3,4) " + calculation.getPolynomialDeegree() );
-      pw.printf( "04 DreiTeil(J/N) %s%n", isTriple ? "J" : "N" );
-      pw.println( "05 PolyReduce(J/N) J" );
-      pw.println( "06 ProfIntervall(J/N) N" );
-      pw.printf( Locale.PRC, "07 StartProf(0000.0000) %.4f%n", startStation );
-      pw.printf( Locale.PRC, "08 EndProf(0000.0000) %.4f%n", endStation );
-      pw.println( "09 AusgabeJeFunktion(J/N) J" );
-      pw.println( "10 AusgabeWspWerte(J/N) J" );
-      pw.println( "11 AusgabeKontrolle(J/N) J" );
-      pw.println( "12 AusgabeFile(Pfad) 02Ausgang\\" );
-      pw.printf( "13 Ausreisser(J/N) %1s%n", ignoreOutlier ? "J" : "N" );
-      pw.printf( Locale.PRC, "14 Impulsstrom(00.0000) %.4f%n", alphaLimit );
+      FormatterUtils.checkIoException( formatter );
     }
-    catch( final FileNotFoundException e )
+    catch( final IOException e )
     {
       throw new SimulationException( "Could not write 'steuerpoly.ini'", e );
     }
     finally
     {
-      IOUtils.closeQuietly( pw );
     }
   }
 
