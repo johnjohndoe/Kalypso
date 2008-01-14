@@ -160,6 +160,9 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
   {
     invalidate();
 
+    if( m_rootContainer != null )
+      m_rootContainer.remove( item );
+
     return m_items.remove( item );
   }
 

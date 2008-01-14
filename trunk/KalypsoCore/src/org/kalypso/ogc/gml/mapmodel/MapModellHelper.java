@@ -120,15 +120,9 @@ public class MapModellHelper
 
           try
           {
-            final IMapModell modell = mapPanel.getMapModell();
-            if( modell != null && modell.isLoaded() )
-            {
-              final KalypsoThemeLoadStatusVisitor visitor = new KalypsoThemeLoadStatusVisitor();
-              modell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
-
-              if( visitor.isLoaded() == true )
-                return Status.OK_STATUS;
-            }
+            final IMapModell model = mapPanel.getMapModell();
+            if( isMapLoaded( model ) )
+              return Status.OK_STATUS;
 
             Thread.sleep( 250 );
 
@@ -342,6 +336,22 @@ public class MapModellHelper
     final double my = (maxY + minY) / 2d;
 
     return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy );
+  }
+
+  /**
+   * Tests if a given map-model is fully loaded.<br>
+   * REMARK: this only checks, that all its themes (and sub-themes) return <code>true</code> for its isLoaded methods<br>
+   * Themes may also report <code>true</code>, if loading its data has failed.
+   */
+  public static boolean isMapLoaded( final IMapModell model )
+  {
+    if( model == null || !model.isLoaded() )
+      return false;
+
+    final KalypsoThemeLoadStatusVisitor visitor = new KalypsoThemeLoadStatusVisitor();
+    model.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
+
+    return visitor.isLoaded();
   }
 
 }

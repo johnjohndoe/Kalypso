@@ -21,6 +21,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -100,9 +101,14 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       return StatusUtilities.createWarningStatus( "No map panel available" );
 
     /* Always make sure that the map was fully loaded */
-    // TODO: this is too slow here!
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "", "" ) )
-      return null;
+    // REMARK: we first test directly, without ui-operation, in order to enhance performance if the map already is open.
+    final IMapModell model = mapPanel.getMapModell();
+    if( !MapModellHelper.isMapLoaded( model ) )
+    {
+      // TODO: this is too slow here!
+      if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "", "" ) )
+        return null;
+    }
 
     final UIJob job = new ActivateWidgetJob( display, "Widget auswählen", widget, mapPanel, activePart );
     // Probably not necessary
