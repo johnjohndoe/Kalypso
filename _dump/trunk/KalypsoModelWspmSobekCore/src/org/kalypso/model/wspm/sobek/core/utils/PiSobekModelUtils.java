@@ -419,8 +419,8 @@ public class PiSobekModelUtils
 
     parameter = factory.createParameter();
     parameter.setId( "numberOfGateValues" );
-    parameter.setType( "double" );
-    parameter.getContent().add( Double.toString( sbkDBStruct.getNumOfGateValues() ) );
+    parameter.setType( "long" );
+    parameter.getContent().add( Long.toString( sbkDBStruct.getNumOfGateValues() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();

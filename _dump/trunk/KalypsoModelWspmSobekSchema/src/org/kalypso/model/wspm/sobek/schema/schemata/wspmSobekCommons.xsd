@@ -601,6 +601,43 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
+	
+	<simpleType name="sbkInterpolationPeriodType">
+		<restriction base="string">
+			<enumeration value="Seconds">
+				<annotation>
+					<documentation xml:lang="de">
+						<name>Sekunden</name>
+						<label>Sekunden</label>
+						<tooltip>Sekunden</tooltip>
+						<description>Sekunden</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<name>Seconds</name>
+						<label>Seconds</label>
+						<tooltip>Seconds</tooltip>
+						<description>Seconds</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="No">
+				<annotation>
+					<documentation xml:lang="de">
+						<name>keine</name>
+						<label>keine</label>
+						<tooltip>keine</tooltip>
+						<description>keine</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<name>No</name>
+						<label>No</label>
+						<tooltip>No</tooltip>
+						<description>No</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
 	<simpleType name="lastBoundaryTypeType">
 		<restriction base="string">
 			<enumeration value="zml">
@@ -696,23 +733,23 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="interpolationPeriod" type="wspmSobekCommon:yesNoType" default="No" nillable="false">
+					<element name="interpolationPeriod" type="wspmSobekCommon:sbkInterpolationPeriodType" default="No" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
-								<name>periodisch</name>
-								<label>periodisch</label>
-								<tooltip>periodisch</tooltip>
-								<description>periodisch</description>
+								<name>Periode</name>
+								<label>Periode</label>
+								<tooltip>Periode</tooltip>
+								<description>Periode</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<name>periodical</name>
-								<label>periodical</label>
-								<tooltip>periodical</tooltip>
-								<description>periodical</description>
+								<name>period</name>
+								<label>period</label>
+								<tooltip>period</tooltip>
+								<description>period</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="interpolationValue" type="byte" default="0" nillable="false">
+					<element name="interpolationValue" type="int" default="0" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<name>value</name>

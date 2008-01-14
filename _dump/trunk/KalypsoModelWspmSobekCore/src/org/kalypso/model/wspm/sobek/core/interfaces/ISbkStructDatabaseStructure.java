@@ -54,7 +54,7 @@ public interface ISbkStructDatabaseStructure extends ISbkStructure
 
   public String getInterpolationType( );
 
-  public double getNumOfGateValues( );
+  public long getNumOfGateValues( );
 
   public String getSecondAxisValueType( );
 

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.math.BigInteger;
+
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.observation.IObservation;
@@ -59,7 +61,7 @@ public class SbkTable implements ISbkTable
 
     private final String m_type;
 
-    private final byte m_value;
+    private final BigInteger m_value;
 
     Interpolation( final Feature table )
     {
@@ -68,10 +70,10 @@ public class SbkTable implements ISbkTable
       m_type = (String) table.getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_TABLE_INTERPOLATION_TYPE );
 
       final Object property = table.getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_TABLE_INTERPOLATION_VALUE );
-      if( property instanceof Byte )
-        m_value = ((Number) property).byteValue();
+      if( property instanceof Integer )
+        m_value = new BigInteger( ((Number) property).toString() );
       else
-        m_value = ((Number) 0).byteValue();
+        m_value = new BigInteger( "0" );
     }
 
     public String getPeriod( )
@@ -84,7 +86,7 @@ public class SbkTable implements ISbkTable
       return m_type;
     }
 
-    public byte getValue( )
+    public BigInteger getValue( )
     {
       return m_value;
     }
@@ -216,7 +218,7 @@ public class SbkTable implements ISbkTable
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable#getInterpolationValue()
    */
-  public byte getInterpolationValue( )
+  public BigInteger getInterpolationValue( )
   {
     return getInterpolation().getValue();
   }

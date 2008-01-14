@@ -99,19 +99,14 @@ public class SbkStructDatabaseStructure extends SbkStructure implements ISbkStru
   {
     // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
     return (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_INTERPOLATION_TYPE );
-
   }
 
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure#getNumOfGateValues()
    */
-  public double getNumOfGateValues( )
+  public long getNumOfGateValues( )
   {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_NUMBER_GATE_VALUES );
-    if( property instanceof Double )
-      return (((Double) property).doubleValue());
-
-    return Double.NaN;
+    return (Long) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_NUMBER_GATE_VALUES );
   }
 
   /**
@@ -121,6 +116,5 @@ public class SbkStructDatabaseStructure extends SbkStructure implements ISbkStru
   {
     // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
     return (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_SECOND_AXIS_VALUE_TYPE );
-
   }
 }

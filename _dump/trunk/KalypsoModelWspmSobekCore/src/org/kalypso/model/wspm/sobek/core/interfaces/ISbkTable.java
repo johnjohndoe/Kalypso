@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import java.math.BigInteger;
+
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -52,7 +54,7 @@ public interface ISbkTable
 
   public String getInterpolationType( );
 
-  public byte getInterpolationValue( );
+  public BigInteger getInterpolationValue( );
 
   public long getRowsCount( );
 

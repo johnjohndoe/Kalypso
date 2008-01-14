@@ -163,7 +163,7 @@
 	<xs:element name="interpolation">
 		<xs:complexType>
 			<xs:simpleContent>
-				<xs:extension base="xs:byte">
+				<xs:extension base="xs:integer">
 					<xs:attribute name="type" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -175,7 +175,7 @@
 					<xs:attribute name="period" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:enumeration value="Yes"/>
+								<xs:enumeration value="Seconds"/>
 								<xs:enumeration value="No"/>
 							</xs:restriction>
 						</xs:simpleType>
@@ -253,7 +253,7 @@
 	<xs:element name="yzCrossSectionData">
 		<xs:complexType>
 			<xs:attribute name="csy" type="xs:double" use="required"/>
-			<xs:attribute name="z" type="xs:double" use="required"/>		
+			<xs:attribute name="z" type="xs:double" use="required"/>
 			<xs:attribute name="roughness" type="xs:double" use="optional"/>
 			<xs:attribute name="mark" type="xs:integer" use="optional"/>
 		</xs:complexType>
