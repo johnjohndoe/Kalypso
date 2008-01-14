@@ -192,7 +192,7 @@ public class MapModellPainter extends Job implements IPainter
    * The caller is responsible for disposing the graphics.
    * </p>
    */
-  private Graphics2D createImage( final SubMonitor monitor, int width, int height ) throws CoreException
+  private Graphics2D createImage( final SubMonitor monitor, final int width, final int height ) throws CoreException
   {
     monitor.beginTask( "initalisiere Buffer", 100 );
 

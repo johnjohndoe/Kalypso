@@ -311,7 +311,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
   @Deprecated
   private void changeSelection( final List features, final IKalypsoFeatureTheme theme, final IFeatureSelectionManager selectionManager2, final int selectionMode )
   {
-    // nothing was choosen by the user, clear selection
+    // nothing was chosen by the user, clear selection
     if( features.isEmpty() )
       selectionManager2.clear();
     // TODO: this should do the widget-manager?
@@ -416,7 +416,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     setMapModell( null );
 
     // REMARK: this should not be necessary, but fixes the memory leak problem when opening/closing a .gmt file.
-    // TODO: where is this ma panel still referenced from?
+    // TODO: where is this map panel still referenced from?
     m_selectionListeners.clear();
     m_mapPanelListeners.clear();
     m_paintListeners.clear();
@@ -647,7 +647,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
       // do not set to null, else we may get NPE in the unsynchronized 'paint'-call
 
-      /* Determine painter depending on state of modell. */
+      /* Determine painter depending on state of model. */
       if( m_model == null )
       {
         if( m_modellPainter == null )
@@ -664,7 +664,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
         m_modellPainter = m_mapModellPainter;
 
-        // delay the Schedule, so if another invalidate comes within that timespan, no repaint happens at all
+        // delay the Schedule, so if another invalidate comes within that time-span, no repaint happens at all
         m_mapModellPainter.schedule( 250 );
       }
 
@@ -672,7 +672,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     }
 
     // do not repaint here, as the painter trigger repaint events himself. Repainting here causes
-    // ugly sideeffect for pan
+    // ugly side effects for pan
     // repaint();
   }
 
@@ -722,7 +722,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final BufferedImage image = paintBuffer( height, width );
 
     // If offset is set, fill the rest with the background color
-    if( (xOffset != 0) || (yOffset != 0) ) // to clear backround ...
+    if( xOffset != 0 || yOffset != 0 ) // to clear background ...
     {
       final int left = Math.max( 0, xOffset );
       final int right = Math.min( width, xOffset + width );
@@ -763,8 +763,10 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       {
         final IMapPanelPaintListener[] pls = m_paintListeners.toArray( new IMapPanelPaintListener[] {} );
         for( final IMapPanelPaintListener pl : pls )
+        {
           if( m_shouldPaint )
             pl.paint( g );
+        }
       }
 
       paintWidget( g );
@@ -858,7 +860,6 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
         if( (minX != maxX) && (minY != maxY) )
         {
-          final JMSelector selector = new JMSelector();
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
           final List<Object> features = JMSelector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( envSelect ), withinStatus );
 
@@ -878,6 +879,9 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   public synchronized void setBoundingBox( final GM_Envelope wishBBox )
   {
+    // TODO: if the map is still about to be painted (e.g. from the last pan-drag); we get an ugly effect here (map
+    // flashes on the old position)
+
     m_wishBBox = wishBBox;
 
     final GM_Envelope oldExtent = m_boundingBox;
@@ -907,9 +911,10 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     }
 
     /* Tell the themes , that the extent has changed. */
-    if( m_model != null ) {
-      int height = getHeight();
-      int width = getWidth();
+    if( m_model != null )
+    {
+      final int height = getHeight();
+      final int width = getWidth();
 
       /* Update dimension. */
       if( (height != m_height) || (width != m_width) )
@@ -917,10 +922,10 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         m_height = height;
         m_width = width;
       }
-      
+
       m_model.accept( new KalypsoThemeChangeExtentVisitor( m_width, m_height, m_boundingBox ), IKalypsoThemeVisitor.DEPTH_INFINITE );
     }
-    
+
     fireExtentChanged( oldExtent, m_boundingBox );
   }
 
