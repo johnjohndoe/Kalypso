@@ -3,15 +3,22 @@ package org.kalypso.kalypsomodel1d2d.ui.map.del;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteJunctionContextCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -19,9 +26,11 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * Provide widget for deleting finit elements
+ * Provide widget for deleting finite elements
  * 
  * @author Patrice Congo
  */
@@ -187,18 +196,55 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     // feature are supposed to be in the same model
     final Feature sampleFeature = selected[0].getFeature();
     final Feature parentFeature = sampleFeature.getParent();
-    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
-    if( model1d2d == null )
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
+
+    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
+
+    if( discModel == null )
       throw new RuntimeException( "Could not found model1d2d" );
 
     try
     {
       final IKalypsoFeatureTheme featureTheme = UtilMap.findEditableTheme( mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT );
-      final CommandableWorkspace workspace = featureTheme.getWorkspace();
+      Set<Feature> changedFeatureList = new HashSet<Feature>();
 
-      final ChangeDiscretiationModelCommand modelChangeCmd = new ChangeDiscretiationModelCommand( workspace, model1d2d );
-      DeleteCmdFactory.createDeleteCmd( model1d2d, selected, modelChangeCmd );
-      workspace.postCommand( modelChangeCmd );
+      for( final EasyFeatureWrapper easyFeatureWrapper : selected )
+      {
+        if( easyFeatureWrapper == null )
+        {
+          throw new IllegalArgumentException( "All easy features in selected must be non null" );
+        }
+
+        final Feature feature = easyFeatureWrapper.getFeature();
+        if( feature != null )
+        {
+          final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( feature, discModel );
+          // command.addCommand( deleteCmd );
+
+          final CommandableWorkspace workspace = featureTheme.getWorkspace();
+          workspace.postCommand( deleteCmd );
+
+          if( deleteCmd instanceof DeletePolyElementCmd )
+          {
+            changedFeatureList.addAll( ((DeletePolyElementCmd) deleteCmd).getChangedFeatureList() );
+          }
+          else if( deleteCmd instanceof DeleteElement1DCmd )
+          {
+            changedFeatureList.addAll( ((DeleteElement1DCmd) deleteCmd).getChangedFeatureList() );
+          }
+          else if( deleteCmd instanceof DeleteJunctionContextCmd )
+          {
+            changedFeatureList.addAll( ((DeleteJunctionContextCmd) deleteCmd).getChangedFeatureList() );
+          }
+        }
+      }
+
+      Feature distFeature = discModel.getWrappedFeature();
+
+      Feature[] deletedFeatures = changedFeatureList.toArray( new Feature[changedFeatureList.size()] );
+      final GMLWorkspace discWorkspace = discModel.getWrappedFeature().getWorkspace();
+      FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( discWorkspace, distFeature, deletedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+      discWorkspace.fireModellEvent( event );
     }
     catch( final Exception e )
     {
