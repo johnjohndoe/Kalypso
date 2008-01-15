@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.util;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
@@ -69,6 +70,7 @@ public class PointSnapper
 
   private boolean m_snappingActive = true;
 
+  @SuppressWarnings("unchecked")
   private IFE1D2DNode m_snapNode = null;
 
   private final MapPanel m_mapPanel;
@@ -87,6 +89,7 @@ public class PointSnapper
    * 
    * @return The snapped node, or <code>null</code> if none was found.
    */
+  @SuppressWarnings("unchecked")
   public IFE1D2DNode moved( final GM_Point p )
   {
     m_snapNode = null;
@@ -117,10 +120,17 @@ public class PointSnapper
       final int lowX = (int) point.getX() - snapRadius;
       final int lowY = (int) point.getY() - snapRadius;
 
+      final Color color = g.getColor();
+
+      Color preViewColor = new Color( 50, 50, 255 );
+      g.setColor( preViewColor );
+
       g.drawRect( lowX, lowY, SNAPPING_RADIUS, SNAPPING_RADIUS );
+      g.setColor( color );
     }
   }
 
+  @SuppressWarnings("unchecked")
   public IFE1D2DNode getSnapNode( )
   {
     return m_snapNode;

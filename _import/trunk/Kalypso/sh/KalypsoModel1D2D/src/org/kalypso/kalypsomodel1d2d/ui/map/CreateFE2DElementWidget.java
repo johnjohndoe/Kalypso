@@ -25,6 +25,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
+ * @author Thomas Jung
  */
 public class CreateFE2DElementWidget extends AbstractWidget
 {
@@ -136,6 +137,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
@@ -156,6 +158,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void leftClicked( final Point p )
   {
@@ -166,7 +169,12 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
     try
     {
-      final ICommand command = m_builder.addNode( newNode );
+      ICommand command;
+
+      if( newNode instanceof GM_Point )
+        command = m_builder.addNode( (GM_Point) newNode );
+      else
+        command = m_builder.addNode( ((IFE1D2DNode) newNode).getPoint() );
 
       if( command != null )
       {
@@ -218,6 +226,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     }
   }
 
+  @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
     final MapPanel mapPanel = getMapPanel();
@@ -228,7 +237,14 @@ public class CreateFE2DElementWidget extends AbstractWidget
     final IFE1D2DNode snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
     final Object newNode = snapNode == null ? currentPoint : snapNode;
 
-    final IStatus status = m_builder.checkNewNode( newNode );
+    IStatus status;
+    if( newNode instanceof GM_Point )
+    {
+      status = m_builder.checkNewNode( (GM_Point) newNode );
+    }
+    else
+      status = m_builder.checkNewNode( ((IFE1D2DNode) newNode).getPoint() );
+
     if( status.isOK() )
       mapPanel.setMessage( "" );
     else

@@ -61,10 +61,11 @@ public class DiscretisationModelUtils
   }
 
   /**
-   * Cheks if a node is a 1d-node.
+   * Checks if a node is a 1d-node.
    * <p>
    * A 1d-node is a node which as at least on 1D-element connected to it. TODO move this into the TypeInfo class
    */
+  @SuppressWarnings("unchecked")
   public static boolean is1DNode( final IFE1D2DNode node )
   {
     final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] elements = node.getElements();
@@ -82,7 +83,7 @@ public class DiscretisationModelUtils
   public static IFeatureWrapper2 findModelElementForBC( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
 
-    // We want to select nodes, but if the node is the first to be selected, tha line will never be selected
+    // We want to select nodes, but if the node is the first to be selected, that line will never be selected
     // if mouse is near any node (i.e. line can be selected only if mouse is outside the model)
 
     // solution: we will select the nodes with small grab distance, so node is selected only if mouse is

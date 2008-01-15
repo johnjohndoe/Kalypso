@@ -70,10 +70,6 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     {
       e.printStackTrace();
     }
-    // TODO: check if this repaint is necessary for the widget
-//    final MapPanel panel = getMapPanel();
-//    if( panel != null )
-//      panel.repaint();
 
   }
 

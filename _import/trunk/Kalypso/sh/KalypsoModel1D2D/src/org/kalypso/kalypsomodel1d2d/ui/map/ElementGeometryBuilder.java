@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -48,7 +49,6 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.ICommand;
@@ -62,25 +62,19 @@ import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -99,15 +93,20 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class ElementGeometryBuilder
 {
+  // search distance in meter
+  private static final double SEARCH_DISTANCE = 0.10;
+
   /**
    * Stores the count of points which this geometry must have. If it is 0, there is no rule.
    */
   private final int m_cnt_points;
 
-  /** A list of either nodes or locations for new nodes. */
-  private final List<Object> m_nodes = new ArrayList<Object>();
+  /** A list of locations for new nodes. */
+  private final List<GM_Point> m_nodes = new ArrayList<GM_Point>();
 
   private final IKalypsoFeatureTheme m_nodeTheme;
+
+  private boolean m_valid;
 
   /**
    * The constructor.
@@ -131,10 +130,8 @@ public class ElementGeometryBuilder
    * Adds a node or a would-be node (i.e. a GM_Point) to this builder.<br>
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
    */
-  public ICommand addNode( final Object node ) throws Exception
+  public ICommand addNode( final GM_Point node ) throws Exception
   {
-    Assert.isTrue( node instanceof GM_Point || node instanceof IFE1D2DNode );
-
     m_nodes.add( node );
     removeDuplicates( m_nodes );
 
@@ -149,6 +146,7 @@ public class ElementGeometryBuilder
    * 
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
+  @SuppressWarnings("unchecked")
   public ICommand finish( ) throws Exception
   {
     final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
@@ -170,94 +168,9 @@ public class ElementGeometryBuilder
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
-    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
-    /* Build new nodes */
-    final FE1D2DNode[] nodes = new FE1D2DNode[m_nodes.size()];
-    for( int i = 0; i < m_nodes.size(); i++ )
-    {
-      final Object node = m_nodes.get( i );
-      if( node instanceof FE1D2DNode )
-        nodes[i] = (FE1D2DNode) node;
-      else
-      {
-        // create new node
-        final FE1D2DNode newNode = FE1D2DNode.createNode( discModel );
-        // TODO: we should try to snap again here..., dont we?
-        newNode.setPoint( (GM_Point) node );
-        newNode.setName( "" ); //$NON-NLS-1$
-        newNode.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
-        final AddFeatureCommand addNodeCommand = new AddFeatureCommand( workspace, parentFeature, parentNodeProperty, -1, newNode.getFeature(), null, false );
-        command.addCommand( addNodeCommand );
-        nodes[i] = newNode;
-      }
-    }
+    ElementGeometryHelper.createAddElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, m_nodes );
 
-    /* Build new edges */
-    final IFE1D2DEdge[] edges = new IFE1D2DEdge[m_nodes.size()];
-    final boolean[] edgesGen = new boolean[m_nodes.size()]; // flag indicating if edge was generated
-    for( int i = 0; i < edges.length; i++ )
-    {
-      final FE1D2DNode node0 = nodes[i];
-      final FE1D2DNode node1 = nodes[(i + 1) % nodes.length];
-
-      /* Search for existing edge */
-      final IFE1D2DEdge edge = discModel.findEdge( node0, node1 );
-      if( edge == null )
-      {
-        final FE1D2DEdge newEdge = FE1D2DEdge.createEdge( discModel );
-        newEdge.setNodes( node0, node1 );
-        edges[i] = newEdge;
-        edgesGen[i] = true;
-        final AddFeatureCommand addEdgeCommand = new AddFeatureCommand( workspace, parentFeature, parentEdgeProperty, -1, newEdge.getFeature(), null, false );
-
-        command.addCommand( addEdgeCommand );
-
-        addNodeContainerCommand( workspace, node0, node1, nodeContainerPT, newEdge, changes );
-      }
-      else
-      {
-        edges[i] = edge;
-        edgesGen[i] = false;
-      }
-    }
-
-    /* Build new element */
-    final IPolyElement element = PolyElement.createPolyElement( discModel );
-
-    element.setEdges( edges );
-
-    final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, element.getWrappedFeature(), null, true );
-    command.addCommand( addElementCommand );
-
-    addEdgeContainerCommand( workspace, edges, edgeContainerPT, element, changes );
-    command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
     return command;
-  }
-
-  private static final void addEdgeContainerCommand( final GMLWorkspace workspace, final IFE1D2DEdge[] edges, final IPropertyType propertyType, final IFE1D2DElement element, final List<FeatureChange> changes )
-  {
-    final Feature elementFeature = element.getWrappedFeature();
-    final String elementID = elementFeature.getId();
-
-    // FeatureChange changes[]= new FeatureChange[edges.length];
-
-    for( final IFE1D2DEdge element2 : edges )
-    {
-
-      changes.add( new FeatureChange( element2.getWrappedFeature(), propertyType, elementID ) );
-    }
-  }
-
-  private static final void addNodeContainerCommand( final GMLWorkspace workspace, final IFE1D2DNode node0, final IFE1D2DNode node1, final IPropertyType propertyType, final IFE1D2DEdge edge, final List<FeatureChange> changes )
-  {
-    final Feature edgeFeature = edge.getWrappedFeature();
-    final Feature node0Feature = node0.getWrappedFeature();
-    final Feature node1Feature = node1.getWrappedFeature();
-    final String edgeID = edgeFeature.getId();
-    final FeatureChange change0 = new FeatureChange( node0Feature, propertyType, edgeID );
-    changes.add( change0 );
-    final FeatureChange change1 = new FeatureChange( node1Feature, propertyType, edgeID );
-    changes.add( change1 );
   }
 
   /**
@@ -275,8 +188,21 @@ public class ElementGeometryBuilder
     final int[] arrayY = points[1];
 
     /* Paint a linestring. */
+    final Color color = g.getColor();
+
+    Color preViewColor;
+    if( m_valid == true )
+      preViewColor = new Color( 100, 255, 100 );
+    else
+      preViewColor = new Color( 255, 100, 100 );
+
+    g.setColor( preViewColor );
+
     g.drawPolygon( arrayX, arrayY, arrayX.length );
     drawHandles( g, arrayX, arrayY );
+
+    g.setColor( color );
+
   }
 
   private int[][] getPointArrays( final GeoTransform projection, final Point currentPoint )
@@ -284,14 +210,8 @@ public class ElementGeometryBuilder
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
 
-    for( final Object node : m_nodes )
+    for( final GM_Point point : m_nodes )
     {
-      final GM_Point point;
-      if( node instanceof FE1D2DNode )
-        point = ((FE1D2DNode) node).getPoint();
-      else
-        point = (GM_Point) node;
-
       final int x = (int) projection.getDestX( point.getX() );
       final int y = (int) projection.getDestY( point.getY() );
 
@@ -320,6 +240,7 @@ public class ElementGeometryBuilder
     return m_nodes.size();
   }
 
+  @SuppressWarnings("unchecked")
   public boolean contains( final IFE1D2DNode snapNode )
   {
     return m_nodes.contains( snapNode );
@@ -328,21 +249,27 @@ public class ElementGeometryBuilder
   /**
    * Checks, if the resulting element would be valid, if the given new node would be inserted at the given position.
    */
-  public IStatus checkNewNode( final Object newNode )
+  public IStatus checkNewNode( final GM_Point newNode )
   {
-    final List<Object> list = new ArrayList<Object>( m_nodes );
+    final List<GM_Point> list = new ArrayList<GM_Point>( m_nodes );
     list.add( newNode );
     removeDuplicates( list );
+    IStatus status = checkNewElement( list.toArray( new GM_Point[list.size()] ) );
 
-    return checkNewElement( list.toArray() );
+    if( status == Status.OK_STATUS )
+      m_valid = true;
+    else
+      m_valid = false;
+
+    return status;
   }
 
-  private static void removeDuplicates( final List<Object> list )
+  private static void removeDuplicates( final List<GM_Point> list )
   {
     Object last = null;
-    for( final Iterator<Object> iterator = list.iterator(); iterator.hasNext(); )
+    for( final Iterator<GM_Point> iterator = list.iterator(); iterator.hasNext(); )
     {
-      final Object next = iterator.next();
+      final GM_Point next = iterator.next();
       if( ObjectUtils.equals( last, next ) )
         iterator.remove();
       last = next;
@@ -352,24 +279,26 @@ public class ElementGeometryBuilder
   // REMARK: some optimization is done here, in order to enhance performance.
   // We assume, that the same checks has been done for every newly added node, so we check only
   // Criteria, which could go wring for the new node (i.e. the last one in the array).
-  private IStatus checkNewElement( final Object[] allNodes )
+  @SuppressWarnings("unchecked")
+  private IStatus checkNewElement( final GM_Point[] allNodes )
   {
     try
     {
-      final Object newNode = allNodes[allNodes.length - 1];
-      final GM_Point newPoint = newNode instanceof GM_Point ? (GM_Point) newNode : ((IFE1D2DNode) newNode).getPoint();
+      final GM_Point newPoint = allNodes[allNodes.length - 1];
 
       final IFEDiscretisationModel1d2d discModel = DiscretisationModelUtils.modelForTheme( m_nodeTheme );
 
       // 0) Node was already grabbed
-      if( ArrayUtils.indexOf( allNodes, newNode ) != allNodes.length - 1 )
+      if( ArrayUtils.indexOf( allNodes, newPoint ) != allNodes.length - 1 )
         return StatusUtilities.createErrorStatus( "Doppelter Knoten" );
 
       // 1) New Node lies inside an element (only for non-grabbed point)
-      if( newNode instanceof GM_Point )
+
+      final IPolyElement elementForNewNode = discModel.find2DElement( newPoint, 0.0 );
+      if( elementForNewNode != null )
       {
-        final IPolyElement elementForNewNode = discModel.find2DElement( newPoint, 0.0 );
-        if( elementForNewNode != null )
+        final IFE1D2DNode foundNode = discModel.findNode( newPoint, SEARCH_DISTANCE );
+        if( foundNode == null )
         {
           final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
           if( surface.contains( newPoint ) )
@@ -382,12 +311,34 @@ public class ElementGeometryBuilder
 
       // 2) New Edge crosses other edge
 
+      // 2b) First edge crosses other elements
+      if( allNodes.length == 2 )
+      {
+        final GM_Position[] line = ElementGeometryHelper.linePositionsFromNodes( allNodes );
+
+        final GM_Curve curve = GeometryFactory.createGM_Curve( line, KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+        final List<IFE1D2DElement> elements = discModel.getElements().query( curve.getEnvelope() );
+        for( final IFE1D2DElement element : elements )
+        {
+          if( element instanceof IElement2D )
+          {
+            final GM_Surface<GM_SurfacePatch> eleGeom = ((IElement2D) element).getGeometry();
+            if( eleGeom.intersects( curve ) )
+            {
+              final GM_Object intersection = eleGeom.intersection( curve );
+              if( intersection instanceof GM_Curve )
+                return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
+            }
+          }
+        }
+
+      }
       // 3) New edge links two non-adjacent points
 
       if( allNodes.length < 3 )
         return Status.OK_STATUS;
 
-      final GM_Position[] ring = ringFromNodes( allNodes );
+      final GM_Position[] ring = ElementGeometryHelper.ringPositionsFromNodes( allNodes );
 
       // 4) New Element self-intersects
       if( GeometryUtilities.isSelfIntersecting( ring ) )
@@ -419,20 +370,4 @@ public class ElementGeometryBuilder
     }
   }
 
-  private GM_Position[] ringFromNodes( final Object[] nodes )
-  {
-    final GM_Position[] poses = new GM_Position[nodes.length + 1];
-    for( int i = 0; i < nodes.length; i++ )
-    {
-      final Object node = nodes[i];
-      if( node instanceof GM_Point )
-        poses[i] = ((GM_Point) node).getPosition();
-      else if( node instanceof IFE1D2DNode )
-        poses[i] = ((IFE1D2DNode) node).getPoint().getPosition();
-    }
-    // close the ring
-    poses[nodes.length] = poses[0];
-
-    return poses;
-  }
 }

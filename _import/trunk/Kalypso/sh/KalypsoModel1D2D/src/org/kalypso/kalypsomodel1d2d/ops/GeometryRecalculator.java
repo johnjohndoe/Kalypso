@@ -53,7 +53,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
@@ -105,6 +104,7 @@ public class GeometryRecalculator
     init( changedFeatures );
   }
 
+  @SuppressWarnings("unchecked")
   private void init( final Collection<Feature> changedFeatures )
   {
     for( final Feature feature : changedFeatures )
@@ -128,6 +128,7 @@ public class GeometryRecalculator
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void addToNodes( final IFE1D2DNode node )
   {
     final Feature feature = node.getWrappedFeature();
@@ -155,7 +156,7 @@ public class GeometryRecalculator
           addToFlowRelationshipsModelChanges( boundaryCondition, element );
         continue;
       }
-      
+
     }
   }
 
@@ -195,6 +196,7 @@ public class GeometryRecalculator
     m_flowRelationshipsModelChanges.add( feature );
   }
 
+  @SuppressWarnings("unchecked")
   private void processNodes( )
   {
     while( m_nodesAdded )
@@ -204,9 +206,6 @@ public class GeometryRecalculator
       {
         final IFE1D2DNode node = (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class );
         final IFeatureWrapperCollection<IFeatureWrapper2> containers = node.getContainers();
-        final List<IFE1D2DElement> complexElements = new ArrayList<IFE1D2DElement>();
-        final List<IFELine> continuityLines = new ArrayList<IFELine>();
-        final List<IBoundaryCondition> boundaryConditions = new ArrayList<IBoundaryCondition>();
 
         for( final IFeatureWrapper2 container : containers )
         {
@@ -215,6 +214,8 @@ public class GeometryRecalculator
             final IFELine line = (IFELine) container;
             try
             {
+              // TODO: is there really no other way? Better would be just to call invalidate() on the line-feature
+
               line.recalculateElementGeometry();
             }
             catch( GM_Exception e )
@@ -258,7 +259,7 @@ public class GeometryRecalculator
     try
     {
       if( !m_flowRelationshipsModelChanges.isEmpty() )
-      ((ICommandPoster) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+        ((ICommandPoster) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       // ((ICommandPoster) modelProvider).postCommand( IOperationalModel.class, new EmptyCommand( "Get dirty!", false )
       // ); //$NON-NLS-1$
       // ((ICommandPoster) modelProvider).postCommand( IOperationalModel1D2D.class, new EmptyCommand( "Get dirty!",
