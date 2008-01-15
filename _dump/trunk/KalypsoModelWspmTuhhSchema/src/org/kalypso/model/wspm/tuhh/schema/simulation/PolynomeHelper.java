@@ -78,6 +78,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties.Dreiteilung;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
@@ -270,15 +271,16 @@ public class PolynomeHelper
 
       /* Polynomial Parameters */
       final PolynomeProperties pps = calculation.getPolynomeProperties();
-      final int polynomialDeegree = pps.getPolynomialDeegree();
-      final boolean ignoreOutlier = pps.getPolynomialIgnoreOutlier();
-      final boolean isTriple = pps.isPolynomialTriple();
+      final int polynomialDeegree = pps.getDeegree();
+      final boolean ignoreOutlier = pps.getIgnoreOutlier();
+      final Dreiteilung triple = pps.getTriple();
+      final boolean isTriple = triple != Dreiteilung.none;
       final double alphaLimit = pps.getAlphaLimit();
-      final boolean autoSlopeDetection = pps.getAutoSlopeDetection();
-      final BigDecimal runoffSlope = pps.getPolynomialRunoffSlope();
-      final BigDecimal areaSlope = pps.getPolynomialAreaSlope();
-      final BigDecimal alphaSlope = pps.getPolynomialAlphaSlope();
-      final BigDecimal weightSplinePoint = pps.getPolynomialWeightSplinePoint();
+      final boolean autoSlopeDetection = isTriple && triple == Dreiteilung.slope;
+      final BigDecimal runoffSlope = pps.getRunoffSlope();
+      final BigDecimal areaSlope = pps.getAreaSlope();
+      final BigDecimal alphaSlope = pps.getAlphaSlope();
+      final BigDecimal weightSplinePoint = pps.getWeightSplinePoint();
 
       // Programming Language C (PRC) locale in order to format with decimal '.'
       final Formatter formatter = new Formatter( steuerFile, Charset.defaultCharset().name(), Locale.PRC );

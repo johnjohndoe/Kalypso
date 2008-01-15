@@ -64,8 +64,6 @@ public class PolynomeProperties extends AbstractFeatureBinder
 
   private final static QName QNAME_PROP_DEEGREE = new QName( TuhhCalculation.NS_WSPM_TUHH, "degree" );
 
-  private static final QName QNAME_PROP_AUTO_SLOPEDETECTION = new QName( TuhhCalculation.NS_WSPM_TUHH, "autoSlopeDetection" );
-
   private static final QName QNAME_PROP_RUNOFF_SLOPE = new QName( TuhhCalculation.NS_WSPM_TUHH, "runoffSlope" );
 
   private static final QName QNAME_PROP_AREA_SLOPE = new QName( TuhhCalculation.NS_WSPM_TUHH, "areaSlope" );
@@ -74,12 +72,19 @@ public class PolynomeProperties extends AbstractFeatureBinder
 
   private static final QName QNAME_PROP_WEIGHT_SPLINE_POINT = new QName( TuhhCalculation.NS_WSPM_TUHH, "weightSplinePoint" );
 
+  public enum Dreiteilung
+  {
+    none,
+    bordvoll,
+    slope;
+  }
+
   public PolynomeProperties( final Feature featureToBind )
   {
     super( featureToBind, QNAME );
   }
 
-  public int getPolynomialDeegree( )
+  public int getDeegree( )
   {
     final Integer value = getProperty( QNAME_PROP_DEEGREE, Integer.class );
     if( value == null )
@@ -88,16 +93,24 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value;
   }
 
-  public boolean isPolynomialTriple( )
+  public Dreiteilung getTriple( )
   {
-    final Boolean value = getProperty( QNAME_PROP_TRIPPLE_IT, Boolean.class );
-    if( value == null )
-      return false;
+    final String value = getProperty( QNAME_PROP_TRIPPLE_IT, String.class );
 
-    return value;
+    // For backwards compability, we are using 'true' and 'false', as these where possible values before....
+    if( "false".equals( value ) )
+      return Dreiteilung.none;
+
+    if( "true".equals( value ) )
+      return Dreiteilung.bordvoll;
+
+    if( "slopeChange".equals( value ) )
+      return Dreiteilung.slope;
+
+    return Dreiteilung.none;
   }
 
-  public boolean getPolynomialIgnoreOutlier( )
+  public boolean getIgnoreOutlier( )
   {
     final Boolean value = getProperty( QNAME_PROP_INGORE_OUTLIER, Boolean.class );
     if( value == null )
@@ -115,16 +128,7 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value.doubleValue();
   }
 
-  public boolean getAutoSlopeDetection( )
-  {
-    final Boolean value = getProperty( QNAME_PROP_AUTO_SLOPEDETECTION, Boolean.class );
-    if( value == null )
-      return false;
-
-    return value;
-  }
-
-  public BigDecimal getPolynomialRunoffSlope( )
+  public BigDecimal getRunoffSlope( )
   {
     final BigDecimal value = getProperty( QNAME_PROP_RUNOFF_SLOPE, BigDecimal.class );
     if( value == null )
@@ -133,7 +137,7 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value;
   }
 
-  public BigDecimal getPolynomialAreaSlope( )
+  public BigDecimal getAreaSlope( )
   {
     final BigDecimal value = getProperty( QNAME_PROP_AREA_SLOPE, BigDecimal.class );
     if( value == null )
@@ -142,7 +146,7 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value;
   }
 
-  public BigDecimal getPolynomialAlphaSlope( )
+  public BigDecimal getAlphaSlope( )
   {
     final BigDecimal value = getProperty( QNAME_PROP_ALPHA_SLOPE, BigDecimal.class );
     if( value == null )
@@ -151,7 +155,7 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value;
   }
 
-  public BigDecimal getPolynomialWeightSplinePoint( )
+  public BigDecimal getWeightSplinePoint( )
   {
     final BigDecimal value = getProperty( QNAME_PROP_WEIGHT_SPLINE_POINT, BigDecimal.class );
     if( value == null )
