@@ -44,11 +44,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.Handle;
@@ -59,15 +56,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -129,7 +119,7 @@ public class EditGeometryWidget extends AbstractWidget
     // final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null );
     final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
     final List<Object> features = selector.select( envelope, featureListVisible, false );
-    m_handles = createHandles( features, null, envelope );
+    m_handles = HandlesFactory.createHandles( features, null, envelope );
 
     final MapPanel panel = getMapPanel();
     if( panel != null )
@@ -337,92 +327,6 @@ public class EditGeometryWidget extends AbstractWidget
     else
       for( final Handle handle : m_handles )
         handle.paint( g, projection, m_boxRadiusDrawnHandle, (int) m_gisRadiusTopology, mask );
-  }
-
-  private List<Handle> createHandles( final List<Object> features, List<Handle> collector, final GM_Envelope envelope )
-  {
-    if( collector == null )
-      collector = new ArrayList<Handle>();
-    for( final Object feature : features )
-      createHandles( (Feature) feature, collector, envelope );
-    return collector;
-  }
-
-  private List<Handle> createHandles( final Feature feature, final List<Handle> collector, final GM_Envelope envelope )
-  {
-    final IValuePropertyType[] geometryProperties = feature.getFeatureType().getAllGeomteryProperties();
-    for( final IValuePropertyType propType : geometryProperties )
-    {
-      final GM_Object geometry = (GM_Object) feature.getProperty( propType );
-      createHandles( feature, propType, geometry, collector, envelope );
-    }
-    return collector;
-  }
-
-  private void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Object geometry, final List<Handle> collector, final GM_Envelope envelope )
-  {
-    if( geometry instanceof GM_Point )
-      createPointHandles( feature, propType, (GM_Point) geometry, collector, envelope );
-    else if( geometry instanceof GM_Curve )
-      createCurveHandles( feature, propType, (GM_Curve) geometry, collector, envelope );
-    else if( geometry instanceof GM_Surface )
-      createSurfaceHandles( feature, propType, (GM_Surface) geometry, collector, envelope );
-  }
-
-  private void createPointHandles( final Feature feature, final IValuePropertyType propType, final GM_Point point, final List<Handle> collector, final GM_Envelope envelope )
-  {
-    final GM_Position position = point.getPosition();
-    if( envelope.contains( position ) )
-      collector.add( new Handle( feature, propType, position ) );
-  }
-
-  private void createCurveHandles( final Feature feature, final IValuePropertyType propType, final GM_Curve curve, final List<Handle> collector, final GM_Envelope envelope )
-  {
-    final GM_Position[] positions;
-    try
-    {
-      positions = curve.getAsLineString().getPositions();
-      createHandles( feature, propType, positions, collector, envelope );
-    }
-    catch( final GM_Exception e )
-    {
-      // create no handles
-      e.printStackTrace();
-    }
-
-  }
-
-  private void createSurfaceHandles( final Feature feature, final IValuePropertyType propType, final GM_Surface surface, final List<Handle> collector, final GM_Envelope envelope )
-  {
-    final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
-    if( surfaceBoundary == null )
-      return;
-    final GM_Ring exteriorRing = surfaceBoundary.getExteriorRing();
-    final GM_Position[] positionsExterior = exteriorRing.getPositions();
-    createHandles( feature, propType, positionsExterior, collector, envelope );
-    final GM_Ring[] interiorRings = surfaceBoundary.getInteriorRings();
-    if( interiorRings != null )
-      for( final GM_Ring ring : interiorRings )
-      {
-        final GM_Position[] positionsInteror = ring.getPositions();
-        createHandles( feature, propType, positionsInteror, collector, envelope );
-      }
-  }
-
-  private void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Position[] positions, final List<Handle> collector, final GM_Envelope envelope )
-  {
-    final Set<GM_Position> pos = new HashSet<GM_Position>();
-    for( final GM_Position position : positions )
-    {
-      if( envelope.contains( position ) )
-      {
-        if( !pos.contains( position ) )
-        {
-          collector.add( new Handle( feature, propType, position ) );
-          pos.add( position );
-        }
-      }
-    }
   }
 
 }
