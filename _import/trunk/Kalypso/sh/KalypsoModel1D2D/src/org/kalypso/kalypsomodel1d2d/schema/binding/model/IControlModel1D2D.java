@@ -122,6 +122,8 @@ public interface IControlModel1D2D extends IControlModel
 
   public boolean getVegeta( );
 
+  public boolean getBeient( );
+
   public Double getAC1( );
 
   public Double getAC2( );

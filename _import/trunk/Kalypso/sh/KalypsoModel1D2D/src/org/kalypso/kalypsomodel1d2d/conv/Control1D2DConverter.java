@@ -206,8 +206,8 @@ public class Control1D2DConverter
     formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, m_controlModel.getUNOM(), m_controlModel.getUDIR(), m_controlModel.getHMIN(), m_controlModel.getDSET(), m_controlModel.getDSETD() ); //$NON-NLS-1$
 
     // C4
-    final int artImpulsstromBeiwert = 0;
-    formatter.format( "C4%14.1f%8.1f%8.1f%56d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert ); //$NON-NLS-1$
+    final boolean artImpulsstromBeiwert = m_controlModel.getBeient();
+    formatter.format( "C4%14.1f%8.1f%8.1f%56d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert ? 1 : 0 ); //$NON-NLS-1$
 
     // C5
     formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", m_controlModel.getNITI(), m_controlModel.getNITN(), m_controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 ); //$NON-NLS-1$

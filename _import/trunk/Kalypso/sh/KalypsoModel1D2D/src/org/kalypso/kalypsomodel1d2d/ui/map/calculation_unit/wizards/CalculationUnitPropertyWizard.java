@@ -166,15 +166,29 @@ public class CalculationUnitPropertyWizard extends Wizard
   private boolean checkSubUnitsInterconnection( final ICalculationUnit[] inputListCalSubUnits )
   {
     final List<ICalculationUnit> connectedUnits = new ArrayList<ICalculationUnit>();
-    for( final ICalculationUnit currentUnit : inputListCalSubUnits )
-    {
-      if( internalCheckInterconnection( connectedUnits, currentUnit ) )
-        connectedUnits.add( currentUnit );
-      else
-        return false;
-    }
+    connectedUnits.add( inputListCalSubUnits[0] );
 
-    return true;
+    for( final ICalculationUnit subUnitsToGoThrough : inputListCalSubUnits )
+    {
+      for( final ICalculationUnit currentUnit : inputListCalSubUnits )
+      {
+        if( connectedUnits.contains( currentUnit ) )
+          continue;
+        else
+        {
+          if( internalCheckInterconnection( connectedUnits, currentUnit ) )
+          {
+            connectedUnits.add( currentUnit );
+          }
+          else
+            continue;
+        }
+      }
+    }
+    if (connectedUnits.size() == inputListCalSubUnits.length)
+      return true;
+    else
+      return false;
   }
 
   private boolean internalCheckInterconnection( final List<ICalculationUnit> connectedUnits, final ICalculationUnit currentUnit )

@@ -200,6 +200,8 @@ public class Kalypso1D2DSchemaConstants
   public final static QName WB1D2DCONTROL_PROP_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart" );
 
   public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" );
+  
+  public static final QName WB1D2DCONTROL_PROP_BEIENT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "BEIENT" );
 
   public final static QName WB1D2DCONTROL_PROP_AC1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC1" );
 
@@ -296,4 +298,5 @@ public class Kalypso1D2DSchemaConstants
   public static final QName TIN_RESULT_PROP_UNIT = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" );
 
   public static final QName TIN_RESULT_PROP_DATE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" );
+
 }

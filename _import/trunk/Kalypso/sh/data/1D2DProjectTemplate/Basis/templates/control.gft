@@ -135,6 +135,29 @@
 					grabExcessHorizontalSpace="false" />
 			</gft:validatorlabel>
 
+			<gft:label text="Boussinesq-Beiwert verwenden" visible="true"
+				tooltip="Berücksichtigung des Boussinesq-Beiwertes bei der Berechnung"
+				style="SWT.NONE">
+				<gft:gridData verticalAlignment="GridData.CENTER"
+					horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="false" />
+			</gft:label>
+			<gft:checkbox editable="true" property="c1d2d:BEIENT"
+				tooltip="Berücksichtigung des Boussinesq-Beiwertes bei der Berechnung"
+				style="SWT.NONE">
+				<gft:gridData horizontalSpan="1"
+					horizontalAlignment="GridData.FILL"
+					grabExcessHorizontalSpace="true" />
+			</gft:checkbox>
+			<gft:label visible="false" style="SWT.NONE">
+				<gft:gridData horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="false" />
+			</gft:label>
+			<gft:label visible="false" style="SWT.NONE">
+				<gft:gridData horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="false" />
+			</gft:label>
+
 			<gft:label text="Breitengrad [°]" visible="true"
 				tooltip="Breitengrad zur Ermittlung der Corioliskraft [°]"
 				style="SWT.NONE">
@@ -183,8 +206,8 @@
 			</gft:checkbox>
 
 			<gft:label
-				text="Max. Anzahl Interationsschritte (stationär)" visible="true"
-				tooltip="Maximale Anzahl der Interationen für stationäre Berechnung"
+				text="Max. Anzahl Iterationsschritte (stationär)" visible="true"
+				tooltip="Maximale Anzahl der Iterationen für stationäre Berechnung"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"
@@ -200,7 +223,7 @@
 				</gft:enabledOperation>
 			</gft:label>
 			<gft:text editable="true" property="c1d2d:NITI"
-				tooltip="Maximale Anzahl der Interationen für stationäre Berechnung"
+				tooltip="Maximale Anzahl der Iterationen für stationäre Berechnung"
 				style="SWT.BORDER">
 				<gft:gridData horizontalSpan="1"
 					horizontalAlignment="GridData.FILL"
@@ -344,8 +367,8 @@
 			</gft:checkbox>
 
 			<gft:label
-				text="Max. Anzahl Interationsschritte (instationär)" visible="true"
-				tooltip="Maximale Anzahl der Interationen für instationäre Berechnung."
+				text="Max. Anzahl Iterationsschritte (instationär)" visible="true"
+				tooltip="Maximale Anzahl der Iterationen für instationäre Berechnung."
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"
@@ -385,7 +408,7 @@
 				</gft:enabledOperation>
 			</gft:label>
 			<gft:text editable="true" property="c1d2d:NITN"
-				tooltip="Maximale Anzahl der Interationen für instationäre Berechnung."
+				tooltip="Maximale Anzahl der Iterationen für instationäre Berechnung."
 				style="SWT.BORDER">
 				<gft:gridData horizontalSpan="1"
 					horizontalAlignment="GridData.FILL"

@@ -287,6 +287,15 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return (Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VEGETA );
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getBeient()
+   */
+  public boolean getBeient( )
+  {
+    final Object property = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_BEIENT );
+    return property != null ? (Boolean) property : false;
+  }
+
   public Double getAC1( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC1 );
