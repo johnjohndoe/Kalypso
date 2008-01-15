@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -52,7 +55,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
- * Command For deleting element
+ * Command for deleting one element. The change event has to fired from outside!
  * 
  * @author Patrice Congo
  */
@@ -60,12 +63,16 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
 {
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
+  @SuppressWarnings("unchecked")
   private final IPolyElement m_element2D;
 
-  public DeletePolyElementCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature element2DFeature )
+  private List<Feature> m_changedFeatureList;
+
+  @SuppressWarnings("unchecked")
+  public DeletePolyElementCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature feature )
   {
     m_model1d2d = model1d2d;
-    m_element2D = (IPolyElement) element2DFeature.getAdapter( IPolyElement.class );
+    m_element2D = (IPolyElement) feature.getAdapter( IPolyElement.class );
   }
 
   /**
@@ -87,15 +94,21 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @SuppressWarnings("unchecked")
   public void process( ) throws Exception
   {
+    m_changedFeatureList = new ArrayList<Feature>();
     final String elementID = m_element2D.getGmlID();
     final RemoveEdgeWithoutContainerOrInvCmd remEdgeCmd = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
 
     // delete link to complex elements
     final List<IFE1D2DComplexElement> parentComplexElements = m_element2D.getContainers();
     for( final IFE1D2DComplexElement complexElement : parentComplexElements )
+    {
       complexElement.getElements().remove( elementID );
+      m_changedFeatureList.add( complexElement.getWrappedFeature() );
+    }
+    m_changedFeatureList.add( m_element2D.getWrappedFeature() );
 
     // delete link to edges and the edges itself (with the nodes)
     final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_element2D.getEdges();
@@ -105,14 +118,18 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
       while( containers.contains( elementID ) )
         containers.remove( elementID );
       remEdgeCmd.setEdgeToDel( edge );
-      try
+      m_changedFeatureList.add( edge.getWrappedFeature() );
+
+      remEdgeCmd.process();
+      if( !(edge instanceof IEdgeInv) )
       {
-        remEdgeCmd.process();
-      }
-      catch( Exception e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        IFeatureWrapperCollection nodes = edge.getNodes();
+        for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
+        {
+          IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
+          Feature wrappedFeature = featureWrapper.getWrappedFeature();
+          m_changedFeatureList.add( wrappedFeature );
+        }
       }
     }
     // delete element from model
@@ -151,4 +168,8 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     return m_model1d2d;
   }
 
+  public List<Feature> getChangedFeatureList( )
+  {
+    return m_changedFeatureList;
+  }
 }

@@ -50,11 +50,18 @@ import org.kalypsodeegree.model.feature.Feature;
  * Provides mechanism to create delete command
  * 
  * @author Patrice Congo
+ * @author Thomas Jung
  */
 public class DeleteCmdFactory
 {
   /**
-   * Create a delete command for the given feature and
+   * Creates a delete command for a given feature. <BR>
+   * Important: The change-event method has to be called from outside. The features changed by the commands can be
+   * accessed via the getter methods of the commands. Supported features are:
+   * <ul>
+   * <li>PolyElementFeature
+   * <li>Element1DFeature
+   * <li>JunctionFeature
    */
   public static final IDiscrModel1d2dChangeCommand createDeleteCmd( final Feature feature, final IFEDiscretisationModel1d2d model1d2d )
   {

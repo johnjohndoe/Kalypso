@@ -61,7 +61,7 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
 
   private IFE1D2DEdge m_edgeToDelete;
 
-  private IFEDiscretisationModel1d2d m_model1d2d;
+  private final IFEDiscretisationModel1d2d m_model1d2d;
 
   public RemoveEdgeWithoutContainerOrInvCmd( final IFEDiscretisationModel1d2d model1d2d, final IFE1D2DEdge edgeToDel )
   {
@@ -88,6 +88,7 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @SuppressWarnings("unchecked")
   public void process( ) throws Exception
   {
     if( !m_edgeToDelete.getContainers().isEmpty() )

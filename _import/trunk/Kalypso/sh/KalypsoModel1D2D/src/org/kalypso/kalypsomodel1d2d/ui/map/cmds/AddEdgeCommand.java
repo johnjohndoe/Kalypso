@@ -53,19 +53,22 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
 {
-  private AddNodeCommand node1Command;
-  private AddNodeCommand node2Command;
-  private IFEDiscretisationModel1d2d model;
+  private final AddNodeCommand node1Command;
+
+  private final AddNodeCommand node2Command;
+
+  private final IFEDiscretisationModel1d2d model;
+
+  @SuppressWarnings("unchecked")
   private IFE1D2DEdge addedEdge;
-  public AddEdgeCommand(
-          IFEDiscretisationModel1d2d model, 
-          AddNodeCommand node1Command,
-          AddNodeCommand node2Command)
+
+  public AddEdgeCommand( IFEDiscretisationModel1d2d model, AddNodeCommand node1Command, AddNodeCommand node2Command )
   {
-    this.node1Command=node1Command;
-    this.node2Command=node2Command;
-    this.model=model;
+    this.node1Command = node1Command;
+    this.node2Command = node2Command;
+    this.model = model;
   }
+
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
@@ -87,12 +90,12 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    //TODO move code into discretisation model
+    // TODO move code into discretisation model
     IFE1D2DNode addedNode1 = node1Command.getAddedNode();
     IFE1D2DNode addedNode2 = node2Command.getAddedNode();
-    addedEdge=model.findEdge( addedNode1, addedNode2 );
-    if(addedEdge==null)
-      addedEdge=FE1D2DEdge.createFromModel( model, addedNode1, addedNode2 );
+    addedEdge = model.findEdge( addedNode1, addedNode2 );
+    if( addedEdge == null )
+      addedEdge = FE1D2DEdge.createFromModel( model, addedNode1, addedNode2 );
   }
 
   /**
@@ -100,7 +103,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(addedEdge!=null)
+    if( addedEdge != null )
     {
       process();
     }
@@ -111,20 +114,21 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(addedEdge!=null)
+    if( addedEdge != null )
     {
       model.getEdges().remove( addedEdge.getWrappedFeature() );
-      //TODO remove edges from node add method to node interface
+      // TODO remove edges from node add method to node interface
     }
   }
+
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[]{addedEdge};
+    return new IFeatureWrapper2[] { addedEdge };
   }
-  
+
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */
@@ -132,24 +136,26 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   {
     return model;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
   @Override
   public String toString( )
   {
-    StringBuffer buf= new StringBuffer(128);
-    buf.append("AddEdgeCommand[");
+    StringBuffer buf = new StringBuffer( 128 );
+    buf.append( "AddEdgeCommand[" );
     buf.append( node1Command );
     buf.append( node2Command );
     buf.append( ']' );
     return buf.toString();
-}
+  }
+
   public AddNodeCommand getNode1Command( )
   {
     return node1Command;
   }
+
   public AddNodeCommand getNode2Command( )
   {
     return node2Command;

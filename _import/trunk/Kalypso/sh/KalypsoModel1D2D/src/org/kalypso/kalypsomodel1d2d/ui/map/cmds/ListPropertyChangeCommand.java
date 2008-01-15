@@ -65,32 +65,29 @@ public class ListPropertyChangeCommand implements ICommand
 
   private final GMLWorkspace m_workspace;
 
-  public ListPropertyChangeCommand( 
-                  final GMLWorkspace workspace, 
-                  final FeatureChange[] changes )
+  public ListPropertyChangeCommand( final GMLWorkspace workspace, final FeatureChange[] changes )
   {
     m_workspace = workspace;
     m_newChanges = changes;
-    m_oldChanges= new FeatureChange[changes.length];
-    //check changes
+    m_oldChanges = new FeatureChange[changes.length];
+    // check changes
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];
-      if(!change.getProperty().isList())
+      if( !change.getProperty().isList() )
       {
-        throw new IllegalArgumentException(
-              "Change must be done on a list property");
+        throw new IllegalArgumentException( "Change must be done on a list property" );
       }
-//      final Object oldValue = 
-//        change.getFeature().getProperty( change.getProperty() );
-      
+      // final Object oldValue =
+      // change.getFeature().getProperty( change.getProperty() );
+
     }
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -98,7 +95,7 @@ public class ListPropertyChangeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
     doChanges( m_newChanges );
   }
@@ -106,7 +103,7 @@ public class ListPropertyChangeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     doChanges( m_newChanges );
   }
@@ -114,15 +111,15 @@ public class ListPropertyChangeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  public void undo() throws Exception
-  { 
+  public void undo( ) throws Exception
+  {
     undoChanges();
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "Feature verändern";
   }
@@ -132,50 +129,45 @@ public class ListPropertyChangeCommand implements ICommand
     final Set<Feature> changedFeaturesList = new HashSet<Feature>();
     Feature featureToChange;
     IPropertyType propType;
-    List /*nextPropList,*/ propList;
+    List /* nextPropList, */propList;
     Object newProp;
-    
+
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];
-      featureToChange=change.getFeature();
-      propType=change.getProperty();
-      if(propType==null)
+      featureToChange = change.getFeature();
+      propType = change.getProperty();
+      if( propType == null )
       {
-        System.out.println(
-            "Proptype is null; feature to change:"+featureToChange);
+        System.out.println( "Proptype is null; feature to change:" + featureToChange );
         continue;
       }
-      if(featureToChange==null)
+      if( featureToChange == null )
       {
         continue;
       }
       else
       {
-        propList=(List)featureToChange.getProperty( propType );
+        propList = (List) featureToChange.getProperty( propType );
       }
-      newProp=change.getNewValue();
-      m_oldChanges[i]=
-         new FeatureChange(
-                 featureToChange, 
-                 propType,
-                 new ArrayList(propList));
-      //nextPropList= new ArrayList(propList);
-      if(newProp instanceof List)
+      newProp = change.getNewValue();
+      m_oldChanges[i] = new FeatureChange( featureToChange, propType, new ArrayList( propList ) );
+      // nextPropList= new ArrayList(propList);
+      if( newProp instanceof List )
       {
-        //nextPropList.addAll( (List)newProp );
-        propList.addAll( (List)newProp );
+        // nextPropList.addAll( (List)newProp );
+        propList.addAll( (List) newProp );
       }
       else
       {
-        //nextPropList.add( newProp );
+        // nextPropList.add( newProp );
         propList.add( newProp );
       }
-      featureToChange.setProperty( propType, propList/*nextPropList*/ );
-//      FeatureHelper.addProperty( 
-//              change.getFeature(),
-//              change.getProperty(), 
-//              change.getNewValue() );
+      featureToChange.setProperty( propType, propList/* nextPropList */);
+      // FeatureHelper.addProperty(
+      // change.getFeature(),
+      // change.getProperty(),
+      // change.getNewValue() );
       changedFeaturesList.add( change.getFeature() );
     }
 
@@ -185,20 +177,18 @@ public class ListPropertyChangeCommand implements ICommand
       m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, cfs ) );
     }
   }
-  
-  
-  private final void undoChanges()
+
+  private final void undoChanges( )
   {
-//    IPropertyType proType;
+    // IPropertyType proType;
     List propToRetain;
     List curProp;
-    for(FeatureChange change:m_oldChanges)
+    for( FeatureChange change : m_oldChanges )
     {
-      if(change!=null)
+      if( change != null )
       {
-        propToRetain =(List)change.getNewValue();
-        curProp=(List)change.getFeature().getProperty( 
-                              change.getProperty());
+        propToRetain = (List) change.getNewValue();
+        curProp = (List) change.getFeature().getProperty( change.getProperty() );
         curProp.retainAll( propToRetain );
       }
     }

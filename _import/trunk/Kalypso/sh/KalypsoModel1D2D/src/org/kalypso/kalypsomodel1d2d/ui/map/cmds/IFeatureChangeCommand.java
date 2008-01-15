@@ -44,17 +44,17 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * Interface for an {@link ICommand} that can return the feature
- * it has changed after execution
+ * Interface for an {@link ICommand} that can return the feature it has changed after execution
  * 
  * @author Patrice Congo
  */
 public interface IFeatureChangeCommand extends ICommand
 {
   /**
-   * Get the feature which is being edited od changed
+   * Get the feature which is being edited or changed
+   * 
    * @return the created or modified feature
    */
-  public IFeatureWrapper2[] getChangedFeature();
-  
+  public IFeatureWrapper2[] getChangedFeature( );
+
 }

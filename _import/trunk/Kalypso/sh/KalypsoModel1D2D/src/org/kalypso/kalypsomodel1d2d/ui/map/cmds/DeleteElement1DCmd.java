@@ -40,39 +40,42 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Command For deleting 1D element
+ * Command for deleting one 1D element. The change event has to fired from outside!
  * 
  * @author Patrice Congo
  */
 public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
 {
-  private final IFEDiscretisationModel1d2d model1d2d;
-
-  private final IElement1D element1D;
-
-  private GM_Point[] elementPoints;
-
+  @SuppressWarnings("unchecked")
   private IFE1D2DComplexElement[] complexElements;
 
-  public DeleteElement1DCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature element2DFeature )
+  private List<Feature> m_changedFeatureList;
+
+  private final IFEDiscretisationModel1d2d m_model1d2d;
+
+  @SuppressWarnings("unchecked")
+  private final IElement1D m_element1D;
+
+  @SuppressWarnings("unchecked")
+  public DeleteElement1DCmd( @SuppressWarnings("hiding")
+  final IFEDiscretisationModel1d2d model1d2d, final Feature element2DFeature )
   {
-    this.model1d2d = model1d2d;
-    this.element1D = (IElement1D) element2DFeature.getAdapter( IElement1D.class );
+    m_model1d2d = model1d2d;
+    m_element1D = (IElement1D) element2DFeature.getAdapter( IElement1D.class );
   }
 
   /**
@@ -94,32 +97,25 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @SuppressWarnings("unchecked")
   public void process( ) throws Exception
   {
-    final String elementID = element1D.getGmlID();
-
-    final List<IFE1D2DNode> nodes = element1D.getNodes();
-
-    elementPoints = makeElementPoints( nodes );
+    final String elementID = m_element1D.getGmlID();
 
     complexElements = getElementComplexElement();
 
-    final IFE1D2DEdge edge = makeElementEdges();
+    final IFE1D2DEdge edge = m_element1D.getEdge();
 
     deleteElement( elementID, edge, complexElements );
-
-    deleteEdges( edge, elementID );
-
+    deleteEdges( edge );
   }
 
-  private void deleteEdges( final IFE1D2DEdge edge, final String elementID )
+  @SuppressWarnings("unchecked")
+  private void deleteEdges( final IFE1D2DEdge edge )
   {
-    final RemoveEdgeWithoutContainerOrInvCmd remEdgeCmd = new RemoveEdgeWithoutContainerOrInvCmd( model1d2d, null );
-    // for(IFE1D2DEdge edge:edges)
-    // {
+    final RemoveEdgeWithoutContainerOrInvCmd remEdgeCmd = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
     try
     {
-
       remEdgeCmd.setEdgeToDel( edge );
       remEdgeCmd.process();
     }
@@ -127,67 +123,53 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
     {
       e.printStackTrace();
     }
-    // }
   }
 
+  @SuppressWarnings("unchecked")
   private void deleteElement( final String elementID, final IFE1D2DEdge edge, final IFE1D2DComplexElement[] complexElements )
   {
+    /* remember the changes */
+    m_changedFeatureList = new ArrayList<Feature>();
+
     // delete link to complex elements
     for( final IFE1D2DComplexElement complexElement : complexElements )
     {
       complexElement.getElements().remove( elementID );
+      m_changedFeatureList.add( complexElement.getWrappedFeature() );
     }
 
     // delete link to edges
     final IFeatureWrapperCollection containers = edge.getContainers();
     boolean isRemoved = containers.remove( elementID );
+    m_changedFeatureList.add( edge.getWrappedFeature() );
     if( !isRemoved )
     {
       throw new RuntimeException( "Could not remove element as edge container" );
     }
-    // delete element from model
-    model1d2d.getElements().remove( element1D );
 
-  }
-
-  private IFE1D2DEdge makeElementEdges( )
-  {
-    final IFE1D2DEdge edge = element1D.getEdge();
-    return edge;
-  }
-
-  private IFE1D2DComplexElement[] getElementComplexElement( )
-  {
-    final IFeatureWrapperCollection containers = element1D.getContainers();
-    final IFE1D2DComplexElement[] cElements = (IFE1D2DComplexElement[]) containers.toArray( new IFE1D2DComplexElement[] {} );
-    return cElements;
-  }
-
-  private GM_Point[] makeElementPoints( final List<IFE1D2DNode> nodes )
-  {
-    final int SIZE = nodes.size();
-    final GM_Point[] points = new GM_Point[SIZE];
-    GM_Position nodePos;
-    for( int i = SIZE - 1; i > 0; i-- )
+    if( !(edge instanceof IEdgeInv) )
     {
-      final GM_Point point = nodes.get( i ).getPoint();
-      nodePos = point.getPosition();
-      final double[] xyz = nodePos.getAsArray();
-      final int dimension = xyz.length;// getDimension();
-      if( dimension == 2 )
+      IFeatureWrapperCollection nodes = edge.getNodes();
+      for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
       {
-        points[i] = GeometryFactory.createGM_Point( xyz[0], xyz[1], point.getCoordinateSystem() );
-      }
-      else if( dimension == 3 )
-      {
-        points[i] = GeometryFactory.createGM_Point( xyz[0], xyz[1], xyz[2], point.getCoordinateSystem() );
-      }
-      else
-      {
-        throw new RuntimeException( "Unsupported gm point dimension:" + dimension + " " + nodePos );
+        IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
+        Feature wrappedFeature = featureWrapper.getWrappedFeature();
+        m_changedFeatureList.add( wrappedFeature );
       }
     }
-    return points;
+
+    // delete element from model
+    m_model1d2d.getElements().remove( m_element1D );
+    m_changedFeatureList.add( m_element1D.getWrappedFeature() );
+
+  }
+
+  @SuppressWarnings("unchecked")
+  private IFE1D2DComplexElement[] getElementComplexElement( )
+  {
+    final IFeatureWrapperCollection containers = m_element1D.getContainers();
+    final IFE1D2DComplexElement[] cElements = (IFE1D2DComplexElement[]) containers.toArray( new IFE1D2DComplexElement[] {} );
+    return cElements;
   }
 
   /**
@@ -211,7 +193,7 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { element1D };
+    return new IFeatureWrapper2[] { m_element1D };
   }
 
   /**
@@ -219,7 +201,12 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return model1d2d;
+    return m_model1d2d;
+  }
+
+  public List<Feature> getChangedFeatureList( )
+  {
+    return m_changedFeatureList;
   }
 
 }
