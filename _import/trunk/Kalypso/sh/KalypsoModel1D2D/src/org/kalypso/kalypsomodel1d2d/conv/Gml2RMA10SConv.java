@@ -631,7 +631,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           edgeSet.add( edge );
         }
 
-        final int roughnessID = m_roughnessIDProvider != null ? 0 : getRoughnessID( element );
+        final int roughnessID = m_roughnessIDProvider == null ? 0 : getRoughnessID( element );
         formatter.format( "FE%10d%10d%n", id, roughnessID );
 
         // print roughness correction parameters only if there is any correction
