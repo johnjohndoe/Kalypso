@@ -57,8 +57,8 @@
                   <AnchorPointY>0.0</AnchorPointY>
                 </AnchorPoint>
                 <Displacement>
-                  <DisplacementX>10.0</DisplacementX>
-                  <DisplacementY>10.0</DisplacementY>
+                  <DisplacementX>-10.0</DisplacementX>
+                  <DisplacementY>-20.0</DisplacementY>
                 </Displacement>
                 <Rotation>0.0</Rotation>
               </PointPlacement>

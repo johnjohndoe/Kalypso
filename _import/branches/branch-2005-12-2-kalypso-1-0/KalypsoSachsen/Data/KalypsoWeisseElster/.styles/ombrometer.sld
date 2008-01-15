@@ -48,7 +48,7 @@
 						<Font>
 							<CssParameter name="font-family">sansserif</CssParameter>
 							<CssParameter name="font-color">#000000</CssParameter>
-							<CssParameter name="font-size">12.0</CssParameter>
+							<CssParameter name="font-size">11.0</CssParameter>
 							<CssParameter name="font-style">normal</CssParameter>
 							<CssParameter name="font-weight">normal</CssParameter>
 						</Font>

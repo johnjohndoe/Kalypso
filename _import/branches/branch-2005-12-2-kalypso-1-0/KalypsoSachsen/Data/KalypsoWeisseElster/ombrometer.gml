@@ -187,7 +187,7 @@
   <ombrometerMember>
     <Ombrometer fid="Ombrometer-43451">
       <gml:description>O509</gml:description>
-      <gml:name>Altmörbitz, Talsperre Schömbach</gml:name>
+      <gml:name>Altmörbitz, TS Schömbach</gml:name>
       <Ort>
         <gml:Point srsName="EPSG:31468">
           <gml:coordinates cs="," decimal="." ts=" ">4540474.0,5651043.0</gml:coordinates>
@@ -210,7 +210,7 @@
   <ombrometerMember>
     <Ombrometer fid="Ombrometer-43304">
       <gml:description>O952</gml:description>
-      <gml:name>Oelsnitz/Vogtl. (Talsperre Pirk)</gml:name>
+      <gml:name>Oelsnitz/Vogtl. (TS Pirk)</gml:name>
       <Ort>
         <gml:Point srsName="EPSG:31468">
           <gml:coordinates cs="," decimal="." ts=" ">4507030.0,5588251.0</gml:coordinates>
@@ -233,7 +233,7 @@
   <ombrometerMember>
     <Ombrometer fid="Ombrometer-43338">
       <gml:description>O855</gml:description>
-      <gml:name>Pöhl-Jocketa (Talsperre)</gml:name>
+      <gml:name>Pöhl-Jocketa (TS)</gml:name>
       <Ort>
         <gml:Point srsName="EPSG:31468">
           <gml:coordinates cs="," decimal="." ts=" ">4513097.0,5601768.0</gml:coordinates>
@@ -256,7 +256,7 @@
   <ombrometerMember>
     <Ombrometer fid="Ombrometer-43336">
       <gml:description>O912</gml:description>
-      <gml:name>Werda (Talsperre Geigenbach)</gml:name>
+      <gml:name>Werda (TS Geigenbach)</gml:name>
       <Ort>
         <gml:Point srsName="EPSG:31468">
           <gml:coordinates cs="," decimal="." ts=" ">4521759.0,5590254.0</gml:coordinates>
@@ -279,7 +279,7 @@
   <ombrometerMember>
     <Ombrometer fid="Ombrometer-43430">
       <gml:description>O811</gml:description>
-      <gml:name>Langenhessen (Koberbachtalsperre)</gml:name>
+      <gml:name>Langenhessen (Koberbach-TS)</gml:name>
       <Ort>
         <gml:Point srsName="EPSG:31468">
           <gml:coordinates cs="," decimal="." ts=" ">4525089.0,5625806.0</gml:coordinates>
@@ -302,7 +302,7 @@
   <ombrometerMember>
     <Ombrometer fid="Ombrometer-42150">
       <gml:description>O827</gml:description>
-      <gml:name>Stollberg/Erzg. (Talsperre )</gml:name>
+      <gml:name>Stollberg/Erzg. (TS)</gml:name>
       <Ort>
         <gml:Point srsName="EPSG:31468">
           <gml:coordinates cs="," decimal="." ts=" ">4556980.0,5620297.0</gml:coordinates>

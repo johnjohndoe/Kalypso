@@ -9,6 +9,7 @@
         <arg name="rightSash" value="50"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=name#linkColumn=N"/>   
         <arg name="maximizeMap" value="true"/>
+		<arg name="mapWidgetID" value="SELECT"/>
     </page>
 
 	<!-- Ansicht Gebietsniederschläge -->

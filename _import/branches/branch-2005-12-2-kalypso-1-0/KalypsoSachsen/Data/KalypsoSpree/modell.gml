@@ -25,6 +25,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_SCHIRG_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>70.0</BodenfeuchteMax>
@@ -83,6 +84,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_BAUTZWB_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>130.0</BodenfeuchteMax>
@@ -141,6 +143,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_GROEDI_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>70.0</BodenfeuchteMax>
@@ -205,6 +208,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_JAENKD_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>200.0</BodenfeuchteMax>
@@ -263,6 +267,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_HOLTD_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>240.0</BodenfeuchteMax>
@@ -315,6 +320,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SAERI_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <BodenfeuchteMin>0.01</BodenfeuchteMin>
           <Bodenfeuchte>0.0</Bodenfeuchte>
           <BodenfeuchteMax>310.0</BodenfeuchteMax>
@@ -373,6 +379,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_LIESKE_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
           <Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
@@ -402,6 +409,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_BOXBRG_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
           <Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
@@ -431,6 +439,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPREY_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
           <Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
@@ -460,6 +469,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPWITZ_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
           <Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>
@@ -489,6 +499,7 @@
           <Wasserstand_vorhersage_oben>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen//QV_SPREMB_oben.zml"/>
           </Wasserstand_vorhersage_oben>
+          <accuracyPrediction>30.0</accuracyPrediction>
           <Korrektur_Faktor>1.0</Korrektur_Faktor>
           <Korrektur_Niveau>0.0</Korrektur_Niveau>
           <Korrektur_Laufzeit>0.0</Korrektur_Laufzeit>

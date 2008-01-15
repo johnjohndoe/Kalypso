@@ -2282,6 +2282,7 @@
       <ganglinie_vorhersage_cz>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Vorhersage_Cz/Usti.zml"/>
       </ganglinie_vorhersage_cz>
+      <accuracyPrediction>30.0</accuracyPrediction>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -2310,6 +2311,7 @@
       <ganglinie_modellwerte_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schöna_oben.zml"/>
       </ganglinie_modellwerte_oben>
+      <accuracyPrediction>30.0</accuracyPrediction>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -2338,6 +2340,7 @@
       <ganglinie_modellwerte_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Dresden_oben.zml"/>
       </ganglinie_modellwerte_oben>
+      <accuracyPrediction>30.0</accuracyPrediction>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -2366,6 +2369,7 @@
       <ganglinie_modellwerte_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Riesa_oben.zml"/>
       </ganglinie_modellwerte_oben>
+      <accuracyPrediction>30.0</accuracyPrediction>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -2394,6 +2398,7 @@
       <ganglinie_modellwerte_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Torgau_oben.zml"/>
       </ganglinie_modellwerte_oben>
+      <accuracyPrediction>30.0</accuracyPrediction>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -2422,6 +2427,7 @@
       <ganglinie_modellwerte_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Wittenberg_oben.zml"/>
       </ganglinie_modellwerte_oben>
+      <accuracyPrediction>30.0</accuracyPrediction>
     </ElbePegel>
   </pegelMember>
   <zwgZuflussMember>
