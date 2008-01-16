@@ -77,7 +77,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( getMapPanel().getMapModell() == null )
       return;
 
-    m_discModel = getDiscretisationModel();
+    m_discModel = UtilMap.findFEModelTheme( getMapPanel().getMapModell() );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
     reinit();
   }
@@ -87,13 +87,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     m_currentNode = null;
     m_lineType = null;
     m_nodeList.clear();
-  }
-
-  private IFEDiscretisationModel1d2d getDiscretisationModel( )
-  {
-    if( m_discModel == null )
-      m_discModel = UtilMap.findFEModelTheme( getMapPanel().getMapModell() );
-    return m_discModel;
   }
 
   /**
@@ -132,7 +125,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
           if( DiscretisationModelUtils.is1DNode( candidateNode ) )
           {
             m_currentNode = candidateNode;
-            mapPanel.setMessage( "2D Knoten" );
           }
           else
             m_currentNode = null;
@@ -141,11 +133,12 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
         {
           if( DiscretisationModelUtils.is1DNode( candidateNode ) )
           {
-            mapPanel.setMessage( "1D Knoten" );
             m_currentNode = null;
           }
           else
+          {
             m_currentNode = candidateNode;
+          }
         }
       }
     }
@@ -229,7 +222,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       final IKalypsoTheme theme = UtilMap.findEditableTheme( getMapPanel().getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
       final CommandableWorkspace workspace = ((IKalypsoFeatureTheme) theme).getWorkspace();
 
-      final CreateContinuityLineCommand command = new CreateContinuityLineCommand( getDiscretisationModel(), m_nodeList, m_lineType );
+      final CreateContinuityLineCommand command = new CreateContinuityLineCommand( m_discModel, m_nodeList, m_lineType );
       workspace.postCommand( command );
     }
     catch( final Exception e )
