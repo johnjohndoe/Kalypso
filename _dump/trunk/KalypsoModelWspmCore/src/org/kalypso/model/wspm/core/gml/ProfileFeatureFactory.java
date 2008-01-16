@@ -101,7 +101,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
   private ProfileFeatureFactory( )
   {
-    // private: never instatiate
+    // private: never instantiate
   }
 
   /**
@@ -352,7 +352,7 @@ public class ProfileFeatureFactory implements IWspmConstants
           {
             doubleValue = (Double) value;
           }
-          catch( NumberFormatException e )
+          catch( final NumberFormatException e )
           {
             doubleValue = (propertyProvider instanceof IProfilPointPropertyProvider2) ? ((IProfilPointPropertyProvider2) propertyProvider).createDoubleFor( compId, value ) : Double.NaN;
           }

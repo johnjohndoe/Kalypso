@@ -84,7 +84,6 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     return null;
   }
 
-  // $ANALYSIS-IGNORE
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
@@ -158,7 +157,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
   {
     if( !profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) || !profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT )
         || !profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) )// ||ppRW == null || ppHW == null || ppH
-                                                                              // == null )
+      // == null )
       return null;
 
     return WspmGeometryUtilities.pointFromRrHw( profilPoint.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), profilPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT ), profilPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
