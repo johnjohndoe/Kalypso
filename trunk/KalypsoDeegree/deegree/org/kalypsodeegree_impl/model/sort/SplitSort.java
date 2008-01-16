@@ -3,9 +3,12 @@ package org.kalypsodeegree_impl.model.sort;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -14,7 +17,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -57,11 +59,14 @@ public class SplitSort implements FeatureList
     }
   };
 
-  public static boolean showIndexEnv = false;
+  /**
+   * Used to synchronize access to m_items and m_index
+   */
+  private final Object m_lock = new Object();
 
-  private final SpatialIndexExt m_index;
+  private SpatialIndexExt m_index;
 
-  private final List<Object> m_objects = new ArrayList<Object>();
+  private final List<Object> m_items = new ArrayList<Object>();
 
   private final Feature m_parentFeature;
 
@@ -90,38 +95,89 @@ public class SplitSort implements FeatureList
     m_parentFeatureTypeProperty = parentFTP;
     m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
 
-    m_index = new SplitSortSpatialIndex( m_envelopeProvider, env );
-// m_index = new QuadTreeIndex( m_envelopeProvider );
+    // Index is initially index. This is necessary, as loading the features ads them to this list,
+    // but the features often have no envelope; so we rather wait for the first query.
+    m_index = null;
   }
 
+  private SpatialIndexExt createIndex( final Envelope env )
+  {
+    return new SplitSortSpatialIndex( env );
+    // m_index = new QuadTreeIndex( env );
+  }
+
+  /**
+   * Recreate the index, if it is <code>null</code>.
+   */
+  private void checkIndex( )
+  {
+    if( m_index == null )
+    {
+      // Recalculate the bounding box
+      Envelope bbox = null;
+      for( final Object item : m_items )
+      {
+        final Envelope env = getEnvelope( item );
+        if( env != null )
+        {
+          if( bbox == null )
+            bbox = new Envelope( env );
+          else
+            bbox.expandToInclude( env );
+        }
+      }
+
+      // create index
+      m_index = createIndex( bbox );
+
+      // insert all elements
+      for( final Object item : m_items )
+      {
+        final Envelope env = getEnvelope( item );
+        m_index.insert( env, item );
+      }
+    }
+  }
+
+  /**
+   * @see java.util.List#add(java.lang.Object)
+   */
   public boolean add( final Object object )
   {
-    final GM_Envelope env = getEnvelope( object );
-    spacialAdd( env, object );
+    final Envelope env = getEnvelope( object );
 
-    return m_objects.add( object );
+    synchronized( m_lock )
+    {
+      if( m_index != null )
+        m_index.insert( env, object );
+      return m_items.add( object );
+    }
   }
 
-  private void spacialAdd( final GM_Envelope env, final Object object )
-  {
-    final Envelope itemEnv = env == null ? new Envelope() : JTSAdapter.export( env );
-    m_index.insert( itemEnv, object );
-  }
-
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      java.util.List)
+   */
   public List query( final GM_Envelope queryEnv, List result )
   {
-    if( result == null )
-      result = new ArrayList();
+    checkIndex();
 
-    final Envelope env = JTSAdapter.export( queryEnv );
-
-    final List list = m_index.query( env );
-    for( final Object object : list )
-      result.add( object );
-
-    return result;
+    synchronized( m_lock )
+    {
+      if( result == null )
+        result = new ArrayList();
+      final Envelope env = JTSAdapter.export( queryEnv );
+      final List list = m_index.query( env );
+      for( final Object object : list )
+        result.add( object );
+      return result;
+    }
   }
 
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,
+   *      java.util.List)
+   */
   public List query( final GM_Position pos, List result )
   {
     if( result == null )
@@ -129,50 +185,60 @@ public class SplitSort implements FeatureList
     return query( GeometryFactory.createGM_Envelope( pos, pos ), result );
   }
 
-  public List queryAll( List result )
-  {
-    if( result == null )
-      result = new ArrayList();
-
-    result.addAll( m_objects );
-    return result;
-  }
-
+  /**
+   * @deprecated This is slow: TODO: better comment TODO: deprecate in parent interface
+   * @see java.util.List#remove(java.lang.Object)
+   */
+  @Deprecated
   public boolean remove( final Object object )
   {
-    final GM_Envelope env = getEnvelope( object );
-    remove( env, object );
+    final Envelope env = getEnvelope( object );
 
-    return m_objects.remove( object );
+    synchronized( m_lock )
+    {
+      // TODO: slow!
+      final boolean removed = m_items.remove( object );
+      if( m_index != null )
+        m_index.remove( env, object );
+      return removed;
+    }
   }
 
-  private void remove( final GM_Envelope env, final Object object )
+  private Envelope getEnvelope( final Object object )
   {
-    final Envelope itemEnv = JTSAdapter.export( env );
-    m_index.remove( itemEnv, object );
+    final GM_Envelope envelope = m_envelopeProvider.getEnvelope( object );
+    return JTSAdapter.export( envelope );
   }
 
-  protected GM_Envelope getEnvelope( final Object object )
-  {
-    return m_envelopeProvider.getEnvelope( object );
-  }
-
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
+   */
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
-    m_index.paint( g, geoTransform );
+    checkIndex();
+
+    synchronized( m_lock )
+    {
+      m_index.paint( g, geoTransform );
+    }
   }
 
-  public int rsize( )
-  {
-    return 0;
-  }
-
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#getBoundingBox()
+   */
+  // TODO: slow; check if we can improve it by maintaining the bbox in this class
   public GM_Envelope getBoundingBox( )
   {
-    final Envelope bbox = m_index.getBoundingBox();
-    if( bbox.isNull() )
-      return null;
-    return JTSAdapter.wrap( bbox );
+    checkIndex();
+
+    synchronized( m_lock )
+    {
+      final Envelope bbox = m_index.getBoundingBox();
+      if( bbox == null )
+        return null;
+      return JTSAdapter.wrap( bbox );
+    }
   }
 
   /**
@@ -180,7 +246,10 @@ public class SplitSort implements FeatureList
    */
   public int size( )
   {
-    return m_objects.size();
+    synchronized( m_lock )
+    {
+      return m_items.size();
+    }
   }
 
   /**
@@ -188,9 +257,11 @@ public class SplitSort implements FeatureList
    */
   public void clear( )
   {
-    m_index.clear();
-
-    m_objects.clear();
+    synchronized( m_lock )
+    {
+      m_items.clear();
+      m_index = null;
+    }
   }
 
   /**
@@ -198,7 +269,7 @@ public class SplitSort implements FeatureList
    */
   public boolean isEmpty( )
   {
-    return m_objects.isEmpty();
+    return size() == 0;
   }
 
   /**
@@ -206,7 +277,10 @@ public class SplitSort implements FeatureList
    */
   public Object[] toArray( )
   {
-    return m_objects.toArray();
+    synchronized( m_lock )
+    {
+      return m_items.toArray( new Object[m_items.size()] );
+    }
   }
 
   /**
@@ -214,7 +288,10 @@ public class SplitSort implements FeatureList
    */
   public Object get( final int index )
   {
-    return m_objects.get( index );
+    synchronized( m_lock )
+    {
+      return m_items.get( index );
+    }
   }
 
   /**
@@ -222,46 +299,74 @@ public class SplitSort implements FeatureList
    */
   public Object remove( final int index )
   {
-    final Object object = get( index );
-    remove( object );
-    return object;
+    synchronized( m_lock )
+    {
+      final Object removedItem = m_items.remove( index );
+      if( m_index != null )
+      {
+        // We remove with null envelope here, else we would break the synchronized code by calling getEnvelope() here
+        m_index.remove( null, removedItem );
+      }
+      return removedItem;
+    }
   }
 
   /**
+   * @deprecated SLOW (as we are using ArrayList internally) TODO: better comment, make deprecated in interface
    * @see java.util.List#add(int, java.lang.Object)
    */
-  public void add( final int index, final Object object )
+  @Deprecated
+  public void add( final int index, final Object item )
   {
-    final GM_Envelope env = getEnvelope( object );
-    spacialAdd( env, object );
+    final Envelope env = getEnvelope( item );
 
-    m_objects.add( index, object );
+    synchronized( m_lock )
+    {
+      m_items.add( index, item );
+      if( m_index != null )
+        m_index.insert( env, item );
+    }
   }
 
   /**
+   * @deprecated SLOW TODO: better comment, make deprecated in interface
    * @see java.util.List#indexOf(java.lang.Object)
    */
-  public int indexOf( final Object o )
+  @Deprecated
+  public int indexOf( final Object item )
   {
-    return m_objects.indexOf( o );
+    synchronized( m_lock )
+    {
+      return m_items.indexOf( item );
+    }
   }
 
   /**
+   * @deprecated SLOW TODO: better comment, make deprecated in interface
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
-  public int lastIndexOf( final Object o )
+  @Deprecated
+  public int lastIndexOf( final Object item )
   {
-    return m_objects.lastIndexOf( o );
+    synchronized( m_lock )
+    {
+      return m_items.lastIndexOf( item );
+    }
   }
 
   /**
-   * IMPORTANT: this operation is slow (as in ArrayList).
-   * 
    * @see java.util.List#contains(java.lang.Object)
    */
-  public boolean contains( final Object o )
+  public boolean contains( final Object item )
   {
-    return m_objects.contains( o );
+    final Envelope env = getEnvelope( item );
+    checkIndex();
+
+    synchronized( m_lock )
+    {
+      // TODO: slow, as the index may be recalculated, check if possible to avoid this
+      return m_index.contains( env, item );
+    }
   }
 
   /**
@@ -269,7 +374,24 @@ public class SplitSort implements FeatureList
    */
   public boolean addAll( final int index, final Collection c )
   {
-    throw new UnsupportedOperationException();
+    // First get all envelope, in order no to break the synchronize code by calling getEnvelope inside
+    final Map<Object, Envelope> newItems = new HashMap<Object, Envelope>();
+    for( final Object item : c )
+    {
+      final Envelope envelope = getEnvelope( item );
+      newItems.put( item, envelope );
+    }
+
+    synchronized( m_lock )
+    {
+      final boolean added = m_items.addAll( index, c );
+      if( m_index != null )
+      {
+        for( final Entry<Object, Envelope> entry : newItems.entrySet() )
+          m_index.insert( entry.getValue(), entry.getKey() );
+      }
+      return added;
+    }
   }
 
   /**
@@ -277,15 +399,24 @@ public class SplitSort implements FeatureList
    */
   public boolean addAll( final Collection c )
   {
-    boolean changed = false;
-    for( final Iterator iter = c.iterator(); iter.hasNext(); )
+    // First get all envelope, in order no to break the synchronize code by calling getEnvelope inside
+    final Map<Object, Envelope> newItems = new HashMap<Object, Envelope>();
+    for( final Object item : c )
     {
-      add( iter.next() );
-
-      changed = true;
+      final Envelope envelope = getEnvelope( item );
+      newItems.put( item, envelope );
     }
 
-    return changed;
+    synchronized( m_lock )
+    {
+      final boolean added = m_items.addAll( c );
+      if( m_index != null )
+      {
+        for( final Entry<Object, Envelope> entry : newItems.entrySet() )
+          m_index.insert( entry.getValue(), entry.getKey() );
+      }
+      return added;
+    }
   }
 
   /**
@@ -293,12 +424,33 @@ public class SplitSort implements FeatureList
    */
   public boolean containsAll( final Collection c )
   {
-    return m_objects.containsAll( c );
+    // First get all envelope, in order no to break the synchronize code by calling getEnvelope inside
+    final Map<Object, Envelope> newItems = new HashMap<Object, Envelope>();
+    for( final Object item : c )
+    {
+      final Envelope envelope = getEnvelope( item );
+      newItems.put( item, envelope );
+    }
+
+    checkIndex();
+
+    synchronized( m_lock )
+    {
+      // TODO: see contains()
+      for( final Entry<Object, Envelope> entry : newItems.entrySet() )
+      {
+        if( !m_index.contains( entry.getValue(), entry.getKey() ) )
+          return false;
+      }
+      return true;
+    }
   }
 
   /**
+   * @deprecated SLOW: TODO: better comment, make deprecated in interface
    * @see java.util.List#removeAll(java.util.Collection)
    */
+  @Deprecated
   public boolean removeAll( final Collection c )
   {
     boolean result = false;
@@ -309,24 +461,32 @@ public class SplitSort implements FeatureList
   }
 
   /**
+   * NOT IMPLEMENTED
+   * 
    * @see java.util.List#retainAll(java.util.Collection)
    */
   public boolean retainAll( final Collection c )
   {
+    // TODO: implement
     throw new UnsupportedOperationException();
   }
 
   /**
-   * ATTENTION: do not remove object via this iterator, it will break the geo-index
+   * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
+   * TODO: wrap iterator in order to maintain the index's consistency
    * 
    * @see java.util.List#iterator()
    */
   public Iterator iterator( )
   {
-    return m_objects.iterator();
+    // TODO: what about synchronization?
+
+    return m_items.iterator();
   }
 
   /**
+   * NOT IMPLEMENTED
+   * 
    * @see java.util.List#subList(int, int)
    */
   public List subList( final int fromIndex, final int toIndex )
@@ -335,65 +495,85 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   * ATTENTION: do not remove object via this iterator, it will break the geo-index
+   * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
+   * TODO: wrap iterator in order to maintain the index's consistency
    * 
    * @see java.util.List#listIterator()
    */
   public ListIterator listIterator( )
   {
-    return m_objects.listIterator();
+    // TODO: what about synchronization?
+    return m_items.listIterator();
   }
 
   /**
-   * ATTENTION: do not remove object via this iterator, it will break the geo-index
+   * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
+   * TODO: wrap iterator in order to maintain the index's consistency
    * 
    * @see java.util.List#listIterator(int)
    */
   public ListIterator listIterator( final int index )
   {
-    return m_objects.listIterator( index );
+    // TODO: what about synchronization?
+    return m_items.listIterator( index );
   }
 
   /**
    * @see java.util.List#set(int, java.lang.Object)
    */
-  public Object set( final int index, final Object element )
+  public Object set( final int index, final Object newItem )
   {
-    final GM_Envelope env = getEnvelope( element );
-    remove( env, element );
+    final Envelope newEnv = getEnvelope( newItem );
 
-    /* Only update index if we are valid. Else we do not need to because we get a resort at the next query. */
-    spacialAdd( env, element );
-
-    return m_objects.set( index, element );
+    synchronized( m_lock )
+    {
+      final Object oldItem = m_items.set( index, newItem );
+      if( m_index != null )
+      {
+        // remove with null envelope, in order not to break the synchronization code by calling getEnvelope
+        m_index.remove( null, oldItem );
+        m_index.insert( newEnv, newItem );
+      }
+      return oldItem;
+    }
   }
 
   /**
    * @see java.util.List#toArray(java.lang.Object[])
    */
-  @SuppressWarnings("unchecked")
   public Object[] toArray( final Object[] a )
   {
-    return m_objects.toArray( a );
+    synchronized( m_lock )
+    {
+      return m_items.toArray( a );
+    }
   }
 
   /**
-   * @deprecated use toArray() cause in a splitsort can be also featureIds (String), if feature is linked from the list
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
   @Deprecated
   public Feature[] toFeatures( )
   {
-    return m_objects.toArray( new Feature[m_objects.size()] );
+    synchronized( m_lock )
+    {
+      // TODO: this will probably not work, as the list may contain non-features
+      return m_items.toArray( new Feature[m_items.size()] );
+    }
   }
 
   /**
+   * TODO: add flags for visiting links/depth
+   * 
    * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
    */
   public void accept( final FeatureVisitor visitor )
   {
-    for( final Object object : m_objects )
+    // TODO: not synchronized: Problem?
+
+    for( final Object object : m_items )
     {
+      // TODO: also visit links?
       if( object instanceof Feature )
         visitor.visit( (Feature) object );
     }
@@ -420,7 +600,10 @@ public class SplitSort implements FeatureList
    */
   public void invalidate( )
   {
-    m_index.invalidate();
+    synchronized( m_lock )
+    {
+      m_index = null;
+    }
   }
 
   /**
@@ -428,7 +611,30 @@ public class SplitSort implements FeatureList
    */
   public void invalidate( final Object o )
   {
-    m_index.invalidate( o );
+    final Envelope envelope = getEnvelope( o );
+
+    synchronized( m_lock )
+    {
+      if( m_index != null )
+      {
+        m_index.remove( null, o );
+
+        m_index.insert( envelope, o );
+      }
+    }
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#first()
+   */
+  public Object first( )
+  {
+    synchronized( m_lock )
+    {
+      if( size() == 0 )
+        return null;
+      return m_items.get( 0 );
+    }
   }
 
 }

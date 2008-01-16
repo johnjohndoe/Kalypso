@@ -54,6 +54,9 @@ import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
 
 /**
+ * // TODO: refaktor QuadTreeIndex in order to not use the envelope-provider. This is necessary, because everything is
+ * synchronized now.... (don't call foreign code within synchronized code)
+ * 
  * @author Gernot Belger
  */
 public class QuadTreeIndex implements SpatialIndexExt
@@ -117,9 +120,9 @@ public class QuadTreeIndex implements SpatialIndexExt
         bbox.expandToInclude( envelope );
     }
 
-    if( bbox == null)
+    if( bbox == null )
       return new Envelope();
-    
+
     return bbox;
   }
 
@@ -162,7 +165,7 @@ public class QuadTreeIndex implements SpatialIndexExt
       final Envelope itemEnv = getEnvelope( item );
       if( itemEnv.isNull() )
       {
-//        System.out.println( "Null envelope for: " + item );
+// System.out.println( "Null envelope for: " + item );
       }
       else
         m_index.insert( itemEnv, item );
@@ -172,7 +175,7 @@ public class QuadTreeIndex implements SpatialIndexExt
   private SpatialIndex createIndex( )
   {
     return new Quadtree();
-//    return new STRtree();
+// return new STRtree();
   }
 
   /**
@@ -206,7 +209,7 @@ public class QuadTreeIndex implements SpatialIndexExt
       revalidate();
     else if( !itemEnv.isNull() )
       m_index.insert( itemEnv, item );
-    
+
     // TODO:check depth of quadtree, if too big, maybe we have to revalidate?
   }
 
@@ -240,6 +243,17 @@ public class QuadTreeIndex implements SpatialIndexExt
     m_boundingBox = null;
 
     return m_items.remove( item );
+  }
+
+  /**
+   * NOT IMPLEMENTED
+   * 
+   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#contains(com.vividsolutions.jts.geom.Envelope,
+   *      java.lang.Object)
+   */
+  public boolean contains( final Envelope itemEnv, final Object item )
+  {
+    throw new UnsupportedOperationException();
   }
 
 }

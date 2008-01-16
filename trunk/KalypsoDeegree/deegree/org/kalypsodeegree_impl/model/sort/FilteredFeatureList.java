@@ -38,6 +38,9 @@ public class FilteredFeatureList implements FeatureList
   }
 
   /**
+   * TODO: this is the key method of this implementation, but it probably does not work properly, as not all elements
+   * must be features...
+   * 
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
   public Feature[] toFeatures( )
@@ -71,8 +74,8 @@ public class FilteredFeatureList implements FeatureList
   public void clear( )
   {
     final Feature[] features = toFeatures();
-    for( int i = 0; i < features.length; i++ )
-      m_original.remove( features[i] );
+    for( final Feature element : features )
+      m_original.remove( element );
   }
 
   /**
@@ -94,7 +97,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.List#get(int)
    */
-  public Object get( int index )
+  public Object get( final int index )
   {
     return toFeatures()[index];
   }
@@ -102,7 +105,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.List#remove(int)
    */
-  public Object remove( int index )
+  public Object remove( final int index )
   {
     final Object object = get( index );
     if( m_original.remove( object ) )
@@ -114,7 +117,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.List#add(int, java.lang.Object)
    */
-  public void add( int index, Object element )
+  public void add( final int index, final Object element )
   {
     // geht nicht?
     throw new UnsupportedOperationException();
@@ -123,7 +126,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.List#indexOf(java.lang.Object)
    */
-  public int indexOf( Object o )
+  public int indexOf( final Object o )
   {
     final Object[] objects = toArray();
     for( int i = 0; i < objects.length; i++ )
@@ -137,7 +140,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
-  public int lastIndexOf( Object o )
+  public int lastIndexOf( final Object o )
   {
     final Object[] objects = toArray();
     for( int i = objects.length - 1; i > -1; i-- )
@@ -163,7 +166,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.Collection#contains(java.lang.Object)
    */
-  public boolean contains( Object o )
+  public boolean contains( final Object o )
   {
     return m_original.contains( o );
   }
@@ -182,7 +185,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.List#addAll(int, java.util.Collection)
    */
-  public boolean addAll( int index, Collection c )
+  public boolean addAll( final int index, final Collection c )
   {
     throw new UnsupportedOperationException();
   }
@@ -192,7 +195,7 @@ public class FilteredFeatureList implements FeatureList
    */
   public boolean addAll( final Collection c )
   {
-    for( Iterator cIt = c.iterator(); cIt.hasNext(); )
+    for( final Iterator cIt = c.iterator(); cIt.hasNext(); )
       add( cIt.next() );
 
     return !c.isEmpty();
@@ -203,7 +206,7 @@ public class FilteredFeatureList implements FeatureList
    */
   public boolean containsAll( final Collection c )
   {
-    for( Iterator cIt = c.iterator(); cIt.hasNext(); )
+    for( final Iterator cIt = c.iterator(); cIt.hasNext(); )
     {
       final Object f = cIt.next();
       if( !contains( f ) )
@@ -218,7 +221,7 @@ public class FilteredFeatureList implements FeatureList
    */
   public boolean removeAll( final Collection c )
   {
-    for( Iterator cIt = c.iterator(); cIt.hasNext(); )
+    for( final Iterator cIt = c.iterator(); cIt.hasNext(); )
     {
       final Object f = cIt.next();
       remove( f );
@@ -246,7 +249,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.List#subList(int, int)
    */
-  public List subList( int fromIndex, int toIndex )
+  public List subList( final int fromIndex, final int toIndex )
   {
     throw new UnsupportedOperationException();
   }
@@ -273,7 +276,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.List#set(int, java.lang.Object)
    */
-  public Object set( int index, Object element )
+  public Object set( final int index, final Object element )
   {
     throw new UnsupportedOperationException();
   }
@@ -281,7 +284,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * @see java.util.Collection#toArray(java.lang.Object[])
    */
-  public Object[] toArray( Object[] a )
+  public Object[] toArray( final Object[] a )
   {
     final Feature[] toFeatures = toFeatures();
     if( a == null || a.length < toFeatures.length )
@@ -307,7 +310,7 @@ public class FilteredFeatureList implements FeatureList
 
     // only remove new elements, which do not match type
     final List sublist = originalList.subList( oldlength, originalList.size() );
-    for( Iterator sIt = sublist.iterator(); sIt.hasNext(); )
+    for( final Iterator sIt = sublist.iterator(); sIt.hasNext(); )
     {
       final Feature f = (Feature) sIt.next();
       if( !m_filterVisitor.matchesType( f ) )
@@ -324,14 +327,6 @@ public class FilteredFeatureList implements FeatureList
   public List query( final GM_Position env, final List result )
   {
     return filterList( m_original.query( env, result ), result );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#queryAll(java.util.List)
-   */
-  public List queryAll( final List result )
-  {
-    return filterList( m_original.queryAll( result ), result );
   }
 
   /**
@@ -388,7 +383,18 @@ public class FilteredFeatureList implements FeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate(java.lang.Object)
    */
   public void invalidate( final Object o )
-  { 
+  {
     m_original.invalidate( o );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#first()
+   */
+  public Object first( )
+  {
+    final Feature[] features = toFeatures();
+    if( features.length == 0 )
+      return null;
+    return features[0];
   }
 }

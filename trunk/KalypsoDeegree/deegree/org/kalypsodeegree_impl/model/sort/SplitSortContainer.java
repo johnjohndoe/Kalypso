@@ -2,14 +2,51 @@ package org.kalypsodeegree_impl.model.sort;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+import com.vividsolutions.jts.geom.Envelope;
 
 public class SplitSortContainer
 {
+  public static interface Visitor
+  {
+    void visit( final Object item, final Envelope env );
+  }
+
+  /**
+   * A visitor implementation that calculates the combined bounding box of all elements of this container.
+   */
+  public static class BboxVisitor implements Visitor
+  {
+    @SuppressWarnings("hiding")
+    private Envelope m_envelope = null;
+
+    public Envelope getEnvelope( )
+    {
+      return m_envelope;
+    }
+
+    /**
+     * @see org.kalypsodeegree_impl.model.sort.SplitSortContainer.Visitor#visit(java.lang.Object,
+     *      com.vividsolutions.jts.geom.Envelope)
+     */
+    public void visit( final Object item, final Envelope env )
+    {
+      if( env != null )
+      {
+        if( m_envelope == null )
+          m_envelope = new Envelope( env );
+        else
+          m_envelope.expandToInclude( env );
+      }
+    }
+  }
+
   private static final int MAX_OBJECTS = 500;
 
   private static final int LEFT_BOTTOM = 0;
@@ -22,24 +59,24 @@ public class SplitSortContainer
 
   private final SplitSortContainer[] m_subContainer = new SplitSortContainer[4];
 
-  private final GM_Envelope m_envelope;
+  private Envelope m_envelope;
 
-  private final IEnvelopeProvider m_envProvider;
-
-  private List<Object> m_objects = new ArrayList<Object>();
+  private Map<Object, Envelope> m_objects = new HashMap<Object, Envelope>();
 
   private SplitSortContainer m_parent;
 
-  public SplitSortContainer( final SplitSortContainer parent, final GM_Envelope env, final IEnvelopeProvider envProvider )
+  public SplitSortContainer( final SplitSortContainer parent, final Envelope env )
   {
     m_envelope = env;
     m_parent = parent;
-    m_envProvider = envProvider;
   }
 
-  public GM_Envelope getEnvelope( )
+  public boolean containsEnvelope( final Envelope e )
   {
-    return m_envelope;
+    if( m_envelope == null )
+      return false;
+
+    return m_envelope.contains( e );
   }
 
   public void setParent( final SplitSortContainer container )
@@ -54,53 +91,60 @@ public class SplitSortContainer
 
   private void resort( )
   {
-    final List<Object> oldObjects = m_objects;
-    m_objects = new ArrayList<Object>( oldObjects.size() );
+    final Map<Object, Envelope> oldObjects = m_objects;
+    m_objects = new HashMap<Object, Envelope>( oldObjects.size() );
 
-    for( int i = 0; i < oldObjects.size(); i++ )
+    for( final Entry<Object, Envelope> entry : oldObjects.entrySet() )
     {
-      final GM_Envelope env = m_envProvider.getEnvelope( oldObjects.get( i ) );
-      if( env != null )
-        add( env, oldObjects.get( i ) );
-      else
-        m_objects.add( oldObjects.get( i ) );
+      final Object object = entry.getKey();
+      final Envelope env = entry.getValue();
+      add( object, env );
     }
   }
 
-  public void add( final GM_Envelope env, final Object object )
+  public void add( final Object object, final Envelope env )
   {
-    if( !hasSubContainers() && m_objects.size() < MAX_OBJECTS )
+    if( env == null )
+    {
+      m_objects.put( object, env );
+      return;
+    }
+    else if( m_envelope == null )
+    {
+      // Prohibits, that an root container ever has an null-envelope while containing elements with envelope
+      m_envelope = env;
+    }
+
+    // Add to sub container, if it belongs there
+    if( hasSubContainers() )
+    {
+      for( final SplitSortContainer subContainer : m_subContainer )
+      {
+        if( subContainer.containsEnvelope( env ) )
+        {
+          subContainer.add( object, env );
+          return;
+        }
+      }
+
+      // If it does not fit into the sub-containers, always add to me: ??? this object could get very full indeed ???
+      // Maybe re-balance this container if it gets fuller than MAX_OBJECTS * 2 ?
+      m_objects.put( object, env );
+      return;
+    }
+
+    // No sub containers yet present
+
+    if( m_objects.size() < MAX_OBJECTS )
     {
       // as long this container is not too full, add into own list
-      m_objects.add( object );
+      m_objects.put( object, env );
+      return;
     }
-    else if( hasSubContainers() )
-    {
-      if( m_subContainer[0].getEnvelope().contains( env ) )
-        m_subContainer[0].add( env, object );
-      else if( m_subContainer[1].getEnvelope().contains( env ) )
-        m_subContainer[1].add( env, object );
-      else if( m_subContainer[2].getEnvelope().contains( env ) )
-        m_subContainer[2].add( env, object );
-      else if( m_subContainer[3].getEnvelope().contains( env ) )
-        m_subContainer[3].add( env, object );
-      else
-      {
-        // ? Dangerous: all objects may always go into this container...
-        m_objects.add( object );
-      }
-    }
-    else
-    {
-      createSubContainers();
-      resort();
-      add( env, object );
-    }
-  }
 
-  public boolean intersects( final GM_Envelope env )
-  {
-    return m_envelope.intersects( env );
+    createSubContainers();
+    resort();
+    add( object, env );
   }
 
   public void createSubContainers( final SplitSortContainer container )
@@ -109,18 +153,20 @@ public class SplitSortContainer
     double midY = 0d;
     boolean midXset = false;
     boolean midYset = false;
-    final GM_Envelope subEnv = container.getEnvelope();
 
-    final double maxX = m_envelope.getMax().getX();
-    final double maxY = m_envelope.getMax().getY();
-    final double minX = m_envelope.getMin().getX();
-    final double minY = m_envelope.getMin().getY();
+    final double maxX = m_envelope.getMaxX();
+    final double maxY = m_envelope.getMaxY();
+    final double minX = m_envelope.getMinX();
+    final double minY = m_envelope.getMinY();
 
-    final double maxXsub = subEnv.getMax().getX();
-    final double maxYsub = subEnv.getMax().getY();
-    final double minXsub = subEnv.getMin().getX();
-    final double minYsub = subEnv.getMin().getY();
+    // REMARK: sub containers never have a null envelope, only root containers do
+    final Envelope subEnv = container.getEnvelope();
+    final double maxXsub = subEnv.getMaxX();
+    final double maxYsub = subEnv.getMaxY();
+    final double minXsub = subEnv.getMinX();
+    final double minYsub = subEnv.getMinY();
 
+    // !!! == for double comparison !!!
     if( maxX == maxXsub )
     {
       midX = minXsub;
@@ -146,10 +192,8 @@ public class SplitSortContainer
       createSubContainers( midX, midY );
       for( int i = 0; i < 4; i++ )
       {
-        if( m_subContainer[i].getEnvelope().equals( container.getEnvelope() ) )
-        {
+        if( m_subContainer[i].m_envelope.equals( container.m_envelope ) )
           m_subContainer[i] = container;
-        }
       }
     }
     else
@@ -173,10 +217,8 @@ public class SplitSortContainer
       }
       for( int i = 0; i < 4; i++ )
       {
-        if( m_subContainer[i].getEnvelope().contains( container.getEnvelope() ) )
-        {
+        if( m_subContainer[i].containsEnvelope( container.m_envelope ) )
           m_subContainer[i].createSubContainers( container );
-        }
       }
     }
   }
@@ -199,11 +241,11 @@ public class SplitSortContainer
 
   private void createSubContainers( )
   {
-    final double maxX = m_envelope.getMax().getX();
-    final double maxY = m_envelope.getMax().getY();
+    final double maxX = m_envelope.getMaxX();
+    final double maxY = m_envelope.getMaxY();
 
-    final double minX = m_envelope.getMin().getX();
-    final double minY = m_envelope.getMin().getY();
+    final double minX = m_envelope.getMinX();
+    final double minY = m_envelope.getMinY();
 
     final double midX = (minX + maxX) / 2d;
     final double midY = (minY + maxY) / 2d;
@@ -212,15 +254,15 @@ public class SplitSortContainer
 
   private void createSubContainers( final double midX, final double midY )
   {
-    final double maxX = m_envelope.getMax().getX();
-    final double maxY = m_envelope.getMax().getY();
-    final double minX = m_envelope.getMin().getX();
-    final double minY = m_envelope.getMin().getY();
+    final double maxX = m_envelope.getMaxX();
+    final double maxY = m_envelope.getMaxY();
+    final double minX = m_envelope.getMinX();
+    final double minY = m_envelope.getMinY();
 
-    m_subContainer[0] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( minX, minY, midX, midY ), m_envProvider );
-    m_subContainer[1] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( midX, minY, maxX, midY ), m_envProvider );
-    m_subContainer[2] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( midX, midY, maxX, maxY ), m_envProvider );
-    m_subContainer[3] = new SplitSortContainer( this, GeometryFactory.createGM_Envelope( minX, midY, midX, maxY ), m_envProvider );
+    m_subContainer[0] = new SplitSortContainer( this, new Envelope( minX, midX, minY, midY ) );
+    m_subContainer[1] = new SplitSortContainer( this, new Envelope( midX, maxX, minY, midY ) );
+    m_subContainer[2] = new SplitSortContainer( this, new Envelope( midX, maxX, midY, maxY ) );
+    m_subContainer[3] = new SplitSortContainer( this, new Envelope( minX, midX, midY, maxY ) );
   }
 
   private boolean hasSubContainers( )
@@ -234,25 +276,29 @@ public class SplitSortContainer
     return true;
   }
 
-  public List query( final GM_Envelope env, List result )
+  public List<Object> query( final Envelope env, List<Object> result )
   {
     if( result == null )
-      result = new ArrayList();
+      result = new ArrayList<Object>();
+
     if( env == null )
       return result;
-    for( int i = 0; i < m_objects.size(); i++ )
+
+    for( final Entry<Object, Envelope> entry : m_objects.entrySet() )
     {
-      final Object object = m_objects.get( i );
-      final GM_Envelope envObject = m_envProvider.getEnvelope( object );
-      if( envObject == null || env.intersects( envObject ) )
+      final Object object = entry.getKey();
+      final Envelope envelope = entry.getValue();
+
+      // objects with null envelope are always found...
+      if( envelope == null || env.intersects( envelope ) )
         result.add( object );
     }
-    // boolean queried=false;
+
     if( hasSubContainers() )
     {
       for( int i = 0; i < 4; i++ )
       {
-        if( m_subContainer[i].getEnvelope().contains( env ) )
+        if( m_subContainer[i].containsEnvelope( env ) )
         {
           result = m_subContainer[i].query( env, result );
           return result;
@@ -260,18 +306,26 @@ public class SplitSortContainer
       }
       for( int i = 0; i < 4; i++ )
       {
-        if( env.intersects( m_subContainer[i].getEnvelope() ) )
+        if( env.intersects( m_subContainer[i].m_envelope ) )
           m_subContainer[i].query( env, result );
       }
     }
     return result;
   }
 
-  public boolean remove( final Object object )
+  /**
+   * Removes the item from this container.
+   * 
+   * @param env
+   *            If <code>null</code>, no optimization is made via the position of the item.
+   */
+  public boolean remove( final Envelope env, final Object item )
   {
-    final boolean removed = m_objects.remove( object );
-    if( removed )
+    /* First, check if it is inside this envelope and remove it in this case */
+    if( m_objects.containsKey( item ) )
     {
+      m_objects.remove( item );
+
       if( m_parent != null )
         m_parent.optimize();
 
@@ -282,9 +336,13 @@ public class SplitSortContainer
     {
       for( int i = 0; i < 4; i++ )
       {
-        final boolean subRemoved = m_subContainer[i].remove( object );
-        if( subRemoved )
-          return true;
+        /* Only search in containers, that may contain this object */
+        if( env == null || m_subContainer[i].containsEnvelope( env ) )
+        {
+          final boolean subRemoved = m_subContainer[i].remove( env, item );
+          if( subRemoved )
+            return true;
+        }
       }
     }
 
@@ -316,15 +374,68 @@ public class SplitSortContainer
 
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
-    final double g1x = geoTransform.getDestX( m_envelope.getMin().getX() );
-    final double g1y = geoTransform.getDestY( m_envelope.getMin().getY() );
-    final double g2x = geoTransform.getDestX( m_envelope.getMax().getX() );
-    final double g2y = geoTransform.getDestY( m_envelope.getMax().getY() );
+    final double g1x = geoTransform.getDestX( m_envelope.getMinX() );
+    final double g1y = geoTransform.getDestY( m_envelope.getMinY() );
+    final double g2x = geoTransform.getDestX( m_envelope.getMaxX() );
+    final double g2y = geoTransform.getDestY( m_envelope.getMaxY() );
 
     g.drawRect( (int) (g1x < g2x ? g1x : g2x), (int) (g1y < g2y ? g1y : g2y), (int) Math.abs( (g2x - g1x) ), (int) Math.abs( (g2y - g1y) ) );
 
     if( hasSubContainers() )
+    {
       for( int i = 0; i < 4; i++ )
         m_subContainer[i].paint( g, geoTransform );
+    }
+  }
+
+  /**
+   * Checks, if this container contains the item.
+   * 
+   * @param env
+   *            If non-<code>null</code>, this envelope is used to improve the search.
+   */
+  public boolean contains( final Envelope env, final Object item )
+  {
+    if( env != null )
+    {
+      final List<Object> query = query( env, null );
+      if( query.contains( item ) )
+        return true;
+    }
+
+    // Else: brute force search
+    if( m_objects.containsKey( item ) )
+      return true;
+
+    for( final SplitSortContainer subContainer : m_subContainer )
+    {
+      // Search with null-envelope so it is not again searched via query
+      if( subContainer != null && subContainer.contains( null, item ) )
+        return true;
+    }
+
+    return false;
+  }
+
+  public void accept( final Visitor visitor )
+  {
+    for( final Entry<Object, Envelope> entry : m_objects.entrySet() )
+      visitor.visit( entry.getKey(), entry.getValue() );
+
+    for( final SplitSortContainer subContainer : m_subContainer )
+    {
+      if( subContainer != null )
+        subContainer.accept( visitor );
+    }
+  }
+
+  /* default visibility */boolean hasNullEnvelope( )
+  {
+    return m_envelope == null;
+  }
+
+  /* default visibility */Envelope getEnvelope( )
+  {
+    return m_envelope;
   }
 }

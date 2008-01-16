@@ -120,8 +120,8 @@ public class GMLWeightingTask extends Task
       // create needed factories
       final ObjectFactory filterFac = new ObjectFactory();
       final JAXBContext filterJC = JaxbUtilities.createQuiet( ObjectFactory.class );
-      
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(filterJC);
+
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( filterJC );
 
       final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
 
@@ -136,9 +136,9 @@ public class GMLWeightingTask extends Task
       final FeaturePath path = new FeaturePath( m_featurePathTarget );
       final FeatureList feList = (FeatureList) path.getFeature( workspace );
       // loop all features
-      for( int i = 0; i < feList.size(); i++ )
+      for( final Object object : feList )
       {
-        final Feature targetFE = (Feature) feList.get( i );
+        final Feature targetFE = (Feature) object;
         // 3. find target
         final TimeseriesLinkType targetLink = (TimeseriesLinkType) targetFE.getProperty( m_propZMLTarget );
         final URL targetURL = urlResolver.resolveURL( m_targetContext, targetLink.getHref() );
@@ -149,18 +149,18 @@ public class GMLWeightingTask extends Task
         final List<JAXBElement< ? extends AbstractFilterType>> filterList = nOperationFilter.getFilter();
 
         // 5. resolve weights
-        final IRelationType pt = (IRelationType) FeatureHelper.getPT(targetFE, m_propRelationWeightMember);
+        final IRelationType pt = (IRelationType) FeatureHelper.getPT( targetFE, m_propRelationWeightMember );
         final Feature[] weightFEs = workspace.resolveLinks( targetFE, pt );
 
         // 6. loop weights
-        for( int j = 0; j < weightFEs.length; j++ )
+        for( final Feature element : weightFEs )
         {
           // 7. resolve feature that has source zml reference
-          final IRelationType pt2 = (IRelationType) FeatureHelper.getPT(weightFEs[j], m_propRelationSourceFeature);
-          final Feature sourceFE = workspace.resolveLink( weightFEs[j], pt2 );
+          final IRelationType pt2 = (IRelationType) FeatureHelper.getPT( element, m_propRelationSourceFeature );
+          final Feature sourceFE = workspace.resolveLink( element, pt2 );
           if( sourceFE == null )
           {
-            logger.log( "Linked source feature missing in Feature: " + weightFEs[j].getId() );
+            logger.log( "Linked source feature missing in Feature: " + element.getId() );
 
             // IMPORTANT: just skips this weight; leads probably to wrong results
             continue;
@@ -170,7 +170,7 @@ public class GMLWeightingTask extends Task
           final TimeseriesLinkType zmlLink = (TimeseriesLinkType) sourceFE.getProperty( m_propZMLSource );
           if( zmlLink == null )
           {
-            logger.log( "Linked timeserie link missing in Feature: " + weightFEs[j].getId() );
+            logger.log( "Linked timeserie link missing in Feature: " + element.getId() );
 
             // IMPORTANT: just skips this weight; leads probably to wrong results
             continue;
@@ -180,7 +180,7 @@ public class GMLWeightingTask extends Task
           final OperationFilterType filter = filterFac.createOperationFilterType();
           filterList.add( filterFac.createFilter( filter ) );
           filter.setOperator( "*" );
-          double factor = ((Double) weightFEs[j].getProperty( m_propWeight )).doubleValue();
+          final double factor = ((Double) element.getProperty( m_propWeight )).doubleValue();
           filter.setOperand( Double.toString( factor ) );
           final ZmlFilterType zmlFilter = filterFac.createZmlFilterType();
           filter.setFilter( filterFac.createFilter( zmlFilter ) );
@@ -226,7 +226,7 @@ public class GMLWeightingTask extends Task
 
   /**
    * @param targetMapping
-   *          gml file that will be generated and includes the mapping that will be generated from the model
+   *            gml file that will be generated and includes the mapping that will be generated from the model
    */
   public final void setTargetMapping( final File targetMapping )
   {
@@ -235,99 +235,99 @@ public class GMLWeightingTask extends Task
 
   /**
    * @param modelURL
-   *          reference to the model that describes the mapping in a gml structure
+   *            reference to the model that describes the mapping in a gml structure
    */
-  public final void setModelURL( URL modelURL )
+  public final void setModelURL( final URL modelURL )
   {
     m_modelURL = modelURL;
   }
 
   /**
    * @param targetContext
-   *          context to use
+   *            context to use
    */
-  public final void setTargetContext( URL targetContext )
+  public final void setTargetContext( final URL targetContext )
   {
     m_targetContext = targetContext;
   }
 
   /**
    * @param featurePathTarget
-   *          path to the features that contain the ZML-target properties and the references to weighting features
+   *            path to the features that contain the ZML-target properties and the references to weighting features
    */
-  public final void setFeaturePathTarget( String featurePathTarget )
+  public final void setFeaturePathTarget( final String featurePathTarget )
   {
     m_featurePathTarget = featurePathTarget;
   }
 
   /**
    * @param propRelationSourceFeature
-   *          name of property that links from weighting feature to zml source feature
+   *            name of property that links from weighting feature to zml source feature
    */
-  public final void setPropRelationSourceFeature( String propRelationSourceFeature )
+  public final void setPropRelationSourceFeature( final String propRelationSourceFeature )
   {
     m_propRelationSourceFeature = propRelationSourceFeature;
   }
 
   /**
    * @param propRelationWeightMember
-   *          name of property that links from zml target feature to the list of weighting features
+   *            name of property that links from zml target feature to the list of weighting features
    */
-  public final void setPropRelationWeightMember( String propRelationWeightMember )
+  public final void setPropRelationWeightMember( final String propRelationWeightMember )
   {
     m_propRelationWeightMember = propRelationWeightMember;
   }
 
   /**
    * @param propWeight
-   *          property name of the weighting property, feature property type must be double
+   *            property name of the weighting property, feature property type must be double
    */
-  public final void setPropWeight( String propWeight )
+  public final void setPropWeight( final String propWeight )
   {
     m_propWeight = propWeight;
   }
 
   /**
    * @param propZMLSource
-   *          property name of the zml source property, feature property type must be TimeSeriesLink
+   *            property name of the zml source property, feature property type must be TimeSeriesLink
    */
-  public final void setPropZMLSource( String propZMLSource )
+  public final void setPropZMLSource( final String propZMLSource )
   {
     m_propZMLSource = propZMLSource;
   }
 
   /**
    * @param propZMLTarget
-   *          property name of the zml target property, feature property type must be TimeSeriesLink
+   *            property name of the zml target property, feature property type must be TimeSeriesLink
    */
-  public final void setPropZMLTarget( String propZMLTarget )
+  public final void setPropZMLTarget( final String propZMLTarget )
   {
     m_propZMLTarget = propZMLTarget;
   }
 
   /**
    * @param from
-   *          beginning of measure periode
+   *            beginning of measure periode
    */
-  public final void setFrom( long from )
+  public final void setFrom( final long from )
   {
     m_from = from;
   }
 
   /**
    * @param forecastFrom
-   *          beginning of forecast periode (end of measure periode)
+   *            beginning of forecast periode (end of measure periode)
    */
-  public final void setForecastFrom( long forecastFrom )
+  public final void setForecastFrom( final long forecastFrom )
   {
     m_forecastFrom = forecastFrom;
   }
 
   /**
    * @param to
-   *          end of forecast periode
+   *            end of forecast periode
    */
-  public final void setTo( long to )
+  public final void setTo( final long to )
   {
     m_to = to;
   }

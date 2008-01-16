@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  */
 public class SpatialIndexTest extends TestCase
 {
-  private List<File> m_filesToDelete = new ArrayList<File>();
+  private final List<File> m_filesToDelete = new ArrayList<File>();
 
   /**
    * @see junit.framework.TestCase#tearDown()
@@ -84,21 +84,21 @@ public class SpatialIndexTest extends TestCase
   {
     doTheTest( "resources/bigShape.zip", "mod", ShapeSerializer.PROPERTY_FEATURE_MEMBER );
   }
-  
+
   public void testBigGml( ) throws Exception
   {
     doTheTest( "resources/bigGml.zip", "nodeResult.gml", new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "nodeResultMember" ) );
   }
-  
-  private void doTheTest( String zipResourcePath, final String filename, final QName propQName )throws Exception
+
+  private void doTheTest( final String zipResourcePath, final String filename, final QName propQName ) throws Exception
   {
     final TimeLogger logger = new TimeLogger( "Start spatial index test" );
     final GMLWorkspace workspace = loadWorkspace( zipResourcePath, filename );
     logger.takeInterimTime();
     logger.printCurrentInterim( "File loaded in: " );
-    
+
     final SplitSort sort = new SplitSort( null, null );
-    
+
     final FeatureList featureList = (FeatureList) workspace.getRootFeature().getProperty( propQName );
     for( final Object object : featureList )
       sort.add( object );
@@ -111,19 +111,19 @@ public class SpatialIndexTest extends TestCase
     sort.query( boundingBox, null );
     logger.takeInterimTime();
     logger.printCurrentInterim( "Index queried in: " );
-    
+
     sort.query( boundingBox, null );
     logger.takeInterimTime();
     logger.printCurrentInterim( "Index queried again in: " );
-    
-    sort.invalidate( featureList.get( 0 ) );
+
+    sort.invalidate( featureList.first() );
     logger.takeInterimTime();
     logger.printCurrentInterim( "Index invalidated in: " );
 
     sort.query( boundingBox, null );
     logger.takeInterimTime();
     logger.printCurrentInterim( "Index queried again in: " );
-    
+
     logger.printCurrentTotal( "Total: " );
   }
 
@@ -132,14 +132,14 @@ public class SpatialIndexTest extends TestCase
     final URL resource = getClass().getResource( relativeResourcePath );
 
     final File unzipDir = FileUtilities.createNewTempDir( "unzip" );
-    
+
     ZipUtilities.unzip( resource, unzipDir );
 
     final File fileBase = new File( unzipDir, filename );
-    
-    if( filename.toLowerCase().endsWith( ".gml" ))
+
+    if( filename.toLowerCase().endsWith( ".gml" ) )
       return GmlSerializer.createGMLWorkspace( fileBase.toURL(), null );
-    
+
     return ShapeSerializer.deserialize( fileBase.getAbsolutePath(), KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
   }
 }

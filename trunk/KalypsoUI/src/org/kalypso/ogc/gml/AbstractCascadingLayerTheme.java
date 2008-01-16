@@ -96,8 +96,11 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
+      // HACK FIXME: commented out so a map with wms themes may still work
+      // else map laoding with wms themes that are not accessible cannot be used at the moment...
+
       if( isVisible() )
-        invalidate( theme.getFullExtent() );
+        invalidate( null/* theme.getFullExtent() */);
 
       handleThemeStatusChanged();
     }
