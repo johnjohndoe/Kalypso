@@ -127,7 +127,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
   private IPropertyType m_propertyType;
 
-  public GenerateDifferenceResultTinWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, MapPanel mapPanel )
+  public GenerateDifferenceResultTinWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final MapPanel mapPanel )
   {
     super( pageName, title, titleImage );
     m_mapPanel = mapPanel;
@@ -141,7 +141,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     final int comboWidth1 = 75;
     final int comboWidth2 = 50;
@@ -170,7 +170,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     riverLineText.setText( "Bitte Thema der Gewässerachse auswählen" );
 
     final ComboViewer comboRiverLine = new ComboViewer( riverLineGroup, SWT.NONE | SWT.READ_ONLY );
-    GridData gridDatacomboRiverLine = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    final GridData gridDatacomboRiverLine = new GridData( SWT.FILL, SWT.CENTER, true, false );
     gridDatacomboRiverLine.widthHint = comboWidth1;
     comboRiverLine.getControl().setLayoutData( gridDatacomboRiverLine );
     comboRiverLine.setContentProvider( new ArrayContentProvider() );
@@ -208,7 +208,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     riverLineNameFieldText.setText( "Spalte der Gewässer-ID auswählen" );
 
     m_comboRiverLineNameField = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
-    GridData gridDatacomboRiverLineNameField = new GridData( SWT.FILL, SWT.END, true, false );
+    final GridData gridDatacomboRiverLineNameField = new GridData( SWT.FILL, SWT.END, true, false );
     gridDatacomboRiverLineNameField.widthHint = comboWidth2;
     m_comboRiverLineNameField.getControl().setLayoutData( gridDatacomboRiverLineNameField );
     m_comboRiverLineNameField.setContentProvider( new ArrayContentProvider() );
@@ -218,9 +218,9 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
-        IPropertyType propertyType = (IPropertyType) element;
+        final IPropertyType propertyType = (IPropertyType) element;
         return propertyType.getQName().getLocalPart();
       }
     } );
@@ -234,7 +234,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
         // get field names for river name field and station fields
         if( selection.getFirstElement() instanceof IPropertyType )
         {
-          IPropertyType property = (IPropertyType) selection.getFirstElement();
+          final IPropertyType property = (IPropertyType) selection.getFirstElement();
           m_riverNameField = property.getQName().getLocalPart();
           updateRiverNames();
         }
@@ -246,7 +246,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     riverLineNameText.setText( "Gewässer auswählen" );
 
     m_comboRiverLineName = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
-    GridData gridDatacomboRiverLineName = new GridData( SWT.FILL, SWT.END, true, false );
+    final GridData gridDatacomboRiverLineName = new GridData( SWT.FILL, SWT.END, true, false );
     gridDatacomboRiverLineName.widthHint = comboWidth2;
     m_comboRiverLineName.getControl().setLayoutData( gridDatacomboRiverLineName );
     m_comboRiverLineName.setContentProvider( new ArrayContentProvider() );
@@ -256,7 +256,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     stationFromFieldText.setText( "Spalte der Anfangsstation" );
 
     m_comboStationFromField = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
-    GridData gridDatacomboStationFromField = new GridData( SWT.FILL, SWT.END, true, false );
+    final GridData gridDatacomboStationFromField = new GridData( SWT.FILL, SWT.END, true, false );
     gridDatacomboStationFromField.widthHint = comboWidth2;
     m_comboStationFromField.getControl().setLayoutData( gridDatacomboStationFromField );
     m_comboStationFromField.setContentProvider( new ArrayContentProvider() );
@@ -266,9 +266,9 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
-        IPropertyType propertyType = (IPropertyType) element;
+        final IPropertyType propertyType = (IPropertyType) element;
         return propertyType.getQName().getLocalPart();
       }
     } );
@@ -278,7 +278,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     stationToFieldText.setText( "Spalte der Endstation" );
 
     m_comboStationToField = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
-    GridData gridDatacomboStationToField = new GridData( SWT.FILL, SWT.END, true, false );
+    final GridData gridDatacomboStationToField = new GridData( SWT.FILL, SWT.END, true, false );
     gridDatacomboStationToField.widthHint = comboWidth2;
     m_comboStationToField.getControl().setLayoutData( gridDatacomboStationToField );
     m_comboStationToField.setContentProvider( new ArrayContentProvider() );
@@ -288,9 +288,9 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
-        IPropertyType propertyType = (IPropertyType) element;
+        final IPropertyType propertyType = (IPropertyType) element;
         return propertyType.getQName().getLocalPart();
       }
     } );
@@ -300,18 +300,18 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     stationSpinnerText.setText( "Stützpunktweite des Längsschnitts [m]" );
 
     final Spinner stationSpinner = new Spinner( propertyGroup, SWT.BORDER | SWT.TRAIL );
-    GridData gridDatastationSpinner = new GridData( SWT.FILL, SWT.END, true, false );
+    final GridData gridDatastationSpinner = new GridData( SWT.FILL, SWT.END, true, false );
     gridDatastationSpinner.widthHint = 30;
     stationSpinner.setLayoutData( gridDatastationSpinner );
 
-    BigDecimal selectionValue = new BigDecimal( m_stationWidth ).setScale( 0, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal selectionValue = new BigDecimal( m_stationWidth ).setScale( 0, BigDecimal.ROUND_HALF_UP );
     stationSpinner.setValues( selectionValue.intValue(), 10, 1000, 0, 10, 100 );
 
     stationSpinner.addSelectionListener( new SelectionAdapter()
     {
       @SuppressWarnings("synthetic-access")
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_stationWidth = stationSpinner.getSelection();
       }
@@ -325,7 +325,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
       m_comboStationFromField.getControl().setEnabled( false );
       m_comboStationToField.getControl().setEnabled( false );
 
-      String msg = "Kein Linienthema in Karte vorhanden.";
+      final String msg = "Kein Linienthema in Karte vorhanden.";
       comboRiverLine.setInput( new String[] { msg } );
       comboRiverLine.setSelection( new StructuredSelection( msg ) );
       m_riverLineTheme = null;
@@ -353,7 +353,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     setControl( composite );
   }
 
-  protected void setRiverLine( IKalypsoFeatureTheme theme )
+  protected void setRiverLine( final IKalypsoFeatureTheme theme )
   {
     if( m_comboRiverLineNameField == null )
       return;
@@ -364,13 +364,13 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     // get Features
     m_riverFeatures = theme.getFeatureList();
-    IFeatureType targetFeatureType = m_riverFeatures.getParentFeatureTypeProperty().getTargetFeatureType();
+    final IFeatureType targetFeatureType = m_riverFeatures.getParentFeatureTypeProperty().getTargetFeatureType();
 
     // get field names for river name field and station fields
-    IPropertyType[] properties = targetFeatureType.getProperties();
+    final IPropertyType[] properties = targetFeatureType.getProperties();
 
-    Object object = m_riverFeatures.get( 0 );
-    Feature feature = (Feature) object;
+    final Object object = m_riverFeatures.first();
+    final Feature feature = (Feature) object;
 
     m_comboRiverLineNameField.setInput( properties );
     // set river name field to "NAME". If it does not exist, set it to the first field
@@ -429,7 +429,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
          * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
          */
         @Override
-        public String getText( Object element )
+        public String getText( final Object element )
         {
           return guiTypeHandler.getText( element );
         }
@@ -446,14 +446,14 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     m_riverFeatures = m_riverLineTheme.getFeatureList();
     IPropertyType propertyType;
-    for( Object o : m_riverFeatures )
+    for( final Object o : m_riverFeatures )
     {
-      Feature riverFeature = (Feature) o;
+      final Feature riverFeature = (Feature) o;
       propertyType = riverFeature.getFeatureType().getProperty( new QName( "namespace", m_riverNameField ) );
 
       if( propertyType instanceof IValuePropertyType )
       {
-        IValuePropertyType vpt = (IValuePropertyType) propertyType;
+        final IValuePropertyType vpt = (IValuePropertyType) propertyType;
         if( vpt.getValueClass() == String.class || vpt.getValueClass() == Double.class || vpt.getValueClass() == Integer.class || vpt.getValueClass() == Long.class )
         {
           m_riverNameSet.add( riverFeature.getProperty( propertyType ) );

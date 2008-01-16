@@ -53,6 +53,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
@@ -569,6 +570,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
   {
     final List<IFE1D2DElement> elementsInBBox = m_exportRequest ? elements : elements.query( m_calcUnitBBox );
     final Set<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
+
+    if( elementsInBBox.size() == 0 )
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Das Modell enthält keine Elemente. Berechnung nicht möglich.", null ) );
 
     for( final IFE1D2DElement element : elementsInBBox )
     {

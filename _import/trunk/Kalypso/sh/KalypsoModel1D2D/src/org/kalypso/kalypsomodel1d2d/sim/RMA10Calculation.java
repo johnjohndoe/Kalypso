@@ -398,12 +398,16 @@ public class RMA10Calculation implements ISimulation1D2DConstants
   {
     final File errorDatFile = new File( dir, "ERROR.DAT" );
     final File errorOutFile = new File( dir, "ERROR.OUT" );
+    final File errorErrFile = new File( dir, "exe.err" );
 
     if( errorDatFile.exists() )
       return errorDatFile;
 
     if( errorOutFile.exists() )
       return errorOutFile;
+
+    if( errorErrFile.exists() && errorErrFile.length() > 0 )
+      return errorErrFile;
 
     return null;
   }

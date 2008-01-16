@@ -123,15 +123,14 @@ public class MeasuresHelper
     // so lets transform the measures workspace to the one rrm model uses. (less work than other way)
     if( storageChannelList.size() > 0 )
     {
-      final Feature feature = (Feature) storageChannelList.get( 0 );
+      final Feature feature = (Feature) storageChannelList.first();
       final GM_Object geom = feature.getGeometryProperties()[0];
       final CS_CoordinateSystem targetCS = geom.getCoordinateSystem();
       final TransformVisitor visitor = new TransformVisitor( targetCS );
       measureRhbWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
     }
-    for( int i = 0; i < measureRhbFEs.length; i++ )
+    for( final Feature measureRhbFE : measureRhbFEs )
     {
-      final Feature measureRhbFE = measureRhbFEs[i];
       int c_success = 0;
       int c_error = 0;
 
@@ -141,10 +140,10 @@ public class MeasuresHelper
       // komplet
       // im Chatchment ist)
       final List<JMSpatialIndex> catchmentInENV = catchementList.query( rbENV, null );
-      for( Iterator iter = catchmentInENV.iterator(); iter.hasNext(); )
+      for( final Object element : catchmentInENV )
       {
-        Feature catchment = (Feature) iter.next();
-        GM_Object catchmentGEOM = (GM_Object) catchment.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
+        final Feature catchment = (Feature) element;
+        final GM_Object catchmentGEOM = (GM_Object) catchment.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
         if( catchmentGEOM.contains( measureRhbGEOM ) )
         {
           boolean succseeded = addRHBinCatchment( modelWorkspace, catchment, storageChannelList, measureRhbFE );
@@ -265,7 +264,7 @@ public class MeasuresHelper
       }
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return false;
@@ -316,16 +315,16 @@ public class MeasuresHelper
    * @param diameter
    * @return
    */
-  private static Double getDischarge( double sumHeigth, double diameter )
+  private static Double getDischarge( final double sumHeigth, final double diameter )
   {
     final double area = Math.pow( diameter, 2d ) * Math.PI / 4;
     final double q = m_energyLosses * area * Math.pow( 2 * m_g * sumHeigth, 2d );
     return new Double( q );
   }
 
-  private static Double getVolume( double waterlevel, double lenght, double slope, double depth )
+  private static Double getVolume( final double waterlevel, final double lenght, final double slope, final double depth )
   {
-    double value = (4 / 3 * Math.pow( slope, 2d ) * (Math.pow( waterlevel, 2d ) - 3 * depth * Math.pow( waterlevel, 2d ) + 3 * Math.pow( depth, 2d ) * waterlevel) + 2 * slope * lenght
+    final double value = (4 / 3 * Math.pow( slope, 2d ) * (Math.pow( waterlevel, 2d ) - 3 * depth * Math.pow( waterlevel, 2d ) + 3 * Math.pow( depth, 2d ) * waterlevel) + 2 * slope * lenght
         * (Math.pow( waterlevel, 2d ) - 2 * depth * waterlevel) + Math.pow( lenght, 2d ) * waterlevel);
     return new Double( value );
   }
@@ -355,11 +354,11 @@ public class MeasuresHelper
     final QName qNameGRZ = new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GRZ_PROP );
     // get all hydros in the model
 
-    FeatureList hydroList = (FeatureList) hydrotopWorkspace.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
+    final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
     // transform planning workspace coordinate system to match coordinate system of hydrotop files
     if( hydroList.size() > 0 )
     {
-      final Feature feature = (Feature) hydroList.get( 0 );
+      final Feature feature = (Feature) hydroList.first();
       final GM_Object geom = feature.getGeometryProperties()[0];
       final CS_CoordinateSystem targetCS = geom.getCoordinateSystem();
       final TransformVisitor visitor = new TransformVisitor( targetCS );
@@ -368,41 +367,36 @@ public class MeasuresHelper
     // handel GruenFlaech features
     final IFeatureType gruenflFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GRUENFL_FT ) );
     final Feature[] gruenflFE = planningWorkspace.getFeatures( gruenflFT );
-    for( int i = 0; i < gruenflFE.length; i++ )
+    for( final Feature gfFE : gruenflFE )
     {
-      final Feature gfFE = gruenflFE[i];
       setNewLandUseAndCorrSealingFactor( gfFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, initValuesWorkspace, MeasuresConstants.XPLANUNG_GRUENFL_LANDUSE_NAME, logger );
     }
     // handel VerkehrsFlaech features
     final IFeatureType verkehrsFlaechFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_VERKEHRSFL_FT ) );
     final Feature[] verkersFEs = planningWorkspace.getFeatures( verkehrsFlaechFT );
-    for( int i = 0; i < verkersFEs.length; i++ )
+    for( final Feature vfFE : verkersFEs )
     {
-      final Feature vfFE = verkersFEs[i];
       setNewLandUseAndCorrSealingFactor( vfFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, initValuesWorkspace, MeasuresConstants.XPLANUNG_VERKEHRSFL_LANDUSE_NAME, logger );
     }
     // handel VerkehrsflaecheBesondererZweckbestimmung features
     final IFeatureType verkehrsflaechBesZweckFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_VERKEHRSFMITBESZWECK_FT ) );
     final Feature[] verkehrsflaechBesZweckFEs = planningWorkspace.getFeatures( verkehrsflaechBesZweckFT );
-    for( int i = 0; i < verkehrsflaechBesZweckFEs.length; i++ )
+    for( final Feature vfBZbFE : verkehrsflaechBesZweckFEs )
     {
-      final Feature vfBZbFE = verkehrsflaechBesZweckFEs[i];
       setNewLandUseAndCorrSealingFactor( vfBZbFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, initValuesWorkspace, MeasuresConstants.XPLANUNG_VERKEHRSFL_LANDUSE_NAME, logger );
     }
     // handel GemeinbedarfsFlaeche features
     final IFeatureType gemeinBedFlaechFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_GEMEINBED_FT ) );
     final Feature[] gemeinBedFlaechFEs = planningWorkspace.getFeatures( gemeinBedFlaechFT );
-    for( int i = 0; i < gemeinBedFlaechFEs.length; i++ )
+    for( final Feature gbFE : gemeinBedFlaechFEs )
     {
-      final Feature gbFE = gemeinBedFlaechFEs[i];
       setNewLandUseAndCorrSealingFactor( gbFE, qNameGRZ, qNameGeom, hydrotopWorkspace, paraWorkspace, initValuesWorkspace, MeasuresConstants.XPLANUNG_GEMEINBED_LANDUSE_NAME, logger );
     }
     // handel BaugebietsFlaechenTeil (Baugebiete) features
     final IFeatureType bauGebFT = planningSchema.getFeatureType( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_BAUGEBIET_FT ) );
     final Feature[] bauGebFEs = planningWorkspace.getFeatures( bauGebFT );
-    for( int i = 0; i < bauGebFEs.length; i++ )
+    for( final Feature bgFE : bauGebFEs )
     {
-      final Feature bgFE = bauGebFEs[i];
       final Object artBaulicherNutzung = bgFE.getProperty( new QName( MeasuresConstants.NS_XPLANUNG, MeasuresConstants.XPLANUNG_ART_BAULICHNUTZ_PROP ) );
       final String type;
       if( artBaulicherNutzung == null )
@@ -432,7 +426,7 @@ public class MeasuresHelper
     }
   }
 
-  private static void setNewLandUseAndCorrSealingFactor( final Feature planningMeasureFE, final QName sealingProp, final QName sealingGeom, final GMLWorkspace hydrotopWorkspace, final GMLWorkspace paraWorkspace, GMLWorkspace initValuesWorkspace, final String landUseProp, final Logger logger ) throws Exception
+  private static void setNewLandUseAndCorrSealingFactor( final Feature planningMeasureFE, final QName sealingProp, final QName sealingGeom, final GMLWorkspace hydrotopWorkspace, final GMLWorkspace paraWorkspace, final GMLWorkspace initValuesWorkspace, final String landUseProp, final Logger logger ) throws Exception
   {
     // init counter
     int c_success = 0;
@@ -442,9 +436,9 @@ public class MeasuresHelper
     final IFeatureType landUseFT = parameterSchema.getFeatureType( NaModelConstants.PARA_LANDUSE_NAME );
     final Feature[] landUseFEs = paraWorkspace.getFeatures( landUseFT );
     Feature landUseFE = null;
-    for( int i = 0; i < landUseFEs.length; i++ )
+    for( final Feature element : landUseFEs )
     {
-      landUseFE = landUseFEs[i];
+      landUseFE = element;
       final Object property = landUseFE.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP );
       if( landUseProp.equals( property ) )
         break;
@@ -480,7 +474,7 @@ public class MeasuresHelper
         difference = jtsHydroGEOM.difference( jtsMeasureGEOM );
         c_success++;
       }
-      catch( TopologyException e )
+      catch( final TopologyException e )
       {
         c_error++;
         e.printStackTrace();
@@ -520,7 +514,7 @@ public class MeasuresHelper
       final IRelationType linkSealing = (IRelationType) landUseFE.getFeatureType().getProperty( NaModelConstants.PARA_LANDUSE_PROP_SEALING_LINK );
       final Feature landuseSealingFE = paraWorkspace.resolveLink( landUseFE, linkSealing );
       final double landuseSealingFactor = FeatureHelper.getAsDouble( landuseSealingFE, NaModelConstants.PARA_LANDUSE_PROP_SEALING, 0.5d );
-      double measureSealingFactor = FeatureHelper.getAsDouble( planningMeasureFE, sealingProp, landuseSealingFactor );
+      final double measureSealingFactor = FeatureHelper.getAsDouble( planningMeasureFE, sealingProp, landuseSealingFactor );
       // TODO: implement the Kappungsgrenze
       // determine the 50% additional area für Nebenflächen und Stellplätze (Regel in Hamburg)
       // final IFeatureType measureFT = planningMeasureFE.getFeatureType();
@@ -561,9 +555,8 @@ public class MeasuresHelper
     final Feature[] hydIniFEs = initValuesWorkspace.getFeatures( hydIniFT );
     final String hydFEId = hydroFE.getId();
     boolean foundMatch = false;
-    for( int i = 0; i < hydIniFEs.length; i++ )
+    for( final Feature hydIniFE : hydIniFEs )
     {
-      final Feature hydIniFE = hydIniFEs[i];
       final String hydIniFEId = (String) hydIniFE.getProperty( featureIdPT );
       if( hydFEId.equals( hydIniFEId ) )
       {
@@ -588,16 +581,16 @@ public class MeasuresHelper
    * adjusted to account for the measure.
    * 
    * @param sealingURL
-   *          URL of the sealingMeasure.gml
+   *            URL of the sealingMeasure.gml
    * @param result
-   *          dataProvider
+   *            dataProvider
    * @param logger
-   *          logger
+   *            logger
    * @throws Exception
    */
   public static void insertSealingChangeMeasure( final URL sealingURL, final GMLWorkspace hydrotopWorkspace, final CalcDataProviderDecorater result, final Logger logger ) throws SimulationException, IOException, Exception
   {
-    GMLWorkspace sealingWS = GmlSerializer.createGMLWorkspace( sealingURL, null );
+    final GMLWorkspace sealingWS = GmlSerializer.createGMLWorkspace( sealingURL, null );
 
     final URL parameterURL = (URL) result.getInputForID( NaModelConstants.IN_PARAMETER_ID );
     // Versiegelungsgrad Measure
@@ -616,7 +609,7 @@ public class MeasuresHelper
     // so let measure transform to the one hydo uses. (less work than other way)
     if( hydroList.size() > 0 )
     {
-      final Feature feature = (Feature) hydroList.get( 0 );
+      final Feature feature = (Feature) hydroList.first();
       final GM_Object geom = feature.getGeometryProperties()[0];
       final CS_CoordinateSystem targetCS = geom.getCoordinateSystem();
       final TransformVisitor visitor = new TransformVisitor( targetCS );
@@ -624,18 +617,17 @@ public class MeasuresHelper
     }
     int c_success = 0;
     int c_error = 0;
-    for( int i = 0; i < sealingFEs.length; i++ )
+    for( final Feature sealFE : sealingFEs )
     {
-      final Feature sealFE = sealingFEs[i];
-      double sealMeasure = FeatureHelper.getAsDouble( sealFE, new QName( MeasuresConstants.NS_MEASURES_SEALING, MeasuresConstants.SEALING_MEASURE_SEALINGFACTOR_PROP ), 1.0d );
+      final double sealMeasure = FeatureHelper.getAsDouble( sealFE, new QName( MeasuresConstants.NS_MEASURES_SEALING, MeasuresConstants.SEALING_MEASURE_SEALINGFACTOR_PROP ), 1.0d );
 
       final GM_Object measureGEOM = (GM_Object) sealFE.getProperty( new QName( MeasuresConstants.NS_MEASURES_SEALING, MeasuresConstants.SEALING_MEASURE_GEOMETRY_PROP ) );
       final Geometry jtsMeasureGEOM = JTSAdapter.export( measureGEOM );
       final GM_Envelope selENV = sealFE.getEnvelope();
       final List<JMSpatialIndex> hydrosInENV = hydroList.query( selENV, null );
-      for( Iterator iter = hydrosInENV.iterator(); iter.hasNext(); )
+      for( final Object element : hydrosInENV )
       {
-        final Feature hydroFE = (Feature) iter.next();
+        final Feature hydroFE = (Feature) element;
         final double originalSealingFactor = getSealingFactorForHydrotop( hydroFE, paraWorkspace ); // TODO abfangen
         // wenn
 
@@ -649,7 +641,7 @@ public class MeasuresHelper
             continue;
           c_success++;
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           c_error++;
         }
@@ -686,16 +678,16 @@ public class MeasuresHelper
    * Get's the sealing factor for a hydrotop from the paramter.gml file
    * 
    * @param hydroFE
-   *          the hydrotop as a Feature
+   *            the hydrotop as a Feature
    * @param paramWorkspace
-   *          workspace containing the parameter-gml
+   *            workspace containing the parameter-gml
    */
   private static double getSealingFactorForHydrotop( final Feature hydroFE, final GMLWorkspace paramWorkspace )
   {
     final Object property = hydroFE.getProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME );
     final FeatureList features = (FeatureList) paramWorkspace.getRootFeature().getProperty( NaModelConstants.PARA_PROP_LANDUSE_MEMBER );
     Feature landuseFE = null;
-    Iterator it = features.iterator();
+    final Iterator it = features.iterator();
     while( it.hasNext() )
     {
       landuseFE = (Feature) it.next();
@@ -754,17 +746,16 @@ public class MeasuresHelper
       }
       int c_success = 0;
       int c_error = 0;
-      for( int i = 0; i < mrsMeasureFEs.length; i++ )
+      for( final Feature mrsMeasure : mrsMeasureFEs )
       {
-        final Feature mrsMeasure = mrsMeasureFEs[i];
         final Double percentage = FeatureHelper.getAsDouble( mrsMeasure, new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_PROP_PERCENTAGE ), 0d );
         final GM_Envelope envMeasure = mrsMeasure.getEnvelope();
         final GM_Object mrsGEOM = (GM_Object) mrsMeasure.getProperty( new QName( MeasuresConstants.NS_MEASURES_MRS, MeasuresConstants.MRS_MEASURE_GEOMETRY_PROP ) );
         final Geometry mrsJTS = JTSAdapter.export( mrsGEOM );
         final List<JMSpatialIndex> queriedCatchmentList = catchementList.query( envMeasure, null );
-        for( Iterator iter = queriedCatchmentList.iterator(); iter.hasNext(); )
+        for( final Object element : queriedCatchmentList )
         {
-          final Feature catchmentInEnv = (Feature) iter.next();
+          final Feature catchmentInEnv = (Feature) element;
           final GM_Object catchmentGEOM = (GM_Object) catchmentInEnv.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
           try
           {
@@ -794,7 +785,7 @@ public class MeasuresHelper
               c_success++;
             }
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             c_error++;
           }
@@ -804,7 +795,7 @@ public class MeasuresHelper
       }
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       logger.warning( "Was not able to merge swale and trench measures....skipped!" );
       throw new Exception( "Was not able to merge swale and trench measures....skipped!", e );
@@ -835,7 +826,7 @@ public class MeasuresHelper
 
     final FeatureList hydroList = (FeatureList) hydrotopWorkspace.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
     final List queriedHydroList = hydroList.query( geomBufferdArea.getEnvelope(), null );
-    for( Iterator iter = queriedHydroList.iterator(); iter.hasNext(); )
+    for( final Iterator iter = queriedHydroList.iterator(); iter.hasNext(); )
     {
       final Feature hydFe = (Feature) iter.next();
       final GM_Object hydGeom = (GM_Object) hydFe.getProperty( NaModelConstants.HYDRO_PROP_GEOM );

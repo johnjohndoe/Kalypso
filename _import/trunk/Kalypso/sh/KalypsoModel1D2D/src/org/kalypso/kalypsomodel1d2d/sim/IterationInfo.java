@@ -278,6 +278,10 @@ public class IterationInfo
    */
   private void finishCurrent( )
   {
+    // If nothing was processed at all, just return
+    if( m_stepNr == -1 )
+      return;
+
     final String obsName;
     final String obsDesc;
     final File obsFile;

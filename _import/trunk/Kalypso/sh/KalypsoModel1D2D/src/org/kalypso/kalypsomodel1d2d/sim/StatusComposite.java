@@ -154,7 +154,7 @@ public class StatusComposite extends Composite
       m_statusImgLabel.setImage( getStatusImage( status ) );
       m_statusMessageLabel.setText( status.getMessage() );
       if( m_detailsButton != null )
-        m_detailsButton.setEnabled( status.isMultiStatus() );
+        m_detailsButton.setEnabled( status.isMultiStatus() || status.getException() != null );
     }
 
     layout();

@@ -192,6 +192,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
           th.printStackTrace();
         }
 
+        // FIXME: Throws an exception on startup as this code is called within plug-in initialization, but accesses
+        // plug-in classes....
         final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( dataSetScope );
         if( locationMap != null )
         {

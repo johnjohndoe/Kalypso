@@ -91,15 +91,15 @@ import org.kalypsodeegree_impl.model.feature.visitors.SetPropertyFeatureVisitor;
 public class KalypsoDssCalcJob implements ISimulation
 {
 
-  private HashSet<NaModelCalcJob> m_naCalcJobs = new HashSet<NaModelCalcJob>();
+  private final HashSet<NaModelCalcJob> m_naCalcJobs = new HashSet<NaModelCalcJob>();
 
   private File m_resultDirDSS = null;
 
   List<String> m_featruesWithResults = new ArrayList<String>();
 
-  private String m_initValueFilePrefix = "lzsim";
+  private final String m_initValueFilePrefix = "lzsim";
 
-  private String m_initValueFileSuffix = ".gml";
+  private final String m_initValueFileSuffix = ".gml";
 
   /** assures to return only directories for a file.list() call */
   ISimulationResultEater m_resultEater;
@@ -133,7 +133,7 @@ public class KalypsoDssCalcJob implements ISimulation
       choiseCalcCase = (String) rootFeatureControl.getProperty( new QName( MeasuresConstants.NS_MESURESMETA, MeasuresConstants.METADATA_CALCCASE_PROP ) );
       optimize = FeatureHelper.booleanIsTrue( rootFeatureControl, new QName( MeasuresConstants.NS_MESURESMETA, MeasuresConstants.METADATA_OPTIMIZE_PROP ), false );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       // fallback to default calculate all HQs
@@ -176,7 +176,7 @@ public class KalypsoDssCalcJob implements ISimulation
         {
           inputStream = calcSwitchURL.openStream();
           IOUtils.copy( inputStream, writer );
-          String string = writer.toString();
+          final String string = writer.toString();
           doMeasures = string.indexOf( "yes" ) >= 0;
         }
         finally
@@ -243,14 +243,14 @@ public class KalypsoDssCalcJob implements ISimulation
       FlowsDSSResultGenerator.generateHTMLFormFragments( analyseFile, htmlFragmentBeans, true );
       FlowsDSSResultGenerator.generateHTMLFormFragments( analyseHQFile, htmlFragmentBeans, false );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
     resultEater.addResult( NaModelConstants.OUT_ZML, m_resultDirDSS );
   }
 
-  private List<Feature> mergeMeasures( final ISimulationDataProvider dssInputProvider, CalcDataProviderDecorater rrmInputProvider, final boolean doMeasures, Logger logger ) throws SimulationException
+  private List<Feature> mergeMeasures( final ISimulationDataProvider dssInputProvider, final CalcDataProviderDecorater rrmInputProvider, final boolean doMeasures, final Logger logger ) throws SimulationException
   {
     final List<Feature> resultNodes = new ArrayList<Feature>();
     boolean writeNewHydrotopFile = false;
@@ -326,7 +326,7 @@ public class KalypsoDssCalcJob implements ISimulation
         writeNewHydrotopFile = true;
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       logger.info( "Problems while merging measures with modell data - " + e.getLocalizedMessage() );
@@ -347,7 +347,7 @@ public class KalypsoDssCalcJob implements ISimulation
       }
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       // setAllResultFlags( modelWorkspace, true );
@@ -395,7 +395,7 @@ public class KalypsoDssCalcJob implements ISimulation
       }
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       logger.warning( "There have been problems serializing the measured model and hydrotop files -- The model is calcuate without any measures" );
       rrmInputProvider.addURL( NaModelConstants.IN_MODELL_ID, modelURL );
@@ -404,15 +404,15 @@ public class KalypsoDssCalcJob implements ISimulation
     return resultNodes;
   }
 
-  private Feature[] getAffectedChannels( GMLWorkspace modelWorkspace, URL designAreaURL ) throws Exception
+  private Feature[] getAffectedChannels( final GMLWorkspace modelWorkspace, final URL designAreaURL ) throws Exception
   {
     final GMLWorkspace designArea = GmlSerializer.createGMLWorkspace( designAreaURL, null );
-    FeatureList designAreaFEs = (FeatureList) designArea.getFeatureFromPath( MeasuresConstants.DESIGNAREA_MEMBER_PROP );
-    Feature designAreaFE = (Feature) designAreaFEs.get( 0 );
+    final FeatureList designAreaFEs = (FeatureList) designArea.getFeatureFromPath( MeasuresConstants.DESIGNAREA_MEMBER_PROP );
+    final Feature designAreaFE = (Feature) designAreaFEs.first();
     final FeatureList catchmentList = (FeatureList) modelWorkspace.getFeatureFromPath( "CatchmentCollectionMember/catchmentMember" );
     final ArrayList<Feature> channelCollector = new ArrayList<Feature>();
     final List catchments = catchmentList.query( designAreaFE.getEnvelope(), null );
-    for( Iterator iter = catchments.iterator(); iter.hasNext(); )
+    for( final Iterator iter = catchments.iterator(); iter.hasNext(); )
     {
       final Feature f = (Feature) iter.next();
       final IFeatureType featureType = f.getFeatureType();
@@ -434,7 +434,7 @@ public class KalypsoDssCalcJob implements ISimulation
 
   public boolean isSucceeded( )
   {
-    Iterator<NaModelCalcJob> name = m_naCalcJobs.iterator();
+    final Iterator<NaModelCalcJob> name = m_naCalcJobs.iterator();
     while( name.hasNext() )
     {
       final NaModelCalcJob job = name.next();
@@ -476,18 +476,18 @@ public class KalypsoDssCalcJob implements ISimulation
 
     HashSet<String> m_hashtable = new HashSet<String>();
 
-    public boolean accept( File dir, String name )
+    public boolean accept( final File dir, final String name )
     {
-      File file = new File( dir, name );
+      final File file = new File( dir, name );
       if( file.isDirectory() && (m_hashtable.contains( name ) || m_hashtable.isEmpty()) )
         return true;
       return false;
     }
 
-    public void add( String[] ommit )
+    public void add( final String[] ommit )
     {
-      for( int i = 0; i < ommit.length; i++ )
-        m_hashtable.add( ommit[i] );
+      for( final String element : ommit )
+        m_hashtable.add( element );
     }
 
   }
@@ -501,14 +501,14 @@ public class KalypsoDssCalcJob implements ISimulation
 
     ResultFileFilter( final List<String> toMatch )
     {
-      for( Iterator<String> iter = toMatch.iterator(); iter.hasNext(); )
-        m_hashtable.add( iter.next() );
+      for( final String string : toMatch )
+        m_hashtable.add( string );
     }
 
     /**
      * @see org.apache.commons.io.filefilter.IOFileFilter#accept(java.io.File)
      */
-    public boolean accept( File file )
+    public boolean accept( final File file )
     {
       final String filename = file.getName();
       if( file.isDirectory() && m_hashtable.contains( filename ) )
@@ -522,7 +522,7 @@ public class KalypsoDssCalcJob implements ISimulation
     /**
      * @see org.apache.commons.io.filefilter.IOFileFilter#accept(java.io.File, java.lang.String)
      */
-    public boolean accept( File file, String name )
+    public boolean accept( final File file, final String name )
     {
       return false;
     }

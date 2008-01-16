@@ -175,10 +175,9 @@ public class ExportThemeAction extends MapModellViewActionDelegate
     monitor.beginTask( Messages.getString( "action.ExportThemeAction.CreateImage" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     final FeatureList featureList = activeTheme.getFeatureList();
     final UserStyle[] style = activeTheme.getStyles();
-    final int pos = 0;
-    final RasterSymbolizer rasterSym = (RasterSymbolizer) style[pos].getFeatureTypeStyles()[pos].getRules()[pos].getSymbolizers()[pos];
-    final RectifiedGridDomain rgDomain = (RectifiedGridDomain) ((Feature) featureList.get( pos )).getProperty( "rectifiedGridDomain" ); //$NON-NLS-1$
-    final RangeSet rangeSet = (RangeSet) ((Feature) featureList.get( pos )).getProperty( "rangeSet" ); //$NON-NLS-1$
+    final RasterSymbolizer rasterSym = (RasterSymbolizer) style[0].getFeatureTypeStyles()[0].getRules()[0].getSymbolizers()[0];
+    final RectifiedGridDomain rgDomain = (RectifiedGridDomain) ((Feature) featureList.first()).getProperty( "rectifiedGridDomain" ); //$NON-NLS-1$
+    final RangeSet rangeSet = (RangeSet) ((Feature) featureList.first()).getProperty( "rangeSet" ); //$NON-NLS-1$
     monitor.beginTask( Messages.getString( "action.ExportThemeAction.CreateImage" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     final Raster raster = getSurrogateRaster( rgDomain, rangeSet, rasterSym, monitor );
     final PlanarImage image = getSurrogateImage( raster );
