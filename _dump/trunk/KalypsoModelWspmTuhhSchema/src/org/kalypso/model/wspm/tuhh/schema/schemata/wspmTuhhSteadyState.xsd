@@ -880,35 +880,32 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="trippleIt" default="false">
+					<element name="trippleIt" type="boolean" default="false">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Dreiteilung</label>
-								<tooltip>Dreiteilung</tooltip>
-								<description>Dreiteilung</description>
+								<label>Generelle Dreiteilung</label>
+								<tooltip>Falls aktiviert, werden die Polynome für alle Parameter dreigeteilt, sonst nur für alpha.</tooltip>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Triple Polynomes</label>
-								<tooltip>Triple Polynomes</tooltip>
-								<description>Triple Polynomes</description>
+								<tooltip>If active, all parameters get tripled polynomes, else onyl the alpha values are tripled.</tooltip>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="trippleMode" default="bordvoll" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Art der Dreiteilung</label>
+								<tooltip>Art der Dreiteilung</tooltip>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Triple Mode</label>
+								<tooltip>Triple Mode</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-							<!-- REMARK: For backwards compability, we are using 'true' and 'false', as these where possible values before....	-->
-								<enumeration value="false">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>keine</label>
-											<tooltip>Keine Dreiteitung der Polynome</tooltip>
-										</documentation>
-										<documentation xml:lang="en">
-											<label>&lt;none&gt;</label>
-											<tooltip>Polynomes are not tripled</tooltip>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="true">
+								<enumeration value="bordvoll">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Bordvollpunkte</label>

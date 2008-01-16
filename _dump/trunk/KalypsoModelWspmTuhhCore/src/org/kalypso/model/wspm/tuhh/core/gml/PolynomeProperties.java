@@ -60,6 +60,8 @@ public class PolynomeProperties extends AbstractFeatureBinder
 
   private static final QName QNAME_PROP_TRIPPLE_IT = new QName( TuhhCalculation.NS_WSPM_TUHH, "trippleIt" );
 
+  private static final QName QNAME_PROP_TRIPPLE_MODE = new QName( TuhhCalculation.NS_WSPM_TUHH, "trippleMode" );
+
   public final static QName QNAME = new QName( TuhhCalculation.NS_WSPM_TUHH, "CalcPolynomes" );
 
   private final static QName QNAME_PROP_DEEGREE = new QName( TuhhCalculation.NS_WSPM_TUHH, "degree" );
@@ -72,11 +74,10 @@ public class PolynomeProperties extends AbstractFeatureBinder
 
   private static final QName QNAME_PROP_WEIGHT_SPLINE_POINT = new QName( TuhhCalculation.NS_WSPM_TUHH, "weightSplinePoint" );
 
-  public enum Dreiteilung
+  public enum TripleMode
   {
-    none,
     bordvoll,
-    slope;
+    slopeChange;
   }
 
   public PolynomeProperties( final Feature featureToBind )
@@ -93,21 +94,19 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value;
   }
 
-  public Dreiteilung getTriple( )
+  public boolean getTripleForAll( )
   {
-    final String value = getProperty( QNAME_PROP_TRIPPLE_IT, String.class );
+    final Boolean value = getProperty( QNAME_PROP_TRIPPLE_IT, Boolean.class );
+    if( value == null )
+      return Boolean.FALSE;
 
-    // For backwards compability, we are using 'true' and 'false', as these where possible values before....
-    if( "false".equals( value ) )
-      return Dreiteilung.none;
+    return value;
+  }
 
-    if( "true".equals( value ) )
-      return Dreiteilung.bordvoll;
-
-    if( "slopeChange".equals( value ) )
-      return Dreiteilung.slope;
-
-    return Dreiteilung.none;
+  public TripleMode getTripleMode( )
+  {
+    final String value = getProperty( QNAME_PROP_TRIPPLE_MODE, String.class );
+    return TripleMode.valueOf( value );
   }
 
   public boolean getIgnoreOutlier( )
