@@ -56,6 +56,8 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -99,6 +101,19 @@ public class MapPartHelper
     virtualFrame.setVisible( true );
     mapPanel.setVisible( true );
     virtualFrame.add( mapPanel );
+
+    // channel focus to awt
+    composite.addFocusListener( new FocusAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.FocusAdapter#focusGained(org.eclipse.swt.events.FocusEvent)
+       */
+      @Override
+      public void focusGained( FocusEvent e )
+      {
+        mapPanel.requestFocus();
+      }
+    } );
 
     // create Context Menu
     final MenuManager menuManager = new MenuManager();
