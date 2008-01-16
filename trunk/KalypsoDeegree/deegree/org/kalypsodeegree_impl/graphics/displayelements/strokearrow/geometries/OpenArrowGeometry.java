@@ -69,8 +69,10 @@ public class OpenArrowGeometry extends AbstractArrowGeometry
     final int[] b = new int[] { -size, -size_3 };
     final int[] c = new int[] { 0, 0 };
 
-    getGraphic().drawLine( c[0], c[1], a[0], a[1] );
-    getGraphic().drawLine( c[0], c[1], b[0], b[1] );
+    final Graphics2D graphic = getGraphic();
+
+    graphic.drawLine( c[0], c[1], a[0], a[1] );
+    graphic.drawLine( c[0], c[1], b[0], b[1] );
   }
 
 }
