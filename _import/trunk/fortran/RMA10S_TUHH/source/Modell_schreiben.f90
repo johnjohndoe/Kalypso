@@ -1,4 +1,4 @@
-!     Last change:  WP   14 Dec 2007   12:01 pm
+!     Last change:  NIS  13 Jan 2008   11:47 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -90,6 +90,8 @@ INTEGER              :: iicyc                          !local variable for inter
 INTEGER, ALLOCATABLE :: Trans_nodes(:,:)               !informations for writing specific informations about transition elements
 INTEGER              :: trans_els                      !counter and name-giver for transition-elements
 
+CHARACTER (LEN = 1000) :: dataline
+
 !nis,may07
 !Add midside node for polynom approach
 !!NiS,apr06: allocating the two local arrays for arc-handling with the size of MaxP
@@ -117,17 +119,14 @@ DO i = 1, np
     arc_tmp (i, j) = 0
   END DO
 END DO
+
 !nis,may07
 !Add midside node for polynom approach
-!DO i = LPPoly, np
 DO i = 1, np
-!  DO j = 1, 5
   DO j = 1, 4
     arcmid  (i, j) = 0
   END DO
 END DO
-!Add midside node for polynom approach
-!-
 
 ! Zu jedem Midseitenknoten eine Kante erzeugen:
 !     (Kantennummer =Mittseitenknotennummer)                            
@@ -150,13 +149,21 @@ END DO
 
         !1D-ELEMENTS or 1D-2D-TRANSITION ELEMENTS
         IF (nnum .eq. 3 .or. nnum .eq. 5) THEN
-          !!midside node
-          k = nop (nelem, 2)
+          if ( (.not. IntPolProf (nop (nelem, 1))) .and. (.not. IntPolProf (nop (nelem, 3)))) then
+            !!midside node
+            k = nop (nelem, 2)
 
-          arcmid (k, 1) = nop (nelem, 1)
-          arcmid (k, 2) = nop (nelem, 3)
-          arcmid (k, 3) = nelem
-          arcmid (k, 4) = nelem
+            arcmid (k, 1) = nop (nelem, 1)
+            arcmid (k, 2) = nop (nelem, 3)
+            arcmid (k, 3) = nelem
+            arcmid (k, 4) = nelem
+          elseif ( (.not. IntPolProf (nop (nelem, 1))) .and. (IntPolProf (nop (nelem, 3)))) then
+            k = nop (nelem, 2)
+            arcmid (k, 1) = nop (nelem, 1)
+            arcmid (k, 2) = nop (IntPolElts (nelem, IntPolNo (nelem)), 3)
+            arcmid (k, 3) = nelem
+            arcmid (k, 4) = nelem
+          end if
 
           !Save informations for 1D-2D-TRANSITION ELEMENTS
           IF (nnum .eq. 5) THEN
@@ -231,7 +238,7 @@ DO i = 1, np
       !NiS,apr06: Changed arc to arc_tmp because of global conflict
       arc_tmp (arccnt, j) = arcmid (i, j)
     END DO
-      arc_tmp (arccnt, 5) = i
+    arc_tmp (arccnt, 5) = i
   ENDIF
 END DO
 
@@ -292,18 +299,26 @@ write_nodes: DO i = 1, np
 
   !NiS,may06: The cord array is initialized with -1.e20, so every node with coordinates less than -1e19 that are skipped for writing
   IF (cord(i,1) .lt. -1.e19) CYCLE write_nodes
-  !-
-  if (kmx(i).NE.-1) then
+
+  if (.not. (IntPolProf (i)) .and. kmx (i) /= -1.0) then
     write (IKALYPSOFM, 6999) i, cord (i, 1), cord (i, 2), aour(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
-  else
+  ELSEIF (.not. (IntPolProf (i)) .and. kmx (i) == -1.0) then
     WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), aour (i)
+  !for interpolated profiles
+  ELSEIF (IntPolProf (i) .AND. kmx (i) /= -1.0) then
+    write (IKALYPSOFM, 7043) i, cord (i, 1), cord (i, 2), aour(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+  ELSEIF (IntPolProf (i)) then
+    WRITE (IKALYPSOFM, 7044) i, cord (i, 1), cord (i, 2), aour (i)
   endif
 
   if (resultType == 'resu') THEN
-    WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3) , rausv (3, i)
-    !NiS,may06: All degrees of freedom have to be written and read for restart
-    WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
-    !-
+    if (.not. (IntPolProf (i)) ) then
+      WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3) , rausv (3, i)
+      !NiS,may06: All degrees of freedom have to be written and read for restart
+      WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
+    else
+      WRITE (IKALYPSOFM, 7045) i, (vel (j, i), j = 1, 3) , rausv (3, i)
+    end if
   ELSEIF ( resultType == 'mini') THEN
     WRITE (IKALYPSOFM, 7003) i, (minvel (j, i), j = 1, 3) , minrausv (i)
   ELSEIF (resultType == 'maxi') THEN
@@ -312,7 +327,8 @@ write_nodes: DO i = 1, np
 
 
   !only for real results not for minmax-result-files
-!  if (resultType == 'resu') then
+  !if (resultType == 'resu') then
+  if (.not. IntPolProf (i)) then
     IF (tet.ne.0.0) then
       WRITE (IKALYPSOFM, 7004) i, (vdot (j, i), j = 1, 3)
       WRITE (IKALYPSOFM, 7005) i, (vold (j, i), j = 1, 3)
@@ -325,28 +341,44 @@ write_nodes: DO i = 1, np
     IF (width (i) .ne. 0) THEN
       WRITE (IKALYPSOFM, 7013) i, width(i), ss1(i), ss2(i), wids(i), widbs(i), wss(i)
     END IF
+  !end if
 
-!  end if
 
-  !EFa Dec06, weitere Daten einlesen für 1d-Teschke-Elemente
-  PolyApproach = 1
-  !if (MINVAL (apoly(1, i, :) /= 0.0 .or. MAXVAL (apoly(1, i, :) /= 0.0) PolyApproach = 1
+    !EFa Dec06, weitere Daten einlesen für 1d-Teschke-Elemente
+    PolyApproach = 1
+    !if (MINVAL (apoly(1, i, :) /= 0.0 .or. MAXVAL (apoly(1, i, :) /= 0.0) PolyApproach = 1
 
-  if (PolyApproach == 1) then
-    WRITE (IKALYPSOFM, 7020) i, hhmin(i),hhmax(i)
-    WRITE (IKALYPSOFM, 7021) i, hbordv(i)
+    if (PolyApproach == 1) then
+      !WRITE (IKALYPSOFM, 7020) i, hhmin(i),hhmax(i)
+      !WRITE (IKALYPSOFM, 7021) i, hbordv(i)
 
-    do j = 1, PolySplitsA(i)
-      WRITE (IKALYPSOFM, *) 'AP ', i, j, apoly(j, i, :)
-    end do
-    do j = 1, PolySplitsQ(i)
-      WRITE (IKALYPSOFM, *) 'QP ', i, j, qgef(i), qpoly(j, i, :)
-    end do
-    do j = 1, PolySplitsB(i)
-      WRITE (IKALYPSOFM, *) 'ALP', i, j, alphapoly(j, i, :)
-      WRITE (IKALYPSOFM, *) 'BEP', i, j, betapoly(j, i, :)
-    end do
+      WRITE (dataline, *) 'PRA', i, polySplitsA(i), hhmin(i), (polyrangeA(i, k), k=1, polySplitsA(i))
+      WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
+      WRITE (dataline, *) 'PRQ', i, polySplitsQ(i), hhmin(i), (polyrangeQ(i, k), k=1, polySplitsQ(i))
+      WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
+      if (PolySplitsB(i) /= 0) then
+        WRITE (dataline, *) 'PRB', i, polySplitsB(i), hhmin(i), (polyrangeB(i, k), k=1, polySplitsB(i))
+        WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
+      endif
+
+      do j = 1, PolySplitsA(i)
+
+        WRITE (dataline, *) 'AP ', i, j, apoly(j, i, :)
+        WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
+      end do
+      do j = 1, PolySplitsQ(i)
+        WRITE (dataline, *) 'QP ', i, j, qgef(i), qpoly(j, i, :)
+        WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
+      end do
+      do j = 1, PolySplitsB(i)
+        WRITE (dataline, *) 'ALP', i, j, alphapoly(j, i, :)
+        WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
+        WRITE (dataline, *) 'BEP', i, j, betapoly(j, i, :)
+        WRITE (IKALYPSOFM, '(a)') dataline (2: LEN (TRIM (dataline)))
+      end do
+    end if
   end if
+
 
 END DO write_nodes
                                                                         
@@ -360,16 +392,26 @@ end do write_arcs
 
 ! Elements:
 write_elements: DO i = 1, ne
+  !for weir elements
   if (imat(i) >= 901 .and. imat(i) <= 903) then
     WRITE (IKALYPSOFM, 7019) i, (nop(i, j), j= 1, ncorn(i))
-  else
-    WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
-    if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
-      BACKSPACE(IKALYPSOFM)
-      WRITE (IKALYPSOFM, 7016) i, imat (i), imato (i), nfixh (i), nop(i,1)
-    end if
-    if (CorrectionKS(i) /= 1.0 .or. CorrectionAxAy(i) /= 1.0 .or. CorrectionDp(i) /= 1.0) then
-      WRITE (IKALYPSOFM, 7017) i, CorrectionKS(i), CorrectionAxAy(i), CorrectionDp(i)
+  !for 1D or 2D elements; interpolated elements are excluded; no necessary informations
+  ELSE
+    if (imat (i) /= 89) then
+      WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
+      !write material types and reordering number
+      if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
+        BACKSPACE(IKALYPSOFM)
+        WRITE (IKALYPSOFM, 7016) i, imat (i), imato (i), nfixh (i), nop(i,1)
+      end if
+      !write roughness corrections
+      if (CorrectionKS(i) /= 1.0 .or. CorrectionAxAy(i) /= 1.0 .or. CorrectionDp(i) /= 1.0) then
+        WRITE (IKALYPSOFM, 7017) i, CorrectionKS(i), CorrectionAxAy(i), CorrectionDp(i)
+      end if
+    !write number of profiles to interpolate in between
+    elseif (imat (i) == 89 .and. (.NOT.(IntPolProf (nop (i, 1))))) then
+      WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i)
+      write (IKALYPSOFM, 7046) i, IntPolNo (i)
     end if
 
     !only for real results, not for minmax-results
@@ -477,6 +519,16 @@ CLOSE (IKALYPSOFM, STATUS='keep')
 
  !nis,apr07: continuity line definition
  7042 FORMAT ('CC', i1, 9i8)
+
+ !nis,jan08: interpolated profiles in 1D polynomial approach
+ 7043 FORMAT ('IN', i10, 4f20.7)
+ !nis,jan08: interpolated nodes in 1D polynomial approach
+ 7044 FORMAT ('IN', i10, 3f20.7)
+ !nis,jan08: results of interpolated nodes or profiles; like VA-line
+ 7045 FORMAT ('IR', i10,4f20.7)
+ !nis,jan08: no. of interpolated profiles
+ 7046 FORMAT ('IP', 2i10)
+
 
 
 !--------------- deallocation section -----------------------------

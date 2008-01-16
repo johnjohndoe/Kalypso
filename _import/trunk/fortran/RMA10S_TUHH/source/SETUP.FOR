@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007    2:47 am
+C     Last change:  WP   10 Jan 2008    7:07 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE JAN 12 1999 ADD LOGIC FOR 2DV JUNCTIONS
       SUBROUTINE SETUP
@@ -31,7 +31,10 @@ C-
 cipk oct98 update to f90
       IMMT=IMAT(J)
       L=MOD(IMMT,100)
-      IF(ORT(L,1) .EQ. 0.) GO TO 199
+      !nis,jan08: Exclude polynomial approach
+      if (l /= 89) then
+        IF(ORT(L,1) .EQ. 0.) GO TO 199
+      end if
 
 cipk oct98 update to f90
 CIPK OCT98      ILK=1

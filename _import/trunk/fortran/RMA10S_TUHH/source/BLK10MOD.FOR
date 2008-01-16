@@ -1,4 +1,4 @@
-C     Last change:  WP    7 Nov 2007    7:53 pm
+C     Last change:  WP   10 Jan 2008    4:05 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -107,8 +107,9 @@ CIPK MAR06 ADD IOUTRWD
       INTEGER   NADTYP(50),NOUTCC(50)
 
 
-      INTEGER*2 IMAT,NCORN,NCRN
-     1         ,NETYP,NDEP,IBN,NOPSS,NFIXHS
+!      INTEGER*2 IMAT,NCORN,NCRN
+!     1         ,NETYP,NDEP,IBN,NOPSS,NFIXHS
+      INTEGER :: IMAT, NCORN, NCRN ,NETYP, NDEP, IBN, NOPSS, NFIXHS
 
 cipk may02
       real*8 vel,ao,cord,AORIG

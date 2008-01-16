@@ -1,4 +1,4 @@
-C     Last change:  WP    9 Nov 2007    9:14 am
+C     Last change:  WP   10 Jan 2008    7:09 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -197,10 +197,12 @@ c      write(75,*) 'front',n,nelm,netyp(n),imat(n)
 
 CIPK DEC03 ADD IEDSW DEPENDENCE
 
-      NMATYP=(MOD(IMAT(N),1000))
-      IEDSW=IEDSW1(NMATYP)
-      TBFACT=TBFACT1(NMATYP)
-      TBMIN=TBMIN1(NMATYP)
+      if (imat (n) /= 89) then
+        NMATYP=(MOD(IMAT(N),1000))
+        IEDSW=IEDSW1(NMATYP)
+        TBFACT=TBFACT1(NMATYP)
+        TBMIN=TBMIN1(NMATYP)
+      endif
 
       IF(ITEQV(MAXN) .NE. 5) THEN
           

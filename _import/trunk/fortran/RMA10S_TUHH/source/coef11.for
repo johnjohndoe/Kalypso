@@ -19,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  WP   22 Nov 2007    8:15 pm
+C     Last change:  NIS  13 Jan 2008    6:36 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -385,7 +385,7 @@ CIPK OCT02 GET GAUSS POINT ICE VALUES
       !-
 CIPK FEB07
       EXTL=EXTLDEL(NN)
-	IF(NTX .NE. 0) THEN
+      IF(NTX /= 0) THEN
         H=VEL(3,N1)*XM(1)+VEL(3,N2)*XM(2)
       ELSE
         H=1.0
@@ -590,7 +590,7 @@ C
         SRCSNK=0.
         IF(LSAND .GT. 0) THEN
           CALL MKSAND(SALT,H,VSN,SRCSNK,GRATE,NETYP(NN))
-	  ENDIF
+      ENDIF
         DRDS=DRODSD(SALT,IGF)
       ELSE
         DRDS=DRODSD(SALT,IGF)

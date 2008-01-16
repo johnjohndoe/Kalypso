@@ -1,3 +1,4 @@
+C     Last change:  NIS  13 Jan 2008    7:44 pm
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
 CIPK  LAST UPDATE MAY 03 2004 ALLOW FOR LOAD APPLIED ONLY AS MASS
 CIPK  LAST UPDATE JAN 14 2003 ADD MOMENTUM FOR INFLOWS
@@ -11,6 +12,7 @@ cipk  last update Dec 9 1997  initialize SIDF correctly
       USE BLK10MOD
       USE BLK11MOD
       USE PARAMMOD
+      USE ParaKalyps
       SAVE
 C-
 C...... Input special boundary conditions
@@ -116,41 +118,38 @@ CIPK NOV97 END CHANGES
       ENDDO
   201 CONTINUE
       IF(ID(1:3) .EQ. 'EFA') THEN
-        IEGEN=IEGEN+1
+        !counter of elements inflows
+        IEGEN = IEGEN + 1
 CIPK DEC97 REFINE TEST FOR TOO MANY ELEMENT FLOWS
-        IF(IEGEN .GT. NELDS) THEN
-CIPK SEP04 CREATE ERROR FILE
-          CLOSE(75)
-          OPEN(75,FILE='ERROR.OUT')
-          WRITE(75,*) 'ERROR STOP TOO MANY ELEMENT INFLOWS'
-          WRITE(*,*) 'ERROR STOP TOO MANY ELEMENT INFLOWS'
-          STOP 'TOO MANY ELEMENT INFLOWS'
-        ENDIF
+        IF (IEGEN > NELDS)
+           !ERROR - TOO MANY ELEMENT INFLOWS.
+     +     CALL ErrorMessageAndStop (1007, 0, 0.0D0, 0.0D0)
+
 CIPK DEC97 END ADDITION
-        IF(IEGEN .EQ. 1) THEN
-          WRITE(LOUT,6029)
+        IF (IEGEN .EQ. 1) THEN
+          WRITE (LOUT, 6029)
         ENDIF
-        IF(NEQ(IEGEN) .EQ. 0) THEN
+        IF(NEQ (IEGEN) .EQ. 0) THEN
 cipk jan03          READ(DLIN,5029) N,LN,NEST,SF,QQAL,LABL
-          READ(DLIN,5029) N,LN,NEST,SF,QQAL,LABL,ELINR
-	    read(dlinextra,5030) ELINT
-	    ELINX=ELINR*COS(ELINT)
-	    ELINY=ELINR*SIN(ELINT)
-          WRITE(LOUT,6019) N,SF,QQAL,ELINX,ELINY
+          READ (DLIN, 5029) N, LN, NEST, SF, QQAL, LABL, ELINR
+          read (dlinextra, 5030) ELINT
+          ELINX = ELINR * COS (ELINT)
+          ELINY = ELINR * SIN (ELINT)
+          WRITE (LOUT, 6019) N, SF, QQAL, ELINX, ELINY
 cipk nov97          READ(IBIN,7000) ID,DLIN
-          call ginpt(ibin,id,dlin)
+          call ginpt (ibin, id, dlin)
 cipk APR96 save data to a scratch file
           if(isvs .eq. 1) then
-            write(nscrin,7000) id,dlin
+            write (nscrin, 7000) id, dlin
           endif
-          NDATLN=NDATLN+1
+          NDATLN = NDATLN + 1
 C
 
           DO N=1,NE
 CIPK LOGIC FOR LAYERS MOVED TO LNFLO
 cipk mar01  go to LNFLO with NEST increased by 2 (for recognition)
 CIPK JAN03            CALL LNFLO(N,SF,QQAL,NEST+2,LN)
-            CALL LNFLO(N,SF,QQAL,NEST+2,LN,ELINX,ELINY)
+            CALL LNFLO (N, SF, QQAL, NEST + 2, LN, ELINX, ELINY)
 CIPK NOV97 END CHANGES
           ENDDO
           IF(LABL .EQ. 1) THEN
@@ -164,70 +163,96 @@ CIPK NOV97 END CHANGES
       ENDIF
       IFPAS=0
   202 CONTINUE
+
+
+      !individual element inflow
       IF(ID(1:3) .EQ. 'EFE') THEN
-        IEGEN=IEGEN+1
+        IEGEN = IEGEN + 1
+
 CIPK DEC97 REFINE TEST FOR TOO MANY ELEMENT FLOWS
-        IF(IEGEN .GT. NELDS) THEN
-CIPK SEP04 CREATE ERROR FILE
-          CLOSE(75)
-          OPEN(75,FILE='ERROR.OUT')
-          WRITE(75,*) 'ERROR STOP TOO MANY ELEMENT INFLOWS'
-          WRITE(*,*) 'ERROR STOP TOO MANY ELEMENT INFLOWS'
-          STOP 'TOO MANY ELEMENT INFLOWS'
-        ENDIF
+        IF (IEGEN > NELDS)
+           !ERROR - TOO MANY ELEMENT INFLOWS.
+     +     call errorMessageAndStop (1007, 0, 0.0D0, 0.0D0)
+
 CIPK DEC97 END ADDITION
-         IFPAS=IFPAS+1
+        IFPAS = IFPAS + 1
+
+        !write header of control output
         IF(IFPAS .EQ. 1) THEN
-          WRITE(LOUT,6041)
+          WRITE (LOUT, 6041)
         ENDIF
-        IF(NEQ(IEGEN) .EQ. 0) THEN
-CIPK NOV97          READ(DLIN,5029) N,LNO(N),NEST,SF,SIDQ(N,1),SIDQ(N,2),SIDQ(N,3)
-CIPK NOV97          WRITE(LOUT,6021) N,LNO(N),SF,SIDQ(N,1),SIDQ(N,2),SIDQ(N,3)
-CIPK JAN03          READ(DLIN,5029) N,LN,NEST,SF,QQAL,LABL
-          READ(DLIN,5029) N,LN,NEST,SF,QQAL,LABL,ELINR
-	    read(dlinextra,5030) ELINT
-	    ELINX=ELINR*COS(ELINT)
-	    ELINY=ELINR*SIN(ELINT)
+
+        IF (NEQ (IEGEN) .EQ. 0) THEN
+
+          !get the user's input data with new option for inflow angle if inflow has direction (for momentum equation)
+          READ (DLIN, 5029) N, LN, NEST, SF, QQAL, LABL, ELINR
+          read (dlinextra, 5030) ELINT
+
+          !calculate x- and y- inflow
+          ELINX = ELINR * COS (ELINT)
+          ELINY = ELINR * SIN (ELINT)
 CIPK MAY04
-	    IF(N .LT. 0) THEN
-	      N=-N
-            IF(LN .GT. 1) THEN
-	        NNN=NEREF(N)+LN-1
-	        INOFLOW(NNN)=1
-	      ELSE
-	        INOFLOW(N)=1
-	      ENDIF
-	    ELSE
-            IF(LN .GT. 1) THEN
-	        NNN=NEREF(N)+LN-1
-	        INOFLOW(NNN)=0
-	      ELSE
-	        INOFLOW(N)=0
-	      ENDIF
-	    ENDIF
-          WRITE(LOUT,6021) N,LN,SF,QQAL,ELINX,ELINY
-cipk nov97          READ(IBIN,7000) ID,DLIN
+          IF (N < 0) THEN
+            N = -N
+            IF (LN > 1) THEN
+              NNN = NEREF (N) + LN - 1
+              INOFLOW (NNN) = 1
+            ELSE
+              INOFLOW (N) = 1
+            ENDIF
+          ELSE
+            IF (LN > 1) THEN
+              NNN = NEREF (N) + LN - 1
+              INOFLOW (NNN) = 0
+            ELSE
+              INOFLOW (N) = 0
+            ENDIF
+          ENDIF
+
+          !TODO:
+          !This output is not correct; it's only displaying the direct input, but it can differ
+          !between total inflow or specific inflow
+          !control output, and read new line
+          WRITE (LOUT, 6021) N, LN, SF, QQAL, ELINX, ELINY
           call ginpt(ibin,id,dlin)
+
 cipk APR96 save data to a scratch file
-          if(isvs .eq. 1) then
-            write(nscrin,7000) id,dlin
+          if (isvs == 1) then
+            write (nscrin, 7000) id, dlin
           endif
-          NDATLN=NDATLN+1
+          NDATLN = NDATLN + 1
 C          WRITE(LOUT,6038) N,SF,ELINX,ELINY
           IF(LABL .EQ. 1) THEN
-            NEQ(IEGEN)=N
-            WRITE(LOUT,6051)
- 6051       FORMAT (/'   INDIVIDUAL ELEMENT INFLOW HYDROGRAPH WILL BE IN
-     +TERPOLATED ')
+            NEQ (IEGEN) = N
+            WRITE (LOUT, 6051)
+ 6051       FORMAT (/
+     +'   INDIVIDUAL ELEMENT INFLOW HYDROGRAPH WILL BE INTERPOLATED ')
           ENDIF
 CIPK LOGIC FOR LAYERS MOVED TO LNFLO
 CIPK JAN03  ADD MOMENTUM TERMS
-          CALL LNFLO(N,SF,QQAL,NEST,LN,ELINX,ELINY)
+          if (imat (n) == 89 .and. NEST /= 0)
+     +      SF = SF / (IntPolNo (n) + 1)
+
+          CALL LNFLO (N, SF, QQAL, NEST, LN, ELINX, ELINY)
+
+          !for interpolated elements
+          if (IntPolNo (n) /= 0) then
+            ForInterpolated: do i = 1, IntPolNo (n)
+              if (IntPolElts (n, i) == 0) EXIT ForInterpolated
+              WRITE (LOUT, 6021)
+     +          IntPolElts (n, i), LN, SF, QQAL, ELINX, ELINY
+              call LNFLO (IntPolElts (n, i),
+     +          SF, QQAL, NEST, LN, ELINX, ELINY)
+            end do ForInterpolated
+          end if
+
 CIPK JAN03          CALL LNFLO(N,SF,QQAL,NEST,LN)
 CIPK NOV97 END CHANGES
           GO TO 202
         ENDIF
       ENDIF
+
+
 CIPK NOV97 END CHANGES
 CIPK JAN03
  5029 FORMAT( 3I8, 4F8.0, I8 ,2F8.0)

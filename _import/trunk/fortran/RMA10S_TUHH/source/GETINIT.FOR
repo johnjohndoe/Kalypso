@@ -1,4 +1,4 @@
-C     Last change:  WP    9 Nov 2007    8:11 am
+C     Last change:  WP   14 Jan 2008    3:15 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -67,6 +67,16 @@ C-
      +                dummy(5), dummy(6), dummy(7), 2)
         npx = maxp-1
         ndx = 9
+
+        !introducing the restart values for interpolated profiles
+        do i = 1, maxp
+          if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
+            do j = 1, 3
+              vel (j, i) = kmWeight(i) * vel (j, NeighProf(i, 1)) +
+     +                  (1.0d0 - kmWeight(i)) * vel (j, NeighProf(i, 2))
+            end do
+          end if
+        end do
       ELSE
 
 CIPK APR06   READ FOR SUS SED DATA ONLY
@@ -315,17 +325,34 @@ cipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
           NLM=3
         ENDIF
 
-        DO 172 M=1,NLM
+        Get1DInits: DO M=1,NLM
+
+          !get node
           NA=NOP(N,M)
-
-          !testing for polynomial nodes
-          if (imat(n) == 89) then
-            vel(3,na) = 0.5 * (hhmin(na) + hhmax(na))
-          end if
-
+          !get initial velocities
           VEL(1,NA)=UNOM
 
-  172   CONTINUE
+          !skip midsides of polynomial approach
+          if (m == 2 .and. imat (n) == 89) CYCLE Get1DInits
+
+          !testing for polynomial nodes
+          if (imat(n) == 89 .and. (.not. IntPolProf(na))) then
+            vel(3,na) = 0.5 * (hhmin(na) + hhmax(na))
+          ELSEIF (imat(n) == 89 .and. IntPolProf(na)) then
+            VEL (3, na) =
+     +      kmWeight (na) *
+     +      0.5 *(hhmin (NeighProf (na, 1)) + hhmax (NeighProf (na, 1)))
+     +      + (1.0D0 - kmWeight (na)) *
+     +      0.5 *(hhmin (NeighProf (na, 2)) + hhmax (NeighProf (na, 2)))
+            !fill vel(3,*) midsides for polynomial approach
+          end if
+          if (m == 3) then
+            vel(3, NOP(n, 2)) =
+     +      (vel (3, nop(n, 1)) + VEL (3, nop(n, 3))) / 2.0d0
+          end if
+
+        ENDDO Get1DInits
+
   173 CONTINUE
   175 CONTINUE
 c      DO 1780 N=1,NP

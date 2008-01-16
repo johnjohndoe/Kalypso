@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP   25 Oct 2007    1:25 pm
+C     Last change:  WP   10 Jan 2008    5:16 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -180,10 +180,12 @@ CIPK JUN05
 CIPK OCT98 CONVERT TO F90
         !NiS,may06: every element that is in the range of 1-899 and 1001+
         IF(NM .LT. 900  .OR. NM .GT. 1000) THEN
+
 !nis,may07: Might be error with the mod-function, because this function would reduce any material type greater than 100 to a number less than 100
 !           Increasing to mod(nm,1000)
-!          L=MOD(NM,100) !NiS,may06: for every normal element
-          L=MOD(NM,1000) !NiS,may06: for every normal element
+!           probably it's for the reason of curved elements
+          L=MOD(NM,100) !NiS,may06: for every normal element
+!          L=MOD(NM,1000) !NiS,may06: for every normal element
 !-
         ELSE
           L=NM !NiS,may06: for special elements
@@ -192,7 +194,9 @@ CIPK OCT98 CONVERT TO F90
 !Allow for polynom approach with turbulent exchange coefficient equal to zero
         !NiS,may06: if no turbulent exchange coefficient, jump over element
 !        IF(ORT(L,1) .EQ. 0.) GO TO 199
-        IF(ORT(L,1) .EQ. 0. .and. L /= 89) GO TO 199
+        if (l /= 89) then
+          IF(ORT(L,1) .EQ. 0.) GO TO 199
+        end if
 !Allow for polynom approach with turbulent exchange coefficient equal to zero
 !-
         ILK=1

@@ -1,4 +1,4 @@
-C     Last change:  WP    8 Jan 2008   11:11 am
+C     Last change:  WP   10 Jan 2008    6:19 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -1084,7 +1084,7 @@ C-
         ENDIF
       ENDIF
 
-!NiS,mar06	write control
+!NiS,mar06 write control
 
       WRITE( *,6903)NCL
       WRITE(75,6903)NCL
@@ -1155,7 +1155,7 @@ C-
       !NiS,may06: testing
       !OPEN(UNIT=357, FILE='roughnesstest.txt')
       Materialassigning: DO J=1,MaxE
-        if (IMAT(J).eq.0) CYCLE Materialassigning
+        if (IMAT(J) == 0 .or. imat (j) == 89) CYCLE Materialassigning
         CNIKU(J)     = ORT(ABS(IMAT(J)),15)
         ABST(J)      = ORT(ABS(IMAT(J)),16)
         DURCHBAUM(J) = ORT(ABS(IMAT(J)),17)
@@ -1169,7 +1169,7 @@ CIPK JUN02 GET LIST OF ACTIVE NODES INCLUDING NODES WITH ORT NON ZERO
         IBNA(N)=0
       ENDDO
       DO N=1,NE
-        IF(IMAT(N) .GT. 0) THEN
+        IF(IMAT(N) .GT. 0 .and. imat (n) /= 89) THEN
           IF(ORT(IMAT(N),1) .NE. 0.) THEN
             DO K=1,NCORN(N)
               IBNA(NOP(N,K))=IBNA(NOP(N,K))+1
@@ -1590,7 +1590,7 @@ C  Calculate 2-D Eddy Viscosity Coef
 C  Initialize viscosity array
 C
       DO 141  N=1,NE
-         IF (IMAT(N) .NE. 0)  THEN
+         IF (IMAT(N) .NE. 0 .and. imat(n) /= 89)  THEN
 cipk dec00          IF (IMAT(N) .GE. 900) GO TO 141
             I = IMAT(N)
             EEXXYY(1,N) = ORT(I,1)
@@ -1915,9 +1915,13 @@ C
 CIPK DEC03 ADD IEDSW DEPENDENCE
 
           NMATYP=(MOD(IMAT(N),1000))
-  	    IEDSW=IEDSW1(NMATYP)
-	    TBFACT=TBFACT1(NMATYP)
-	    TBMIN=TBMIN1(NMATYP)
+
+          if (imat(n) /= 89) then
+            IEDSW=IEDSW1(NMATYP)
+            TBFACT=TBFACT1(NMATYP)
+            TBMIN=TBMIN1(NMATYP)
+          end if
+
           IF(IMAT(N) .GT. 1000  .AND.  IMAT(N) .LT. 5000) THEN
             CALL SURCOF(N,0)
           ELSEIF(NETYP(N)/10 .EQ. 2) THEN

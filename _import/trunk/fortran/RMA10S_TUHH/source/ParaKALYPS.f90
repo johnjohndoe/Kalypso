@@ -1,4 +1,4 @@
-!     Last change:  WP    8 Jan 2008   11:06 am
+!     Last change:  NIS  13 Jan 2008    3:34 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -58,17 +58,17 @@ REAL(KIND=8)             :: semp,dside,gsc1,gsc2,artr1,artr2,gscal
 REAL, ALLOCATABLE 	:: rss(:), specccold(:,:),speccc(:,:)
 REAL, ALLOCATABLE 	:: specccfut(:,:),temp_vel(:,:)
 REAL, ALLOCATABLE 	:: temp_vdot(:,:),temp_vdoto(:,:)
-REAL                    :: rrr,hhh,hhh2,qqq,qqqdir
-INTEGER                 :: nitnzero,nitazero,nitizero,extranita
-INTEGER                 :: beiauto,nnnunst,nnnst,linlog,exterr
-INTEGER                 :: emp_nan
-ALLOCATABLE             :: temp_nbc(:,:)
-INTEGER                 :: temp_maxnn,temp_iteqs,temp_iteqv
-INTEGER                 :: temp_iurvl,temp_itlvl,temp_iurvl1
+REAL               :: rrr,hhh,hhh2,qqq,qqqdir
+INTEGER            :: nitnzero,nitazero,nitizero,extranita
+INTEGER            :: beiauto,nnnunst,nnnst,linlog,exterr
+INTEGER            :: emp_nan
+ALLOCATABLE        :: temp_nbc(:,:)
+INTEGER            :: temp_maxnn,temp_iteqs,temp_iteqv
+INTEGER            :: temp_iurvl,temp_itlvl,temp_iurvl1
 !EFa aug07
-REAL                    :: autoindex
-REAL(KIND = 8)          :: deltsum
-REAL,allocatable        :: temp_speccc(:)
+REAL               :: autoindex
+REAL(KIND = 8)     :: deltsum
+REAL,allocatable   :: temp_speccc(:)
 
 !nis,aug07: for correction purposes in Kalypso-GUI, there must be a correction based on the elements
 !           correction applies for ks-value, diameter of ... and distance between vegetation elements
@@ -81,6 +81,13 @@ REAL (KIND = 8), ALLOCATABLE, dimension (:):: lambdaKS, lambdaP, lambdaDunes, la
 
 !nis,jan08: New output control paramters
 INTEGER :: WriteNodeBlock     ! (==1: Writes the nodal values into output.out file; ==0: Writes no nodal values into output.out)
+
+!nis,jan08: new variables for profile interpolation
+INTEGER, ALLOCATABLE :: IntPolNo (:), NeighProf (:, :), IntPolElts (:, :)
+INTEGER              :: maxIntPolElts
+LOGICAL, ALLOCATABLE :: IntPolProf (:)
+INTEGER              :: statElSz, statNoSz, NodesToIntPol
+REAL (KIND = 8), ALLOCATABLE :: kmWeight(:)
 
 
 END MODULE 

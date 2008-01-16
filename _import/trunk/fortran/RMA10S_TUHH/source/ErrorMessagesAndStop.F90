@@ -1,4 +1,4 @@
-!     Last change:  WP   28 Nov 2007   11:34 am
+!     Last change:  WP   14 Jan 2008   11:31 am
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -43,6 +43,10 @@ elseif (ErrorID == 1006) then
   WRITE (ErrorUnit, 1006) ObjectID
   WRITE (        *, 1006) ObjectID
 
+elseif (ErrorID == 1007) then
+  WRITE (ErrorUnit, 1007)
+  WRITE (        *, 1007)
+
 elseif (ErrorID == 1101) then
   WRITE (ErrorUnit, 1101) ObjectID
   WRITE (        *, 1101) ObjectID
@@ -84,6 +88,10 @@ elseif (ErrorID == 1109) then
 elseif (ErrorID == 1110) then
   WRITE (ErrorUnit, 1110) ObjectID
   WRITE (        *, 1110) ObjectID
+
+elseif (ErrorID == 1111) then
+  WRITE (ErrorUnit, 1111) ObjectID
+  WRITE (        *, 1111) ObjectID
 
 elseif (ErrorID == 1201) then
   WRITE (ErrorUnit, 1201) ObjectID
@@ -133,6 +141,10 @@ elseif (ErrorID == 1601) then
   WRITE (ErrorUnit, 1601) ObjectID
   WRITE (        *, 1601) ObjectID
 
+elseif (ErrorID == 1601) then
+  WRITE (ErrorUnit, 1601) 
+  WRITE (        *, 1601) 
+
 ELSEIF (ErrorID == 3501) then
   WRITE (ErrorUnit, 3501)
   WRITE (        *, 3501)
@@ -178,6 +190,9 @@ end if
  1005 FORMAT (1x, 'ERROR - junction element ', I5, 'shall not be zero or negative')
  1006 FORMAT (1x, 'ERROR - KSWIT has the value ', i5, ', but it can only have the' / &
             & 1x, 'values 0, 1, 2. This must be an implementation error.')
+ !elflows
+ 1007 format (1x, 'ERROR - TOO MANY ELEMENT INFLOWS.' / &
+            & 1x, 'Reduce the number of element inflows! Program will be stopped')
 
 !1100  Errors with nodes
 !****
@@ -204,6 +219,10 @@ end if
  1109 format (1x, 'ERROR - Midside node number', i5, ' is higher than maximum node number defined.' / &
             & 1x, "That doesn't work. Please change numbering!")
  1110 format (1x, 'ERROR - There are too many elements connected to node ', i5, '. Change mesh!')
+ !GenNewNode
+ 1111 format (1x, 'ERROR - If you want to interpolate between profiles, these profiles must have the'/&
+            & 1x, ' same roughness slope, otherwise a reference Q calculation does not make sense!'/&
+            & 1x, 'Error occured at element ', i5, ' Program stopped.')
 
 !1200  Errors with elements
 !****
@@ -250,10 +269,14 @@ end if
  1601 FORMAT (1x, "ERROR - Restart values can't be applied to node,", i5, ',' / &
             & 1x, 'because it is less or equal zero or it is higher than the' / &
             & 1x, 'maximum node number')
+ 1602 format (1x, 'ERROR - TRYING TO APPLY RESTART RESULT FOR INTERPOLATED NODE' / &
+            & 1x, 'TO A REAL PROFILE/ NODE. THERE MUST BE A MODEL FILE ERROR' / &
+            & 1x, 'PLEASE CHECK YOUR MESH, THE CURRENT ERROR OCCURS AT NODE', I5 / &
+            & 1x, 'EXECUTION TERMINATED!')
 
 !2000   Output Errors
 !3000   Mesh Errors
- !3500  Reordering problems
+!3500  Reordering problems
  !reord_Kalyps
  3501 format (1x, 'ERROR - Reordering could not be fullfilled.')
  !3600  TransVelDistribution
@@ -263,7 +286,7 @@ end if
             & 1x, 'execution of program terminated - STOP')
 !4000   Calculation Errors
  !update
- 4001 FORMAT (1x, 'ERROR - Execution termintated by excess changes' / &
+ 4001 FORMAT (1x, 'ERROR - Execution terminated by excess changes' / &
             & 1x, 'at node ', I6, '. Please increase' / &
             & 1x, 'URFC, change time step or boundary condition' / &
             & 1x, 'values in general')

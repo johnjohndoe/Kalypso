@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  WP   14 Nov 2007    5:28 pm
+C     Last change:  NIS  13 Jan 2008    6:14 pm
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -30,7 +30,7 @@ CIPK  LAST UPDATE OCT 1 1996
       USE para1dpoly
       SAVE
 !NiS,jul06: Consistent data types for passing parameters
-      INTEGER :: n, m, a, lt, dummy1, dummy2
+      INTEGER :: n, m, a, lt, dummy1, dummy2, dummy3
 !-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -67,8 +67,9 @@ cipk feb01
       NCLL=0
 
       !nis,apr07: dummy-initialize
-      dummy1 = 0
-      dummy2 = 0
+      dummy1 = 1
+      dummy2 = 1
+      dummy3 = 1
       !-
 
 CNiS,mar06: show values of geometry recognition
@@ -330,7 +331,7 @@ CIPK JUN03
 
 !NiS,mar06: new option in if-block to enable the program to read 2D-geometry in Kalypso-2D-Format
        ELSEIF (IGEO ==2) then
-         call rdkalyps(n,m,a,lt,1,1,1,0)
+         call rdkalyps (n, m, a, lt, dummy1, dummy2, dummy3, 0)
 
 !         do i = 1, maxp
 !           WRITE(*,*) i, PolySplitsA(i)
@@ -493,13 +494,13 @@ cipk oct98 update to f90
 CIPK FEB07  
             IF(IMMT .GT. 903) J=IMMT            
             IF(NOP(I,6) .EQ. 0) J=IMAT(I)
-            IF(ORT(J,5) .GT. 1.) THEN
-              CHEZ(I)=ORT(J,5)
-  !NiS,apr06: skipping, if ORT(J,5)==-1:
-  !          ELSE
-            ELSEIF(ORT(J,5) /= -1) THEN
-  !In the case of ORT(J,5)=-1 there is no assignement
-              ZMANN(I)=ORT(J,5)
+            !only for normal elements, roughness class 89 means polynomial approach
+            if (immt /= 89) then
+              IF(ORT(J,5) .GT. 1.) THEN
+                CHEZ(I)=ORT(J,5)
+              ELSEIF(ORT(J,5) /= -1) THEN
+                ZMANN(I)=ORT(J,5)
+              ENDIF
             ENDIF
           ENDIF
         ENDDO
@@ -509,6 +510,7 @@ C-.....Find max node and element numbers.....
 C-
       NP = 0
       DO 75 J = 1, MAXE
+        !TOASK:
         !nis,sep07: Adapting this; problem is, if during restart elements are dry they can never
         !           be reactivated again, because, they're not considered during mesh reading
         !IF( IMAT(J) .GT. 0 ) THEN

@@ -1,8 +1,9 @@
-C     Last change:  WP   11 Dec 2007    5:14 pm
+C     Last change:  NIS  13 Jan 2008    6:18 pm
 CNis  LAST UPDATE MAR  XX 2006 Adding capabilities for Kalypso-2D-network-files
 CIPK  LAST UPDATE JUNE 25 2005 RESET LOWER LIMIT
       SUBROUTINE GETGEO1
       USE BLK10MOD
+      USE parakalyps
 
 CIPK FEB05
 
@@ -25,12 +26,19 @@ cipk aug05      INCLUDE 'BLK10.COM'
       MaxPolyQ = 1
       MaxPolyB = 1
 !-
+!nis,jan08: for interpolation of polynomial approach 1D elements
+      maxIntPolElts = 0
 
 !nis,nov06: Initialize MaxLT, the dimensioner for the number of Line transitions
       MaxLT = 0
-!-
 
       NCLL = 0
+
+!nis,jan08: Number of nodes that will be in the end interpolated between measured profiles
+      NodesToIntPol = 0
+      statElSz = 0
+      statNoSz = 0
+
 C-
 C-.....READ EXTERNALLY GENERATED GEOMETRY FILE.....
 C-
@@ -117,6 +125,14 @@ CIPK JUN05 SET LOWER LIMIT
       MAXE = MELL
       MAXP = N + 1
 
+      !nis,jan08: For interpolation of profiles between 1D-profiles
+      StatElSz = MAXE - 1
+      StatNoSz = MAXP - 1
+      MAXE = MAXE + NodesToIntPol
+      !new element corners and midsides
+      MAXP = MAXP + NodesToIntPol + NodesToIntPol
+
+
       !nis,comment
       !the usage of MELL is no more necessary because it was
       !oringinary the maximum value for the number of elements, set in a (old) module; as it is
@@ -127,24 +143,21 @@ CIPK JUN05 SET LOWER LIMIT
 
 
 !if the input file is in KALYPSO-2D format the size of allocatable arc array is not neglectable
-        if (igeo==2) then
-          MAXA = A + 1
-          !Adding 1D-2D-Transitionline-array counter
-          MaxLT = LT
-          MaxPolyA = PA
-          MaxPolyQ = PQ
-          MaxPolyB = PB
-          !-
-        else
-          MAXA = 0
-          !Adding 1D-2D-Transitionline-array counter
-          MaxLT = 0
-          MaxPolyA = 1
-          MaxPolyQ = 1
-          MaxPolyB = 1
-          !-
-        end if
-!-
+      if (igeo==2) then
+        MAXA = A + 1
+        !Adding 1D-2D-Transitionline-array counter
+        MaxLT = LT
+        MaxPolyA = PA
+        MaxPolyQ = PQ
+        MaxPolyB = PB
+      else
+        MAXA = 0
+        !Adding 1D-2D-Transitionline-array counter
+        MaxLT = 0
+        MaxPolyA = 1
+        MaxPolyQ = 1
+        MaxPolyB = 1
+      end if
 
       RETURN
       END

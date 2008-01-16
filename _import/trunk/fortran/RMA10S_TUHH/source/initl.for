@@ -1,4 +1,4 @@
-C     Last change:  WP   15 Dec 2007    5:33 pm
+C     Last change:  NIS  13 Jan 2008    3:35 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -982,6 +982,23 @@ CIPK MAR01
         temp_speccc(i) = 0.0
       end do
       !-
+
+      ALLOCATE (IntPolNo (1: MaxE), NeighProf (1: MaxP, 1: 2))
+      ALLOCATE (IntPolProf (1: MaxP), kmWeight (1: MaxP))
+      ALLOCATE (IntPolElts (1: MaxE, 1: maxIntPolElts))
+      do i = 1, MaxE
+        IntPolNo (i) = 0
+        do j = 1, maxIntPolElts
+          IntPolElts (i, j) = 0
+        end do
+      enddo
+      do i = 1, MaxP
+        IntPolProf (i) = .false.
+        NeighProf (i, 1) = 0
+        NeighProf (i, 2) = 0
+        kmWeight (i) = 1.0D0
+      end do
+
 
       RETURN
       END
