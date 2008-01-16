@@ -1,9 +1,9 @@
 package org.kalypso.risk.model.schema.binding;
 
+import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
-public class VectorDataModel extends AbstractFeatureBinder implements IVectorDataModel
+public class VectorDataModel extends UnversionedModel implements IVectorDataModel
 {
   public VectorDataModel( final Feature featureToBind )
   {

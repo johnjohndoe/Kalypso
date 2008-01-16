@@ -244,18 +244,18 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
             final IVectorDataModel vectorDataModel = szenarioDataProvider.getModel( IVectorDataModel.class );
 
-            final QName shapeGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
-            final QName shapeLandusePropertyName = new QName( "namespace", landuseProperty ); //$NON-NLS-1$
 
             final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
 
             final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
-            final List shapeFeatureList = (List) shapeRootFeature.getProperty( new QName( "namespace", "featureMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER ); //$NON-NLS-1$ //$NON-NLS-2$
 
+            
             // create entries for landuse database
             for( int i = 0; i < shapeFeatureList.size(); i++ )
             {
               final Feature shpFeature = (Feature) shapeFeatureList.get( i );
+              final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getLocalPart(), landuseProperty );
               final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
               if( !m_landuseTypeSet.contains( shpPropertyValue ) )
                 m_landuseTypeSet.add( shpPropertyValue );
@@ -482,9 +482,10 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             for( int i = 0; i < shapeFeatureList.size(); i++ )
             {
               final Feature shpFeature = (Feature) shapeFeatureList.get( i );
-              final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
+              final QName shpPropQName = new QName( shpFeature.getFeatureType().getQName().getLocalPart(), landuseProperty );
+              final String shpPropertyValue = shpPropQName.toString();
               final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
-              final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( shapeGeomPropertyName );
+              final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
 
               // we don't like multi surfaces, so...
               if( shpGeometryProperty instanceof GM_MultiSurface )

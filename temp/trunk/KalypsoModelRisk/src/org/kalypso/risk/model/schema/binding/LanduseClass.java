@@ -56,7 +56,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
     final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE );
     return value == null ? 0 : value.intValue();
   }
-  
+
   public void setMaxDamage( double value )
   {
     getFeature().setProperty( ILanduseClass.PROP_MAX_DAMAGE, value );
@@ -71,7 +71,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   {
     getFeature().setProperty( ILanduseClass.PROP_TOTAL_DAMAGE, value );
   }
-  
+
   public void setAverageAnnualDamage( double value )
   {
     getFeature().setProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE, value );

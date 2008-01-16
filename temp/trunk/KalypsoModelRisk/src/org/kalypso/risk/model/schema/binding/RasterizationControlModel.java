@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
-public class RasterizationControlModel extends AbstractFeatureBinder implements IRasterizationControlModel
+public class RasterizationControlModel extends VersionedModel implements IRasterizationControlModel
 {
   private final FeatureList m_landuseClassesFeatureList;
 
