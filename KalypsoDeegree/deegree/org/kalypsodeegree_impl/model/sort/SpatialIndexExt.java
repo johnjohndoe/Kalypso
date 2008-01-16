@@ -56,11 +56,7 @@ public interface SpatialIndexExt extends SpatialIndex
 
   public Envelope getBoundingBox( );
 
-  public int size( );
-
   public void clear( );
 
-  public void invalidate( );
-
-  public void invalidate( final Object item );
+  public boolean contains( final Envelope itemEnv, Object item );
 }

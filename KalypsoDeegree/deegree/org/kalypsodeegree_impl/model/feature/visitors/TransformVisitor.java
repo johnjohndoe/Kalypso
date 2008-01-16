@@ -7,6 +7,7 @@ import java.util.Map;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
@@ -70,6 +71,8 @@ public class TransformVisitor implements FeatureVisitor
             continue;
         }
 
+        boolean wasTransformed = false;
+
         if( GeometryUtilities.isGeometry( ftp ) )
         {
           if( ftp.isList() )
@@ -80,6 +83,9 @@ public class TransformVisitor implements FeatureVisitor
             {
               final GM_Object geom = geomList.get( i );
               final GM_Object transformedGeom = transformProperty( geom );
+
+              wasTransformed = wasTransformed | (geom != transformedGeom);
+
               geomList.set( i, transformedGeom );
             }
           }
@@ -87,7 +93,23 @@ public class TransformVisitor implements FeatureVisitor
           {
             final GM_Object object = (GM_Object) f.getProperty( ftp );
             final GM_Object transformedGeom = transformProperty( object );
+
+            wasTransformed = object != transformedGeom;
+
             f.setProperty( ftp, transformedGeom );
+          }
+
+          // HACK: we invalidate the complete geo-index, in order to make sure the complete bbox of the list is
+          // correctly set.
+          if( wasTransformed )
+          {
+            final Feature parent = f.getParent();
+            if( parent != null )
+            {
+              final Object parentList = parent.getProperty( f.getParentRelation() );
+              if( parentList instanceof FeatureList )
+                ((FeatureList) parentList).invalidate();
+            }
           }
         }
       }

@@ -45,9 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.ItemVisitor;
@@ -55,90 +52,48 @@ import com.vividsolutions.jts.index.ItemVisitor;
 /**
  * A Spatial-Index implemented by the good old kalypso SplitSort.
  * <p>
- * Made this in order to easyly exchange SplitSort with a JTS implementation.
+ * Made this in order to easily exchange SplitSort with a JTS implementation.
  * 
  * @author Gernot Belger
  */
 public class SplitSortSpatialIndex implements SpatialIndexExt
 {
-  private final IEnvelopeProvider m_envelopeProvider;
-
-  private final List<Object> m_items = new ArrayList<Object>();
-
   private SplitSortContainer m_rootContainer = null;
 
-  /**
-   * A flag indicating if the spacial index is upd-to-date (if false). If not, the next call to 'query' will first
-   * recalculate the index.
-   */
-  private boolean m_invalid = true;
-
-  public SplitSortSpatialIndex( final IEnvelopeProvider envelopeProvider, final GM_Envelope env )
+  public SplitSortSpatialIndex( final Envelope env )
   {
-    m_envelopeProvider = envelopeProvider;
-
-    if( env != null )
-      m_rootContainer = new SplitSortContainer( null, env, m_envelopeProvider );
+    m_rootContainer = new SplitSortContainer( null, env );
   }
 
   /**
    * @see com.vividsolutions.jts.index.SpatialIndex#insert(com.vividsolutions.jts.geom.Envelope, java.lang.Object)
    */
-  public void insert( final Envelope itemEnv, final Object item )
+  public void insert( final Envelope env, final Object item )
   {
-    m_items.add( item );
-
-    /* Only update index if we are valid. Else we do not need to because we get a resort at the next query. */
-    if( itemEnv.isNull() || m_invalid )
-      return;
-
-    final GM_Envelope env = JTSAdapter.wrap( itemEnv );
-    spatialAdd( item, env );
-  }
-
-  private void spatialAdd( final Object item, final GM_Envelope env )
-  {
-    if( m_rootContainer == null )
-      m_rootContainer = new SplitSortContainer( null, env, m_envelopeProvider );
-
-    if( m_rootContainer.getEnvelope().contains( env ) )
-      m_rootContainer.add( env, item );
+    if( env == null || m_rootContainer.hasNullEnvelope() || m_rootContainer.containsEnvelope( env ) )
+      m_rootContainer.add( item, env );
     else
     {
-      final double maxX = env.getMax().getX();
-      final double maxY = env.getMax().getY();
-      final double minX = env.getMin().getX();
-      final double minY = env.getMin().getY();
+      final Envelope newRootEnv = new Envelope( env );
+      newRootEnv.expandToInclude( m_rootContainer.getEnvelope() );
 
-      final GM_Envelope envRoot = m_rootContainer.getEnvelope();
-
-      final double maxXroot = envRoot.getMax().getX();
-      final double maxYroot = envRoot.getMax().getY();
-      final double minXroot = envRoot.getMin().getX();
-      final double minYroot = envRoot.getMin().getY();
-      final GM_Envelope newEnv = GeometryFactory.createGM_Envelope( minX < minXroot ? minX : minXroot, minY < minYroot ? minY : minYroot, maxX > maxXroot ? maxX : maxXroot, maxY > maxYroot ? maxY
-          : maxYroot );
-
-      final SplitSortContainer newRootContainer = new SplitSortContainer( null, newEnv, m_envelopeProvider );
+      final SplitSortContainer newRootContainer = new SplitSortContainer( null, newRootEnv );
       m_rootContainer.setParent( newRootContainer );
       newRootContainer.createSubContainers( m_rootContainer );
       m_rootContainer = newRootContainer;
-      m_rootContainer.add( env, item );
+      m_rootContainer.add( item, env );
     }
   }
 
   /**
    * @see com.vividsolutions.jts.index.SpatialIndex#query(com.vividsolutions.jts.geom.Envelope)
    */
-  public List query( final Envelope searchEnv )
+  public List<Object> query( final Envelope searchEnv )
   {
-    final List result = new ArrayList();
+    final List<Object> result = new ArrayList<Object>();
 
-    resort();
+    m_rootContainer.query( searchEnv, result );
 
-    final GM_Envelope queryEnv = JTSAdapter.wrap( searchEnv );
-    if( m_rootContainer != null )
-      m_rootContainer.query( queryEnv, result );
     return result;
   }
 
@@ -148,9 +103,14 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
    */
   public void query( final Envelope searchEnv, final ItemVisitor visitor )
   {
-    final List list = query( searchEnv );
+    final List<Object> list = query( searchEnv );
     for( final Object object : list )
       visitor.visitItem( object );
+  }
+
+  public void clear( )
+  {
+    m_rootContainer = new SplitSortContainer( null, null );
   }
 
   /**
@@ -158,106 +118,26 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
    */
   public boolean remove( final Envelope itemEnv, final Object item )
   {
-    invalidate();
-
-    if( m_rootContainer != null )
-      m_rootContainer.remove( item );
-
-    return m_items.remove( item );
-  }
-
-  private void resort( )
-  {
-    if( m_invalid == false )
-      return;
-
-    m_rootContainer = null;
-
-    GM_Envelope bbox = null;
-
-    // REMARK: the access to m_items is not synchronized, so we
-    // retrieve the objects as array to reduce probability of ConcurrentModificationExceptions's
-    final Object[] items = m_items.toArray( new Object[m_items.size()] );
-    for( final Object f : items )
-    {
-      final GM_Envelope envelope = getEnvelope( f );
-      if( bbox == null )
-        bbox = envelope;
-      else
-        bbox = bbox.getMerged( envelope );
-    }
-
-    if( bbox != null )
-    {
-      m_rootContainer = new SplitSortContainer( null, bbox, m_envelopeProvider );
-      for( final Object next : items )
-      {
-        final GM_Envelope envelope = getEnvelope( next );
-        if( envelope == null )
-        {
-          // because it throws exception
-        }
-        else
-          spatialAdd( next, envelope );
-      }
-    }
-    else
-      m_rootContainer = null;
-
-    m_invalid = false;
-  }
-
-  public GM_Envelope getEnvelope( final Object object )
-  {
-    return m_envelopeProvider.getEnvelope( object );
-  }
-
-  public void invalidate( )
-  {
-    m_invalid = true;
+    return m_rootContainer.remove( itemEnv, item );
   }
 
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
-    if( m_rootContainer != null )
-      m_rootContainer.paint( g, geoTransform );
+    m_rootContainer.paint( g, geoTransform );
   }
 
   public Envelope getBoundingBox( )
   {
-    if( m_invalid )
-      resort();
-
-    if( m_rootContainer != null )
-      return JTSAdapter.export( m_rootContainer.getEnvelope() );
-
-    return new Envelope();
+    return m_rootContainer.getEnvelope();
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#clear()
+   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#contains(com.vividsolutions.jts.geom.Envelope,
+   *      java.lang.Object)
    */
-  public void clear( )
+  public boolean contains( final Envelope itemEnv, final Object item )
   {
-    m_items.clear();
-
-    m_rootContainer = null;
-    invalidate();
+    return m_rootContainer.contains( itemEnv, item );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#invalidate(java.lang.Object)
-   */
-  public void invalidate( final Object o )
-  {
-    invalidate();
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#size()
-   */
-  public int size( )
-  {
-    return m_items.size();
-  }
 }

@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.command;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -62,7 +61,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 public class RelativeFeatureChangeTest extends TestCase
 {
   private static final int COMMAND_COUNT = 5;
-  
+
   private final Feature m_original;
 
   private final IPropertyType[] m_originalProperties;
@@ -84,17 +83,18 @@ public class RelativeFeatureChangeTest extends TestCase
     final Feature m_feature = m_workspace.getRootFeature();
     final FeatureList featureList = (FeatureList) m_feature.getProperty( m_feature.getFeatureType().getProperties()[0] );
 
-    m_original = (Feature) featureList.get( 0 );
+    m_original = (Feature) featureList.first();
     for( int i = 0; i < COMMAND_COUNT; i++ )
     {
-      m_result[i] = (Feature) featureList.get( i + 1 );
-      m_changes[i] = new ArrayList<FeatureChange>();
+      // FIXME
+// m_result[i] = (Feature) featureList.get( i + 1 );
+// m_changes[i] = new ArrayList<FeatureChange>();
     }
 
     m_originalProperties = m_original.getFeatureType().getProperties();
-    
-    // Command runs in the order add, multiply, subtract, divide, set that work on the same feature. 
-    for( IPropertyType propertyType : m_originalProperties )
+
+    // Command runs in the order add, multiply, subtract, divide, set that work on the same feature.
+    for( final IPropertyType propertyType : m_originalProperties )
     {
       if( RelativeFeatureChange.isNumeric( propertyType ) )
       {
@@ -118,8 +118,8 @@ public class RelativeFeatureChangeTest extends TestCase
   }
 
   /**
-   * Test method for 'org.kalypso.ui.editor.actions.RelativeFeatureChange.getNewValue()'
-   * The expected results are in the file resources/testFeature.gml.
+   * Test method for 'org.kalypso.ui.editor.actions.RelativeFeatureChange.getNewValue()' The expected results are in the
+   * file resources/testFeature.gml.
    */
   public final void testGetNewValue( ) throws Exception
   {
@@ -129,7 +129,7 @@ public class RelativeFeatureChangeTest extends TestCase
       final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( m_workspace, m_changes[i].toArray( new FeatureChange[m_changes[i].size()] ) );
       m_workspace.postCommand( changeFeaturesCommand );
 
-      for( IPropertyType propertyType : m_originalProperties )
+      for( final IPropertyType propertyType : m_originalProperties )
       {
         if( RelativeFeatureChange.isNumeric( propertyType ) )
         {

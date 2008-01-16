@@ -15,9 +15,6 @@ public interface JMSpatialIndex<T>
 
   public List<T> query( final GM_Position env, final List<T> result );
 
-  /** TODO: remove this, the list interface is enough to get all objects */
-  public List<T> queryAll( final List<T> result );
-
   public boolean remove( final Object object );
 
   /** Invalidate the spatial index. The next time one of the 'query' methods is called, a resort is made. */
@@ -27,15 +24,12 @@ public interface JMSpatialIndex<T>
    * Invalidate the spatial index. The next time one of the 'query' methods is called, a resort is made.
    * 
    * @param o
-   *          Only this object is invalid. Implementors may use this information to improve the resort performance.
+   *            Only this object is invalid. Implementors may use this information to improve the resort performance.
    */
   public void invalidate( final Object o );
 
   /** Paints the quad-tree as rectangles */
   public void paint( final Graphics g, final GeoTransform geoTransform );
-
-  /** TODO: Was bedeutet das??? */
-  public int rsize( );
 
   public GM_Envelope getBoundingBox( );
 }

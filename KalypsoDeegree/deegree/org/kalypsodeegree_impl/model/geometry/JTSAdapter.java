@@ -564,7 +564,7 @@ public class JTSAdapter
   public static Envelope export( final GM_Envelope env )
   {
     if( env == null )
-      return new Envelope();
+      return null;
 
     final GM_Position posMin = env.getMin();
     final GM_Position posMax = env.getMax();

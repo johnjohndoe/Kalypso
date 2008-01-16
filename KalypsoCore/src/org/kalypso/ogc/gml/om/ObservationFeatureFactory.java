@@ -242,9 +242,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final List<IComponent> components = new ArrayList<IComponent>();
 
     final FeatureList comps = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
-    for( int i = 0; i < comps.size(); i++ )
+    for( final Object object : comps )
     {
-      final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), comps.get( i ) );
+      final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), object );
 
       components.add( new FeatureComponent( itemDef ) );
     }
@@ -306,9 +306,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final List<IComponent> components = new ArrayList<IComponent>();
 
     final FeatureList comps = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.SWE_COMPONENT );
-    for( int i = 0; i < comps.size(); i++ )
+    for( final Object object : comps )
     {
-      final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), comps.get( i ) );
+      final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), object );
 
       components.add( new FeatureComponent( itemDef ) );
     }

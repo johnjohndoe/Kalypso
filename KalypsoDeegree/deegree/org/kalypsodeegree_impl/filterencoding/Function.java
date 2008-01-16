@@ -175,6 +175,7 @@ public class Function extends Expression_Impl
   {
     try
     {
+      // TODO: implement caching strategy to cache this function, it might be called very often!
       final IFunctionExpression function = KalypsoDeegreeExtensions.createFunctionExpression( m_name );
       if( function == null )
         throw new FilterEvaluationException( "Unknown function: " + m_name );

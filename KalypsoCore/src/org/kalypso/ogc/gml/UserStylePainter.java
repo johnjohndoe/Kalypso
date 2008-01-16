@@ -98,7 +98,7 @@ public class UserStylePainter
 
   /**
    * @param selected
-   *            Wether to paint selected or not-selected features. If <code>null</code>, paint all features.
+   *            Whether to paint selected or not-selected features. If <code>null</code>, paint all features.
    */
   private void paintFeatureTypeStyle( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final FeatureTypeStyle element, final IPaintDelegate delegate ) throws CoreException
   {
