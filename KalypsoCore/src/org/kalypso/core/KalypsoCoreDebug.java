@@ -45,7 +45,7 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
 /**
  * Holds debug-constants in order to produce trace output.
  * <p>
- * Debug constants correspond to entris in <code>.options</code> file.
+ * Debug constants correspond to entries in <code>.options</code> file.
  * </p>
  * 
  * @author Gernot Belger
@@ -53,5 +53,7 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
 public class KalypsoCoreDebug
 {
   public static Debug MAP_MODELL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapModell" );
+
+  public static Debug SPATIAL_INDEX_PAINT = new Debug( KalypsoCorePlugin.getDefault(), "/debug/spatialIndex/paint" );
 
 }

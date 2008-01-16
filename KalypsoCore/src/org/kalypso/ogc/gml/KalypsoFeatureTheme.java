@@ -56,6 +56,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -179,6 +180,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     };
 
     paint( scale, bbox, selected, monitor, paintDelegate );
+
+    if( m_featureList != null && KalypsoCoreDebug.SPATIAL_INDEX_PAINT.isEnabled() )
+      m_featureList.paint( graphics, projection );
   }
 
   public void paint( final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
