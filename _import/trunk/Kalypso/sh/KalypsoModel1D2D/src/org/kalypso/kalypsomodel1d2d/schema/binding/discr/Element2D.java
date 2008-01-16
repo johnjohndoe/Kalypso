@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypsodeegree.model.feature.Feature;
@@ -197,7 +196,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
     {
       edgeList.add( edge.getGmlID() );
     }
-    ModelOps.sortElementEdges( this );
+    // ModelOps.sortElementEdges( this );
 
     getWrappedFeature().invalidEnvelope();
   }
@@ -222,36 +221,14 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
 
     for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
     {
-      if( edge instanceof IEdgeInv )
+      for( final IFE1D2DNode node : edge.getNodes() )
       {
-        final IFE1D2DEdge invertedEdge = ((IEdgeInv) edge).getInverted();
-        final List<IFE1D2DNode> edgeNodes = invertedEdge.getNodes();
-        IFE1D2DNode node;
-        for( int i = edgeNodes.size() - 1; i >= 0; i-- )
+        if( node != null )
         {
-          node = edgeNodes.get( i );
-          if( node != null )
+          if( !node.equals( lasAddedNode ) )
           {
-            if( !node.equals( lasAddedNode ) )
-            {
-              nodes.add( node );
-              lasAddedNode = node;
-            }
-          }
-        }
-
-      }
-      else
-      {
-        for( final IFE1D2DNode node : edge.getNodes() )
-        {
-          if( node != null )
-          {
-            if( !node.equals( lasAddedNode ) )
-            {
-              nodes.add( node );
-              lasAddedNode = node;
-            }
+            nodes.add( node );
+            lasAddedNode = node;
           }
         }
       }

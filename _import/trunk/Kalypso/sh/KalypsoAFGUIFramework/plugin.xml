@@ -304,6 +304,12 @@
        </enablement>
     </decorator>
  </extension>
+ <extension
+       point="org.kalypso.ui.kalypsoThemeFactory">
+    <themeFactory
+          factory="org.kalypso.afgui.scenarios.KalypsoAFGUIThemeFactory">
+    </themeFactory>
+ </extension>
  
    
 </plugin>

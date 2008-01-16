@@ -8,7 +8,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
@@ -159,13 +158,13 @@ public class PolyElement extends Element2D implements IPolyElement
     final FeatureList edgeList = (FeatureList) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
 
     edgeList.clear();
-    final Feature edgeInvFeature;
 
     for( final IFE1D2DEdge edge : edges )
     {
       edgeList.add( edge.getGmlID() );
     }
-    ModelOps.sortElementEdges( this );
+
+    // ModelOps.sortElementEdges( this );
 
     edgeList.invalidate();
     getWrappedFeature().invalidEnvelope();
@@ -238,39 +237,47 @@ public class PolyElement extends Element2D implements IPolyElement
   public List<IFE1D2DNode> getNodes( )
   {
     final List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>( m_edges.size() + 1 );
-    IFE1D2DNode lastAddedNode = null;
-    for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : m_edges )
+
+    if( m_edges.size() < 3 )
+      // this must be wrong
+      return nodes;
+
+    final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> firstEdge = m_edges.get( 0 );
+    final IFeatureWrapperCollection<IFE1D2DNode> firstTwoNodes = firstEdge.getNodes();
+    final IFE1D2DNode firstNode = firstTwoNodes.get( 0 );
+    nodes.add( firstNode );
+
+    final IFE1D2DNode secondNode = firstTwoNodes.get( 1 );
+    IFE1D2DNode lastAddedNode = secondNode;
+
+    while( lastAddedNode != null && !lastAddedNode.equals( firstNode ) )
     {
-      if( edge instanceof IEdgeInv )
-      {
-        final IFE1D2DEdge invertedEdge = ((IEdgeInv) edge).getInverted();
-        final List<IFE1D2DNode> edgeNodes = invertedEdge.getNodes();
-        IFE1D2DNode node;
-        for( int i = edgeNodes.size() - 1; i >= 0; i-- )
-        {
-          node = edgeNodes.get( i );
-          if( node != null )
-          {
-            if( !node.equals( lastAddedNode ) )
-            {
-              nodes.add( node );
-              lastAddedNode = node;
-            }
-          }
-        }
-      }
-      else
-        for( final IFE1D2DNode node : edge.getNodes() )
-          if( node != null && !node.equals( lastAddedNode ) )
-          {
-            nodes.add( node );
-            lastAddedNode = node;
-          }
+      nodes.add( lastAddedNode );
+      lastAddedNode = getAdjacentNode( lastAddedNode, nodes );
     }
-    if( lastAddedNode != null && nodes.size() > 0 )
-      if( !lastAddedNode.equals( nodes.get( 0 ) ) )
-        nodes.add( nodes.get( 0 ) );
+
+    nodes.add( firstNode );
+
+    if( nodes.size() < 4 )
+      // this must be wrong
+      return new ArrayList<IFE1D2DNode>( 0 );
+
     return nodes;
+  }
+
+  private IFE1D2DNode getAdjacentNode( final IFE1D2DNode node, final List<IFE1D2DNode> excludeNodes )
+  {
+    for( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : m_edges )
+    {
+      final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
+      final IFE1D2DNode firstNode = nodes.get( 0 );
+      final IFE1D2DNode secondNode = nodes.get( 1 );
+      if( firstNode.equals( node ) && !excludeNodes.contains( secondNode ) )
+        return secondNode;
+      else if( secondNode.equals( node ) && !excludeNodes.contains( firstNode ) )
+        return firstNode;
+    }
+    return null;
   }
 
   /**

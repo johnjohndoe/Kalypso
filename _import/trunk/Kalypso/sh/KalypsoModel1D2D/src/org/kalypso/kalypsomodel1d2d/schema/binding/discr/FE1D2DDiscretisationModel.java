@@ -42,9 +42,9 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.NodeOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -55,7 +55,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -65,7 +64,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author Patrice Congo
  */
 @SuppressWarnings("unchecked")
-public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements IFEDiscretisationModel1d2d
+public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDiscretisationModel1d2d
 {
   private final IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
 
@@ -88,26 +87,14 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
    */
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
-    IFE1D2DEdge toInv = null;
     for( final IFE1D2DEdge edge : (IFeatureWrapperCollection<IFE1D2DEdge>) node0.getContainers() )
     {
-      if( NodeOps.endOf( node1, edge ) )
+      if( edge.getNodes().contains( node1 ) )
       {
         return edge;
       }
-      else if( NodeOps.startOf( node1, edge ) )
-      {
-        toInv = edge;
-      }
     }
-    if( toInv != null )
-    {
-      return new EdgeInv( toInv, this );
-    }
-    else
-    {
-      return null;
-    }
+    return null;
   }
 
   /**

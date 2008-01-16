@@ -116,29 +116,6 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
   public void addNode( String nodeID );
 
   /**
-   * Sets the inverted edge of this node
-   * 
-   * @param invEdgeID
-   *            the id of the inverted edge
-   * @throws IllegalArgumentException
-   *             if inveEdge is null or empty
-   */
-  public void setInvEdge( String invEdgeID );
-
-  /**
-   * reset the inverted edd of this edge
-   * 
-   */
-  public void resetInvEdge( );
-
-  /**
-   * Gets the inverted edge of this edge
-   * 
-   * @return the inverted edge of this edge or null if this edge does not have an inverted edge associated with it
-   */
-  public IEdgeInv getEdgeInv( );
-
-  /**
    * Returns the middle node of this edge, or <code>null</code> if it is not defined.
    * 
    * @return the middle node of the edge
@@ -198,5 +175,7 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    * @return <code>true</code>, if this edge lies on the border of the net.
    */
   public boolean isBorder( );
+
+  public IFeatureWrapperCollection<IFE1D2DElement> getAdjacentElements( );
 
 }

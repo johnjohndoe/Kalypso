@@ -21,11 +21,7 @@ import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -35,12 +31,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>
 {
-  private enum Orientation
-  {
-    ORIENTATION_LEFT,
-    ORIENTATION_RIGHT
-  }
-
   private static final Logger logger = Logger.getLogger( FE1D2DEdge.class.toString() );
 
   private final IFeatureWrapperCollection<IFE1D2DElement> m_containers;
@@ -338,44 +328,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#setInvEdge(java.lang.String)
-   */
-  public void setInvEdge( String invEdgeID )
-  {
-    invEdgeID = Assert.throwIAEOnNullOrEmpty( invEdgeID );
-    getWrappedFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV, invEdgeID );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#resetInvEdge()
-   */
-  public void resetInvEdge( )
-  {
-    getWrappedFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV, null );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getEdgeInv()
-   */
-  public IEdgeInv getEdgeInv( )
-  {
-    final Feature wrappedFeature = getWrappedFeature();
-    final Object prop = wrappedFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGEINV );
-
-    final Feature edgeInvFeature = FeatureHelper.getFeature( wrappedFeature.getWorkspace(), prop );
-
-    if( edgeInvFeature == null )
-    {
-      return null;
-    }
-    else
-    {
-      final IEdgeInv edgeInv = (IEdgeInv) edgeInvFeature.getAdapter( IEdgeInv.class );
-      return edgeInv;
-    }
-  }
-
-  /**
    * @see java.lang.Object#toString()
    */
   @Override
@@ -414,9 +366,17 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getLeftElement()
    */
+  public IFeatureWrapperCollection<IFE1D2DElement> getAdjacentElements( )
+  {
+    return getContainers();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getLeftElement()
+   */
   public IFE1D2DElement getLeftElement( )
   {
-    return getElementWithOrientation( Orientation.ORIENTATION_LEFT );
+    return getContainers().get( 0 );
   }
 
   /**
@@ -424,71 +384,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    */
   public IFE1D2DElement getRightElement( )
   {
-    return getElementWithOrientation( Orientation.ORIENTATION_RIGHT );
-  }
-
-  private IFE1D2DElement getElementWithOrientation( final Orientation orientation )
-  {
-    final IEdgeInv edgeInv = getEdgeInv();
-    IFeatureWrapperCollection<IFE1D2DElement> edgeInvContainers = null;
-    if( edgeInv != null )
-      edgeInvContainers = edgeInv.getContainers();
-    try
-    {
-      for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : getContainers() )
-      {
-        if( ele instanceof IFELine )
-          continue;
-        final GM_Object object = ele.recalculateElementGeometry();
-        if( object instanceof GM_Surface )
-        {
-          final Orientation surfaceOrientation = getSurfaceOrientation( (GM_Surface) object );
-          if( surfaceOrientation == orientation )
-            return ele;
-          else if( edgeInv != null && edgeInvContainers.contains( ele ) )
-            return ele;
-        }
-        else
-          throw new RuntimeException( "Iregular surface found for: " + ele.getGmlID() );
-      }
-      if( edgeInv != null )
-      {
-        for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : edgeInvContainers )
-        {
-          if( ele instanceof IFELine )
-            continue;
-          final GM_Object object = ele.recalculateElementGeometry();
-          if( object instanceof GM_Surface )
-          {
-            final Orientation surfaceOrientation = getSurfaceOrientation( (GM_Surface) object );
-            if( surfaceOrientation != orientation )
-              return ele;
-          }
-          else
-            throw new RuntimeException( "Surface expected as geometrie but found:" + object );
-        }
-      }
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-      throw new RuntimeException( "unable to recompute the edge container geometrie" );
-    }
-    return null;
-  }
-
-  private final Orientation getSurfaceOrientation( final GM_Surface surface )
-  {
-    final GM_Ring exteriorRing = surface.getSurfaceBoundary().getExteriorRing();
-    final GM_Position[] positions = exteriorRing.getPositions();
-    final double x0 = positions[0].getX();
-    final double y0 = positions[0].getY();
-    final double x1 = positions[1].getX();
-    final double y1 = positions[1].getY();
-    final double x2 = positions[2].getX();
-    final double y2 = positions[2].getY();
-    final double vectorProduct = (x1 - x0) * (y2 - y1) - (y1 - y0) * (x2 - x1);
-    return vectorProduct > 0.0 ? Orientation.ORIENTATION_LEFT : Orientation.ORIENTATION_RIGHT;
+    return getContainers().get( 1 );
   }
 
   /**
@@ -521,24 +417,8 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    */
   public boolean isBorder( )
   {
-    final IFE1D2DEdge inv;
-    int noOfInvertedOnes = 0;
-    //TODO: This is not possible, because isBorder() is implemented in EdgeInv.java;
-    //      besides that this function method is supposed to only check the 'normal' arcs
-    if( this instanceof IEdgeInv )
-      inv = ((IEdgeInv) this).getInverted();
-    else
-      inv = getEdgeInv();
-    
-    if (inv instanceof IEdgeInv)
-      noOfInvertedOnes = inv.getContainers().size();
-
     final IFeatureWrapperCollection<IFE1D2DElement> containers = getContainers();
-    
-    if (containers.size() + noOfInvertedOnes == 2) 
-      return false;
-
-    return true;
+    return containers.size() == 1;
   }
 
 }

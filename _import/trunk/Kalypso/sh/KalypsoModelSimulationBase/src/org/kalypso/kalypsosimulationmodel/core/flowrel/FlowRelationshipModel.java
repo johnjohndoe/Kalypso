@@ -42,6 +42,7 @@ package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
 import java.util.List;
 
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
@@ -166,4 +167,11 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
     return foundFeatures;
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.modeling.IModel#getVersion()
+   */
+  public String getVersion( )
+  {
+    return IModel.NO_VERSION;
+  }
 }

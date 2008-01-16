@@ -373,10 +373,11 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     final Feature feature = (Feature) object;
 
     m_comboRiverLineNameField.setInput( properties );
+    final String customNamespace = targetFeatureType.getGMLSchema().getTargetNamespace(); //TODO: shape api?
     // set river name field to "NAME". If it does not exist, set it to the first field
-    if( feature.getFeatureType().getProperty( new QName( "namespace", RIVER_NAME_FIELD ) ) != null )
+    if( feature.getFeatureType().getProperty( new QName( customNamespace, RIVER_NAME_FIELD ) ) != null )
     {
-      m_comboRiverLineNameField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( "namespace", RIVER_NAME_FIELD ) ) ) );
+      m_comboRiverLineNameField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( customNamespace, RIVER_NAME_FIELD ) ) ) );
       m_riverNameField = RIVER_NAME_FIELD;
     }
     else
@@ -389,9 +390,9 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     m_comboStationFromField.setInput( properties );
     // set river name field to "NAME". If it does not exist, set it to the first field
-    if( feature.getFeatureType().getProperty( new QName( "namespace", FROM_STATION_FIELD ) ) != null )
+    if( feature.getFeatureType().getProperty( new QName( customNamespace, FROM_STATION_FIELD ) ) != null )
     {
-      m_comboStationFromField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( "namespace", FROM_STATION_FIELD ) ) ) );
+      m_comboStationFromField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( customNamespace, FROM_STATION_FIELD ) ) ) );
       m_fromStationField = FROM_STATION_FIELD;
     }
     else
@@ -402,9 +403,9 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     m_comboStationToField.setInput( properties );
     // set river name field to "NAME". If it does not exist, set it to the first field
-    if( feature.getFeatureType().getProperty( new QName( "namespace", TO_STATION_FIELD ) ) != null )
+    if( feature.getFeatureType().getProperty( new QName( customNamespace, TO_STATION_FIELD ) ) != null )
     {
-      m_comboStationToField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( "namespace", TO_STATION_FIELD ) ) ) );
+      m_comboStationToField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( customNamespace, TO_STATION_FIELD ) ) ) );
       m_toStationField = TO_STATION_FIELD;
     }
     else
@@ -415,7 +416,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     // get all river names
 
-    m_propertyType = feature.getFeatureType().getProperty( new QName( "namespace", m_riverNameField ) );
+    m_propertyType = feature.getFeatureType().getProperty( new QName( customNamespace, m_riverNameField ) );
     final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     final IGuiTypeHandler guiTypeHandler = typeRegistry.getTypeHandlerFor( m_propertyType );
 

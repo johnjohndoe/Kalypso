@@ -148,7 +148,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
         // Special case for 1D-Elements, although they are elements. Its getEdges method is not supported.
         final IElement1D elt1d = (IElement1D) elt;
         final IFE1D2DEdge edge = elt1d.getEdge();
-        final IFeatureWrapperCollection nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() : edge.getNodes();
+        final IFeatureWrapperCollection nodes = edge.getNodes();
         if( nodes.contains( this ) )
           foundElements.add( elt );
       }
@@ -157,7 +157,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
         final IFeatureWrapperCollection<IFE1D2DEdge> edges = ((IElement2D) elt).getEdges();
         for( final IFE1D2DEdge edge : edges )
         {
-          final IFeatureWrapperCollection nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() : edge.getNodes();
+          final IFeatureWrapperCollection nodes = edge.getNodes();
           if( nodes.contains( this ) )
           {
             foundElements.add( elt );
@@ -184,7 +184,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
     final IFeatureWrapperCollection nodeContainers = getContainers();
     for( final Object container : nodeContainers )
     {
-      if( container instanceof IFE1D2DEdge && !(container instanceof IEdgeInv) )
+      if( container instanceof IFE1D2DEdge )
       {
         final IFeatureWrapperCollection<IFE1D2DNode> nodes = ((IFE1D2DEdge) container).getNodes();
         for( final IFE1D2DNode node : nodes )
