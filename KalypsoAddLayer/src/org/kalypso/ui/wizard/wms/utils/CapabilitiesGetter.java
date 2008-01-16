@@ -56,7 +56,7 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
      * This image provider should do nothing, but create the neccessary image loader, so we need not to provide
      * anything, except the providerID.
      */
-    IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( "", "", "", "", m_providerID, null );
+    IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( "", "", "", "", m_providerID );
 
     /* Get the loader. */
     ICapabilitiesLoader loader = imageProvider.getLoader();

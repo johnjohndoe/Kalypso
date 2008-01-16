@@ -150,16 +150,19 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   }
 
   /**
-   * returns true if the bounding box conatins the specified GM_Point
+   * returns true if the bounding box contains the point specified by the given x and y coordinates
+   */
+  public boolean contains( final double pointX, final double pointY )
+  {
+    return (pointX >= m_min.getX()) && (pointX <= m_max.getX()) && (pointY >= m_min.getY()) && (pointY <= m_max.getY());
+  }
+
+  /**
+   * returns true if the bounding box contains the specified GM_Point
    */
   public boolean contains( final GM_Position point )
   {
-    if( (point.getX() >= m_min.getX()) && (point.getX() <= m_max.getX()) && (point.getY() >= m_min.getY()) && (point.getY() <= m_max.getY()) )
-    {
-      return true;
-    }
-
-    return false;
+    return contains( point.getX(), point.getY() );
   }
 
   /**
@@ -273,13 +276,11 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   {
     if( bb == null )
       return false;
-    final GM_Position p1 = new GM_Position_Impl( bb.getMin().getX(), bb.getMin().getY() );
-    final GM_Position p2 = new GM_Position_Impl( bb.getMin().getX(), bb.getMax().getY() );
-    final GM_Position p3 = new GM_Position_Impl( bb.getMax().getX(), bb.getMin().getY() );
-    final GM_Position p4 = new GM_Position_Impl( bb.getMax().getX(), bb.getMax().getY() );
-
-    final boolean ins = (contains( p1 ) && contains( p2 ) && contains( p3 ) && contains( p4 ));
-    return ins;
+    final double minX = bb.getMin().getX();
+    final double minY = bb.getMin().getY();
+    final double maxX = bb.getMax().getX();
+    final double maxY = bb.getMax().getY();
+    return (contains( minX, minY ) && contains( minX, maxY ) && contains( maxX, minY ) && contains( maxX, maxY ));
   }
 
   /**
@@ -411,23 +412,26 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
 
 /*
  * Changes to this class. What the people haven been up to: $Log$
- * Changes to this class. What the people haven been up to: Revision 1.17  2007/08/09 17:58:20  devgernot
- * Changes to this class. What the people haven been up to: Some code cleanup for WMS-Theme. Removed unnecessary image transformation stuff.
- * Changes to this class. What the people haven been up to: Revision 1.16 2006/05/28
- * 15:47:16 devgernot - GML-Version is now determined automatically! Use annotations, default is 2.1; - some yellow
- * thingies - repaired some tests (KalypsoCommon, Core is clean, some Test in KalypsoTest are still not running due to
- * GMLSchemaParser/Writer Problems) Revision 1.15 2005/09/29 12:35:21 doemming *** empty log message *** Revision 1.14
- * 2005/09/18 16:22:58 belger *** empty log message *** Revision 1.13 2005/07/21 02:56:47 doemming *** empty log message
- * *** Revision 1.12 2005/06/19 15:10:01 doemming *** empty log message *** Revision 1.11 2005/04/17 21:19:24 doemming
- * *** empty log message *** Revision 1.10 2005/03/08 11:01:04 doemming *** empty log message *** Revision 1.9
- * 2005/03/02 18:17:17 doemming *** empty log message *** Revision 1.8 2005/02/20 18:56:50 doemming *** empty log
- * message *** Revision 1.7 2005/02/15 17:13:49 doemming *** empty log message *** Revision 1.6 2005/01/18 12:50:41
- * doemming *** empty log message *** Revision 1.5 2004/10/07 14:09:10 doemming *** empty log message *** Revision 1.1
- * 2004/09/02 23:56:51 doemming *** empty log message *** Revision 1.3 2004/08/31 13:54:32 doemming *** empty log
- * message *** Revision 1.13 2004/03/02 07:38:14 poth no message Revision 1.12 2004/02/23 07:47:50 poth no message
- * Revision 1.11 2004/01/27 07:55:44 poth no message Revision 1.10 2004/01/08 09:50:22 poth no message Revision 1.9
- * 2003/09/14 14:05:08 poth no message Revision 1.8 2003/07/10 15:24:23 mrsnyder Started to implement
- * LabelDisplayElements that are bound to a Polygon. Fixed error in GM_MultiSurface_Impl.calculateCentroidArea().
- * Revision 1.7 2003/07/03 12:32:26 poth no message Revision 1.6 2003/03/20 12:10:29 mrsnyder Rewrote intersects()
- * method. Revision 1.5 2003/03/19 15:30:04 axel_schaefer Intersects: crossing envelopes, but points are not in envelope
+ * Changes to this class. What the people haven been up to: Revision 1.18  2008/01/16 15:12:04  skurzbach
+ * Changes to this class. What the people haven been up to: model adaptors based on gml feature type, theme factory extension for maps, adaptor for discretization model (dm): no inverted edges anymore, introduced version 1.0 of dm, removed wrappers for inverted edges, adapted geometry drawing and import/export (2d) of dm, removed double usage of xerces (profiling error)
+ * Changes to this class. What the people haven been up to: Changes to this class. What
+ * the people haven been up to: Revision 1.17 2007/08/09 17:58:20 devgernot Changes to this class. What the people haven
+ * been up to: Some code cleanup for WMS-Theme. Removed unnecessary image transformation stuff. Changes to this class.
+ * What the people haven been up to: Revision 1.16 2006/05/28 15:47:16 devgernot - GML-Version is now determined
+ * automatically! Use annotations, default is 2.1; - some yellow thingies - repaired some tests (KalypsoCommon, Core is
+ * clean, some Test in KalypsoTest are still not running due to GMLSchemaParser/Writer Problems) Revision 1.15
+ * 2005/09/29 12:35:21 doemming *** empty log message *** Revision 1.14 2005/09/18 16:22:58 belger *** empty log message
+ * *** Revision 1.13 2005/07/21 02:56:47 doemming *** empty log message *** Revision 1.12 2005/06/19 15:10:01 doemming
+ * *** empty log message *** Revision 1.11 2005/04/17 21:19:24 doemming *** empty log message *** Revision 1.10
+ * 2005/03/08 11:01:04 doemming *** empty log message *** Revision 1.9 2005/03/02 18:17:17 doemming *** empty log
+ * message *** Revision 1.8 2005/02/20 18:56:50 doemming *** empty log message *** Revision 1.7 2005/02/15 17:13:49
+ * doemming *** empty log message *** Revision 1.6 2005/01/18 12:50:41 doemming *** empty log message *** Revision 1.5
+ * 2004/10/07 14:09:10 doemming *** empty log message *** Revision 1.1 2004/09/02 23:56:51 doemming *** empty log
+ * message *** Revision 1.3 2004/08/31 13:54:32 doemming *** empty log message *** Revision 1.13 2004/03/02 07:38:14
+ * poth no message Revision 1.12 2004/02/23 07:47:50 poth no message Revision 1.11 2004/01/27 07:55:44 poth no message
+ * Revision 1.10 2004/01/08 09:50:22 poth no message Revision 1.9 2003/09/14 14:05:08 poth no message Revision 1.8
+ * 2003/07/10 15:24:23 mrsnyder Started to implement LabelDisplayElements that are bound to a Polygon. Fixed error in
+ * GM_MultiSurface_Impl.calculateCentroidArea(). Revision 1.7 2003/07/03 12:32:26 poth no message Revision 1.6
+ * 2003/03/20 12:10:29 mrsnyder Rewrote intersects() method. Revision 1.5 2003/03/19 15:30:04 axel_schaefer Intersects:
+ * crossing envelopes, but points are not in envelope
  */

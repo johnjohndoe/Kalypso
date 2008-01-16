@@ -215,7 +215,7 @@ public class FeatureHelper
       return (String) value;
     return value.toString();
   }
-
+ 
   /**
    * Überträgt die Daten eines Features in die Daten eines anderen.
    * <p>

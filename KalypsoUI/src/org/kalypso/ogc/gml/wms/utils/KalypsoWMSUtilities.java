@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.WMSImageProvider;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -84,8 +85,10 @@ public class KalypsoWMSUtilities
    *            The client coordinate system. Will be used to initialize the image provider.
    * @return An image provider. Should never be null.
    */
-  public static IKalypsoImageProvider getImageProvider( String themeName, String layers, String styles, String service, String providerID, CS_CoordinateSystem localSRS )
+  public static IKalypsoImageProvider getImageProvider( String themeName, String layers, String styles, String service, String providerID )
   {
+    final CS_CoordinateSystem localSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+
     /* If it is missing or null, return the default provider. */
     if( providerID == null )
       return getDefaultImageProvider( themeName, layers, styles, service, localSRS );

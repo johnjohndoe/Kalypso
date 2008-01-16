@@ -93,6 +93,11 @@ public interface GM_Envelope extends Cloneable
    * returns the maximum coordinates of bounding box
    */
   GM_Position getMax();
+  
+  /**
+   * returns true if the bounding box contains the submitted position
+   */
+  boolean contains( double x, double y );
 
   /**
    * returns true if the bounding box contains the submitted position

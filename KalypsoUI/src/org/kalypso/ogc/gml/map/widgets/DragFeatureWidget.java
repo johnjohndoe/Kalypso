@@ -233,7 +233,7 @@ public class DragFeatureWidget extends AbstractWidget
       double x = projection.getSourceX( p.getX() );
       double y = projection.getSourceY( p.getY() );
 
-      if( envelope.contains( GeometryFactory.createGM_Position( x, y ) ) )
+      if( envelope.contains( x, y ) )
       {
         /* Activate all handles, because we want to drag the whole feature. */
         for( IHandle handle : m_handles )

@@ -49,7 +49,9 @@ import java.net.URL;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -67,8 +69,11 @@ import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.IModelAdaptor;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypso.util.pool.ScenarioDataExtension;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
@@ -109,7 +114,7 @@ public class GmlLoader extends AbstractLoader
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, final URL context, IProgressMonitor monitor ) throws LoaderException
   {
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) );
 
@@ -123,7 +128,7 @@ public class GmlLoader extends AbstractLoader
 
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, factory );
 
-      final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
+      CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 
       workspace.addCommandManagerListener( m_commandManagerListener );
 
@@ -145,6 +150,32 @@ public class GmlLoader extends AbstractLoader
         perfLogger.printCurrentTotal( "Finished transforming gml workspace in: " );
       }
 
+      final Feature rootFeature = workspace.getRootFeature();
+// final String version = FeatureHelper.getAsString( rootFeature, "version" );
+      final IModelAdaptor[] modelAdaptors = ScenarioDataExtension.getModelAdaptor( rootFeature.getFeatureType().getQName().toString() );
+
+      for( final IModelAdaptor modelAdaptor : modelAdaptors )
+      {
+        monitor.subTask( "GML adaptieren" );
+        workspace = modelAdaptor.adapt( workspace );
+      }
+
+      if( workspace.isDirty() )
+      {
+        // some adaptation occured, so directly save workspace
+        // but create a backup (.bak) of old workspace
+        monitor.subTask( "Sicherheitskopie des alten GML erzeugen" );
+
+        if( gmlFile != null )
+        {
+          final IPath backupPath = gmlFile.getFullPath().addFileExtension( "bak" );
+          backup( gmlFile, backupPath, monitor, 0 );
+        }
+
+        monitor.subTask( "Adaptiertes GML speichern" );
+        save( source, context, monitor, workspace );
+      }
+
       return workspace;
     }
     catch( final LoaderException le )
@@ -162,6 +193,21 @@ public class GmlLoader extends AbstractLoader
     finally
     {
       monitor.done();
+    }
+  }
+
+  private void backup( final IResource gmlFile, final IPath backupPath, final IProgressMonitor monitor, final int count ) throws CoreException
+  {
+    final IWorkspaceRoot root = gmlFile.getWorkspace().getRoot();
+    final IPath currentTry = backupPath.addFileExtension( "" + count );
+    final IResource backupResource = root.findMember( currentTry );
+    if( backupResource != null )
+    {
+      backup( gmlFile, backupResource.getFullPath(), monitor, count + 1 );
+    }
+    else
+    {
+      gmlFile.copy( currentTry, false, monitor );
     }
   }
 

@@ -5,6 +5,8 @@
 		schema="schema/org.kalypso.ui.mapview.action.exsd" />
    	<extension-point id="featureViewExtensionControl" name="featureViewExtensionControl" schema="schema/featureViewExtensionControl.exsd"/>
     <extension-point id="componentUiHandlerProvider" name="componentUiHandlerProvider" schema="schema/componentUiHandlerProvider.exsd"/>
+    <extension-point id="kalypsoThemeFactory" name="kalypsoThemeFactory" schema="schema/kalypsoThemeFactory.exsd"/>
+    <extension-point id="modelAdapter" name="modelAdapter" schema="schema/modelAdapter.exsd"/>
 
 	<extension id="preferences" name="preferences"
 		point="org.eclipse.core.runtime.preferences">

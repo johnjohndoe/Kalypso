@@ -60,7 +60,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -173,14 +172,19 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws Exception
   {
     final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" };
-    final CS_CoordinateSystem defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     if( layerType instanceof CascadingLayer )
       return new CascadingLayerKalypsoTheme( (CascadingLayer) layerType, context, m_selectionManager, this );
 
     final String linktype = layerType.getLinktype();
     final String layerName = layerType.getName();
-    if( "wms".equals( linktype ) ) //$NON-NLS-1$
+
+    final IKalypsoThemeFactory themeFactory = getThemeFactory( linktype );
+    if( themeFactory != null )
+    {
+      return themeFactory.createTheme( linktype, layerType, context, this, m_selectionManager );
+    }
+    else if( "wms".equals( linktype ) ) //$NON-NLS-1$
     {
       final String source = layerType.getHref();
 
@@ -194,12 +198,12 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       final String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
 
       /* Create the image provider. */
-      final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, layers, styles, service, providerID, defaultCS );
+      final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, layers, styles, service, providerID );
 
       return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, this );
     }
     else if( ArrayUtils.contains( arrImgTypes, linktype.toLowerCase() ) )
-      return KalypsoPictureTheme.getPictureTheme( layerType, context, this, defaultCS );
+      return KalypsoPictureTheme.getPictureTheme( layerType, context, this );
     else if( "gmt".equals( linktype ) )
       return new CascadingKalypsoTheme( layerType, context, m_selectionManager, this );
     else if( "legend".equals( linktype ) )
@@ -209,6 +213,11 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     else
       // TODO: returns handling of gml files - part of else?!? dont assume it, proof it!
       return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this );
+  }
+
+  private IKalypsoThemeFactory getThemeFactory( final String linktype )
+  {
+    return ThemeFactoryExtension.getThemeFactory(linktype);
   }
 
   // Helper
@@ -248,6 +257,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       monitor.worked( 100 );
 
       int count = 0;
+
       for( final IKalypsoTheme theme : themes )
       {
         final StyledLayerType layer = GisTemplateHelper.addLayer( layerList, theme, count++, bbox, srsName, monitor );

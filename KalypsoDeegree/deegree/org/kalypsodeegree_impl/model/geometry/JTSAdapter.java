@@ -310,7 +310,7 @@ public class JTSAdapter
     return jtsFactory.createLinearRing( coords );
   }
 
-  private static Coordinate[] export( final GM_Position[] positions )
+  public static Coordinate[] export( final GM_Position[] positions )
   {
     final Coordinate[] coords = new Coordinate[positions.length];
     for( int i = 0; i < positions.length; i++ )
