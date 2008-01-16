@@ -82,6 +82,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
+ * @author ThomaS Jung
  * 
  */
 public class EditFEConceptGeometryWidget extends AbstractWidget
