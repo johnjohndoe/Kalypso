@@ -97,6 +97,11 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
         /* Immediately handle local features */
         final String uri = getUri();
 
+        if( "urn:ogc:gml:dict:kalypso:model:wspm:components".equals( uri ) )
+        {
+          System.out.println();
+        }
+
         if( uri == null )
         {
           m_workspace = contextWorkspace;
