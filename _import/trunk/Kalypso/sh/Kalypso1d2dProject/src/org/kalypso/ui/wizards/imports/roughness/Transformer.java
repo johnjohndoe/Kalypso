@@ -28,6 +28,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -119,12 +120,12 @@ public class Transformer implements ICoreRunnableWithProgress
       m_data.getRoughnessShapeStaticRelationMap().clear();
       // m_data.getRoughnessPolygonCollection().clear();
     }
-    final QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final QName shpCustomPropertyName = new QName( "namespace", m_data.getShapeProperty() ); //$NON-NLS-1$
     final GMLWorkspace shapeWorkSpace = ShapeSerializer.deserialize( FileUtilities.nameWithoutExtension( m_data.getInputFile() ), m_data.getCoordinateSystem( true ) );
+    final String customNamespace = shapeWorkSpace.getGMLSchema().getTargetNamespace();
+    //final QName shpFeatureName = new QName( customNamespace, "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final QName shpCustomPropertyName = new QName( customNamespace, m_data.getShapeProperty() ); //$NON-NLS-1$
     final Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
-    final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty( shpFeatureName );
+    final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
 
     m_NumberOfEntriesAdded = 0;
@@ -132,7 +133,7 @@ public class Transformer implements ICoreRunnableWithProgress
     {
       final Feature shapeFeature = (Feature) shapeFeatureList.get( i );
       final String propertyValue = shapeFeature.getProperty( shpCustomPropertyName ).toString();
-      final Object gm_Whatever = shapeFeature.getProperty( shpGeomPropertyName );
+      final Object gm_Whatever = shapeFeature.getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
       if( gm_Whatever instanceof GM_Object )
       {
         if( gm_Whatever instanceof GM_MultiSurface )
