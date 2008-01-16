@@ -280,11 +280,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     m_mapModellContextSwitcher.setMapModell( m_mapPanel.getMapModell() );
 
-//    final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
-//    final IContextService workbenchContextService = (IContextService) workbench.getService( IContextService.class );
-//    if( workbenchContextService != null )
-//      m_mapModellContextSwitcher.addContextService( workbenchContextService );
-    
+// final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
+// final IContextService workbenchContextService = (IContextService) workbench.getService( IContextService.class );
+// if( workbenchContextService != null )
+// m_mapModellContextSwitcher.addContextService( workbenchContextService );
+
     final IContextService siteContextService = (IContextService) site.getService( IContextService.class );
     if( siteContextService != null )
       m_mapModellContextSwitcher.addContextService( siteContextService );
@@ -296,7 +296,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   @Override
   public void setFocus( )
   {
-    if( (m_control != null) && !m_control.isDisposed() )
+    if( m_control != null && !m_control.isDisposed() )
       m_control.setFocus();
   }
 
