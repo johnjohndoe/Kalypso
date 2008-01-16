@@ -31,7 +31,7 @@ public class Feature_Impl extends AbstractFeature
   private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
 
   /**
-   * all property-values are stored here in sequencial order (as defined in applicationschema) properties with
+   * all property-values are stored here in sequential order (as defined in application-schema) properties with
    * maxOccurency = 1 are stored direct properties with maxOccurency > 1 are stored in a list properties with
    * maxOccurency = "unbounded" should use FeatureCollections
    */

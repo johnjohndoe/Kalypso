@@ -343,7 +343,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
 
     final XLinkedFeature_Impl other = (XLinkedFeature_Impl) obj;
     return new EqualsBuilder().append( m_uri, other.m_uri ).append( m_featureId, other.m_featureId ).isEquals();
-
   }
 
   /**
