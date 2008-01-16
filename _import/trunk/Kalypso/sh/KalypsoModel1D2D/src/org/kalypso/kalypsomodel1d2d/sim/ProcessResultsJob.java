@@ -70,6 +70,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
+import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
@@ -184,7 +185,7 @@ public class ProcessResultsJob extends Job
 
       /* GMLWorkspace für Ergebnisse anlegen */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlResultFile.toURL(), null );
-      final URL lsObsUrl = ProcessResultsJob.class.getResource( "resource/template/lengthSectionTemplate.gml" );
+      final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" );
       final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
       final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
 
