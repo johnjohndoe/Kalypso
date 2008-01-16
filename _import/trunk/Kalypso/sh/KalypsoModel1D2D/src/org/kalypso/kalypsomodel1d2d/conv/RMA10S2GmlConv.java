@@ -71,6 +71,22 @@ public class RMA10S2GmlConv
 
   private final int m_monitorStep;
 
+  private static final Pattern NODE_LINE_PATTERN = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" );
+
+  private static final Pattern ARC_LINE_PATTERN = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
+
+  private static final Pattern ARC_LINE_PATTERN2 = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
+
+  private static final Pattern NODE_INFO_LINE_PATTERN = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s*" );
+
+  private static final Pattern ELEMENT_LINE_PATTERN_4 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" );
+
+  private static final Pattern ELEMENT_LINE_PATTERN_3 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" );
+
+  private static final Pattern ELEMENT_LINE_PATTERN_2 = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+).*" );
+
+  private static final Pattern ELEMENT_LINE_PATTERN_1 = Pattern.compile( "FE\\s*([0-9]+).*" );
+
   public RMA10S2GmlConv( final IProgressMonitor monitor, final int numberOfLinesToProcess )
   {
     m_monitorStep = numberOfLinesToProcess / 100;
@@ -217,8 +233,7 @@ public class RMA10S2GmlConv
 
   private void interpreteNodeLine( final String line )
   {
-    final Pattern linePattern = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" ); //$NON-NLS-1$
-    final Matcher matcher = linePattern.matcher( line );
+    final Matcher matcher = NODE_LINE_PATTERN.matcher( line );
     if( matcher.matches() )
     {
       try
@@ -266,8 +281,7 @@ public class RMA10S2GmlConv
 
   private void interpreteArcLine( final String line )
   {
-    final Pattern middleNodePattern = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
-    Matcher matcher = middleNodePattern.matcher( line );
+    Matcher matcher = ARC_LINE_PATTERN.matcher( line );
     try
     {
       if( matcher.matches() )
@@ -282,8 +296,7 @@ public class RMA10S2GmlConv
       }
       else
       {
-        final Pattern noMiddleNodePattern = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
-        matcher = noMiddleNodePattern.matcher( line );
+        matcher = ARC_LINE_PATTERN2.matcher( line );
         if( matcher.matches() )
         {
           final int id = Integer.parseInt( matcher.group( 1 ) );
@@ -330,35 +343,36 @@ public class RMA10S2GmlConv
     }
   }
 
-  private void interpreteFlowResistanceLine( final String line )
-  {
-    Matcher matcher = null;
-    final Pattern fourParamLinePattern = Pattern.compile( "FR\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s*" ); //$NON-NLS-1$
-    matcher = fourParamLinePattern.matcher( line );
-    try
-    {
-      if( matcher.matches() )
-      {
-        final int id = Integer.parseInt( matcher.group( 1 ) );
-        final double combinedLambda = Double.parseDouble( matcher.group( 2 ) );
-        final double soilLambda = Double.parseDouble( matcher.group( 3 ) );
-        final double vegetationLambda = Double.parseDouble( matcher.group( 4 ) );
-        m_handler.handleFlowResitance( line, id, combinedLambda, soilLambda, vegetationLambda );
-      }
-      else
-        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
-    }
-    catch( final NumberFormatException e )
-    {
-      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
-    }
-  }
+  // private void interpreteFlowResistanceLine( final String line )
+  // {
+  // Matcher matcher = null;
+  // final Pattern fourParamLinePattern = Pattern.compile(
+  // "FR\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s*" );
+  // //$NON-NLS-1$
+  // matcher = fourParamLinePattern.matcher( line );
+  // try
+  // {
+  // if( matcher.matches() )
+  // {
+  // final int id = Integer.parseInt( matcher.group( 1 ) );
+  // final double combinedLambda = Double.parseDouble( matcher.group( 2 ) );
+  // final double soilLambda = Double.parseDouble( matcher.group( 3 ) );
+  // final double vegetationLambda = Double.parseDouble( matcher.group( 4 ) );
+  // m_handler.handleFlowResitance( line, id, combinedLambda, soilLambda, vegetationLambda );
+  // }
+  // else
+  // m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+  // }
+  // catch( final NumberFormatException e )
+  // {
+  // m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+  // }
+  // }
 
   private void interpreteElementLine( final String line )
   {
     Matcher matcher = null;
-    final Pattern fourParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
-    matcher = fourParamLinePattern.matcher( line );
+    matcher = ELEMENT_LINE_PATTERN_4.matcher( line );
     try
     {
       if( matcher.matches() )
@@ -371,8 +385,7 @@ public class RMA10S2GmlConv
       }
       else
       {
-        final Pattern threeParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" ); //$NON-NLS-1$
-        matcher = threeParamLinePattern.matcher( line );
+        matcher = ELEMENT_LINE_PATTERN_3.matcher( line );
         if( matcher.matches() )
         {
           final int id = Integer.parseInt( matcher.group( 1 ) );
@@ -382,8 +395,7 @@ public class RMA10S2GmlConv
         }
         else
         {
-          final Pattern twoParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
-          matcher = twoParamLinePattern.matcher( line );
+          matcher = ELEMENT_LINE_PATTERN_2.matcher( line );
           if( matcher.matches() )
           {
             final int id = Integer.parseInt( matcher.group( 1 ) );
@@ -392,8 +404,7 @@ public class RMA10S2GmlConv
           }
           else
           {
-            final Pattern oneParamLinePattern = Pattern.compile( "FE\\s*([0-9]+).*" ); //$NON-NLS-1$
-            matcher = oneParamLinePattern.matcher( line );
+            matcher = ELEMENT_LINE_PATTERN_1.matcher( line );
             if( matcher.matches() )
             {
               final int id = Integer.parseInt( matcher.group( 1 ) );

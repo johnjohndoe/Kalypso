@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -56,33 +57,25 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * {@link AbstractFeatureBinder} based default implementation of 
- * {@link IFlowResistanceModel} 
+ * {@link AbstractFeatureBinder} based default implementation of {@link IFlowResistanceModel}
  * 
  * @author Patrice Congo
- *
+ * 
  */
-public class FlowResistanceModel 
-                  extends AbstractFeatureBinder 
-                  implements IFlowResistanceModel
+public class FlowResistanceModel extends UnversionedModel implements IFlowResistanceModel
 {
-  
-  private static final  Logger logger = Logger.getLogger( FlowResistanceModel.class.toString() );
-  
+
+  private static final Logger logger = Logger.getLogger( FlowResistanceModel.class.toString() );
+
   private IFeatureWrapperCollection<IFlowResistanceConcept> flowResistanceConcepts;
 
-  public FlowResistanceModel(Feature featureToBind, QName qnameToBind)
+  public FlowResistanceModel( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
-    flowResistanceConcepts = 
-        new FeatureWrapperCollection<IFlowResistanceConcept>(
-              featureToBind,
-              IFlowResistanceConcept.class,
-              KalypsoModelSimulationBaseConsts.SIM_BASE_P_FLOW_RESISTANCE_CONCEPT);
+    flowResistanceConcepts = new FeatureWrapperCollection<IFlowResistanceConcept>( featureToBind, IFlowResistanceConcept.class, KalypsoModelSimulationBaseConsts.SIM_BASE_P_FLOW_RESISTANCE_CONCEPT );
   }
 
   /**
@@ -93,30 +86,29 @@ public class FlowResistanceModel
     return null;
   }
 
-  //TODO Patric Congo this is limited to linked feature inside the bindfeature-workspace 
+  // TODO Patric Congo this is limited to linked feature inside the bindfeature-workspace
   private List<IFlowResistanceConcept> findApplicableFlowResistanceConcepts( GM_Primitive selectionZone )
   {
     Assert.throwIAEOnNullParam( selectionZone, "selectionZone" );
-    
+
     FeatureList wrappedList = flowResistanceConcepts.getWrappedList();
     GMLWorkspace workspace = getWrappedFeature().getWorkspace();
-    
-    if(selectionZone instanceof GM_Point)
+
+    if( selectionZone instanceof GM_Point )
     {
-      List<IFlowResistanceConcept> result =  new ArrayList<IFlowResistanceConcept>();
-      List linkOrFeatures = wrappedList.query( ( ( GM_Point ) selectionZone ).getPosition(), null );
+      List<IFlowResistanceConcept> result = new ArrayList<IFlowResistanceConcept>();
+      List linkOrFeatures = wrappedList.query( ((GM_Point) selectionZone).getPosition(), null );
       IFlowResistanceConcept concept;
       for( Object linkOrFeature : linkOrFeatures )
       {
         Feature feature = FeatureHelper.getFeature( workspace, linkOrFeature );
-        if(feature!=null)
+        if( feature != null )
         {
-          concept = ( IFlowResistanceConcept ) 
-                        feature.getAdapter( IFlowResistanceModel.class );
+          concept = (IFlowResistanceConcept) feature.getAdapter( IFlowResistanceModel.class );
           if( concept != null )
           {
             GM_Primitive applicationZone = concept.getApplicationZone();
-            if(applicationZone.contains( selectionZone ))
+            if( applicationZone.contains( selectionZone ) )
             {
               result.add( concept );
             }
@@ -124,23 +116,22 @@ public class FlowResistanceModel
         }
         else
         {
-          logger.info( "Could not found feature: link or feature="+feature );
+          logger.info( "Could not found feature: link or feature=" + feature );
         }
       }
       return result;
     }
-    else if(selectionZone instanceof GM_Surface)
+    else if( selectionZone instanceof GM_Surface )
     {
-      List<IFlowResistanceConcept> result =  new ArrayList<IFlowResistanceConcept>();
-      List linkOrFeatures = wrappedList.query( ( ( GM_Surface ) selectionZone ).getEnvelope(), null );
+      List<IFlowResistanceConcept> result = new ArrayList<IFlowResistanceConcept>();
+      List linkOrFeatures = wrappedList.query( ((GM_Surface) selectionZone).getEnvelope(), null );
       IFlowResistanceConcept concept;
       for( Object linkOrFeature : linkOrFeatures )
       {
         Feature feature = FeatureHelper.getFeature( workspace, linkOrFeature );
-        if(feature!=null)
+        if( feature != null )
         {
-          concept = ( IFlowResistanceConcept ) 
-                        feature.getAdapter( IFlowResistanceModel.class );
+          concept = (IFlowResistanceConcept) feature.getAdapter( IFlowResistanceModel.class );
           if( concept != null )
           {
             GM_Primitive applicationZone = concept.getApplicationZone();
@@ -152,22 +143,17 @@ public class FlowResistanceModel
         }
         else
         {
-          logger.info( "Could not found feature: link or feature="+feature );
+          logger.info( "Could not found feature: link or feature=" + feature );
         }
       }
       return result;
     }
     else
     {
-      throw new IllegalArgumentException(
-                  "Supports only point und surface zone:"+
-                  "\n\tcurrent zone type = "+selectionZone.getClass()+
-                  "\n\tcurrent zone value = "+selectionZone);
+      throw new IllegalArgumentException( "Supports only point und surface zone:" + "\n\tcurrent zone type = " + selectionZone.getClass() + "\n\tcurrent zone value = " + selectionZone );
     }
   }
-  
-  
-  
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.flowresistance.IFlowResistanceModel#getFlowResistanceConcepts()
    */

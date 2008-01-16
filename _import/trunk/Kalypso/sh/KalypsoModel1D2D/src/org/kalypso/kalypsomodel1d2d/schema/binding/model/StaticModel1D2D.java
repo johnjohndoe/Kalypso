@@ -49,32 +49,28 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.flowresistance.IFlowResistanceModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * {@link AbstractFeatureBinder} based, default implementation for
- * {@link IStaticModel1D2D}
- *  
+ * {@link AbstractFeatureBinder} based, default implementation for {@link IStaticModel1D2D}
+ * 
  * @author Patrice Congo
- *
+ * 
  */
-public class StaticModel1D2D extends AbstractFeatureBinder implements IStaticModel1D2D
+public class StaticModel1D2D extends VersionedModel implements IStaticModel1D2D
 {
-  
-  public StaticModel1D2D(Feature featureToBind )
+
+  public StaticModel1D2D( Feature featureToBind )
   {
-    this( 
-        featureToBind,
-        Kalypso1D2DSchemaConstants.WB1D2D_F_STATIC_MODEL
-        );
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_STATIC_MODEL );
   }
-  
+
   public StaticModel1D2D( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
@@ -85,9 +81,7 @@ public class StaticModel1D2D extends AbstractFeatureBinder implements IStaticMod
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel( )
   {
-    return getSubModel( 
-        SIM_BASE_P_DICRRETISATION_MODEL,
-        IFEDiscretisationModel1d2d.class );
+    return getSubModel( SIM_BASE_P_DICRRETISATION_MODEL, IFEDiscretisationModel1d2d.class );
   }
 
   /**
@@ -95,20 +89,15 @@ public class StaticModel1D2D extends AbstractFeatureBinder implements IStaticMod
    */
   public IFlowRelationshipModel getFlowRelationshipModel( )
   {
-    return getSubModel( 
-              SIM_BASE_P_FLOW_RELATIONSHIP_MODEL,
-              IFlowRelationshipModel.class );
+    return getSubModel( SIM_BASE_P_FLOW_RELATIONSHIP_MODEL, IFlowRelationshipModel.class );
   }
 
- 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D#getFlowResistanceModel()
    */
   public IFlowResistanceModel getFlowResistanceModel( )
   {
-    return getSubModel( 
-        SIM_BASE_P_FLOW_RESISTANCE_MODEL,
-        IFlowResistanceModel.class );
+    return getSubModel( SIM_BASE_P_FLOW_RESISTANCE_MODEL, IFlowResistanceModel.class );
   }
 
   /**
@@ -116,21 +105,13 @@ public class StaticModel1D2D extends AbstractFeatureBinder implements IStaticMod
    */
   public ITerrainModel getTerrainModel( )
   {
-    return getSubModel( 
-        SIM_BASE_P_TERRAIN_MODEL,
-        ITerrainModel.class );
+    return getSubModel( SIM_BASE_P_TERRAIN_MODEL, ITerrainModel.class );
   }
 
-  private final <T extends IModel> T getSubModel(
-      final QName propertyQName,
-      final Class<T> adapterTargetClass)
+  private final <T extends IModel> T getSubModel( final QName propertyQName, final Class<T> adapterTargetClass )
   {
     final Feature feature = getFeature();
-    final T subModel = 
-      FeatureHelper.resolveLink( 
-        feature, 
-        propertyQName, 
-        adapterTargetClass );
+    final T subModel = FeatureHelper.resolveLink( feature, propertyQName, adapterTargetClass );
     return subModel;
   }
 }

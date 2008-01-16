@@ -45,12 +45,10 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -125,18 +123,6 @@ public class TypeInfo
         return true;
       }
     }
-    IEdgeInv edgeInv = edge.getEdgeInv();
-    if( edgeInv != null )
-    {
-      IFeatureWrapperCollection<IFE1D2DElement> invContainers = edgeInv.getContainers();
-      for( IFE1D2DElement element : invContainers )
-      {
-        if( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.equals( element.getWrappedFeature().getFeatureType().getQName() ) )
-        {
-          return true;
-        }
-      }
-    }
     return false;
   }
 
@@ -199,7 +185,7 @@ public class TypeInfo
     if( feature == null )
       return false;
     else
-      return( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IFELine.QNAME ) );
+      return (GMLSchemaUtilities.substitutes( feature.getFeatureType(), IFELine.QNAME ));
   }
 
   /**
@@ -257,35 +243,6 @@ public class TypeInfo
     return Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( selecFeature.getFeatureType().getQName() );
   }
 
-  public static final boolean isBorderEdge( IFE1D2DEdge edge )
-  {
-
-    if( is2DEdge( edge ) )
-    {
-      IFeatureWrapperCollection<IFeatureWrapper2> edgeContainer = edge.getContainers();
-      // get numer of containing poly elemnt
-      int numPoly = edgeContainer.countFeatureWrappers( IPolyElement.class );
-
-      IEdgeInv edgeInv = edge.getEdgeInv();
-      if( edgeInv != null )
-      {
-        final IFeatureWrapperCollection<IFeatureWrapper2> edgeInvContainers = edgeInv.getContainers();
-        numPoly = numPoly + edgeInvContainers.countFeatureWrappers( IPolyElement.class );
-      }
-
-      return numPoly == 1;
-    }
-    else if( is1DEdge( edge ) )
-    {
-      return true;
-    }
-    else
-    {
-      throw new RuntimeException( "Unsupported edge type:" + edge );
-    }
-
-  }
-
   /**
    * Check if the given complex element wrapper object wrapps a junction context feature, i.e. a feature which is
    * substituable to wb1d2d:JunctionContext
@@ -328,6 +285,6 @@ public class TypeInfo
     if( feature == null )
       return false;
     IFeatureType featureType = feature.getFeatureType();
-    return( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT ) );
+    return (GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT ));
   }
 }

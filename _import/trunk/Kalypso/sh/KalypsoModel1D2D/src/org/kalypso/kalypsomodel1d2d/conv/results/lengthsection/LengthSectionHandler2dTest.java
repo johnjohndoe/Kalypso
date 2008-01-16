@@ -46,8 +46,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -92,7 +90,7 @@ public class LengthSectionHandler2dTest extends TestCase
       // GMLWorkspace shapeWorkspace = ShapeSerializer.deserialize( resourceShape.toString(), cSystem );
 
       final Feature fRoot = shapeWorkspace.getRootFeature();
-      final FeatureList lstMembers = (FeatureList) fRoot.getProperty( new QName( "namespace", "featureMember" ) );
+      final FeatureList lstMembers = (FeatureList) fRoot.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
       BigDecimal max = new BigDecimal( 62000 );
       BigDecimal min = new BigDecimal( 58000 );

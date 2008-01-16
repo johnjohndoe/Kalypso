@@ -19,7 +19,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
@@ -33,7 +32,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -247,23 +245,15 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       {
         final QName featureQName = feature.getFeatureType().getQName();
 
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV ) )
-        {
-          return new EdgeInv( feature );
-        }
-        else if( featureQName.equals( IFE1D2DEdge.QNAME ) )
+        if( featureQName.equals( IFE1D2DEdge.QNAME ) )
         {
           return new FE1D2DEdge( feature );
         }
-        else
-        {
-          warnUnableToAdapt( feature, featureQName, IFE1D2DEdge.class );
-          return null;
-        }
+        warnUnableToAdapt( feature, featureQName, IFE1D2DEdge.class );
+        return null;
       }
     };
     cMap.put( IFE1D2DEdge.class, cTor );
-    cMap.put( IEdgeInv.class, cTor );
 
     // 1d2d element
     // registered for IFE1D2DElement.class but generates the most specific type
@@ -896,5 +886,4 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
     return Collections.unmodifiableMap( cMap );
   }
-
 }

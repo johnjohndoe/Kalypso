@@ -50,5 +50,26 @@
             id="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
             name="Native-Terrain-Elevation-Shape-Builder"/>
    </extension>
+   <extension
+         point="org.kalypso.afgui.scenarioData">
+      <dataSet
+            id="org.kalypso.kalypso1d2d">
+         <scenarioDatum
+               bundle="org.kalypso.ModelSimulationBase"
+               classKey="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection"
+               modelPath="project:/.metadata/roughness.gml">
+         </scenarioDatum>
+         <scenarioDatum
+               bundle="org.kalypso.ModelSimulationBase"
+               classKey="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel"
+               modelPath="models/flowrelations.gml">
+         </scenarioDatum>
+         <scenarioDatum
+               bundle="org.kalypso.ModelSimulationBase"
+               classKey="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"
+               modelPath="models/terrain.gml">
+         </scenarioDatum>
+      </dataSet>
+   </extension>
 
 </plugin>

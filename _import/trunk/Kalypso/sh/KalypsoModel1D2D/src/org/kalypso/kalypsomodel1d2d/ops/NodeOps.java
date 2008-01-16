@@ -44,11 +44,9 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
@@ -98,7 +96,7 @@ public class NodeOps
       final List<IFE1D2DEdge> edges = ele.getEdges();
       for( final IFE1D2DEdge edge : edges )
       {
-        final List<IFE1D2DNode> nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() : edge.getNodes();
+        final List<IFE1D2DNode> nodes = edge.getNodes();
         for( final IFE1D2DNode node : nodes )
         {
           final GM_Point nodePoint = node.getPoint();
@@ -115,26 +113,6 @@ public class NodeOps
     return nearestNode;
   }
 
-  public static boolean startOf( IFE1D2DNode startNode, IFE1D2DEdge edgeToTest )
-  {
-    Assert.throwIAEOnNullParam( startNode, "startNode" );
-    IFE1D2DNode edgeStart = edgeToTest.getNode( 0 );
-    boolean equals = startNode.equals( edgeStart );
-    return equals;
-  }
-
-  public static boolean endOf( IFE1D2DNode endNode, IFE1D2DEdge edgeToTest )
-  {
-    if( endNode == null || edgeToTest == null )
-    {
-      return false;
-    }
-
-    IFE1D2DNode edgeEnd = edgeToTest.getNode( 1 );
-    boolean equals = endNode.equals( edgeEnd );
-    return equals;
-  }
-
   public static boolean hasElevation( final IFE1D2DNode node )
   {
     final GM_Point point = node.getPoint();
@@ -142,58 +120,5 @@ public class NodeOps
     if( point.getCoordinateDimension() <= 2 )
       return false;
     return !Double.isNaN( point.getZ() );
-  }
-
-  /**
-   * Gets the opposite of the given node within the specified edge
-   * 
-   * @param edge
-   *            the edge given the opposition context
-   * @param node
-   *            the node to found the opposite for
-   * @throws IllegalArgumentException
-   *             if
-   *             <ul>
-   *             <li/> node or edge is null <li/> if node is neither a starting nor an ending node of edge <li/> if edge
-   *             does not have 2 nodes
-   *             </ul>
-   * @throws RuntimeException
-   *             on any other exception encontered while searching for the opposite node
-   */
-  public static final IFE1D2DNode getOpositeNode( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge, IFE1D2DNode node ) throws IllegalArgumentException
-  {
-    Assert.throwIAEOnNullParam( node, "node" );
-    Assert.throwIAEOnNullParam( edge, "edge" );
-
-    try
-    {
-      if( NodeOps.startOf( node, edge ) )
-      {
-        return edge.getNode( 1 );// nodes.get( 1 );
-      }
-      else if( NodeOps.endOf( node, edge ) )
-      {
-        return edge.getNode( 0 );// nodes.get( 0 );
-      }
-      else
-      {
-        String message = String.format( "Node[%s] does not bellong to egde[%s]", node.getGmlID(), edge.getGmlID() );
-        throw new IllegalArgumentException( message );
-      }
-    }
-    catch( IllegalArgumentException iae )
-    {
-      throw iae;
-    }
-    catch( ArrayIndexOutOfBoundsException aobe )
-    {
-      String message = String.format( "Edge does not have 2 nodes: \n\tedge=%s \n\texception message:%s", edge.getGmlID(), aobe.getLocalizedMessage() );
-      throw new IllegalArgumentException( message, aobe );
-    }
-    catch( Throwable th )// else
-    {
-      String message = String.format( "Error while getting opposite of node[%s] in edge[%s]", node.getGmlID(), edge.getGmlID() );
-      throw new RuntimeException( message, th );
-    }
   }
 }

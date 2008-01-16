@@ -45,12 +45,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
@@ -86,6 +82,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final HashMap<Integer, String> m_elementsNameConversionMap = new HashMap<Integer, String>( 5000 );
 
+  private HashMap<GM_Point, IFE1D2DNode> m_pointCashe = new HashMap<GM_Point, IFE1D2DNode>( 10000 );
+
   public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IPositionProvider positionProvider )
   {
     m_model = model;
@@ -105,8 +103,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   public void end( )
   {
-    for( final IFE1D2DElement elelemt : m_model.getElements() )
-      ModelOps.sortElementEdges( elelemt );
+    // for( final IFE1D2DElement elelemt : m_model.getElements() )
+    // ModelOps.sortElementEdges( elelemt );
     m_model.getElements().getWrappedList().invalidate();
     m_model.getEdges().getWrappedList().invalidate();
     m_model.getNodes().getWrappedList().invalidate();
@@ -174,17 +172,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       if( elementRightID != 0 )
       {
         final IPolyElement elementRight = getElement2D( elementRightID );
-        // TODO remove dependencies to the inv edge use find node instead
-        // change the api to get the whether is was newly created or not
-        IEdgeInv invertedEdge = edge.getEdgeInv();
-        if( invertedEdge == null )
-        {
-          invertedEdge = new EdgeInv( edge, m_model );
-          m_createdFeatures.add( invertedEdge );
-          // m_edgesNameConversionMap.put( id, invertedEdge.getGmlID() );
-        }
-        elementRight.addEdge( invertedEdge.getGmlID() );
-        invertedEdge.addContainer( elementRight.getGmlID() );
+        elementRight.addEdge( edge.getGmlID() );
+        edge.addContainer( elementRight.getGmlID() );
       }
     }
   }
@@ -242,7 +231,18 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   public void handleNode( final String lineString, final int id, final double xCoord, final double yCoord, final double elevation )
   {
     final GM_Point nodeLocation = m_positionProvider.getGMPoint( xCoord, yCoord, elevation );
-    final IFE1D2DNode existingNode = m_model.findNode( nodeLocation, 0.0 );
+    final double x = nodeLocation.getX();
+    final double y = nodeLocation.getY();
+    IFE1D2DNode existingNode = null;
+    for( final GM_Point node : m_pointCashe.keySet() )
+    {
+      if( node.getX() == x && node.getY() == y )
+      {
+        existingNode = m_pointCashe.get( node );
+        break;
+      }
+    }
+
     if( existingNode != null )
     {
       // this means that in .2d file several nodes with different IDs have the same coords!
@@ -256,6 +256,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     }
     final IFE1D2DNode node = m_model.getNodes().addNew( IFE1D2DNode.QNAME, IFE1D2DNode.class );
     node.setPoint( nodeLocation );
+    m_pointCashe.put( nodeLocation, node );
     m_createdFeatures.add( node );
     m_nodesNameConversionMap.put( id, node.getGmlID() );
   }

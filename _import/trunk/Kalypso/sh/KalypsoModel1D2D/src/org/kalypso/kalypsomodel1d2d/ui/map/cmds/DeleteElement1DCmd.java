@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -147,15 +146,12 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
       throw new RuntimeException( "Could not remove element as edge container" );
     }
 
-    if( !(edge instanceof IEdgeInv) )
+    final IFeatureWrapperCollection nodes = edge.getNodes();
+    for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
     {
-      IFeatureWrapperCollection nodes = edge.getNodes();
-      for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
-      {
-        IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
-        Feature wrappedFeature = featureWrapper.getWrappedFeature();
-        m_changedFeatureList.add( wrappedFeature );
-      }
+      IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
+      Feature wrappedFeature = featureWrapper.getWrappedFeature();
+      m_changedFeatureList.add( wrappedFeature );
     }
 
     // delete element from model

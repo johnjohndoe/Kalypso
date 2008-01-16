@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -65,6 +67,10 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
+import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author Thomas Jung
@@ -189,6 +195,21 @@ public class ElementGeometryHelper
       else
         nodes[i] = foundNode;
     }
+
+    // reverse direction of element nodes if not in ccw-order
+    final Coordinate[] jtsCoordinates = new Coordinate[nodes.length + 1];
+    for( int i = 0; i < nodes.length; i++ )
+    {
+      jtsCoordinates[i] = JTSAdapter.export( nodes[i].getPoint().getPosition() );
+    }
+    jtsCoordinates[nodes.length] = jtsCoordinates[0];
+    if( CGAlgorithms.isCCW( jtsCoordinates ) )
+    {
+      final List<IFE1D2DNode> nodeList = Arrays.asList( nodes );
+      Collections.reverse( nodeList );
+      nodeList.toArray( nodes );
+    }
+
     return nodes;
   }
 
@@ -197,7 +218,6 @@ public class ElementGeometryHelper
   {
     /* Build new edges */
     final IFE1D2DEdge[] edges = new IFE1D2DEdge[points.size()];
-    final boolean[] edgesGen = new boolean[points.size()]; // flag indicating if edge was generated
     for( int i = 0; i < edges.length; i++ )
     {
       final IFE1D2DNode node0 = nodes[i];
@@ -210,7 +230,6 @@ public class ElementGeometryHelper
         final FE1D2DEdge newEdge = FE1D2DEdge.createEdge( discModel );
         newEdge.setNodes( node0, node1 );
         edges[i] = newEdge;
-        edgesGen[i] = true;
         final AddFeatureCommand addEdgeCommand = new AddFeatureCommand( workspace, parentFeature, parentEdgeProperty, -1, newEdge.getFeature(), null, false );
 
         command.addCommand( addEdgeCommand );
@@ -220,9 +239,9 @@ public class ElementGeometryHelper
       else
       {
         edges[i] = edge;
-        edgesGen[i] = false;
       }
     }
+
     return edges;
   }
 

@@ -52,7 +52,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.vecmath.Vector3d;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
@@ -65,7 +68,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -76,6 +78,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
@@ -334,11 +337,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
     int cnt = 1;
     for( final IFE1D2DEdge edge : edges )
     {
-      if( edge instanceof IEdgeInv )
-        continue;
-
-      final int node0ID = getConversionID( edge.getNode( 0 ) );
-      final int node1ID = getConversionID( edge.getNode( 1 ) );
+      final IFE1D2DNode node0 = edge.getNode( 0 );
+      final int node0ID = getConversionID( node0 );
+      final IFE1D2DNode node1 = edge.getNode( 1 );
+      final int node1ID = getConversionID( node1 );
 
       /*
        * If we have no middle node (which is always the case), create it on the fly (just takes middle of edge). This is
@@ -378,8 +380,57 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        final IFE1D2DElement leftElement = edge.getLeftElement();
-        final IFE1D2DElement rightElement = edge.getRightElement();
+        final IFeatureWrapperCollection<PolyElement> elements = edge.getAdjacentElements();
+
+        final GM_Point point0 = node0.getPoint();
+        final GM_Point point1 = node1.getPoint();
+
+        final double x0 = point0.getX();
+        final double y0 = point0.getY();
+        final double vx0 = point1.getX() - x0;
+        final double vy0 = point1.getY() - y0;
+
+        IFE1D2DElement leftElement = null;
+        IFE1D2DElement rightElement = null;
+        // find left and right elements
+        nextElement: for( final PolyElement element : elements )
+        {
+          final IFeatureWrapperCollection<IFE1D2DEdge> elementEdges = element.getEdges();
+          // find node adjacent to node0 other than node1
+          for( final IFE1D2DEdge elementEdge : elementEdges )
+          {
+            final IFeatureWrapperCollection<IFE1D2DNode> nodes = elementEdge.getNodes();
+            final IFE1D2DNode node2;
+            if( !elementEdge.equals( edge ) && nodes.contains( node0 ) )
+            {
+              if( nodes.get( 0 ).equals( node0 ) )
+              {
+                node2 = nodes.get( 1 );
+              }
+              else
+              {
+                node2 = nodes.get( 0 );
+              }
+              final GM_Point point2 = node2.getPoint();
+              final double vx1 = point2.getX() - x0;
+              final double vy1 = point2.getY() - y0;              
+              final double magnitude = vx0 * vy1 - vy0 * vx1;
+              if( magnitude > 0 )
+              {
+                // positive cross product
+                if(leftElement == null) 
+                  leftElement = element;
+                else
+                  System.out.println();
+              }
+              else
+              {
+                rightElement = element;
+              }
+              continue nextElement;
+            }
+          }
+        }
         final int leftParent;
         final int rightParent;
         if( m_exportRequest )
@@ -420,7 +471,17 @@ public class Gml2RMA10SConv implements INativeIDProvider
         continue;
 
       // check if node elevation is assigned
-      if( Double.isNaN( node.getPoint().getZ() ) )
+      double z = Double.NaN;
+      try
+      {
+        z = node.getPoint().getZ();
+      }
+      catch( final ArrayIndexOutOfBoundsException e )
+      {
+        // could happen that the node only has x and y coordinates
+        // ignore now, case will be handled soon, z = Double.NaN;
+      }
+      if( Double.isNaN( z ) )
       {
         final double x = node.getPoint().getX();
         final double y = node.getPoint().getY();
@@ -499,6 +560,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           {
             writeSplittedPolynomials( formatter, "ALP", nodeID, j, polyAlpha[j], null );
           }
+
         }
         else
         {
@@ -519,6 +581,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     double z = Double.NaN;
     // TODO: Here we should decide what we do with non-elevation-assigned nodes. For now the elevation of these nodes
     // will be set to '-9999'
+    // TODO: this cannot happen anymore (?) because an exception would have been thrown earlier
     if( point.getCoordinateDimension() == 3 )
       z = point.getZ();
     else
@@ -558,7 +621,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
       formatter.format( "%20.7f", element.getRangeMax() );
       FormatterUtils.checkIoException( formatter );
     }
-
     formatter.format( "%n" ); //$NON-NLS-1$
     FormatterUtils.checkIoException( formatter );
   }
@@ -573,7 +635,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     if( elementsInBBox.size() == 0 )
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Das Modell enthält keine Elemente. Berechnung nicht möglich.", null ) );
-
+    
     for( final IFE1D2DElement element : elementsInBBox )
     {
       // TODO: shouldn't the check for calculation unit always happens? -> So export is per calculation unit?
@@ -588,9 +650,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
       if( element instanceof IElement1D )
       {
-        IFE1D2DEdge edge = ((IElement1D) element).getEdge();
-        if( edge instanceof IEdgeInv )
-          edge = ((IEdgeInv) edge).getInverted();
+        final IFE1D2DEdge edge = ((IElement1D) element).getEdge();
         edgeSet.add( edge );
 
         /* 1D-Elements get special handling. */
@@ -628,11 +688,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else if( element instanceof IPolyElement )
       {
-        for( IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
+        for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
         {
-          if( edge instanceof IEdgeInv )
-            edge = ((IEdgeInv) edge).getInverted();
-          edgeSet.add( edge );
+           edgeSet.add( edge );
         }
 
         final int roughnessID = m_roughnessIDProvider == null ? 0 : getRoughnessID( element );

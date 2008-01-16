@@ -44,6 +44,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -82,7 +84,12 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * TODO: separate (again) geometry building from 1d2d element building!
@@ -333,10 +340,10 @@ public class ElementGeometryBuilder
                 final GM_Point endPoint = intersCurve.getAsLineString().getEndPoint();
 
                 if( checkIntersectionCurve( allNodes, startPoint, endPoint ) )
-                  return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
-              }
+                return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
             }
           }
+        }
         }
 
       }

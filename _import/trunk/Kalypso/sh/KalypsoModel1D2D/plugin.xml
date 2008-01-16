@@ -828,4 +828,37 @@
            name="org.kalypso.kalypsomodel1d2d.ui.map.function.BorderEdgeFunctionExpression">
      </function>
   </extension>
+  <extension
+        point="org.kalypso.afgui.scenarioData">
+     <dataSet
+           id="org.kalypso.kalypso1d2d">
+        <scenarioDatum
+              bundle="org.kalypso.model1d2d"
+              classKey="org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta"
+              modelPath="models/scenarioResultMeta.gml">
+        </scenarioDatum>
+        <scenarioDatum
+              bundle="org.kalypso.model1d2d"
+              classKey="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"
+              modelPath="models/static_model.gml">
+        </scenarioDatum>
+        <scenarioDatum
+              bundle="org.kalypso.model1d2d"
+              classKey="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup"
+              modelPath="models/control.gml">
+        </scenarioDatum>
+        <scenarioDatum
+              bundle="org.kalypso.model1d2d"
+              classKey="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d"
+              modelPath="models/discretisation.gml">
+        </scenarioDatum>
+     </dataSet>
+  </extension>
+  <extension
+        point="org.kalypso.ui.modelAdapter">
+     <modelAdapter
+           adapterClass="org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor"
+           featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}DiscretisationModel">
+     </modelAdapter>
+  </extension>
 </plugin>

@@ -51,26 +51,20 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
- * {@link AbstractFeatureBinder} based default implementation of
- * {@link IFlowResistanceConcept}
+ * {@link AbstractFeatureBinder} based default implementation of {@link IFlowResistanceConcept}
  * 
  * @author Patrice Congo
  * 
  */
-abstract public class FlowResistanceConcept 
-                          extends AbstractFeatureBinder 
-                          implements IFlowResistanceConcept
+abstract public class FlowResistanceConcept extends AbstractFeatureBinder implements IFlowResistanceConcept
 {
   /**
-   * Creates a new {@link FlowResistanceConcept} 
-   * binding the given feature of the specified w-name 
+   * Creates a new {@link FlowResistanceConcept} binding the given feature of the specified w-name
    */
-  protected FlowResistanceConcept( 
-                      Feature featureToBind, 
-                      QName qnameToBind )
+  protected FlowResistanceConcept( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
-    
+
   }
 
   /**
@@ -79,27 +73,21 @@ abstract public class FlowResistanceConcept
   public GM_Primitive getApplicationZone( )
   {
     final Feature feature = getFeature();
-    final Object zone = 
-        feature.getProperty( 
-            KalypsoModelSimulationBaseConsts.SIM_BASE_P_APPLICATION_ZONE );
-    return (GM_Primitive)zone;
+    final Object zone = feature.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_P_APPLICATION_ZONE );
+    return (GM_Primitive) zone;
   }
-  
-  public void setApplicationZone(GM_Primitive zone)
+
+  public void setApplicationZone( GM_Primitive zone )
   {
     Assert.throwIAEOnNullParam( zone, "zone" );
-    if( !( zone instanceof GM_Point ||
-           zone instanceof GM_Surface ) )
+    if( !(zone instanceof GM_Point || zone instanceof GM_Surface) )
     {
-      throw new IllegalArgumentException(
-          "Only GM_point and GM_Surface is supported");
+      throw new IllegalArgumentException( "Only GM_point and GM_Surface is supported" );
     }
-    
+
     final Feature feature = getFeature();
-    
-    feature.setProperty( 
-          KalypsoModelSimulationBaseConsts.SIM_BASE_P_APPLICATION_ZONE, 
-          zone);
+
+    feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_P_APPLICATION_ZONE, zone );
   }
-  
+
 }

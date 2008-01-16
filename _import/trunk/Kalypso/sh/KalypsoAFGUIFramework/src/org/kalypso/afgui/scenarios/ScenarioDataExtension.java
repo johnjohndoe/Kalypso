@@ -47,8 +47,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 
 /**
@@ -60,11 +58,17 @@ public class ScenarioDataExtension
 {
   private final static String SCENARIO_DATA_EXTENSION_POINT = "org.kalypso.afgui.scenarioData"; //$NON-NLS-1$
 
+  private static final String ATTRIBUTE_MODEL_PATH = "modelPath"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_CLASS_KEY = "classKey"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
+
+  private static Map<String, String> CLASS_LOADER_MAP;
+
   public static String getScenarioDataPath( final String id, final Class< ? extends IModel> classKey )
   {
     final Map<Class< ? extends IModel>, String> map = getLocationMap( id );
-    if( map == null )
-      return null;
 
     return map.get( classKey );
   }
@@ -72,46 +76,51 @@ public class ScenarioDataExtension
   @SuppressWarnings("unchecked")
   public static Map<Class< ? extends IModel>, String> getLocationMap( final String id )
   {
+    if( CLASS_LOADER_MAP == null )
+    {
+      CLASS_LOADER_MAP = new HashMap<String, String>();
+    }
+    CLASS_LOADER_MAP.clear();
+
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( SCENARIO_DATA_EXTENSION_POINT );
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
+    final Map<Class< ? extends IModel>, String> dataSetMap = new HashMap<Class< ? extends IModel>, String>();
     for( final IConfigurationElement dataSet : configurationElements )
     {
-      final String dataSetId = dataSet.getAttribute( "id" );
+      final String dataSetId = dataSet.getAttribute( ATTRIBUTE_ID );
       if( dataSetId.equals( id ) )
       {
         final IConfigurationElement[] elements = dataSet.getChildren();
-        final Map<Class< ? extends IModel>, String> dataSetMap = new HashMap<Class< ? extends IModel>, String>( elements.length );
         for( final IConfigurationElement element : elements )
         {
-          String bundleName = element.getAttribute( "bundle" ); //$NON-NLS-1$
-          if( bundleName == null )
-          {
-            // default to loading from same bundle
-            bundleName = element.getContributor().getName();
-          }
-          final String classKeyName = element.getAttribute( "classKey" ); //$NON-NLS-1$
-          final String modelPath = element.getAttribute( "modelPath" ); //$NON-NLS-1$
-          try
-          {
-            // TODO: don't! This violates the eclipse's lazy plug-in loading contract, as this
-            // causes plug-ins to load that are not needed at the moment (only 'id' is called for)
+          final String classKeyName = element.getAttribute( ATTRIBUTE_CLASS_KEY );
+          final String bundleId = element.getContributor().getName();
+          CLASS_LOADER_MAP.put( classKeyName, bundleId );
 
-            final Class< ? extends IModel> classKey = Platform.getBundle( bundleName ).loadClass( classKeyName );
-            dataSetMap.put( classKey, modelPath );
-          }
-          catch( final ClassNotFoundException e )
-          {
-            KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-          }
+          final String modelPath = element.getAttribute( ATTRIBUTE_MODEL_PATH );
+          final Class< ? extends IModel> classKey = loadClass( classKeyName );
+          dataSetMap.put( classKey, modelPath );
         }
-
-        return dataSetMap;
       }
     }
 
-    // id not found, return null
+    return dataSetMap;
+  }
+
+  public static Class<IModel> loadClass( final String classKey )
+  {
+    try
+    {
+      // TODO: don't! This violates the eclipse's lazy plug-in loading contract, as this
+      // causes plug-ins to load that are not needed at the moment (only 'id' is called for)
+      return Platform.getBundle( CLASS_LOADER_MAP.get( classKey ) ).loadClass( classKey );
+    }
+    catch( final ClassNotFoundException e )
+    {
+      e.printStackTrace();
+    }
     return null;
   }
 

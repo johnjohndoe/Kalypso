@@ -4,6 +4,8 @@ import javax.xml.namespace.QName;
 
 public class KalypsoModelSimulationBaseConsts
 {
+  public static final QName SIM_BASE_PROP_VERSION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "version" ); //$NON-NLS-1$
+  
   public static final QName SIM_BASE_F_ROUGHNESS_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon" ); //$NON-NLS-1$
 
   public static final QName SIM_BASE_PROP_ROUGHNESS_STYLE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessStyle" ); //$NON-NLS-1$

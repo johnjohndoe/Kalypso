@@ -43,16 +43,16 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Gernot Belger
  */
-public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
+public class TerrainModel extends VersionedModel implements ITerrainModel
 {
   private final IFeatureWrapperCollection<IRoughnessLayer> m_roughnessLayers = new FeatureWrapperCollection<IRoughnessLayer>( getFeature(), IRoughnessLayer.class, QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
 

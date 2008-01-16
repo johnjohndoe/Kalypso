@@ -76,7 +76,7 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
     Assert.throwIAEOnNullParam( elementEdgeCmds, "elementEdgeCmds" );
     for( IDiscrModel1d2dChangeCommand cmd : elementEdgeCmds )
     {
-      if( !((cmd instanceof AddEdgeCommand) || (cmd instanceof AddEdgeInvCommand)) )
+      if( !(cmd instanceof AddEdgeCommand) )
       {
         throw new IllegalArgumentException( "elementEdgeCmds must only contains edge or edgeinv  command: " + cmd );
       }

@@ -38,19 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.modeling;
+package org.kalypso.kalypsosimulationmodel.core;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
- * Tagging interface for classes representing a simBase:_Model
- * 
- * @author Patrice Congo
+ * @author kurzbach
  * 
  */
-public interface IModel extends IFeatureWrapper2
+public class VersionedModel extends AbstractFeatureBinder implements IFeatureWrapper2
 {
-  public static final String NO_VERSION = null;
+  private static final String VERSION_0_0 = "0.0";
 
-  public String getVersion( );
+  private String m_version;
+
+  public VersionedModel( final Feature featureToBind, final QName qnameToBind )
+  {
+    super( featureToBind, qnameToBind );
+    String property = null;
+    try
+    {
+      property = (String) featureToBind.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
+    }
+    catch( final Exception e )
+    {
+    }
+
+    if( property == null )
+    {
+      // create version property
+      setVersion( VERSION_0_0 );
+    }
+    else
+    {
+      m_version = property;
+    }
+  }
+
+  public String getVersion( )
+  {
+    return m_version;
+  }
+
+  public void setVersion( final String version )
+  {
+    m_version = version;
+    setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION, version );
+  }
+
 }

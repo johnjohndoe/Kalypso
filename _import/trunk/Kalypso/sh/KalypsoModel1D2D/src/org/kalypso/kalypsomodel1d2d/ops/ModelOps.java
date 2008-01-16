@@ -40,14 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ops;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -100,7 +98,7 @@ public class ModelOps
     IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
     final IPolyElement polyElement = elements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, IPolyElement.class );
 
-    sortElementEdges( polyElement, edges );
+    // sortElementEdges( polyElement );
     String elementID = polyElement.getGmlID();
     for( IFE1D2DEdge edge : edges )
     {
@@ -116,68 +114,53 @@ public class ModelOps
     // TODO: not every IFE1D2DElement is a IElement2D!!! What to do?
     if( !(element instanceof IElement2D) )
       return;
-    final IFeatureWrapperCollection edges = ((IElement2D) element).getEdges();
-    final List<IFE1D2DEdge> toSort = new ArrayList<IFE1D2DEdge>( edges );
-    edges.clear();
-    sortElementEdges( (IElement2D) element, toSort );
-  }
 
-  public static final void sortElementEdges( IElement2D element, List<IFE1D2DEdge> toSortAndAddEdges )
-  {
-    // sortElementEdgesOld( element );
-    IFeatureWrapperCollection<IFE1D2DEdge> elementEdges = element.getEdges();
-    final int INITIAL_SIZE = toSortAndAddEdges.size();// elementEdges.size();
+    final IFeatureWrapperCollection edgeFeatureCollection = ((IElement2D) element).getEdges();
+    final IFeatureWrapperCollection<IFE1D2DEdge> edges = edgeFeatureCollection;
+    final FeatureList edgeFeatureList = edges.getWrappedList();
+
+    edgeFeatureList.clear();
+
+    final int INITIAL_SIZE = edges.size();
     if( INITIAL_SIZE < 3 )
     {
       return;
-      // String str = "Illegal2D element:" + element.getGmlID() + " edgeCount=" + INITIAL_SIZE;
-      // throw new IllegalStateException( str );
-      // return;
     }
-    List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>( toSortAndAddEdges );// element.getEdges());
-
-    // clear old edge for reordering
-    elementEdges.clear();
-
-    FeatureList edgeFeatureList = elementEdges.getWrappedList();
 
     // just select the first node
     IFE1D2DEdge edge = edges.remove( 0 );
+    IFE1D2DNode nodeEnd = edge.getNode( 0 );
     edgeFeatureList.add( edge.getGmlID() );
-    int SIZE = edges.size();
-    for( ; SIZE > 0; SIZE = edges.size() )
+
+    while( !edges.isEmpty() )
     {
-
-      IFE1D2DNode nodeEnd = edge.getNode( 1 );
-
-      findingNextNode: for( int j = 0; j < SIZE; j++ )
+      for( final IFE1D2DEdge nextEdge : edges )
       {
-        IFE1D2DEdge nextEdge = edges.get( j );// :endNodeEdges
-        if( NodeOps.startOf( nodeEnd, nextEdge ) )
+        final IFeatureWrapperCollection<IFE1D2DNode> nodes = nextEdge.getNodes();
+        final IFE1D2DNode node0 = nodes.get( 0 );
+        final IFE1D2DNode node1 = nodes.get( 1 );
+        if( node0.equals( nodeEnd ) )
         {
           edge = nextEdge;
-          break findingNextNode;
+          nodeEnd = node1;
+          break;
         }
-
+        else if( node1.equals( nodeEnd ) )
+        {
+          edge = nextEdge;
+          nodeEnd = node0;
+          break;
+        }
       }
-
-      if( edge == null )
+      if( edges.remove( edge ) )
       {
-        throw new RuntimeException( "Could not found next edge:" + "\n\tnode:" + nodeEnd + "\n\tedges=" + edges );
+        edgeFeatureList.add( edge.getGmlID() );
       }
       else
       {
-        if( edges.remove( edge ) )
-        {
-          edgeFeatureList.add( edge.getGmlID() );
-        }
-        else
-        {
-          throw new RuntimeException( "edge not in list:" + "\n\tedge=" + edge + "\n\tlist:" + edges );
-        }
+        throw new RuntimeException( "edge not in list:" + "\n\tedge=" + edge + "\n\tlist:" + edges );
       }
     }
-
   }
 
   /**
@@ -188,29 +171,9 @@ public class ModelOps
    *            the edge to test
    * @return true if the given edge is in an element
    */
-  public static final boolean isContainedInAnElement( IFE1D2DEdge edge )
+  public static final boolean isContainedInAnElement( final IFE1D2DEdge edge )
   {
-    if( !edge.getContainers().isEmpty() )
-    {
-      return true;
-    }
-    if( edge instanceof IEdgeInv )
-    {
-      return false;
-    }
-    else
-    {
-      IEdgeInv edgeInv = edge.getEdgeInv();
-      if( edgeInv == null )
-      {
-        return false;
-      }
-      if( edgeInv.getContainers().isEmpty() )
-      {
-        return false;
-      }
-      return true;
-    }
+    return !edge.getContainers().isEmpty();
   }
 
   public static final IFeatureWrapperCollection<IFE1D2DComplexElement> getElementContainer( Feature featureToBind )
@@ -273,25 +236,6 @@ public class ModelOps
     }
     return selected1DEdges;
 
-  }
-
-  public static boolean hasOnlyBorderEdges( Collection<IFE1D2DEdge> edges )
-  {
-    if( edges == null )
-    {
-      return false;
-    }
-    else
-    {
-      for( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
-      {
-        if( !TypeInfo.isBorderEdge( edge ) )
-        {
-          return false;
-        }
-      }
-      return true;
-    }
   }
 
 }

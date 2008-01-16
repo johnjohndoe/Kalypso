@@ -44,32 +44,32 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
- * {@link AbstractFeatureBinder} based default implementation of
- * {@link IControlModelGroup}.
+ * {@link AbstractFeatureBinder} based default implementation of {@link IControlModelGroup}.
  * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
- *
+ * 
  */
-public class ControlModelGroup extends AbstractFeatureBinder implements IControlModelGroup
+public class ControlModelGroup extends UnversionedModel implements IControlModelGroup
 {
 
   private IControlModel1D2DCollection cModelCollection;
-  
-  public ControlModelGroup( Feature featureToBind)
+
+  public ControlModelGroup( Feature featureToBind )
   {
-    this(featureToBind, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL_GROUP);
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL_GROUP );
   }
+
   public ControlModelGroup( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
     Feature controlModelCollection = (Feature) featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_FP_MODEL_COLLECTION );
-    if(controlModelCollection == null)
+    if( controlModelCollection == null )
     {
       final Feature feature = getFeature();
       final GMLWorkspace workspace = feature.getWorkspace();
@@ -77,8 +77,7 @@ public class ControlModelGroup extends AbstractFeatureBinder implements IControl
       controlModelCollection = workspace.createFeature( feature, parentRelation, parentRelation.getTargetFeatureType(), -1 );
       feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_FP_MODEL_COLLECTION, controlModelCollection );
     }
-    cModelCollection = 
-      (IControlModel1D2DCollection) controlModelCollection.getAdapter( IControlModel1D2DCollection.class );
+    cModelCollection = (IControlModel1D2DCollection) controlModelCollection.getAdapter( IControlModel1D2DCollection.class );
   }
 
   /**

@@ -55,10 +55,7 @@
 
 	<xs:complexType name="DiscretisationModelType">
 		<xs:complexContent>
-			<!-- TODO: with this restriction, the standard gml properties
-				'name', 'description', ... are removed. Is this intended?
-			-->
-			<xs:restriction base="simBase:FEDiscretisationModelType">
+			<xs:extension base="simBase:FEDiscretisationModelType">
 				<xs:sequence>
 					<xs:element ref="wb1d2d:complexElement"
 						minOccurs="1" maxOccurs="unbounded" />
@@ -69,9 +66,9 @@
 					<xs:element ref="wb1d2d:node" minOccurs="1"
 						maxOccurs="unbounded" />
 					<xs:element ref="wb1d2d:continuityLine"
-						minOccurs="1" maxOccurs="unbounded" />
+						minOccurs="1" maxOccurs="unbounded" />						
 				</xs:sequence>
-			</xs:restriction>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
@@ -184,6 +181,7 @@
 				real edge these 3 node muss have different geometric
 				properties. ==Single point edge are also possible, in
 				that case the all
+
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>

@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -95,66 +94,17 @@ public class RemoveEdgeWithoutContainerOrInvCmd implements ICommand
       return;
     final List<IFE1D2DNode> nodesInvolved = new ArrayList<IFE1D2DNode>();
 
-    if( m_edgeToDelete instanceof IEdgeInv )
-    {
-      final IFE1D2DEdge inverted = ((IEdgeInv) m_edgeToDelete).getInverted();
-      inverted.resetInvEdge();
+    final String edgeID = m_edgeToDelete.getGmlID();
+    final List<IFE1D2DNode> nodes = m_edgeToDelete.getNodes();
+    nodesInvolved.addAll( nodes );
+    final IFE1D2DNode middleNode = m_edgeToDelete.getMiddleNode();
+    if( middleNode != null )
+      nodesInvolved.add( middleNode );
+    for( final IFE1D2DNode node : nodesInvolved )
+      node.getContainers().getWrappedList().remove( edgeID );
+    // remov edge
+    m_model1d2d.getEdges().remove( m_edgeToDelete );
 
-      // remove link to nodes
-      final String edgeID = m_edgeToDelete.getGmlID();
-      final List<IFE1D2DNode> nodes = inverted.getNodes();
-      nodesInvolved.addAll( nodes );
-      final IFE1D2DNode middleNode = inverted.getMiddleNode();
-      if( middleNode != null )
-        nodesInvolved.add( middleNode );
-      for( final IFE1D2DNode node : nodesInvolved )
-        node.getContainers().getWrappedList().remove( edgeID );
-
-      for( ; m_model1d2d.getEdges().remove( m_edgeToDelete ); )
-        ;
-      new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, inverted ).process();
-    }
-    else
-    {// for normal edges
-
-      IEdgeInv edgeInv = m_edgeToDelete.getEdgeInv();
-      if( edgeInv != null )
-      {
-        if( !edgeInv.getContainers().isEmpty() )
-          return;
-        else
-        {
-          // remode edge inv without container
-          IFE1D2DEdge inverted = edgeInv.getInverted();
-          inverted.resetInvEdge();
-
-          // remove link to nodes
-          final String edgeID = edgeInv.getGmlID();
-          final List<IFE1D2DNode> nodes = inverted.getNodes();
-          nodesInvolved.addAll( nodes );
-          final IFE1D2DNode middleNode = inverted.getMiddleNode();
-          if( middleNode != null )
-            nodesInvolved.add( middleNode );
-          for( final IFE1D2DNode node : nodesInvolved )
-            node.getContainers().getWrappedList().remove( edgeID );
-          for( ; m_model1d2d.getEdges().remove( edgeInv ); )
-            ;
-        }
-      }
-      else
-      {
-        final String edgeID = m_edgeToDelete.getGmlID();
-        final List<IFE1D2DNode> nodes = m_edgeToDelete.getNodes();
-        nodesInvolved.addAll( nodes );
-        final IFE1D2DNode middleNode = m_edgeToDelete.getMiddleNode();
-        if( middleNode != null )
-          nodesInvolved.add( middleNode );
-        for( final IFE1D2DNode node : nodesInvolved )
-          node.getContainers().getWrappedList().remove( edgeID );
-        // remov edge
-        m_model1d2d.getEdges().remove( m_edgeToDelete );
-      }
-    }
     for( final IFE1D2DNode node : nodesInvolved )
       if( node.getContainers().isEmpty() )
       {

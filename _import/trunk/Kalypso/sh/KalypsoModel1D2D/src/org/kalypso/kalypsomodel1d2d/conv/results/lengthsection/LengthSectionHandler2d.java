@@ -97,7 +97,8 @@ public class LengthSectionHandler2d
       // get "from" and "to" values for each segment
       final BigDecimal from;
       final BigDecimal to;
-      Object propertyFrom = feature.getProperty( new QName( "namespace", "RIVER_A" ) );
+      final String customNamespace = feature.getFeatureType().getGMLSchema().getTargetNamespace(); //TODO: shape api?
+      Object propertyFrom = feature.getProperty( new QName( customNamespace, "RIVER_A" ) );
       if( propertyFrom instanceof Long )
       {
         from = new BigDecimal( (Long) propertyFrom );
@@ -107,7 +108,7 @@ public class LengthSectionHandler2d
         throw new ClassCastException( "Fehler bei Stationswert. Falscher Typ." );
       }
 
-      Object propertyTo = feature.getProperty( new QName( "namespace", "RIVER_B" ) );
+      Object propertyTo = feature.getProperty( new QName( customNamespace, "RIVER_B" ) );
       if( propertyTo instanceof Long )
       {
         to = new BigDecimal( (Long) propertyTo );

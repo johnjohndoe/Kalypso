@@ -38,19 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.modeling;
+package org.kalypso.kalypsosimulationmodel.core;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
- * Tagging interface for classes representing a simBase:_Model
- * 
- * @author Patrice Congo
+ * @author kurzbach
  * 
  */
-public interface IModel extends IFeatureWrapper2
+public class UnversionedModel extends AbstractFeatureBinder implements IFeatureWrapper2
 {
-  public static final String NO_VERSION = null;
+  public UnversionedModel( final Feature featureToBind, final QName qnameToBind )
+  {
+    super( featureToBind, qnameToBind );
+  }
 
-  public String getVersion( );
+  public String getVersion( )
+  {
+    return IModel.NO_VERSION;
+  }
 }

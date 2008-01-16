@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
@@ -44,7 +45,7 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
   }
 
   @Override
-  public String getName()
+  public String getName( )
   {
     return NamedFeatureHelper.getName( getWrappedFeature() );
   }
@@ -79,4 +80,11 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
     FeatureHelper.addProperty( wrappedFeature, KalypsoModelRoughnessConsts.GML_PROP_NAME, Arrays.asList( new String[] { name } ) );
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.modeling.IModel#getVersion()
+   */
+  public String getVersion( )
+  {
+    return IModel.NO_VERSION;
+  }
 }

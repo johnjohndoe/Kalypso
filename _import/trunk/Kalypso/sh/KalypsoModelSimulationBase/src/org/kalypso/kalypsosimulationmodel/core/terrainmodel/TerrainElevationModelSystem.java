@@ -69,7 +69,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
    * substitutable to simBase:TerrainelevationModel
    * 
    * @throws IllegalArgumentException
-   *           if featureToBind is null or not substitutable to simBase:TerrainElevationModel
+   *             if featureToBind is null or not substitutable to simBase:TerrainElevationModel
    */
   public TerrainElevationModelSystem( Feature featureToBind ) throws IllegalArgumentException
   {
@@ -191,7 +191,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
       }
     }
 
-    return maxEle==Double.MIN_VALUE?Double.NaN:maxEle;
+    return maxEle == Double.MIN_VALUE ? Double.NaN : maxEle;
   }
 
   /**
@@ -215,7 +215,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
       }
     }
 
-    return minEle==Double.MAX_VALUE?Double.NaN:minEle;
+    return minEle == Double.MAX_VALUE ? Double.NaN : minEle;
   }
 
   /**
@@ -223,7 +223,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
    */
   public void setCoordinateSystem( String coordinateSystem )
   {
-    // TODO 
-    
+    // TODO
+
   }
 }

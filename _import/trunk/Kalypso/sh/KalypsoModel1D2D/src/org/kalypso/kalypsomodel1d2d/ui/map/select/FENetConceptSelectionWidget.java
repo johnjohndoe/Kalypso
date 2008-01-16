@@ -500,30 +500,35 @@ public class FENetConceptSelectionWidget implements IWidget
 
   public List<EasyFeatureWrapper> getSelectedByEnvelope( final GM_Envelope envelope )
   {
-    final List roughSelection = JMSelector.select( envelope, m_featureThemes[0].getFeatureList(), true );
-    for( int i = 1; i < m_featureThemes.length; i++ )
+    final List roughSelection = new ArrayList();
+    for( int i = 0; i < m_featureThemes.length; i++ )
       roughSelection.addAll( JMSelector.select( envelope, m_featureThemes[i].getFeatureList(), true ) );
     return packForSelectionManager( roughSelection );
   }
 
   public List<EasyFeatureWrapper> getSelectedByPoint( final GM_Point point ) throws GM_Exception
   {
-    final Geometry pointGeometry = JTSAdapter.export( point );
-    final List roughSelection = m_featureThemes[0].getFeatureList().query( point.getPosition(), null );
-    for( int i = 1; i < m_featureThemes.length; i++ )
-      roughSelection.addAll( m_featureThemes[0].getFeatureList().query( point.getPosition(), null ) );
-    final List fineSelection = new ArrayList();
-    for( final Object object : roughSelection )
-      if( object instanceof Feature )
-      {
-        final Geometry featureGeometry = JTSAdapter.export( ((Feature) object).getDefaultGeometryProperty() );
-        if( pointGeometry.coveredBy( featureGeometry ) )
-        {
-          fineSelection.add( object );
-          return packForSelectionManager( fineSelection );
-        }
-      }
-    return packForSelectionManager( fineSelection );
+    final List roughSelection = new ArrayList();
+    for( int i = 0; i < m_featureThemes.length; i++ )
+      roughSelection.addAll( JMSelector.select( point.getPosition(), 0.0001d, m_featureThemes[i].getFeatureList(), false) );
+    return packForSelectionManager( roughSelection );
+    
+//    final Geometry pointGeometry = JTSAdapter.export( point );
+//    final List roughSelection = new ArrayList();
+//    for( int i = 0; i < m_featureThemes.length; i++ )
+//      roughSelection.addAll( m_featureThemes[i].getFeatureList().query( point.getPosition(), null ) );
+//    final List fineSelection = new ArrayList();
+//    for( final Object object : roughSelection )
+//      if( object instanceof Feature )
+//      {
+//        final Geometry featureGeometry = JTSAdapter.export( ((Feature) object).getDefaultGeometryProperty() );
+//        if( pointGeometry.coveredBy( featureGeometry ) )
+//        {
+//          fineSelection.add( object );
+//          return packForSelectionManager( fineSelection );
+//        }
+//      }
+//    return packForSelectionManager( fineSelection );
   }
 
   private List<EasyFeatureWrapper> packForSelectionManager( final List selected )
