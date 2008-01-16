@@ -201,6 +201,9 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
                 for( final String otherEdgeLink : newContainers )
                 {
                   final Feature otherEdge = FeatureHelper.getFeature( workspace, otherEdgeLink );
+                  if(!otherEdge.getFeatureType().getQName().equals( IFE1D2DEdge.QNAME ))
+                    continue;
+                  
                   final FeatureList otherNodeLinks = (FeatureList) otherEdge.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
 
                   final Feature[] otherNodes = getFeatures( otherNodeLinks );
