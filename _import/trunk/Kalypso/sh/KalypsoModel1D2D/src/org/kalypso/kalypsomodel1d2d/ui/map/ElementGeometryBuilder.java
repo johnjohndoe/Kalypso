@@ -327,7 +327,14 @@ public class ElementGeometryBuilder
             {
               final GM_Object intersection = eleGeom.intersection( curve );
               if( intersection instanceof GM_Curve )
-                return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
+              {
+                final GM_Curve intersCurve = (GM_Curve) intersection;
+                final GM_Point startPoint = intersCurve.getAsLineString().getStartPoint();
+                final GM_Point endPoint = intersCurve.getAsLineString().getEndPoint();
+
+                if( checkIntersectionCurve( allNodes, startPoint, endPoint ) )
+                  return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
+              }
             }
           }
         }
@@ -368,6 +375,21 @@ public class ElementGeometryBuilder
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e );
     }
+  }
+
+  /**
+   * checks, if the first and last point lies on the same position as the intersection curve. If this is the case,
+   * return false, else return true.
+   */
+  private boolean checkIntersectionCurve( final GM_Point[] allNodes, final GM_Point startPoint, final GM_Point endPoint )
+  {
+    if( startPoint.isWithinDistance( allNodes[0], 0.0 ) && endPoint.isWithinDistance( allNodes[1], 0.0 ) )
+      return false;
+    if( startPoint.isWithinDistance( allNodes[1], 0.0 ) && endPoint.isWithinDistance( allNodes[0], 0.0 ) )
+      return false;
+
+    return true;
+
   }
 
 }
