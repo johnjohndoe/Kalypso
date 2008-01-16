@@ -43,10 +43,9 @@ package org.kalypso.ogc.gml.map.widgets.mapfunctions;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -84,31 +83,31 @@ public class MapfunctionHelper
    *            The radius, in which is searched.
    * @return All feature wrappers, whose features geometries lies within the radius.
    */
-  public static EasyFeatureWrapper[] findFeatureToSelect( MapPanel mapPanel, Rectangle rectangle, EasyFeatureWrapper[] featureToSelectFrom, int radius )
+  public static EasyFeatureWrapper[] findFeatureToSelect( final MapPanel mapPanel, final Rectangle rectangle, final EasyFeatureWrapper[] featureToSelectFrom, final int radius )
   {
     if( mapPanel == null )
       return new EasyFeatureWrapper[] {};
 
-    IMapModell mapModell = mapPanel.getMapModell();
+    final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
       return new EasyFeatureWrapper[] {};
 
-    GeoTransform transform = mapPanel.getProjection();
-    CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
+    final GeoTransform transform = mapPanel.getProjection();
+    final CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
 
-    SplitSort geoIndex = new SplitSort( null, null, null, new EasyFeatureWrapperEnvelopeProvider() );
-    for( EasyFeatureWrapper wrapper : featureToSelectFrom )
+    final SplitSort geoIndex = new SplitSort( null, null, null, new EasyFeatureWrapperEnvelopeProvider() );
+    for( final EasyFeatureWrapper wrapper : featureToSelectFrom )
       geoIndex.add( wrapper );
 
     if( (rectangle.width < radius) && (rectangle.height < radius) )
     {
-      double g1x = transform.getSourceX( rectangle.x );
-      double g1y = transform.getSourceY( rectangle.y );
+      final double g1x = transform.getSourceX( rectangle.x );
+      final double g1y = transform.getSourceY( rectangle.y );
 
-      double gisRadius = Math.abs( transform.getSourceX( rectangle.x + radius ) - g1x );
-      GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, coordinatesSystem );
+      final double gisRadius = Math.abs( transform.getSourceX( rectangle.x + radius ) - g1x );
+      final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, coordinatesSystem );
 
-      EasyFeatureWrapper efw = (EasyFeatureWrapper) JMSelector.selectNearest( pointSelect, gisRadius, geoIndex, false );
+      final EasyFeatureWrapper efw = (EasyFeatureWrapper) JMSelector.selectNearest( pointSelect, gisRadius, geoIndex, false );
       if( efw == null )
         return new EasyFeatureWrapper[] {};
       else
@@ -116,8 +115,8 @@ public class MapfunctionHelper
     }
     else
     {
-      GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( transform, rectangle );
-      List<Object> features = JMSelector.select( envelope, geoIndex, false );
+      final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( transform, rectangle );
+      final List<Object> features = JMSelector.select( envelope, geoIndex, false );
 
       return features.toArray( new EasyFeatureWrapper[features.size()] );
     }
@@ -138,41 +137,54 @@ public class MapfunctionHelper
    *            The radius, in which is searched.
    * @return All feature wrappers, whose features geometries lies within the radius.
    */
-  public static Feature[] findFeatureToSelect( MapPanel mapPanel, Rectangle rectangle, Feature[] features, int radius )
+  public static Feature[] findFeatureToSelect( final MapPanel mapPanel, final Rectangle rectangle, final Feature[] features, final int radius )
   {
     if( mapPanel == null )
       return new Feature[] {};
 
-    IMapModell mapModell = mapPanel.getMapModell();
+    final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
       return new Feature[] {};
 
-    GeoTransform transform = mapPanel.getProjection();
-    CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
+    final GeoTransform transform = mapPanel.getProjection();
+    final CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
 
     if( features.length <= 0 )
       return new Feature[] {};
 
-    Feature oldRootFeature = features[0].getWorkspace().getRootFeature();
-    IFeatureType featureType = oldRootFeature.getFeatureType();
-    Object propertyType = oldRootFeature.getProperty( new QName( "namespace", "type" ) );
+    final Feature oldRootFeature = features[0].getWorkspace().getRootFeature();
+    final IFeatureType featureType = oldRootFeature.getFeatureType();
 
-    Feature root = ShapeSerializer.createWorkspaceRootFeature( featureType, propertyType );
-    IRelationType parentRelation = features[0].getParentRelation();
+    final IPropertyType[] properties = oldRootFeature.getFeatureType().getProperties();
+    IPropertyType propertyType = null;
+    for( final IPropertyType pt : properties )
+    {
+      if( pt.getQName().getLocalPart().equals( "type" ) )
+      {
+        propertyType = pt;
+        break;
+      }
+    }
 
-    FeatureList geoIndex = FeatureFactory.createFeatureList( root, parentRelation );
-    for( Feature feature : features )
+    if( propertyType == null )
+      return new Feature[] {};
+
+    final Feature root = ShapeSerializer.createWorkspaceRootFeature( featureType, propertyType );
+    final IRelationType parentRelation = features[0].getParentRelation();
+
+    final FeatureList geoIndex = FeatureFactory.createFeatureList( root, parentRelation );
+    for( final Feature feature : features )
       geoIndex.add( feature );
 
     if( (rectangle.width < radius) && (rectangle.height < radius) )
     {
-      double g1x = transform.getSourceX( rectangle.x );
-      double g1y = transform.getSourceY( rectangle.y );
+      final double g1x = transform.getSourceX( rectangle.x );
+      final double g1y = transform.getSourceY( rectangle.y );
 
-      double gisRadius = Math.abs( transform.getSourceX( rectangle.x + radius ) - g1x );
-      GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, coordinatesSystem );
+      final double gisRadius = Math.abs( transform.getSourceX( rectangle.x + radius ) - g1x );
+      final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, coordinatesSystem );
 
-      Feature f = (Feature) JMSelector.selectNearest( pointSelect, gisRadius, geoIndex, false );
+      final Feature f = (Feature) JMSelector.selectNearest( pointSelect, gisRadius, geoIndex, false );
       if( f == null )
         return new Feature[] {};
       else
@@ -180,12 +192,12 @@ public class MapfunctionHelper
     }
     else
     {
-      GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( transform, rectangle );
+      final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( transform, rectangle );
 
-      List<Feature> myList = new LinkedList<Feature>();
+      final List<Feature> myList = new LinkedList<Feature>();
 
-      List<Object> list = JMSelector.select( envelope, geoIndex, false );
-      for( Object object : list )
+      final List<Object> list = JMSelector.select( envelope, geoIndex, false );
+      for( final Object object : list )
       {
         if( !(object instanceof EasyFeatureWrapper) )
           continue;
@@ -197,17 +209,17 @@ public class MapfunctionHelper
     }
   }
 
-  public static GM_Envelope rectangleToEnvelope( GeoTransform transform, Rectangle rectangle )
+  public static GM_Envelope rectangleToEnvelope( final GeoTransform transform, final Rectangle rectangle )
   {
-    double g1x = transform.getSourceX( rectangle.x );
-    double g1y = transform.getSourceY( rectangle.y );
-    double g2x = transform.getSourceX( rectangle.x + rectangle.width );
-    double g2y = transform.getSourceY( rectangle.y + rectangle.height );
+    final double g1x = transform.getSourceX( rectangle.x );
+    final double g1y = transform.getSourceY( rectangle.y );
+    final double g2x = transform.getSourceX( rectangle.x + rectangle.width );
+    final double g2y = transform.getSourceY( rectangle.y + rectangle.height );
 
-    double minX = g1x < g2x ? g1x : g2x;
-    double maxX = g1x > g2x ? g1x : g2x;
-    double minY = g1y < g2y ? g1y : g2y;
-    double maxY = g1y > g2y ? g1y : g2y;
+    final double minX = g1x < g2x ? g1x : g2x;
+    final double maxX = g1x > g2x ? g1x : g2x;
+    final double minY = g1y < g2y ? g1y : g2y;
+    final double maxY = g1y > g2y ? g1y : g2y;
 
     return GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
   }
