@@ -82,7 +82,7 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
    */
   public WMSImageProvider( )
   {
-    super( new WMSCapabilitiesLoader( 10000 ) );
+    super( new WMSCapabilitiesLoader( 3000 ) );
   }
 
   /**

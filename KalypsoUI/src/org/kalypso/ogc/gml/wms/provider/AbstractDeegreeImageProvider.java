@@ -176,7 +176,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     if( m_wms == null )
     {
       if( m_service == null )
-        return;
+        throw new CoreException( StatusUtilities.createErrorStatus( "No service url given ..." ) );
 
       /* Create the service URL. */
       URL serviceURL = parseServiceUrl( m_service );

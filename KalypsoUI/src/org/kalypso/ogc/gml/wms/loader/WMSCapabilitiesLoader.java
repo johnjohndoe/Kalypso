@@ -109,7 +109,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
       monitor.subTask( "Creating the object for getting the cababilities ..." );
 
       /* Create a getter for retrieving the URL. */
-      URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, m_timeout );
+      URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, m_timeout, 0 );
 
       monitor.worked( 25 );
       monitor.subTask( "Loading the capabilities ..." );

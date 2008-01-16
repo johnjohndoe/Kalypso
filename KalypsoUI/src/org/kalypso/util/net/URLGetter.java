@@ -59,11 +59,11 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 public class URLGetter implements ICoreRunnableWithProgress
 {
-  public static URLGetter createURLGetter( final URL url, final int timeOut )
+  public static URLGetter createURLGetter( final URL url, final int timeOut, int retries )
   {
     try
     {
-      final HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut, new URL( url.getProtocol() + "://" + url.getHost() ) );
+      final HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut, new URL( url.getProtocol() + "://" + url.getHost() ), retries );
       return new URLGetter( client, url );
     }
     catch( final MalformedURLException e )
