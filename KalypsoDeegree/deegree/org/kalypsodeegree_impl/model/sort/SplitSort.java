@@ -40,7 +40,7 @@ public class SplitSort implements FeatureList
         final Feature fe = (Feature) object;
 
         // HACK: if the workspace is null, we are probably still loading
-        // so do not access the envelope, which may cause problems now
+        // so we do not access the envelope, which may cause problems now
         final GMLWorkspace workspace = fe.getWorkspace();
         if( workspace == null )
           return null;
@@ -76,26 +76,16 @@ public class SplitSort implements FeatureList
 
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP )
   {
-    this( parentFeature, parentFTP, (IEnvelopeProvider) null );
+    this( parentFeature, parentFTP, null );
   }
 
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
-  {
-    this( parentFeature, parentFTP, null, envelopeProvider );
-  }
-
-  public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env )
-  {
-    this( parentFeature, parentFTP, env, null );
-  }
-
-  public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env, final IEnvelopeProvider envelopeProvider )
   {
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
     m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
 
-    // Index is initially index. This is necessary, as loading the features ads them to this list,
+    // Index is initially invalid. This is necessary, as loading the features ads them to this list,
     // but the features often have no envelope; so we rather wait for the first query.
     m_index = null;
   }
@@ -111,8 +101,16 @@ public class SplitSort implements FeatureList
    */
   private void checkIndex( )
   {
+    // HM: still dangerous: the calculation of the whole bbox is not synchronized, as we access 'getEnvelope' here
+    // However, this is not thread safe...
+
+    // What is the solution? Maybe never get the envelopes again? IN that case we need to maintain an own Map
+    // object->envelope?
+    // But: we need the recalculate all envelopes if the whole index is invalidated...
+
     if( m_index == null )
     {
+
       // Recalculate the bounding box
       Envelope bbox = null;
       for( final Object item : m_items )
@@ -127,14 +125,16 @@ public class SplitSort implements FeatureList
         }
       }
 
-      // create index
-      m_index = createIndex( bbox );
-
-      // insert all elements
-      for( final Object item : m_items )
+      synchronized( m_lock )
       {
-        final Envelope env = getEnvelope( item );
-        m_index.insert( env, item );
+        // create index
+        m_index = createIndex( bbox );
+        // insert all elements
+        for( final Object item : m_items )
+        {
+          final Envelope env = getEnvelope( item );
+          m_index.insert( env, item );
+        }
       }
     }
   }

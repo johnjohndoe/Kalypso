@@ -84,7 +84,6 @@ import org.kalypso.gmlschema.xml.Mapper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 
@@ -259,11 +258,6 @@ public class FeatureFactory
     return new SplitSort( parentFeature, parentFTP );
   }
 
-  public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final GM_Envelope env )
-  {
-    return new SplitSort( parentFeature, parentFTP, env );
-  }
-
   public static IPropertyType[] createVirtualFeatureTypeProperties( final IFeatureType realFeatureType )
   {
     final List<IPropertyType> result = new ArrayList<IPropertyType>();
@@ -284,7 +278,7 @@ public class FeatureFactory
     return result.toArray( new IPropertyType[result.size()] );
   }
 
-  public static GMLWorkspace createGMLWorkspace( final IGMLSchema schema, final Feature rootFeature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory, NamespaceContext namespaceContext )
+  public static GMLWorkspace createGMLWorkspace( final IGMLSchema schema, final Feature rootFeature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory, final NamespaceContext namespaceContext )
   {
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     return new GMLWorkspace_Impl( schema, featureTypes, rootFeature, context, null, schemaLocation, factory );

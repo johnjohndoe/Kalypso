@@ -89,6 +89,8 @@ public class Function extends Expression_Impl
   /** The Function's arguments. */
   private final List<Expression> m_args = new ArrayList<Expression>();
 
+  private IFunctionExpression m_function;
+
   /** Constructs a new Function. */
   public Function( final String name, final List<Expression> args )
   {
@@ -175,12 +177,14 @@ public class Function extends Expression_Impl
   {
     try
     {
-      // TODO: implement caching strategy to cache this function, it might be called very often!
-      final IFunctionExpression function = KalypsoDeegreeExtensions.createFunctionExpression( m_name );
-      if( function == null )
-        throw new FilterEvaluationException( "Unknown function: " + m_name );
+      if( m_function == null )
+      {
+        m_function = KalypsoDeegreeExtensions.createFunctionExpression( m_name );
+        if( m_function == null )
+          throw new FilterEvaluationException( "Unknown function: " + m_name );
+      }
 
-      return function.evaluate( feature, m_args );
+      return m_function.evaluate( feature, m_args );
     }
     catch( final CoreException e )
     {
