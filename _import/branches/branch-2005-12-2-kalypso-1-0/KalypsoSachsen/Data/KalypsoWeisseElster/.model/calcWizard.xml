@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <calcwizard xmlns="xml.model.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!-- Allgemeine Argumente -->
+	<arg name="showSaveButton" value="false"/>
+	<arg name="askForSaveOnFinish" value="false"/>
 
 	<!-- Ansicht Ombrometer -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ansicht Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif" >
