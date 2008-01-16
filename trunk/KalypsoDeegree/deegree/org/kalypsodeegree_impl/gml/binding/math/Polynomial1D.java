@@ -190,7 +190,7 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
   public void setRangePhenomenon( final String rangeId )
   {
     final Feature ref = refForId( rangeId );
-    
+
     getFeature().setProperty( QNAME_PROP_RANGE_PHENOMENON, ref );
   }
 
@@ -213,7 +213,6 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
     return propertyToId( property );
   }
 
-
   /**
    * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#getRangePhenomenon()
    */
@@ -223,18 +222,18 @@ public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
     final Object property = feature.getProperty( QNAME_PROP_RANGE_PHENOMENON );
     return propertyToId( property );
   }
-  
+
   private String propertyToId( final Object property )
   {
     if( property == null )
       return null;
-    
+
     if( property instanceof XLinkedFeature_Impl )
-      return ((XLinkedFeature_Impl)property).getHref();
-    
+      return ((XLinkedFeature_Impl) property).getHref();
+
     if( property instanceof Feature )
-      return ((Feature)property).getId();
-    
+      return ((Feature) property).getId();
+
     return property.toString();
   }
 

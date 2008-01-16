@@ -69,8 +69,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -85,7 +83,6 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.io.rtree.HyperBoundingBox;
@@ -549,9 +546,8 @@ public class ShapeFile
         geom = (SHPPoint) shp.getByRecNo( i + 1 );
 
         // is the Point within the seach rectangle?
-        final GM_Position pos = GeometryFactory.createGM_Position( geom.getX(), geom.getY() );
 
-        if( r.contains( pos ) == true )
+        if( r.contains( geom.getX(), geom.getY() ) )
         {
           numbers.add( new Integer( i + 1 ) );
         }

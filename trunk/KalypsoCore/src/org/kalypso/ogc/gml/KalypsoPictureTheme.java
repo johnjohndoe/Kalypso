@@ -37,6 +37,7 @@ import javax.media.jai.TiledImage;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -57,9 +58,10 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
   // TODO: use tracing instead
   private static final Logger LOGGER = Logger.getLogger( KalypsoPictureTheme.class.getName() );
 
-  public static IKalypsoTheme getPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell, final CS_CoordinateSystem system ) throws Exception
+  public static IKalypsoTheme getPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell ) throws Exception
   {
     final String[] arrWorldTypes = new String[] { "tif", "jpg", "png", "gif" };
+    final CS_CoordinateSystem system = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     if( ArrayUtils.contains( arrWorldTypes, layerType.getLinktype().toLowerCase() ) )
       return new KalypsoPictureThemeWorldFile( layerType, context, modell, system );
     else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) )

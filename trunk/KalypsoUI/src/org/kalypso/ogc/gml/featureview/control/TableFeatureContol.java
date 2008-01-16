@@ -311,7 +311,9 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
     if( m_kft != null )
     {
-      m_kft.getWorkspace().removeModellListener( this );
+      final CommandableWorkspace workspace = m_kft.getWorkspace();
+      if( workspace != null )
+        workspace.removeModellListener( this );
       m_kft.getMapModell().dispose(); // we made the modell, so we dispose it
       m_kft.dispose();
       m_kft = null;
