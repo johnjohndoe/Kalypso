@@ -111,7 +111,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class NodeResultsHandler implements IRMA10SModelElementHandler
 {
-  private static final int WSP_EXTRAPOLATION_RANGE = 20;
+  private static final int WSP_EXTRAPOLATION_RANGE = 1;
 
   private final Map<Integer, GMLNodeResult> m_nodeIndex = new HashMap<Integer, GMLNodeResult>();
 
