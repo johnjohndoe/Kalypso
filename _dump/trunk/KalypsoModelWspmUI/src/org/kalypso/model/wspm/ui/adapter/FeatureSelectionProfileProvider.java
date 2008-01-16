@@ -44,8 +44,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
@@ -141,41 +139,28 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       return;
 
     final IFeatureSelection fs = (IFeatureSelection) selection;
-
-    Feature fProfil = null;
-    final QName qProfile = new QName( "org.kalypso.model.wspmprofile", "Profile" );
-
     final EasyFeatureWrapper[] features = fs.getAllFeatures();
-    for( final EasyFeatureWrapper eft : features )
-    {
-      final Feature feature = eft.getFeature();
-      final QName qname = feature.getFeatureType().getQName();
-      if( qProfile.equals( qname ) )
-      {
-        fProfil = feature;
-        break;
-      }
-
-    }
-
-    final CommandableWorkspace workspace = fs.getWorkspace( fProfil );
-    final URL workspaceContext = workspace == null ? null : workspace.getContext();
-    m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
     IProfil profile = null;
     WspmProfile profileMember = null;
     IStationResult[] results = null;
     try
     {
-      if( fProfil != null )
+      for( final EasyFeatureWrapper eft : features )
       {
-        profileMember = ProfileFeatureProvider.findProfile( fProfil );
-        if( profileMember != null )
-        {
-          profile = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+        final Feature feature = eft.getFeature();
 
-          results = findResults( profileMember );
+        if( feature != null )
+        {
+          profileMember = ProfileFeatureProvider.findProfile( feature );
+          if( profileMember != null )
+          {
+            profile = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+            results = findResults( profileMember );
+            break;
+          }
         }
+
       }
     }
     catch( final Exception e )
@@ -183,6 +168,14 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       final KalypsoModelWspmUIPlugin wspmPlugin = KalypsoModelWspmUIPlugin.getDefault();
       wspmPlugin.getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+
+    if( profileMember == null )
+      return;
+
+    final Feature feature = profileMember == null ? null : profileMember.getFeature();
+    final CommandableWorkspace workspace = fs.getWorkspace( feature );
+    final URL workspaceContext = workspace == null ? null : workspace.getContext();
+    m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
     final Feature profileFeature = profileMember == null ? null : profileMember.getFeature();
     setProfile( profile, results, profileFeature, workspace );

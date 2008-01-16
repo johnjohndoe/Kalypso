@@ -47,8 +47,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Gernot
- *
+ * @author Gernot Belger
  */
 public class DefaultProfileFeatureProvider implements IProfileFeatureProvider
 {
@@ -59,7 +58,7 @@ public class DefaultProfileFeatureProvider implements IProfileFeatureProvider
   {
     if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) ) )
       return new WspmProfile( feature );
-    
+
     return null;
   }
 
