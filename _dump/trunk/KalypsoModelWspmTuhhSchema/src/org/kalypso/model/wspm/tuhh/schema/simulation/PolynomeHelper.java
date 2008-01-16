@@ -106,9 +106,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class PolynomeHelper
 {
-  private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
+  // TODO: Deciding which approach to take, energy level or water stage
 
-  private static final String BRIDGE_FILE_NAME = "HOW_QBruecke_HUW.txt";
+  // private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
+  private static final String WEIR_FILE_NAME = "EOW_QWehr_EUW.txt";
+
+  // private static final String BRIDGE_FILE_NAME = "HOW_QBruecke_HUW.txt";
+  private static final String BRIDGE_FILE_NAME = "EOW_QBruecke_EUW.txt";
 
   private static final String QLANG_FILE_NAME = "Q_LangSchnitt.txt";
 
