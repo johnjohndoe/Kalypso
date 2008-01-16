@@ -388,7 +388,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     /* If an image is missing, there can be no extent. */
     if( image == null )
+    {
       m_extent = null;
+      invalidate( null );
+      return;
+    }
 
     /* Inform to paint new image. */
     invalidate( getFullExtent() );
