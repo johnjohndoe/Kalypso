@@ -62,6 +62,11 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelegate
 {
 
+  private static final double MIN_DISTANCE_OF_POINTS = 4.0; /*
+                                                             * REMARK: GM_POINTS will be transfered to screen
+                                                             * coordinates, and these points must differ!
+                                                             */
+
   public StrokeArrowPaintDelegateLine( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final Double strokeWidth )
   {
     super( arrowType, arrowWidget, arrowAlignment, arrowSize );
@@ -120,10 +125,14 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
 
     /* point b must differ from point a */
     int count = 1;
-    while( b.equals( a ) )
+    double distance = 0.0;
+
+    while( b.equals( a ) || distance < MIN_DISTANCE_OF_POINTS )
     {
       b = GeometryFactory.createGM_Point( positions[count], curve.getCoordinateSystem() );
       count++;
+
+      distance = b.distance( a );
     }
 
     return new GM_Point[] { a, b };
@@ -143,10 +152,14 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
 
     /* point b must differ from point a! */
     int count = 2;
-    while( b.equals( a ) )
+    double distance = 0.0;
+
+    while( b.equals( a ) || distance < MIN_DISTANCE_OF_POINTS )
     {
       b = GeometryFactory.createGM_Point( positions[positions.length - count], curve.getCoordinateSystem() );
       count++;
+
+      distance = b.distance( a );
     }
 
     return new GM_Point[] { a, b };
