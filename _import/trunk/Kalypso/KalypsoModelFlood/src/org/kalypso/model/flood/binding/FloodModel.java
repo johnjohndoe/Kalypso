@@ -40,16 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.binding;
 
+import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Thomas Jung
  */
-public class FloodModel extends AbstractFeatureBinder implements IFloodModel
+public class FloodModel extends UnversionedModel implements IFloodModel
 {
   private final FeatureWrapperCollection<IFloodPolygon> m_polygones;
 
@@ -91,5 +91,4 @@ public class FloodModel extends AbstractFeatureBinder implements IFloodModel
   {
     return m_events;
   }
-
 }
