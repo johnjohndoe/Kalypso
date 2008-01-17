@@ -52,7 +52,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author madanago
@@ -138,13 +138,29 @@ public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dCha
 
   private void fireProcessChanges( )
   {
-    final Feature bcFeature = m_boundaryConditionToAdd.getWrappedFeature();
+    final Feature calcUnitFeature = m_calculationUnit.getWrappedFeature();
     final List<Feature> features = new ArrayList<Feature>();
-    features.add( bcFeature );
+    features.add( calcUnitFeature );
+    features.add( m_boundaryConditionToAdd.getWrappedFeature() );
 
-    final GMLWorkspace workspace = bcFeature.getWorkspace();
-    final FeaturesChangedModellEvent event = new FeaturesChangedModellEvent( workspace, features.toArray( new Feature[features.size()] ) );
-    workspace.fireModellEvent( event );
+    final GMLWorkspace calcUnitWorkspace = calcUnitFeature.getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( calcUnitWorkspace, calcUnitFeature.getParent(), features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+    calcUnitWorkspace.fireModellEvent( event );
+
+    final Feature bcFeature = m_boundaryConditionToAdd.getWrappedFeature();
+    final GMLWorkspace bcWorkspace = bcFeature.getWorkspace();
+    final FeatureStructureChangeModellEvent bcEvent = new FeatureStructureChangeModellEvent( bcWorkspace, bcFeature.getParent(), new Feature[] { bcFeature }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+    bcWorkspace.fireModellEvent( bcEvent );
+
+//    
+//    
+//    final Feature bcFeature = m_boundaryConditionToAdd.getWrappedFeature();
+//    final List<Feature> features = new ArrayList<Feature>();
+//    features.add( bcFeature );
+//
+//    final GMLWorkspace workspace = bcFeature.getWorkspace();
+//    final FeaturesChangedModellEvent event = new FeaturesChangedModellEvent( workspace, features.toArray( new Feature[features.size()] ) );
+//    workspace.fireModellEvent( event );
   }
 
   /**

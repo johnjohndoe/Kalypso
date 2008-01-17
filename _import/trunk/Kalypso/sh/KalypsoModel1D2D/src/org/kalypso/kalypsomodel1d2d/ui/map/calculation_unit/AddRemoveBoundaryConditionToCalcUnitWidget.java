@@ -100,6 +100,31 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
 
     popupMenu.add( addBoundaryCondition );
     popupMenu.add( removeBoundaryCondition );
+
+    final Feature[] selectedFeatures = getSelectedFeature();
+    if( selectedFeatures != null && selectedFeatures.length > 0 )
+    {
+      boolean calcUnitContainsAllSelectedBCs = true;
+      boolean calcUnitContainsAnyOfSelectedBCs = false;
+      final ICalculationUnit calcUnit = (ICalculationUnit) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+      final String calcUnitID = calcUnit.getGmlID();
+      for( final Feature feature : selectedFeatures )
+      {
+        final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
+        if( bc == null )
+          continue;
+        calcUnitContainsAllSelectedBCs &= bc.getParentCalculationUnitIDs().contains( calcUnitID );
+        calcUnitContainsAnyOfSelectedBCs |= bc.getParentCalculationUnitIDs().contains( calcUnitID );
+      }
+      addBoundaryCondition.setEnabled( !calcUnitContainsAnyOfSelectedBCs );
+      removeBoundaryCondition.setEnabled( calcUnitContainsAllSelectedBCs );
+    }
+    else
+    {
+      addBoundaryCondition.setEnabled( false );
+      removeBoundaryCondition.setEnabled( false );
+    }
+
     popupMenu.show( mapPanel, p.x, p.y );
   }
 
@@ -149,11 +174,11 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
       public void actionPerformed( ActionEvent e )
       {
         final Feature[] selectedFeatures = getSelectedFeature();
-        final ICalculationUnit calcUnit = (ICalculationUnit) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-        if( selectedFeatures.length == 0 )
+        if( selectedFeatures == null || selectedFeatures.length == 0 )
           return;
+        final ICalculationUnit calcUnit = (ICalculationUnit) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
 
-        for( Feature feature : selectedFeatures )
+        for( final Feature feature : selectedFeatures )
         {
           final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
