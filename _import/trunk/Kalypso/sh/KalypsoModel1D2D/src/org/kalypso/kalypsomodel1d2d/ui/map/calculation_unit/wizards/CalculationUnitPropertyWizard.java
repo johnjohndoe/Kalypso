@@ -107,7 +107,7 @@ public class CalculationUnitPropertyWizard extends Wizard
   public boolean performFinish( )
   {
     final ICalculationUnit[] newSubUnits = m_wizardPage.getSelectedSubUnits();
-    if( checkSubUnitsInterconnection( newSubUnits ) )
+    if( !(m_parentCalcUnit instanceof ICalculationUnit1D2D) || checkSubUnitsInterconnection( newSubUnits ) )
     {
       try
       {
@@ -185,7 +185,7 @@ public class CalculationUnitPropertyWizard extends Wizard
         }
       }
     }
-    if (connectedUnits.size() == inputListCalSubUnits.length)
+    if( connectedUnits.size() == inputListCalSubUnits.length )
       return true;
     else
       return false;
