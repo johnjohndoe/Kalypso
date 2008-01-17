@@ -329,7 +329,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   @Override
   public boolean contains( final GM_Object gmo )
   {
-    throw new NoSuchMethodError( "the contains operation for points " + "isn't supported at the moment." );
+    throw new UnsupportedOperationException( "the contains operation for points " + "isn't supported at the moment." );
   }
 
   /**
@@ -357,7 +357,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform)
    */
-  public GM_Object transform( MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
   {
     Debug.debugMethodBegin( this, "transformPoint" );
 

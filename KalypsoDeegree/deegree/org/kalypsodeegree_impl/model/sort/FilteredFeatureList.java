@@ -335,15 +335,7 @@ public class FilteredFeatureList implements FeatureList
    */
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#rsize()
-   */
-  public int rsize( )
-  {
-    throw new UnsupportedOperationException();
+    m_original.paint( g, geoTransform );
   }
 
   /**

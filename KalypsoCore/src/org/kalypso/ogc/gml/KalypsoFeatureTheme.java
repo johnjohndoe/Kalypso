@@ -185,7 +185,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       m_featureList.paint( graphics, projection );
   }
 
-  public void paint( final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  private void paint( final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     final Collection<UserStylePainter> styles = m_styleDisplayMap.values();
     final UserStylePainter[] styleArray = styles.toArray( new UserStylePainter[styles.size()] );

@@ -10,4 +10,5 @@ org.kalypso.core/perf/serialization/gml = true
 org.kalypso.core/debug/mapModell = false
 
 # Spatial Index
+org.kalypso.core/debug/spatialIndex = false
 org.kalypso.core/debug/spatialIndex/paint = false
