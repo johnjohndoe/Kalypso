@@ -338,7 +338,7 @@
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget"/>
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteBCWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/14_flowrelation_cut_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
@@ -396,7 +396,7 @@
             class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-               value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget">
+               value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteParameter1DWidget">
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
@@ -446,7 +446,7 @@
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"/>
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditBCWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/15_flowrelation_edit_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
@@ -483,7 +483,7 @@
             class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-               value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget">
+               value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget">
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"

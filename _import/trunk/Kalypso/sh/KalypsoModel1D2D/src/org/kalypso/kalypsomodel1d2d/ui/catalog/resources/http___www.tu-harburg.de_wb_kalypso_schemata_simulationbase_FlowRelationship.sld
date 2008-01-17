@@ -8,11 +8,50 @@
 	<Title>_FlowRelationship</Title>
 	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship</FeatureTypeName>
 
+<!-- 
 	<Rule>
 		<Name>otherFlowRelationShips</Name>
 		<Title>Netzparameter</Title>
 		<Abstract>Netzparameter</Abstract>
 		<ElseFilter />
+		<MinScaleDenominator>0.0</MinScaleDenominator>
+		<MaxScaleDenominator>10000000.00</MaxScaleDenominator>
+		<PointSymbolizer>
+			<Geometry>
+				<ogc:PropertyName>position</ogc:PropertyName>
+			</Geometry>
+			<Graphic>
+				<Mark>
+					<WellKnownName>circle</WellKnownName>
+					<Fill>
+						<CssParameter name="fill-opacity">1.0</CssParameter>
+						<CssParameter name="fill">#ff952b</CssParameter>
+					</Fill>
+					<Stroke>
+						<CssParameter name="stroke">#000000</CssParameter>
+						<CssParameter name="stroke-width">1.0</CssParameter>
+						<CssParameter name="stroke-linejoin">round</CssParameter>
+						<CssParameter name="stroke-opacity">1.0</CssParameter>
+						<CssParameter name="stroke-linecap">square</CssParameter>
+					</Stroke>
+				</Mark>
+				<Opacity>1.0</Opacity>
+				<Size>14.0</Size>
+				<Rotation>0.0</Rotation>
+			</Graphic>
+		</PointSymbolizer>
+	</Rule>
+-->
+
+	<Rule>
+		<Name>polynome</Name>
+		<Title>Polynomfunktion</Title>
+		<ogc:Filter>
+			<ogc:PropertyIsEqualTo>
+				<ogc:Literal>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TeschkeFlowRelation</ogc:Literal>
+				<ogc:Function name="org.kalypso.deeegree.functionExpression.featureTypeName" />
+			</ogc:PropertyIsEqualTo>
+		</ogc:Filter>
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>10000000.00</MaxScaleDenominator>
 		<PointSymbolizer>
