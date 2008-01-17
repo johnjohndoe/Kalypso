@@ -118,7 +118,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
     m_savedAT = getGraphic().getTransform();
     final AffineTransform transform = new AffineTransform();
     transform.translate( p1[0], p1[1] );
-    transform.rotate( getRotation( p1, p2 ) );
+    transform.rotate( getRotation() );
     getGraphic().setTransform( transform );
   }
 
@@ -137,10 +137,10 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
     }
   }
 
-  protected double getRotation( final int[] p1, final int[] p2 )
+  protected double getRotation( )
   {
-    final double dx = p2[0] - p1[0];
-    final double dy = -(p2[1] - p1[1]);
+    final double dx = m_points[1].getPosition().getX() - m_points[0].getPosition().getX();
+    final double dy = -(m_points[1].getPosition().getY() - m_points[0].getPosition().getY());
     double rotation = 0.0;
 
     if( dx <= 0 )
