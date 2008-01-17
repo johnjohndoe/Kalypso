@@ -47,7 +47,7 @@ public class SplitSortContainer
     }
   }
 
-  private static final int MAX_OBJECTS = 500;
+  private static final int MAX_OBJECTS = 200;
 
   private static final int LEFT_BOTTOM = 0;
 
