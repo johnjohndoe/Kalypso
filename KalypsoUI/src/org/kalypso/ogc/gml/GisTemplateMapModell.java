@@ -217,7 +217,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   private IKalypsoThemeFactory getThemeFactory( final String linktype )
   {
-    return ThemeFactoryExtension.getThemeFactory(linktype);
+    return ThemeFactoryExtension.getThemeFactory( linktype );
   }
 
   // Helper

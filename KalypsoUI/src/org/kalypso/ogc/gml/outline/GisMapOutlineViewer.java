@@ -49,6 +49,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.ITreeViewerListener;
+import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -153,6 +155,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
 
         if( (event.detail & SWT.SELECTED) == 0 )
           return; /* item not selected */
+
         final Color leftColor = c.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND_GRADIENT );
         final Color rightColor = c.getDisplay().getSystemColor( SWT.COLOR_WHITE );
 
@@ -169,6 +172,24 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
         event.detail &= ~SWT.SELECTED;
 
         gc.setForeground( rightColor );
+      }
+    } );
+
+    m_viewer.addTreeListener( new ITreeViewerListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse.jface.viewers.TreeExpansionEvent)
+       */
+      public void treeCollapsed( TreeExpansionEvent event )
+      {
+      }
+
+      /**
+       * @see org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse.jface.viewers.TreeExpansionEvent)
+       */
+      public void treeExpanded( TreeExpansionEvent event )
+      {
+        resetCheckState( m_mapModel );
       }
     } );
 
@@ -451,5 +472,4 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
       } );
     }
   }
-
 }
