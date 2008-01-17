@@ -75,7 +75,7 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
       @Override
       public Object getThemeParent( final IKalypsoTheme theme )
       {
-        return this;
+        return CascadingLayerKalypsoTheme.this;
       }
     } );
 
@@ -124,6 +124,5 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     int count = 0;
     for( final IKalypsoTheme theme : themes )
       GisTemplateHelper.addLayer( layers, theme, count++, getFullExtent(), srsName, monitor );
-
   }
 }

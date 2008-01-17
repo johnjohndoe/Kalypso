@@ -331,8 +331,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * Overwritten in order to have corrct parent for tree strcutures.
-   * ypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
+   * Overwritten in order to have correct parent for tree strucutures.
+   * 
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public Object getThemeParent( final IKalypsoTheme theme )
   {
