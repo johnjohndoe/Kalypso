@@ -58,9 +58,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class AbstractEditFeatureWidget extends AbstractSelectFeatureWidget
 {
-  public AbstractEditFeatureWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName qnameToSelect, final QName geomQName )
+  public AbstractEditFeatureWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName[] qnamesToSelect, final QName geomQName )
   {
-    super( name, toolTip, allowMultipleSelection, qnameToSelect, geomQName );
+    super( name, toolTip, allowMultipleSelection, qnamesToSelect, geomQName );
   }
 
   /**

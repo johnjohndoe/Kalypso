@@ -42,6 +42,7 @@ package org.kalypso.kalypsosimulationmodel.ui.map;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -56,7 +57,6 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -70,6 +70,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -96,14 +97,14 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
 
   private QName m_geomQName = null;
 
-  private final QName m_qnameToSelect;
+  private final QName[] m_qnamesToSelect;
 
-  public AbstractSelectFeatureWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName qnameToSelect, final QName geomQName )
+  public AbstractSelectFeatureWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName qnamesToSelect[], final QName geomQName )
   {
     super( name, toolTip );
 
     m_allowMultipleSelection = allowMultipleSelection;
-    m_qnameToSelect = qnameToSelect;
+    m_qnamesToSelect = qnamesToSelect;
     m_geomQName = geomQName;
   }
 
@@ -130,14 +131,8 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
     final IMapModell mapModell = mapPanel.getMapModell();
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    final IFeatureType activeFT = activeTheme instanceof IKalypsoFeatureTheme ? ((IKalypsoFeatureTheme) activeTheme).getFeatureType() : null;
-    if( activeFT != null && GMLSchemaUtilities.substitutes( activeFT, m_qnameToSelect ) )
-      m_theme = (IKalypsoFeatureTheme) activeTheme;
-
-    if( m_theme == null )
-      return;
-
-    m_featureList = m_theme.getFeatureList();
+    m_theme = activeTheme instanceof IKalypsoFeatureTheme ? (IKalypsoFeatureTheme) activeTheme : null;
+    m_featureList = m_theme == null ? null : m_theme.getFeatureList();
   }
 
   /**
@@ -150,12 +145,13 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
 
     final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
 
-    /* Grab next flowrelation */
+    /* Grab next flow-relation */
     if( m_featureList == null )
       return;
 
     final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
-    m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, m_featureList, m_geomQName );
+
+    m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, m_featureList, m_geomQName, m_qnamesToSelect );
 
     final MapPanel panel = getMapPanel();
     if( panel != null )
@@ -223,11 +219,24 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
           final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minPoint.getPosition(), maxPoint.getPosition() );
           final GMLWorkspace workspace = m_featureList.getParentFeature().getWorkspace();
           final List result = m_featureList.query( envelope, null );
-          final Feature[] selectedFeatures = new Feature[result.size()];
-          for( int i = 0; i < selectedFeatures.length; i++ )
-            selectedFeatures[i] = FeatureHelper.getFeature( workspace, result.get( i ) );
 
-          featureGrabbed( m_theme.getWorkspace(), selectedFeatures );
+          final List<Feature> selectedFeatures = new ArrayList<Feature>( result.size() );
+
+          for( final Object object : result )
+          {
+            final Feature feature = FeatureHelper.getFeature( workspace, object );
+
+            if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), m_qnamesToSelect ) )
+            {
+              final GM_Object geom = (GM_Object) feature.getProperty( m_geomQName );
+              // REMARK: we check here only for intersection with the geoms envelope, not the geometry; maybe this
+              // should be improved
+              if( geom != null && envelope.intersects( geom.getEnvelope() ) )
+                selectedFeatures.add( feature );
+            }
+          }
+
+          featureGrabbed( m_theme.getWorkspace(), selectedFeatures.toArray( new Feature[selectedFeatures.size()] ) );
         }
         catch( final Throwable t )
         {
@@ -304,7 +313,7 @@ public abstract class AbstractSelectFeatureWidget extends AbstractWidget
 
   protected abstract void featureGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception;
 
-  public void setFeatureList( FeatureList featureList )
+  public void setFeatureList( final FeatureList featureList )
   {
     m_featureList = featureList;
   }

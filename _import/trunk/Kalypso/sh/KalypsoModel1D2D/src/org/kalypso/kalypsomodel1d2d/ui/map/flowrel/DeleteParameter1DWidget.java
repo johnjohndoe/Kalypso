@@ -40,16 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.kalypsosimulationmodel.ui.map.AbstractEditFeatureWidget;
+import org.kalypso.kalypsosimulationmodel.ui.map.AbstractDeleteFeatureWidget;
 
 /**
  * @author Gernot Belger
  */
-public class EditFlowrelationWidget extends AbstractEditFeatureWidget
+public class DeleteParameter1DWidget extends AbstractDeleteFeatureWidget
 {
-  public EditFlowrelationWidget( )
+  public DeleteParameter1DWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false, IFlowRelationship.QNAME, IFlowRelationship.QNAME_PROP_POSITION );
+    super( "Parameter löschen", "einem FE-Knoten oder FE-Element zugeordneten Parameter löschen", true, new QName[] { ITeschkeFlowRelation.QNAME, IBuildingFlowRelation.QNAME }, IFlowRelationship.QNAME_PROP_POSITION );
   }
 }

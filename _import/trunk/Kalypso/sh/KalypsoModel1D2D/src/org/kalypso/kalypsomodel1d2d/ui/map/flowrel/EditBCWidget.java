@@ -38,33 +38,21 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.ui.map;
+package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.util.MapUtils;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.ui.map.AbstractEditFeatureWidget;
 
 /**
- * This widget lets the user grab features and then deletes them.
- * 
  * @author Gernot Belger
  */
-public abstract class AbstractDeleteFeatureWidget extends AbstractSelectFeatureWidget
+public class EditBCWidget extends AbstractEditFeatureWidget
 {
-  public AbstractDeleteFeatureWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName[] qnamesToDelete, final QName geomQName )
+  public EditBCWidget( )
   {
-    super( name, toolTip, allowMultipleSelection, qnamesToDelete, geomQName );
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.ui.map.AbstractSelectFeatureWidget#flowRelationGrabbed(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature[])
-   */
-  @Override
-  protected void featureGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
-  {
-    MapUtils.removeFeature( workspace, getMapPanel(), selectedFeatures );
+    super( "Randbedingungen bearbeiten", "Randbedingungen bearbeiten", false, new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION );
   }
 }

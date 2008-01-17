@@ -40,16 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.ui.map.AbstractDeleteFeatureWidget;
 
 /**
  * @author Gernot Belger
  */
-public class DeleteFlowrelationWidget extends AbstractDeleteFeatureWidget
+public class DeleteBCWidget extends AbstractDeleteFeatureWidget
 {
-  public DeleteFlowrelationWidget( )
+  public DeleteBCWidget( )
   {
-    super( "Parameter löschen", "einem FE-Koten zugeordnete Parameter löschen", true, IFlowRelationship.QNAME, IFlowRelationship.QNAME_PROP_POSITION );
+    super( "Randbedingung löschen", "Randbedingung löschen", true, new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION );
   }
 }

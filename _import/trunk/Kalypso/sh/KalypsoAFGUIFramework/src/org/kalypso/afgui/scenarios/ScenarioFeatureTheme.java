@@ -51,7 +51,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.command.ICommand;
@@ -68,7 +67,6 @@ import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoUserStyleListener;
-import org.kalypso.ogc.gml.IPaintDelegate;
 import org.kalypso.ogc.gml.IPaintInternalDelegate;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -81,7 +79,6 @@ import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -107,14 +104,12 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
 
   private final List<GisTemplateUserStyle> m_gisTemplateUserStyles = new ArrayList<GisTemplateUserStyle>();
 
-  private final URL m_context;
-
-  private JobExclusiveCommandTarget m_commandTarget;
+  private final JobExclusiveCommandTarget m_commandTarget;
 
   public ScenarioFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModell )
   {
     super( "<no name>", layerType.getLinktype(), mapModell );
-    m_context = context;
+
     m_featurePath = layerType.getFeaturePath();
     m_selectionManager = selectionManager;
     if( layerType instanceof StyledLayerType )
@@ -176,7 +171,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
         {
           public URL resolveURL( final String href ) throws MalformedURLException
           {
-            return UrlResolverSingleton.resolveUrl( m_context, href );
+            return UrlResolverSingleton.resolveUrl( context, href );
           }
         };
         final FeatureTypeStyle fts = styleCatalog.getDefault( resolver, featureType );
@@ -249,26 +244,14 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
    */
   public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
-    final IPaintDelegate paintDelegate = new IPaintDelegate()
-    {
-      public void paint( DisplayElement displayElement, final IProgressMonitor paintMonitor ) throws CoreException
-      {
-        displayElement.paint( g, p, paintMonitor );
-      }
-    };
-
-    paint( scale, bbox, selected, monitor, paintDelegate );
-  }
-
-  public void paint( final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
-  {
     if( m_theme != null )
-      m_theme.paint( scale, bbox, selected, monitor, delegate );
+      m_theme.paint( g, p, scale, bbox, selected, monitor );
   }
 
   public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
   {
-    paint( delegate.getScale(), delegate.getBoundingBox(), delegate.getSelected(), new NullProgressMonitor(), delegate );
+    if( m_theme != null )
+      m_theme.paintInternal( delegate );
   }
 
   /**
