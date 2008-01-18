@@ -114,7 +114,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     for( final IFE1D2DEdge edge : edges )
     {
       final FeatureList containers = edge.getContainers().getWrappedList();
-      while( containers.contains( elementID ) )
+      if( containers.contains( elementID ) )
         containers.remove( elementID );
       remEdgeCmd.setEdgeToDel( edge );
       m_changedFeatureList.add( edge.getWrappedFeature() );
