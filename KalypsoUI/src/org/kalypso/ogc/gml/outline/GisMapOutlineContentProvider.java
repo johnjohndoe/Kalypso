@@ -46,7 +46,7 @@ import org.kalypso.ogc.gml.RuleTreeObject;
 import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 
 /**
- * Content provider for modifying the outline tree.
+ * Content provider for modifying the outline tree. It filters the styles and the rules.
  * 
  * @author Holger Albert
  */

@@ -420,6 +420,9 @@ public class MapModell implements IMapModell
    */
   public Object getParent( final Object o )
   {
+    if( o instanceof IKalypsoTheme )
+      return getThemeParent( (IKalypsoTheme) o );
+
     return null;
   }
 

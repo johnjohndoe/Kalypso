@@ -124,7 +124,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
     container.setLayout( gridLayout );
-    m_viewer = new GisMapOutlineViewer( null, null );
+    m_viewer = new GisMapOutlineViewer( null, null, false );
     m_viewer.createControl( container );
     m_viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final IWorkbenchPartSite site = getSite();
@@ -138,7 +138,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     // maybe just start this search in a job?
     // TODO: bad, here we lok for a specific view id; in the part-listener we look for any
     // view wich is a AbstractMapPart! This should be done here as well.
-    // TODO: also if a Map-View is active this shoould be used in preference
+    // TODO: also if a Map-View is active this should be used in preference
     // TODO: what about non-active editors?
     final IViewPart mapView = page.findView( MapView.ID );
     // try to find map editor first

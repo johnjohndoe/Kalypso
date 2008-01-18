@@ -118,7 +118,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   public GisMapOutlinePage( final JobExclusiveCommandTarget commandTarget )
   {
     m_commandTarget = commandTarget;
-    m_modellView = new GisMapOutlineViewer( m_commandTarget, null );
+    m_modellView = new GisMapOutlineViewer( m_commandTarget, null, true );
   }
 
   /**
