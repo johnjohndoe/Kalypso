@@ -64,7 +64,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.internal.util.Util;
-import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
@@ -85,20 +84,32 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 @SuppressWarnings("restriction")
 public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, IMapModellListener
 {
-  //private final ITreeContentProvider m_contentProvider = new WorkbenchContentProvider();
-  
+  // private final ITreeContentProvider m_contentProvider = new WorkbenchContentProvider();
+
   private final ITreeContentProvider m_contentProvider = new GisMapOutlineContentProvider();
 
-  private final GisMapOutlineLabelProvider m_labelProvider = new GisMapOutlineLabelProvider();
+  private final GisMapOutlineLabelProvider m_labelProvider;
 
   private CheckboxTreeViewer m_viewer;
 
-  private IMapModell m_mapModel;
+  protected IMapModell m_mapModel;
 
   private ICommandTarget m_commandTarget;
 
-  public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel )
+  /**
+   * The constructor.
+   * 
+   * @param commandTarget
+   *            The command target.
+   * @param mapModel
+   *            The map modell.
+   * @param showStyle
+   *            If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
+   *            styles of a theme, this is not neccessary, because their level will be displayed in the outline then.
+   */
+  public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel, final boolean showStyle )
   {
+    m_labelProvider = new GisMapOutlineLabelProvider( showStyle );
     setMapModel( mapModel );
     m_commandTarget = commandTarget;
   }

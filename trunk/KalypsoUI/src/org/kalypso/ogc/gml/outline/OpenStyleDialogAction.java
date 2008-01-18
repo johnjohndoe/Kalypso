@@ -83,7 +83,6 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
       if( o instanceof ThemeStyleTreeObject )
       {
         final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
-
         if( part != null && theme instanceof IKalypsoFeatureTheme )
         {
           final KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
@@ -93,7 +92,25 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
           part.initStyleEditor( null, null );
       }
       else if( o instanceof IKalypsoTheme )
-        part.initStyleEditor( null, null );
+      {
+        if( !(o instanceof IKalypsoFeatureTheme) )
+        {
+          part.initStyleEditor( null, null );
+          return;
+        }
+
+        IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) o;
+        Object[] children = theme.getChildren( theme );
+        if( !(children instanceof ThemeStyleTreeObject[]) || children.length == 0 )
+        {
+          part.initStyleEditor( null, null );
+          return;
+        }
+
+        KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) children[0]).getStyle();
+        part.initStyleEditor( kalypsoStyle, theme );
+        return;
+      }
     }
     catch( final Exception e )
     {
@@ -114,7 +131,7 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
     if( selection instanceof IStructuredSelection )
     {
       final IStructuredSelection s = (IStructuredSelection) selection;
-      if( s.getFirstElement() instanceof ThemeStyleTreeObject )
+      if( s.getFirstElement() instanceof IKalypsoTheme )
         bEnable = true;
       action.setEnabled( bEnable );
     }
