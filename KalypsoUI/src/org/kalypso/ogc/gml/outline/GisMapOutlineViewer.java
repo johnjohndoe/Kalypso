@@ -85,7 +85,9 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 @SuppressWarnings("restriction")
 public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, IMapModellListener
 {
-  private final ITreeContentProvider m_contentProvider = new WorkbenchContentProvider();
+  //private final ITreeContentProvider m_contentProvider = new WorkbenchContentProvider();
+  
+  private final ITreeContentProvider m_contentProvider = new GisMapOutlineContentProvider();
 
   private final GisMapOutlineLabelProvider m_labelProvider = new GisMapOutlineLabelProvider();
 
