@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -68,11 +67,14 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         IStatus status = Status.OK_STATUS;
         final Feature model = workspace.getRootFeature();
         final IFeatureType modelFeatureType = model.getFeatureType();
+
+        final IRelationType complexElementsProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_COMPLEX_ELEMENTS );
         final IRelationType elementsProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
         final IRelationType edgesProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
         final IRelationType continuityLinesProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINES );
         final IRelationType nodesProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES );
 
+        final FeatureList complexElements = (FeatureList) model.getProperty( complexElementsProperty );
         final FeatureList elements = (FeatureList) model.getProperty( elementsProperty );
         final FeatureList edges = (FeatureList) model.getProperty( edgesProperty );
         final FeatureList nodes = (FeatureList) model.getProperty( nodesProperty );
@@ -82,7 +84,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         {
           final CompositeCommand cc = new CompositeCommand( name );
 
-          final int numberOfChanges = elements.size() + continuityLines.size() + nodes.size();
+          final int numberOfChanges = complexElements.size() + elements.size() + continuityLines.size() + nodes.size();
           final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>( numberOfChanges );
           final int amountOfWork = numberOfChanges * 10;
           monitor.beginTask( "Diskretisierungsmodell adaptieren", amountOfWork );
@@ -126,6 +128,29 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             }
             else
               throw new IllegalStateException( "element type not handled: " + elementQName );
+            monitor.worked( 10 );
+          }
+
+          for( final Object complexElementOrLink : complexElements )
+          {
+            final Feature complexElement = FeatureHelper.getFeature( workspace, complexElementOrLink );
+
+            // ignore two complexElements with the same id
+            final String id = complexElement.getId();
+            if( allElements.containsKey( id ) )
+            {
+              System.out.println( "ignoring duplicate complex element " + id );
+              continue;
+            }
+
+            // distinguish between complex elements
+            final IFeatureType complexElementFeatureType = complexElement.getFeatureType();
+            final QName complexElementQName = complexElementFeatureType.getQName();
+
+            if( complexElementQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D ) )
+            {
+              checkComplexElement2d( complexElement, featureChanges );
+            }
             monitor.worked( 10 );
           }
 
@@ -201,9 +226,9 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
                 for( final String otherEdgeLink : newContainers )
                 {
                   final Feature otherEdge = FeatureHelper.getFeature( workspace, otherEdgeLink );
-                  if(!otherEdge.getFeatureType().getQName().equals( IFE1D2DEdge.QNAME ))
+                  if( !otherEdge.getFeatureType().getQName().equals( IFE1D2DEdge.QNAME ) )
                     continue;
-                  
+
                   final FeatureList otherNodeLinks = (FeatureList) otherEdge.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
 
                   final Feature[] otherNodes = getFeatures( otherNodeLinks );
@@ -262,10 +287,46 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         {
           GeometryCalcControl.setDoCalcElement( true );
           GeometryCalcControl.setDoCalcEdge( true );
-//          elements.invalidate();
+          // elements.invalidate();
           monitor.done();
         }
         return status;
+      }
+
+      private void checkComplexElement2d( final Feature complexElement, final List<FeatureChange> collectChanges )
+      {
+        final IFeatureType complexElementFeatureType = complexElement.getFeatureType();
+        final IRelationType elementsProperty = (IRelationType) complexElementFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+        final FeatureList elementsInComplexElement = (FeatureList) complexElement.getProperty( elementsProperty );
+        final int numberOfElements = elementsInComplexElement.size();
+
+        final List<String> newElements = new ArrayList<String>( numberOfElements );
+        for( final Object elementOrId : elementsInComplexElement )
+        {
+          final Feature elementFeature = FeatureHelper.getFeature( workspace, elementOrId );
+          if( elementFeature == null )
+          {
+            // feature does not exist
+            System.out.println( "ignoring reference to non-existing element with id " + elementOrId + " in complex element " + complexElement );
+            continue;
+          }
+
+          final String id = (String) elementOrId;
+          // final QName elementQName = element.getFeatureType().getQName();
+          // if( elementQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ) )
+          // {
+          //
+          // if( !allElements.containsKey( id ) )
+          // {
+          // System.out.println( "ignoring reference to non-existing PolyElement " + id + " in complex element " +
+          // complexElement );
+          // continue;
+          // }
+          // }
+          newElements.add( id );
+        }
+
+        collectChanges.add( new FeatureListChange( complexElement, elementsProperty, newElements ) );
       }
 
       private Feature[] getFeatures( final FeatureList featureList )
@@ -325,11 +386,13 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         final int numberOfEdges = edgesInElement.size();
         if( numberOfEdges < 3 )
         {
-          System.out.println( "PolyElement with less than 3 edges: " + element );
+          System.out.println( "Ignoring PolyElement with less than 3 edges: " + element );
+          return false;
         }
         if( numberOfEdges > 4 )
         {
-          System.out.println( "PolyElement with more than 4 edges: " + element );
+          System.out.println( "Ignoring PolyElement with more than 4 edges: " + element );
+          return false;
         }
 
         // remove inverted edges from elements and add corresponding normal edges instead
