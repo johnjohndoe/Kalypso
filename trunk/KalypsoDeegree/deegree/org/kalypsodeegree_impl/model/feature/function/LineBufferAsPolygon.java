@@ -134,8 +134,6 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
     if( m_lineXPathSegs == null || m_widthXPathSegs == null )
       return null;
 
-    final IFeatureType featureType = feature.getFeatureType();
-
     // get userCanSetPolyIfLineIsNull (can be constant boolean value, has default)
     boolean userCanSetPolyIfLineIsNull;
     // set default
