@@ -87,11 +87,16 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
         {
           final KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
           part.initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme) theme );
+          return;
         }
         else
+        {
           part.initStyleEditor( null, null );
+          return;
+        }
       }
-      else if( o instanceof IKalypsoTheme )
+
+      if( o instanceof IKalypsoTheme )
       {
         if( !(o instanceof IKalypsoFeatureTheme) )
         {
@@ -107,10 +112,14 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
           return;
         }
 
+        /* TODO: It always edits the first of a theme (perhaps the style editor could edit all of them simultaniously?). */
         KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) children[0]).getStyle();
         part.initStyleEditor( kalypsoStyle, theme );
         return;
       }
+
+      part.initStyleEditor( null, null );
+      return;
     }
     catch( final Exception e )
     {
@@ -131,7 +140,8 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
     if( selection instanceof IStructuredSelection )
     {
       final IStructuredSelection s = (IStructuredSelection) selection;
-      if( s.getFirstElement() instanceof IKalypsoTheme )
+      Object firstElement = s.getFirstElement();
+      if( firstElement instanceof ThemeStyleTreeObject || firstElement instanceof IKalypsoTheme )
         bEnable = true;
       action.setEnabled( bEnable );
     }
