@@ -86,6 +86,8 @@ public class Multiply extends FeaturePropertyFunction
     Object objNumber = null;
     for( String property : m_properties.values() )
     {
+      if( property == null )
+        return null;
       // decide if property is a constant (double)
       try
       {
