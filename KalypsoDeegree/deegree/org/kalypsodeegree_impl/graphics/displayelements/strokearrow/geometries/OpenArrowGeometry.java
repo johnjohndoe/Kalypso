@@ -43,7 +43,9 @@ package org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries;
 import java.awt.Graphics2D;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * @author kuch
@@ -51,28 +53,53 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class OpenArrowGeometry extends AbstractArrowGeometry
 {
 
-  public OpenArrowGeometry( final Graphics2D g2, final GeoTransform projection, final GM_Point[] points )
+  public OpenArrowGeometry( final Graphics2D g2, final GeoTransform projection, final GM_Point[] points, final UOM uom )
   {
-    super( g2, projection, points );
+    super( g2, projection, points, uom );
   }
 
   /**
    * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries.AbstractArrowGeometry#draw(int)
    */
   @Override
-  protected void draw( final int size )
+  protected void draw( final int size, final UOM uom, final GeoTransform projection )
   {
-    // draw triangle
-    final int size_3 = size / 2;
+    int size_2 = 0; // length
+    int size_3 = 0; // width
 
-    final int[] a = new int[] { -size, +size_3 };
-    final int[] b = new int[] { -size, -size_3 };
+    switch( uom )
+    {
+      case pixel:
+        size_2 = size / 2;
+        size_3 = size / 4;
+
+        break;
+
+      case meter:
+
+        final GM_Envelope sourceRect = projection.getSourceRect();
+        final double sizeFromNull = projection.getDestX( sourceRect.getMin().getX() );
+        final double sizeFromMeters = projection.getDestX( sourceRect.getMin().getX() + size );
+        final double lengthInMeters = Math.abs( sizeFromMeters - sizeFromNull );
+        size_2 = (int) lengthInMeters / 2;
+        size_3 = (int) lengthInMeters / 4;
+
+        break;
+
+      case foot:
+
+        throw new UnsupportedOperationException();
+    }
+
+    final int[] a = new int[] { -size_2, +size_3 };
+    final int[] b = new int[] { -size_2, -size_3 };
     final int[] c = new int[] { 0, 0 };
 
     final Graphics2D graphic = getGraphic();
 
     graphic.drawLine( c[0], c[1], a[0], a[1] );
     graphic.drawLine( c[0], c[1], b[0], b[1] );
+
   }
 
 }

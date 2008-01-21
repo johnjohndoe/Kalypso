@@ -88,7 +88,7 @@ public class StrokePainter
     final int cap = stroke == null ? BasicStroke.CAP_ROUND : stroke.getLineCap( feature );
     final int join = stroke == null ? BasicStroke.JOIN_ROUND : stroke.getLineJoin( feature );
 
-    getAdditionalPainters( stroke, projection );
+    getAdditionalPainters( stroke, projection, uom );
 
     // use a simple Stroke if dash == null or its length < 2 because that's faster
     if( stroke == null )
@@ -105,12 +105,12 @@ public class StrokePainter
       m_image = null;
   }
 
-  private void getAdditionalPainters( Stroke stroke, GeoTransform projection )
+  private void getAdditionalPainters( Stroke stroke, GeoTransform projection, final UOM uom )
   {
     /* TODO bad style - StrokePainter shouldn't know something about IAdditionalStrokePainter Implementations */
     if( StrokeArrowHelper.isArrowDefined( stroke ) )
     {
-      m_painters.add( new StrokeArrowPainter( stroke.getCssParameters(), projection ) );
+      m_painters.add( new StrokeArrowPainter( stroke.getCssParameters(), projection, uom ) );
     }
   }
 
