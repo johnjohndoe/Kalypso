@@ -43,6 +43,7 @@ package org.kalypso.loader;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 
 /**
  * ILoader is intended to be subclassed by clients who wish to integrate a loading solution for specific file types into
@@ -53,17 +54,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public interface ILoader
 {
   /** Return a description for this loader */
-  public String getDescription();
+  public String getDescription( );
 
   /**
    * Load an object from somewhere
    * 
    * @param location
-   *          information about the location of the resource to load
+   *            information about the location of the resource to load
    * @param context
-   *          some context for making the relative location of the resource to load absolute
+   *            some context for making the relative location of the resource to load absolute
    * @param monitor
-   *          monitors the progress of loading
+   *            monitors the progress of loading
    * @return object
    * @throws LoaderException
    */
@@ -72,8 +73,7 @@ public interface ILoader
   /**
    * Save an object to the given location
    */
-  public void save( final String location, final URL context, final IProgressMonitor monitor, final Object data )
-      throws LoaderException;
+  public void save( final String location, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException;
 
   /**
    * Release resources or whatsoever is associated to the given object
@@ -83,4 +83,6 @@ public interface ILoader
   public void addLoaderListener( final ILoaderListener l );
 
   public void removeLoaderListener( final ILoaderListener l );
+
+  public IStatus getStatus( );
 }

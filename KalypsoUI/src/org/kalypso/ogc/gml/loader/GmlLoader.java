@@ -45,6 +45,8 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -53,6 +55,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.command.ICommandManager;
@@ -60,6 +63,7 @@ import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.IKalypsoCoreConstants;
@@ -117,6 +121,7 @@ public class GmlLoader extends AbstractLoader
   protected Object loadIntern( final String source, final URL context, IProgressMonitor monitor ) throws LoaderException
   {
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) );
+    final List<IStatus> resultList = new ArrayList<IStatus>();
 
     try
     {
@@ -137,7 +142,7 @@ public class GmlLoader extends AbstractLoader
         perfLogger = new TimeLogger( "Start transforming gml workspace" );
 
       final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-
+      monitor.subTask( "in das Zielkoordinatensystem transformieren." );
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
@@ -158,6 +163,7 @@ public class GmlLoader extends AbstractLoader
       {
         monitor.subTask( "GML adaptieren" );
         workspace = modelAdaptor.adapt( workspace );
+        resultList.add( modelAdaptor.getResult() );
       }
 
       if( workspace.isDirty() )
@@ -169,25 +175,27 @@ public class GmlLoader extends AbstractLoader
         if( gmlFile != null )
         {
           final IPath backupPath = gmlFile.getFullPath().addFileExtension( "bak" );
-          backup( gmlFile, backupPath, monitor, 0 );
+          backup( gmlFile, backupPath, monitor, 0, resultList );
         }
 
         monitor.subTask( "Adaptiertes GML speichern" );
         save( source, context, monitor, workspace );
       }
 
+      setStatus( StatusUtilities.createStatus( resultList, String.format( "GML-Datei %s wurde geladen.", gmlURL.toExternalForm() ) ) );
+
       return workspace;
     }
     catch( final LoaderException le )
     {
       le.printStackTrace();
-
+      setStatus( StatusUtilities.statusFromThrowable( le ) );
       throw le;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-
+      setStatus( StatusUtilities.statusFromThrowable( e ) );
       throw new LoaderException( "GML konnte nicht geladen werden: " + source + ". Grund: " + e.getLocalizedMessage(), e );
     }
     finally
@@ -196,18 +204,26 @@ public class GmlLoader extends AbstractLoader
     }
   }
 
-  private void backup( final IResource gmlFile, final IPath backupPath, final IProgressMonitor monitor, final int count ) throws CoreException
+  private void backup( final IResource gmlFile, final IPath backupPath, final IProgressMonitor monitor, final int count, final List<IStatus> resultList )
   {
     final IWorkspaceRoot root = gmlFile.getWorkspace().getRoot();
     final IPath currentTry = backupPath.addFileExtension( "" + count );
     final IResource backupResource = root.findMember( currentTry );
     if( backupResource != null )
     {
-      backup( gmlFile, backupResource.getFullPath(), monitor, count + 1 );
+      backup( gmlFile, backupResource.getFullPath(), monitor, count + 1, resultList );
     }
     else
     {
-      gmlFile.copy( currentTry, false, monitor );
+      try
+      {
+        resultList.add( StatusUtilities.createInfoStatus( String.format( "Eine Sicherheitskopie von %s wurde unter %s gespeichert.", gmlFile.getName(), currentTry.toOSString() ) ) );
+        gmlFile.copy( currentTry, false, monitor );
+      }
+      catch( final CoreException e )
+      {
+        resultList.add( e.getStatus() );
+      }
     }
   }
 

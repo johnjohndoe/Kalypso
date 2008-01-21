@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
@@ -48,4 +49,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 public interface IModelAdaptor
 {
   public CommandableWorkspace adapt( final CommandableWorkspace workspace );
+
+  public IStatus getResult( );
 }

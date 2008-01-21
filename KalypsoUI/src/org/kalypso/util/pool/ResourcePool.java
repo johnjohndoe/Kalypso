@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.factory.FactoryException;
@@ -255,10 +256,10 @@ public class ResourcePool
         info.join();
 
         final IStatus result = info.getResult();
-        if( result.isOK() )
-          return info.getObject();
+        if( (result.getSeverity() & Status.ERROR) == 1 )
+          throw new CoreException( result );
 
-        throw new CoreException( result );
+        return info.getObject();
       }
       catch( final InterruptedException e )
       {
@@ -275,10 +276,10 @@ public class ResourcePool
       final ILoader loader = getLoader( key.getType() );
       info2 = new KeyInfo( key, loader );
       final IStatus result = info2.loadObject( new NullProgressMonitor() );
-      if( result.isOK() )
-        return info2.getObject();
+      if( (result.getSeverity() & Status.ERROR) == 1 )
+        throw new CoreException( result );
 
-      throw new CoreException( result );
+      return info2.getObject();
     }
     catch( final Exception e )
     {
