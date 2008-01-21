@@ -45,7 +45,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -68,11 +67,12 @@ public abstract class FELine extends AbstractFeatureBinder implements IFELine
       m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFELine.QNAME, IFELine.PROP_NODES, IFE1D2DNode.class );
     else
       m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DNode.class, IFELine.PROP_NODES );
-    prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+    prop = featureToBind.getProperty( IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
     if( prop == null )
-      m_containers = new FeatureWrapperCollection( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
+      // TODO remove this stuff
+      m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
     else
-      m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+      m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DComplexElement.class, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
     m_containers.addSecondaryWrapper( ICalculationUnit1D2D.class );
     m_containers.addSecondaryWrapper( ICalculationUnit1D.class );
     m_containers.addSecondaryWrapper( ICalculationUnit2D.class );

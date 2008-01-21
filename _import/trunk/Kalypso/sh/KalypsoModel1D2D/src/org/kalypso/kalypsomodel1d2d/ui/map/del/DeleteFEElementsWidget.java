@@ -9,11 +9,10 @@ import java.util.Set;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteJunctionContextCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -205,7 +204,7 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
 
     try
     {
-      final IKalypsoFeatureTheme featureTheme = UtilMap.findEditableTheme( mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT );
+      final IKalypsoFeatureTheme featureTheme = UtilMap.findEditableTheme( mapPanel.getMapModell(), FE1D2DElement.QNAME );
       Set<Feature> changedFeatureList = new HashSet<Feature>();
 
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )
@@ -231,10 +230,6 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
           else if( deleteCmd instanceof DeleteElement1DCmd )
           {
             changedFeatureList.addAll( ((DeleteElement1DCmd) deleteCmd).getChangedFeatureList() );
-          }
-          else if( deleteCmd instanceof DeleteJunctionContextCmd )
-          {
-            changedFeatureList.addAll( ((DeleteJunctionContextCmd) deleteCmd).getChangedFeatureList() );
           }
         }
       }

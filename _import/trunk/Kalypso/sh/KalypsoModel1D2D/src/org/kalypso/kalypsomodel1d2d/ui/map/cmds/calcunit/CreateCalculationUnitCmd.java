@@ -50,10 +50,11 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
@@ -255,11 +256,11 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
     final IControlModel1D2DCollection model1D2DCollection = modelGroup.getModel1D2DCollection();
     final Feature parentFeature = model1D2DCollection.getWrappedFeature();
-    final IRelationType relationType = (IRelationType) parentFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+    final IRelationType relationType = (IRelationType) parentFeature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
     final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
     final int pos = 0;
     final IGMLSchema schema = parentFeature.getFeatureType().getGMLSchema();
-    final IFeatureType controlModelFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL );
+    final IFeatureType controlModelFeatureType = schema.getFeatureType( ControlModel1D2D.WB1D2DCONTROL_F_MODEL );
     final AddFeatureCommand command = new AddFeatureCommand( commandableWorkspace, controlModelFeatureType, parentFeature, relationType, pos, null, null, -1 )
     {
       /**
@@ -276,7 +277,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
         newControlModel.setCalculationUnit( m_calculationUnit );
         model1D2DCollection.setActiveControlModel( newControlModel );
 
-        final Feature obsFeature = (Feature) newControlFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+        final Feature obsFeature = (Feature) newControlFeature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
 
         /*
          * If observation does not exist, create it. final Feature obsFeature; if( obsFeatureIfPresent == null ) { final

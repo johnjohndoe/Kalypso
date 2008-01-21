@@ -74,10 +74,6 @@ public class DeleteCmdFactory
     {
       return new DeleteElement1DCmd( model1d2d, feature );
     }
-    else if( TypeInfo.isJuntionContext( feature ) )
-    {
-      return new DeleteJunctionContextCmd( model1d2d, feature );
-    }
     else
     {
       return null;

@@ -44,6 +44,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.services.RoughnessAssignListener;
@@ -77,7 +78,7 @@ public class SzenarioController implements IScenarioDataListener
     ResourcesPlugin.getWorkspace().addResourceChangeListener( m_roughnessStyleUpdateListener, IResourceChangeEvent.POST_CHANGE );
   }
 
-  public synchronized void modelLoaded( final IModel model )
+  public synchronized void modelLoaded( final IModel model, final IStatus status )
   {
     if( model instanceof IFEDiscretisationModel1d2d )
       m_discModel = (IFEDiscretisationModel1d2d) model;
@@ -94,7 +95,7 @@ public class SzenarioController implements IScenarioDataListener
       m_terrainModel.getWrappedFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
     }
 
-    if( model instanceof IRoughnessClsCollection && m_scenarioDataPath != null)
+    if( model instanceof IRoughnessClsCollection && m_scenarioDataPath != null )
     {
       final IFile roughnessDbFile = m_scenarioDataPath.getProject().getFile( RoughnessStyleUpdateListener.ROUGHNESS_DATABASE_PATH );
       m_roughnessStyleUpdateListener.startStyleUpdateJob( roughnessDbFile );

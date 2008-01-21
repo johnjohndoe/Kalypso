@@ -146,15 +146,15 @@ public class ElementGeometryEditor
     final Feature parentFeature = featureList.getParentFeature();
     final IFeatureType parentType = parentFeature.getFeatureType();
     final IRelationType parentNodeProperty = featureList.getParentFeatureTypeProperty();
-    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
-    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
+    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
     final IGMLSchema schema = workspace.getGMLSchema();
 
     final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
+    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
 
     final IFeatureType edgeFeatureType = schema.getFeatureType( IFE1D2DEdge.QNAME );
-    final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+    final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );

@@ -206,7 +206,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     final String gmlID = m_elementsNameConversionMap.get( rmaID );
     if( gmlID == null )
     {
-      final IElement1D newElement = m_model.getElements().addNew( IPolyElement.QNAME, IElement1D.class );
+      final IElement1D newElement = m_model.getElements().addNew( IElement1D.QNAME, IElement1D.class );
       m_createdFeatures.add( newElement );
       m_elementsNameConversionMap.put( rmaID, newElement.getGmlID() );
       return newElement;

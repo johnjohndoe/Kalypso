@@ -47,7 +47,6 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
@@ -81,7 +80,7 @@ public class CalculationUnit1D2D extends CalculationUnit implements ICalculation
 
   public CalculationUnit1D2D( final Feature featureToBind )
   {
-    this( featureToBind, ICalculationUnit1D2D.QNAME, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, IFENetItem.class );
+    this( featureToBind, ICalculationUnit1D2D.QNAME, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS, ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT, IFENetItem.class );
   }
 
   public CalculationUnit1D2D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final QName subUnitPropQName, final Class<IFENetItem> wrapperClass )
@@ -91,7 +90,7 @@ public class CalculationUnit1D2D extends CalculationUnit implements ICalculation
     m_qnameToBind = qnameToBind;
     m_subUnitPropQName = subUnitPropQName;
     m_subCalculationUnits = Util.get( m_featureToBind, m_qnameToBind, m_subUnitPropQName, ICalculationUnit.class, true );
-    m_elements = new FeatureWrapperCollection( m_featureToBind, IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+    m_elements = new FeatureWrapperCollection( m_featureToBind, IFE1D2DElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
     ((FeatureWrapperCollection) m_elements).addSecondaryWrapper( IFELine.class );
     m_elements.clear();
     m_virtualElements = new ArrayList<IFENetItem>();

@@ -44,7 +44,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     Object prop = null;
     try
     {
-      prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+      prop = featureToBind.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
     }
     catch( final Exception e )
     {
@@ -55,27 +55,27 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     {
       // create the property that is still missing
       // TODO check this since edge are not edge container this is not okay
-      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DEdge.QNAME, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
+      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DEdge.QNAME, IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
     }
     else
     {
 
       // just wrapped the existing one
-      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DElement.class, IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
     }
 
     // nodes
-    prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+    prop = featureToBind.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
     if( prop == null )
     {
       // create the property that is still missing
-      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DEdge.QNAME, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE, IFE1D2DNode.class );
+      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DEdge.QNAME, IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE, IFE1D2DNode.class );
     }
     else
     {
 
       // just wrapped the existing one
-      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DNode.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
+      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DNode.class, IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
     }
   }
 
@@ -124,7 +124,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   {
     final Feature feature = getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
-    final List nodeList = (List) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
+    final List nodeList = (List) feature.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
 
     final FE1D2DNode[] nodes = new FE1D2DNode[nodeList.size()];
     for( int i = 0; i < nodes.length; i++ )
@@ -155,9 +155,9 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    */
   public IFE1D2DNode getMiddleNode( )
   {
-    if( getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE ) != null )
+    if( getFeature().getProperty( IFE1D2DEdge.WB1D2D_PROP_MIDDLE_NODE ) != null )
     {
-      final Feature middleNodeFeature = FeatureHelper.getSubFeature( getFeature(), Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE );
+      final Feature middleNodeFeature = FeatureHelper.getSubFeature( getFeature(), IFE1D2DEdge.WB1D2D_PROP_MIDDLE_NODE );
       if( middleNodeFeature == null )
         return null;
       else
@@ -176,7 +176,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     {
       newMiddleNodeID = middleNode.getGmlID();
     }
-    getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE, newMiddleNodeID );
+    getFeature().setProperty( IFE1D2DEdge.WB1D2D_PROP_MIDDLE_NODE, newMiddleNodeID );
   }
 
   /* static helper functions */
@@ -189,7 +189,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   {
     final Feature parentFeature = discModel.getWrappedFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
-    final IRelationType parentEdgeProperty = (IRelationType) parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
+    final IRelationType parentEdgeProperty = (IRelationType) parentFT.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
     final IFeatureType edgeType = parentFT.getGMLSchema().getFeatureType( IFE1D2DEdge.QNAME );
     final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentEdgeProperty, edgeType );
     return new FE1D2DEdge( edgeFeature );
@@ -199,7 +199,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   public void setNodes( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
     final Feature feature = getFeature();
-    final FeatureList nodeList = (FeatureList) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE /* QNAME_PROP_DIRECTEDNODE */
+    final FeatureList nodeList = (FeatureList) feature.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE /* QNAME_PROP_DIRECTEDNODE */
     );
     nodeList.clear();
     nodeList.add( node0.getWrappedFeature().getId() );
@@ -394,7 +394,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   {
     if( m_nodes.size() > 1 )
     {
-      if( getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_MIDDLE_NODE ) != null )
+      if( getFeature().getProperty( IFE1D2DEdge.WB1D2D_PROP_MIDDLE_NODE ) != null )
       {
         final GM_Point pointN1 = m_nodes.get( 0 ).getPoint();
         final GM_Point pointN2 = m_nodes.get( 1 ).getPoint();

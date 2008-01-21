@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
@@ -72,7 +72,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
     mapPanel.setMessage( "Klicken Sie in die Karte um 1D-Elemente hinzuzufügen." );
 
     final IMapModell mapModell = mapPanel.getMapModell();
-    m_theme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
+    m_theme = UtilMap.findEditableTheme( mapModell, IElement1D.QNAME );
     m_model1d2d = UtilMap.findFEModelTheme( mapModell );
     m_lineBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
   }

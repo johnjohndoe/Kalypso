@@ -41,17 +41,17 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   {
     super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
 
-    final Object prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
+    final Object prop = featureToBind.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
 
     if( prop == null )
     {
       // create the property that is still missing
-      m_containers = new FeatureWrapperCollection( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS, IFE1D2DEdge.class );
+      m_containers = new FeatureWrapperCollection( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS, IFE1D2DEdge.class );
     }
     else
     {
       // just wrapped the existing one
-      m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
+      m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DEdge.class, IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
     }
     m_containers.addSecondaryWrapper( IFELine.class );
     // TODO: does this collection really may contain 1D-Elements??
@@ -85,14 +85,14 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
 
   public GM_Point getPoint( )
   {
-    return (GM_Point) getWrappedFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT );
+    return (GM_Point) getWrappedFeature().getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
   }
 
   public void setPoint( final GM_Point point )
   {
     if( point.getCoordinateSystem() == null )
       point.setCoordinateSystem( IFE1D2DNode.DEFAULT_COORDINATE_SYSTEM );
-    getWrappedFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT, point );
+    getWrappedFeature().setProperty( IFE1D2DNode.WB1D2D_PROP_POINT, point );
     // if(point.getCoordinateDimension()>2 || !Double.isNaN( point.getZ() ))
     // getWrappedFeature().setProperty( IFE1D2DNode.PROP_HAS_ELEVATION, true );
     // else
@@ -103,7 +103,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   {
     final Feature parentFeature = discModel.getWrappedFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
-    final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES );
+    final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
     final IFeatureType nodeType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final Feature nodeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentNodeProperty, nodeType );
     return new FE1D2DNode( nodeFeature );
@@ -131,7 +131,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
     // references via the containers.
 
     final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getWorkspace().getRootFeature() );
-    final FeatureList elementList = (FeatureList) model.getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+    final FeatureList elementList = (FeatureList) model.getFeature().getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
 
     // get all elements touching this node
     final List touchingElements = elementList.query( getPoint().getPosition(), null );

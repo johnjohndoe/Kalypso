@@ -27,6 +27,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -114,15 +119,31 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         // TODO remove mappings to IModel from the factories
         final IModel model = (IModel) workspace.getRootFeature().getAdapter( m_modelClass );
         if( model != null )
-          fireModelLoaded( model );
+          fireModelLoaded( model, status );
+
+        // notify user once about messages during loading
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        if( workbench != null && !workbench.isClosing() && !status.isOK() )
+        {
+          final Display display = workbench.getDisplay();
+          display.asyncExec( new Runnable()
+          {
+
+            public void run( )
+            {
+              final Shell activeShell = display.getActiveShell();
+              ErrorDialog.openError( activeShell, "GML wurde geladen.", "Meldungen:", status );
+            }
+          } );
+        }
       }
     }
 
-    private void fireModelLoaded( final IModel model )
+    private void fireModelLoaded( final IModel model, final IStatus status )
     {
       for( final IScenarioDataListener listener : m_controller )
       {
-        listener.modelLoaded( model );
+        listener.modelLoaded( model, status );
       }
     }
   }
@@ -366,10 +387,13 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   public boolean isDirty( )
   {
-    for( final Class< ? extends IModel> modelClass : m_keyMap.keySet() )
+    synchronized( m_keyMap )
     {
-      if( isDirty( modelClass ) )
-        return true;
+      for( final Class< ? extends IModel> modelClass : m_keyMap.keySet() )
+      {
+        if( isDirty( modelClass ) )
+          return true;
+      }
     }
     return false;
   }

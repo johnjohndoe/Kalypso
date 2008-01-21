@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 
 /**
  * Interface for classes representing a wb1d2d:CalculationUnit2D. It basically contains 2d element and boundary lines
@@ -49,5 +52,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
  */
 public interface ICalculationUnit2D extends ICalculationUnit
 {
+
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit2D" ); //$NON-NLS-1$
 
 }

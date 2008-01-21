@@ -45,10 +45,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -57,7 +55,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 @SuppressWarnings("unchecked")
@@ -78,7 +75,7 @@ public class ModelOps
   public static final IElement1D createElement1d( IFEDiscretisationModel1d2d model1d2d, IFE1D2DEdge edge )
   {
     final IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
-    final IElement1D element = elements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, IElement1D.class );
+    final IElement1D element = elements.addNew( IElement1D.QNAME, IElement1D.class );
 
     element.setEdge( edge );
 
@@ -96,7 +93,7 @@ public class ModelOps
     }
 
     IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
-    final IPolyElement polyElement = elements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, IPolyElement.class );
+    final IPolyElement polyElement = elements.addNew( IPolyElement.QNAME, IPolyElement.class );
 
     // sortElementEdges( polyElement );
     String elementID = polyElement.getGmlID();
@@ -174,32 +171,6 @@ public class ModelOps
   public static final boolean isContainedInAnElement( final IFE1D2DEdge edge )
   {
     return !edge.getContainers().isEmpty();
-  }
-
-  public static final IFeatureWrapperCollection<IFE1D2DComplexElement> getElementContainer( Feature featureToBind )
-  {
-    Object prop = null;
-    try
-    {
-      prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
-    }
-    catch( Throwable th )
-    {
-      th.printStackTrace();
-    }
-
-    FeatureWrapperCollection<IFE1D2DComplexElement> containers;
-    if( prop == null )
-    {
-      // create the property tha is still missing
-      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
-    }
-    else
-    {
-      // just wrapped the existing one
-      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
-    }
-    return containers;
   }
 
   public static final Collection<IFE1D2DEdge> collectAll2DEdges( Feature[] selectedFeatures )

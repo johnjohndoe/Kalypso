@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -28,6 +28,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends FE1D2DElement<CT, ET> implements IElement2D<CT, ET>
 {
   private final IFeatureWrapperCollection<ET> edges;
+  public final static QName WB1D2D_F_FE1D2D_2DElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element2D" );
 
   /**
    * Creates an element with a specified GML ID. The parent feature respectively its link to the newly created element
@@ -72,7 +73,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
     Object prop = null;
     try
     {
-      prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+      prop = featureToBind.getProperty( IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
     catch( final Throwable th )
     {
@@ -82,7 +83,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
     // edges
     try
     {
-      prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+      prop = featureToBind.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
     }
     catch( final Throwable th )
     {
@@ -95,19 +96,19 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
       // create the property that is still missing
       edges = new FeatureWrapperCollection<ET>( featureToBind,
       // TODO: problem here?
-      Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, edgeClass// IFE1D2DEdge.class
+      Element2D.WB1D2D_F_FE1D2D_2DElement, FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, edgeClass// IFE1D2DEdge.class
       );
     }
     else
     {
       // just wrapped the existing one
-      edges = new FeatureWrapperCollection<ET>( featureToBind, edgeClass, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+      edges = new FeatureWrapperCollection<ET>( featureToBind, edgeClass, FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
     }
   }
 
   public Element2D( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
+    this( featureToBind, Element2D.WB1D2D_F_FE1D2D_2DElement );
   }
 
   public Element2D( final Feature featureToBind, final QName featureQName )
@@ -136,7 +137,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
 
   public Element2D( final Feature parentFeature, final QName propQName, final String gmlID )
   {
-    this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, parentFeature, propQName, gmlID ) );
+    this( FeatureHelper.createFeatureWithId( Element2D.WB1D2D_F_FE1D2D_2DElement, parentFeature, propQName, gmlID ) );
   }
 
   /**
@@ -154,7 +155,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
   {
     final Feature feature = getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
-    final List edgeList = (List) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    final List edgeList = (List) feature.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
 
     final FE1D2DEdge[] edges = new FE1D2DEdge[edgeList.size()];
     for( int i = 0; i < edges.length; i++ )
@@ -179,7 +180,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
   public void setEdges( final ET[] edges )
   {
     final Feature feature = getFeature();
-    final List edgeList = (List) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    final List edgeList = (List) feature.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
 
     /*
      * remove former edges and un register this as container

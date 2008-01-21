@@ -29,7 +29,7 @@
 	The simulation model is an inegrativ data model, and contains all data generated 
 	or process during the worklow
 		
-	@author Patrice Congo
+	@author Patrice Congo, Stefan Kurzbach
 -->
 <xs:schema 
 	xmlns:gml="http://www.opengis.net/gml" 
@@ -73,8 +73,6 @@
 					<xs:element ref="simBase:controlModel"/>
 					<xs:element ref="simBase:resultModel"/>
 					<xs:element ref="simBase:evaluationModel"/>
-					<xs:element ref="simBase:additionalModelProperty" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element ref="simBase:overridingModel" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -96,53 +94,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<!--==================================================================
-		additionalModelProperty 
-	===================================================================-->
-	<xs:element name="additionalModelProperty" type="simBase:AdditionalModelPropertyAssociationType" block="substitution">
-		<xs:annotation>
-			<xs:documentation>s 
-				To associate an additional model property to a simualtion model.
-				A additional property must not be required for a simulation model.
-				A simulation model is therefore consistent and simulable without all 
-				additional properties. They may be think like helper data structures 
-				for the application. An example is a temporary cross layer check 
-				data structure.
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:complexType name="AdditionalModelPropertyAssociationType" abstract="true">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">
-				Provides the base substitution group type for extension
-				when creating an element which may be use as 
-				AdditionalModelProperty.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:restriction base="gml:AssociationType">
-				<xs:sequence>
-					<xs:element ref="simBase:AdditionalModelProperty"/>
-				</xs:sequence>
-			</xs:restriction>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- =================================================================
-		AdditionalModelProperty
-	================================================================== -->
-	<xs:element name="AdditionalModelProperty" type="simBase:AdditionalModelPropertyType" substitutionGroup="gml:_GML"/>
-	<xs:complexType name="AdditionalModelPropertyType" abstract="true">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">
-				Provides the base substitution group type for extension
-				when creating an element which may be use as 
-				AdditionalModelProperty.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractGMLType"/>
-		</xs:complexContent>
-	</xs:complexType>
+	
 	<!-- =====================================================================
 				staticModel property element 
 		===================================================================-->
@@ -409,53 +361,5 @@
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractModelType"/>
 		</xs:complexContent>
-	</xs:complexType>
-	<!-- ====================================================================
-		overridingModel property element
-	====================================================================== -->
-	<xs:element name="overridingModel" type="simBase:OverridingModelPropertyType">
-		<xs:annotation>
-			<xs:documentation>
-				Use to override the behavior of a model
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:complexType name="OverridingModelPropertyType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">
-				The root type of all overriding model property type.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence minOccurs="0">
-			<xs:element ref="simBase:OverridingModel"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-	</xs:complexType>
-	<!-- =================================================================
-		OverridingModel 
-	================================================================== -->
-	<xs:element 
-			name="OverridingModel" 
-			type="simBase:AbstractOverridingModelType" 
-			abstract="true" 
-			substitutionGroup="simBase:_Model">
-		<xs:annotation>
-			<xs:documentation>
-				Substitution head for overriding models
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:complexType name="AbstractOverridingModelType" abstract="true">
-		<xs:annotation>
-			<xs:documentation>
-				The base type for all overriding model element.
-				This overriding concept is used to enfore property values for
-				feature, which normaly are computed throught a cross layer, 
-				cross model computation.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="simBase:AbstractModelType"/>
-		</xs:complexContent>
-	</xs:complexType>
+	</xs:complexType>	
 </xs:schema>

@@ -45,7 +45,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -64,7 +63,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
 {
   public Element1D( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, (Class<CT>) IFE1D2DComplexElement.class/* IRiverChannel1D.class */);
+    this( featureToBind, IElement1D.QNAME, (Class<CT>) IFE1D2DComplexElement.class/* IRiverChannel1D.class */);
   }
 
   public Element1D( final Feature featureToBind, QName featureQName, Class<CT> complexElementClass )
@@ -78,7 +77,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   public ET getEdge( )
   {
     final Feature feature = getFeature();
-    final Object property = feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE/* QNAME_PROPS_DIRECTED_EDGE */);
+    final Object property = feature.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE/* QNAME_PROPS_DIRECTED_EDGE */);
     final Feature edgeFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
     if( edgeFeature == null )
       return null;
@@ -104,12 +103,12 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
     final Feature feature = getWrappedFeature();
     if( edge == null )
     {
-      feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, null );
+      feature.setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, null );
     }
     else
     {
       final String linkToEdge = edge.getGmlID();
-      feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, linkToEdge );
+      feature.setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, linkToEdge );
 
       final IFeatureWrapperCollection containers = edge.getContainers();
       FeatureList wrappedList = containers.getWrappedList();

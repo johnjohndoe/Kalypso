@@ -52,7 +52,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 
 public class CreateCalculationUnitWizardPage extends WizardPage
 {
@@ -127,11 +129,11 @@ public class CreateCalculationUnitWizardPage extends WizardPage
   {
     final String qNameKey = m_calcUnitType.getText();
     if( QNAME_KEY_1D.equals( qNameKey ) )
-      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D;
+      return ICalculationUnit1D.QNAME;
     else if( QNAME_KEY_2D.equals( qNameKey ) )
-      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D;
+      return ICalculationUnit2D.QNAME;
     else if( QNAME_KEY_1D2D.equals( qNameKey ) )
-      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D;
+      return ICalculationUnit1D2D.QNAME;
     else
       throw new RuntimeException( "Unknown qNameKey:" + qNameKey ); //$NON-NLS-1$
   }

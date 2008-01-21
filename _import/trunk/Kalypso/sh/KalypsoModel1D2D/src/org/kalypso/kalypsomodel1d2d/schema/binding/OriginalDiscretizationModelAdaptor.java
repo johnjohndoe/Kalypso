@@ -18,10 +18,16 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.functions.GeometryCalcControl;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
@@ -44,6 +50,8 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 {
   private static final String VERSION_1_0 = "1.0";
 
+  private IStatus m_result = Status.OK_STATUS;
+
   public CommandableWorkspace adapt( final CommandableWorkspace workspace )
   {
     final Object property = workspace.getRootFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
@@ -64,15 +72,16 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         {
           monitor = new NullProgressMonitor();
         }
-        IStatus status = Status.OK_STATUS;
+        final List<IStatus> statusList = new ArrayList<IStatus>();
+
         final Feature model = workspace.getRootFeature();
         final IFeatureType modelFeatureType = model.getFeatureType();
 
-        final IRelationType complexElementsProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_COMPLEX_ELEMENTS );
-        final IRelationType elementsProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
-        final IRelationType edgesProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
-        final IRelationType continuityLinesProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINES );
-        final IRelationType nodesProperty = (IRelationType) modelFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES );
+        final IRelationType complexElementsProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
+        final IRelationType elementsProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
+        final IRelationType edgesProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
+        final IRelationType continuityLinesProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
+        final IRelationType nodesProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
 
         final FeatureList complexElements = (FeatureList) model.getProperty( complexElementsProperty );
         final FeatureList elements = (FeatureList) model.getProperty( elementsProperty );
@@ -103,28 +112,21 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             // ignore two elements with the same id
             final String id = element.getId();
             if( allElements.containsKey( id ) )
-            {
-              System.out.println( "ignoring duplicate element " + id );
               continue;
-            }
 
             // distinguish between PolyElement and 1dElement
             final IFeatureType elementFeatureType = element.getFeatureType();
             final QName elementQName = elementFeatureType.getQName();
 
-            if( elementQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ) )
+            if( elementQName.equals( IPolyElement.QNAME ) )
             {
-              if( checkPolyElement( element, allEdges, allNodes, featureChanges ) )
+              if( checkPolyElement( element, allEdges, allNodes, featureChanges, statusList ) )
                 allElements.put( id, element );
-              else
-                System.out.println( "ignoring invalid PolyElement " + element );
             }
-            else if( elementQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D ) )
+            else if( elementQName.equals( IElement1D.QNAME ) )
             {
               if( check1dElement( element, allEdges, allNodes, featureChanges ) )
                 allElements.put( id, element );
-              else
-                System.out.println( "ignoring invalid Element1d " + element );
             }
             else
               throw new IllegalStateException( "element type not handled: " + elementQName );
@@ -138,19 +140,14 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             // ignore two complexElements with the same id
             final String id = complexElement.getId();
             if( allElements.containsKey( id ) )
-            {
-              System.out.println( "ignoring duplicate complex element " + id );
               continue;
-            }
 
             // distinguish between complex elements
             final IFeatureType complexElementFeatureType = complexElement.getFeatureType();
             final QName complexElementQName = complexElementFeatureType.getQName();
 
-            if( complexElementQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D ) )
-            {
-              checkComplexElement2d( complexElement, featureChanges );
-            }
+            if( complexElementQName.equals( ICalculationUnit2D.QNAME ) )
+              checkComplexElement2d( complexElement, featureChanges, statusList );
             monitor.worked( 10 );
           }
 
@@ -162,10 +159,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             // ignore two continuity lines with the same id
             final String id = continuityLine.getId();
             if( allContinuityLines.containsKey( id ) )
-            {
-              System.out.println( "ignoring duplicate continuity line " + id );
               continue;
-            }
 
             // distinguish between 1d and 2d
             final IFeatureType continuityLineFeatureType = continuityLine.getFeatureType();
@@ -174,15 +168,11 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
             {
               if( checkContinuityLine( continuityLine, allNodes, featureChanges ) )
                 allContinuityLines.put( id, continuityLine );
-              else
-                System.out.println( "ignoring invalid ContinuityLine2D " + continuityLine );
             }
             else if( continuityLineQName.equals( IContinuityLine1D.QNAME ) )
             {
               if( checkContinuityLine( continuityLine, allNodes, featureChanges ) )
                 allContinuityLines.put( id, continuityLine );
-              else
-                System.out.println( "ignoring invalid ContinuityLine1D " + continuityLine );
             }
             else
             {
@@ -195,7 +185,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
           {
             final IFeatureType nodeFeatureType = node.getFeatureType();
 
-            final IRelationType nodeContainersProperty = (IRelationType) nodeFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
+            final IRelationType nodeContainersProperty = (IRelationType) nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
             final FeatureList nodeContainers = (FeatureList) node.getProperty( nodeContainersProperty );
             final List<String> newContainers = new ArrayList<String>();
             nextNode: for( final Feature nodeContainer : getFeatures( nodeContainers ) )
@@ -213,15 +203,15 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
                 // Edge
                 if( !allEdges.containsKey( nodeContainer.getId() ) )
                 {
-                  System.out.println( "ignoring reference to edge " + nodeContainer + " in node " + node );
+                  statusList.add( StatusUtilities.createWarningStatus( String.format( "ignoring reference to edge %s in node %s", nodeContainer, node ) ) );
                   continue nextNode;
                 }
 
-                final FeatureList myNodeLinks = (FeatureList) nodeContainer.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
+                final FeatureList myNodeLinks = (FeatureList) nodeContainer.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
 
                 final Feature[] myNodes = getFeatures( myNodeLinks );
-                final Object p0 = myNodes[0].getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT );
-                final Object p1 = myNodes[1].getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT );
+                final Object p0 = myNodes[0].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
+                final Object p1 = myNodes[1].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
 
                 for( final String otherEdgeLink : newContainers )
                 {
@@ -229,15 +219,15 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
                   if( !otherEdge.getFeatureType().getQName().equals( IFE1D2DEdge.QNAME ) )
                     continue;
 
-                  final FeatureList otherNodeLinks = (FeatureList) otherEdge.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
+                  final FeatureList otherNodeLinks = (FeatureList) otherEdge.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
 
                   final Feature[] otherNodes = getFeatures( otherNodeLinks );
-                  final Object op0 = otherNodes[0].getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT );
-                  final Object op1 = otherNodes[1].getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT );
+                  final Object op0 = otherNodes[0].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
+                  final Object op1 = otherNodes[1].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
 
                   if( (p0.equals( op0 ) && p1.equals( op1 )) || (p0.equals( op1 ) && p1.equals( op0 )) )
                   {
-                    System.out.println( "equal edges: " + otherEdge + " and " + nodeContainer );
+                    statusList.add( StatusUtilities.createWarningStatus( String.format( "equal edges: %s and %s", otherEdge, nodeContainer ) ) );
                     continue nextNode;
                   }
                 }
@@ -281,7 +271,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         }
         catch( final Exception e )
         {
-          status = StatusUtilities.statusFromThrowable( e );
+          statusList.add( StatusUtilities.statusFromThrowable( e ) );
         }
         finally
         {
@@ -290,13 +280,18 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
           // elements.invalidate();
           monitor.done();
         }
-        return status;
+        final IStatus resultStatus;
+        if( statusList.size() > 0 )
+          resultStatus = StatusUtilities.createStatus( statusList, "Probleme beim Adaptieren des Modells." );
+        else
+          resultStatus = StatusUtilities.createInfoStatus( "Diskretisierungsnetz wurde erfolgreich auf Version 1.0 adaptiert." );
+        return resultStatus;
       }
 
-      private void checkComplexElement2d( final Feature complexElement, final List<FeatureChange> collectChanges )
+      private void checkComplexElement2d( final Feature complexElement, final List<FeatureChange> collectChanges, final List<IStatus> statusList )
       {
         final IFeatureType complexElementFeatureType = complexElement.getFeatureType();
-        final IRelationType elementsProperty = (IRelationType) complexElementFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+        final IRelationType elementsProperty = (IRelationType) complexElementFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
         final FeatureList elementsInComplexElement = (FeatureList) complexElement.getProperty( elementsProperty );
         final int numberOfElements = elementsInComplexElement.size();
 
@@ -307,7 +302,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
           if( elementFeature == null )
           {
             // feature does not exist
-            System.out.println( "ignoring reference to non-existing element with id " + elementOrId + " in complex element " + complexElement );
+            statusList.add( StatusUtilities.createWarningStatus( String.format( "Ignoriere Referenz auf nicht existierendes Element mit der Id %s in der Berechnungseinheit %s", elementOrId, complexElement ) ) );
             continue;
           }
 
@@ -355,10 +350,10 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       private boolean check1dElement( final Feature element, final Map<String, Feature> collectEdges, final Map<String, Feature> collectNodes, final Collection<FeatureChange> collectChanges )
       {
         final IFeatureType elementFeatureType = element.getFeatureType();
-        final IRelationType edgeProperty = (IRelationType) elementFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+        final IRelationType edgeProperty = (IRelationType) elementFeatureType.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
         final String edgeInElementLink = (String) element.getProperty( edgeProperty );
         final Feature edge = FeatureHelper.getFeature( workspace, edgeInElementLink );
-        final FeatureList nodeList = (FeatureList) edge.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
+        final FeatureList nodeList = (FeatureList) edge.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
         checkNodes( getFeatures( nodeList ), collectNodes, collectChanges );
 
         final String id = edge.getId();
@@ -377,21 +372,21 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         }
       }
 
-      private boolean checkPolyElement( final Feature element, final Map<String, Feature> collectEdges, final Map<String, Feature> collectNodes, final Collection<FeatureChange> collectChanges )
+      private boolean checkPolyElement( final Feature element, final Map<String, Feature> collectEdges, final Map<String, Feature> collectNodes, final Collection<FeatureChange> collectChanges, final List<IStatus> statusList )
       {
         final IFeatureType elementFeatureType = element.getFeatureType();
-        final IRelationType edgesProperty = (IRelationType) elementFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+        final IRelationType edgesProperty = (IRelationType) elementFeatureType.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
         final FeatureList edgesInElement = (FeatureList) element.getProperty( edgesProperty );
 
         final int numberOfEdges = edgesInElement.size();
         if( numberOfEdges < 3 )
         {
-          System.out.println( "Ignoring PolyElement with less than 3 edges: " + element );
+          statusList.add( StatusUtilities.createWarningStatus( String.format( "Ignoriere PolyElement %s mit weniger als 3 Kanten.", element ) ) );
           return false;
         }
         if( numberOfEdges > 4 )
         {
-          System.out.println( "Ignoring PolyElement with more than 4 edges: " + element );
+          statusList.add( StatusUtilities.createWarningStatus( String.format( "Ignoriere PolyElement %s mit mehr als 4 Kanten.", element ) ) );
           return false;
         }
 
@@ -415,11 +410,12 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
           if( !newEdges.contains( id ) )
             newEdges.add( id );
           else
-            System.out.println( "ignoring duplicate reference to edge " + id + " in PolyElement " + element );
+            statusList.add( StatusUtilities.createWarningStatus( String.format( "Ignoriere doppelte Referenz auf Kante %s in PolyElement %s.", id, element ) ) );
+          System.out.println();
           if( !collectEdges.containsKey( id ) )
             collectEdges.put( id, edgeOrInvEdge );
 
-          final FeatureList nodeList = (FeatureList) edgeOrInvEdge.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE );
+          final FeatureList nodeList = (FeatureList) edgeOrInvEdge.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
           checkNodes( getFeatures( nodeList ), collectNodes, collectChanges );
         }
 
@@ -435,7 +431,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
         final Feature invEdge = FeatureHelper.getFeature( workspace, invEdgeLink );
 
         // add all references to elements from inverted edges to corresponding normal edges
-        final IRelationType elementsProperty = (IRelationType) edgeFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+        final IRelationType elementsProperty = (IRelationType) edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
         final List<String> elements = (FeatureList) edge.getProperty( elementsProperty );
         final List<String> elementsInInvEdge = (FeatureList) invEdge.getProperty( elementsProperty );
 
@@ -457,6 +453,13 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     {
       e.printStackTrace();
     }
+
+    m_result = job.getResult();
     return workspace;
+  }
+
+  public IStatus getResult( )
+  {
+    return m_result;
   }
 }

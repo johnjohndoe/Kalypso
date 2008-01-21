@@ -48,7 +48,7 @@ public class PolyElement extends Element2D implements IPolyElement
 
   public PolyElement( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement );
+    this( featureToBind, Element2D.WB1D2D_F_FE1D2D_2DElement );
   }
 
   public PolyElement( final Feature featureToBind, final QName featureQName )
@@ -58,7 +58,7 @@ public class PolyElement extends Element2D implements IPolyElement
     Object prop = null;
     try
     {
-      prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+      prop = featureToBind.getProperty( IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
     catch( final Throwable th )
     {
@@ -68,18 +68,19 @@ public class PolyElement extends Element2D implements IPolyElement
     if( prop == null )
     {
       // create the property tha is still missing
-      m_containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
+      // TODO: remove this stuff
+      m_containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
     }
     else
     {
       // just wrapped the existing one
-      m_containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+      m_containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
 
     // edges
     try
     {
-      prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+      prop = featureToBind.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
     }
     catch( final Throwable th )
     {
@@ -90,12 +91,12 @@ public class PolyElement extends Element2D implements IPolyElement
     if( prop == null )
     {
       // create the property that is still missing
-      m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, IFE1D2DEdge.class );
+      m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, Element2D.WB1D2D_F_FE1D2D_2DElement, FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, IFE1D2DEdge.class );
     }
     else
     {
       // just wrapped the existing one
-      m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+      m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class, FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
     }
   }
 
@@ -121,7 +122,7 @@ public class PolyElement extends Element2D implements IPolyElement
 
   public PolyElement( final Feature parentFeature, final QName propQName, final String gmlID )
   {
-    this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, parentFeature, propQName, gmlID ) );
+    this( FeatureHelper.createFeatureWithId( Element2D.WB1D2D_F_FE1D2D_2DElement, parentFeature, propQName, gmlID ) );
   }
 
   /**
@@ -132,7 +133,7 @@ public class PolyElement extends Element2D implements IPolyElement
   {
     final Feature feature = getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
-    final List edgeList = (List) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    final List edgeList = (List) feature.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
 
     final FE1D2DEdge[] edges = new FE1D2DEdge[edgeList.size()];
     for( int i = 0; i < edges.length; i++ )
@@ -155,7 +156,7 @@ public class PolyElement extends Element2D implements IPolyElement
   public void setEdges( final IFE1D2DEdge[] edges )
   {
     final Feature feature = getFeature();
-    final FeatureList edgeList = (FeatureList) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+    final FeatureList edgeList = (FeatureList) feature.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
 
     edgeList.clear();
 
@@ -203,9 +204,9 @@ public class PolyElement extends Element2D implements IPolyElement
   {
     final Feature parentFeature = discModel.getWrappedFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
-    final IRelationType parentElementProperty = (IRelationType) parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+    final IRelationType parentElementProperty = (IRelationType) parentFT.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
 
-    final IFeatureType polyType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+    final IFeatureType polyType = parentFT.getGMLSchema().getFeatureType( IPolyElement.QNAME );
 
     final Feature eleFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentElementProperty, polyType );
 

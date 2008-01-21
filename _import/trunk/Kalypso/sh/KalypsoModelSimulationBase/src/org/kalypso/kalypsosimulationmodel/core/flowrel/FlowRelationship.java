@@ -42,6 +42,7 @@ package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
@@ -51,6 +52,8 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public abstract class FlowRelationship extends AbstractFeatureBinder implements IFlowRelationship
 {
+  public static final QName OP1D2D_F_FLOWRELATIONSHIPS_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" );
+
   public FlowRelationship( final Feature featureToBind, final QName qname )
   {
     super( featureToBind, qname );

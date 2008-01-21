@@ -41,6 +41,7 @@
 package org.kalypso.afgui.scenarios;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 
 /**
@@ -50,7 +51,7 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
  */
 public interface IScenarioDataListener
 {
-  public void modelLoaded( final IModel model );
+  public void modelLoaded( final IModel model, final IStatus status );
 
   public void scenarioChanged( final IFolder scenarioDataFolder );
 }

@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -52,6 +55,27 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface IFEDiscretisationModel1d2d extends IModel
 {
+
+  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "DiscretisationModel" ); //$NON-NLS-1$
+
+  /**
+   * QName for a property linking a feature to a node. Use for example in DiscretisationModel feature
+   */
+  public final static QName WB1D2D_PROP_COMPLEX_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "complexElement" ); //$NON-NLS-1$
+
+  /**
+   * QName for a property linking a feature to a node. Use for example in DiscretisationModel feature
+   */
+  public final static QName WB1D2D_PROP_NODES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" ); //$NON-NLS-1$
+
+  /**
+   * QName for a property linking a feature to an edge. Use for example in DiscretisationModel feature
+   */
+  public final static QName WB1D2D_PROP_EDGES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edge" ); //$NON-NLS-1$
+
+  public final static QName WB1D2D_PROP_CONTINUITY_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" ); //$NON-NLS-1$
+
+  public final static QName WB1D2D_PROP_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" ); //$NON-NLS-1$
 
   /**
    * Finds an edge given two bounding nodes. If a the found edge does not have the direction from node0 to node1 a
@@ -95,6 +119,7 @@ public interface IFEDiscretisationModel1d2d extends IModel
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
 
   public IFeatureWrapperCollection<IFELine> getContinuityLines( );
+
   /**
    * Finds the node nearest to the given position, within the search rectangle
    * 
@@ -141,7 +166,7 @@ public interface IFEDiscretisationModel1d2d extends IModel
    *            the element type
    */
   public <T extends IFENetItem> T findElement( final GM_Point position, final double grabDistance, Class<T> elementType );
-  
+
   /**
    * Replaces the old node with the new one. Old node will be deleted.
    */

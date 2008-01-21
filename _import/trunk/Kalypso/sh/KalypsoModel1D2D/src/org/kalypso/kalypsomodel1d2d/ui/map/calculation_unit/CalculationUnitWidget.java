@@ -54,9 +54,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -155,7 +155,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
     // command manager since it is use in the dirty pool object framework
     // the commandable workspace of the target theme is taken
-    final IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+    final IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( mapModell, IPolyElement.QNAME );
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, targetTheme.getWorkspace() );
 
     m_calcUnitTheme = new Model1d2dCalUnitTheme( Messages.getString( "CalculationUnitWidget.2" ), mapModell ); //$NON-NLS-1$

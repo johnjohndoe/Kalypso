@@ -57,7 +57,11 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public interface IFE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFENetItem
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" ); //$NON-NLS-1$
+  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" ); //$NON-NLS-1$
+
+  public final static QName WB1D2D_PROP_ELEMENT_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "elementContainer" ); //$NON-NLS-1$
+
+  public final static QName WB1D2D_PROP_DIRECTEDEDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedEdge" ); //$NON-NLS-1$
 
   public static final QName PROP_ROUGHNESS_CLS_ID = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "roughnessClsID" ); //$NON-NLS-1$
 

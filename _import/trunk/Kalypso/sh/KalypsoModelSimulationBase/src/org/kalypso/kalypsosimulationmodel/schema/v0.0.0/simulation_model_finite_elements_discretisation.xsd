@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--  
 	Provide schema elements for a finite element discretisation model.
 	The model kann be view in a different levels of complexity:
@@ -28,10 +27,8 @@
 	ii)other element geometry are implicitely defined.
 	iii)Extra geometric shape may be associated to elements or complex element
 	in the case the shape are not esy to derive from their sub elements  	
-	@author Patrice Congo
+	@author Patrice Congo, Stefan Kurzbach
 -->
-
-
 <xs:schema
 	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
 	xmlns:gml="http://www.opengis.net/gml"
@@ -46,32 +43,25 @@
 	</xs:annotation>
 
 	<xs:import namespace="http://www.opengis.net/gml" />
-	<xs:include schemaLocation="simulation_model.xsd" />
+	<xs:include schemaLocation="simulation_model.xsd" />	
 
-	<!--***********************************************************************
-		Definition discretisation Model 
-		********************************************************************-->
+	<!--================================================================= 
+		_FEDiscretisationModel
+		====================================================================-->
+	<!-- Property (for backward compatibility) -->
 	<xs:element name="feDiscretisationModel"
 		type="simBase:FEDiscretisationModelPropertyType" abstract="true">
-		<xs:annotation>
-			<xs:documentation>
-				To define a finite element discretisation model
-				property.
-
-			</xs:documentation>
-		</xs:annotation>
 	</xs:element>
-
 	<xs:complexType name="FEDiscretisationModelPropertyType">
 		<xs:sequence>
-			<xs:element ref="simBase:FEDiscretisationModel"
+			<xs:element ref="simBase:_FEDiscretisationModel"
 				minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-
-	<xs:element name="FEDiscretisationModel"
-		type="simBase:FEDiscretisationModelType" abstract="true"
+	<!-- end Property (for backward compatibility) -->
+	<xs:element name="_FEDiscretisationModel" 
+		type="simBase:FEAbstractDiscretisationModelType" abstract="true"
 		substitutionGroup="simBase:_Model">
 		<xs:annotation>
 			<xs:documentation>
@@ -80,92 +70,19 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
-	<!-- ================================================================= 
-		FEDirectedModelType
-		====================================================================-->
-	<xs:complexType name="FEDiscretisationModelType" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="simBase:AbstractModelType"><!--gml:FeaturePropertyType"-->
-				<xs:sequence>
-					<xs:element ref="simBase:feComplexElementProperty"
-						minOccurs="0" maxOccurs="unbounded" />
-					<xs:element ref="simBase:feElementProperty"
-						minOccurs="0" maxOccurs="unbounded" />
-					<xs:element ref="simBase:feNodeProperty"
-						minOccurs="0" maxOccurs="unbounded" />
-					<xs:element ref="simBase:feLineProperty"
-						minOccurs="0" maxOccurs="unbounded" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-
-
-	<!-- ================================================================= 
-		directedNode
-		====================================================================-->
-	<xs:element name="directedNode"
-		type="simBase:FEDirectedNodePropertyType" />
-
-	<!-- ================================================================= 
-		FEDirectedNodePropertyType node
-		====================================================================-->
-	<xs:complexType name="FEDirectedNodePropertyType">
+	<xs:complexType name="FEAbstractDiscretisationModelType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-				Node property with an orientation attribute
+				Abstract type for a finite element network.
 			</xs:documentation>
 		</xs:annotation>
-		<xs:sequence minOccurs="0" maxOccurs="0">
-			<xs:element ref="simBase:_FENode" minOccurs="0"
-				maxOccurs="1" />
-		</xs:sequence>
-		<xs:attribute name="orientation" type="gml:SignType"
-			default="+" />
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractModelType" />
+		</xs:complexContent>
 	</xs:complexType>
-
-
-
-	<!-- ================================================================= 
-		FEDirectedEdgePropertyType
-		====================================================================-->
-	<xs:element name="feDirectedEdge"
-		type="simBase:FEDirectedEdgePropertyType">
-	</xs:element>
-
-	<xs:complexType name="FEDirectedEdgePropertyType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">
-				A directed nod holds a reference to an edge and has a
-				direction property element. No attribute is used due to
-				Kalypso limitations.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element ref="simBase:_FEEdge" minOccurs="1"
-				maxOccurs="1" />
-		</xs:sequence>
-		<xs:attribute name="orientation" type="gml:SignType"
-			default="+" />
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
-
-	<!-- ================================================================= 
-		FENodePropertyType
-		====================================================================-->
-	<xs:complexType name="FENodePropertyType">
-		<xs:sequence minOccurs="0" maxOccurs="unbounded">
-			<xs:element ref="simBase:_FENode" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
-
-
-	<!-- ================================================================= 
-		FENodePropertyType
+	
+	<!--================================================================= 
+		_FENode
 		====================================================================-->
 	<xs:element name="_FENode" abstract="true"
 		type="simBase:FEAbstractNodeType" substitutionGroup="gml:_Feature">
@@ -176,10 +93,6 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
-	<!-- ================================================================= 
-		FEAbstractNodeType
-		====================================================================-->
 	<xs:complexType name="FEAbstractNodeType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -193,34 +106,18 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-
-	<!-- ================================================================= 
-		FEEdgePropertyType
-		====================================================================-->
-	<xs:complexType name="FEEdgesPropertyType">
-		<xs:sequence>
-			<xs:element ref="simBase:_FEEdge" minOccurs="0"
-				maxOccurs="1" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
-
-	<!-- ================================================================= 
-		_FEEdge, subtitution head for edges
+	<!--================================================================= 
+		_FEEdge
 		====================================================================-->
 	<xs:element name="_FEEdge" abstract="true"
 		type="simBase:FEAbstractEdgeType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation>
-				Substitution head for all edged in a finite element
+				Substitution head for all edges in a finite element
 				network
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
-	<!-- ================================================================= 
-		FEAbstractEdgeType, base type for edges
-		====================================================================-->
 	<xs:complexType name="FEAbstractEdgeType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -232,49 +129,23 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-
-	<xs:complexType name="FELinesPropertyType">
-		<xs:sequence>
-			<xs:element ref="simBase:_FELine" minOccurs="0"
-				maxOccurs="1" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
-
+	<!--================================================================= 
+		_FELine
+		====================================================================-->
 	<xs:element name="_FELine" abstract="true"
 		type="simBase:FEAbstractLineType" substitutionGroup="gml:_Feature">
 	</xs:element>
-
 	<xs:complexType name="FEAbstractLineType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType"></xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-
-	<!-- ================================================================= 
-		FEEdgePropertyType
-		====================================================================-->
-	<xs:complexType name="FEElementPropertyType" abstract="true">
-		<xs:complexContent>
-			<xs:restriction base="gml:AssociationType">
-				<xs:sequence minOccurs="0" maxOccurs="0">
-					<xs:element ref="simBase:_FENetItem" minOccurs="0"
-						maxOccurs="1" />
-				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-			</xs:restriction>
-		</xs:complexContent>
-	</xs:complexType>
-
-
-
 	<!-- =====================================================================
-		_FENetItem head of the substitution hierarchy for 
-		the a finite element network
+		_FEElement
 		====================================================================== -->
-	<xs:element name="_FENetItem" abstract="true"
-		type="simBase:AbstractFENetworkItemType"
+	<xs:element name="_FEElement" abstract="true"
+		type="simBase:AbstractFEElementType"
 		substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation>
@@ -282,107 +153,14 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
-
-	<!-- =====================================================================
-		AbstractFENetworkItemType base type for finite elements
-		the a finite element network
-		====================================================================== -->
-	<xs:complexType name="AbstractFENetworkItemType" abstract="true">
+	<xs:complexType name="AbstractFEElementType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
-				Base type for an elment in finite element network
+				Base type for an element in finite element network.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
-				<xs:sequence>
-					<xs:element name="elementContainer"
-						type="simBase:FEElementContainerPropertyType" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<!-- =================================================================
-		feComplexElementProperty
-		================================================================= -->
-	<xs:element name="feComplexElementProperty"
-		type="simBase:FEComplexElementPropertyType" abstract="true"
-		substitutionGroup="gml:_association">
-		<xs:annotation>
-			<xs:documentation>
-				Property elements holding a _FEComplexElement. This must
-				be subtituted by a custom fe complex element property
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-
-	<!-- =================================================================
-		feElementProperty
-		================================================================= -->
-
-	<xs:element name="feElementProperty"
-		type="simBase:FEElementPropertyType"
-		substitutionGroup="gml:_association" abstract="true">
-		<xs:annotation>
-			<xs:documentation>
-				Property elements holding a _FENetItem. This must be
-				subtituted by a custom finite element.
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-
-	<!-- =================================================================
-		feEdgeProperty
-		================================================================= -->
-
-	<xs:element name="feEgdeProperty" type="simBase:FEEdgesPropertyType"
-		abstract="true">
-		<xs:annotation>
-			<xs:documentation>
-				Property elements holding a _FEEdge. This must be
-				subtituted by a custom edge element.
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-
-	<xs:element name="feLineProperty" type="simBase:FELinesPropertyType"
-		abstract="true">
-	</xs:element>
-
-	<!-- =================================================================
-		feNodeProperty
-		================================================================= -->
-
-	<xs:element name="feNodeProperty" type="simBase:FENodePropertyType"
-		abstract="true">
-		<xs:annotation>
-			<xs:documentation>
-				Property elements holding a _FENode. This must be
-				subtituted by a custom node element.
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-
-	<!-- =================================================================
-		FEComplexElementPropertyType
-		================================================================= -->
-
-	<xs:complexType name="FEComplexElementPropertyType"
-		abstract="true">
-		<xs:annotation>
-			<xs:documentation>
-				Property type for defining complex elements
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:restriction base="gml:AssociationType">
-				<xs:sequence minOccurs="0" maxOccurs="1">
-					<xs:element ref="simBase:_FEComplexElement" />
-				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-			</xs:restriction>
+			<xs:extension base="gml:AbstractFeatureType" />
 		</xs:complexContent>
 	</xs:complexType>
 
@@ -401,10 +179,6 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
-	<!-- =================================================================
-		FEAbstractComplexElementType
-		================================================================= -->
 	<xs:complexType name="FEAbstractComplexElementType"
 		abstract="true">
 		<xs:annotation>
@@ -419,80 +193,4 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
-	<!-- =================================================================
-		feEdgeContainerPropertyType
-		================================================================= -->
-	<xs:element name="feEdgeContainer"
-		type="simBase:FEEdgeContainerPropertyType" />
-
-	<xs:complexType name="FEEdgeContainerPropertyType"
-		abstract="true">
-		<xs:annotation>
-			<xs:documentation>
-				Associates elements to the element the contains, edges
-			</xs:documentation>
-		</xs:annotation>
-		<!-- xs:complexContent>
-			<xs:restriction
-			base="gml:ArrayAssociationType" -->
-		<xs:sequence minOccurs="0" maxOccurs="1">
-			<xs:element ref="simBase:_FENetItem" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-		<!--/xs:restriction>
-			</xs:complexContent-->
-	</xs:complexType>
-
-	<!-- =================================================================
-		FENodeContainerPropertyType
-		================================================================= -->
-	<xs:element name="feNodeContainer"
-		type="simBase:FENodeContainerPropertyType" />
-	<xs:complexType name="FENodeContainerPropertyType"
-		abstract="true">
-		<xs:annotation>
-			<xs:documentation>
-				Associates node to egde elements containing it.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:restriction base="gml:AssociationType">
-				<xs:sequence minOccurs="1" maxOccurs="1">
-					<xs:element ref="simBase:_FEEdge" />
-				</xs:sequence>
-				<!--xs:attributeGroup ref="gml:AssociationAttributeGroup"/ -->
-			</xs:restriction>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<!-- =====================================================================
-		elementContainer, _ComplexElements
-		======================================================================-->
-	<xs:element name="feElementContainer"
-		type="simBase:FEElementContainerPropertyType" abstract="true" />
-
-	<!-- =====================================================================
-		FEElementContainerPropertyType, _ComplexElements
-		======================================================================-->
-
-	<xs:complexType name="FEElementContainerPropertyType"
-		abstract="true">
-		<xs:annotation>
-			<xs:documentation>
-				Associates an element to the complex element containing
-				it
-			</xs:documentation>
-		</xs:annotation>
-		<!-- xs:complexContent>
-			<xs:restriction
-			base="gml:ArrayAssociationType"-->
-		<xs:sequence minOccurs="1" maxOccurs="unbounded">
-			<xs:element ref="simBase:_FEComplexElement" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-		<!-- /xs:restriction>
-			</xs:complexContent-->
-	</xs:complexType>
-
 </xs:schema>

@@ -54,8 +54,9 @@ import org.eclipse.core.runtime.FileLocator;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.observation.IObservation;
@@ -77,10 +78,43 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 public class ControlModel1D2D extends AbstractFeatureBinder implements IControlModel1D2D
 {
   private final IFeatureWrapperCollection<IRestartInfo> m_restartInfos = new FeatureWrapperCollection<IRestartInfo>( getFeature(), IRestartInfo.class, QNAME_PROPERTY_RESTART_INFO );
+  public final static QName WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "timestepsMember" );
+  public final static QName WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_unsteady" );
+  public final static QName WB1D2DCONTROL_PROP_STEADY_CHECKBOX = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steady" );
+  public final static QName WB1D2DCONTROL_PROP_RELAXATION_FACTOR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steadyBC" );
+  public final static QName WB1D2DCONTROL_PROP_P_BOTTOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_p_bottom" );
+  public final static QName WB1D2DCONTROL_PROP_AC3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC3" );
+  public final static QName WB1D2DCONTROL_PROP_AC2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC2" );
+  public final static QName WB1D2DCONTROL_PROP_AC1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC1" );
+  public static final QName WB1D2DCONTROL_PROP_BEIENT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "BEIENT" );
+  public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" );
+  public final static QName WB1D2DCONTROL_PROP_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart" );
+  public final static QName WB1D2DCONTROL_PROP_IACCYC = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IACCYC" );
+  public final static QName WB1D2DCONTROL_PROP_DRFACT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "DRFACT" );
+  public final static QName WB1D2DCONTROL_PROP_IDRPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDRPT" );
+  public final static QName WB1D2DCONTROL_PROP_CONV_3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_3" );
+  public final static QName WB1D2DCONTROL_PROP_CONV_2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_2" );
+  public final static QName WB1D2DCONTROL_PROP_CONV_1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_1" );
+  public final static QName WB1D2DCONTROL_PROP_NITN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "NITN" );
+  public final static QName WB1D2DCONTROL_PROP_NITI = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "NITI" );
+  public final static QName WB1D2DCONTROL_PROP_DSETD = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "DSETD" );
+  public final static QName WB1D2DCONTROL_PROP_DSET = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "DSET" );
+  public final static QName WB1D2DCONTROL_PROP_HMIN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "HMIN" );
+  public final static QName WB1D2DCONTROL_PROP_UNOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "UNOM" );
+  public final static QName WB1D2DCONTROL_PROP_UDIR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "UDIR" );
+  public final static QName WB1D2DCONTROL_PROP_ELEV = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ELEV" );
+  public final static QName WB1D2DCONTROL_PROP_OMEGA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "OMEGA" );
+  public final static QName WB1D2DCONTROL_PROP_TBMIN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBMIN" );
+  public final static QName WB1D2DCONTROL_PROP_TBFACT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBFACT" );
+  public final static QName WB1D2DCONTROL_PROP_IEDSW = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IEDSW" );
+  public final static QName WB1D2DCONTROL_PROP_IDNOPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDNOPT" );
+  public final static QName WB1D2DCONTROL_PROP_STARTSIM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "startsim" );
+  public final static QName WB1D2DCONTROL_PROP_VERSION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "Version" );
+  public final static QName WB1D2DCONTROL_F_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModel" );
 
   public ControlModel1D2D( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL );
+    this( featureToBind, ControlModel1D2D.WB1D2DCONTROL_F_MODEL );
   }
 
   public ControlModel1D2D( final Feature featureToBind, final QName qnameToBind )
@@ -96,7 +130,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     try
     {
       final Feature feature = getFeature();
-      final Object property = feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+      final Object property = feature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
       return (IObservation<TupleResult>) ((Feature) property).getAdapter( IObservation.class );
     }
     catch( final Throwable th )
@@ -108,7 +142,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getIDNOPT( )
   {
-    return (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDNOPT );
+    return (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDNOPT );
   }
 
   /**
@@ -116,7 +150,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
    */
   public String getVersion( )
   {
-    return (String) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VERSION );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION );
   }
 
   public int getStartYear( )
@@ -129,7 +163,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     // REMARK: do not change the value here, this is DANGEROUS!
     // This class is just the binding class and should not decide what to do about its data...
 
-    final BigInteger propertyValue = getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC, BigInteger.class );
+    final BigInteger propertyValue = getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IACCYC, BigInteger.class );
 
     // DANGEROUS: does the user get some warning, that he has chosen restart but it is ignored? I think not...
     if( propertyValue != null && getRestart() && !isSteadySelected() && isUnsteadySelected() )
@@ -140,7 +174,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public boolean getRestart( )
   {
-    return ((Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
+    return ((Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
   }
 
   public List<IRestartInfo> getRestartInfos( )
@@ -150,7 +184,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public XMLGregorianCalendar getStartCalendar( )
   {
-    return (XMLGregorianCalendar) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_STARTSIM );
+    return (XMLGregorianCalendar) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STARTSIM );
   }
 
   public Integer getStartJulianDay( )
@@ -166,61 +200,61 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getIEDSW( )
   {
-    final Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW );
+    final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IEDSW );
     return property != null ? property : 0;
   }
 
   public Double getTBFACT( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBFACT );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT );
     return property != null ? property : 0.0;
   }
 
   public Double getTBMIN( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBMIN );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBMIN );
     return property != null ? property : 0.0;
   }
 
   public Double getOMEGA( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_OMEGA );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_OMEGA );
     return property != null ? property : 0.0;
   }
 
   public Double getELEV( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_ELEV );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_ELEV );
     return property != null ? property : 0.0;
   }
 
   public Double getUDIR( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UDIR );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UDIR );
     return property != null ? property : 0.0;
   }
 
   public Double getUNOM( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNOM );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNOM );
     return property != null ? property : 0.0;
   }
 
   public Double getHMIN( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_HMIN );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HMIN );
     return property != null ? property : 0.0;
   }
 
   public Double getDSET( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSET );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSET );
     return property != null ? property : 0.0;
   }
 
   public Double getDSETD( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSETD );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSETD );
     return property != null ? property : 0.0;
   }
 
@@ -228,7 +262,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   {
     if( !isSteadySelected() )
       return 0;
-    Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITI );
+    Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITI );
     if( property == null )
       property = 0;
     return property;
@@ -238,7 +272,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   {
     if( !isUnsteadySelected() )
       return 0;
-    Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITN );
+    Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITN );
     if( property == null )
       property = 0;
     return property;
@@ -254,37 +288,37 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Double getCONV_1( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_1 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_1 );
     return property != null ? property : 0.0;
   }
 
   public Double getCONV_2( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_2 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_2 );
     return property != null ? property : 0.0;
   }
 
   public Double getCONV_3( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_3 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_3 );
     return property != null ? property : 0.0;
   }
 
   public Integer getIDRPT( )
   {
-    final Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDRPT );
+    final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDRPT );
     return property != null ? property : 0;
   }
 
   public Double getDRFACT( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DRFACT );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DRFACT );
     return property != null ? property : 0.0;
   }
 
   public boolean getVegeta( )
   {
-    return (Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VEGETA );
+    return (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VEGETA );
   }
 
   /**
@@ -292,25 +326,25 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
    */
   public boolean getBeient( )
   {
-    final Object property = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_BEIENT );
+    final Object property = getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_BEIENT );
     return property != null ? (Boolean) property : false;
   }
 
   public Double getAC1( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC1 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC1 );
     return property != null ? property : 0.0;
   }
 
   public Double getAC2( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC2 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC2 );
     return property != null ? property : 0.0;
   }
 
   public Double getAC3( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC3 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC3 );
     return property != null ? property : 0.0;
   }
 
@@ -323,7 +357,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     {
       final Feature wrappedFeature = calUnit.getWrappedFeature();
       final Feature parentFeature = getFeature();// control to link to
-      final IPropertyType property = parentFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT );
+      final IPropertyType property = parentFeature.getFeatureType().getProperty( ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT );
 
       final GMLWorkspace workspace = calUnit.getWrappedFeature().getWorkspace();
       final URL context = workspace.getContext();
@@ -346,7 +380,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   {
     try
     {
-      final ICalculationUnit resolveLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, ICalculationUnit.class );
+      final ICalculationUnit resolveLink = FeatureHelper.resolveLink( this, ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT, ICalculationUnit.class );
       return resolveLink;
     }
     catch( final IllegalStateException e )
@@ -355,7 +389,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
       // hacking by getting the feature id and returning
       // the one id the control workspace with the same id
       // this will only work in the same scenario context
-      final Feature resolveLink = FeatureHelper.resolveLink( this.getFeature(), Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT );
+      final Feature resolveLink = FeatureHelper.resolveLink( this.getFeature(), ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT );
       if( !(resolveLink instanceof XLinkedFeature_Impl) )
       {
         throw e;
@@ -382,7 +416,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
    */
   public Double get_P_BOTTOM( )
   {
-    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_P_BOTTOM );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_P_BOTTOM );
     return property != null ? property : 0.0;
   }
 
@@ -391,18 +425,18 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
    */
   public Double get_RelaxationsFactor( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
+    return (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
   }
 
   public boolean isSteadySelected( )
   {
-    final Boolean property = (Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_STEADY_CHECKBOX );
+    final Boolean property = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STEADY_CHECKBOX );
     return property != null ? property.booleanValue() : false;
   }
 
   public boolean isUnsteadySelected( )
   {
-    final Boolean property = (Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX );
+    final Boolean property = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX );
     return property != null ? property.booleanValue() : false;
   }
 

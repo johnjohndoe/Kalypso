@@ -57,14 +57,12 @@
             adaptableType="org.kalypsodeegree.model.feature.Feature"
             class="org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory">
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge"/>         
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement"/>         
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d"/>
          <adapter type="org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship"/>

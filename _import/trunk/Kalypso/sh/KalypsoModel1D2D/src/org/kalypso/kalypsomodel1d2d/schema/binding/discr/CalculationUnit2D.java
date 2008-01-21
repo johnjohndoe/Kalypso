@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -57,7 +56,7 @@ public class CalculationUnit2D extends CalculationUnit implements ICalculationUn
 {
   public CalculationUnit2D( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, IFENetItem.class );
+    this( featureToBind, ICalculationUnit2D.QNAME, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS, IFENetItem.class );
   }
 
   public CalculationUnit2D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<IFENetItem> wrapperClass )

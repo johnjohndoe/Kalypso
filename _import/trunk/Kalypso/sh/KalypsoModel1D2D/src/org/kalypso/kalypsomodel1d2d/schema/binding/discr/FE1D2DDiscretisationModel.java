@@ -66,19 +66,19 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 @SuppressWarnings("unchecked")
 public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDiscretisationModel1d2d
 {
-  private final IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+  private final IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
 
-  private final IFeatureWrapperCollection<IFE1D2DEdge> m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( getFeature(), IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
+  private final IFeatureWrapperCollection<IFE1D2DEdge> m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( getFeature(), IFE1D2DEdge.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
 
-  private final IFeatureWrapperCollection<IFE1D2DNode> m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( getFeature(), IFE1D2DNode.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES );
+  private final IFeatureWrapperCollection<IFE1D2DNode> m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( getFeature(), IFE1D2DNode.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
 
-  private final IFeatureWrapperCollection<IFELine> m_continuityLines = new FeatureWrapperCollection<IFELine>( getFeature(), IFELine.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CONTINUITY_LINES );
+  private final IFeatureWrapperCollection<IFELine> m_continuityLines = new FeatureWrapperCollection<IFELine>( getFeature(), IFELine.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
 
-  private final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = new FeatureWrapperCollection<IFE1D2DComplexElement>( getFeature(), IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_COMPLEX_ELEMENTS );
+  private final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = new FeatureWrapperCollection<IFE1D2DComplexElement>( getFeature(), IFE1D2DComplexElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
 
   public FE1D2DDiscretisationModel( final Feature featureToBind )
   {
-    super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel );
+    super( featureToBind, IFEDiscretisationModel1d2d.QNAME );
   }
 
   /**

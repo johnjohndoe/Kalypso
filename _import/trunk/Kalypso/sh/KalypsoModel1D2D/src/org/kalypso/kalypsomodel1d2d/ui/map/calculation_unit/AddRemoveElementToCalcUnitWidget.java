@@ -52,10 +52,11 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveElementFromCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -127,7 +128,7 @@ public class AddRemoveElementToCalcUnitWidget extends FENetConceptSelectionWidge
 
   public AddRemoveElementToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, }, Messages.getString( "AddRemoveElementToCalcUnitWidget.0" ), Messages.getString( "AddRemoveElementToCalcUnitWidget.1" ), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( new QName[] { IPolyElement.QNAME, IElement1D.QNAME, }, Messages.getString( "AddRemoveElementToCalcUnitWidget.0" ), Messages.getString( "AddRemoveElementToCalcUnitWidget.1" ), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }
 

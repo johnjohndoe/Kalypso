@@ -5,7 +5,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
@@ -30,7 +29,7 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
 
   public FE1D2DElement( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT, (Class<CT>) IFE1D2DComplexElement.class );
+    this( featureToBind, FE1D2DElement.QNAME, (Class<CT>) IFE1D2DComplexElement.class );
   }
 
   public FE1D2DElement( final Feature featureToBind, final QName featureQName, final Class<CT> complexElementClass )
@@ -40,7 +39,7 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
     Object prop = null;
     try
     {
-      prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+      prop = featureToBind.getProperty( IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
     catch( final Throwable th )
     {
@@ -50,12 +49,13 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
     if( prop == null )
     {
       // create the property that is still missing
-      containers = new FeatureWrapperCollection<CT>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, complexElementClass );
+      // TODO: remove this stuff
+      containers = new FeatureWrapperCollection<CT>( featureToBind, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS, complexElementClass );
     }
     else
     {
       // just wrapped the existing one
-      containers = new FeatureWrapperCollection<CT>( featureToBind, complexElementClass, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+      containers = new FeatureWrapperCollection<CT>( featureToBind, complexElementClass, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
   }
 
@@ -81,7 +81,7 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
 
   public FE1D2DElement( final Feature parentFeature, final QName propQName, final String gmlID )
   {
-    this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT, parentFeature, propQName, gmlID ) );
+    this( FeatureHelper.createFeatureWithId( FE1D2DElement.QNAME, parentFeature, propQName, gmlID ) );
   }
 
   /**

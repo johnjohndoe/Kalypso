@@ -572,7 +572,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         edgeList.add( edge );
 
         /* Create corresponding element */
-        final IElement1D element1d = discretisationModel.getElements().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, IElement1D.class );
+        final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
 
         addedFeatures.add( element1d.getWrappedFeature() );
 

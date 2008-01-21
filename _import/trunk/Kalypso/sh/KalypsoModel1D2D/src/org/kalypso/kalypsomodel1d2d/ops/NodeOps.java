@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -70,7 +69,7 @@ public class NodeOps
   public static final IFE1D2DNode findeNodeImpl( final GM_Point point, final FE1D2DDiscretisationModel model )
   {
     final FeatureList elementList = (FeatureList) model.getElements().getWrappedList();
-    final FeatureList element2DList = new FilteredFeatureList( elementList, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.getLocalPart(), true );
+    final FeatureList element2DList = new FilteredFeatureList( elementList, IPolyElement.QNAME.getLocalPart(), true );
 
     // 1. Try: look, if the position is within an element
     final List foundElements = element2DList.query( point.getPosition(), null );

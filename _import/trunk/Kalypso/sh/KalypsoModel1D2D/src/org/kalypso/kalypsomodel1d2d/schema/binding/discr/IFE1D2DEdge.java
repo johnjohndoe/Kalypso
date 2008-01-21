@@ -57,7 +57,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" );
+  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" ); //$NON-NLS-1$
+
+  public final static QName WB1D2D_PROP_EDGE_CONTAINERS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "edgeContainer" ); //$NON-NLS-1$
+
+  public final static QName WB1D2D_PROP_MIDDLE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "middleNode" ); //$NON-NLS-1$
+
+  public final static QName WB1D2D_PROP_DIRECTEDNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedNode" ); //$NON-NLS-1$
 
   /**
    * To get the computed geometry of this edge as curve

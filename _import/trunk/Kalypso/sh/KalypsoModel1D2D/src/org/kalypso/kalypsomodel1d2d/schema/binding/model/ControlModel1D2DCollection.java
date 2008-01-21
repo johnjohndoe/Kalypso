@@ -46,7 +46,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
@@ -65,9 +65,13 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class ControlModel1D2DCollection extends FeatureWrapperCollection<IControlModel1D2D> implements IControlModel1D2DCollection
 {
+  public final static QName WB1D2DCONTROL_XP_ACTIVE_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "activeModelID" );
+  public final static QName WB1D2DCONTROL_F_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelCollection" );
+  public final static QName WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" );
+
   public ControlModel1D2DCollection( final Feature featureCol )
   {
-    this( featureCol, IControlModel1D2D.class, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+    this( featureCol, IControlModel1D2D.class, ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
   }
 
   public ControlModel1D2DCollection( final Feature featureCol, final Class<IControlModel1D2D> fwClass, final QName featureMemberProp )
@@ -80,7 +84,7 @@ public class ControlModel1D2DCollection extends FeatureWrapperCollection<IContro
    */
   public void setActiveControlModel( final IControlModel1D2D newControlModel )
   {
-    getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getGmlID() );
+    getFeature().setProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getGmlID() );
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
@@ -100,7 +104,7 @@ public class ControlModel1D2DCollection extends FeatureWrapperCollection<IContro
    */
   public IControlModel1D2D getActiveControlModel( )
   {
-    final Object activeModelID = getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL, Object.class );
+    final Object activeModelID = getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, Object.class );
     final Feature feature = FeatureHelper.getFeature( getFeature().getWorkspace(), activeModelID );
     if( feature == null )
       return null;

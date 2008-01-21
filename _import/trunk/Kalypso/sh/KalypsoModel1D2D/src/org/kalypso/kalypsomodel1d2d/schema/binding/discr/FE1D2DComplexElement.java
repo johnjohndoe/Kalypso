@@ -52,7 +52,8 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
- * The default implementation of the {@link IFE1D2DComplexElement} interface.
+ * The default implementation of the {@link IFE1D2DComplexElement} interface. TODO: remove this level of indirection:
+ * use CalculationUnit instead
  * 
  * @author Patrice Congo
  */

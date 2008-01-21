@@ -43,12 +43,12 @@ package org.kalypso.kalypsomodel1d2d.ops;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -77,7 +77,7 @@ public class TypeInfo
     IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
     for( IFE1D2DElement element : containers )
     {
-      if( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D.equals( element.getWrappedFeature().getFeatureType().getQName() ) )
+      if( IElement1D.QNAME.equals( element.getWrappedFeature().getFeatureType().getQName() ) )
       {
         return true;
       }
@@ -118,7 +118,7 @@ public class TypeInfo
     IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
     for( IFE1D2DElement element : containers )
     {
-      if( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.equals( element.getWrappedFeature().getFeatureType().getQName() ) )
+      if( IPolyElement.QNAME.equals( element.getWrappedFeature().getFeatureType().getQName() ) )
       {
         return true;
       }
@@ -143,7 +143,7 @@ public class TypeInfo
     else
     {
       QName featureQName = feature.getFeatureType().getQName();
-      return featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
+      return featureQName.equals( IElement1D.QNAME );
     }
   }
 
@@ -176,7 +176,7 @@ public class TypeInfo
     else
     {
       QName featureQName = feature.getFeatureType().getQName();
-      return featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+      return featureQName.equals( IPolyElement.QNAME );
     }
   }
 
@@ -188,52 +188,6 @@ public class TypeInfo
       return (GMLSchemaUtilities.substitutes( feature.getFeatureType(), IFELine.QNAME ));
   }
 
-  /**
-   * Answer whether the given element is a line element; i.e. is substitutable to wb1d2d:LineElement
-   * 
-   * @param feature
-   *            the feature to test
-   * @param return
-   *            true if the feature passed is a line element otherwise false including the case where its feature is
-   *            null
-   */
-  public static final boolean isLineElement( final Feature feature )
-  {
-    if( feature == null )
-    {
-      return false;
-    }
-    else
-    {
-      IFeatureType featureType = feature.getFeatureType();
-
-      return GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_LINE_ELEMENT );
-    }
-  }
-
-  /**
-   * Answer whether the given element is a line element; i.e. is substitutable to wb1d2d:LineElement
-   * 
-   * @param feature
-   *            the feature to test
-   * @param return
-   *            true if the feature passed is a line element otherwise false including the case where its feature is
-   *            null
-   */
-  public static final boolean isBoundaryCondition( final Feature feature )
-  {
-    if( feature == null )
-    {
-      return false;
-    }
-    else
-    {
-      IFeatureType featureType = feature.getFeatureType();
-
-      return GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.OP1D2D_F_BOUNDARY_CONDITION );
-    }
-  }
-
   public static boolean isNode( Feature selecFeature )
   {
     if( selecFeature == null )
@@ -241,50 +195,5 @@ public class TypeInfo
       return false;
     }
     return Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( selecFeature.getFeatureType().getQName() );
-  }
-
-  /**
-   * Check if the given complex element wrapper object wrapps a junction context feature, i.e. a feature which is
-   * substituable to wb1d2d:JunctionContext
-   * 
-   * @param complexElement
-   *            the complex element to test for its junction context nature
-   * @return true if the given complex element wrapper object wrapps a junction context feature otherwise false,
-   *         including the case where the passed junction element is null
-   */
-  public static final boolean isJuntionContext( IFE1D2DComplexElement complexElement )
-  {
-    if( complexElement == null )
-    {
-      return false;
-    }
-    Feature ceFeature = complexElement.getWrappedFeature();
-    IFeatureType featureType = ceFeature.getFeatureType();
-
-    if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT ) )
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-
-  /**
-   * Check if the given complex element wrapper object wrapps a junction context feature, i.e. a feature which is
-   * substitutable to wb1d2d:JunctionContext
-   * 
-   * @param feature
-   *            the feature to test for its junction context nature
-   * @return true if the given feature is a junction context feature otherwise false, including the case where the
-   *         passed junction element is null
-   */
-  public static final boolean isJuntionContext( final Feature feature )
-  {
-    if( feature == null )
-      return false;
-    IFeatureType featureType = feature.getFeatureType();
-    return (GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT ));
   }
 }

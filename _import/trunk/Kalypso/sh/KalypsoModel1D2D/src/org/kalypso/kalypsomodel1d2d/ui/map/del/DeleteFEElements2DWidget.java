@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 
 /**
@@ -50,7 +50,7 @@ public class DeleteFEElements2DWidget extends DeleteFEElementsWidget
 {
   public DeleteFEElements2DWidget( )
   {
-    super( new FENetConceptSelectionWidget( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, "2D-Element löschen", "2D-Element löschen" ) );
+    super( new FENetConceptSelectionWidget( Element2D.WB1D2D_F_FE1D2D_2DElement, "2D-Element löschen", "2D-Element löschen" ) );
   }
   
 }

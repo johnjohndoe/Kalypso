@@ -43,7 +43,9 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
@@ -62,6 +64,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 public class BoundaryCondition extends FlowRelationship implements IBoundaryCondition
 {
   private IObservation<TupleResult> m_observation;
+  public static final QName OP1D2D_PROP_STATIONARY_COND = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" );
 
   public BoundaryCondition( final Feature featureToBind )
   {
@@ -131,7 +134,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   public double getStationaryCondition( )
   {
     final Feature feature = getWrappedFeature();
-    final Object property = feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_STATIONARY_COND );
+    final Object property = feature.getProperty( BoundaryCondition.OP1D2D_PROP_STATIONARY_COND );
     if( property instanceof Double )
     {
       return ((Double) property).doubleValue();
@@ -157,7 +160,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
       dValue = Double.valueOf( statCond );
     }
     final Feature feature = getWrappedFeature();
-    feature.setProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_STATIONARY_COND, dValue );
+    feature.setProperty( BoundaryCondition.OP1D2D_PROP_STATIONARY_COND, dValue );
   }
 
   /**

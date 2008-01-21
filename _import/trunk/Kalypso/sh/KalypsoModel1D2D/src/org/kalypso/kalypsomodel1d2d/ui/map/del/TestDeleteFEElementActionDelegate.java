@@ -41,7 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
 import org.eclipse.ui.IEditorActionDelegate;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActionDelegate;
 
@@ -53,7 +53,7 @@ public class TestDeleteFEElementActionDelegate extends AbstractGisMapEditorActio
 {
   public TestDeleteFEElementActionDelegate( )
   {
-    super( new DeleteFEElementsWidget( new FENetConceptSelectionWidget(Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT, 
+    super( new DeleteFEElementsWidget( new FENetConceptSelectionWidget(FE1D2DElement.QNAME, 
         "Selectiere ein fe element",
         "Selectiere ein fe element") ){});
   }
