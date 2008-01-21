@@ -44,11 +44,12 @@ import java.awt.Graphics2D;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * @author kuch
  */
 public interface IStrokeArrowPaintDelegate
 {
-  void paint( Graphics2D g2, GeoTransform projection, GM_Curve curve );
+  void paint( Graphics2D g2, GeoTransform projection, GM_Curve curve, final UOM m_uom );
 }

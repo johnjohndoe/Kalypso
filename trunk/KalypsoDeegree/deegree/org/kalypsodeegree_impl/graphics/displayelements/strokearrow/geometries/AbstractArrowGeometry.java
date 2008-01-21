@@ -48,6 +48,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.LabelFactory;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * @author kuch
@@ -63,11 +64,14 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
 
   private AffineTransform m_savedAT;
 
-  public AbstractArrowGeometry( final Graphics2D g2, final GeoTransform projection, final GM_Point[] points )
+  private final UOM m_uom;
+
+  public AbstractArrowGeometry( final Graphics2D g2, final GeoTransform projection, final GM_Point[] points, final UOM uom )
   {
     m_g2 = g2;
     m_projection = projection;
     m_points = points;
+    m_uom = uom;
   }
 
   protected Graphics2D getGraphic( )
@@ -100,12 +104,12 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
     // setTransform
     setAffineTransformation( p1, p2 );
 
-    draw( size.intValue() );
+    draw( size.intValue(), m_uom, m_projection );
 
     resetAffineTransformation();
   }
 
-  protected abstract void draw( int size );
+  protected abstract void draw( int size, UOM uom, final GeoTransform projection );
 
   private void resetAffineTransformation( )
   {
@@ -122,15 +126,15 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
     getGraphic().setTransform( transform );
   }
 
-  public static IArrowGeometry getArrowGeometry( final ARROW_WIDGET widget, final Graphics2D g2, final GeoTransform projection, final GM_Point[] points )
+  public static IArrowGeometry getArrowGeometry( final ARROW_WIDGET widget, final Graphics2D g2, final GeoTransform projection, final GM_Point[] points, final UOM uom )
   {
     switch( widget )
     {
       case eFill:
-        return new FillArrowGeometry( g2, projection, points );
+        return new FillArrowGeometry( g2, projection, points, uom );
 
       case eOpen:
-        return new OpenArrowGeometry( g2, projection, points );
+        return new OpenArrowGeometry( g2, projection, points, uom );
 
       default:
         throw new NotImplementedException();
@@ -139,16 +143,14 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
 
   protected double getRotation( )
   {
-    final double dx = m_points[1].getPosition().getX() - m_points[0].getPosition().getX();
-    final double dy = -(m_points[1].getPosition().getY() - m_points[0].getPosition().getY());
-    double rotation = 0.0;
+    final double dx = m_points[0].getPosition().getX() - m_points[1].getPosition().getX();
+    final double dy = m_points[0].getPosition().getY() - m_points[1].getPosition().getY();
 
-    if( dx <= 0 )
-      rotation = -Math.atan( dy / dx );
+    double atan = Math.atan( dy / dx );
+
+    if( dx >= 0 )
+      return -atan;
     else
-      rotation = -Math.PI - Math.atan( dy / dx );
-
-    return rotation;
+      return Math.PI - atan;
   }
-
 }

@@ -338,7 +338,7 @@ public class Graphic_Impl implements Graphic, Marshallable
     switch( uom )
     {
       case meter:
-        // REMARK: we transform here a length near the origin of the coordinate sytem, which is probably not correct
+        // REMARK: we transform here a length near the origin of the coordinate system, which is probably not correct
         // for most coordinate systems.
         final GM_Envelope sourceRect = transform.getSourceRect();
         final double sizeFromNull = transform.getDestX( sourceRect.getMin().getX() );

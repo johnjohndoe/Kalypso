@@ -54,6 +54,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowH
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries.AbstractArrowGeometry;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries.IArrowGeometry;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -77,13 +78,13 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
    *      java.awt.Graphics2D, org.kalypsodeegree.graphics.transformation.GeoTransform,
    *      org.kalypsodeegree.model.geometry.GM_Curve)
    */
-  public void paint( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve )
+  public void paint( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final UOM uom )
   {
     try
     {
       final GM_Point[] points = calculatePoints( curve );
 
-      final IArrowGeometry arrow = AbstractArrowGeometry.getArrowGeometry( getWidget(), g2, projection, points );
+      final IArrowGeometry arrow = AbstractArrowGeometry.getArrowGeometry( getWidget(), g2, projection, points, uom );
       arrow.paint( getSize() );
 
       // draw triangle (arrow)

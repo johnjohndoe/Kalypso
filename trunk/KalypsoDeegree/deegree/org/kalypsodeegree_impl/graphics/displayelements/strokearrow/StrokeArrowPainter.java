@@ -48,6 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_TYPE;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * @author kuch
@@ -58,10 +59,13 @@ public class StrokeArrowPainter implements IAdditionalStrokePainter
 
   private final Map< ? , ? > m_cssParameters;
 
-  public StrokeArrowPainter( final Map< ? , ? > cssParameters, final GeoTransform projection )
+  private final UOM m_uom;
+
+  public StrokeArrowPainter( final Map< ? , ? > cssParameters, final GeoTransform projection, final UOM uom )
   {
     m_cssParameters = cssParameters;
     m_projection = projection;
+    m_uom = uom;
   }
 
   public void paint( final Graphics2D g2, final GM_Curve curve, final int[][] positions )
@@ -73,6 +77,6 @@ public class StrokeArrowPainter implements IAdditionalStrokePainter
     final Double strokeWidth = StrokeArrowHelper.getStrokeWidth( m_cssParameters );
 
     final IStrokeArrowPaintDelegate painter = AbstractStrokeArrowPaintDelegate.getPaintDelegate( arrowType, arrowWidget, arrowAlignment, arrowSize, strokeWidth );
-    painter.paint( g2, m_projection, curve );
+    painter.paint( g2, m_projection, curve, m_uom );
   }
 }

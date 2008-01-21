@@ -44,6 +44,7 @@ import java.awt.Graphics2D;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * @author kuch
@@ -52,16 +53,16 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class DefaultArrowGeometry extends AbstractArrowGeometry
 {
 
-  public DefaultArrowGeometry( final Graphics2D g2, final GeoTransform projection, final GM_Point[] points )
+  public DefaultArrowGeometry( final Graphics2D g2, final GeoTransform projection, final GM_Point[] points, final UOM uom )
   {
-    super( g2, projection, points );
+    super( g2, projection, points, uom );
   }
 
   /**
    * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.AbstractArrowGeometry#draw(java.lang.Double)
    */
   @Override
-  protected void draw( int size )
+  protected void draw( int size, final UOM uom, final GeoTransform projection )
   {
     // draw triangle
     int size_4 = size / 4;
