@@ -244,8 +244,8 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       }
       catch( GMLXPathException e )
       {
-        // default value is taken
         e.printStackTrace();
+        return null;
       }
     }
     // get offset (has default, can be constant value)
@@ -273,8 +273,8 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       }
       catch( GMLXPathException e )
       {
-        // default value is taken
         e.printStackTrace();
+        return null;
       }
     }
     // get endCapStyle (has default, can be constant value)
@@ -302,8 +302,8 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       }
       catch( GMLXPathException e )
       {
-        // default value is taken
         e.printStackTrace();
+        return null;
       }
     }
     // get quadrantSegments (has default, can be constant value)
@@ -331,8 +331,8 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       }
       catch( GMLXPathException e )
       {
-        // default value is taken
         e.printStackTrace();
+        return null;
       }
     }
     // return buffered line as polygon
