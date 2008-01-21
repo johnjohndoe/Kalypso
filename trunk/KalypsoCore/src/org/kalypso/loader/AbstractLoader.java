@@ -54,6 +54,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -68,6 +69,8 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
   private final List<ILoaderListener> m_listener = new ArrayList<ILoaderListener>();
 
   private final List<Object> m_objectList = new ArrayList<Object>();
+
+  private IStatus m_status = Status.OK_STATUS;
 
   /** Resources in this list will be ignored at the next resource change event. */
   private final Collection<String> m_ignoreresourceList = new HashSet<String>();
@@ -203,5 +206,18 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
       m_ignoreresourceList.add( m_visitor.pathForObject( data ) );
     else
       m_ignoreresourceList.remove( m_visitor.pathForObject( data ) );
+  }
+
+  /**
+   * @see org.kalypso.loader.ILoader#getStatus()
+   */
+  public IStatus getStatus( )
+  {
+    return m_status;
+  }
+
+  protected void setStatus( final IStatus status )
+  {
+    m_status = status;
   }
 }

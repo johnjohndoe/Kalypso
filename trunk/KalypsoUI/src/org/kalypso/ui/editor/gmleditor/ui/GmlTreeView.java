@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -32,6 +33,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
@@ -392,24 +394,28 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         public void run( )
         {
           if( !control.isDisposed() )
+          {
+            final Tree tree = treeViewer.getTree();
             if( m_workspace == null )
             {
               final Image failImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.FAILED_LOADING_OBJ );
               treeViewer.setLabelProvider( new ConstantLabelProvider( status.getMessage(), failImg ) );
               treeViewer.setContentProvider( new ArrayTreeContentProvider() );
-              treeViewer.getTree().setLinesVisible( false );
+              tree.setLinesVisible( false );
               treeViewer.setInput( new Object[] { "" } );
             }
             else
             {
+              ErrorDialog.openError( tree.getShell(), "GML wurde geladen.", "Meldungen:", status );
               treeViewer.setLabelProvider( labelProvider );
               treeViewer.setContentProvider( contentProvider );
-              treeViewer.getTree().setLinesVisible( false );
+              tree.setLinesVisible( false );
               treeViewer.setInput( m_workspace );
 
               final GMLXPath rootPath = new GMLXPath( rootPathString );
               contentProvider.setRootPath( rootPath );
             }
+          }
         }
       } );
 
