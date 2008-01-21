@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -43,6 +43,7 @@ package org.kalypso.risk.project;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -66,7 +67,7 @@ public class SzenarioController implements IScenarioDataListener
   {
   }
 
-  public synchronized void modelLoaded( final IModel model )
+  public synchronized void modelLoaded( final IModel model, final IStatus status )
   {
     if( m_scenarioDataPath == null )
       return;
