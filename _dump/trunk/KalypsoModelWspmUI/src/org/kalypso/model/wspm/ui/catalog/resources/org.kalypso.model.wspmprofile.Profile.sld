@@ -44,7 +44,7 @@
 		    	</Stroke>
 		  	</Halo>
 		</TextSymbolizer>
-        <LineSymbolizer>
+        <LineSymbolizer uom="meter">
             <Geometry>
                 <ogc:PropertyName>profileLocation</ogc:PropertyName>
             </Geometry>
@@ -55,7 +55,7 @@
                 <CssParameter name="stroke-opacity">1.0</CssParameter>
                 <CssParameter name="stroke-linecap">butt</CssParameter>
 				<CssParameter name="stroke-arrow-type">line</CssParameter>
-				<CssParameter name="stroke-arrow-widget">open</CssParameter>
+				<CssParameter name="stroke-arrow-widget">fill</CssParameter>
 				<CssParameter name="stroke-arrow-alignment">end</CssParameter>
 				<CssParameter name="stroke-arrow-size">12</CssParameter>	                
             </Stroke>
