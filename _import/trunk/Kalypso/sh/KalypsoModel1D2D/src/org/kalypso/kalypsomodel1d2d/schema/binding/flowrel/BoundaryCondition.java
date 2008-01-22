@@ -64,6 +64,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 public class BoundaryCondition extends FlowRelationship implements IBoundaryCondition
 {
   private IObservation<TupleResult> m_observation;
+
   public static final QName OP1D2D_PROP_STATIONARY_COND = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" );
 
   public BoundaryCondition( final Feature featureToBind )
@@ -92,6 +93,12 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
       getFeature().setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) );
     else
       getFeature().setProperty( QNAME_P_DIRECTION, null );
+
+    if( (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ))
+        || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )) )
+      getFeature().setProperty( QNAME_P_ISABSOLUTE, new Boolean( true ) );
+    else
+      getFeature().setProperty( QNAME_P_ISABSOLUTE, null );
 
     final String[] componentUrns = new String[] { domainComponentUrn, valueComponentUrn };
     final IComponent[] components = new IComponent[componentUrns.length];
@@ -215,7 +222,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
    */
   public List<String> getParentCalculationUnitIDs( )
   {
-    return (List<String>) getFeature().getProperty( IBoundaryCondition.PROP_PARENT_CALCULATION_UNIT );
+    return (List<String>) getFeature().getProperty( PROP_PARENT_CALCULATION_UNIT );
   }
 
   /**
@@ -231,6 +238,14 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     }
 
     return false;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#isAbsolute()
+   */
+  public Boolean isAbsolute( )
+  {
+    return (Boolean) getFeature().getProperty( QNAME_P_ISABSOLUTE );
   }
 
 }

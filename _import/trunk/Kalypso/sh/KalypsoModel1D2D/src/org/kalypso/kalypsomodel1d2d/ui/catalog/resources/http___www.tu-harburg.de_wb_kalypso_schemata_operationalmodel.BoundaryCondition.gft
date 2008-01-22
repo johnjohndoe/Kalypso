@@ -32,6 +32,56 @@
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
+	<gft:label text="Absolutwert?" visible="true" tooltip="absoluter oder entsprechender Wert" style="SWT.NONE">
+		<gft:visibleOperation>
+			<ogc:Not>
+				<ogc:PropertyIsNull>
+					<ogc:PropertyName>op1d2d:absolute</ogc:PropertyName>
+				</ogc:PropertyIsNull>
+			</ogc:Not>
+		</gft:visibleOperation>
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false">
+			<gft:excludeOperation>
+				<ogc:PropertyIsNull>
+					<ogc:PropertyName>op1d2d:absolute</ogc:PropertyName>
+				</ogc:PropertyIsNull>
+			</gft:excludeOperation>
+		</gft:gridData>
+	</gft:label>
+	<gft:checkbox property="op1d2d:absolute" tooltip="absoluter oder entsprechender Wert" style="SWT.HORIZONTAL">
+		<gft:visibleOperation>
+			<ogc:Not>
+				<ogc:PropertyIsNull>
+					<ogc:PropertyName>op1d2d:absolute</ogc:PropertyName>
+				</ogc:PropertyIsNull>
+			</ogc:Not>
+		</gft:visibleOperation>
+		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true">
+			<gft:excludeOperation>
+				<ogc:PropertyIsNull>
+					<ogc:PropertyName>op1d2d:absolute</ogc:PropertyName>
+				</ogc:PropertyIsNull>
+			</gft:excludeOperation>
+		</gft:gridData>
+	</gft:checkbox>
+	<gft:validatorlabel property="op1d2d:absolute" visible="true" style="SWT.NONE">
+		<gft:visibleOperation>
+			<ogc:Not>
+				<ogc:PropertyIsNull>
+					<ogc:PropertyName>op1d2d:absolute</ogc:PropertyName>
+				</ogc:PropertyIsNull>
+			</ogc:Not>
+		</gft:visibleOperation>
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+			<gft:excludeOperation>
+				<ogc:PropertyIsNull>
+					<ogc:PropertyName>op1d2d:absolute</ogc:PropertyName>
+				</ogc:PropertyIsNull>
+			</gft:excludeOperation>
+		</gft:gridData>
+	</gft:validatorlabel>
+
 	<gft:label text="Richtung" visible="true" tooltip="Richtung der Randbedingung" style="SWT.NONE">
 		<gft:visibleOperation>
 			<ogc:Not>

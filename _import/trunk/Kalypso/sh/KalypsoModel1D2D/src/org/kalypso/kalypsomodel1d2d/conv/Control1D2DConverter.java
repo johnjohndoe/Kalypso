@@ -459,8 +459,8 @@ public class Control1D2DConverter
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
-    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D );
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D );
 
     FormatterUtils.checkIoException( formatter );
 
@@ -535,10 +535,12 @@ public class Control1D2DConverter
           {
             formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 0.000, 20.000 );
           }
-          else if( (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D ))
-              || (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D )) )
+          else if( (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ))
+              || (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )) )
           {
-            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, 0, stepValue, 0.0, 0.0, 20.000 );
+            final Boolean isAbsoluteProperty = boundaryCondition.isAbsolute();
+            final String isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? "1" : "0";
+            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 0.0, 20.000 );
           }
         }
       }

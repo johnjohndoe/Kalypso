@@ -59,9 +59,9 @@ public interface Kalypso1D2DDictConstants
 
   public static final String DICT_COMPONENT_DISCHARGE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
 
-  public static final String DICT_COMPONENT_DISCHARGE_1D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D";
+  public static final String DICT_COMPONENT_SPECIFIC_DISCHARGE_1D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D";
 
-  public static final String DICT_COMPONENT_DISCHARGE_2D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D";
+  public static final String DICT_COMPONENT_SPECIFIC_DISCHARGE_2D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D";
 
   public static final String DICT_COMPONENT_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Depth";
 
