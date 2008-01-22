@@ -47,10 +47,13 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -66,6 +69,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ogc.gml.featureview.action.TupleResultFeatureActionsEnum;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.LastLineCellModifier;
@@ -149,7 +153,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
       if( component != null )
       {
-        final IComponentUiHandler handler = ComponentUiHandlerFactory.getHandler( component, cd.isEditable(), cd.isResizeable(), cd.getLabel(), alignment, cd.getWidth(), cd.getWidthPercent(), cd.getDisplayFormat(), cd.getNullFormat(), cd.getParseFormat() );
+        final IComponentUiHandler handler = ComponentUiHandlerFactory.getHandler( component, cd.isEditable(), cd.isResizeable(), cd.isMoveable(), cd.getLabel(), alignment, cd.getWidth(), cd.getWidthPercent(), cd.getDisplayFormat(), cd.getNullFormat(), cd.getParseFormat() );
         handlers.add( handler );
       }
 
@@ -170,17 +174,39 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
    */
   public Control createControl( final Composite parent, final int style )
   {
-    m_viewer = new DefaultTableViewer( parent, style );
+    final Composite composite = new Composite( parent, style );
+    GridLayout compLayout = new GridLayout();
+    compLayout.marginHeight = 0;
+    compLayout.marginWidth = 0;
+    composite.setLayout( compLayout );
+
+    final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
+    manager.createControl( composite );
+
+    m_viewer = new DefaultTableViewer( composite, style ); // TODO and not SWT.BORDER delete border style here...
+
+    final boolean useToolbar = true;
+    if( useToolbar )
+    {
+
+      manager.add( TupleResultFeatureActionsEnum.createAction( m_viewer, TupleResultFeatureActionsEnum.COPY ) );
+
+      manager.update( true );
+    }
     final Table table = m_viewer.getTable();
+    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
     m_lastLineBackground = new Color( parent.getDisplay(), 170, 230, 255 );
 
+    // TODO: if any of the columns is not editable, do not show the 'last-line'
+    boolean editable = true;
+    for( IComponentUiHandler handler : m_handlers )
+      editable |= handler.isEditable();
+
     m_tupleResultContentProvider = new TupleResultContentProvider( m_handlers );
-    m_lastLineContentProvider = new LastLineContentProvider( m_tupleResultContentProvider );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_handlers );
-    m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
 
     if( m_viewerFilter != null )
       m_viewer.addFilter( m_viewerFilter );
@@ -212,8 +238,19 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       }
     };
 
-    m_viewer.setContentProvider( m_lastLineContentProvider );
-    m_viewer.setLabelProvider( m_lastLineLabelProvider );
+    if( editable )
+    {
+      m_viewer.setContentProvider( m_tupleResultContentProvider );
+      m_viewer.setLabelProvider( m_tupleResultLabelProvider );
+    }
+    else
+    {
+      m_lastLineContentProvider = new LastLineContentProvider( m_tupleResultContentProvider );
+      m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
+      m_viewer.setContentProvider( m_lastLineContentProvider );
+      m_viewer.setLabelProvider( m_lastLineLabelProvider );
+    }
+
     m_viewer.setCellModifier( lastLineCellModifier );
     m_viewer.setInput( null );
 
@@ -221,7 +258,15 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     new ExcelTableCursor( m_viewer, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.RIGHT, true );
 
-    return table;
+    return composite;
+  }
+
+  public void runTableAction( final TupleResultFeatureActionsEnum tableAction )
+  {
+    if( m_viewer != null )
+    {
+
+    }
   }
 
   /**
@@ -233,8 +278,11 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     m_tupleResultContentProvider.dispose();
     m_tupleResultLabelProvider.dispose();
 
-    m_lastLineContentProvider.dispose();
-    m_lastLineLabelProvider.dispose();
+    if( m_lastLineContentProvider != null )
+      m_lastLineContentProvider.dispose();
+
+    if( m_lastLineLabelProvider != null )
+      m_lastLineLabelProvider.dispose();
 
     m_lastLineBackground.dispose();
 

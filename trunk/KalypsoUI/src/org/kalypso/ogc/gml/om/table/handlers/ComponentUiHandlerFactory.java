@@ -55,22 +55,22 @@ import org.kalypso.observation.result.IComponent;
  */
 public class ComponentUiHandlerFactory
 {
-  public static IComponentUiHandler getHandler( final IComponent component, final boolean editable, final boolean resizeable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public static IComponentUiHandler getHandler( final IComponent component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     final QName valueTypeName = component.getValueTypeName();
 
     if( ComponentUtilities.restrictionContainsEnumeration( component.getRestrictions() ) )
-      return new ComponentUiEnumerationHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiEnumerationHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "dateTime" ) ) )
-      return new ComponentUiDateHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiDateHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "double" ) ) )
-      return new ComponentUiDoubleHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiDoubleHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "decimal" ) ) )
-      return new ComponentUiDecimalHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiDecimalHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "integer" ) ) )
-      return new ComponentUiIntegerHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiIntegerHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "string" ) ) )
-      return new ComponentUiStringHandler( component, editable, resizeable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiStringHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
 
     throw new NotImplementedException( "No UI-Handler for component type: " + valueTypeName );
   }

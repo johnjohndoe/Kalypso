@@ -79,28 +79,29 @@ public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerPro
     // Some default value
     final boolean editable = true;
     final boolean resizeable = true;
+    final boolean moveable = true;
     final String columnLabel = component.getName();
     final int columnWidth = 100;
 
     if( ComponentUtilities.restrictionContainsEnumeration( component.getRestrictions() ) )
-      return new ComponentUiEnumerationHandler( component, editable, resizeable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "", "", null );
+      return new ComponentUiEnumerationHandler( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "", "", null );
 
     final QName valueTypeName = component.getValueTypeName();
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "dateTime" ) ) )
-      return new ComponentUiDateHandler( component, editable, resizeable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%1$tm %1$te,%1$tY", "", null );
+      return new ComponentUiDateHandler( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%1$tm %1$te,%1$tY", "", null );
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "double" ) ) )
-      return new ComponentUiDoubleHandler( component, editable, resizeable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
+      return new ComponentUiDoubleHandler( component, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "decimal" ) ) )
-      return new ComponentUiDecimalHandler( component, editable, resizeable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
+      return new ComponentUiDecimalHandler( component, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "integer" ) ) )
-      return new ComponentUiIntegerHandler( component, editable, resizeable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%d", "", null );
+      return new ComponentUiIntegerHandler( component, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%d", "", null );
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "string" ) ) )
-      return new ComponentUiStringHandler( component, editable, resizeable, columnLabel, SWT.LEFT, columnWidth, columnWidthPercent, "%s", "", null );
+      return new ComponentUiStringHandler( component, editable, resizeable, moveable, columnLabel, SWT.LEFT, columnWidth, columnWidthPercent, "%s", "", null );
 
     return null;
   }

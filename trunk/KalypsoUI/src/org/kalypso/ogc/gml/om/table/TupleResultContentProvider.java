@@ -129,12 +129,13 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
       final int columnStyle = handler.getColumnStyle();
       final boolean editable = handler.isEditable();
       final boolean resizeable = handler.isResizeable();
+      final boolean moveable = handler.isMoveable();
 
       final String label = handler.getColumnLabel();
       final String columnLabel = label == null ? component.getName() : label;
       final String tooltip = component == null ? null : component.getDescription();
 
-      m_tableViewer.addColumn( "" + i, columnLabel, tooltip, columnWidth, columnWidthPercent, editable, columnStyle, resizeable );
+      m_tableViewer.addColumn( "" + i, columnLabel, tooltip, columnWidth, columnWidthPercent, editable, columnStyle, resizeable, moveable );
 
       cellEditors[i] = handler.createCellEditor( m_tableViewer.getTable() );
     }

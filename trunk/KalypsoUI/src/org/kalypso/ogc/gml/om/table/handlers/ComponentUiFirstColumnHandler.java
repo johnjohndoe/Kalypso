@@ -54,7 +54,7 @@ public class ComponentUiFirstColumnHandler extends AbstractComponentUiHandler
 {
   public ComponentUiFirstColumnHandler( )
   {
-    super( null, false, false, "-", SWT.CENTER, 0, -1, "", "", "" );
+    super( null, false, false, false, "-", SWT.CENTER, 0, -1, "", "", "" );
   }
 
   /**

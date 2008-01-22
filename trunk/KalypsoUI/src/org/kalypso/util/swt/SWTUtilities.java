@@ -99,6 +99,8 @@ public class SWTUtilities
     SWTUtilities.putSWT( "SWT.V_SCROLL", SWT.V_SCROLL );
     SWTUtilities.putSWT( "SWT.H_SCROLL", SWT.H_SCROLL );
     SWTUtilities.putSWT( "SWT.FILL", SWT.FILL );
+    SWTUtilities.putSWT( "SWT.TOP", SWT.TOP );
+    SWTUtilities.putSWT( "SWT.BOTTOM", SWT.BOTTOM );
     // TODO really a lot to complete SWT keys
   }
 

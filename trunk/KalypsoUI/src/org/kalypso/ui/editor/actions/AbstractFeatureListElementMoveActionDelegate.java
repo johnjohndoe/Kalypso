@@ -99,7 +99,9 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
     if( m_targetPart == part )
     {
       m_targetPart.getSite().getPage().removePartListener( m_partAdapter );
-      m_workspace.removeModellListener( AbstractFeatureListElementMoveActionDelegate.this );
+
+      if( m_workspace != null )
+        m_workspace.removeModellListener( AbstractFeatureListElementMoveActionDelegate.this );
     }
   }
 
@@ -129,7 +131,7 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
   {
     m_action = action;
 
-    if( m_selectedFeature == null )
+    if( m_selectedFeature == null || m_workspace == null )
       return;
 
     final IRelationType rt = m_selectedFeature.getParentRelation();
@@ -180,7 +182,8 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
       final IFeatureSelection featureSelection = (IFeatureSelection) selection;
       m_selectedFeature = FeatureSelectionHelper.getFirstFeature( featureSelection );
       m_workspace = featureSelection.getWorkspace( m_selectedFeature );
-      m_workspace.addModellListener( this );
+      if( m_workspace != null )
+        m_workspace.addModellListener( this );
       // it is always a Feature (objectcontribution)
 
       final IRelationType rt = m_selectedFeature.getParentRelation();
