@@ -48,9 +48,10 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.impl.ChartModel;
@@ -61,46 +62,56 @@ import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
 import org.ksp.chart.factory.ChartType;
 
 /**
- * Class for charts inserted as tabs into the chart feature controll; this has to be isolated in a seperate class as
- * each IChartPart can only return one ChartComposite and one ChartDragHandler
+ * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a separate class as each
+ * IChartPart can only return one ChartComposite and one ChartDragHandler
  * 
  * @author burtscher1
  */
 public class ChartTabItem implements IChartPart
 {
-
   private final ChartDragHandlerDelegate m_chartDragHandlerDelegate;
 
   private final ChartComposite m_chartComposite;
 
-  public ChartTabItem( ChartType chartType, TabFolder folder, int style )
-  {
-    final TabItem item = new TabItem( folder, SWT.NONE );
+  private final Composite m_parent;
 
-    final Composite composite = new Composite( folder, style );
+  public ChartTabItem( ChartType chartType, Composite folder, int style )
+  {
+    final TabItem item;
+    if( folder instanceof TabFolder )
+      item = new TabItem( (TabFolder) folder, SWT.NONE );
+    else
+      item = null;
+
+    m_parent = new Composite( folder, style );
     final GridLayout gridLayout = new GridLayout();
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
     gridLayout.horizontalSpacing = 0;
     gridLayout.verticalSpacing = 0;
-    composite.setLayout( gridLayout );
+    m_parent.setLayout( gridLayout );
 
     final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-    manager.createControl( composite );
+    manager.createControl( m_parent );
 
-    item.setText( chartType.getTitle() );
-    item.setToolTipText( chartType.getDescription() );
+    if( item != null )
+    {
+      item.setText( chartType.getTitle() );
+      item.setToolTipText( chartType.getDescription() );
+    }
 
     final IChartModel chartModel = new ChartModel();
-    final ChartComposite chart = new ChartComposite( composite, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
+    final ChartComposite chart = new ChartComposite( m_parent, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
     final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
 
     chart.setLayoutData( gridData );
 
     m_chartDragHandlerDelegate = new ChartDragHandlerDelegate( chart );
 
-    CommandContributionItem zoomIn = new CommandContributionItem( Workbench.getInstance(), "", IChartCommand.COMMAND_ZOOM_IN, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_RADIO );
-    CommandContributionItem zoomOut = new CommandContributionItem( Workbench.getInstance(), "", IChartCommand.COMMAND_ZOOM_OUT, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_RADIO );
-    CommandContributionItem pan = new CommandContributionItem( Workbench.getInstance(), "", IChartCommand.COMMAND_PAN, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_RADIO );
-    CommandContributionItem maximize = new CommandContributionItem( Workbench.getInstance(), "", IChartCommand.COMMAND_MAXIMIZE, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_PUSH );
+    CommandContributionItem zoomIn = new CommandContributionItem( PlatformUI.getWorkbench(), "", IChartCommand.COMMAND_ZOOM_IN, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_RADIO );
+    CommandContributionItem zoomOut = new CommandContributionItem( PlatformUI.getWorkbench(), "", IChartCommand.COMMAND_ZOOM_OUT, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_RADIO );
+    CommandContributionItem pan = new CommandContributionItem( PlatformUI.getWorkbench(), "", IChartCommand.COMMAND_PAN, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_RADIO );
+    CommandContributionItem maximize = new CommandContributionItem( PlatformUI.getWorkbench(), "", IChartCommand.COMMAND_MAXIMIZE, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_PUSH );
     manager.add( zoomIn );
     manager.add( zoomOut );
     manager.add( pan );
@@ -109,7 +120,13 @@ public class ChartTabItem implements IChartPart
 
     m_chartComposite = chart;
 
-    item.setControl( composite );
+    if( item != null )
+      item.setControl( m_parent );
+  }
+
+  public Control getControl( )
+  {
+    return m_parent;
   }
 
   /**

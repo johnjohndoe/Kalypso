@@ -49,6 +49,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
@@ -56,7 +57,6 @@ import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -81,8 +81,6 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
   private final ChartConfigurationLoader m_ccl;
 
-  private ChartDragHandlerDelegate m_chartDragHandlerDelegate;
-
   private ChartTabItem[] m_chartTabs;
 
   public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final URL context )
@@ -99,36 +97,49 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
    */
   public Control createControl( final Composite parent, final int style )
   {
-
-    final TabFolder folder = new TabFolder( parent, SWT.TOP );
+    m_charts = new ChartComposite[m_chartTypes.length];
     m_chartTabs = new ChartTabItem[m_chartTypes.length];
 
-    m_charts = new ChartComposite[m_chartTypes.length];
-    for( int i = 0; i < m_chartTypes.length; i++ )
+    if( m_chartTabs.length < 2 )
     {
-      m_chartTabs[i] = new ChartTabItem( m_chartTypes[i], folder, style );
+      final Composite composite = new Composite( parent, SWT.NONE );
+
+      composite.setLayout( new FillLayout() );
+
+      m_chartTabs[0] = new ChartTabItem( m_chartTypes[0], composite, style );
+
+      updateControl();
+
+      return composite;
+    }
+    else
+    {
+      final TabFolder folder = new TabFolder( parent, SWT.TOP );
+
+      for( int i = 0; i < m_chartTypes.length; i++ )
+        m_chartTabs[i] = new ChartTabItem( m_chartTypes[i], folder, style );
+
+      final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
+      final int selectedTab = selectedTabStr == null ? 0 : Integer.parseInt( selectedTabStr );
+      if( selectedTab < folder.getTabList().length )
+        folder.setSelection( selectedTab );
+
+      folder.addSelectionListener( new SelectionAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        @Override
+        public void widgetSelected( final SelectionEvent e )
+        {
+          handleFolderSelectionChanged( folder.getSelectionIndex() );
+        }
+      } );
+
+      updateControl();
+      return folder;
     }
 
-    final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
-    final int selectedTab = selectedTabStr == null ? 0 : Integer.parseInt( selectedTabStr );
-    if( selectedTab < folder.getTabList().length )
-      folder.setSelection( selectedTab );
-
-    folder.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleFolderSelectionChanged( folder.getSelectionIndex() );
-      }
-    } );
-
-    updateControl();
-
-    return folder;
   }
 
   protected void handleFolderSelectionChanged( final int selectionIndex )
@@ -175,6 +186,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     }
   }
 
+  @SuppressWarnings("unchecked")
   public Object getAdapter( Class adapter )
   {
     return null;
