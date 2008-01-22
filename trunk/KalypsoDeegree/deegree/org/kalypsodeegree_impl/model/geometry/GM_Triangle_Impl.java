@@ -44,8 +44,11 @@ import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
+import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -175,6 +178,18 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   private static double signedArea( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
   {
     return (pos1.getX() * (pos2.getY() - pos3.getY()) + pos2.getX() * (pos3.getY() - pos1.getY()) + pos3.getX() * (pos1.getY() - pos2.getY()));
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  @Override
+  public GM_SurfacePatch transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
+  {
+    final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
+    final GM_Ring transExRing = (GM_Ring) exRing.transform( trans, targetOGCCS );
+    return GeometryFactory.createGM_Triangle( transExRing.getPositions(), targetOGCCS );
   }
 
   /**
