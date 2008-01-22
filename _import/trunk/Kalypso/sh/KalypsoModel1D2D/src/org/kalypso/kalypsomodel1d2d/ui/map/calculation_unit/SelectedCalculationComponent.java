@@ -254,6 +254,6 @@ public class SelectedCalculationComponent
     m_subCalcUnitsTableViewer.setContentProvider( new ArrayContentProvider() );
     m_subCalcUnitsTableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( parent.getDisplay() ) );
 
-    m_subCalcUnitsTableViewer.addColumn( "name", "title", null, 100, 100, false, SWT.LEFT, false );
+    m_subCalcUnitsTableViewer.addColumn( "name", "title", null, 100, 100, false, SWT.LEFT, false, false );
   }
 }

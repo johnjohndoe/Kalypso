@@ -232,7 +232,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   {
     final DefaultTableViewer tableViewer = new DefaultTableViewer( parent, SWT.FULL_SELECTION | SWT.NONE );
 
-    tableViewer.addColumn( "Name", "Name", null, 100, 100, false, SWT.LEFT, false ); //$NON-NLS-1$
+    tableViewer.addColumn( "Name", "Name", null, 100, 100, false, SWT.LEFT, false, false ); //$NON-NLS-1$
 
     tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( parent.getDisplay() ) );

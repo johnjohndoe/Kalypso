@@ -120,8 +120,9 @@ public class CreateMainChannelComposite extends Composite
   boolean m_ButtonStateZoom;
 
   /*********************************************************************************************************************
-   * m_buttonList Following buttons are present in the Schlauchgenerator: Profile wählen Uferlinie 1 wählen Uferlinie 1
-   * zeichnen Uferlinie 2 wählen Uferlinie 2 zeichnen
+   * m_buttonList<BR>
+   * Following buttons are present in the Schlauchgenerator: <BR>
+   * Profile wählen; Uferlinie 1 wählen; Uferlinie 1 zeichnen; Uferlinie 2 wählen; Uferlinie 2 zeichnen:
    */
   private final List<Button> m_buttonList = new ArrayList<Button>();
 
