@@ -25,8 +25,8 @@
 		<Title>Abfluss</Title>
 		<Description>Abflusswerte der Berechnung</Description>
 		<Layers>
-			<LayerRef ref="runoffPolynomeLayer" />
 			<LayerRef ref="runoffLayer" />
+			<LayerRef ref="runoffPolynomeLayer" />
 			<!--LayerRef ref="runoffDeltaLayer" /-->
 		</Layers>
 	</Chart>
@@ -151,8 +151,8 @@
 		<Title>Fläche</Title>
 		<Description>Flächenwerte der Berechnung</Description>
 		<Layers>
-			<LayerRef ref="areaPolynomeLayer" />
 			<LayerRef ref="areaLayer" />
+			<LayerRef ref="areaPolynomeLayer" />
 			<!--LayerRef ref="areaDeltaLayer" /-->
 		</Layers>
 	</Chart>
@@ -279,8 +279,8 @@
 		<Title>Alpha</Title>
 		<Description>Alphawerte der Berechnung</Description>
 		<Layers>
-			<LayerRef ref="alphaPolynomeLayer" />
 			<LayerRef ref="alphaLayer" />
+			<LayerRef ref="alphaPolynomeLayer" />
 			<!--LayerRef ref="alphaDeltaLayer" /-->
 		</Layers>
 	</Chart>
@@ -403,9 +403,9 @@
 	<Style id="polynomeStyle">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
 		<Parameters>
-			<Parameter value="2" name="lineWidth"/>
+			<Parameter value="3" name="lineWidth"/>
 			<Parameter value="SOLID" name="lineStyle"/>
-			<Parameter value="#000000" name="lineColor"/>
+			<Parameter value="#00AAFF" name="lineColor"/>
 		</Parameters>
 	</Provider>
         <StyleID></StyleID>

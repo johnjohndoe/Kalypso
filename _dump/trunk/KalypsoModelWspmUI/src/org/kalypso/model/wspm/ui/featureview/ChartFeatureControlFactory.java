@@ -41,9 +41,12 @@
 package org.kalypso.model.wspm.ui.featureview;
 
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.SWT;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -51,6 +54,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
+import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -76,6 +80,34 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
   {
     final String configurationUrn = arguments.getProperty( "configuration", null );
     final String featureKeyName = arguments.getProperty( "featureKeyName", null );
+    final String cmdIds = arguments.getProperty( "commands", "" );
+    final String cmdStyles = arguments.getProperty( "commandStyles", "" );
+
+    final String[] commandIds = cmdIds.split( ";" );
+    final String[] commandStyles = cmdStyles.split( ";" );
+
+    final Map<String, Integer> commands = new LinkedHashMap<String, Integer>();
+
+    if( commandIds.length != commandStyles.length )
+    {
+      final String msg = String.format( "Number of command-ids (%s - %d) is not queal to number of command styles (%s - %d)", commandIds, commandIds.length, cmdStyles, commandStyles.length );
+      StatusUtilities.createStatus( IStatus.WARNING, msg, null );
+    }
+    else
+    {
+      for( int i = 0; i < commandIds.length; i++ )
+      {
+        final String cmdId = commandIds[i].trim();
+        final String cmdStyle = commandStyles[i].trim();
+
+        if( cmdId.length() > 0 && cmdStyle.length() > 0 )
+        {
+          final int styleFromString = SWTUtilities.createStyleFromString( cmdStyle );
+          final int style = styleFromString == 0 ? SWT.PUSH : styleFromString;
+          commands.put( cmdId, style );
+        }
+      }
+    }
 
     final String configurationUrl = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog().resolve( configurationUrn, configurationUrn );
 
@@ -87,7 +119,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
 
       ChartDataProvider.FEATURE_MAP.put( featureKeyName, feature );
 
-      return new ChartFeatureControl( feature, pt, ccl, configUrl );
+      return new ChartFeatureControl( feature, pt, ccl, configUrl, commands );
     }
     catch( final Throwable e )
     {

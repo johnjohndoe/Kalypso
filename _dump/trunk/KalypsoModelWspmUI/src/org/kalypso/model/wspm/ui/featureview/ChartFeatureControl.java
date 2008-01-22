@@ -41,32 +41,35 @@
 package org.kalypso.model.wspm.ui.featureview;
 
 import java.net.URL;
+import java.util.Map;
 
-import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
+import org.kalypso.util.swt.StatusComposite;
 import org.kalypsodeegree.model.feature.Feature;
 import org.ksp.chart.factory.ChartType;
 
 /**
  * @author Gernot Belger
  */
-public class ChartFeatureControl extends AbstractFeatureControl implements IFeatureControl, IAdaptable
+public class ChartFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
   /** These settings are used locally to remember the last selected tab-folder. */
   private final static IDialogSettings SETTINGS = new DialogSettings( "bla" );
@@ -83,10 +86,13 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
   private ChartTabItem[] m_chartTabs;
 
-  public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final URL context )
+  private final Map<String, Integer> m_commands;
+
+  public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final URL context, final Map<String, Integer> commands )
   {
     super( feature, ftp );
     m_ccl = ccl;
+    m_commands = commands;
 
     m_chartTypes = m_ccl.getCharts();
     m_context = context;
@@ -100,45 +106,64 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     m_charts = new ChartComposite[m_chartTypes.length];
     m_chartTabs = new ChartTabItem[m_chartTypes.length];
 
-    if( m_chartTabs.length < 2 )
+    if( m_chartTabs.length == 0 )
     {
-      final Composite composite = new Composite( parent, SWT.NONE );
+      final IStatus warningStatus = StatusUtilities.createStatus( IStatus.WARNING, "No Charts available", null );
+      final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
+      statusComposite.setStatus( warningStatus );
+      return statusComposite;
+    }
 
-      composite.setLayout( new FillLayout() );
+    if( m_chartTabs.length == 1 )
+    {
+// final Composite composite = new Composite( parent, SWT.NONE );
+//
+// composite.setLayout( new FillLayout() );
 
-      m_chartTabs[0] = new ChartTabItem( m_chartTypes[0], composite, style );
+      // REAMRK: we do not tab, if we have only one chart
+      m_chartTabs[0] = new ChartTabItem( /* composite */parent, style, m_chartTypes[0], m_commands );
 
       updateControl();
 
-      return composite;
+      return m_chartTabs[0];
+// return composite;
     }
-    else
+
+    final TabFolder folder = new TabFolder( parent, SWT.TOP );
+
+    for( int i = 0; i < m_chartTypes.length; i++ )
     {
-      final TabFolder folder = new TabFolder( parent, SWT.TOP );
+      final ChartType chartType = m_chartTypes[i];
 
-      for( int i = 0; i < m_chartTypes.length; i++ )
-        m_chartTabs[i] = new ChartTabItem( m_chartTypes[i], folder, style );
+      /* The tab item */
+      final TabItem item = new TabItem( folder, SWT.NONE );
+      item.setText( chartType.getTitle() );
+      item.setToolTipText( chartType.getDescription() );
 
-      final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
-      final int selectedTab = selectedTabStr == null ? 0 : Integer.parseInt( selectedTabStr );
-      if( selectedTab < folder.getTabList().length )
-        folder.setSelection( selectedTab );
+      m_chartTabs[i] = new ChartTabItem( folder, style, chartType, m_commands );
 
-      folder.addSelectionListener( new SelectionAdapter()
+      item.setControl( m_chartTabs[i] );
+    }
+
+    final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
+    final int selectedTab = selectedTabStr == null ? 0 : Integer.parseInt( selectedTabStr );
+    if( selectedTab < folder.getTabList().length )
+      folder.setSelection( selectedTab );
+
+    folder.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
-        /**
-         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-         */
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          handleFolderSelectionChanged( folder.getSelectionIndex() );
-        }
-      } );
+        handleFolderSelectionChanged( folder.getSelectionIndex() );
+      }
+    } );
 
-      updateControl();
-      return folder;
-    }
+    updateControl();
+    return folder;
 
   }
 
@@ -186,10 +211,18 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public Object getAdapter( Class adapter )
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#dispose()
+   */
+  @Override
+  public void dispose( )
   {
-    return null;
-  }
+    if( m_chartTabs != null )
+    {
+      for( final ChartTabItem item : m_chartTabs )
+        item.dispose();
+    }
 
+    super.dispose();
+  }
 }

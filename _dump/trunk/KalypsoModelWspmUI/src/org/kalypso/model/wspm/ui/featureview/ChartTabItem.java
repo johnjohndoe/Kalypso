@@ -41,92 +41,134 @@
 package org.kalypso.model.wspm.ui.featureview;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IExecutionListener;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.ui.IChartCommand;
 import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
 import org.ksp.chart.factory.ChartType;
 
 /**
- * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a separate class as each
+ * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a seperate class as each
  * IChartPart can only return one ChartComposite and one ChartDragHandler
  * 
  * @author burtscher1
  */
-public class ChartTabItem implements IChartPart
+public class ChartTabItem extends Composite implements IChartPart
 {
   private final ChartDragHandlerDelegate m_chartDragHandlerDelegate;
 
   private final ChartComposite m_chartComposite;
 
-  private final Composite m_parent;
+  private final IExecutionListener m_executionListener;
 
-  public ChartTabItem( ChartType chartType, Composite folder, int style )
+  public ChartTabItem( final Composite parent, final int style, final ChartType chartType, final Map<String, Integer> commands )
   {
-    final TabItem item;
-    if( folder instanceof TabFolder )
-      item = new TabItem( (TabFolder) folder, SWT.NONE );
-    else
-      item = null;
+    super( parent, style );
 
-    m_parent = new Composite( folder, style );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
     gridLayout.horizontalSpacing = 0;
     gridLayout.verticalSpacing = 0;
-    m_parent.setLayout( gridLayout );
+    setLayout( gridLayout );
 
+    final IWorkbench serviceLocator = PlatformUI.getWorkbench();
     final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-    manager.createControl( m_parent );
-
-    if( item != null )
+    if( commands.size() > 0 )
     {
-      item.setText( chartType.getTitle() );
-      item.setToolTipText( chartType.getDescription() );
+      manager.createControl( this );
+      for( final Entry<String, Integer> entry : commands.entrySet() )
+      {
+        final String cmdId = entry.getKey();
+        final Integer cmdStyle = entry.getValue();
+
+        final CommandContributionItem contribItem = new CommandContributionItem( serviceLocator, cmdId + "_item_", cmdId, new HashMap<Object, Object>(), null, null, null, null, null, null, cmdStyle );
+        manager.add( contribItem );
+      }
+      manager.update( true );
     }
 
     final IChartModel chartModel = new ChartModel();
-    final ChartComposite chart = new ChartComposite( m_parent, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
+    m_chartComposite = new ChartComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
     final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
 
-    chart.setLayoutData( gridData );
+    m_chartComposite.setLayoutData( gridData );
 
-    m_chartDragHandlerDelegate = new ChartDragHandlerDelegate( chart );
+    m_chartDragHandlerDelegate = new ChartDragHandlerDelegate( m_chartComposite );
 
-    CommandContributionItem zoomIn = new CommandContributionItem( PlatformUI.getWorkbench(), "", IChartCommand.COMMAND_ZOOM_IN, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_RADIO );
-    CommandContributionItem zoomOut = new CommandContributionItem( PlatformUI.getWorkbench(), "", IChartCommand.COMMAND_ZOOM_OUT, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_RADIO );
-    CommandContributionItem pan = new CommandContributionItem( PlatformUI.getWorkbench(), "", IChartCommand.COMMAND_PAN, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_RADIO );
-    CommandContributionItem maximize = new CommandContributionItem( PlatformUI.getWorkbench(), "", IChartCommand.COMMAND_MAXIMIZE, new HashMap(), null, null, null, null, null, null, CommandContributionItem.STYLE_PUSH );
-    manager.add( zoomIn );
-    manager.add( zoomOut );
-    manager.add( pan );
-    manager.add( maximize );
-    manager.update( true );
+    final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
+    final IHandlerService handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
 
-    m_chartComposite = chart;
+    m_executionListener = new IExecutionListener()
+    {
+      public void notHandled( final String commandId, final NotHandledException exception )
+      {
+      }
 
-    if( item != null )
-      item.setControl( m_parent );
-  }
+      public void preExecute( final String commandId, final ExecutionEvent event )
+      {
+        if( !commands.keySet().contains( commandId ) )
+          return;
 
-  public Control getControl( )
-  {
-    return m_parent;
+        final Event trigger = (Event) event.getTrigger();
+        final ToolItem toolItem = (ToolItem) trigger.widget;
+        final ToolBar parentToolbar = toolItem.getParent();
+        final ToolBar managerToolbar = manager.getControl();
+
+        // REMARK: only set the chart context for the visible tab, as this code is executed for every tab
+        // Still problematic: what about multiple diagrams in different tab-folders? Does is still work...?
+// final TabItem selectedItem = folder.getItem( folder.getSelectionIndex() );
+        if( commands.keySet().contains( commandId ) && /* selectedItem == item && */parentToolbar == managerToolbar )
+        {
+          final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+          context.addVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME, ChartTabItem.this );
+        }
+      }
+
+      public void postExecuteFailure( final String commandId, final ExecutionException exception )
+      {
+        if( !commands.keySet().contains( commandId ) )
+          return;
+
+        final IEvaluationContext currentState = handlerService.getCurrentState();
+        currentState.removeVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME );
+      }
+
+      public void postExecuteSuccess( final String commandId, final Object returnValue )
+      {
+        if( !commands.keySet().contains( commandId ) )
+          return;
+
+        final IEvaluationContext currentState = handlerService.getCurrentState();
+        currentState.removeVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME );
+      }
+
+    };
+    cmdService.addExecutionListener( m_executionListener );
   }
 
   /**
@@ -145,8 +187,12 @@ public class ChartTabItem implements IChartPart
     return m_chartDragHandlerDelegate;
   }
 
+  @Override
   public void dispose( )
   {
+    final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
+    cmdService.removeExecutionListener( m_executionListener );
+
     m_chartComposite.dispose();
   }
 }
