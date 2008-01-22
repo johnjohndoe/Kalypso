@@ -197,6 +197,8 @@ public class MapModell implements IMapModell
     {
       public boolean visit( final IKalypsoTheme theme )
       {
+        if( theme == null )
+          return false;
         if( theme.getMapModell().isThemeActivated( theme ) )
         {
           oldActiveTheme[0] = theme;

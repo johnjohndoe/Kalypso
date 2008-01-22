@@ -99,7 +99,8 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
     final int[] p2 = LabelFactory.calcScreenCoordinates( getProjection(), getPoints()[1] );
 
     if( p1[0] == p2[0] && p1[1] == p2[1] )
-      throw (new IllegalStateException( "point coordinates of p1 and p2 must differ" ));
+      // point coordinates of p1 and p2 must differ
+      return;
 
     // setTransform
     setAffineTransformation( p1, p2 );

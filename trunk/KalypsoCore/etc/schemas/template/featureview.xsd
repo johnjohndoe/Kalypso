@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Gernot Belger (BCE GmbH) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fv="featureview.template.kalypso.org"
-	xmlns:tv="gistableview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fv="featureview.template.kalypso.org" xmlns:tv="gistableview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org"
 	targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd" />
 	<xs:import namespace="gistableview.template.kalypso.org" schemaLocation="./gistableview.xsd" />
@@ -44,14 +43,8 @@
 					<xs:documentation>
 						<p>The visibility of the control.</p>
 						<p>If set, replaces the 'visible' attribute.</p>
-						<p>
-							The type of this element must be of type ogc:FilterType of the ogc filter specification
-							(http://www.opengis.net/ogc).
-						</p>
-						<p>
-							REMARK: the type is anyType here to reuse the 'buildFromDom' methods of the deegree
-							Operation implementation.
-						</p>
+						<p>The type of this element must be of type ogc:FilterType of the ogc filter specification (http://www.opengis.net/ogc).</p>
+						<p>REMARK: the type is anyType here to reuse the 'buildFromDom' methods of the deegree Operation implementation.</p>
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
@@ -95,6 +88,18 @@
 			<xs:complexContent>
 				<xs:extension base="fv:compositeType">
 					<xs:attribute name="text" type="xs:string" use="required" />
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tabFolder" substitutionGroup="fv:control">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="fv:ControlType">
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="tabLabel" type="xs:string" />
+						<xs:element ref="fv:control" minOccurs="1" maxOccurs="1" />
+					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -184,10 +189,7 @@
 							<xs:complexType>
 								<xs:sequence>
 									<xs:annotation>
-										<xs:documentation>
-											The list of parameters for the sorter. Will be given to the implementation
-											of the extension-point.
-										</xs:documentation>
+										<xs:documentation>The list of parameters for the sorter. Will be given to the implementation of the extension-point.</xs:documentation>
 									</xs:annotation>
 									<xs:element name="param" minOccurs="0" maxOccurs="unbounded">
 										<xs:annotation>
@@ -205,8 +207,7 @@
 						<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
 							<xs:annotation>
 								<xs:documentation>
-									An entry represant a selectable item from the combo box. The label is the string
-									displayed to the user. The value (string element content) will be parsed by the
+									An entry represant a selectable item from the combo box. The label is the string displayed to the user. The value (string element content) will be parsed by the
 									appropriate IMarhsallingTypeHandler to the required value.
 								</xs:documentation>
 							</xs:annotation>
@@ -252,20 +253,14 @@
 	</xs:element>
 	<xs:element name="extensioncontrol" substitutionGroup="fv:control">
 		<xs:annotation>
-			<xs:documentation>
-				A (generic) control which implementation is provided by extensions of the extension-point
-				'org.kalypso.ui.featureViewExtensionControl'
-			</xs:documentation>
+			<xs:documentation>A (generic) control which implementation is provided by extensions of the extension-point 'org.kalypso.ui.featureViewExtensionControl'</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="fv:PropertyControlType">
 					<xs:sequence>
 						<xs:annotation>
-							<xs:documentation>
-								The list of parameters for this control. Will be given to the implementation of the
-								extension-point.
-							</xs:documentation>
+							<xs:documentation>The list of parameters for this control. Will be given to the implementation of the extension-point.</xs:documentation>
 						</xs:annotation>
 						<xs:element name="param" minOccurs="0" maxOccurs="unbounded">
 							<xs:annotation>
@@ -295,18 +290,14 @@
 						<xs:element name="columnProviderId" type="xs:string">
 							<xs:annotation>
 								<xs:documentation xml:lang="en">
-									Id of a columnProvider which provides the column to be shown in a more dynamic way
-									than the static columnDescriptors. See extension-point org.kalypso.core.columnProvider
+									Id of a columnProvider which provides the column to be shown in a more dynamic way than the static columnDescriptors. See extension-point
+									org.kalypso.core.columnProvider
 								</xs:documentation>
 							</xs:annotation>
 						</xs:element>
-						<xs:element name="columnDescriptor" type="fv:ColumnDescriptor" minOccurs="0"
-							maxOccurs="unbounded">
+						<xs:element name="columnDescriptor" type="fv:ColumnDescriptor" minOccurs="0" maxOccurs="unbounded">
 							<xs:annotation>
-								<xs:documentation xml:lang="en">
-									This list of column descriptors describes which column and how are to be shown in
-									the table.
-								</xs:documentation>
+								<xs:documentation xml:lang="en">This list of column descriptors describes which column and how are to be shown in the table.</xs:documentation>
 							</xs:annotation>
 						</xs:element>
 					</xs:choice>
@@ -338,7 +329,6 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
 
 	<xs:element name="layout" type="fv:LayoutType" abstract="true" />
 	<xs:element name="gridLayout" substitutionGroup="fv:layout">
@@ -392,9 +382,7 @@
 		</xs:attribute>
 		<xs:attribute name="editable" type="xs:boolean" use="optional" default="true">
 			<xs:annotation>
-				<xs:documentation>
-					If false, the column will not be editable for the user. Defaults to true.
-				</xs:documentation>
+				<xs:documentation>If false, the column will not be editable for the user. Defaults to true.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="optional" type="xs:boolean" use="optional" default="false">
@@ -412,32 +400,29 @@
 		<xs:attribute name="widthPercent" type="xs:int" use="optional" default="-1">
 			<xs:annotation>
 				<xs:documentation>
-					The width in percent of the column i respect of the total width of the table. If not -1, each resize
-					adjusts the columns width according to this setting. If not -1, the width attribute is regarded as
-					minimum width. Defaults to -1.
+					The width in percent of the column i respect of the total width of the table. If not -1, each resize adjusts the columns width according to this setting. If not -1, the width
+					attribute is regarded as minimum width. Defaults to -1.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="alignment" type="xs:string" use="optional" default="SWT.CENTER">
 			<xs:annotation>
-				<xs:documentation>
-					Alignment of the column: valid values: SWT.LEFT, SWT.RIGHT, SWT.CENTER.
-				</xs:documentation>
+				<xs:documentation>Alignment of the column: valid values: SWT.LEFT, SWT.RIGHT, SWT.CENTER.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="resizeable" type="xs:boolean" use="optional" default="true">
 			<xs:annotation>
-				<xs:documentation>
-					If false, the column cannot be resized by the user. Default to true.
-				</xs:documentation>
+				<xs:documentation>If false, the column cannot be resized by the user. Defaults to true.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="moveable" type="xs:boolean" use="optional" default="true">
+			<xs:annotation>
+				<xs:documentation>If false, the column cannot be moved by the user. Defaults to true.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="displayFormat" type="xs:string" use="optional">
 			<xs:annotation>
-				<xs:documentation>
-					Format string used to format entries (in order to display them) of this column. See String.format
-					for valid values.
-				</xs:documentation>
+				<xs:documentation>Format string used to format entries (in order to display them) of this column. See String.format for valid values.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="nullFormat" type="xs:string" use="optional">
@@ -448,16 +433,13 @@
 		<xs:attribute name="parseFormat" type="xs:string" use="optional">
 			<xs:annotation>
 				<xs:documentation>
-					Format string used to parse user edited entries of this column. Possible values are type dependend.
-					Used within the XsdBaseGuiTypeHandler implementations.
+					Format string used to parse user edited entries of this column. Possible values are type dependend. Used within the XsdBaseGuiTypeHandler implementations.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="label" type="xs:string" use="optional">
 			<xs:annotation>
-				<xs:documentation>
-					Label of the column header. If not set, the name of the associated phenomenon is used.
-				</xs:documentation>
+				<xs:documentation>Label of the column header. If not set, the name of the associated phenomenon is used.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
