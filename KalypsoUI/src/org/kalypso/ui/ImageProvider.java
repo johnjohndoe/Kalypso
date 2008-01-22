@@ -68,7 +68,9 @@ public class ImageProvider
     IMAGE_THEME_WMS("icons/full/obj16/wmsTheme.gif"),
     IMAGE_THEME_CASCADING("icons/full/obj16/cascadingTheme.gif"),
 
-    STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif");
+    STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif"),
+
+    STATUS_IMAGE_OK("icons/full/elcl16/ok.gif");
 
     private final String m_imagePath;
 
