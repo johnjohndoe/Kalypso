@@ -47,8 +47,8 @@ import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.grid.IGridMetaReader;
 import org.kalypso.grid.GridFileVerifier;
+import org.kalypso.grid.IGridMetaReader;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.coverage.GridRange;
@@ -65,9 +65,9 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 {
 
-  public KalypsoPictureThemeWorldFile( final StyledLayerType layerType, final URL context, final IMapModell modell, final CS_CoordinateSystem system ) throws Exception
+  public KalypsoPictureThemeWorldFile( final StyledLayerType layerType, final URL context, final IMapModell modell, final CS_CoordinateSystem system, final String legendGraphic ) throws Exception
   {
-    super( layerType, context, modell );
+    super( layerType, context, modell, legendGraphic );
 
     final String href = layerType.getHref();
     if( href == null || !href.contains( "." ) )

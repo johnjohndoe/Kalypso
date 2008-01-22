@@ -147,6 +147,9 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
       if( label.contains( "- generierter Standard-Stil -" ) )
         return input;
 
+      if( label.trim().equals( "" ) )
+        return input;
+
       return input + " (" + label + ")";
     }
 

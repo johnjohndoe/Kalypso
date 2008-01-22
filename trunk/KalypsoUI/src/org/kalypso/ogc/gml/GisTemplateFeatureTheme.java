@@ -71,6 +71,7 @@ import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.IPoolListener;
@@ -125,9 +126,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final List<GisTemplateUserStyle> m_gisTemplateUserStyles = new ArrayList<GisTemplateUserStyle>();
 
-  public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
+  public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon )
   {
-    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ), layerType.getLinktype(), mapModel ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ), layerType.getLinktype(), mapModel, legendIcon, context ); //$NON-NLS-1$
 
     m_selectionManager = selectionManager;
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -318,7 +319,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
             properties.put( propName, value );
           }
 
-          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
+          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell(), getLegendIcon(), getContext() );
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
           /* Put current property set into m_theme */
@@ -562,6 +563,18 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       return m_theme.getImageDescriptor( object );
 
     return super.getImageDescriptor( object );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
+  @Override
+  protected ImageDescriptor getDefaultIcon( )
+  {
+    if( m_theme != null )
+      return m_theme.getDefaultIcon();
+
+    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_FEATURE );
   }
 
   /**

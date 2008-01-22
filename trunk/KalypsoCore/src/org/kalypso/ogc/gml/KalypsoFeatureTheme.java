@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
+import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -53,7 +54,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCoreDebug;
@@ -96,9 +98,14 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private final String m_featurePath;
 
-  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
+  /**
+   * Holds the descriptor for the default icon of this theme. Is used in legends, such as the outline.
+   */
+  private Image m_featureThemeIcon;
+
+  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context )
   {
-    super( name, "FeatureTheme", mapModel );
+    super( name, "FeatureTheme", mapModel, legendIcon, context );
 
     m_workspace = workspace;
     m_featurePath = featurePath;
@@ -141,6 +148,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       m_workspace.removeModellListener( this );
       m_workspace = null;
     }
+
+    if( m_featureThemeIcon != null )
+      m_featureThemeIcon.dispose();
 
     super.dispose();
   }
@@ -412,11 +422,23 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public ImageDescriptor getImageDescriptor( final Object object )
   {
-    final Object[] children = getChildren( this );
-    if( (children.length > 0) && (children[0] instanceof IWorkbenchAdapter) )
-      return ((IWorkbenchAdapter) children[0]).getImageDescriptor( children[0] );
+// final Object[] children = getChildren( this );
+// if( (children.length > 0) && (children[0] instanceof IWorkbenchAdapter) )
+// return ((IWorkbenchAdapter) children[0]).getImageDescriptor( children[0] );
 
     return super.getImageDescriptor( object );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
+  @Override
+  protected ImageDescriptor getDefaultIcon( )
+  {
+    if( m_featureThemeIcon == null )
+      m_featureThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/featureTheme.gif" ) );
+
+    return ImageDescriptor.createFromImage( m_featureThemeIcon );
   }
 
   /**

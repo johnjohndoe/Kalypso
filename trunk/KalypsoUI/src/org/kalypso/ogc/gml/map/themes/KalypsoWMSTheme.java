@@ -44,6 +44,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.net.URL;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -52,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
@@ -61,6 +63,8 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
 import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.Debug;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -182,9 +186,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param mapModel
    *            The map modell.
    */
-  public KalypsoWMSTheme( String source, String linktype, String themeName, IKalypsoImageProvider imageProvider, IMapModell mapModel )
+  public KalypsoWMSTheme( String source, String linktype, String themeName, IKalypsoImageProvider imageProvider, IMapModell mapModel, String legendIcon, URL context )
   {
-    super( themeName, linktype.toUpperCase(), mapModel );
+    super( themeName, linktype.toUpperCase(), mapModel, legendIcon, context );
 
     m_source = source;
     m_provider = imageProvider;
@@ -480,5 +484,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   public String getSource( )
   {
     return m_source;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
+  @Override
+  protected ImageDescriptor getDefaultIcon( )
+  {
+    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_WMS );
   }
 }

@@ -45,6 +45,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,9 +121,9 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
   private Image m_image = null;
 
-  public KalypsoLegendTheme( final String name, final IMapModell mapModell )
+  public KalypsoLegendTheme( final String name, final IMapModell mapModell, final String legendIcon, final URL context )
   {
-    super( name, "legend", mapModell );
+    super( name, "legend", mapModell, legendIcon, context );
 
     mapModell.addMapModelListener( m_modellListener );
   }
