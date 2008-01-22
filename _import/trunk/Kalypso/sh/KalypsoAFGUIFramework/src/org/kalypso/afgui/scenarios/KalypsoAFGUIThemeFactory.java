@@ -14,7 +14,7 @@ public class KalypsoAFGUIThemeFactory implements IKalypsoThemeFactory
   {
     if( "scenario".equals( linkType ) )
     {
-      return new ScenarioFeatureTheme( layerType, context, selectionManager, mapModell );
+      return new ScenarioFeatureTheme( layerType, context, selectionManager, mapModell, null );
     }
     return null;
   }

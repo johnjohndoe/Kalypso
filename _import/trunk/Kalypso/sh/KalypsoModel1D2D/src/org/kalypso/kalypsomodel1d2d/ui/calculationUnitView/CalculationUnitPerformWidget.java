@@ -153,7 +153,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
 
       // TODO: ulgy! This also causes a whole map repaint if selection in this widget changes
       // Directly paint this stuff onto the map? Drawback: in that case, no buffering occurs so it is also slow...
-      final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( Messages.getString( "CalculationUnitPerformWidget.2" ), mapModell ); //$NON-NLS-1$
+      final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( Messages.getString( "CalculationUnitPerformWidget.2" ), mapModell, null, null ); //$NON-NLS-1$
       mapModell.insertTheme( calcUnitTheme, 0 );
 
       final CalculationUnitDataModel dataModel = m_dataModel;
