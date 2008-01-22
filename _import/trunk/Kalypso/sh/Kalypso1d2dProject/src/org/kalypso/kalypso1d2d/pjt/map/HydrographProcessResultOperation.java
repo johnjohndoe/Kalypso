@@ -215,7 +215,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
     tuples.setSortComponents( new IComponent[] { dateComp } );
 
     /* find the nearest node */
-    Feature nearestFeature = GeometryUtilities.findNearestFeature( point, 0.0, nodeList, GMLNodeResult.QNAME_PROP_LOCATION );
+    Feature nearestFeature = GeometryUtilities.findNearestFeature( point, 0.1, nodeList, GMLNodeResult.QNAME_PROP_LOCATION );
     if( nearestFeature != null )
     {
       /* get the data of that node */

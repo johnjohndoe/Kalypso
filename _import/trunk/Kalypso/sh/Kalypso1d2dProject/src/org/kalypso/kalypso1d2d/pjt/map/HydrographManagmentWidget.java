@@ -122,6 +122,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -422,7 +423,10 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
         if( wizardDialog2.open() == Window.OK )
         {
-          // m_hydrographs = addCalcUnitWizard.getHydrograph();
+          // TODO: maybe we have to wait a little bit until the map is loaded, so that the new inserted hydrograph theme
+          // gets found.
+          MapModellHelper.waitForAndErrorDialog( shell, getMapPanel(), addCalcUnitWizard.getWindowTitle(), "Fehler beim hinzufügen des Themas" );
+
           refreshThemeCombo();
         }
       }
