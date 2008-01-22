@@ -89,8 +89,7 @@ public class FeatureTypeCatalog
     if( baseCatalog == null )
       return null;
     
-    final String uri = baseCatalog.resolve( urn, urn );
-    return uri;
+    return baseCatalog.resolve( urn, urn );
   }
 
   public static String createUrn( final String catalogTypeBasename, final QName qname )

@@ -173,8 +173,13 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   {
     final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" };
 
+    JAXBElement<String> lg = layerType.getLegendicon();
+    String legendIcon = null;
+    if( lg != null )
+      legendIcon = lg.getValue();
+
     if( layerType instanceof CascadingLayer )
-      return new CascadingLayerKalypsoTheme( (CascadingLayer) layerType, context, m_selectionManager, this );
+      return new CascadingLayerKalypsoTheme( (CascadingLayer) layerType, context, m_selectionManager, this, legendIcon );
 
     final String linktype = layerType.getLinktype();
     final String layerName = layerType.getName();
@@ -200,19 +205,19 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       /* Create the image provider. */
       final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, layers, styles, service, providerID );
 
-      return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, this );
+      return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, this, legendIcon, context );
     }
     else if( ArrayUtils.contains( arrImgTypes, linktype.toLowerCase() ) )
-      return KalypsoPictureTheme.getPictureTheme( layerType, context, this );
+      return KalypsoPictureTheme.getPictureTheme( layerType, context, this, legendIcon );
     else if( "gmt".equals( linktype ) )
-      return new CascadingKalypsoTheme( layerType, context, m_selectionManager, this );
+      return new CascadingKalypsoTheme( layerType, context, m_selectionManager, this, legendIcon );
     else if( "legend".equals( linktype ) )
-      return new KalypsoLegendTheme( layerName, this );
+      return new KalypsoLegendTheme( layerName, this, legendIcon, context );
     else if( "scrab".equals( linktype ) )
-      return new ScrabLayerFeatureTheme( layerName, m_selectionManager, this );
+      return new ScrabLayerFeatureTheme( layerName, m_selectionManager, this, legendIcon, context );
     else
       // TODO: returns handling of gml files - part of else?!? dont assume it, proof it!
-      return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this );
+      return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this, legendIcon );
   }
 
   private IKalypsoThemeFactory getThemeFactory( final String linktype )
@@ -262,8 +267,19 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       {
         final StyledLayerType layer = GisTemplateHelper.addLayer( layerList, theme, count++, bbox, srsName, monitor );
 
-        if( layer != null && m_modell.isThemeActivated( theme ) && !(theme instanceof KalypsoLegendTheme) && !(theme instanceof ScrabLayerFeatureTheme) )
-          layersType.setActive( layer );
+        if( layer != null )
+        {
+          if( m_modell.isThemeActivated( theme ) && !(theme instanceof KalypsoLegendTheme) && !(theme instanceof ScrabLayerFeatureTheme) )
+            layersType.setActive( layer );
+
+          if( theme instanceof AbstractKalypsoTheme )
+          {
+            AbstractKalypsoTheme kalypsoTheme = (AbstractKalypsoTheme) theme;
+            String legendIcon = kalypsoTheme.getLegendIcon();
+            if( legendIcon != null )
+              layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+          }
+        }
       }
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();

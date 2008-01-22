@@ -162,9 +162,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
 
   };
 
-  public AbstractCascadingLayerTheme( final String name, final String linktype, final IMapModell mapModel )
+  public AbstractCascadingLayerTheme( final String name, final String linktype, final IMapModell mapModel, final String legendIcon, final URL context )
   {
-    super( name, linktype, mapModel );
+    super( name, linktype, mapModel, legendIcon, context );
   }
 
   /**
@@ -294,6 +294,15 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   {
     Assert.isLegal( object == this );
 
+    return super.getImageDescriptor( object );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
+  @Override
+  protected ImageDescriptor getDefaultIcon( )
+  {
     return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_CASCADING );
   }
 

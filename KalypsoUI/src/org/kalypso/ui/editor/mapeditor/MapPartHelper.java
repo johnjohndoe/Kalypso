@@ -45,6 +45,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -111,7 +113,11 @@ public class MapPartHelper
       @Override
       public void focusGained( FocusEvent e )
       {
-        mapPanel.requestFocus();
+        SwingUtilities.invokeLater( new Runnable() {
+          public void run( )
+          {
+            mapPanel.requestFocus();
+          }} );
       }
     } );
 

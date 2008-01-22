@@ -42,11 +42,15 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Font;
 import java.awt.Image;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -56,10 +60,16 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCoreExtensions;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.CatalogManager;
+import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -88,6 +98,21 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   private final IMapModell m_mapModel;
 
+  /**
+   * Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
+   */
+  private final String m_legendIcon;
+
+  /**
+   * The context, if the theme is part of a template loaded from a file. May be null.
+   */
+  private final URL m_context;
+
+  /**
+   * Stores an icon from an external URL or URN and which can be used for the layer in a legend. May be null.
+   */
+  private org.eclipse.swt.graphics.Image m_externIcon;
+
   private String m_name;
 
   private String m_type;
@@ -100,13 +125,35 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   private boolean m_isVisible = true;
 
-  public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel )
+  /**
+   * Holds the descriptor for the default icon of all themes. Is used in legends, such as the outline.
+   */
+  private org.eclipse.swt.graphics.Image m_standardThemeIcon;
+
+  /**
+   * The constructor.
+   * 
+   * @param name
+   *            The name of the theme.
+   * @param type
+   *            The type of the theme.
+   * @param mapModel
+   *            The map model to use.
+   * @param legendIcon
+   *            Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
+   * @param context
+   *            The context, if the theme is part of a template loaded from a file. May be null.
+   */
+  public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel, final String legendIcon, final URL context )
   {
     Assert.isNotNull( mapModel );
 
     m_name = name;
     m_type = type;
     m_mapModel = mapModel;
+    m_legendIcon = legendIcon;
+    m_context = context;
+    m_externIcon = null;
 
     /* Initialize properties */
     // deleteable defaults to 'true', because this was the old behaviour
@@ -147,6 +194,12 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public void dispose( )
   {
     m_listeners.clear();
+
+    if( m_standardThemeIcon != null )
+      m_standardThemeIcon.dispose();
+
+    if( m_externIcon != null )
+      m_externIcon.dispose();
   }
 
   /**
@@ -230,7 +283,174 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       }
     }
 
-    return null;
+    return getOutlineImageFromLayer();
+  }
+
+  /**
+   * This function returns the icon set in the style (StyledLayerType), if any.<br>
+   * This may be icons with a relative path or icons, which are defined via some URNs.<br>
+   * 
+   * @return If an user icon or URN is defined, this icon will be returned.<br>
+   *         If not, it checks the number of styles and rules.<br>
+   *         If only one style and rule exists, there is a generated icon returned, representing the first rule.<br>
+   *         If there are more rules or styles, there is the standard icon returned, defined by each theme itself.
+   */
+  private ImageDescriptor getOutlineImageFromLayer( )
+  {
+    /* Make a default icon for the legend. */
+    if( m_legendIcon == null )
+    {
+      Object[] styles = getChildren( this );
+      if( styles instanceof ThemeStyleTreeObject[] && styles.length == 1 )
+      {
+        /* Cast ... . */
+        ThemeStyleTreeObject[] themeStyles = (ThemeStyleTreeObject[]) styles;
+
+        /* One must exist here! */
+        ThemeStyleTreeObject style = themeStyles[0];
+
+        /* Get the rules. */
+        Object[] rules = style.getChildren( style );
+        if( rules.length == 1 )
+        {
+          RuleTreeObject rule = (RuleTreeObject) rules[0];
+          return rule.getImageDescriptor( rule );
+        }
+
+        /* Otherwise there are more styles or rules, so give them the default image. */
+        return getDefaultIcon();
+      }
+
+      return getDefaultIcon();
+    }
+
+    /* If the m_legendIcon string was already evaluated and an image does exist, return this image. */
+    if( m_externIcon != null )
+      return ImageDescriptor.createFromImage( m_externIcon );
+
+    /* Check, if it is a special URN. */
+    Pattern p = Pattern.compile( "^.*:style:(.*):rule:(.*)$", Pattern.MULTILINE );
+    Matcher m = p.matcher( m_legendIcon.trim() );
+
+    /* A special URN was defined. Evaluate it. */
+    if( m.matches() && m.groupCount() == 2 )
+    {
+      String styleName = m.group( 1 );
+      String ruleName = m.group( 2 );
+
+      Object[] children = getChildren( this );
+      if( children instanceof ThemeStyleTreeObject[] )
+      {
+        ThemeStyleTreeObject[] styles = (ThemeStyleTreeObject[]) children;
+        for( ThemeStyleTreeObject style : styles )
+        {
+          String sName = style.getStyle().getName();
+          if( styleName.equals( sName ) )
+          {
+            Object[] children2 = style.getChildren( style );
+            if( children2 instanceof RuleTreeObject[] )
+            {
+              RuleTreeObject[] rules = (RuleTreeObject[]) children2;
+              for( RuleTreeObject ruleTreeObject : rules )
+              {
+                String rName = ruleTreeObject.getRule().getName();
+                if( ruleName.equals( rName ) )
+                {
+                  /* Found the right one, need this image icon. */
+                  ImageDescriptor descriptor = ruleTreeObject.getImageDescriptor( ruleTreeObject );
+
+                  /* Create the Image. */
+                  m_externIcon = descriptor.createImage();
+
+                  /* Need a new one with the created image, because the image is cached and should be disposed. */
+                  /* Using the descriptor above will result in undisposed images. */
+                  return ImageDescriptor.createFromImage( m_externIcon );
+                }
+              }
+            }
+
+            break;
+          }
+        }
+      }
+
+      return getDefaultIcon();
+    }
+
+    /* Resolve the URL. */
+    URL absoluteUrl = getLegendIconURL();
+
+    /* On error, return the default icon. */
+    if( absoluteUrl == null )
+      return getDefaultIcon();
+
+    /* Create the descriptor. */
+    ImageDescriptor descriptor = ImageDescriptor.createFromURL( absoluteUrl );
+
+    /* Create the Image. */
+    m_externIcon = descriptor.createImage();
+
+    /* Need a new one with the created image, because the image is cached and should be disposed. */
+    /* Using the descriptor above will result in undisposed images. */
+    return ImageDescriptor.createFromImage( m_externIcon );
+  }
+
+  /**
+   * This function returns the resolved URL for the legend icon or null, if none could be created.
+   * 
+   * @return The resolved URL for the legend icon or null, if none could be created.
+   */
+  private URL getLegendIconURL( )
+  {
+    try
+    {
+      /* A URL or URN was given. */
+      if( m_legendIcon.startsWith( "urn" ) )
+      {
+        // search for url
+        final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
+        final ICatalog baseCatalog = catalogManager.getBaseCatalog();
+        if( baseCatalog == null )
+          return null;
+
+        String uri = baseCatalog.resolve( m_legendIcon, m_legendIcon );
+        if( uri == null || uri.equals( m_legendIcon ) )
+          return null;
+
+        /* Resolve the URL. */
+        URL absoluteUrl = new URL( uri );
+
+        return absoluteUrl;
+      }
+
+      /* Resolve the URL. */
+      URL absoluteUrl = UrlResolverSingleton.resolveUrl( m_context, m_legendIcon );
+
+      return absoluteUrl;
+    }
+    catch( MalformedURLException e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+      return null;
+    }
+  }
+
+  /**
+   * This function should return the default image descriptor representing the theme. <br>
+   * Subclasses should override, if they want an own standard icon for representing them.<br>
+   * <strong>Note:</strong><br>
+   * <br>
+   * This has only an effect, if the user does not define an URL or URN and the theme has more then one style or rule.
+   * 
+   * @return The default image descriptor.
+   */
+  protected ImageDescriptor getDefaultIcon( )
+  {
+    if( m_standardThemeIcon == null )
+      m_standardThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/standardTheme.gif" ) );
+
+    return ImageDescriptor.createFromImage( m_standardThemeIcon );
   }
 
   /**
@@ -441,4 +661,24 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return super.getAdapter( adapter );
   }
 
+  /**
+   * This function returns the URL or URN defined by the user for an icon, which should be displayed in a legend or an
+   * outline.
+   * 
+   * @return The URL or URN string. May be null.
+   */
+  public String getLegendIcon( )
+  {
+    return m_legendIcon;
+  }
+
+  /**
+   * This function returns the context.
+   * 
+   * @return The context, if the theme is part of a template loaded from a file. May be null.
+   */
+  protected URL getContext( )
+  {
+    return m_context;
+  }
 }
