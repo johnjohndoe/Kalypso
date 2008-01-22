@@ -85,9 +85,9 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
    */
   public static void configureTableViewer( final DefaultTableViewer tableViewer )
   {
-    tableViewer.addColumn( SEVERITY, "Art", null, 30, 0, false, SWT.CENTER, false );
-    tableViewer.addColumn( MESSAGE, "Beschreibung", null, 500, 0, false, SWT.LEFT, true );
-    tableViewer.addColumn( TIME, "Zeit", null, 150, 0, false, SWT.LEFT, false );
+    tableViewer.addColumn( SEVERITY, "Art", null, 30, 0, false, SWT.CENTER, false, true );
+    tableViewer.addColumn( MESSAGE, "Beschreibung", null, 500, 0, false, SWT.LEFT, true, true );
+    tableViewer.addColumn( TIME, "Zeit", null, 150, 0, false, SWT.LEFT, false, true );
 
     tableViewer.setLabelProvider( new StatusLabelProvider( tableViewer.getColumnProperties() ) );
   }
