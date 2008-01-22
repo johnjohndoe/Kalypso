@@ -58,6 +58,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.util.swt.StatusComposite;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
