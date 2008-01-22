@@ -130,6 +130,23 @@
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
+					<xs:element name="absolute"
+						type="xs:boolean" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Absolut</xs:label>
+								<xs:tooltip>
+									Absolute value
+								</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation>
+								<xs:label>Absolute</xs:label>
+								<xs:tooltip>
+									Absolute value
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="direction"
 						type="gml:DegreeValueType" nillable="true">
 						<xs:annotation>
