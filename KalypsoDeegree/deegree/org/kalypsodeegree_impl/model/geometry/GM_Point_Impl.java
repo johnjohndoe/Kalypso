@@ -329,7 +329,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   @Override
   public boolean contains( final GM_Object gmo )
   {
-    throw new UnsupportedOperationException( "the contains operation for points " + "isn't supported at the moment." );
+    return equals( gmo );
+    //TODO: check if this is correct in all cases
+    //throw new UnsupportedOperationException( "the contains operation for points " + "isn't supported at the moment." );
   }
 
   /**
