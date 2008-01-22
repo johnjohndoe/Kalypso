@@ -141,7 +141,7 @@ public class KeyBasedDataModel
 
   public void setData( final String key, final Object newEntry )
   {
-    setData( key, newEntry, true );
+    setData( key, newEntry, false );
   }
 
   protected void setData( String key, final Object newEntry, final boolean doNotify )

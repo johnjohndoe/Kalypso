@@ -139,6 +139,8 @@ public class RoughnessAssignListener implements ModellEventListener
 
   private boolean isRoughnessAssignNeeded( final Feature[] features )
   {
+    if( features == null || features.length == 0 )
+      return false;
     for( int i = 0; i < features.length; i++ )
     {
       if( features[i] == null )
