@@ -72,8 +72,8 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    addColumn( COL_OBS, "Zeitreihe", null, 250, -1, true, SWT.CENTER, true );
-    addColumn( COL_HREF, "Kennzeichen", null, 400, -1, true, SWT.CENTER, true );
+    addColumn( COL_OBS, "Zeitreihe", null, 250, -1, true, SWT.CENTER, true, true );
+    addColumn( COL_HREF, "Kennzeichen", null, 400, -1, true, SWT.CENTER, true, true );
   }
 
   /**

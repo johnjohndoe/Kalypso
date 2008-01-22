@@ -45,6 +45,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -114,6 +116,7 @@ import org.kalypso.template.featureview.PropertyControlType;
 import org.kalypso.template.featureview.Radiobutton;
 import org.kalypso.template.featureview.Spinner;
 import org.kalypso.template.featureview.SubcompositeType;
+import org.kalypso.template.featureview.TabFolder;
 import org.kalypso.template.featureview.Table;
 import org.kalypso.template.featureview.Text;
 import org.kalypso.template.featureview.TupleResult;
@@ -407,6 +410,38 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         createControl( composite, SWT.NONE, element.getValue() );
 
       return composite;
+    }
+
+    if( controlType instanceof TabFolder )
+    {
+      final TabFolder tabFolderType = (TabFolder) controlType;
+
+      final int tabStyle = SWTUtilities.createStyleFromString( tabFolderType.getStyle() );
+
+      org.eclipse.swt.widgets.TabFolder tabFolder = new org.eclipse.swt.widgets.TabFolder( parent, tabStyle );
+
+      /* If a toolkit is set, use it. */
+      if( m_formToolkit != null )
+        m_formToolkit.adapt( tabFolder );
+
+      List<JAXBElement< ? >> tabLabelAndControl = tabFolderType.getTabLabelAndControl();
+      for( Iterator<JAXBElement< ? >> iterator = tabLabelAndControl.iterator(); iterator.hasNext(); )
+      {
+        JAXBElement< ? > labelElement = iterator.next();
+        JAXBElement< ? > controlElement = iterator.next();
+
+        final String label = (String) labelElement.getValue();
+        ControlType control = (ControlType) controlElement.getValue();
+
+        TabItem item = new TabItem( tabFolder, SWT.NONE );
+        item.setText( label );
+
+        Control tabControl = createControl( tabFolder, SWT.NONE, control );
+
+        item.setControl( tabControl );
+      }
+
+      return tabFolder;
     }
 
     final IPropertyType ftp;

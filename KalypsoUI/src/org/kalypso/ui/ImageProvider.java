@@ -214,4 +214,21 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_WARNING = ImageProvider.id( "icons/validation/validation_warning.gif" );
 
   public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_NOTOK = ImageProvider.id( "icons/validation/validation_error.gif" );
+
+  /* tuple result table toolbar */
+  public static final ImageDescriptor IMAGE_TABLE_COPY = ImageProvider.id( "icons/table/copy.gif" );
+
+  public static final ImageDescriptor IMAGE_TABLE_PASTE = ImageProvider.id( "icons/table/paste_edit.gif" );
+
+  public static final ImageDescriptor IMAGE_TABLE_ADD_ROW = ImageProvider.id( "icons/table/add_row.gif" );
+
+  public static final ImageDescriptor IMAGE_TABLE_INSERT_ROW = ImageProvider.id( "icons/table/insert_row.gif" );
+
+  public static final ImageDescriptor IMAGE_TABLE_DELETE_ROW = ImageProvider.id( "icons/table/delete_row.gif" );
+
+  public static final ImageDescriptor IMAGE_TABLE_DELETE_COLUMN = ImageProvider.id( "icons/table/delete_column.gif" );
+
+  public static final ImageDescriptor IMAGE_TABLE_EXPORT = ImageProvider.id( "icons/table/export_wiz.gif" );
+
+  public static final ImageDescriptor IMAGE_TABLE_IMPORT = ImageProvider.id( "icons/table/import_wiz.gif" );
 }

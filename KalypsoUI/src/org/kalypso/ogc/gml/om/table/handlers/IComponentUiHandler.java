@@ -62,6 +62,8 @@ public interface IComponentUiHandler
 
   boolean isResizeable( );
 
+  boolean isMoveable( );
+
   IComponent getComponent( );
 
   /**
@@ -98,5 +100,4 @@ public interface IComponentUiHandler
   int getColumnStyle( );
 
   String getColumnLabel( );
-
 }

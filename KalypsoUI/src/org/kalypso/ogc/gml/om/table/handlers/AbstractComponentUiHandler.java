@@ -71,11 +71,14 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
 
   private final int m_columnWidthPercent;
 
-  public AbstractComponentUiHandler( final IComponent component, final boolean editable, final boolean resizeable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  private final boolean m_moveable;
+
+  public AbstractComponentUiHandler( final IComponent component, final boolean editable, final boolean resizeable, boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     m_component = component;
     m_editable = editable;
     m_resizeable = resizeable;
+    m_moveable = moveable;
     m_columnLabel = columnLabel;
     m_columnStyle = columnStyle;
     m_columnWidth = columnWidth;
@@ -126,6 +129,14 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   public boolean isResizeable( )
   {
     return m_resizeable;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isMoveable()
+   */
+  public boolean isMoveable( )
+  {
+    return m_moveable;
   }
 
   public int getColumnStyle( )
