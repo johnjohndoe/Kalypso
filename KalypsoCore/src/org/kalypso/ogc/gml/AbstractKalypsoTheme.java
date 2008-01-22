@@ -329,7 +329,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       return ImageDescriptor.createFromImage( m_externIcon );
 
     /* Check, if it is a special URN. */
-    Pattern p = Pattern.compile( "^.*:style:(.*):rule:(.*)$", Pattern.MULTILINE );
+    Pattern p = Pattern.compile( "^urn:kalypso:map:theme:swtimage:style:(.*):rule:(.*)$", Pattern.MULTILINE );
     Matcher m = p.matcher( m_legendIcon.trim() );
 
     /* A special URN was defined. Evaluate it. */
@@ -405,7 +405,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     try
     {
       /* A URL or URN was given. */
-      if( m_legendIcon.startsWith( "urn" ) )
+      if( m_legendIcon.startsWith( "urn:kalypso:map:theme:swtimage:" ) )
       {
         // search for url
         final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
