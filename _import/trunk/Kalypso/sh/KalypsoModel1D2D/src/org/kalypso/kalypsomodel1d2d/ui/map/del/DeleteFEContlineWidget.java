@@ -65,7 +65,7 @@ public class DeleteFEContlineWidget extends SingleElementSelectWidget
 {
   public DeleteFEContlineWidget( )
   {
-    super( Messages.getString("DeleteFEContlineWidget.0"), Messages.getString("DeleteFEContlineWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "DeleteFEContlineWidget.0" ), Messages.getString( "DeleteFEContlineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -74,13 +74,18 @@ public class DeleteFEContlineWidget extends SingleElementSelectWidget
   @Override
   public void keyReleased( final KeyEvent event )
   {
+    if( event.getKeyCode() != KeyEvent.VK_DELETE )
+      return;
+
+    event.consume();
+
     final MapPanel mapPanel = getMapPanel();
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
     final EasyFeatureWrapper[] selected = selectionManager.getAllFeatures();
     if( selected.length == 0 )
       return;
 
-    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("DeleteFEContlineWidget.2"), Messages.getString("DeleteFEContlineWidget.3") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString( "DeleteFEContlineWidget.2" ), Messages.getString( "DeleteFEContlineWidget.3" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
     // selectionManager.clear(); active selection is still needed for super.keyReleased( event );
@@ -103,10 +108,10 @@ public class DeleteFEContlineWidget extends SingleElementSelectWidget
           final List<IFELine> continuityLines = transitionElement.getContinuityLines();
           for( final IFELine line : continuityLines )
           {
-            for( int i = 0; i < selected.length; i++ )
-              if( line.getGmlID().equals( selected[i].getFeature().getId() ) )
+            for( final EasyFeatureWrapper element : selected )
+              if( line.getGmlID().equals( element.getFeature().getId() ) )
               {
-                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("DeleteFEContlineWidget.4"), Messages.getString("DeleteFEContlineWidget.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "DeleteFEContlineWidget.4" ), Messages.getString( "DeleteFEContlineWidget.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
                 selectionManager.clear();
                 return;
               }
@@ -118,10 +123,10 @@ public class DeleteFEContlineWidget extends SingleElementSelectWidget
           final List<IFELine> continuityLines = junctionElement.getContinuityLines();
           for( final IFELine line : continuityLines )
           {
-            for( int i = 0; i < selected.length; i++ )
-              if( line.getGmlID().equals( selected[i].getFeature().getId() ) )
+            for( final EasyFeatureWrapper element : selected )
+              if( line.getGmlID().equals( element.getFeature().getId() ) )
               {
-                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("DeleteFEContlineWidget.6"), Messages.getString("DeleteFEContlineWidget.7") ); //$NON-NLS-1$ //$NON-NLS-2$
+                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "DeleteFEContlineWidget.6" ), Messages.getString( "DeleteFEContlineWidget.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
                 selectionManager.clear();
                 return;
               }
@@ -136,10 +141,10 @@ public class DeleteFEContlineWidget extends SingleElementSelectWidget
         if( bc != null )
         {
           final String parentElementID = bc.getParentElementID();
-          for( int i = 0; i < selected.length; i++ )
-            if( selected[i].getFeature().getId().equals( parentElementID ) )
+          for( final EasyFeatureWrapper element : selected )
+            if( element.getFeature().getId().equals( parentElementID ) )
             {
-              SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("DeleteFEContlineWidget.8"), Messages.getString("DeleteFEContlineWidget.9") ); //$NON-NLS-1$ //$NON-NLS-2$
+              SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "DeleteFEContlineWidget.8" ), Messages.getString( "DeleteFEContlineWidget.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
               selectionManager.clear();
               return;
             }
