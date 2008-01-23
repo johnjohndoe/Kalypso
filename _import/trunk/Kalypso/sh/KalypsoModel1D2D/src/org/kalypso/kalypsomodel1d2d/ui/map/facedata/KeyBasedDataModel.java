@@ -141,10 +141,10 @@ public class KeyBasedDataModel
 
   public void setData( final String key, final Object newEntry )
   {
-    setData( key, newEntry, false );
+    setData( key, newEntry, true );
   }
 
-  protected void setData( String key, final Object newEntry, final boolean doNotify )
+  public void setData( String key, final Object newEntry, final boolean doNotify )
   {
     key = Assert.throwIAEOnNullOrEmpty( key );
     final int pos = findPosition( key );

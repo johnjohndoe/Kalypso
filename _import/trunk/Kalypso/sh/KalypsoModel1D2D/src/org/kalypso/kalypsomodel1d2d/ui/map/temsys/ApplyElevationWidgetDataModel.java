@@ -159,7 +159,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public void setElevationModel( final ITerrainElevationModel elevationModel )
   {
     // this.elevationModel = elevationModel;
-    setData( ITerrainElevationModel.class.toString(), elevationModel );
+    setData( ITerrainElevationModel.class.toString(), elevationModel, true );
   }
 
   public ITerrainElevationModelSystem getElevationModelSystem( )
@@ -191,7 +191,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   public void setSelectedNode( final List<IFE1D2DNode> selectedNode )
   {
-    setData( SELECTED_NODE_KEY, selectedNode );
+    setData( SELECTED_NODE_KEY, selectedNode, false );
     // this.selectedNode = selectedNode;
   }
 

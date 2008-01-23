@@ -624,8 +624,8 @@ public class AssignNodeElevationFaceComponent
 
     m_nodeElevationViewer.setInput( noElevationNodes.toArray( new IFE1D2DNode[] {} ) );
     m_nodeElevationViewer.refresh();
-    System.out.println( Messages.getString( "AssignNodeElevationFaceComponent.27" ) + allNodes.size() ); //$NON-NLS-1$
-    System.out.println( Messages.getString( "AssignNodeElevationFaceComponent.28" ) + noElevationNodes.size() ); //$NON-NLS-1$
+//    System.out.println( Messages.getString( "AssignNodeElevationFaceComponent.27" ) + allNodes.size() ); //$NON-NLS-1$
+//    System.out.println( Messages.getString( "AssignNodeElevationFaceComponent.28" ) + noElevationNodes.size() ); //$NON-NLS-1$
   }
 
   private final void applyElevation( ) throws Exception
