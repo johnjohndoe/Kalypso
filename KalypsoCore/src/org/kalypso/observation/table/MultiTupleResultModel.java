@@ -75,19 +75,19 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
    * already present ones: the key component of the column has to be compliant with the existing ones.
    * 
    * @throws IllegalArgumentException
-   *           if the column is not compatible
+   *             if the column is not compatible
    */
   public void addColumn( final TupleResultColumn col )
   {
     if( m_keyColumn == null )
     {
       m_keyColumn = new KeyColumn( 0, col.getKeyComponent() );
-      
+
       fireColumnAdded( m_keyColumn );
     }
     else if( !m_keyColumn.isCompatible( col.getKeyComponent() ) )
       throw new IllegalArgumentException( "Key Components are not compatible" );
-    
+
     if( containsColumn( col ) )
       return;
 
@@ -109,12 +109,12 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
   private boolean containsColumn( final TupleResultColumn col )
   {
     final TupleResultColumnComparator comp = TupleResultColumnComparator.getInstance();
-    for( final TupleResultColumn trc: m_columns )
+    for( final TupleResultColumn trc : m_columns )
     {
       if( comp.compare( trc, col ) == 0 )
         return true;
     }
-    
+
     return false;
   }
 
@@ -234,7 +234,8 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
       throw new IllegalArgumentException( "columnKey is not a KeyColumn nor a TupleResultColumn" );
 
     final TupleResultColumn col = (TupleResultColumn) columnKey;
-    return col.getTupleResult().getValue( col.getRecordFor( rowKey ), col.getValueComponent() );
+
+    return col.getRecordFor( rowKey ).getValue( col.getValueComponent() );
   }
 
   /**
@@ -273,7 +274,7 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
    * @see org.kalypso.commons.tuple.impl.AbstractTupleModel#setValueIntern(java.lang.Object, R, C)
    */
   @Override
-  protected void setValueIntern( Object value, MTRMRow rowKey, MTRMColumn columnKey )
+  protected void setValueIntern( final Object value, final MTRMRow rowKey, final MTRMColumn columnKey )
   {
     if( !(columnKey instanceof TupleResultColumn) )
       throw new IllegalArgumentException( "columnKey is not a TupleResultColumn" );
@@ -289,6 +290,6 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
       col.setMapping( rowKey, record );
     }
 
-    tr.setValue( record, col.getValueComponent(), value );
+    record.setValue( col.getValueComponent(), value );
   }
 }

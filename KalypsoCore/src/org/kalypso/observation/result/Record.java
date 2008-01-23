@@ -44,23 +44,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
+import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
+
 /**
  * @author schlienger Default visibility, use IRecord and TupleResult.createRecord.
  */
-class Record implements IRecord
+/* default */class Record implements IRecord
 {
-  private final TupleResult m_result;
+  private final Map<IComponent, Object> m_values = new HashMap<IComponent, Object>();
 
-  private Map<IComponent, Object> m_values = new HashMap<IComponent, Object>();
+  private final TupleResult m_owner;
 
   public Record( final TupleResult result, final Set<IComponent> components )
   {
-    m_result = result;
+    m_owner = result;
 
     for( final IComponent component : components )
       m_values.put( component, component.getDefaultValue() );
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
@@ -82,7 +86,7 @@ class Record implements IRecord
 
   private void checkComponent( final IComponent comp )
   {
-    if( !m_result.hasComponent( comp ) )
+    if( !m_owner.hasComponent( comp ) )
       throw new IllegalArgumentException( "Unknown component: " + comp );
   }
 
@@ -93,17 +97,28 @@ class Record implements IRecord
   {
     checkComponent( comp );
 
+    final Object oldValue = m_values.get( comp );
+    if( ObjectUtils.equals( value, oldValue ) )
+      return;
+
     m_values.put( comp, value );
+
+    if( m_owner != null )
+    {
+      if( m_owner.invalidateSort( comp ) )
+        m_owner.fireRecordsChanged( null, TYPE.CHANGED );
+      else
+      {
+        final ValueChange[] changes = new ValueChange[] { new ValueChange( this, comp, value ) };
+        m_owner.fireValuesChanged( changes );
+      }
+    }
+
   }
 
-  public void remove( final IComponent comp )
+  /* default */void remove( final IComponent comp )
   {
     m_values.remove( comp );
-  }
-
-  public TupleResult getTableResult( )
-  {
-    return m_result;
   }
 
   public void checkComponents( final Set<IComponent> components )
@@ -116,7 +131,7 @@ class Record implements IRecord
         throw new IllegalArgumentException( "Illegal record: Unknown component: " + component );
     }
 
-    // check if i need a new componetn (i.e. set default value)
+    // check if i need a new component (i.e. set default value)
     for( final IComponent component : components )
     {
       if( !keySet.contains( component ) )
@@ -129,6 +144,6 @@ class Record implements IRecord
    */
   public TupleResult getOwner( )
   {
-    return m_result;
+    return m_owner;
   }
 }

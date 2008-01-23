@@ -66,12 +66,12 @@ public class TupleResultTest extends TestCase
 
     final IRecord r1 = result.createRecord();
     result.add( r1 );
-    result.setValue( r1, comp, 0 );
+    r1.setValue( comp, 0 );
     Assert.assertEquals( 0, r1.getValue( comp ) );
 
     try
     {
-      result.setValue( r1, new Component( "NONE", "Non-Existent", "", null, null, XmlTypes.XS_INTEGER, null, null ), 0 );
+      r1.setValue( new Component( "NONE", "Non-Existent", "", null, null, XmlTypes.XS_INTEGER, null, null ), 0 );
 
       Assert.fail( "there should be an exception if we set a value of a nonexistent component" );
     }
@@ -99,9 +99,9 @@ public class TupleResultTest extends TestCase
 
     Assert.assertEquals( 3, result.size() );
 
-    Assert.assertEquals( 0, result.getValue( r1, comp ) );
-    result.setValue( r1, comp, 4 );
-    Assert.assertEquals( 4, result.getValue( r1, comp ) );
+    Assert.assertEquals( 0, r1.getValue( comp ) );
+    r1.setValue( comp, 4 );
+    Assert.assertEquals( 4, r1.getValue( comp ) );
 
     result.removeComponent( comp );
     Assert.assertEquals( 0, result.getComponents().length );

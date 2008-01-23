@@ -484,6 +484,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         public void run( )
         {
           // TODO: fire in SWT display thread!
+          // FIXE: for the moment: just commented out, it does not work
           l.selectionChanged( e );
         }
       };

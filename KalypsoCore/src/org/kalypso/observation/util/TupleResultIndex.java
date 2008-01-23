@@ -72,7 +72,7 @@ public class TupleResultIndex
 
     for( final IRecord record : result )
     {
-      final Object value = result.getValue( record, component );
+      final Object value = record.getValue( component );
 
       // HACK: convert xml-gregorian calendars to dates
       if( value instanceof XMLGregorianCalendar )

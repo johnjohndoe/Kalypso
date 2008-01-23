@@ -210,18 +210,18 @@ public class ObservationFeatureFactory implements IAdapterFactory
         else
           value = handler.convertToJavaValue( token );
 
-        tupleResult.setValue( record, component, value );
+        record.setValue( component, value );
       }
       catch( final NumberFormatException e )
       {
         e.printStackTrace();
         // TODO: set null here: Problem: the other components can't handle null now, they should
-        tupleResult.setValue( record, component, null );
+        record.setValue( component, null );
       }
       catch( final UnsupportedEncodingException e )
       {
         e.printStackTrace();
-        tupleResult.setValue( record, component, null );
+        record.setValue( component, null );
       }
       nb++;
       nb = nb % components.length;

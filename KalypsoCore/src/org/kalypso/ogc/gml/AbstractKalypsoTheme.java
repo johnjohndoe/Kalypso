@@ -300,20 +300,20 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     /* Make a default icon for the legend. */
     if( m_legendIcon == null )
     {
-      Object[] styles = getChildren( this );
+      final Object[] styles = getChildren( this );
       if( styles instanceof ThemeStyleTreeObject[] && styles.length == 1 )
       {
         /* Cast ... . */
-        ThemeStyleTreeObject[] themeStyles = (ThemeStyleTreeObject[]) styles;
+        final ThemeStyleTreeObject[] themeStyles = (ThemeStyleTreeObject[]) styles;
 
         /* One must exist here! */
-        ThemeStyleTreeObject style = themeStyles[0];
+        final ThemeStyleTreeObject style = themeStyles[0];
 
         /* Get the rules. */
-        Object[] rules = style.getChildren( style );
+        final Object[] rules = style.getChildren( style );
         if( rules.length == 1 )
         {
-          RuleTreeObject rule = (RuleTreeObject) rules[0];
+          final RuleTreeObject rule = (RuleTreeObject) rules[0];
           return rule.getImageDescriptor( rule );
         }
 
@@ -329,35 +329,35 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       return ImageDescriptor.createFromImage( m_externIcon );
 
     /* Check, if it is a special URN. */
-    Pattern p = Pattern.compile( "^urn:kalypso:map:theme:swtimage:style:(.*):rule:(.*)$", Pattern.MULTILINE );
-    Matcher m = p.matcher( m_legendIcon.trim() );
+    final Pattern p = Pattern.compile( "^urn:kalypso:map:theme:swtimage:style:(.*):rule:(.*)$", Pattern.MULTILINE );
+    final Matcher m = p.matcher( m_legendIcon.trim() );
 
     /* A special URN was defined. Evaluate it. */
     if( m.matches() && m.groupCount() == 2 )
     {
-      String styleName = m.group( 1 );
-      String ruleName = m.group( 2 );
+      final String styleName = m.group( 1 );
+      final String ruleName = m.group( 2 );
 
-      Object[] children = getChildren( this );
+      final Object[] children = getChildren( this );
       if( children instanceof ThemeStyleTreeObject[] )
       {
-        ThemeStyleTreeObject[] styles = (ThemeStyleTreeObject[]) children;
-        for( ThemeStyleTreeObject style : styles )
+        final ThemeStyleTreeObject[] styles = (ThemeStyleTreeObject[]) children;
+        for( final ThemeStyleTreeObject style : styles )
         {
-          String sName = style.getStyle().getName();
+          final String sName = style.getStyle().getName();
           if( styleName.equals( sName ) )
           {
-            Object[] children2 = style.getChildren( style );
+            final Object[] children2 = style.getChildren( style );
             if( children2 instanceof RuleTreeObject[] )
             {
-              RuleTreeObject[] rules = (RuleTreeObject[]) children2;
-              for( RuleTreeObject ruleTreeObject : rules )
+              final RuleTreeObject[] rules = (RuleTreeObject[]) children2;
+              for( final RuleTreeObject ruleTreeObject : rules )
               {
-                String rName = ruleTreeObject.getRule().getName();
+                final String rName = ruleTreeObject.getRule().getName();
                 if( ruleName.equals( rName ) )
                 {
                   /* Found the right one, need this image icon. */
-                  ImageDescriptor descriptor = ruleTreeObject.getImageDescriptor( ruleTreeObject );
+                  final ImageDescriptor descriptor = ruleTreeObject.getImageDescriptor( ruleTreeObject );
 
                   /* Create the Image. */
                   m_externIcon = descriptor.createImage();
@@ -378,14 +378,14 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     }
 
     /* Resolve the URL. */
-    URL absoluteUrl = getLegendIconURL();
+    final URL absoluteUrl = getLegendIconURL();
 
     /* On error, return the default icon. */
     if( absoluteUrl == null )
       return getDefaultIcon();
 
     /* Create the descriptor. */
-    ImageDescriptor descriptor = ImageDescriptor.createFromURL( absoluteUrl );
+    final ImageDescriptor descriptor = ImageDescriptor.createFromURL( absoluteUrl );
 
     /* Create the Image. */
     m_externIcon = descriptor.createImage();
@@ -413,22 +413,22 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
         if( baseCatalog == null )
           return null;
 
-        String uri = baseCatalog.resolve( m_legendIcon, m_legendIcon );
+        final String uri = baseCatalog.resolve( m_legendIcon, m_legendIcon );
         if( uri == null || uri.equals( m_legendIcon ) )
           return null;
 
         /* Resolve the URL. */
-        URL absoluteUrl = new URL( uri );
+        final URL absoluteUrl = new URL( uri );
 
         return absoluteUrl;
       }
 
       /* Resolve the URL. */
-      URL absoluteUrl = UrlResolverSingleton.resolveUrl( m_context, m_legendIcon );
+      final URL absoluteUrl = UrlResolverSingleton.resolveUrl( m_context, m_legendIcon );
 
       return absoluteUrl;
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
 
@@ -447,8 +447,20 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   protected ImageDescriptor getDefaultIcon( )
   {
-    if( m_standardThemeIcon == null || m_standardThemeIcon.isDisposed())
-      m_standardThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), AbstractKalypsoTheme.class.getResourceAsStream( "resources/standardTheme.gif" ) );
+    if( m_standardThemeIcon == null )
+    {
+      // TODO: this must be done inside the swt thread!
+
+      final Display current = Display.getCurrent();
+      if( current == null )
+        System.out.println( "Autsch" );
+
+      final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/standardTheme.gif" ) );
+      m_standardThemeIcon = imgDesc.createImage();
+    }
+
+    if( m_standardThemeIcon.isDisposed() )
+      return null;
 
     return ImageDescriptor.createFromImage( m_standardThemeIcon );
   }
