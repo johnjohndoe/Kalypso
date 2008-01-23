@@ -81,7 +81,8 @@ public interface ITupleResultChangedListener
   public enum TYPE
   {
     ADDED,
-    REMOVED;
+    REMOVED,
+    CHANGED;
   }
 
   public void valuesChanged( final ValueChange[] changes );
