@@ -2149,4 +2149,32 @@
           id="org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider">
     </provider>
  </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <category
+          description="Kommandos für tabellarische Observations"
+          id="org.kalypso.ui.tupleResult.category"
+          name="Observation Kommandos">
+    </category>
+    <command
+          categoryId="org.kalypso.ui.tupleResult.category"
+          description="Kopiert die aktuelle Selektion der Tabelle in die Zwischenablage"
+          id="org.kalypso.ui.tupleResult.copyToClipboardCommand"
+          name="Kopieren">
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.kalypso.ogc.gml.om.table.command.CopyToClipboardHandler"
+          commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand">
+    </handler>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commandImages">
+    <image
+          commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand"
+          icon="icons/table/copy.gif">
+    </image>
+ </extension>
 </plugin>

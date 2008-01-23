@@ -225,6 +225,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   /**
    * @see org.kalypso.ogc.gml.IKalypsoLayerModell#getContext()
    */
+  @Override
   public URL getContext( )
   {
     return m_innerMapModel.getContext();

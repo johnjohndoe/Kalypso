@@ -42,12 +42,20 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IExecutionListener;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
@@ -56,7 +64,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -68,7 +85,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
-import org.kalypso.ogc.gml.featureview.action.TupleResultFeatureActionsEnum;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.LastLineCellModifier;
@@ -77,9 +93,14 @@ import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
+import org.kalypso.ogc.gml.om.table.command.TupleResultCommandUtils;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.template.featureview.ColumnDescriptor;
+import org.kalypso.template.featureview.TupleResult.ToolbarItem;
+import org.kalypso.template.featureview.TupleResult.ToolbarItem.Command;
+import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -91,6 +112,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class TupleResultFeatureControl extends AbstractFeatureControl implements ITupleResultChangedListener
 {
   private final List<ModifyListener> m_listener = new ArrayList<ModifyListener>( 10 );
+
+  private final ToolBarManager m_toolbar = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
+
+  private final Set<String> m_commands = new HashSet<String>();
 
   private final IComponentUiHandler[] m_handlers;
 
@@ -112,6 +137,8 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   /** TRICK: in order to suppress refresh after our own changes we set this flag. */
   private int m_ignoreNextUpdateControl = 0;
+
+  private IExecutionListener m_executionListener;
 
   public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandler[] handlers )
   {
@@ -168,6 +195,16 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     return handlers.toArray( new IComponentUiHandler[handlers.size()] );
   }
 
+  public void addToolbarItem( final String commandId, final int style )
+  {
+    final IServiceLocator serviceLocator = PlatformUI.getWorkbench();
+
+    m_toolbar.add( new CommandContributionItem( serviceLocator, commandId + "_item", commandId, new HashMap<Object, Object>(), null, null, null, null, null, null, style ) );
+    m_toolbar.update( true );
+
+    m_commands.add( commandId );
+  }
+
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
@@ -179,19 +216,9 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     compLayout.marginWidth = 0;
     composite.setLayout( compLayout );
 
-    final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-    manager.createControl( composite );
+    m_toolbar.createControl( composite );
 
     m_viewer = new DefaultTableViewer( composite, style ); // TODO and not SWT.BORDER delete border style here...
-
-    final boolean useToolbar = true;
-    if( useToolbar )
-    {
-
-      manager.add( TupleResultFeatureActionsEnum.createAction( m_viewer, TupleResultFeatureActionsEnum.COPY ) );
-
-      manager.update( true );
-    }
     final Table table = m_viewer.getTable();
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     table.setHeaderVisible( true );
@@ -229,10 +256,8 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       protected void addElement( final Object newElement, final String property, final Object value )
       {
         final TupleResult result = tupleResultContentProvider.getResult();
-
         final IRecord record = (IRecord) newElement;
         tupleResultCellModifier.modifyRecord( record, property, value );
-// TODO: maybe do not inform the listeners?
         result.add( record );
       }
     };
@@ -255,7 +280,68 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     updateControl();
 
+    hookExecutionListener( m_commands, m_viewer, m_toolbar );
+
     return composite;
+  }
+
+  private void hookExecutionListener( final Set<String> commands, final TableViewer tableViewer, final ToolBarManager toolBar )
+  {
+    final IWorkbench serviceLocator = PlatformUI.getWorkbench();
+    final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
+    final IHandlerService handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
+
+    m_executionListener = new IExecutionListener()
+    {
+      public void notHandled( final String commandId, final NotHandledException exception )
+      {
+      }
+
+      public void preExecute( final String commandId, final ExecutionEvent event )
+      {
+        if( !commands.contains( commandId ) )
+          return;
+
+        final Event trigger = (Event) event.getTrigger();
+        final ToolItem toolItem = (ToolItem) trigger.widget;
+        final ToolBar parentToolbar = toolItem.getParent();
+        final ToolBar managerToolbar = toolBar.getControl();
+
+        if( commands.contains( commandId ) && parentToolbar == managerToolbar )
+        {
+          final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+          context.addVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME, tableViewer );
+        }
+      }
+
+      public void postExecuteFailure( final String commandId, final ExecutionException exception )
+      {
+        if( !commands.contains( commandId ) )
+          return;
+
+        final IEvaluationContext currentState = handlerService.getCurrentState();
+        currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
+
+        // REMARK: it would be nice to have an error mesage here, but:
+        // If we have several tabs, we get several msg-boxes, as we have several listeners.
+        // How-to avoid that??
+        // final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, "Kommando mit Fehler beendet",
+        // exception );
+        // ErrorDialog.openError( getShell(), "Kommando ausführen", "Fehler bei der Ausführung eines Kommandos",
+        // errorStatus );
+      }
+
+      public void postExecuteSuccess( final String commandId, final Object returnValue )
+      {
+        if( !commands.contains( commandId ) )
+          return;
+
+        final IEvaluationContext currentState = handlerService.getCurrentState();
+        currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
+      }
+    };
+
+    cmdService.addExecutionListener( m_executionListener );
   }
 
   /**
@@ -280,6 +366,9 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       m_tupleResult.removeChangeListener( this );
       m_tupleResult = null;
     }
+
+    m_toolbar.dispose();
+    m_toolbar.removeAll();
 
     super.dispose();
   }
@@ -415,5 +504,46 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   public void setViewerFilter( final ViewerFilter filter )
   {
     m_viewerFilter = filter;
+  }
+
+  private static IComponentUiHandler[] createHandler( final Feature feature, final IPropertyType ftp, final org.kalypso.template.featureview.TupleResult editorType )
+  {
+    final String columnProviderId = editorType.getColumnProviderId();
+
+    final Feature obsFeature = TupleResultFeatureControl.getObservationFeature( feature, ftp );
+
+    final ColumnDescriptor[] descriptors = editorType.getColumnDescriptor().toArray( new ColumnDescriptor[] {} );
+
+    if( descriptors.length == 0 )
+    {
+      // If also the provider is null, a default provider is used.
+      final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( columnProviderId );
+
+      if( obsFeature == null )
+        return new IComponentUiHandler[] {};
+
+      final IComponent[] components = ObservationFeatureFactory.componentsFromFeature( obsFeature );
+      return provider.createComponentHandler( components );
+    }
+    else
+      return TupleResultFeatureControl.toHandlers( obsFeature, descriptors );
+  }
+
+  public static TupleResultFeatureControl create( final org.kalypso.template.featureview.TupleResult editorType, final Feature feature, final IPropertyType ftp )
+  {
+    final IComponentUiHandler[] handler = createHandler( feature, ftp, editorType );
+
+    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, handler );
+
+    final List<ToolbarItem> toolbarItems = editorType.getToolbarItem();
+    for( final ToolbarItem toolbarItem : toolbarItems )
+    {
+      final Command command = toolbarItem.getCommand();
+      final String commandId = command.getCommandId();
+      final int style = SWTUtilities.createStyleFromString( command.getStyle() );
+      tfc.addToolbarItem( commandId, style );
+    }
+
+    return tfc;
   }
 }
