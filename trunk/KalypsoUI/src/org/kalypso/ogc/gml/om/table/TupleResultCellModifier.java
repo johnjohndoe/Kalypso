@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
 public class TupleResultCellModifier implements ICellModifier
@@ -78,13 +76,7 @@ public class TupleResultCellModifier implements ICellModifier
   {
     final TableItem item = (TableItem) element;
     final IRecord record = (IRecord) item.getData();
-    final IComponent component = modifyRecord( record, property, value );
-    if( component == null )
-      return;
-
-    final Object changedValue = record.getValue( component );
-    final ValueChange[] changes = new ValueChange[] { new ValueChange( record, component, changedValue ) };
-    m_contentProvider.getResult().fireValuesChanged( changes );
+    modifyRecord( record, property, value );
   }
 
   /**
@@ -94,21 +86,13 @@ public class TupleResultCellModifier implements ICellModifier
    * 
    * @return the component which was modified, <code>null</code> if the record was not changed.
    */
-  public IComponent modifyRecord( final IRecord record, final String handlerId, final Object value )
+  public void modifyRecord( final IRecord record, final String handlerId, final Object value )
   {
     final IComponentUiHandler compHandler = m_contentProvider.getHandler( handlerId );
     final IComponent component = compHandler.getComponent();
 
-    // TODO: maybe rename to transform value or something; or better 'cellEditorValueToValue'
     final Object valueToSet = compHandler.parseValue( value );
 
-    final Object oldValue = record.getValue( component );
-    if( ObjectUtils.equals( valueToSet, oldValue ) )
-      return null;
-
     record.setValue( component, valueToSet );
-    m_contentProvider.getResult().sort();
-
-    return component;
   }
 }

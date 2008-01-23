@@ -205,8 +205,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       updateLayoutData( control );
 
     if( m_control != null && !m_control.isDisposed() )
+    {
       if( m_control instanceof Composite )
         ((Composite) m_control).layout();
+    }
   }
 
   /**
@@ -418,25 +420,25 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final int tabStyle = SWTUtilities.createStyleFromString( tabFolderType.getStyle() );
 
-      org.eclipse.swt.widgets.TabFolder tabFolder = new org.eclipse.swt.widgets.TabFolder( parent, tabStyle );
+      final org.eclipse.swt.widgets.TabFolder tabFolder = new org.eclipse.swt.widgets.TabFolder( parent, tabStyle );
 
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
         m_formToolkit.adapt( tabFolder );
 
-      List<JAXBElement< ? >> tabLabelAndControl = tabFolderType.getTabLabelAndControl();
-      for( Iterator<JAXBElement< ? >> iterator = tabLabelAndControl.iterator(); iterator.hasNext(); )
+      final List<JAXBElement< ? >> tabLabelAndControl = tabFolderType.getTabLabelAndControl();
+      for( final Iterator<JAXBElement< ? >> iterator = tabLabelAndControl.iterator(); iterator.hasNext(); )
       {
-        JAXBElement< ? > labelElement = iterator.next();
-        JAXBElement< ? > controlElement = iterator.next();
+        final JAXBElement< ? > labelElement = iterator.next();
+        final JAXBElement< ? > controlElement = iterator.next();
 
         final String label = (String) labelElement.getValue();
-        ControlType control = (ControlType) controlElement.getValue();
+        final ControlType control = (ControlType) controlElement.getValue();
 
-        TabItem item = new TabItem( tabFolder, SWT.NONE );
+        final TabItem item = new TabItem( tabFolder, SWT.NONE );
         item.setText( label );
 
-        Control tabControl = createControl( tabFolder, SWT.NONE, control );
+        final Control tabControl = createControl( tabFolder, SWT.NONE, control );
 
         item.setControl( tabControl );
       }

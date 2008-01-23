@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.om.table.celleditor;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -79,10 +80,14 @@ public class DateTimeCellEditor extends CellEditor
   @Override
   public void activate( )
   {
-    m_dialog.open();
-    markDirty();
+    if( m_dialog.open() == Window.OK )
+    {
+      markDirty();
 
-// fireEditorValueChanged( true, true );
+      fireApplyEditorValue();
+    }
+    else
+      fireCancelEditor();
   }
 
   /**

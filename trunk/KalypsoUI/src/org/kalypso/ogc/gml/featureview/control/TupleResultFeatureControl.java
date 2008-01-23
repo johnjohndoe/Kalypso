@@ -59,7 +59,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -175,7 +174,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   public Control createControl( final Composite parent, final int style )
   {
     final Composite composite = new Composite( parent, style );
-    GridLayout compLayout = new GridLayout();
+    final GridLayout compLayout = new GridLayout();
     compLayout.marginHeight = 0;
     compLayout.marginWidth = 0;
     composite.setLayout( compLayout );
@@ -202,7 +201,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     // TODO: if any of the columns is not editable, do not show the 'last-line'
     boolean editable = true;
-    for( IComponentUiHandler handler : m_handlers )
+    for( final IComponentUiHandler handler : m_handlers )
       editable |= handler.isEditable();
 
     m_tupleResultContentProvider = new TupleResultContentProvider( m_handlers );
@@ -233,7 +232,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
         final IRecord record = (IRecord) newElement;
         tupleResultCellModifier.modifyRecord( record, property, value );
-
+// TODO: maybe do not inform the listeners?
         result.add( record );
       }
     };
@@ -256,17 +255,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     updateControl();
 
-    new ExcelTableCursor( m_viewer, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.RIGHT, true );
-
     return composite;
-  }
-
-  public void runTableAction( final TupleResultFeatureActionsEnum tableAction )
-  {
-    if( m_viewer != null )
-    {
-
-    }
   }
 
   /**
