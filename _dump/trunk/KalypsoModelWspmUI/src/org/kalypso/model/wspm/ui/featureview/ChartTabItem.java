@@ -69,7 +69,6 @@ import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
-import org.ksp.chart.factory.ChartType;
 
 /**
  * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a seperate class as each
@@ -85,7 +84,7 @@ public class ChartTabItem extends Composite implements IChartPart
 
   private final IExecutionListener m_executionListener;
 
-  public ChartTabItem( final Composite parent, final int style, final ChartType chartType, final Map<String, Integer> commands )
+  public ChartTabItem( final Composite parent, final int style, final Map<String, Integer> commands )
   {
     super( parent, style );
 
@@ -139,10 +138,7 @@ public class ChartTabItem extends Composite implements IChartPart
         final ToolBar parentToolbar = toolItem.getParent();
         final ToolBar managerToolbar = manager.getControl();
 
-        // REMARK: only set the chart context for the visible tab, as this code is executed for every tab
-        // Still problematic: what about multiple diagrams in different tab-folders? Does is still work...?
-// final TabItem selectedItem = folder.getItem( folder.getSelectionIndex() );
-        if( commands.keySet().contains( commandId ) && /* selectedItem == item && */parentToolbar == managerToolbar )
+        if( commands.keySet().contains( commandId ) && parentToolbar == managerToolbar )
         {
           final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
           context.addVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME, ChartTabItem.this );
@@ -156,6 +152,12 @@ public class ChartTabItem extends Composite implements IChartPart
 
         final IEvaluationContext currentState = handlerService.getCurrentState();
         currentState.removeVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME );
+
+        // REMARK: it would be nice to have an error mesage here, but:
+        // If we have several tabs, we get several msg-boxes, as we have several listeners.
+        // How-to avoid that??
+// final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, "Kommando mit Fehler beendet", exception );
+// ErrorDialog.openError( getShell(), "Kommando ausführen", "Fehler bei der Ausführung eines Kommandos", errorStatus );
       }
 
       public void postExecuteSuccess( final String commandId, final Object returnValue )
@@ -166,8 +168,8 @@ public class ChartTabItem extends Composite implements IChartPart
         final IEvaluationContext currentState = handlerService.getCurrentState();
         currentState.removeVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME );
       }
-
     };
+
     cmdService.addExecutionListener( m_executionListener );
   }
 

@@ -116,17 +116,12 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
     if( m_chartTabs.length == 1 )
     {
-// final Composite composite = new Composite( parent, SWT.NONE );
-//
-// composite.setLayout( new FillLayout() );
-
       // REAMRK: we do not tab, if we have only one chart
-      m_chartTabs[0] = new ChartTabItem( /* composite */parent, style, m_chartTypes[0], m_commands );
+      m_chartTabs[0] = new ChartTabItem( /* composite */parent, style, m_commands );
 
       updateControl();
 
       return m_chartTabs[0];
-// return composite;
     }
 
     final TabFolder folder = new TabFolder( parent, SWT.TOP );
@@ -140,7 +135,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       item.setText( chartType.getTitle() );
       item.setToolTipText( chartType.getDescription() );
 
-      m_chartTabs[i] = new ChartTabItem( folder, style, chartType, m_commands );
+      m_chartTabs[i] = new ChartTabItem( folder, style, m_commands );
 
       item.setControl( m_chartTabs[i] );
     }
