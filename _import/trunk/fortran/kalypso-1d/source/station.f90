@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    5:38 pm
+!     Last change:  MD   23 Jan 2008   11:41 am
 !--------------------------------------------------------------------------
 ! This code, station.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -129,19 +129,20 @@ REAL, INTENT(IN) :: str			! Abstand (Strecke) zwischen zwei Profilen
 !EP   werden, da die Variable nprof, die im Common-Block steht, auch in 
 !EP   Parameterliste dieser SUBR steht. Daher wird die Variable IDR1 ebf
 !EP   diese Parameterliste übergeben und hier nur noch als Character def
-!EP                                                                     
 CHARACTER(LEN=1) :: idr1
 !EP   Ende der Ergänzung
 
 REAL :: xi (maxkla), hi (maxkla), s (maxkla)
-
+!EN   Ergänzung zur Beseitigung von Rueckspruengen in der WSP-Lage
+INTEGER:: kennz
+REAL:: hrc
+!EN   Ende Ergänzung
 
 ! COMMON-Block /ALT/ ----------------------------------------------------------
 REAL            :: ws1, rg1, vmp1, fges1, hv1
 INTEGER         :: ikenn1
 COMMON / alt / ws1, rg1, vmp1, fges1, hv1, ikenn1
 ! -----------------------------------------------------------------------------
-
 
 ! COMMON-Block /BRUECK/ ------------------------------------------------------------
 INTEGER 	:: iwl, iwr, nuk, nok
@@ -153,12 +154,10 @@ COMMON / brueck / iwl, iwr, iokl, iokr, nuk, nok, xuk, huk, xok, hok, hukmax, &
        & hokmax, hsuw, raub, breite, xk, hokmin, ibridge
 ! ----------------------------------------------------------------------------------
 
-
 ! COMMON-Block /DD/ -----------------------------------------------------------
 REAL            :: tm, vm
 COMMON / dd / tm, vm
 ! -----------------------------------------------------------------------------
-
 
 ! COMMON-Block /FROUD/ --------------------------------------------------------
 INTEGER         :: indfl
@@ -166,18 +165,15 @@ REAL            :: froudi (maxkla)
 COMMON / froud / indfl, froudi
 ! -----------------------------------------------------------------------------
 
-
 ! COMMON-Block /GEF_SOHL/ -----------------------------------------------------
 REAL 		:: g_sohl
 COMMON / gef_sohl / g_sohl
 ! -----------------------------------------------------------------------------
 
-
 ! COMMON-Block /GES/ ----------------------------------------------------------
 REAL 		:: fges, brges, uges, akges, vges, rhges, alges
 COMMON / ges / fges, brges, uges, akges, vges, rhges, alges
 ! -----------------------------------------------------------------------------
-
 
 ! COMMON-Block /P2/ -----------------------------------------------------------
 REAL 		 :: x1 (maxkla), h1 (maxkla), rau (maxkla)
@@ -188,7 +184,6 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
             & boli, bore, hmin, hmax, ianf, iend, hrbv
 ! -----------------------------------------------------------------------------
 
-
 ! COMMON-Block /PROF_HR/ ------------------------------------------------------
 REAL 		:: f (maxkla), u (maxkla), br (maxkla), ra (maxkla), rb (maxkla)
 REAL 		:: v (maxkla), qt (maxkla), ts1 (maxkla), ts2 (maxkla)
@@ -196,29 +191,25 @@ REAL 		:: rk (maxkla), ra1 (maxkla), formbeiwert(maxkla)
 COMMON / profhr / f, u, br, ra, rb, v, qt, ts1, ts2, rk, ra1, formbeiwert
 ! -----------------------------------------------------------------------------
 
-
 ! COMMON-Block /ROHR/ ---------------------------------------------------------
 INTEGER         :: idruck
 COMMON / rohr / idruck
 ! -----------------------------------------------------------------------------
-
 
 ! COMMON-Block /VORT/ ---------------------------------------------------------
 REAL 		:: hborda, heins, horts
 COMMON / vort / hborda, heins, horts
 ! -----------------------------------------------------------------------------
 
-
-
 INTEGER :: rdruck
+
 
 ! ------------------------------------------------------------------
 ! BERECHNUNGEN
 ! ------------------------------------------------------------------
-                                                                        
-!                                                                       
-!       Vorbelegung:                                                    
-!       -max. anzahl der iterationsschritte:                            
+
+! Vorbelegung:
+!  -max. anzahl der iterationsschritte:
 g_sohl = sgef
 
 izz = 0
@@ -226,21 +217,20 @@ ifehl = 0
 istat = 1
 rdruck = idruck
                                                                         
-!     Umspeichern der idruck-Variablen, da sie durch Aufruf von verluste
-!     ueberschrieben wird. An dieser Stelle zeigt idruck an, ob im Rohr 
-!     Grenztiefe auftritt(idruck=0) oder bei Erreichen des Rohrscheitels
-!     die Froud-Zahl nocht > 0 ist (idruck=1).                          
-!     Fuer den Fall, dasz der stationaer-gleichfoermige Abfluss bei     
-!     schiessendem Abfluss auftritt, wird die Variable rdruck           
-!     ueberprueft.                                                      
-!     Wenn rdruck= 0   dann mit Grenztiefe weiter                       
-!     Wenn rdruck=1    dann mit Rohrscheitelhoehe weiter                
-!                                                                       
-                                                                        
-!     kennung fuer stationaer gleichfoermig
+! Umspeichern der idruck-Variablen, da sie durch Aufruf von verluste
+! ueberschrieben wird. An dieser Stelle zeigt idruck an, ob im Rohr
+! Grenztiefe auftritt(idruck=0) oder bei Erreichen des Rohrscheitels
+! die Froud-Zahl nocht > 0 ist (idruck=1).
+! Fuer den Fall, dasz der stationaer-gleichfoermige Abfluss bei
+! schiessendem Abfluss auftritt, wird die Variable rdruck
+! ueberprueft.
+! Wenn rdruck= 0   dann mit Grenztiefe weiter
+! Wenn rdruck=1    dann mit Rohrscheitelhoehe weiter
+
+! kennung fuer stationaer gleichfoermig
 ikenn = 3
 hborda = 0.
-!     nur fuer ungleichfoermig
+! nur fuer ungleichfoermig
 heins = 0.
 horts = 0.
 
@@ -249,9 +239,10 @@ IF (nprof.eq.1) then
 ELSE
   q1 = q
 ENDIF
-
+!EN Änderung 21.1.07
+!Erhöhung von it155m von 30 auf 40
 it155 = 0
-it155m = 30
+it155m = 40
 
 !JK   SCHREIBEN IN KONTROLLFILE
 IF (nprof.ne.1) then
@@ -263,21 +254,20 @@ ELSE
 ENDIF
 
 
-!     ******************************************************************
-!     berechnung von basisgeometriegroessen : sehnen, abstand zwischen
-!                                             den profilpunkten (hori-
-!                                             zontal und veritkal)
-!     ******************************************************************
-!     input:  nknot,x1,h1
-!     output: xi,hi,s
+! ******************************************************************
+! berechnung von basisgeometriegroessen : sehnen, abstand zwischen
+!                                         den profilpunkten (hori-
+!                                         zontal und veritkal)
+! ******************************************************************
+! input:  nknot,x1,h1
+! output: xi,hi,s
 CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
 
-!     berechnung der tiefsten sohle und der boeschungskanten (s. profil)
-!     gebraucht werden - boli(i),bore(i),sohl(i)
+! berechnung der tiefsten sohle und der boeschungskanten (s. profil)
+! gebraucht werden - boli(i),bore(i),sohl(i)
 
 
 if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
-
 
   ! *****************************************************************
   ! der anfangswasserspiegel wird unter annahme stationaer
@@ -287,7 +277,6 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   ! anfangsiterationswert (grenztiefe+delta, damit nicht im labilen
   !                        bereich der koch'schen parabel)
   IF (nprof == 1) then
-
     nz = nz + 3
     IF (nz.gt.50) then
       nblatt = nblatt + 1
@@ -307,7 +296,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   END IF
 
   dx = 0.02
-  !     anfangswasserspiegel:
+  ! anfangswasserspiegel:
   IF (nprof.gt.1 .and. BERECHNUNGSMODUS /= 'REIB_KONST') then      !MD neu**
     hr = ws1 - str * sgef
   ELSE
@@ -335,18 +324,18 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   152 CONTINUE
 
-  !write (UNIT_OUT_LOG, 2001)
-  !2001 format (1X, 'In STATION. Werte vor Aufruf von VERLUSTE:')
-  !write (UNIT_OUT_LOG, 2000) str, q, q1, nprof, hrb, hv, rg, hvstb, hrstb,    &
+  ! write (UNIT_OUT_LOG, 2001)
+  ! 2001 format (1X, 'In STATION. Werte vor Aufruf von VERLUSTE:')
+  ! write (UNIT_OUT_LOG, 2000) str, q, q1, nprof, hrb, hv, rg, hvstb, hrstb,    &
   ! & froud, ifehlg, itere1
  
   CALL verluste (str, q, q1, nprof, hrb, hv, rg, hvstb, hrstb,    &
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
    & itere1)
 
-  !write (UNIT_OUT_LOG, 2002)
-  !2002 format (1X, 'In STATION. Werte nach Aufruf von VERLUSTE:')
-  !write (UNIT_OUT_LOG, 2000) str, q, q1, nprof, hrb, hv, rg, hvstb, hrstb,    &
+  ! write (UNIT_OUT_LOG, 2002)
+  ! 2002 format (1X, 'In STATION. Werte nach Aufruf von VERLUSTE:')
+  ! write (UNIT_OUT_LOG, 2000) str, q, q1, nprof, hrb, hv, rg, hvstb, hrstb,    &
   ! & froud, ifehlg, itere1
 
   sistb = hrstb / str
@@ -365,14 +354,16 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   ! & froud, ifehlg, itere1
 
 
-
   sista = hrsta / str
   hraa = - 10000.
 
+  !EN Aennderung
+  kennz=0
+
   DO 150 i = 1, itmax
 
-    !write (UNIT_OUT_LOG, 2010) i
-    !2010 format (1X, 'In STATION. Iterationsschleife 150. Iteration Nr. ', I5)
+    ! write (UNIT_OUT_LOG, 2010) i
+    ! 2010 format (1X, 'In STATION. Iterationsschleife 150. Iteration Nr. ', I5)
     
     del = hrsta / str + sgef
     dfh = abs (hraa - hrb)
@@ -385,8 +376,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     !HB Genauigkeitsveraenderung durchgefuehrt
     !HB alter Wert: 0.00005
     !HB Auf diese Weise treten bei stationaer gleichfoermiger
-    !HB Berechnung keine nicht vorhandenen Geschwindigkeitsverluste
-    !HB auf.
+    !HB Berechnung keine nicht vorhandenen Geschwindigkeitsverluste auf
     !HB Bisher Berechnung des Anfangswasserspiegels ungenauer als
     !HB Berechnung nach Arbeitsgleichung fuer uebrige Profile.
     !HB erzielte Genauigkeit nun: 10**-3 (mm-Bereich)
@@ -408,39 +398,33 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         itere1 = i
         ! ermitteln der verlustwerte
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
-         & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
-         & ifehlg, itere1)
+           & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
+           & ifehlg, itere1)
 
       ELSE IF (froud .ge. 1. .and. jdruck .eq. 0) then
 
         ikenn = 1
         hr = hgrenz
-
-        !JK              SCHREIBEN IN KONTROLLFILE
         WRITE (UNIT_OUT_LOG, '( ''froud ='',f12.4,'' > 1. !'')') froud
         WRITE (UNIT_OUT_LOG, '(/,'' d.h. steiles gefaelle yn<ygr !!'')')
         WRITE (UNIT_OUT_LOG, '(/,'' ->  weiter mit grenztiefe hr= '', f12.4)') hr
 
         froud = 1.
         itere1 = itere1 + 1
-
-        !JK              SCHREIBEN IN KONTROLLFILE
         write (UNIT_OUT_LOG, '(''--> hgrenz ='',f7.3)') hr
 
         ! ermitteln der verlustwerte
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
-         & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
-         & ifehlg, itere1)
+           & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
+           & ifehlg, itere1)
 
       ELSE
-
         ikenn = 3
         hr = hra
         sist = sista
-
       ENDIF
 
-      !HB           SCHREIBEN IN KONTROLLFILE              *** KENNZAHL 10 ***
+      !HB  SCHREIBEN IN KONTROLLFILE      ************************** KENNZAHL 10 ***
       WRITE (UNIT_OUT_LOG, '(i3,f12.7,1x,f12.7,1x,f12.5,f12.7,1x,                &
                  &    f12.7,'' 10'')') i, sgef, sist, hr, froud, del
 
@@ -453,14 +437,13 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     !HB       Genauigkeitsveraenderung durchgefuehrt
     !HB       alter Wert: 0.01
     !HB       *************************************************************
-    ELSE IF (abs (dfh) .le. 0.0001) then
+    ELSEIF (abs (dfh) .le. 0.0001) then
 
       !  Iteration hat in Bezug auf Wasserspiegel konvergiert
       hr = hra
 
-      !JK           SCHREIBEN IN KONTROLLFILE
+      !HB  SCHREIBEN IN KONTROLLFILE   ************************** KENNZAHL 20 ***
       WRITE (UNIT_OUT_LOG, '(''Konvergenz im Wasserspiegel erreicht '')')
-      !HB           SCHREIBEN IN KONTROLLFILE              *** KENNZAHL 20 ***
       WRITE (UNIT_OUT_LOG, '(i3,f12.7,1x,f12.7,1x,f12.5,f12.7,1x,                &
          &       f12.7,'' 20'')') i, sgef, sist, hr, froud, del
 
@@ -475,45 +458,38 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
         ikenn = 4
         hr = hgrenz
-
         !   ermitteln der verlustwerte
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
-         & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
-         & ifehlg, itere1)
+           & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
+           & ifehlg, itere1)
 
-      ELSE IF (froud .ge. 1. .and. jdruck .eq. 0) then
+      ELSEIF (froud .ge. 1. .and. jdruck .eq. 0) then
 
         ikenn = 1
         hr = hgrenz
-
-        !JK  SCHREIBEN IN KONTROLLFILE
         WRITE (UNIT_OUT_LOG, '( ''froud ='',f12.4,'' > 1. !'')') froud
         WRITE (UNIT_OUT_LOG, '(/,'' d.h. steiles gefaelle yn<ygr !!'')')
         WRITE (UNIT_OUT_LOG, '(/,'' ->  weiter mit grenztiefe hr= '', f12.4)') hr
 
         froud = 1.
-
-        !JK               SCHREIBEN IN KONTROLLFILE
         write (UNIT_OUT_LOG, '(''--> hgrenz ='',f7.3)') hr
 
         !      ermitteln der verlustwerte
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
-         & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
-         & ifehlg, itere1)
+           & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
+           & ifehlg, itere1)
 
       ELSE
-
         ikenn = 3
         hr = hra
         sist = sista
-
       ENDIF
 
-      !HB           SCHREIBEN IN KONTROLLFILE              *** KENNZAHL 30 ***
+      !HB  SCHREIBEN IN KONTROLLFILE          ************************** KENNZAHL 30 ***
       WRITE (UNIT_OUT_LOG, '(i3,f12.7,1x,f12.7,1x,f12.5,f12.7,1x,                &
            &    f12.7,'' 30'')') i, sgef, sist, hr, froud, del
 
-      !JK           WSP GEFUNDEN
+      !JK WSP GEFUNDEN
       GOTO 9999
 
     !JK       ELSE ZU (abs(del).lt.0.00005)
@@ -521,26 +497,31 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
       ! Schaetzen neues Wasserspiegelgefaelle SISTB ist Reibungsgefaelle aus HRSTB
       hdif2 = sistb - abs (sgef)
-      !write (UNIT_OUT_LOG, 2020) hdif2
-      !2020 format (1X, 'In STATION. Neues Gefaelle geschaetzt HDIF2 = ', F10.4)
 
+      ! write (UNIT_OUT_LOG, 2020) hdif2
+      ! 2020 format (1X, 'In STATION. Neues Gefaelle geschaetzt HDIF2 = ', F10.7)
+      ! OPEN (unit = UNIT_OUT_LOG, file = NAME_OUT_LOG, status = 'REPLACE', iostat = istat)
+      ! WRITE (UNIT_OUT_LOG, '( ''In STATION. Neues Gefaelle geschaetzt HDIF2 ='',f12.4)') hdif2
 
       155 CONTINUE
 
       hdif1 = sista - abs (sgef)
-      !write (UNIT_OUT_LOG, 2021) hdif1
-      !2021 format (1X, 'In STATION. Neues Gefaelle geschaetzt HDIF1 = ', F10.4)
+      ! write (UNIT_OUT_LOG, 2021) hdif1
+      ! 2021 format (1X, 'In STATION. Neues Gefaelle geschaetzt HDIF1 = ', F10.7)
+      ! WRITE (UNIT_OUT_LOG, '( ''In STATION. Neues Gefaelle geschaetzt HDIF1 ='', f12.4)') hdif1
+
 
       it155 = it155 + 1
-
       IF ( (hdif1*hdif2) .lt. 0) then
 
+        !EN Aenderung: kennz gibt an ob Schleife um Kennzahlen 40 und 50 bereits durchlaufen wurde
+        kennz = kennz+1
         hraa = hra
         dfh = abs (hraa - hrb)
 
-        !HB            Moeglichkeit Genauigkeitseinstellung
+        !HB  Moeglichkeit Genauigkeitseinstellung
         IF (abs (dfh) .le. 0.01) then
-          !                 Iteration hat in Bezug auf Wasserspiegel konvergiert
+          ! Iteration hat in Bezug auf Wasserspiegel konvergiert
           IF (ibridge .eq. 'b' .and. hr .ge. hukmax) then
             jdruck = 1
           ELSE
@@ -551,79 +532,84 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
           IF (froud.ge.1..and.rdruck.ne.0) then
             ikenn = 4
             hr = hgrenz
-             ! ermitteln der verlustwerte
+            ! ermitteln der verlustwerte
             CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst,   &
-             & hrst, indmax, psiein, psiort, hi, xi, s, istat,  &
-             & froud, ifehlg, itere1)
+               & hrst, indmax, psiein, psiort, hi, xi, s, istat,  &
+               & froud, ifehlg, itere1)
 
           ELSE IF (froud.ge.1.and.jdruck.eq.0) then
-
             ikenn = 1
             hr = hgrenz
-
-            !JK   SCHREIBEN IN KONTROLLFILE
             WRITE (UNIT_OUT_LOG, '( ''froud ='',f12.4,'' > 1. !'')') froud
             WRITE (UNIT_OUT_LOG, '(/,'' d.h. steiles gefaelle yn<ygr !!'')')
             WRITE (UNIT_OUT_LOG, '(/,'' ->  weiter mit grenztiefe hr= '',  f12.4)') hr
 
             froud = 1.
-
             write (UNIT_OUT_LOG, '(''--> hgrenz ='',f7.3)')  hr
 
             !  ermitteln der verlustwerte
             CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst,   &
-             & hrst, indmax, psiein, psiort, hi, xi, s, istat,  &
-             & froud, ifehlg, itere1)
+               & hrst, indmax, psiein, psiort, hi, xi, s, istat,  &
+               & froud, ifehlg, itere1)
 
           ELSE
-
             ikenn = 3
             hr = hra
             sist = sista
-
           ENDIF
 
-          !HB           SCHREIBEN IN KONTROLLFILE              *** KENNZAHL 40 ***
+          !HB  SCHREIBEN IN KONTROLLFILE     ****************************** KENNZAHL 40 ***
           WRITE (UNIT_OUT_LOG, '(i3,f12.7,1x,f12.7,1x,f12.5,f12.7,1x,    &
                 &        f12.7,'' 40'')') i, sgef, sist, hr, froud, del
 
-          !JK   WSP GEFUNDEN
+          !JK  WSP GEFUNDEN
           GOTO 9999
 
         !JK               ENDIF ZU (abs(dfh) .le. 0.01)
         ENDIF
 
-        hra = hra + 0.1 * (hrb - hra)
+
+        !EN Änderung 21.1.08: Zwischenspeicherung von hra
+        hrc = hra
+        !EN Schätzwertbildung alt: hra = hra + 0.1 * (hrb - hra)
+        !EN Durch folgende Schleife erfolgt die Schätzwertbildung in Abhängigkeit von dfh
+
+        IF (abs (dfh) .ge. 0.1) then
+          hra = hra + 0.5 * (hrb - hra)
+        ELSEIF (abs (dfh) .lt. 0.1 .and. abs (dfh).gt. 0.05) then
+          hra = hra + 0.2 * (hrb - hra)
+        ELSE
+          hra = hra + 0.1 * (hrb - hra)
+        ENDIF
+        !EN Ende Änderung
 
         CALL verluste (str, q, q1, nprof, hra, hv, rg, hvsta,     &
-         & hrsta, indmax, psiein, psiort, hi, xi, s, istat,     &
-         & froud, ifehlg, itere1)
+           & hrsta, indmax, psiein, psiort, hi, xi, s, istat,     &
+           & froud, ifehlg, itere1)
 
         sista = hrsta / str
 
-        !HB           SCHREIBEN IN KONTROLLFILE              *** KENNZAHL 50 ***
+        !HB SCHREIBEN IN KONTROLLFILE     *************************************** KENNZAHL 50 ***
         WRITE (UNIT_OUT_LOG, '(i3,f12.7,1x,f12.7,1x,f12.5,f12.7,1x,   &
            &         f12.7,'' 50'')') i, sgef, sista, hra, froud, del
 
         IF (it155.le.it155m) then
           !JK  SCHAETZEN NEUEN WSP
           GOTO 155
-
         ELSE
-          !JK    BEENDEN DER SCHLEIFE 150
+          !JK  BEENDEN DER SCHLEIFE 150
           GOTO 153
-
         ENDIF
 
-      !JK   ELSE ZU (hdif1*hdif2.lt.0)
+      !JK  ELSE ZU (hdif1*hdif2.lt.0)
       ELSE
 
         IF (abs (hra - hrb) .lt. 1.e-05) then
-          !JK                  SCHREIBEN IN KONTROLLFILE
+
           WRITE (UNIT_OUT_LOG, '(''Keine Konvergenz in Stationaer'')')
           GOTO 8000
-          !   hra=hra+0.1
-          !   goto 151
+          ! hra=hra+0.1
+          ! goto 151
         ENDIF
 
         df = (hrsta - hrstb) / (hra - hrb)
@@ -633,20 +619,33 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         sistb = sista
 
         IF (abs (df) .le.0.00001) then
-
           !  geradengleichung tangente + schnitt mit sollwert m:
           izz = izz + 1
           IF (izz.gt.2) then
-            !   andere iteration
+            !  andere iteration
             ifehl = 1
             GOTO 8000
           ENDIF
           dif = 0.1
         ELSE
+
           dif = (abs (sgef) - sista) / df
         ENDIF
 
-        hra = hra + dif
+        !EN Beginn Änderung 21.1.08
+        If (kennz.eq.0) then
+          !EN kennz gibt an, ob die Schleife um die Kennzahlen 40 und 50 breits
+          !EN durchlaufen wurde (kennz=1) oder nicht (kennz=0)
+          hra = hra + dif
+
+        Else
+          !EN Wenn 50er Schleife bereits durchlaufen wurde, wird hier ein besserer Schaetzwert gebildet
+          !EN Dadurch werden weniger Iterationsschritte benötigt
+          !EN alt: hra = hra + dif
+          hra=hrc
+          ikenn=0
+
+        Endif !EN Ende Änderung
 
         IF (hra.le.hmin) then
           hra = hmin + 0.10
@@ -654,17 +653,17 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
         IF (hrb.le. (hmin + 0.02) ) hrb = hr
         CALL verluste (str, q, q1, nprof, hra, hv, rg, hvst,      &
-         & hrsta, indmax, psiein, psiort, hi, xi, s, istat,     &
-         & froud, ifehlg, itere1)
+           & hrsta, indmax, psiein, psiort, hi, xi, s, istat,     &
+           & froud, ifehlg, itere1)
 
         sista = hrsta / str
 
-        !HB           SCHREIBEN IN KONTROLLFILE              *** KENNZAHL 60 ***
+        !HB  SCHREIBEN IN KONTROLLFILE    **************************************** KENNZAHL 60 ***
         WRITE (UNIT_OUT_LOG, '(i3,f12.7,1x,f12.7,1x,f12.5,f12.7,1x,   &
            &    f12.7,'' 60'')') i, sgef, sista, hra, froud, del
 
 
-      !JK         ENDIF ZU (hdif1*hdif2.lt.0)
+      !JK  ENDIF ZU (hdif1*hdif2.lt.0)
       ENDIF
     !**     ENDIF ZU if(abs(del).lt.0.00005)
     ENDIF
@@ -677,7 +676,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   !WP Sprungmarke zum Verlassen der Schleife 150
   153 CONTINUE
 
-  !JK   SCHREIBEN IN KONTROLLFILE
+
   WRITE (UNIT_OUT_LOG, '(''maximale anzahl der iterationsschritte &
     &              ueberschritten in stationaer --> keine konvergenz &
     &              erreicht weiter mit grenztiefe'',/)')
@@ -688,7 +687,6 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     froud = 1.
     ikenn = 2
   ELSE
-    !JK       SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, '(''keine konvergenz in stationaer'',    &
      &  ''gleichfoermig -> Rechne mit Grenztiefe weiter.'')')
 
@@ -716,15 +714,12 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     hborda = 0.
   ENDIF
 
-  !JK   SCHREIBEN IN KONTROLLFILE
-
   WRITE (UNIT_OUT_LOG, '(/,'' --> aus stationaer weiter mit hr ='',f7.3,     &
    &              '' froud = '',f7.3,'' hrst = '',f10.4, '' hvst= '', &
    &              f10.4,//)') hr, froud, hrst, hvst
 
   CALL erfroud (br, f, qt, u, iprof, indfl, indmax, froud)
 
-  !JK   SCHREIBEN IN KONTROLLFILE
 
   WRITE (UNIT_OUT_LOG, '(/,''brges = '',f10.3,'' fges = '',f10.3,'' tm = ''  &
     &  ,f10.3,'' vm = '',f10.3,/)') brges, fges, tm, vm
@@ -756,28 +751,25 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   DO 8001 jsch = 1, 100
 
     hborda = 0.
-
     8002 CONTINUE
 
     CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,     &
-     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, &
-     & itere1)
+       & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, &
+       & itere1)
 
     hvst = 0.
-    !                                 /* gleichfoermig
+    !  /* gleichfoermig
     dela = del
     del = hrst / str + sgef
     sist = hrst / str
 
-    !JK        SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, '(i4,4f15.3)') jsch, sgef, sist, hr
 
     IF (jsch.gt.1) then
       IF ( (dela * del) .le.1.e-7) then
-        !              einschlussintervall gefunden
+        !  einschlussintervall gefunden
         hr = hra
 
-        !JK                 SCHREIBEN IN KONTROLLFILE
         WRITE (UNIT_OUT_LOG, '('' einschlussintervall gefunden --> '',   &
          &   '' weiter mit hr = '',f15.3)')
 
@@ -785,7 +777,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         h2x = hr
         f1 = salt
         f2 = sist
-        !JK                  ERMITTLUNG GEFAELLE
+        !JK   ERMITTLUNG GEFAELLE
         GOTO 9000
       ENDIF
     ENDIF
@@ -798,14 +790,11 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   ifehl = 1
 
-  !JK   SCHREIBEN IN KONTROLLFILE
   WRITE (UNIT_OUT_LOG, '('' kein einschlussintervall fuer stationaer '',     &
        &              '' gleichfoermig gefunden'')')
 
 
   IF (iprof.ne.' ') then
-
-    !JK      SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, '(''keine konvergenz in stationaer'',  &
      &   ''gleichfoermig -> Rechne mit Grenztiefe weiter.'')')
 
@@ -816,59 +805,51 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     ELSE
       ikenn = 5
     ENDIF
-    !JK      NEUER VERSUCH MIT EINSCHLUSSINTERVALL
+
+    !JK  NEUER VERSUCH MIT EINSCHLUSSINTERVALL
     GOTO 9999
   ELSE
     STOP ' in stationaer, da keine Konvergenz.'
   ENDIF
 
 
-  9000 CONTINUE
+  9000 CONTINUE    ! --------------------------------------------------
 
   jend = int (dx / 0.01) + 1
-  !                                 /* 0.01 zu erzielende genauigkeit
-
-  !JK   SCHREIBEN IN KONTROLLFILE
+  !   /* 0.01 zu erzielende genauigkeit
   WRITE (UNIT_OUT_LOG, '(''mit 1cm schritten ermittlung des gefaelles'')')
 
   DO 9001 jsch = 1, jend
 
     hborda = 0.
-
     9002 CONTINUE
 
     CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,     &
-     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, &
-     & itere1)
+       & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, &
+       & itere1)
 
     hvst = 0.
-    !                                  /* gleichfoermig
+    !  /* gleichfoermig
     dela = del
     del = hrst / str + sgef
     sist = hrst / str
 
-    !JK        SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, '(i4,4f15.3)') jsch, sgef, sist, hr
 
     IF (jsch.gt.1) then
 
       IF ( (dela * del) .le.1.e-7) then
-        !                  einschlussintervall gefunden
+        !  einschlussintervall gefunden
         IF (dela.lt.del) then
           hr = hra
-
           CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst,     &
-           & hrst, indmax, psiein, psiort, hi, xi, s, istat,    &
-           & froud, ifehlg, itere1)
+             & hrst, indmax, psiein, psiort, hi, xi, s, istat,    &
+             & froud, ifehlg, itere1)
 
           GOTO 9999
-
         ELSE
-
           GOTO 9999
-
         ENDIF
-
       ENDIF
 
     ENDIF
@@ -886,7 +867,6 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 ELSE
 
   !write (*,*) 'In STATION. stat.-gl. Bordvoll.'
-
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
    & itere1)
