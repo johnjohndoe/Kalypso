@@ -56,7 +56,6 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
@@ -109,11 +108,10 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
       record.setValue( ordinalNumberComponent, new BigInteger( Integer.toString( ordinalNumber++ ) ) );
       record.setValue( timeComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
       record.setValue( relaxFactorComponent, new BigDecimal( m_timeStepFillerWizardPage.getUnderRelaxationFactorValue() ).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
-      result.add( record );
       calendarFrom.add( Calendar.MINUTE, m_timeStepFillerWizardPage.getTimeSteps() );
       records.add( record );
     }
-    result.fireRecordsChanged( records.toArray( new IRecord[] {} ), ITupleResultChangedListener.TYPE.ADDED );
+    result.addAll( records );
     m_changes = ObservationFeatureFactory.toFeatureAsChanges( m_observation, m_feature );
     return true;
   }
@@ -122,7 +120,7 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_initialSelection = selection;
   }

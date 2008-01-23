@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -56,6 +57,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.SensorException;
 
 /**
  * Constructs a simple timeserie with a time column and a value column.
@@ -109,7 +111,7 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#fillObservation(org.kalypso.observation.IObservation,
    *      java.lang.String, java.lang.String)
    */
-  public void fillObservation( final IObservation<TupleResult> obs )
+  public void fillObservation( final IObservation<TupleResult> obs ) throws InvocationTargetException
   {
     final TupleResult result = obs.getResult();
 
@@ -144,39 +146,62 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
         dateAxis = model.getAxisList()[1];
         valueAxis = model.getAxisList()[0];
       }
-      int cntFrom;
-      int cntTo;
-      for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
+
+      final Date fromDate = m_wizardPageZmlChooser.getFromDate();
+      final Date toDate = m_wizardPageZmlChooser.getToDate();
+
+      for( int cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
       {
         final Date date = (Date) model.getElement( cntFrom, dateAxis );
-        if( m_wizardPageZmlChooser.getFromDate().before( date ) || m_wizardPageZmlChooser.getFromDate().equals( date ) )
-          break;
-      }
-      for( cntTo = cntFrom; cntTo < model.getCount(); cntTo++ )
-      {
-        final Date date = (Date) model.getElement( cntTo, dateAxis );
-        if( m_wizardPageZmlChooser.getToDate().before( date ) )
+
+        // date must be inside the interval [fromDate, toDate]
+        if( !date.before( fromDate ) && !date.after( toDate ) )
         {
-          cntTo--;
-          break;
+          final Double doubleValue = (Double) model.getElement( cntFrom, valueAxis );
+          final BigDecimal value = BigDecimal.valueOf( doubleValue );
+
+          final IRecord record = result.createRecord();
+          record.setValue( domainComponent, DateUtilities.toXMLGregorianCalendar( date ) );
+          record.setValue( valueComponent, value );
+          result.add( record );
         }
       }
-      for( int i = cntFrom; i < cntTo; i++ )
-      {
-        final Double doubleValue = (Double) model.getElement( i, valueAxis );
-        final BigDecimal value = BigDecimal.valueOf( doubleValue );
-        final IRecord record = result.createRecord();
-        Date date = (Date) model.getElement( i, dateAxis );
 
-        record.setValue( domainComponent, DateUtilities.toXMLGregorianCalendar( date ) );
-        record.setValue( valueComponent, value );
-        result.add( record );
-      }
+      // int cntFrom;
+      // int cntTo;
+      //      
+      // for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
+      // {
+      // final Date date = (Date) model.getElement( cntFrom, dateAxis );
+      // if( fromDate.before( date ) || fromDate.equals( date ) )
+      // break;
+      // }
+      //      
+      // for( cntTo = cntFrom; cntTo < model.getCount(); cntTo++ )
+      // {
+      // final Date date = (Date) model.getElement( cntTo, dateAxis );
+      // if( toDate.before( date ) )
+      // {
+      // cntTo--;
+      // break;
+      // }
+      // }
+      //
+      // for( int i = cntFrom; i < cntTo; i++ )
+      // {
+      // final Double doubleValue = (Double) model.getElement( i, valueAxis );
+      // final BigDecimal value = BigDecimal.valueOf( doubleValue );
+      // final Date date = (Date) model.getElement( i, dateAxis );
+      //
+      // final IRecord record = result.createRecord();
+      // record.setValue( domainComponent, DateUtilities.toXMLGregorianCalendar( date ) );
+      // record.setValue( valueComponent, value );
+      // result.add( record );
+      // }
     }
-    catch( final Exception e )
+    catch( final SensorException e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new InvocationTargetException( e );
     }
     // TODO
     // - get time intervall
