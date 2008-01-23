@@ -447,8 +447,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   protected ImageDescriptor getDefaultIcon( )
   {
-    if( m_standardThemeIcon == null )
-      m_standardThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/standardTheme.gif" ) );
+    if( m_standardThemeIcon == null || m_standardThemeIcon.isDisposed())
+      m_standardThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), AbstractKalypsoTheme.class.getResourceAsStream( "resources/standardTheme.gif" ) );
 
     return ImageDescriptor.createFromImage( m_standardThemeIcon );
   }
