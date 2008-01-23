@@ -290,9 +290,9 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       @Override
       public void controlResized( final ControlEvent e )
       {
-        final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-        panel.setSize( size );
-        sc.setMinHeight( size.y );
+        // final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+        // panel.setSize( size );
+        // sc.setMinHeight( size.y );
       }
     } );
     // Basic Layout
@@ -620,7 +620,6 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-
         m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
 
         try
@@ -656,9 +655,9 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       parent.layout( true, true );
     }
 
-    final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-    panel.setSize( size );
-    sc.setMinHeight( size.y );
+    // final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    // panel.setSize( size );
+    // sc.setMinHeight( size.y );
 
     getMapPanel().repaint();
 
