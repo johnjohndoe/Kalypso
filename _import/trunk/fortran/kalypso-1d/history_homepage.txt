@@ -476,5 +476,24 @@ Kalypso 2.0.6.3     10. Januar 2008
      (Betroffene Routinen: qbordv, w_ber, wspber, globale_funktion, AIWSP, geomet)
 
      
-                                                           Monika Donner, 10.01.2008                                                          
+                                                           Monika Donner, 10.01.2008    
+
+
+Kalypso 2.0.6.4     22. Januar 2008
+-------------------------------------                                                           
+
+1.)  Verminderung der Iterationsprobleme bei der Berechnung der Wasserspiegellagen unter Abflussstaffelung. Dies
+     führt häufig zu Rücksprüngen in der Wasserspiegellage unter zunehmenden Abfluss.
+     Ursache der Problematik ist der unstetige Funktionsverlauf zwischen Reibungsgefälle und dem Wasserspiegel.
+     So kommt es bei der Benetzung des Vorlandes ganz grundsätzlich zu einem sprunghaftem Anstieg des 
+     Reibungsgefälles, der um so extremer ausfällt, wenn zusätzlich auf dem Vorland eine Senke zu füllen ist.
+     Die Probleme bei der Berechnung eines Wasserspiegels wurden weiterstgehend behoben durch:
+     - Optimierung der Schätzwertbildung während der Iteration
+     - Erhöhung der maximale Anzahl der Konvergenzschritte (Kennzahl 50)
+     - Behalten bester Werte unter allen Kennzahlen
+   
+							
+							 Edgar Nehlsen & Monika Donner, 21.01.2008 
+
+                                                      
                                                            
