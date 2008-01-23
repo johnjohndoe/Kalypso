@@ -51,6 +51,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -691,6 +692,14 @@ public class CreateMainChannelComposite extends Composite
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
+        if( m_data.getMeshStatus() == true )
+        {
+          if( !MessageDialog.openQuestion( getShell(), "Anzahl der Uferlinienstützstellen ändern", "Wenn Sie fortfahren werden Ihre bisherigen Eingaben verworfen und der Flussschlauch neu initialisiert. Möchten Sie fortfahren?" ) )
+          {
+            spinNumBankIntersections.setSelection( m_data.getGlobNumBankIntersections() );
+            return;
+          }
+        }
         final int selection = spinNumBankIntersections.getSelection();
         m_data.setGlobNumBankIntersections( selection );
         updateControl( false );
@@ -813,6 +822,15 @@ public class CreateMainChannelComposite extends Composite
       @Override
       public void widgetSelected( SelectionEvent e )
       {
+        if( m_data.getMeshStatus() == true )
+        {
+          if( !MessageDialog.openQuestion( getShell(), "Anzahl der Profilstützstellen ändern", "Wenn Sie fortfahren werden Ihre bisherigen Eingaben verworfen und der Flussschlauch neu initialisiert. Möchten Sie fortfahren?" ) )
+          {
+            spinNumProfIntersections.setSelection( m_data.getNumProfileIntersections() );
+            return;
+          }
+        }
+
         m_data.setNumProfileIntersections( spinNumProfIntersections.getSelection() );
         updateControl( false );
       }
