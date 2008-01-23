@@ -213,7 +213,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
         final IComponent comp = compMap.get( ppName );
         final double value = point.getValueFor( pp.getId() );
-        result.setValue( record, comp, new Double( value ) );
+        record.setValue( comp, new Double( value ) );
       }
 
       // Handle devider
