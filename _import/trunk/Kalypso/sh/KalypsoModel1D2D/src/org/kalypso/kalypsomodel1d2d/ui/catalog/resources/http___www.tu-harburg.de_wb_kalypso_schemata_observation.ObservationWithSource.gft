@@ -3,6 +3,9 @@
 	xmlns:om="http://www.opengis.net/om" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="4" />
+	
+	<!-- REMARK: commented out, as these observations are used withing boundary condition, which already have a name and a description. -->
+	<!-- 
 	<gft:label text="Name" visible="true" tooltip="Name" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
@@ -15,6 +18,8 @@
 	<gft:text editable="true" property="gml:description" tooltip="Beschreibung" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="3" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
 	</gft:text>
+	-->
+
 	<gft:label text="Zeitreihe" visible="true" tooltip="Zeitreihe" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
