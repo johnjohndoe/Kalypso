@@ -1,4 +1,4 @@
-!     Last change:  MD   10 Jan 2008   11:01 am
+!     Last change:  MD   16 Jan 2008   10:40 am
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -242,7 +242,7 @@ LOGICAL :: lexist, lopen
 ! ---------------------------------------------------------------------------------
 ! Varaiblen und Funktion fuer lesen der Agrumente hinter Kalypso1d.exe
 ! MD 10.01.2008, ab Version 2.0.6.3
-character argv*10         ! Argumente als Character
+character(LEN=2000) argv  ! Argumente als Character
 integer iiarg, narg       ! Zaehler der Argumente und Anzahl der Argumente
 integer iargc             ! Feste Funktion in Lahey und G95 (aber KEINE StandardFunktion)
 ! ---------------------------------------------------------------------------------
