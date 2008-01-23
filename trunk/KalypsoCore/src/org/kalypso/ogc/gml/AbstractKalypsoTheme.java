@@ -405,7 +405,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     try
     {
       /* A URL or URN was given. */
-      if( m_legendIcon.startsWith( "urn:kalypso:map:theme:swtimage:" ) )
+      if( m_legendIcon.startsWith( "urn" ) )
       {
         // search for url
         final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
