@@ -189,7 +189,8 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   {
     final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
     final GM_Ring transExRing = (GM_Ring) exRing.transform( trans, targetOGCCS );
-    return GeometryFactory.createGM_Triangle( transExRing.getPositions(), targetOGCCS );
+    final GM_Position[] positions = transExRing.getPositions();
+    return GeometryFactory.createGM_Triangle( positions[0], positions[1], positions[2], targetOGCCS );
   }
 
   /**
