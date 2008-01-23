@@ -287,16 +287,17 @@
 			<xs:complexContent>
 				<xs:extension base="fv:PropertyControlType">
 					<xs:sequence>
-						<xs:element name="toolbarItem" minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="toolbar" minOccurs="0" maxOccurs="1">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="command">
+								<xs:element name="command" minOccurs="0" maxOccurs="unbounded">
 									<xs:complexType>
 										<xs:attribute name="commandId" type="xs:string" use="required"/>
 										<xs:attribute name="style" type="xs:string" use="required"/>
 									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
+							<xs:attribute name="addStandardItems" type="xs:boolean" default="true"/>
 						</xs:complexType>
 						</xs:element>
 						<xs:choice>

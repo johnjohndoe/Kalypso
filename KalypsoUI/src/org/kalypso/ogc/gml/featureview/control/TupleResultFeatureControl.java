@@ -98,8 +98,7 @@ import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.template.featureview.ColumnDescriptor;
-import org.kalypso.template.featureview.TupleResult.ToolbarItem;
-import org.kalypso.template.featureview.TupleResult.ToolbarItem.Command;
+import org.kalypso.template.featureview.TupleResult.Toolbar;
 import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
@@ -113,7 +112,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 {
   private final List<ModifyListener> m_listener = new ArrayList<ModifyListener>( 10 );
 
-  private final ToolBarManager m_toolbar = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
+  private final ToolBarManager m_toolbar;
 
   private final Set<String> m_commands = new HashSet<String>();
 
@@ -140,11 +139,16 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private IExecutionListener m_executionListener;
 
-  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandler[] handlers )
+  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandler[] handlers, final boolean showToolbar )
   {
     super( feature, ftp );
 
     m_handlers = handlers;
+
+    if( showToolbar )
+      m_toolbar = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
+    else
+      m_toolbar = null;
   }
 
   /**
@@ -199,8 +203,11 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   {
     final IServiceLocator serviceLocator = PlatformUI.getWorkbench();
 
-    m_toolbar.add( new CommandContributionItem( serviceLocator, commandId + "_item", commandId, new HashMap<Object, Object>(), null, null, null, null, null, null, style ) );
-    m_toolbar.update( true );
+    if( m_toolbar != null )
+    {
+      m_toolbar.add( new CommandContributionItem( serviceLocator, commandId + "_item", commandId, new HashMap<Object, Object>(), null, null, null, null, null, null, style ) );
+      m_toolbar.update( true );
+    }
 
     m_commands.add( commandId );
   }
@@ -216,7 +223,8 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     compLayout.marginWidth = 0;
     composite.setLayout( compLayout );
 
-    m_toolbar.createControl( composite );
+    if( m_toolbar != null )
+      m_toolbar.createControl( composite );
 
     m_viewer = new DefaultTableViewer( composite, style ); // TODO and not SWT.BORDER delete border style here...
     final Table table = m_viewer.getTable();
@@ -226,10 +234,8 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     m_lastLineBackground = new Color( parent.getDisplay(), 170, 230, 255 );
 
-    // TODO: if any of the columns is not editable, do not show the 'last-line'
-    boolean editable = true;
-    for( final IComponentUiHandler handler : m_handlers )
-      editable |= handler.isEditable();
+    // If any of the columns is not editable, do not show the 'last-line'
+    final boolean editable = isEditable();
 
     m_tupleResultContentProvider = new TupleResultContentProvider( m_handlers );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_handlers );
@@ -280,9 +286,21 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     updateControl();
 
-    hookExecutionListener( m_commands, m_viewer, m_toolbar );
+    if( m_toolbar != null )
+      hookExecutionListener( m_commands, m_viewer, m_toolbar );
 
     return composite;
+  }
+
+  /**
+   * Final, as it is called from the constructor.
+   */
+  private final boolean isEditable( )
+  {
+    boolean editable = true;
+    for( final IComponentUiHandler handler : m_handlers )
+      editable |= handler.isEditable();
+    return editable;
   }
 
   private void hookExecutionListener( final Set<String> commands, final TableViewer tableViewer, final ToolBarManager toolBar )
@@ -350,6 +368,13 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   @Override
   public void dispose( )
   {
+    if( m_executionListener != null )
+    {
+      final IWorkbench serviceLocator = PlatformUI.getWorkbench();
+      final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
+      cmdService.removeExecutionListener( m_executionListener );
+    }
+
     m_tupleResultContentProvider.dispose();
     m_tupleResultLabelProvider.dispose();
 
@@ -367,8 +392,11 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       m_tupleResult = null;
     }
 
-    m_toolbar.dispose();
-    m_toolbar.removeAll();
+    if( m_toolbar != null )
+    {
+      m_toolbar.dispose();
+      m_toolbar.removeAll();
+    }
 
     super.dispose();
   }
@@ -533,12 +561,24 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   {
     final IComponentUiHandler[] handler = createHandler( feature, ftp, editorType );
 
-    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, handler );
+    final Toolbar toolbar = editorType.getToolbar();
+    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, handler, toolbar != null );
 
-    final List<ToolbarItem> toolbarItems = editorType.getToolbarItem();
-    for( final ToolbarItem toolbarItem : toolbarItems )
+    if( toolbar == null )
+      return tfc;
+
+    if( toolbar.isAddStandardItems() )
     {
-      final Command command = toolbarItem.getCommand();
+      final boolean editable = tfc.isEditable();
+
+      tfc.addToolbarItem( "org.kalypso.ui.tupleResult.copyToClipboardCommand", SWT.PUSH );
+      if( editable )
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.deleteSelectedRowsCommand", SWT.PUSH );
+    }
+
+    final List<org.kalypso.template.featureview.TupleResult.Toolbar.Command> commands = toolbar.getCommand();
+    for( final org.kalypso.template.featureview.TupleResult.Toolbar.Command command : commands )
+    {
       final String commandId = command.getCommandId();
       final int style = SWTUtilities.createStyleFromString( command.getStyle() );
       tfc.addToolbarItem( commandId, style );

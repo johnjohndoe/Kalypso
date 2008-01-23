@@ -40,56 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.command;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * Utility methods for tuple-result command handlers.
+ * Deletes the selected lines from the table.
  * 
  * @author Gernot Belger
  */
-public class TupleResultCommandUtils
+public class DeleteSelectedRowsHandler extends AbstractHandler
 {
-  public final static String ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME = "tupleResultTableViewer";
-
-  public static final String TUPLE_RESULT_COMMAND_CATEGORY = "org.kalypso.ui.tupleResult.category";
-
-  private TupleResultCommandUtils( )
-  {
-    throw new UnsupportedOperationException( "Do not instantiate this helper class." );
-  }
-
   /**
-   * Helps finding the chart composite in the context.<br>
-   * Normally (for editor and view) this is done via adapting the active workbench part.<br>
-   * However for the feature view some hack was needed: here it is found via the activeChartComposite variable.
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public static TableViewer findTableViewer( final ExecutionEvent event )
+  @Override
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final Object applicationContext = event.getApplicationContext();
-    if( !(applicationContext instanceof IEvaluationContext) )
-      return null;
+    final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
+    final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
+    if( tupleResult == null || viewer == null )
+      throw new ExecutionException( "No tuple result viewer available" );
 
-    final IEvaluationContext context = (IEvaluationContext) applicationContext;
+    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
-    final Object variable = context.getVariable( ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
-    if( variable instanceof TableViewer )
-      return (TableViewer) variable;
-
-    return null;
-  }
-
-  public static TupleResult findTupleResult( final ExecutionEvent event )
-  {
-    final TableViewer tableViewer = findTableViewer( event );
-    if( tableViewer == null )
-      return null;
-
-    final Object input = tableViewer.getInput();
-    if( input instanceof TupleResult )
-      return (TupleResult) input;
+    tupleResult.removeAll( selection.toList() );
 
     return null;
   }
