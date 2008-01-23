@@ -63,7 +63,6 @@ import org.vafada.swtcalendar.SWTCalendarListener;
  */
 public class DateTimeDialog extends TitleAreaDialog
 {
-
   private GregorianCalendar m_gregorianCalendar;
 
   private GregorianCalendar m_preSettedDateTime;
@@ -71,7 +70,19 @@ public class DateTimeDialog extends TitleAreaDialog
   public DateTimeDialog( final Shell parent )
   {
     super( parent );
+
     setBlockOnOpen( true );
+  }
+
+  /**
+   * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+   */
+  @Override
+  protected void configureShell( final Shell newShell )
+  {
+    super.configureShell( newShell );
+
+    newShell.setText( "Datumsauswahl" );
   }
 
   /**
