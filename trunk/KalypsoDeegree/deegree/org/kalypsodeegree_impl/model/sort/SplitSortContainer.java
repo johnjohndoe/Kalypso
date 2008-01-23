@@ -374,12 +374,15 @@ public class SplitSortContainer
 
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
-    final double g1x = geoTransform.getDestX( m_envelope.getMinX() );
-    final double g1y = geoTransform.getDestY( m_envelope.getMinY() );
-    final double g2x = geoTransform.getDestX( m_envelope.getMaxX() );
-    final double g2y = geoTransform.getDestY( m_envelope.getMaxY() );
+    if( m_envelope != null )
+    {
+      final double g1x = geoTransform.getDestX( m_envelope.getMinX() );
+      final double g1y = geoTransform.getDestY( m_envelope.getMinY() );
+      final double g2x = geoTransform.getDestX( m_envelope.getMaxX() );
+      final double g2y = geoTransform.getDestY( m_envelope.getMaxY() );
 
-    g.drawRect( (int) (g1x < g2x ? g1x : g2x), (int) (g1y < g2y ? g1y : g2y), (int) Math.abs( (g2x - g1x) ), (int) Math.abs( (g2y - g1y) ) );
+      g.drawRect( (int) (g1x < g2x ? g1x : g2x), (int) (g1y < g2y ? g1y : g2y), (int) Math.abs( (g2x - g1x) ), (int) Math.abs( (g2y - g1y) ) );
+    }
 
     if( hasSubContainers() )
     {

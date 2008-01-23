@@ -2162,6 +2162,12 @@
           id="org.kalypso.ui.tupleResult.copyToClipboardCommand"
           name="Kopieren">
     </command>
+    <command
+          categoryId="org.kalypso.ui.tupleResult.category"
+          description="Löscht die selektierten Zeilen der Tabelle"
+          id="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
+          name="Löschen">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -2169,12 +2175,20 @@
           class="org.kalypso.ogc.gml.om.table.command.CopyToClipboardHandler"
           commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand">
     </handler>
+    <handler
+          class="org.kalypso.ogc.gml.om.table.command.DeleteSelectedRowsHandler"
+          commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand">
+    </handler>
  </extension>
  <extension
        point="org.eclipse.ui.commandImages">
     <image
           commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand"
           icon="icons/table/copy.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
+          icon="icons/table/remove.gif">
     </image>
  </extension>
 </plugin>
