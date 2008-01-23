@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -88,6 +89,12 @@ public class BankSelectorFunction implements IRectangleMapFunction
   @SuppressWarnings("unchecked")
   public void execute( MapPanel mapPanel, Rectangle rectangle )
   {
+    if( m_data.getMeshStatus() == true )
+    {
+      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Uferlinien selektieren", "Wenn Sie fortfahren werden Ihre bisherigen Eingaben verworfen und der Flussschlauch neu initialisiert. Möchten Sie fortfahren?" ) )
+        return;
+    }
+
     final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( mapPanel.getProjection(), rectangle );
     IKalypsoFeatureTheme bankTheme = null;
     if( m_side == CreateChannelData.SIDE.LEFT )
@@ -114,12 +121,12 @@ public class BankSelectorFunction implements IRectangleMapFunction
     {
       final Object o = iter.next();
       final Feature feature = FeatureHelper.getFeature( workspace, o );
-      
+
       final GM_MultiCurve multiline = (GM_MultiCurve) feature.getDefaultGeometryProperty();
-      if (multiline.getSize() > 1)
+      if( multiline.getSize() > 1 )
         return;
       final GM_Curve line = multiline.getCurveAt( 0 );
-      
+
       try
       {
         final LineString jtsLine = (LineString) JTSAdapter.export( line );

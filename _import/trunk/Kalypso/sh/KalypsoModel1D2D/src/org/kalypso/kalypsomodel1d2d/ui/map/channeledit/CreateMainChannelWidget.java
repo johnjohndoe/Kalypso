@@ -383,7 +383,10 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   public void leftPressed( final Point p )
   {
     if( m_delegateWidget != null )
+    {
+      // TODO: check, if there is already a preview and if it would be deleted.
       m_delegateWidget.leftPressed( p );
+    }
   }
 
   /**

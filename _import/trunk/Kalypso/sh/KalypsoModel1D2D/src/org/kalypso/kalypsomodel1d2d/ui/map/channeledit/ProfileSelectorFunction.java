@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -87,6 +88,13 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
   @SuppressWarnings("unchecked")
   public void execute( final MapPanel mapPanel, final Rectangle rectangle )
   {
+
+    if( m_data.getMeshStatus() == true )
+    {
+      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Profile selektieren", "Wenn Sie fortfahren werden Ihre bisherigen Eingaben verworfen und der Flussschlauch neu initialisiert. Möchten Sie fortfahren?" ) )
+        return;
+    }
+
     final GM_Envelope envelope = MapfunctionHelper.rectangleToEnvelope( mapPanel.getProjection(), rectangle );
 
     final IKalypsoFeatureTheme profileTheme = m_data.getProfileTheme();

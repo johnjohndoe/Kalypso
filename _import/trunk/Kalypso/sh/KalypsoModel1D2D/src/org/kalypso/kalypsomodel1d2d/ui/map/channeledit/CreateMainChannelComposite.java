@@ -863,7 +863,7 @@ public class CreateMainChannelComposite extends Composite
   }
 
   /**
-   * displays the selected crosssections -> data filling for the profil section
+   * displays the selected cross sections -> data filling for the profil section
    */
   private void updateProfilSection( )
   {
