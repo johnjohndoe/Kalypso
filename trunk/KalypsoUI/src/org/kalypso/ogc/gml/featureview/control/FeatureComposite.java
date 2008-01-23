@@ -89,18 +89,13 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.i18n.Messages;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.ColorLabelType;
-import org.kalypso.template.featureview.ColumnDescriptor;
 import org.kalypso.template.featureview.Combo;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
@@ -572,8 +567,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final TupleResult editorType = (TupleResult) controlType;
 
-      final IComponentUiHandler[] handler = createTupleResultFeatureControl( feature, ftp, editorType );
-      final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, handler );
+      final TupleResultFeatureControl tfc = TupleResultFeatureControl.create( editorType, feature, ftp );
+
       final Control control = tfc.createControl( parent, SWTUtilities.createStyleFromString( editorType.getStyle() ) );
 
       addFeatureControl( tfc );
@@ -780,29 +775,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       m_formToolkit.adapt( label, true, true );
 
     return label;
-  }
-
-  private IComponentUiHandler[] createTupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final TupleResult editorType )
-  {
-    final String columnProviderId = editorType.getColumnProviderId();
-
-    final Feature obsFeature = TupleResultFeatureControl.getObservationFeature( feature, ftp );
-
-    final ColumnDescriptor[] descriptors = editorType.getColumnDescriptor().toArray( new ColumnDescriptor[] {} );
-
-    if( descriptors.length == 0 )
-    {
-      // If also the provider is null, a default provider is used.
-      final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( columnProviderId );
-
-      if( obsFeature == null )
-        return new IComponentUiHandler[] {};
-
-      final IComponent[] components = ObservationFeatureFactory.componentsFromFeature( obsFeature );
-      return provider.createComponentHandler( components );
-    }
-    else
-      return TupleResultFeatureControl.toHandlers( obsFeature, descriptors );
   }
 
   private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType )

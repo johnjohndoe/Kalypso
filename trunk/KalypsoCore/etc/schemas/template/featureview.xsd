@@ -286,21 +286,40 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="fv:PropertyControlType">
-					<xs:choice>
-						<xs:element name="columnProviderId" type="xs:string">
-							<xs:annotation>
-								<xs:documentation xml:lang="en">
-									Id of a columnProvider which provides the column to be shown in a more dynamic way than the static columnDescriptors. See extension-point
-									org.kalypso.core.columnProvider
-								</xs:documentation>
-							</xs:annotation>
+					<xs:sequence>
+						<xs:element name="toolbarItem" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="command">
+									<xs:complexType>
+										<xs:attribute name="commandId" type="xs:string" use="required"/>
+										<xs:attribute name="style" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
 						</xs:element>
-						<xs:element name="columnDescriptor" type="fv:ColumnDescriptor" minOccurs="0" maxOccurs="unbounded">
-							<xs:annotation>
-								<xs:documentation xml:lang="en">This list of column descriptors describes which column and how are to be shown in the table.</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:choice>
+						<xs:choice>
+							<xs:element name="columnProviderId" type="xs:string">
+								<xs:annotation>
+									<xs:documentation xml:lang="en">
+										Id of a columnProvider which provides the column to be shown in a more dynamic
+										way than the static columnDescriptors. See extension-point
+										org.kalypso.core.columnProvider
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="columnDescriptor" type="fv:ColumnDescriptor" minOccurs="0"
+								maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation xml:lang="en">
+										This list of column descriptors describes which column and how are to be shown
+										in the table.
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:choice>
+					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
