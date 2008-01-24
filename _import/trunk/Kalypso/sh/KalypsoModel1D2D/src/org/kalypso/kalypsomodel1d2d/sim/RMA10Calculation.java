@@ -132,7 +132,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
   {
     final String version = m_controlModel.getVersion();
 
-    if( version.equals( "Version3.5" ) )
+    if( version.equals( "Version 3.5" ) )
       return ISimulation1D2DConstants.SIM_EXE_FILE_3_5;
 
     throw new CoreException( StatusUtilities.createErrorStatus( "Rechenkern-Version nicht unterstützt: " + version ) );
