@@ -30,6 +30,7 @@
 package org.kalypso.ogc.gml.filterdialog.actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
@@ -48,20 +49,20 @@ public class CreateOGCComparisionOpsActionDelegate extends AbstractCreateOperati
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   @Override
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( m_selection != null && action.isEnabled() )
     {
       if( m_selection instanceof TreeSelection )
       {
-        Object firstElement = m_selection.getFirstElement();
-        PropertyIsCOMPOperation compOps = new PropertyIsCOMPOperation( OperationDefines.UNKNOWN, null, null );
+        final Object firstElement = m_selection.getFirstElement();
+        final PropertyIsCOMPOperation compOps = new PropertyIsCOMPOperation( OperationDefines.UNKNOWN, null, null );
         if( firstElement instanceof ComplexFilter )
           ((ComplexFilter) firstElement).setOperation( compOps );
         if( firstElement instanceof LogicalOperation )
         {
           final LogicalOperation logicalOps = (LogicalOperation) firstElement;
-          ArrayList<Operation> arguments = logicalOps.getArguments();
+          List<Operation> arguments = logicalOps.getArguments();
           if( arguments == null )
             arguments = new ArrayList<Operation>();
           arguments.add( compOps );

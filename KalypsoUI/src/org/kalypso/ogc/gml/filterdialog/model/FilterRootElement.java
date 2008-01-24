@@ -29,8 +29,7 @@
  */
 package org.kalypso.ogc.gml.filterdialog.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.ListenerList;
@@ -56,7 +55,7 @@ public class FilterRootElement implements Filter
   /**
    * @see org.kalypsodeegree.filterencoding.Filter#evaluate(org.kalypsodeegree.model.feature.Feature)
    */
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     return m_filter.evaluate( feature );
   }
@@ -82,29 +81,29 @@ public class FilterRootElement implements Filter
     return new Object[0];
   }
 
-  public void addChild( Object child )
+  public void addChild( final Object child )
   {
     if( child instanceof Filter )
       m_filter = (Filter) child;
   }
 
-  public void addPropertyChangeListener( IPropertyChangeListener listener )
+  public void addPropertyChangeListener( final IPropertyChangeListener listener )
   {
     getPropetyChangedListeners().add( listener );
   }
 
-  public void removeProperyChangeListener( IPropertyChangeListener listener )
+  public void removeProperyChangeListener( final IPropertyChangeListener listener )
   {
     getPropetyChangedListeners().remove( listener );
   }
 
-  public void firePropertyChange( String id, Object oldValue, Object newValue )
+  public void firePropertyChange( final String id, final Object oldValue, final Object newValue )
   {
     final PropertyChangeEvent event = new PropertyChangeEvent( this, id, oldValue, newValue );
-    Object[] propetyChangedListeners = getPropetyChangedListeners().getListeners();
-    for( int i = 0; i < propetyChangedListeners.length; i++ )
+    final Object[] propetyChangedListeners = getPropetyChangedListeners().getListeners();
+    for( final Object element : propetyChangedListeners )
     {
-      ((IPropertyChangeListener) propetyChangedListeners[i]).propertyChange( event );
+      ((IPropertyChangeListener) element).propertyChange( event );
 
     }
   }
@@ -116,14 +115,14 @@ public class FilterRootElement implements Filter
     return m_listeners;
   }
 
-  public void removeChild( Object child )
+  public void removeChild( final Object child )
   {
     if( m_filter.equals( child ) )
       m_filter = null;
     if( m_filter instanceof ComplexFilter )
     {
-      ComplexFilter root = (ComplexFilter) m_filter;
-      Operation operation = root.getOperation();
+      final ComplexFilter root = (ComplexFilter) m_filter;
+      final Operation operation = root.getOperation();
       if( operation != null )
       {
         if( operation.equals( child ) )
@@ -133,24 +132,23 @@ public class FilterRootElement implements Filter
         }
         if( operation instanceof LogicalOperation )
         {
-          ArrayList arguments = ((LogicalOperation) operation).getArguments();
+          final List<Operation> arguments = ((LogicalOperation) operation).getArguments();
           remove( arguments, child, operation );
         }
       }
     }
   }
 
-  private void remove( ArrayList arguments, Object childToRemove, Object parent )
+  private void remove( final List<Operation> arguments, final Object childToRemove, final Object parent )
   {
-    for( Iterator iter = arguments.iterator(); iter.hasNext(); )
+    for( final Object element : arguments )
     {
-      Object element = iter.next();
       if( element.equals( childToRemove ) )
       {
         if( parent instanceof LogicalOperation )
         {
-          LogicalOperation parentCast = (LogicalOperation) parent;
-          ArrayList oldArgs = parentCast.getArguments();
+          final LogicalOperation parentCast = (LogicalOperation) parent;
+          final List<Operation> oldArgs = parentCast.getArguments();
           oldArgs.remove( childToRemove );
           if( oldArgs.size() == 0 )
             parentCast.setArguments( null );
@@ -159,8 +157,8 @@ public class FilterRootElement implements Filter
       }
       if( element instanceof LogicalOperation )
       {
-        LogicalOperation test = (LogicalOperation) element;
-        ArrayList newArgs = test.getArguments();
+        final LogicalOperation test = (LogicalOperation) element;
+        final List<Operation> newArgs = test.getArguments();
         if( newArgs != null && newArgs.size() > 0 )
           remove( newArgs, childToRemove, test );
       }

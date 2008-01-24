@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.filterencoding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -79,16 +80,15 @@ import org.w3c.dom.Element;
  */
 public class LogicalOperation extends AbstractOperation
 {
-
   /** Arguments of the Operation. */
-  ArrayList<Operation> m_arguments = new ArrayList<Operation>();
+  private List<Operation> m_arguments = new ArrayList<Operation>();
 
   /**
    * Constructs a new LogicalOperation.
    * 
    * @see OperationDefines
    */
-  public LogicalOperation( int operatorId, ArrayList<Operation> arguments )
+  public LogicalOperation( final int operatorId, final ArrayList<Operation> arguments )
   {
     super( operatorId );
     m_arguments = arguments;
@@ -97,12 +97,12 @@ public class LogicalOperation extends AbstractOperation
   /**
    * Returns the arguments of the operation. These are <tt>Operations</tt> as well.
    */
-  public ArrayList<Operation> getArguments( )
+  public List<Operation> getArguments( )
   {
     return m_arguments;
   }
 
-  public void setArguments( ArrayList<Operation> arguments )
+  public void setArguments( final List<Operation> arguments )
   {
     m_arguments = arguments;
   }
@@ -112,39 +112,39 @@ public class LogicalOperation extends AbstractOperation
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Operation buildFromDOM( Element element ) throws FilterConstructionException
+  public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
 
     // check if root element's name is a known operator
-    String name = element.getLocalName();
-    int operatorId = OperationDefines.getIdByName( name );
-    ArrayList<Operation> arguments = new ArrayList<Operation>();
+    final String name = element.getLocalName();
+    final int operatorId = OperationDefines.getIdByName( name );
+    final ArrayList<Operation> arguments = new ArrayList<Operation>();
 
     switch( operatorId )
     {
       case OperationDefines.AND:
       case OperationDefines.OR:
       {
-        ElementList children = XMLTools.getChildElements( element );
+        final ElementList children = XMLTools.getChildElements( element );
         if( children.getLength() < 2 )
           throw new FilterConstructionException( "'" + name + "' requires at least 2 elements!" );
         for( int i = 0; i < children.getLength(); i++ )
         {
-          Element child = children.item( i );
-          Operation childOperation = AbstractOperation.buildFromDOM( child );
+          final Element child = children.item( i );
+          final Operation childOperation = AbstractOperation.buildFromDOM( child );
           arguments.add( childOperation );
         }
         break;
       }
       case OperationDefines.NOT:
       {
-        ElementList children = XMLTools.getChildElements( element );
+        final ElementList children = XMLTools.getChildElements( element );
         if( children.getLength() != 1 )
           throw new FilterConstructionException( "'" + name + "' requires exactly 1 element!" );
-        Element child = children.item( 0 );
-        Operation childOperation = AbstractOperation.buildFromDOM( child );
+        final Element child = children.item( 0 );
+        final Operation childOperation = AbstractOperation.buildFromDOM( child );
         arguments.add( childOperation );
         break;
       }
@@ -159,12 +159,12 @@ public class LogicalOperation extends AbstractOperation
   /** Produces an indented XML representation of this object. */
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
 
     for( int i = 0; i < m_arguments.size(); i++ )
     {
-      Operation operation = m_arguments.get( i );
+      final Operation operation = m_arguments.get( i );
       sb.append( operation.toXML() );
     }
 
@@ -177,12 +177,12 @@ public class LogicalOperation extends AbstractOperation
    * <tt>Feature</tt>.
    * 
    * @param feature
-   *          that determines the property values
+   *            that determines the property values
    * @return true, if the <tt>LogicalOperation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     switch( getOperatorId() )
     {
@@ -190,7 +190,7 @@ public class LogicalOperation extends AbstractOperation
       {
         for( int i = 0; i < m_arguments.size(); i++ )
         {
-          Operation operation = m_arguments.get( i );
+          final Operation operation = m_arguments.get( i );
           if( !operation.evaluate( feature ) )
             return false;
         }
@@ -200,7 +200,7 @@ public class LogicalOperation extends AbstractOperation
       {
         for( int i = 0; i < m_arguments.size(); i++ )
         {
-          Operation operation = m_arguments.get( i );
+          final Operation operation = m_arguments.get( i );
           if( operation.evaluate( feature ) )
             return true;
         }
@@ -208,7 +208,7 @@ public class LogicalOperation extends AbstractOperation
       }
       case OperationDefines.NOT:
       {
-        Operation operation = m_arguments.get( 0 );
+        final Operation operation = m_arguments.get( 0 );
         return !operation.evaluate( feature );
       }
       default:
@@ -222,21 +222,17 @@ public class LogicalOperation extends AbstractOperation
    * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
    *      org.kalypsodeegree.filterencoding.Operation, int)
    */
-  public void accept( FilterVisitor fv, Operation operation, int depth )
+  public void accept( final FilterVisitor fv, final Operation operation, final int depth )
   {
-    final ArrayList<Operation> ops = getArguments();
-
     if( operation != null && OperationDefines.getTypeById( operation.getOperatorId() ) == OperationDefines.TYPE_LOGICAL )
     {
-      for( Operation o : ops )
+      final List<Operation> ops = getArguments();
+      for( final Operation o : ops )
       {
-        boolean recurse = fv.visit( o );
+        final boolean recurse = fv.visit( o );
         if( recurse && depth != FilterVisitor.DEPTH_ZERO )
-        {
           accept( fv, o, depth );
-        }
       }
-
     }
   }
 }

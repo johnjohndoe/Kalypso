@@ -60,7 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import org.kalypsodeegree.filterencoding.Operation;
@@ -78,16 +78,16 @@ public class FilterTools
    * <p>
    * 
    * @param filter
-   *          search starts here
+   *            search starts here
    * @return [0]: <tt>GM_Envelope</tt> (BBOX), [1]: <tt>Filter</tt>
    * @throws Exception
    */
-  public static Object[] extractFirstBBOX( ComplexFilter filter ) throws Exception
+  public static Object[] extractFirstBBOX( final ComplexFilter filter ) throws Exception
   {
     Debug.debugMethodBegin();
 
     // [0]: GM_Envelope, [1]: Filter
-    Object[] objects = new Object[2];
+    final Object[] objects = new Object[2];
     objects[1] = filter;
 
     // sanity check (Filter empty)
@@ -97,13 +97,13 @@ public class FilterTools
     }
 
     // used as LIFO-queue
-    Stack<Operation> operations = new Stack<Operation>();
+    final Stack<Operation> operations = new Stack<Operation>();
     operations.push( filter.getOperation() );
 
     while( !operations.isEmpty() )
     {
       // get the first element of the queue
-      Operation operation = operations.pop();
+      final Operation operation = operations.pop();
 
       switch( operation.getOperatorId() )
       {
@@ -115,8 +115,7 @@ public class FilterTools
         }
         case OperationDefines.AND:
         {
-          ArrayList<Operation> arguments = ((LogicalOperation) operation).getArguments();
-
+          final List<Operation> arguments = ((LogicalOperation) operation).getArguments();
           for( int i = 0; i < arguments.size(); i++ )
           {
             operations.push( arguments.get( i ) );

@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.filterdialog.dialog;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -70,25 +70,25 @@ public class FilterLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
   @Override
-  public Image getImage( Object element )
+  public Image getImage( final Object element )
   {
-//    ImageDescriptor imageDesc = null;
-//    if( element != null )
-//    {
-//      if( element instanceof Operation )
-//      {
-//        Operation operation = (Operation) element;
-//        int id = operation.getOperatorId();
-//        int type = OperationDefines.getTypeById( id );
-//        if( operation instanceof SpatialOperation )
-//        {
-//          if( type == OperationDefines.UNKNOWN )
-//            imageDesc = ImageProvider.IMAGE_FILTERDIALOG_WARNING;
-//        }
-//      }
-//      if( imageDesc != null )
-//        return imageDesc.createImage();
-//    }
+// ImageDescriptor imageDesc = null;
+// if( element != null )
+// {
+// if( element instanceof Operation )
+// {
+// Operation operation = (Operation) element;
+// int id = operation.getOperatorId();
+// int type = OperationDefines.getTypeById( id );
+// if( operation instanceof SpatialOperation )
+// {
+// if( type == OperationDefines.UNKNOWN )
+// imageDesc = ImageProvider.IMAGE_FILTERDIALOG_WARNING;
+// }
+// }
+// if( imageDesc != null )
+// return imageDesc.createImage();
+// }
     return null;
   }
 
@@ -97,7 +97,7 @@ public class FilterLabelProvider extends LabelProvider
    */
 
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element != null )
     {
@@ -123,9 +123,9 @@ public class FilterLabelProvider extends LabelProvider
       }
       else if( element instanceof Operation )
       {
-        Operation operation = (Operation) element;
-        int id = operation.getOperatorId();
-        int type = OperationDefines.getTypeById( id );
+        final Operation operation = (Operation) element;
+        final int id = operation.getOperatorId();
+        final int type = OperationDefines.getTypeById( id );
         // Spatial
         if( element instanceof SpatialOperation )
         {
@@ -138,7 +138,7 @@ public class FilterLabelProvider extends LabelProvider
         if( type == OperationDefines.TYPE_LOGICAL )
         {
           String label = operation.getOperatorName().toUpperCase();
-          ArrayList args = ((LogicalOperation) element).getArguments();
+          final List<Operation> args = ((LogicalOperation) element).getArguments();
           if( id == OperationDefines.AND || id == OperationDefines.OR )
           {
             if( args == null || args.size() < 2 )
@@ -151,8 +151,8 @@ public class FilterLabelProvider extends LabelProvider
         // Comparision
         if( operation instanceof PropertyIsCOMPOperation )
         {
-          Expression firstExpression = ((PropertyIsCOMPOperation) operation).getFirstExpression();
-          Expression secondExpression = ((PropertyIsCOMPOperation) operation).getSecondExpression();
+          final Expression firstExpression = ((PropertyIsCOMPOperation) operation).getFirstExpression();
+          final Expression secondExpression = ((PropertyIsCOMPOperation) operation).getSecondExpression();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( firstExpression == null || secondExpression == null )
@@ -176,7 +176,7 @@ public class FilterLabelProvider extends LabelProvider
         }
         if( operation instanceof PropertyIsLikeOperation )
         {
-          Literal literal = ((PropertyIsLikeOperation) operation).getLiteral();
+          final Literal literal = ((PropertyIsLikeOperation) operation).getLiteral();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( literal == null )
@@ -186,7 +186,7 @@ public class FilterLabelProvider extends LabelProvider
 
         if( operation instanceof PropertyIsNullOperation )
         {
-          Expression expression = ((PropertyIsNullOperation) operation).getExpression();
+          final Expression expression = ((PropertyIsNullOperation) operation).getExpression();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( expression == null )
@@ -195,8 +195,8 @@ public class FilterLabelProvider extends LabelProvider
         }
         if( operation instanceof PropertyIsBetweenOperation )
         {
-          Expression upperBoundary = ((PropertyIsBetweenOperation) operation).getUpperBoundary();
-          Expression lowerBoundary = ((PropertyIsBetweenOperation) operation).getLowerBoundary();
+          final Expression upperBoundary = ((PropertyIsBetweenOperation) operation).getUpperBoundary();
+          final Expression lowerBoundary = ((PropertyIsBetweenOperation) operation).getLowerBoundary();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return "unkown Comparsion Operation *";
           else if( upperBoundary == null || lowerBoundary == null )
@@ -210,7 +210,7 @@ public class FilterLabelProvider extends LabelProvider
     return "EMPTY_NODE";
   }
 
-  protected RuntimeException unknownElement( Object element )
+  protected RuntimeException unknownElement( final Object element )
   {
     return new RuntimeException( "Unknown type of element in tree of type " + element.getClass().getName() ); //$NON-NLS-1$
   }

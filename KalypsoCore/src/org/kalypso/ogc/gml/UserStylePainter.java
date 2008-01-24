@@ -111,6 +111,7 @@ public class UserStylePainter
     for( final Rule rule : rules )
     {
       final SubMonitor childProgress = progress.newChild( 1 );
+
       paintRule( workspace, scale, bbox, features, selected, childProgress, rule, qname, delegate );
       ProgressUtilities.done( monitor );
     }
@@ -118,9 +119,6 @@ public class UserStylePainter
 
   private void paintRule( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final Rule rule, final QName qname, final IPaintDelegate delegate ) throws CoreException
   {
-    // does the filter rule apply?
-    final Filter filter = rule.getFilter();
-
     final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Rule", 100 );
 
     final List visibleFeatures = features.query( bbox, null );
@@ -129,6 +127,7 @@ public class UserStylePainter
 
     final SubMonitor loopProgress = progress.newChild( 85 ).setWorkRemaining( visibleFeatures.size() );
 
+    final Filter filter = rule.getFilter();
     for( final Object o : visibleFeatures )
     {
       final SubMonitor childProgress = loopProgress.newChild( 1 );
@@ -143,6 +142,8 @@ public class UserStylePainter
 
     /* resolve any links */
     final Feature feature = FeatureHelper.getFeature( workspace, featureOrLink );
+
+    /* Check for selection */
 
     try
     {
@@ -159,7 +160,7 @@ public class UserStylePainter
             if( displayElement != null )
             {
               /* does scale apply? */
-              if( (scale == null) || displayElement.doesScaleConstraintApply( scale ) )
+              if( scale == null || displayElement.doesScaleConstraintApply( scale ) )
                 delegate.paint( displayElement, progress.newChild( 100 ) );
             }
           }
@@ -180,7 +181,7 @@ public class UserStylePainter
    * Determines if a feature should be drawn or now
    * 
    * @param selected
-   *            Wether to filter selected or non-selected features. If <code>null</code>, selection is not tested.
+   *            Whether to filter selected or non-selected features. If <code>null</code>, selection is not tested.
    */
   private boolean filterFeature( final Feature feature, final Boolean selected, final Filter filter ) throws FilterEvaluationException
   {

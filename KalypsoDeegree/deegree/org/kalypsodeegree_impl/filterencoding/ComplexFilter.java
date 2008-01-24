@@ -85,12 +85,11 @@ import org.w3c.dom.Element;
  */
 public class ComplexFilter extends AbstractFilter
 {
-
   /** Operation the ComplexFilter is based on */
   private Operation m_operation;
 
   /** Constructs a new ComplexFilter based on the given operation. */
-  public ComplexFilter( Operation operation )
+  public ComplexFilter( final Operation operation )
   {
     m_operation = operation;
   }
@@ -102,7 +101,7 @@ public class ComplexFilter extends AbstractFilter
    * @param operatorId OperationDefines.AND, OperationDefines.OR or
    * 		  OperationDefines.NOT
    */
-  public ComplexFilter( int operatorId )
+  public ComplexFilter( final int operatorId )
   {
     m_operation = new LogicalOperation( operatorId, new ArrayList<Operation>() );
   }
@@ -117,11 +116,11 @@ public class ComplexFilter extends AbstractFilter
    * @param operatorId OperationDefines.AND, OperationDefines.OR or
    * 		  OperationDefines.NOT
    */
-  public ComplexFilter( ComplexFilter filter1, ComplexFilter filter2, int operatorId )
+  public ComplexFilter( final ComplexFilter filter1, final ComplexFilter filter2, final int operatorId )
   {
 
     // extract the Operations from the Filters
-    ArrayList<Operation> arguments = new ArrayList<Operation>();
+    final ArrayList<Operation> arguments = new ArrayList<Operation>();
     arguments.add( filter1.getOperation() );
     if( filter2 != null )
       arguments.add( filter2.getOperation() );
@@ -136,7 +135,7 @@ public class ComplexFilter extends AbstractFilter
   }
 
   /** Sets the Operation. */
-  public void setOperation( Operation operation )
+  public void setOperation( final Operation operation )
   {
     m_operation = operation;
   }
@@ -145,12 +144,12 @@ public class ComplexFilter extends AbstractFilter
    * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
    * 
    * @param feature
-   *          that determines the values of <tt>PropertyNames</tt> in the expression
+   *            that determines the values of <tt>PropertyNames</tt> in the expression
    * @return true, if the <tt>Filter</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     return m_operation.evaluate( feature );
   }
@@ -159,7 +158,7 @@ public class ComplexFilter extends AbstractFilter
   @Override
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>" );
     sb.append( m_operation.toXML() );
     sb.append( "</ogc:Filter>\n" );
@@ -169,20 +168,20 @@ public class ComplexFilter extends AbstractFilter
   @Override
   public Filter clone( ) throws CloneNotSupportedException
   {
-    StringBuffer buffer = toXML();
-    ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
+    final StringBuffer buffer = toXML();
+    final ByteArrayInputStream input = new ByteArrayInputStream( buffer.toString().getBytes() );
     Document asDOM = null;
     try
     {
       asDOM = XMLHelper.getAsDOM( input, true );
-      Element element = asDOM.getDocumentElement();
+      final Element element = asDOM.getDocumentElement();
       return AbstractFilter.buildFromDOM( element );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
     throw new CloneNotSupportedException();
   }
- 
+
 }

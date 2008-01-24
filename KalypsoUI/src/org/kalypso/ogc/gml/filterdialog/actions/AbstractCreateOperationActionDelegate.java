@@ -29,7 +29,7 @@
  */
 package org.kalypso.ogc.gml.filterdialog.actions;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -59,23 +59,23 @@ public abstract class AbstractCreateOperationActionDelegate implements IActionDe
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     action.setEnabled( false );
     if( selection instanceof IStructuredSelection )
     {
       m_selection = (IStructuredSelection) selection;
-      Object firstElement = m_selection.getFirstElement();
+      final Object firstElement = m_selection.getFirstElement();
       if( firstElement instanceof ComplexFilter )
       {
-        Operation operation = ((ComplexFilter) firstElement).getOperation();
+        final Operation operation = ((ComplexFilter) firstElement).getOperation();
         if( operation == null )
           action.setEnabled( true );
       }
       if( firstElement instanceof LogicalOperation )
       {
-        int operatorId = ((LogicalOperation) firstElement).getOperatorId();
-        ArrayList arguments = ((LogicalOperation) firstElement).getArguments();
+        final int operatorId = ((LogicalOperation) firstElement).getOperatorId();
+        final List<Operation> arguments = ((LogicalOperation) firstElement).getArguments();
         if( arguments == null || arguments.size() < 2 && (operatorId == OperationDefines.AND || operatorId == OperationDefines.OR) )
           action.setEnabled( true );
         if( arguments == null || arguments.size() < 1 && operatorId == OperationDefines.NOT )
