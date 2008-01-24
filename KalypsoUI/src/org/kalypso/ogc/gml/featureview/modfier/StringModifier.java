@@ -221,6 +221,10 @@ public class StringModifier implements IFeatureModifier
   {
     final Object data = f.getProperty( m_ftp );
 
+    // We should probably use a null-format string here
+    if( data == null )
+      return null;
+
     if( m_format != null && m_format.length() > 0 )
       return String.format( m_format, data );
 
