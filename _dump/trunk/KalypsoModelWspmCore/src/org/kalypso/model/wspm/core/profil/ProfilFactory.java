@@ -67,4 +67,16 @@ public class ProfilFactory
 
     return profile;
   }
+  public static IProfil createProfil( final String type, final TupleResult result )
+  {
+    final IProfilBuilder builder = KalypsoModelWspmCoreExtensions.getProfilBuilder( type );
+    final IProfil profile = builder.createProfil( result );
+
+    profile.setName( "" );
+    profile.setDescription("" );
+    profile.setMedataList( null );
+    profile.setPhenomenon( null );
+
+    return profile;
+  }
 }
