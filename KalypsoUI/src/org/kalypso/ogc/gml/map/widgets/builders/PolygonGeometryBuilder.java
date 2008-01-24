@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.builders;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -66,7 +66,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   /**
    * Stores the count of points which this geometry must have. If it is 0, there is no rule.
    */
-  private final int m_cnt_points;
+  private int m_cnt_points;
 
   private final List<GM_Point> m_points = new ArrayList<GM_Point>();
 
@@ -74,22 +74,42 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
 
   private GM_Object m_result;
 
+  private final ToolTipRenderer m_renderer;
+
+  final java.awt.Cursor CROSSHAIR_CURSOR = java.awt.Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
+
+  final java.awt.Cursor DEFAULT_CURSOR = java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
+
+  private final IGeometryBuilderExtensionProvider m_extender;
+
   /**
    * The constructor.
    * 
    * @param cnt_points
    *            If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding
-   *            the count of the points will apply, except, that a polygon needs at least 3 points for being created.
+   *            the count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
    * @param targetCrs
    *            The target coordinate system.
    */
-  public PolygonGeometryBuilder( final int cnt_points, final CS_CoordinateSystem targetCrs )
+  public PolygonGeometryBuilder( final int cnt_points, final CS_CoordinateSystem targetCrs, final IGeometryBuilderExtensionProvider extender )
   {
-    Assert.isTrue( cnt_points == 0 || cnt_points > 2 );
+    m_extender = extender;
+    m_cnt_points = 0;
 
-    m_cnt_points = cnt_points;
+    if( cnt_points > 2 )
+      m_cnt_points = cnt_points;
 
     m_crs = targetCrs;
+
+    m_renderer = new ToolTipRenderer( m_extender );
+
+    if( m_extender != null )
+      m_extender.setCursor( CROSSHAIR_CURSOR );
+  }
+
+  public PolygonGeometryBuilder( final int cnt_points, final CS_CoordinateSystem targetCrs )
+  {
+    this( cnt_points, targetCrs, null );
   }
 
   /**
@@ -97,38 +117,10 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    */
   public GM_Object addPoint( final GM_Point p ) throws Exception
   {
-    // TODO: verify if point is allowed
-
     m_points.add( p );
 
     if( m_points.size() == m_cnt_points )
       return finish();
-
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
-   */
-  public GM_Object finish( ) throws Exception
-  {
-    if( m_result != null )
-      return m_result;
-
-    if( (m_points.size() == m_cnt_points) || ((m_cnt_points == 0) && (m_points.size() > 2)) )
-    {
-      final GeoTransformer transformer = new GeoTransformer( m_crs );
-
-      final GM_Position[] poses = new GM_Position[m_points.size()];
-      for( int i = 0; i < poses.length; i++ )
-      {
-        final GM_Point transformedPoint = (GM_Point) transformer.transform( m_points.get( i ) );
-        poses[i] = transformedPoint.getPosition();
-      }
-
-      m_result = createGeometry( poses );
-      return m_result;
-    }
 
     return null;
   }
@@ -159,26 +151,41 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     return GeometryFactory.createGM_Surface( pos, new GM_Position[0][0], null, m_crs );
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
-  public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
+  private void drawHandles( final Graphics g, final int[] x, final int[] y )
   {
-    // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
-    // because the projection depends on the current map-extent, so this builder
-    // is stable in regard to zoom in/out
-    if( !m_points.isEmpty() )
+    final int sizeOuter = 6;
+    for( int i = 0; i < y.length; i++ )
+      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
+  }
+
+  /**
+   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
+   */
+  public GM_Object finish( ) throws Exception
+  {
+    if( m_extender != null )
+      m_extender.setCursor( DEFAULT_CURSOR );
+
+    if( m_result != null )
+      return m_result;
+
+    if( (m_points.size() == m_cnt_points) || ((m_cnt_points == 0) && (m_points.size() > 2)) )
     {
-      final int[][] points = getPointArrays( projection, currentPoint );
+      final GeoTransformer transformer = new GeoTransformer( m_crs );
 
-      final int[] arrayX = points[0];
-      final int[] arrayY = points[1];
+      final GM_Position[] poses = new GM_Position[m_points.size()];
+      for( int i = 0; i < poses.length; i++ )
+      {
+        final GM_Point transformedPoint = (GM_Point) transformer.transform( m_points.get( i ) );
+        poses[i] = transformedPoint.getPosition();
+      }
 
-      /* Paint a polygon. */
-      g.drawPolygon( arrayX, arrayY, arrayX.length );
-      drawHandles( g, arrayX, arrayY );
+      m_result = createGeometry( poses );
+
+      return m_result;
     }
+
+    return null;
   }
 
   private int[][] getPointArrays( final GeoTransform projection, final Point currentPoint )
@@ -209,16 +216,47 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     return new int[][] { xs, ys };
   }
 
-  private void drawHandles( final Graphics g, final int[] x, final int[] y )
+  /**
+   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
+   */
+  public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
-    final int sizeOuter = 6;
-    for( int i = 0; i < y.length; i++ )
-      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
+    // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
+    // because the projection depends on the current map-extent, so this builder
+    // is stable in regard to zoom in/out
+    if( !m_points.isEmpty() )
+    {
+      final int[][] points = getPointArrays( projection, currentPoint );
+
+      final int[] arrayX = points[0];
+      final int[] arrayY = points[1];
+
+      /* Paint a polygon. */
+      g.drawPolygon( arrayX, arrayY, arrayX.length );
+      drawHandles( g, arrayX, arrayY );
+    }
+
+    m_renderer.paint( g );
   }
 
-  public int getSize( )
+  /**
+   * @see org.kalypso.nofdpidss.ui.view.wizard.measure.construction.create.builders.geometry.IMyGeometryBuilder#removeLastPoint()
+   */
+  public void removeLastPoint( )
   {
-    return m_points.size();
+    if( m_points.size() > 0 )
+      m_points.remove( m_points.size() - 1 );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#removePoints()
+   */
+  public void reset( )
+  {
+    m_cnt_points = 0;
+    m_points.clear();
+
+    m_extender.setCursor( CROSSHAIR_CURSOR );
+  }
 }

@@ -41,6 +41,7 @@
 package org.kalypso.observation.result;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 /**
  * @author schlienger Default visibility, use IRecord and TupleResult.createRecord.
  */
-/* default */class Record implements IRecord
+public class Record implements IRecord
 {
   private final Map<IComponent, Object> m_values = new HashMap<IComponent, Object>();
 
@@ -145,5 +146,28 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   public TupleResult getOwner( )
   {
     return m_owner;
+  }
+
+  /**
+   * @see org.kalypso.observation.result.IRecord#cloneRecord()
+   */
+  public IRecord cloneRecord( )
+  {
+    final TupleResult result = this.getOwner();
+    final IComponent[] components = result.getComponents();
+    final Set<IComponent> sComp = new LinkedHashSet<IComponent>();
+
+    for( final IComponent component : components )
+    {
+      sComp.add( component );
+    }
+
+    final Record record = new Record( result, sComp );
+    for( final IComponent component : components )
+    {
+      record.setValue( component, this.getValue( component ) );
+    }
+
+    return record;
   }
 }

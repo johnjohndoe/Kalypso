@@ -42,8 +42,6 @@ package org.kalypso.observation.result;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 
@@ -83,50 +81,6 @@ public class Component extends AbstractComponent
     m_description = description;
     m_valueTypeName = valueTypeName;
     m_defaultValue = defaultValue;
-  }
-
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( !(obj instanceof IComponent) )
-      return false;
-
-    if( this == obj )
-      return true;
-
-    // subclass are sure that the component they receive is of the same class
-    if( !getClass().getName().equals( obj.getClass().getName() ) )
-      return false;
-
-    // FIXME
-
-    final IComponent comp = (IComponent) obj;
-    final EqualsBuilder builder = new EqualsBuilder();
-
-    fillEqualsBuilder( comp, builder );
-
-    return builder.isEquals();
-  }
-
-  protected void fillEqualsBuilder( final IComponent comp, final EqualsBuilder builder )
-  {
-    builder.append( comp.getId(), m_id );
-    builder.append( comp.getDefaultValue(), m_defaultValue );
-    builder.append( comp.getDescription(), m_description );
-    builder.append( comp.getName(), m_name );
-    builder.append( comp.getValueTypeName(), m_valueTypeName );
-  }
-
-  protected void fillHashCodeBuilder( final HashCodeBuilder builder )
-  {
-    builder.append( m_id );
-    builder.append( m_defaultValue );
-    builder.append( m_description );
-    builder.append( m_name );
-    builder.append( m_valueTypeName );
   }
 
   /**
@@ -188,18 +142,6 @@ public class Component extends AbstractComponent
   public QName getValueTypeName( )
   {
     return m_valueTypeName;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode( )
-  {
-    final HashCodeBuilder builder = new HashCodeBuilder();
-    fillHashCodeBuilder( builder );
-
-    return builder.toHashCode();
   }
 
   /**

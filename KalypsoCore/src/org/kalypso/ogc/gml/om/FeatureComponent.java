@@ -67,20 +67,6 @@ public class FeatureComponent extends AbstractComponent
   }
 
   /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof FeatureComponent )
-    {
-      return m_itemDef.equals( ((FeatureComponent) obj).m_itemDef );
-    }
-
-    return false;
-  }
-
-  /**
    * @see org.kalypso.observation.result.IComponent#getDefaultValue()
    */
   public Object getDefaultValue( )
@@ -94,9 +80,7 @@ public class FeatureComponent extends AbstractComponent
   public String getDescription( )
   {
     if( m_itemDef == null )
-    {
       return "";
-    }
     return NamedFeatureHelper.getDescription( m_itemDef );
   }
 
@@ -114,9 +98,7 @@ public class FeatureComponent extends AbstractComponent
   public String getId( )
   {
     if( m_itemDef instanceof XLinkedFeature_Impl )
-    {
       return ((XLinkedFeature_Impl) m_itemDef).getHref();
-    }
 
     return m_itemDef.getId();
   }
@@ -129,9 +111,7 @@ public class FeatureComponent extends AbstractComponent
   public String getName( )
   {
     if( m_itemDef == null )
-    {
       return "<no name>";
-    }
     return NamedFeatureHelper.getName( m_itemDef );
   }
 
@@ -139,9 +119,7 @@ public class FeatureComponent extends AbstractComponent
   {
     final Object phenomProperty = m_itemDef.getProperty( ObservationFeatureFactory.SWE_PROPERTY );
     if( phenomProperty instanceof String )
-    {
       return new DictionaryPhenomenon( (String) phenomProperty, null, null );
-    }
     else if( phenomProperty instanceof XLinkedFeature_Impl )
     {
       final String name = NamedFeatureHelper.getName( (Feature) phenomProperty );
@@ -149,9 +127,7 @@ public class FeatureComponent extends AbstractComponent
       return new DictionaryPhenomenon( ((XLinkedFeature_Impl) phenomProperty).getHref(), name, description );
     }
     else if( phenomProperty instanceof Feature )
-    {
       return new FeaturePhenomenon( (Feature) phenomProperty );
-    }
 
     return null;
   }
@@ -175,15 +151,6 @@ public class FeatureComponent extends AbstractComponent
   public QName getValueTypeName( )
   {
     return getRepresentationType().getValueTypeName();
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode( )
-  {
-    return m_itemDef.hashCode();
   }
 
   /**

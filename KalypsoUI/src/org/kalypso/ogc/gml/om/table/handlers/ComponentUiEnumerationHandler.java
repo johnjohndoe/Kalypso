@@ -117,6 +117,9 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
    */
   public Object parseValue( final Object value )
   {
+    if( value == null )
+      return null;
+
     final String lang = AnnotationAdapterFactory.getPlatformLang();
 
     final Set<Entry<Object, ILanguageAnnontationProvider>> set = m_items.entrySet();
@@ -160,7 +163,12 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
   @Override
   public String getStringRepresentation( final Object value )
   {
+    if( value == null )
+      return "";
+
     final ILanguageAnnontationProvider provider = ComponentUtilities.getLanguageProvider( getComponent().getRestrictions(), value );
+    if( provider == null )
+      return value.toString();
 
     final String lang = AnnotationAdapterFactory.getPlatformLang();
     return provider.getAnnotation( lang ).getLabel().trim();

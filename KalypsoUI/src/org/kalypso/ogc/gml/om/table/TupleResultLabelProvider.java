@@ -112,14 +112,26 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
     if( element instanceof IRecord )
     {
       final IRecord record = (IRecord) element;
+
       final IComponentUiHandler handler = m_handlers[columnIndex];
       final IComponent component = handler.getComponent();
       if( component == null )
         return "";
 
-      final Object value = record.getValue( component );
+      /* tupleresult updated? component removed -> so return "" */
+      if( !record.getOwner().hasComponent( component ) )
+        return "";
 
-      return handler.getStringRepresentation( value );
+      try
+      {
+        final Object value = record.getValue( component );
+
+        return handler.getStringRepresentation( value );
+      }
+      catch( final IllegalArgumentException e )
+      {
+        return "";
+      }
     }
 
     return "";

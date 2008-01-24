@@ -43,11 +43,16 @@ package org.kalypso.ogc.gml.om.table;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -60,7 +65,7 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
  */
 public class TupleResultContentProvider implements IStructuredContentProvider, ITupleResultChangedListener
 {
-  private DefaultTableViewer m_tableViewer;
+  protected DefaultTableViewer m_tableViewer;
 
   private TupleResult m_result;
 
@@ -111,7 +116,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     }
   }
 
-  private void refreshColumns( )
+  protected void refreshColumns( )
   {
     m_tableViewer.removeAllColumns();
 
@@ -208,7 +213,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     else
     {
       final String[] props = properties.toArray( new String[properties.size()] );
-      m_tableViewer.update( records, props );
+      ViewerUtilities.update( m_tableViewer, records, props, true );
     }
   }
 
@@ -246,17 +251,18 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
                 tableViewer.remove( records );
                 break;
 
-              case CHANGED:
-                if( records == null )
-                {
-                  tableViewer.refresh();
-                  // REMARK: at this place it is OK to force the selection to be shown
-                  // as it is quite probable that the user changed the value of the current selection
-                  tableViewer.getTable().showSelection();
-                }
-                else
-                  tableViewer.update( records, null );
-                break;
+              // FIXME
+// case CHANGED:
+// if( records == null )
+// {
+// tableViewer.refresh();
+// // REMARK: at this place it is OK to force the selection to be shown
+// // as it is quite probable that the user changed the value of the current selection
+// tableViewer.getTable().showSelection();
+// }
+// else
+// tableViewer.update( records, null );
+// break;
             }
           }
         }
@@ -270,8 +276,19 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    */
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-    refreshColumns();
-    m_tableViewer.refresh();
+    new UIJob( "updating table... " )
+    {
+
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        refreshColumns();
+        m_tableViewer.refresh();
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 
   public IComponentUiHandler[] getHandlers( )
