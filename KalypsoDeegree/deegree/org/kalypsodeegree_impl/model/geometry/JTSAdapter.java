@@ -128,6 +128,9 @@ public class JTSAdapter
    */
   public static Geometry export( final GM_Object gmObject ) throws GM_Exception
   {
+    if( gmObject == null )
+      return null;
+
     if( gmObject instanceof GM_Point )
       return export( (GM_Point) gmObject );
 
