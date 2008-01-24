@@ -105,8 +105,8 @@ public class DateTimeCellEditor extends CellEditor
   @Override
   protected void doSetFocus( )
   {
-    // FIXME
-    m_dialog.getShell().setFocus();
+    if( m_dialog != null && !m_dialog.getShell().isDisposed() )
+      m_dialog.getShell().setFocus();
   }
 
   /**
