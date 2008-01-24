@@ -67,6 +67,8 @@ public class VersionedModel extends AbstractFeatureBinder implements IFeatureWra
     }
     catch( final Exception e )
     {
+      // FIXME: NONONONONOOJ: never just catch an empty exception ( at least without comment!)
+      // Pleeeeease: why no tjsut test if the property exists...!
     }
 
     if( property == null )
