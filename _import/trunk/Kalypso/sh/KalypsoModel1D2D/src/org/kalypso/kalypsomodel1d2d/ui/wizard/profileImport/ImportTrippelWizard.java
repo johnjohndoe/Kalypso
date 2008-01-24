@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -142,8 +141,8 @@ public class ImportTrippelWizard extends Wizard implements IWizard
           /* get file name from wizard */
           final File trippelFile = m_ProfilePage.getFile();
           final String separator = m_ProfilePage.getSeparator();
-          
-          List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile,separator, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+
+          List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile, separator, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
 
           monitor.worked( 1 );
 
@@ -203,7 +202,6 @@ public class ImportTrippelWizard extends Wizard implements IWizard
 
     for( final IProfil profile : profiles )
     {
-      profile.getPointProperty( desc );
       final Feature profileFeature = FeatureHelper.addFeature( network.getWrappedFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
       ProfileFeatureFactory.toFeature( profile, profileFeature );
       new WspmProfile( profileFeature ).setSrsName( crs.getName() );
