@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml.om.table.command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -78,20 +80,45 @@ public class TupleResultCommandUtils
     if( variable instanceof TableViewer )
       return (TableViewer) variable;
 
-    return null;
+    final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    if( activePart == null )
+      return null;
+
+    final ITupleResultViewerProvider provider = (ITupleResultViewerProvider) activePart.getAdapter( ITupleResultViewerProvider.class );
+    if( provider == null )
+      return null;
+
+    return provider.getTupleResultViewer();
   }
 
   public static TupleResult findTupleResult( final ExecutionEvent event )
   {
-    final TableViewer tableViewer = findTableViewer( event );
-    if( tableViewer == null )
+    final Object applicationContext = event.getApplicationContext();
+    if( !(applicationContext instanceof IEvaluationContext) )
       return null;
 
-    final Object input = tableViewer.getInput();
-    if( input instanceof TupleResult )
-      return (TupleResult) input;
+    final IEvaluationContext context = (IEvaluationContext) applicationContext;
 
-    return null;
+    final Object variable = context.getVariable( ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
+    if( variable instanceof TableViewer )
+    {
+      final TableViewer tableViewer = (TableViewer) variable;
+      final Object input = tableViewer.getInput();
+      if( input instanceof TupleResult )
+        return (TupleResult) input;
+
+      return null; // do not continue if we already could find the viewer
+    }
+
+    final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    if( activePart == null )
+      return null;
+
+    final ITupleResultViewerProvider provider = (ITupleResultViewerProvider) activePart.getAdapter( ITupleResultViewerProvider.class );
+    if( provider == null )
+      return null;
+
+    return provider.getTupleResult();
   }
 
 }
