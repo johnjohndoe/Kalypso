@@ -91,7 +91,6 @@ import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
@@ -109,6 +108,8 @@ import org.kalypso.model.wspm.ui.view.AbstractProfilPart;
 import org.kalypso.model.wspm.ui.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.legend.ChartLegend;
 
@@ -123,9 +124,9 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
 
   private IStationResult[] m_results;
 
-  private Collection<IProfilchartEditorListener> m_listener = new LinkedList<IProfilchartEditorListener>();
+  private final Collection<IProfilchartEditorListener> m_listener = new LinkedList<IProfilchartEditorListener>();
 
-  private PartAdapter2 m_partAdapter = new PartAdapter2()
+  private final PartAdapter2 m_partAdapter = new PartAdapter2()
   {
     @Override
     public void partOpened( final IWorkbenchPartReference partRef )
@@ -161,7 +162,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     }
   };
 
-  private IOperationHistoryListener m_undoOperationListener = new IOperationHistoryListener()
+  private final IOperationHistoryListener m_undoOperationListener = new IOperationHistoryListener()
   {
     public void historyNotification( final OperationHistoryEvent event )
     {
@@ -189,7 +190,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     }
   };
 
-  private List<IProfilProviderListener> m_profilProviderListener = new ArrayList<IProfilProviderListener>( 5 );
+  private final List<IProfilProviderListener> m_profilProviderListener = new ArrayList<IProfilProviderListener>( 5 );
 
   private final MenuManager m_menuManager = new MenuManager( "#PopupMenu" ); //$NON-NLS-1$
 
@@ -447,16 +448,16 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     final IProfilEventManager oldPem = m_profilPart.getProfilEventManager();
     final ProfilViewData oldViewData = m_profilPart.getViewData();
 
-    if( (oldPem == null) && (oldViewData != null)&& (pem!= null) )
+    if( (oldPem == null) && (oldViewData != null) && (pem != null) )
     {
       final IProfil profile = pem.getProfil();
       if( profile != null )
       {
-        for( final String markerId : profile.getPointMarkerTypes() )
+        for( final IComponent markerId : profile.getPointMarkerTypes() )
           oldViewData.setMarkerVisibility( markerId, true );
       }
     }
-    
+
     m_profilPart.setProfil( pem, file, getEditorSite().getId() );
 
     fireOnProfilProviderChanged( oldPem, m_profilPart.getProfilEventManager(), oldViewData, m_profilPart.getViewData() );
@@ -643,7 +644,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       if( profil == null )
         return;
 
-      final IProfilPoint point = profil.getPoints().get( pointPos );
+      final IRecord point = profil.getPoints().get( pointPos );
       final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( profil, point, null ), true );
       final IStatus status = operation.execute( new NullProgressMonitor(), null );
       operation.dispose();

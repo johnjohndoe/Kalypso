@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
+import org.kalypso.model.wspm.core.profil.IProfilBuilder;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
@@ -31,6 +32,8 @@ public class KalypsoModelWspmCoreExtensions
   private static Map<String, List<IProfilPointMarkerProvider>> THE_MARKER_PROVIDER_MAP = null;
 
   private static Map<String, List<IProfilPointPropertyProvider>> THE_PROPERTY_PROVIDER_MAP = null;
+
+  private static Map<String, IProfilBuilder> THE_PROFIL_BUILDER_MAP = null;
 
   private static Map<String, List<IProfileObjectProvider>> THE_OBJECT_PROVIDER_MAP = null;
 
@@ -123,9 +126,8 @@ public class KalypsoModelWspmCoreExtensions
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profileFeatureProvider" );
 
     final Collection<IProfileFeatureProvider> provider = new ArrayList<IProfileFeatureProvider>( elements.length );
-    for( int i = 0; i < elements.length; i++ )
+    for( final IConfigurationElement element : elements )
     {
-      final IConfigurationElement element = elements[i];
       try
       {
         provider.add( (IProfileFeatureProvider) element.createExecutableExtension( "class" ) );
@@ -150,9 +152,8 @@ public class KalypsoModelWspmCoreExtensions
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilePointFilter" );
 
     final Collection<IProfilePointFilter> filter = new ArrayList<IProfilePointFilter>( elements.length );
-    for( int i = 0; i < elements.length; i++ )
+    for( final IConfigurationElement element : elements )
     {
-      final IConfigurationElement element = elements[i];
       try
       {
         filter.add( (IProfilePointFilter) element.createExecutableExtension( "class" ) );
@@ -304,6 +305,35 @@ public class KalypsoModelWspmCoreExtensions
     }
 
     return THE_PROPERTY_PROVIDER_MAP;
+  }
+
+  public static IProfilBuilder getProfilBuilder( final String type )
+  {
+    if( THE_PROFIL_BUILDER_MAP != null )
+      return THE_PROFIL_BUILDER_MAP.get( type );
+
+    THE_PROFIL_BUILDER_MAP = new HashMap<String, IProfilBuilder>();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] propertyProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilbuilder" );
+    for( final IConfigurationElement configurationElement : propertyProvider )
+    {
+      try
+      {
+        // TODO: eventuell nur die elemente des gewünschten typs erzeugen und in map merken
+        final String profilType = configurationElement.getAttribute( "profiletype" );
+        final Object builderProvider = configurationElement.createExecutableExtension( "provider" );
+        final IProfilBuilder provider = (IProfilBuilder) builderProvider;
+
+        THE_PROFIL_BUILDER_MAP.put( profilType, provider );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
+      }
+    }
+
+    return THE_PROFIL_BUILDER_MAP.get( type );
   }
 
 }

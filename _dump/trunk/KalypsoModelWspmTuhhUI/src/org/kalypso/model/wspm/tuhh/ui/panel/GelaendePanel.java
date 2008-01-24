@@ -95,7 +95,7 @@ public class GelaendePanel extends AbstractProfilView
     horzbutton.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         getViewData().setEdithorz( horzbutton.getSelection() );
       }
@@ -107,7 +107,7 @@ public class GelaendePanel extends AbstractProfilView
     vertbutton.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         getViewData().setEditvert( vertbutton.getSelection() );
       }
@@ -127,7 +127,7 @@ public class GelaendePanel extends AbstractProfilView
        * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
        */
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
 
         final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true );
@@ -135,7 +135,8 @@ public class GelaendePanel extends AbstractProfilView
       }
     } );
     m_comment.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_comment.setText( getProfil().getComment() );
+    if( getProfil().getComment() != null )
+      m_comment.setText( getProfil().getComment() );
     return panel;
   }
 

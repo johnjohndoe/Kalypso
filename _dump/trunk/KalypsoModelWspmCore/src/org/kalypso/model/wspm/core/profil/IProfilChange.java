@@ -45,19 +45,22 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 public interface IProfilChange
 {
   /**
-   * @param
-   *          the Themes , affected by this ProfilChange should be set true
+   * @param the
+   *            Themes , affected by this ProfilChange should be set true
    * @return the undo operation for this ProfilChange or {@code null} if not undoable
    */
-  public IProfilChange doChange( final ProfilChangeHint hint )throws IllegalProfileOperationException;
-/**
- * @return something stored in this ProfilChange
- */
+  public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException;
+
+  /**
+   * @return something stored in this ProfilChange
+   */
   public Object[] getObjects( );
+
   /**
    * @return a String stored in this ProfilChange
    */
   public String getInfo( );
+
   /**
    * @return a Double stored in this ProfilChange
    */

@@ -62,8 +62,9 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -79,8 +80,8 @@ public class DA50Importer
 {
   /**
    * @param bRefFirst
-   *          Where to apply the reference: if true, the start-point is applied to the first point of the profile, else
-   *          to the point with the breite-coordinate zero.
+   *            Where to apply the reference: if true, the start-point is applied to the first point of the profile,
+   *            else to the point with the breite-coordinate zero.
    */
   public static FeatureChange[] importDA50( final File da50File, final FeatureList profileFeatures, final boolean bRefFirst ) throws CoreException
   {
@@ -130,8 +131,8 @@ public class DA50Importer
 
   /**
    * @param bRefFirst
-   *          Where to apply the reference: if true, the start-point is applied to the first point of the profile, else
-   *          to the point with the breite-coordinate zero.
+   *            Where to apply the reference: if true, the start-point is applied to the first point of the profile,
+   *            else to the point with the breite-coordinate zero.
    */
   private static void applyD50Entry( final IProfil profil, final DA50Entry entry, final boolean bRefFirst ) throws CoreException
   {
@@ -142,7 +143,7 @@ public class DA50Importer
     // den Vektor der Profilachse ausrechnen
     double vx = endPos.getX() - startPos.getX();
     double vy = endPos.getY() - startPos.getY();
-    double vl = Math.sqrt( vx * vx + vy * vy );
+    final double vl = Math.sqrt( vx * vx + vy * vy );
     if( vl == 0.0 )
     {
       final String message = String.format( "Station %.4f: Start und Endpunkt liegen an der gleichen Stelle", entry.station );
@@ -154,14 +155,14 @@ public class DA50Importer
     vy /= vl;
 
     /* Only do reference the first and last point */
-    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final LinkedList<IRecord> points = profil.getPoints();
     if( points.size() < 2 )
       return;
 
-    final IProfilPoint firstPP = points.getFirst();
-    final IProfilPoint lastPP = points.getLast();
-    final double firstBreite = firstPP.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double lastBreite = lastPP.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IRecord firstPP = points.getFirst();
+    final IRecord lastPP = points.getLast();
+    final double firstBreite = (Double) firstPP.getValue( ProfilObsHelper.getPropertyFromId( firstPP, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double lastBreite = (Double) lastPP.getValue( ProfilObsHelper.getPropertyFromId( lastPP, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     double yOffset = 0;
     if( bRefFirst )
@@ -175,13 +176,13 @@ public class DA50Importer
     final double rwLast = startPos.getX() + yLast * vx;
     final double hwLast = startPos.getY() + yLast * vy;
 
-    profil.addPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    profil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    profil.addPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+    profil.addPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
-    firstPP.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, rwFirst );
-    firstPP.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, hwFirst );
-    lastPP.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, rwLast );
-    lastPP.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, hwLast );
+    firstPP.setValue( ProfilObsHelper.getPropertyFromId( firstPP, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), rwFirst );
+    firstPP.setValue( ProfilObsHelper.getPropertyFromId( firstPP, IWspmConstants.POINT_PROPERTY_HOCHWERT ), hwFirst );
+    lastPP.setValue( ProfilObsHelper.getPropertyFromId( lastPP, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), rwLast );
+    lastPP.setValue( ProfilObsHelper.getPropertyFromId( lastPP, IWspmConstants.POINT_PROPERTY_HOCHWERT ), hwLast );
   }
 
   private static DA50Entry[] readDA50( final LineNumberReader lnr ) throws IOException, CoreException

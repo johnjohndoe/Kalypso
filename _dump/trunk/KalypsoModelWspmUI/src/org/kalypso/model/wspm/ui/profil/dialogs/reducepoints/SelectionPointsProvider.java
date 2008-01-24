@@ -46,9 +46,8 @@ import java.util.List;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Delivers points from a selection.
@@ -61,7 +60,7 @@ public class SelectionPointsProvider implements IPointsProvider
 
   private String m_errorMessage;
 
-  private IProfilPoint[] m_points = new IProfilPoint[0];
+  private IRecord[] m_points = new IRecord[] {};
 
   public SelectionPointsProvider( final IProfil profil, final ISelection selection )
   {
@@ -75,50 +74,50 @@ public class SelectionPointsProvider implements IPointsProvider
 
     if( selection instanceof IStructuredSelection )
     {
-//      try
-//      {
-        final IStructuredSelection structSel = (IStructuredSelection) selection;
+// try
+// {
+      final IStructuredSelection structSel = (IStructuredSelection) selection;
 
-        if( structSel.size() < 3 )
+      if( structSel.size() < 3 )
+      {
+        m_errorMessage = "Die Selektion beinhaltet weniger als drei Punkte.";
+        return;
+      }
+
+      final Object[] objects = structSel.toArray();
+
+      IRecord lastPoint = null;
+      final List<IRecord> points = new ArrayList<IRecord>( objects.length );
+      for( final Object object : objects )
+      {
+        if( object instanceof IRecord )
         {
-          m_errorMessage = "Die Selektion beinhaltet weniger als drei Punkte.";
-          return;
-        }
-
-        final Object[] objects = structSel.toArray();
-
-        IProfilPoint lastPoint = null;
-        final List<IProfilPoint> points = new ArrayList<IProfilPoint>( objects.length );
-        for( final Object object : objects )
-        {
-          if( object instanceof IProfilPoint )
+          final IRecord point = (IRecord) object;
+          if( lastPoint != null && lastPoint != ProfilUtil.getPointBefore( m_profil, point ) )
           {
-            final IProfilPoint point = (IProfilPoint) object;
-            if( lastPoint != null && lastPoint != ProfilUtil.getPointBefore( m_profil, point ) )
-            {
-              m_errorMessage = "Die Selektion ist nicht kontinuierlich.";
-              return;
-            }
-
-            points.add( point );
-            lastPoint = point;
-          }
-          else
-          {
-            m_errorMessage = "Die Selektion besteht nicht auschliesslich aus Profilpunkten.";
+            m_errorMessage = "Die Selektion ist nicht kontinuierlich.";
             return;
           }
-        }
 
-        m_errorMessage = null;
-        m_points = points.toArray( new IProfilPoint[points.size()] );
-        return;
-//      }
-//      catch( final IllegalProfileOperationException e )
-//      {
-//        m_errorMessage = "Fehler beim Prüfen der Selektion: " + e.getLocalizedMessage();
-//        return;
-//      }
+          points.add( point );
+          lastPoint = point;
+        }
+        else
+        {
+          m_errorMessage = "Die Selektion besteht nicht auschliesslich aus Profilpunkten.";
+          return;
+        }
+      }
+
+      m_errorMessage = null;
+      m_points = points.toArray( new IRecord[points.size()] );
+      return;
+// }
+// catch( final IllegalProfileOperationException e )
+// {
+// m_errorMessage = "Fehler beim Prüfen der Selektion: " + e.getLocalizedMessage();
+// return;
+// }
     }
 
     m_errorMessage = "Ungültige Selektion.";
@@ -127,7 +126,7 @@ public class SelectionPointsProvider implements IPointsProvider
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getPoints()
    */
-  public IProfilPoint[] getPoints( )
+  public IRecord[] getPoints( )
   {
     return m_points;
   }

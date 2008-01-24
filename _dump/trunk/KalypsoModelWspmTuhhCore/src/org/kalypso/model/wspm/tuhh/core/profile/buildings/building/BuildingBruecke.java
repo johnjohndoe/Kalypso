@@ -40,41 +40,89 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
+import org.kalypso.commons.metadata.MetadataObject;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.Component;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author kimwerner
  */
-public class BuildingBruecke extends AbstractProfilBuilding
+final public class BuildingBruecke extends AbstractObservationBuilding
 {
-  public BuildingBruecke( )
+  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_BRUECKE;
+
+  public BuildingBruecke( final IProfil profil )
   {
-    super( IWspmTuhhConstants.BUILDING_TYP_BRUECKE, "Brücke", new String[] { IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER,
-        IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT },
-        new String[] {"Breite","Unterwasser","Pfeilerformbeiwert","Rauheit"}, new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE,
-        IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE } );
+    final TupleResult result = new TupleResult();
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) );
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
+
+    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
+
+    init( profil, observation );
+  }
+
+  public BuildingBruecke( final IProfil profil, final IObservation<TupleResult> observation )
+  {
+    init( profil, observation );
+  }
+
+  @Override
+  protected String[] getProfileProperties( )
+  {
+    return new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE };
+  }
+
+  private IComponent createComponent( final String type )
+  {
+    /* building observation properties */
+    if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER, "Unterwasser", "Unterwasser", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Pfeilerformbeiwert", "Pfeilerformbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+
+    /* profile observation properties */
+    else if( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE.equals( type ) )
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE.equals( type ) )
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+
+    throw new NotImplementedException();
+
   }
 
   /**
-   * erzeugt die verknüpften Objekte des Bauwerks im Profil und setzt sie auf einen default Wert
+   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
    */
   @Override
-  public void addProfilProperties( IProfil profil )
+  protected IComponent getPointProperty( final String id )
   {
-    super.addProfilProperties( profil );
-    final LinkedList<IProfilPoint> points = profil.getPoints();
+    return createComponent( id );
+  }
 
-    for( final IProfilPoint pt : points )
-    {
-      final Double h = pt.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-      pt.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, h );
-      pt.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, h );
-    }
-
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
+   */
+  public String getId( )
+  {
+    return ID;
   }
 
 }

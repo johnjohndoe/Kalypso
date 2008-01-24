@@ -63,11 +63,13 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
+import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -81,6 +83,8 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
@@ -117,7 +121,7 @@ public class CreateProfileDeviderWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles,1, "profileFeaturesChooserPage", "Profile ausw‰hlen", null );
+    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 1, "profileFeaturesChooserPage", "Profile ausw‰hlen", null );
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
     m_profileChooserPage.setMessage( "Bitte w‰hlen Sie aus, in welchen Profilen Flieﬂzonen erzeugt werden sollen." );
 
@@ -152,7 +156,7 @@ public class CreateProfileDeviderWizard extends Wizard
 
     final FeatureList lineFeatures = m_deviderPage.getFeatures();
     final IPropertyType lineGeomProperty = m_deviderPage.getGeomProperty();
-    final String deviderType = m_deviderPage.getDeviderType();
+    final IComponent deviderType = m_deviderPage.getDeviderType();
 
     final IKalypsoFeatureTheme commandTarget = m_foundProfiles.theme;
 
@@ -192,7 +196,7 @@ public class CreateProfileDeviderWizard extends Wizard
   }
 
   @SuppressWarnings("unchecked")
-  protected static FeatureChange[] createDevider( final Object[] profileFeatures, final FeatureList lineFeatures, final IPropertyType lineGeomProperty, final String deviderType, final IProgressMonitor monitor )
+  protected static FeatureChange[] createDevider( final Object[] profileFeatures, final FeatureList lineFeatures, final IPropertyType lineGeomProperty, final IComponent deviderType, final IProgressMonitor monitor )
   {
     monitor.beginTask( "erzeuge Begrenzer", profileFeatures.length );
 
@@ -275,28 +279,28 @@ public class CreateProfileDeviderWizard extends Wizard
   /**
    * At the moment, only existing points are taken
    */
-  private static boolean createNewDevider( final IProfil profil, final Point[] intersectionPoints, final String markerType )
+  private static boolean createNewDevider( final IProfil profil, final Point[] intersectionPoints, final IComponent markerType )
   {
     // find corresponding profile points // create new profile points
 
-    final Map<Point, IProfilPoint> pointMap = new HashMap<Point, IProfilPoint>( intersectionPoints.length );
+    final Map<Point, IRecord> pointMap = new HashMap<Point, IRecord>( intersectionPoints.length );
 
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-    for( final IProfilPoint profilPoint : points )
+    final LinkedList<IRecord> points = profil.getPoints();
+    for( final IRecord profilPoint : points )
     {
       try
       {
-        final GM_Point pointGeom = ProfileCacherFeaturePropertyFunction.convertPoint(profil, profilPoint );
+        final GM_Point pointGeom = ProfileCacherFeaturePropertyFunction.convertPoint( profil, profilPoint );
         final Point geoPoint = (Point) JTSAdapter.export( pointGeom );
 
         for( final Point p : intersectionPoints )
         {
           final double newDist = geoPoint.distance( p );
-          final IProfilPoint lastProfilPoint = pointMap.get( p );
+          final IRecord lastProfilPoint = pointMap.get( p );
           final double lastDist;
           if( lastProfilPoint != null )
           {
-            final GM_Point lastPointGeom = ProfileCacherFeaturePropertyFunction.convertPoint(profil, lastProfilPoint );
+            final GM_Point lastPointGeom = ProfileCacherFeaturePropertyFunction.convertPoint( profil, lastProfilPoint );
             final Point lastGeoPoint = (Point) JTSAdapter.export( lastPointGeom );
             lastDist = geoPoint.distance( lastGeoPoint );
           }
@@ -314,15 +318,18 @@ public class CreateProfileDeviderWizard extends Wizard
       }
     }
 
-    // TODO
     final IProfilPointMarker[] existingMarkers = profil.getPointMarkerFor( markerType );
     for( final IProfilPointMarker marker : existingMarkers )
       profil.removePointMarker( marker );
-    // TODO
-    for( final IProfilPoint markerPoint : pointMap.values() )
+
+    for( final IRecord markerPoint : pointMap.values() )
     {
-      profil.addPointMarker( markerPoint, markerType );
+      final ProfilDevider profilDevider = new ProfilDevider( markerType, markerPoint );
+      // FIXME debug - not defined boolean values in obs table are null or false?!?
+      throw new NotImplementedException();
+// profilDevider.setValue( markerType.getDefaultValue() );
     }
+
     return pointMap.size() > 0;
   }
 }

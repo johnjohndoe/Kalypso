@@ -53,8 +53,8 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.WspPanel;
@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.EditInfo;
 
@@ -79,11 +80,11 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
 
   private final IStationResult m_result;
 
-  private double m_height;
+  private final double m_height;
 
-  public WspLayer( final ProfilChartView pcv,final IStationResult result )
+  public WspLayer( final ProfilChartView pcv, final IStationResult result )
   {
-    super(IWspmTuhhConstants.LAYER_WASSERSPIEGEL, pcv, pcv.getDomainRange(),pcv.getValueRangeLeft(),"Wasserspiegel");
+    super( IWspmTuhhConstants.LAYER_WASSERSPIEGEL, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Wasserspiegel" );
 
     m_profil = pcv.getProfil();
     m_color = pcv.getColorRegistry().get( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
@@ -141,16 +142,16 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
   private int[] getPoints( )
   {
     // ermittelt das Polygon oberhalb der geländelinie
-    final List<IProfilPoint> ppoints = m_profil.getPoints();
+    final List<IRecord> ppoints = m_profil.getPoints();
     final List<Point> points = new ArrayList<Point>( (ppoints.size() + 2) * 2 );
     for( int i = 0; i < ppoints.size(); i++ )
     {
-      final IProfilPoint p = ppoints.get( i );
+      final IRecord p = ppoints.get( i );
 
       try
       {
-        final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-        final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+        final double x = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+        final double y = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
 
         final Point point = logical2screen( new Point2D.Double( x, y ) );
 
@@ -162,7 +163,7 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
         if( i == ppoints.size() - 1 )
           points.add( new Point( point.x, -1000 ) );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         // should never happen
       }
@@ -206,7 +207,7 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
    * @see de.belger.swtchart.layer.IChartLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHoverInfo( Point point )
+  public EditInfo getHoverInfo( final Point point )
   {
     return null;
   }
@@ -273,7 +274,7 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
    *      java.lang.Object)
    */
   @Override
-  protected void editProfil( Point point, Object data )
+  protected void editProfil( final Point point, final Object data )
   {
   }
 
@@ -282,7 +283,7 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
    *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
   }
 }

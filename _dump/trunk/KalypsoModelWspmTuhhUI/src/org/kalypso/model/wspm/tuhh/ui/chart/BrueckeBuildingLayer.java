@@ -53,10 +53,10 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.BuildingPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -65,7 +65,7 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
-
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -73,7 +73,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 public class BrueckeBuildingLayer extends AbstractPolyLineLayer
 {
   @Override
-  public List<IProfilPoint> getPoints( )
+  public List<IRecord> getPoints( )
   {
     return getProfil().getPoints();
   }
@@ -81,10 +81,10 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   public BrueckeBuildingLayer( final ProfilChartView pcv )
 
   {
-    super(IWspmTuhhConstants.LAYER_BRUECKE,"Brücke", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(),  new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE,
-        IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE }, false, false, false );
-    setColors( setColor(pcv.getColorRegistry()));
-   
+    super( IWspmTuhhConstants.LAYER_BRUECKE, "Brücke", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] {
+        IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE } ), false, false, false );
+    setColors( setColor( pcv.getColorRegistry() ) );
+
   }
 
   @Override
@@ -92,22 +92,23 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   {
     return "Brücke";
   }
-  private final Color[] setColor(final ColorRegistry cr)
+
+  private final Color[] setColor( final ColorRegistry cr )
   {
-    
-   
-    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_TOP") )
+
+    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_TOP" ) )
     {
-      cr.put( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_TOP" , new RGB(0, 128, 0 ));
+      cr.put( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_TOP", new RGB( 0, 128, 0 ) );
     }
-    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_BOTTOM") )
+    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_BOTTOM" ) )
     {
-      cr.put( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_BOTTOM", new RGB(0, 128,179 ));
+      cr.put( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_BOTTOM", new RGB( 0, 128, 179 ) );
     }
-    return new Color[]{cr.get(  IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_TOP"),cr.get( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_BOTTOM")};
+    return new Color[] { cr.get( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_TOP" ), cr.get( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_BOTTOM" ) };
   }
+
   @Override
-  public void paintLegend( GCWrapper gc )
+  public void paintLegend( final GCWrapper gc )
   {
     final Rectangle clipping = gc.getClipping();
 
@@ -128,24 +129,25 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
 
   }
 
-  protected Double convertPoint( IProfilPoint p, int lineNr )
+  protected Double convertPoint( final IRecord p, final int lineNr )
   {
     {
-      final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+      final double x = (java.lang.Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
       double y = 0.0;
       switch( lineNr )
       {
         case 0:
         {
-          y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+          y = (java.lang.Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
           break;
         }
         case 1:
         {
-          y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+          y = (java.lang.Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) );
           break;
         }
       }
+
       return new Point2D.Double( x, y );
     }
   }
@@ -161,9 +163,9 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
     final IProfilEventManager pem = getProfilEventManager();
     final IProfil profile = pem.getProfil();
     final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new ProfileObjectSet(profile , (IProfileObject)null );
-    changes[1] = new PointPropertyRemove(profile, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    changes[2] = new PointPropertyRemove(profile, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+    changes[0] = new ProfileObjectSet( profile, new IProfileObject[] {} );
+    changes[1] = new PointPropertyRemove( profile, ProfilObsHelper.getPropertyFromId( profile, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
+    changes[2] = new PointPropertyRemove( profile, ProfilObsHelper.getPropertyFromId( profile, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) );
     final ProfilOperation operation = new ProfilOperation( " entfernen", pem, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }

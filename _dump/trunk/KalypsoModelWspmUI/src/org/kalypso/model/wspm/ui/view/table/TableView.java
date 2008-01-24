@@ -40,7 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
-import org.eclipse.core.resources.IFile;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -55,17 +63,36 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
-import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
-import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.ITupleResultChangedListener;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
+import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
+import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem(!) Editor.
@@ -76,15 +103,65 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 {
   private final AdapterPartListener m_profilProviderListener = new AdapterPartListener( IProfilProvider2.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
-  private ProfilSWTTableView m_view;
-
   private Composite m_control;
 
   private UndoRedoActionGroup m_group;
 
   private IProfilProvider2 m_provider;
 
-  private IProfilEventManager m_pem;
+  protected IProfilEventManager m_pem;
+
+  private DefaultTableViewer m_view;
+
+  private TupleResultContentProvider m_tupleResultContentProvider;
+
+  private TupleResultLabelProvider m_tupleResultLabelProvider;
+
+  private final IProfilListener m_profileListener = new IProfilListener()
+  {
+    public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+    {
+      new UIJob( "updating cross section table..." )
+      {
+        @Override
+        public IStatus runInUIThread( IProgressMonitor monitor )
+        {
+          updateControl();
+
+          return Status.OK_STATUS;
+        }
+      }.schedule();
+    }
+  };
+
+  private final ITupleResultChangedListener m_changedListener = new ITupleResultChangedListener()
+  {
+    public void componentsChanged( final IComponent[] components, final TYPE type )
+    {
+      /** not fired, because of eventloop with pem */
+// final ProfilChangeHint hint = new ProfilChangeHint();
+// hint.setProfilPropertyChanged( true );
+//
+// m_pem.fireProfilChanged( hint, new IProfilChange[] {} );
+    }
+
+    public void recordsChanged( final IRecord[] records, final TYPE type )
+    {
+      /** not fired, because of eventloop with pem */
+      final ProfilChangeHint hint = new ProfilChangeHint();
+      hint.setPointsChanged();
+
+      m_pem.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
+    }
+
+    public void valuesChanged( final ValueChange[] changes )
+    {
+      final ProfilChangeHint hint = new ProfilChangeHint();
+      hint.setPointValuesChanged();
+
+      m_pem.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
+    }
+  };
 
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
@@ -104,15 +181,18 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   {
     super.dispose();
 
+    if( m_pem != null )
+      m_pem.removeProfilListener( m_profileListener );
+
     unhookProvider();
+
+    m_tupleResultContentProvider.dispose();
+    m_tupleResultLabelProvider.dispose();
 
     m_profilProviderListener.dispose();
 
     if( m_group != null )
       m_group.dispose();
-
-    if( m_view != null )
-      m_view.dispose();
 
     if( m_control != null )
       m_control.dispose();
@@ -169,14 +249,9 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     if( (m_control == null) || m_control.isDisposed() )
       return;
 
-    final Object viewState = m_view == null ? null : m_view.storeState();
-
     final Control[] childcontrols = m_control.getChildren();
     for( final Control c : childcontrols )
       c.dispose();
-
-    if( m_view != null )
-      m_view.dispose();
 
     unregisterGlobalActions();
 
@@ -191,27 +266,86 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     }
     else
     {
-      final IFile file = m_provider == null ? null : m_provider.getFile();
+      m_view = new DefaultTableViewer( m_control, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+      m_view.getTable().setHeaderVisible( true );
+      m_view.getTable().setLinesVisible( true );
 
-      m_view = new ProfilSWTTableView( pem, pvd, file );
+      m_view.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+      final List<IComponentUiHandler> myHandlers = new ArrayList<IComponentUiHandler>();
+
+      final IProfil profil = getProfilEventManager().getProfil();
+      final IComponent[] pointMarkerTypes = profil.getPointMarkerTypes();
+
+      final IComponent[] components = profil.getPointProperties();
+      for( final IComponent component : components )
+      {
+        /* marker?!? yes -> continue */
+        if( ArrayUtils.contains( pointMarkerTypes, component ) )
+          continue;
+
+        final int spacing = 100 / components.length;
+
+        final QName valueTypeName = component.getValueTypeName();
+
+        // TODO: let a table-column-provider create the handlers (profile-type dependent)
+        if( ComponentUiHandlerFactory.Q_DATE_TIME.equals( valueTypeName ) )
+        {
+          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
+        }
+        else if( ComponentUiHandlerFactory.Q_STRING.equals( valueTypeName ) )
+        {
+          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
+        }
+        else if( ComponentUiHandlerFactory.Q_INTEGER.equals( valueTypeName ) )
+        {
+          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
+        }
+        else if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
+        {
+          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
+        }
+        else if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
+        {
+          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
+        }
+        else
+          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
+      }
+
+      m_tupleResultContentProvider = new TupleResultContentProvider( myHandlers.toArray( new IComponentUiHandler[] {} ) );
+      m_tupleResultLabelProvider = new TupleResultLabelProvider( myHandlers.toArray( new IComponentUiHandler[] {} ) );
+
+      m_view.setContentProvider( m_tupleResultContentProvider );
+      m_view.setLabelProvider( m_tupleResultLabelProvider );
+      m_view.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
+
+      final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType( KalypsoCorePlugin.getDefault().getSelectionManager(), ObservationFeatureFactory.OM_OBSERVATION );
+      if( obsFeatures.length > 0 )
+      {
+        final IProfil profile = ProfileFeatureFactory.toProfile( obsFeatures[0] );
+        m_view.setInput( profile.getResult() );
+
+        final TupleResult result = profile.getResult();
+        result.remove( m_changedListener );
+        result.addChangeListener( m_changedListener );
+
+      }
+      else
+        m_view.setInput( null );
 
       registerGlobalActions( m_view );
 
-      final Control control = m_view.createControl( m_control, SWT.NONE );
-      control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-      updateAdvanceMode();
-
-      getSite().registerContextMenu( m_view.getContextMenuManager(), m_view.getSelectionProvider() );
-      getSite().setSelectionProvider( m_view.getSelectionProvider() );
+      // FIXME
+// getSite().registerContextMenu( m_view.getContextMenuManager(), m_view.getSelectionProvider() );
+// getSite().setSelectionProvider( m_view.getSelectionProvider() );
     }
 
     m_control.layout();
 
-    if( m_view != null )
-      m_view.restoreState( viewState );
   }
 
-  private void registerGlobalActions( final ProfilSWTTableView tableView )
+  private void registerGlobalActions( final DefaultTableViewer tableView )
   {
     // final IActionBars actionBars = getViewSite().getActionBars();
 
@@ -248,18 +382,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
    */
   public void propertyChange( final PropertyChangeEvent event )
   {
-    if( PreferenceConstants.P_TABLE_ADVANCE_MODE.equals( event.getProperty() ) )
-      updateAdvanceMode();
-  }
-
-  private void updateAdvanceMode( )
-  {
-    m_view.setAdvanceMode( KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().getString( PreferenceConstants.P_TABLE_ADVANCE_MODE ) );
-  }
-
-  public static String[][] getAdvanceModes( )
-  {
-    return ProfilSWTTableView.getAdvanceModes();
+    // FIXME wie spalten, die hinzukommen
   }
 
   /** Must be called in the swt thread */
@@ -322,7 +445,13 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     // } );
     // }
 
+    if( m_pem != null )
+      m_pem.removeProfilListener( m_profileListener );
+
     m_pem = newPem;
+
+    if( m_pem != null )
+      m_pem.addProfilListener( m_profileListener );
 
     if( (m_control != null) && !m_control.isDisposed() )
       m_control.getDisplay().asyncExec( new Runnable()
@@ -332,16 +461,10 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
           updateControl();
         }
       } );
-
   }
 
   public IProfilEventManager getProfilEventManager( )
   {
     return m_pem;
-  }
-
-  public ProfilSWTTableView getTableView( )
-  {
-    return m_view;
   }
 }

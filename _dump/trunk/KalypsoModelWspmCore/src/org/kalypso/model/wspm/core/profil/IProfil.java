@@ -42,10 +42,15 @@ package org.kalypso.model.wspm.core.profil;
 
 import java.util.LinkedList;
 
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+
 /**
  * @author kimwerner
  */
-public interface IProfil
+public interface IProfil extends IObservation<TupleResult>
 {
   /**
    * @return something stored in the profile as Strings
@@ -55,115 +60,54 @@ public interface IProfil
   public void setComment( final String comment );
 
   /**
-   * @return the friendly name for this profile
-   */
-  public String getName( );
-
-  public void setName( final String name );
-
-  /**
    * @return false if the point does not match all the properties in this profile, otherwise true and adds the given
    *         point at the end of the pointlist
    */
-  public boolean addPoint( final IProfilPoint point );
-
-  /**
-   * @return the new pointmarker represented by markerId created on the given point
-   * @note may return null if the point is not a member of this profile
-   */
-  public IProfilPointMarker addPointMarker( final IProfilPoint point, final String markerId );
-
-  /**
-   * @return all pointmarker in this profile with the same markerId given by marker
-   * @return an empty array if the marker is not added
-   */
-  public IProfilPointMarker[] addPointMarker( final IProfilPointMarker marker );
+  public boolean addPoint( final IRecord point );
 
   /**
    * @param pointProperty
    * @return POINT_PROPERTY[] with all current pointproperties
    */
-  public String[] addPointProperty( final String pointProperty );
+  public void addPointProperty( final IComponent pointProperty );
 
   /**
    * @return a valid profilPoint, addable to this profile
    * @see #addPoint(IProfilPoint)
    */
-  public IProfilPoint createProfilPoint( );
+  public IRecord createProfilPoint( );
 
   /**
    * @return the active Point.
    */
-  public IProfilPoint getActivePoint( );
+  public IRecord getActivePoint( );
 
   /**
    * @return the active Pointproperty.
    */
-  public IProfilPointProperty getActiveProperty( );
-
-  /**
-   * @return array of PointPropertyIds wich depends somehow on the given propertyId
-   */
-  public String[] getDependenciesFor( final String property );
-
-  /**
-   * @return all profilePoints captured by a PointMarker
-   */
-  public IProfilPoint[] getMarkedPoints( );
-
-  /**
-   * @return the first markerProvider wich provides the given MarkerId
-   */
-  public IProfilPointMarkerProvider getMarkerProviderFor( final String markerId );
-
-  /**
-   * @return the first profileObjectProvider wich provides the given ObjectId
-   */
-  public IProfileObjectProvider getObjectProviderFor( final String profileObject );
-
-  /**
-   * @return all PointMarker with a reference on the given point
-   */
-  public IProfilPointMarker[] getPointMarkerFor( final IProfilPoint point );
-
-  /**
-   * @return all PointMarker equals the given PointMarkerId
-   */
-  public IProfilPointMarker[] getPointMarkerFor( final String markerType );
-
-  /**
-   * @return all PointMarkerIds addable to this profile
-   */
-  public String[] getPointMarkerTypes( );
+  public IComponent getActiveProperty( );
 
   /**
    * @return all PointProperties used by this profile
    */
-  public IProfilPointProperty[] getPointProperties( );
-
-  public IProfilPointProperty getPointProperty( final String pointPrioperty );
+  public IComponent[] getPointProperties( );
 
   /**
    * @return the nested PointList of this profile, changes will be reflected in the profile.
    * @note May cause ConcurrentModificationException
    */
-  public LinkedList<IProfilPoint> getPoints( );
+  public LinkedList<IRecord> getPoints( );
 
   /**
    * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
    */
-  public IProfileObject getProfileObject( );
+  public IProfileObject[] getProfileObject( );
 
   /**
    * @param key
    * @return the value from HashMap<key,ProfileObject>
    */
   public Object getProperty( Object key );
-
-  /**
-   * @return the first pointPropertyProvider wich provides the given propertyId
-   */
-  public IProfilPointPropertyProvider getPropertyProviderFor( final String property );
 
   public double getStation( );
 
@@ -179,26 +123,21 @@ public interface IProfil
    */
   public String getType( );
 
-  public boolean hasPointProperty( final String propertyId );
+  public boolean hasPointProperty( final IComponent property );
 
   /**
    * @param point
-   *          to remove
+   *            to remove
    * @return false if the point is captured by a marker and will NOT remove the point from pointList
    */
-  public boolean removePoint( final IProfilPoint point );
-
-  /**
-   * @return the removed PointMarker
-   */
-  public IProfilPointMarker removePointMarker( final IProfilPointMarker pointMarker );
+  public boolean removePoint( final IRecord point );
 
   /**
    * @param pointProperty
-   *          to remove
+   *            to remove
    * @return false if the pointProperty is not used in this profile
    */
-  public boolean removePointProperty( final String pointProperty );
+  public boolean removePointProperty( final IComponent pointProperty );
 
   /**
    * @return the extracted ProfileObject
@@ -211,29 +150,44 @@ public interface IProfil
 
   /**
    * @param key
-   *          removes the key and its value of the profiles HashMap
+   *            removes the key and its value of the profiles HashMap
    */
   public Object removeProperty( final Object key );
 
-  public void setActivePoint( final IProfilPoint point );
+  public void setActivePoint( final IRecord point );
 
-  public void setActivePointProperty( final String activeProperty );
+  public void setActivePointProperty( final IComponent activeProperty );
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
    * 
    * @return the oldObject
    * @param building
-   *          must not be null, in this case use removeProfileObject()
+   *            must not be null, in this case use removeProfileObject()
    */
-  public IProfileObject setProfileObject( final IProfileObject building );
+  public IProfileObject[] setProfileObject( final IProfileObject[] profileObjects );
 
   /**
    * @param key
    * @param value
-   *          saves the the key,value in its own HashMap
+   *            saves the the key,value in its own HashMap
    */
   public void setProperty( final Object key, final Object value );
 
   public void setStation( final double station );
+
+  public IComponent[] getPointMarkerTypes( );
+
+  public IProfilPointMarker[] getPointMarkerFor( IComponent propertyFromId );
+
+  /*
+   * obsolete - point markers will be automatically set by their setValue() implementation (value will be directly added
+   * to observation, and so the point marker is registered)
+   */
+// public Object addPointMarker( IProfilPointMarker marker );
+  public Object removePointMarker( IProfilPointMarker devider );
+
+  public IRecord[] getMarkedPoints( );
+
+  public void createProfileObjects( IObservation<TupleResult>[] profileObjects );
 }

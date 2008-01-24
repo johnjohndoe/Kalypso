@@ -50,6 +50,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
+import org.kalypso.observation.result.IComponent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -78,13 +79,13 @@ public class ProfilViewData
 
   protected boolean m_editvert = true;
 
-   private List<String> m_invisibleMarker = new ArrayList<String>();
+  private final List<IComponent> m_invisibleMarker = new ArrayList<IComponent>();
 
-  private List<String> m_invisiblePointProperties = new ArrayList<String>();
+  private final List<String> m_invisiblePointProperties = new ArrayList<String>();
 
   private IChartLayer m_activeLayer;
 
-  private Collection<IProfilViewDataListener> m_listener = new ArrayList<IProfilViewDataListener>();
+  private final Collection<IProfilViewDataListener> m_listener = new ArrayList<IProfilViewDataListener>();
 
   public ProfilViewData( )
   {
@@ -144,12 +145,12 @@ public class ProfilViewData
     return m_edithorz;
   }
 
-  public void setEdithorz( boolean edithorz )
+  public void setEdithorz( final boolean edithorz )
   {
     m_edithorz = edithorz;
   }
 
-  public void setMarkerVisibility( final String markerTyp, final boolean visible )
+  public void setMarkerVisibility( final IComponent markerTyp, final boolean visible )
   {
     if( visible )
       m_invisibleMarker.remove( markerTyp );
@@ -170,7 +171,7 @@ public class ProfilViewData
     return m_editvert;
   }
 
-  public void setEditvert( boolean editvert )
+  public void setEditvert( final boolean editvert )
   {
     m_editvert = editvert;
   }
@@ -197,7 +198,7 @@ public class ProfilViewData
     return m_activeLayer;
   }
 
-  public void setActiveLayer( IChartLayer activeLayer )
+  public void setActiveLayer( final IChartLayer activeLayer )
   {
     m_activeLayer = activeLayer;
 

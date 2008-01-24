@@ -54,11 +54,11 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel;
@@ -70,6 +70,8 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.color.IProfilColorSet;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
@@ -79,7 +81,7 @@ import de.belger.swtchart.axis.AxisRange;
  */
 public class TrennerLayer extends AbstractProfilChartLayer
 {
-  private ColorRegistry m_colorRegistry;
+  private final ColorRegistry m_colorRegistry;
 
   public TrennerLayer( final ProfilChartView pcv )
   {
@@ -108,15 +110,21 @@ public class TrennerLayer extends AbstractProfilChartLayer
   {
     final IProfilPointMarker activeDevider = (IProfilPointMarker) data;
 
-    final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
+    final IRecord destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
 
-    final IProfilPoint oldPos = activeDevider.getPoint();
+    final IRecord oldPos = activeDevider.getPoint();
     if( oldPos != destinationPoint )
     {
       final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfilEventManager(), true );
       operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
-      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, (activeDevider.getMarkerId() == IWspmTuhhConstants.MARKER_TYP_WEHR ? IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR
-          : null) ) );
+
+      final String id = activeDevider.getId().getId() == IWspmTuhhConstants.MARKER_TYP_WEHR ? IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR : null;
+
+      if( id == IWspmTuhhConstants.MARKER_TYP_WEHR )
+        operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, ProfilObsHelper.getPropertyFromId( activeDevider.getPoint(), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
+      else
+        operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, null ) );
+
       new ProfilOperationJob( operation ).schedule();
     }
   }
@@ -128,16 +136,16 @@ public class TrennerLayer extends AbstractProfilChartLayer
   {
     try
     {
-      final String[] markerTypes = getProfil().getPointMarkerTypes();
-      for( final String markerType : markerTypes )
+      final IComponent[] markerTypes = getProfil().getPointMarkerTypes();
+      for( final IComponent markerType : markerTypes )
       {
         final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( markerType );
         if( deviders.length < 2 )
           return MINIMAL_RECT;
 
-        final double left = deviders[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-        final double right = deviders[deviders.length - 1].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-        final double top = deviders[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+        final double left = (Double) deviders[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( deviders[0].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+        final double right = (Double) deviders[deviders.length - 1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( deviders[deviders.length - 1].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+        final double top = (Double) deviders[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( deviders[0].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
 
         return new Rectangle2D.Double( left, top, right - left, 0 );
       }
@@ -150,23 +158,24 @@ public class TrennerLayer extends AbstractProfilChartLayer
     return null;
   }
 
-  public String getDeviderInfo( IProfilPointMarker devider )
+  public String getDeviderInfo( final IProfilPointMarker devider )
   {
     try
     {
 
-      if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( devider.getMarkerId() ) )
+      if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( devider.getId().getId() ) )
       {
-        final Boolean position = (Boolean) devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG );
+        final Boolean position = (Boolean) devider.getValue();
         final boolean pos = position == null ? false : position;
 
-        return String.format( "%s %s%n%10.4f [m]", new Object[] { devider.getMarkerLabel(), pos ? "Böschungsfuss" : "Vorland",
-            devider.getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) } );
+        return String.format( "%s %s%n%10.4f [m]", new Object[] { devider.getId().getName(), pos ? "Böschungsfuss" : "Vorland",
+            devider.getPoint().getValue( ProfilObsHelper.getPropertyFromId( devider.getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) } );
       }
       else
-        return String.format( "%s%n%10.4f [m]", new Object[] { devider.getMarkerLabel(), devider.getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) } );
+        return String.format( "%s%n%10.4f [m]", new Object[] { devider.getId().getName(),
+            devider.getPoint().getValue( ProfilObsHelper.getPropertyFromId( devider.getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) } );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return "";
     }
@@ -181,17 +190,15 @@ public class TrennerLayer extends AbstractProfilChartLayer
     for( final IProfilPointMarker devider : deviders )
     {
 
-      final IProfilPoint deviderPos = devider.getPoint();
-      final double breite = deviderPos.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-      final Point point = logical2screen( new Point2D.Double( breite, deviderPos.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) );
+      final IRecord deviderPos = devider.getPoint();
+      final double breite = (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final Point point = logical2screen( new Point2D.Double( breite, (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) ) );
       final Rectangle devRect = new Rectangle( point.x - 5, top - 5, 10, bottom - top + 10 );
       final Rectangle pointRect = new Rectangle( point.x - 5, point.y - 5, 10, 10 );
       if( pointRect.contains( mousePoint.x, mousePoint.y ) )
         return null;
       if( devRect.contains( mousePoint.x, mousePoint.y ) )
-      {
         return new EditInfo( this, devRect, devider, getDeviderInfo( devider ) );
-      }
     }
     return null;
   }
@@ -208,21 +215,21 @@ public class TrennerLayer extends AbstractProfilChartLayer
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
     {
 
-      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), 20 );
+      info = getDeviderInfo( point, profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ), 20 );
       if( info != null )
         return info;
     }
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
     {
 
-      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 40 );
+      info = getDeviderInfo( point, profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ), 40 );
       if( info != null )
         return info;
     }
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
     {
 
-      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 0 );
+      info = getDeviderInfo( point, profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) ), 0 );
       if( info != null )
         return info;
     }
@@ -235,7 +242,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
    *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
 
   }
@@ -249,31 +256,34 @@ public class TrennerLayer extends AbstractProfilChartLayer
     gc.setLineStyle( SWT.LINE_SOLID );
     final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
-      paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, top, true );
+      paintDevider( gc, ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), top, true );
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
-      paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, top + 20, false );
+      paintDevider( gc, ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), top + 20, false );
 
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
-      paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, top + 40, false );
+      paintDevider( gc, ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), top + 40, false );
   }
 
-  public void paintDevider( final GCWrapper gc, final String deviderId, final int top, final boolean isClosed )
+  public void paintDevider( final GCWrapper gc, final IComponent devider, final int top, final boolean isClosed )
   {
-    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( deviderId );
+    if( devider == null )
+      return;
+
+    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( devider );
     final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
 
-    gc.setForeground( m_colorRegistry.get( deviderId ) );
-    for( IProfilPointMarker devider : deviders )
+    gc.setForeground( m_colorRegistry.get( devider.getId() ) );
+    for( final IProfilPointMarker d : deviders )
     {
-      final IProfilPoint point = devider.getPoint();
-      final double leftvalue = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+      final IRecord point = d.getPoint();
+      final double leftvalue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
       final int left = (int) getDomainRange().logical2screen( leftvalue );
       gc.drawLine( left, top, left, bottom );
     }
     if( isClosed && deviders.length > 1 )
     {
-      final int l = (int) getDomainRange().logical2screen( deviders[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-      final int r = (int) getDomainRange().logical2screen( deviders[deviders.length - 1].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final int l = (int) getDomainRange().logical2screen( (Double) deviders[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( deviders[0].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
+      final int r = (int) getDomainRange().logical2screen( (Double) deviders[deviders.length - 1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( deviders[deviders.length - 1].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
       gc.drawLine( l, top, r, top );
     }
   }
@@ -290,21 +300,21 @@ public class TrennerLayer extends AbstractProfilChartLayer
     gc.setForeground( m_colorRegistry.get( IProfilColorSet.COLOUR_AXIS_FOREGROUND ) );
     if( hoverData instanceof IProfilPointMarker )
     {
-      final String deviderId = ((IProfilPointMarker) hoverData).getMarkerId();
+      final IComponent deviderId = ((IProfilPointMarker) hoverData).getId();
       final AxisRange valueRange = getValueRange();
       final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
       int top = valueRange.getScreenTo() + valueRange.getGapSpace();
-      if( deviderId.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
+      if( deviderId.getId().equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
         top = top + 20;
-      if( deviderId.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
+      if( deviderId.getId().equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
         top = top + 40;
       try
       {
-        final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( editing ).getX() );
-        final Point destP = logical2screen( new Point2D.Double( destinationPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ), destinationPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) );
+        final IRecord destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( editing ).getX() );
+        final Point destP = logical2screen( new Point2D.Double( (Double) destinationPoint.getValue( ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ), (Double) destinationPoint.getValue( ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) ) );
         gc.drawRectangle( destP.x - 5, top - 5, 10, bottom - top + 10 );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -341,12 +351,12 @@ public class TrennerLayer extends AbstractProfilChartLayer
    * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractProfilChartLayer#setActivePoint(java.lang.Object)
    */
   @Override
-  public void setActivePoint( Object data )
+  public void setActivePoint( final Object data )
   {
     if( data instanceof IProfilPointMarker )
     {
       final IProfilPointMarker devider = (IProfilPointMarker) data;
-      final IProfilPoint activePoint = devider.getPoint();
+      final IRecord activePoint = devider.getPoint();
       final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), activePoint, null ), true );
       final IStatus status = operation.execute( new NullProgressMonitor(), null );
       operation.dispose();

@@ -40,72 +40,83 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.impl.points.PointProperty;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.observation.result.Component;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author kimwerner
  */
 public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
 {
-  final Map<String, IProfilPointProperty> m_properties = new HashMap<String, IProfilPointProperty>();
+  final Set<IComponent> m_properties = new LinkedHashSet<IComponent>();
 
   public PointPropertyProviderTUHH( )
   {
-    m_properties.put( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, null );
-    m_properties.put( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, null );
-    m_properties.put( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, null );
+    m_properties.add( createPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
+    m_properties.add( createPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
+    m_properties.add( createPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) );
+
+    // TODO Markers
+    m_properties.add( createPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    m_properties.add( createPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
+    m_properties.add( createPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#getPointProperties()
    */
-  public String[] getPointProperties( )
+  public IComponent[] getPointProperties( )
   {
-    return m_properties.keySet().toArray( new String[0] );
+    return m_properties.toArray( new IComponent[] {} );
   }
 
-  private final IProfilPointProperty createPointProperty( final String property )
+  private final IComponent createPointProperty( final String property )
   {
     if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) )
-      return new PointProperty( property, "Oberkante Brücke", 0.0001, new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE }, true, true );
-    if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) )
-      return new PointProperty( property, "Unterkante Brücke", 0.0001, new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE }, true, true );
-    if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) )
-      return new PointProperty( property, "Oberkante Wehr", 0.0001, new String[0], true, true );
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) )
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) )
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
+      return new Component( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, "Trennflaeche", "Trennflaeche", "", "", IWspmConstants.Q_STRING, "", null );
+    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
+      return new Component( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, "Bordvoll", "Bordvoll", "", "", IWspmConstants.Q_BOOLEAN, "false", null );
+    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
+      return new Component( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Durchströmter Bereich", "", "", IWspmConstants.Q_BOOLEAN, "false", null );
 
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createPointProperty(java.lang.String)
-   */
-  public IProfilPointProperty getPointProperty( final String pointPropertyId )
-  {
-    IProfilPointProperty prop = m_properties.get( pointPropertyId );
-    if( prop != null )
-      return prop;
-    if( m_properties.containsKey( pointPropertyId ) )
-    {
-      prop = createPointProperty( pointPropertyId );
-      if( prop != null )
-        m_properties.put( pointPropertyId, prop );
-    }
-    return prop;
-
+    throw new IllegalStateException( "property not defined" );
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#providesPointProperty(java.lang.String)
    */
-  public boolean providesPointProperty( String pointPropertyId )
+  public boolean providesPointProperty( final String profilPointProperty )
   {
-    return m_properties.containsKey( pointPropertyId );
+    for( final IComponent component : m_properties )
+    {
+      if( component.getId().equals( profilPointProperty ) )
+        return true;
+    }
+
+    return false;
+  }
+
+  public IComponent getPointProperty( final String propertyId )
+  {
+    for( final IComponent component : m_properties )
+    {
+      if( component.getId().equals( propertyId ) )
+        return component;
+    }
+
+    return null;
   }
 
 }

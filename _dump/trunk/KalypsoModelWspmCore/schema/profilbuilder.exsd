@@ -3,7 +3,7 @@
 <schema targetNamespace="org.kalypso.model.wspm.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.kalypso.model.wspm.core" id="pointMarkerProvider" name="pointMarkerProvider"/>
+         <meta.schema plugin="org.kalypso.model.wspm.core" id="profilbuilder" name="ProfilBuilder"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="pointMarkerProvider" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="Profil_Builder" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,30 +42,16 @@
       </complexType>
    </element>
 
-   <element name="pointMarkerProvider">
+   <element name="Profil_Builder">
       <complexType>
-         <attribute name="id" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="provider" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.model.wspm.core.profil.IProfilBuilder"/>
                </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="name" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
             </annotation>
          </attribute>
          <attribute name="profiletype" type="string" use="required">

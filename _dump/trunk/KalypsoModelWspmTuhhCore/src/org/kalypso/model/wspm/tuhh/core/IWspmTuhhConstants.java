@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.model.wspm.core.IWspmConstants;
 
 /**
@@ -50,6 +52,8 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 public interface IWspmTuhhConstants extends IWspmConstants
 {
   public static String NS_WSPM_TUHH = "org.kalypso.model.wspm.tuhh";
+
+  public static final QName Q_WEHRART = new QName( "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents", "WEHRART" );
 
   /**
    * The scale (i.e. fraction digits) for station values.

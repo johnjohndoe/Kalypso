@@ -44,9 +44,10 @@ import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -56,7 +57,7 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
 {
   final private int m_index;
 
-  final private String m_property;
+  final private IComponent m_property;
 
   final private double m_value;
 
@@ -64,9 +65,9 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
    * verschieben der Trennfläche auf die Trenner "Durchströmter Bereich"
    * 
    * @param deviderTyp,deviderIndex
-   *          devider=IProfil.getDevider(deviderTyp)[deviderIndex]
+   *            devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
-  public EditPointResolution( final int index, final String property, final double value )
+  public EditPointResolution( final int index, final IComponent property, final double value )
   {
     super( "Ändern der Eigenschaft " + property.toString() + " auf einen gültigen Wert", null, null );
     m_index = index;
@@ -79,18 +80,14 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected IProfilChange[] resolve( IProfil profil )
+  protected IProfilChange[] resolve( final IProfil profil )
   {
-    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final LinkedList<IRecord> points = profil.getPoints();
     if( points.isEmpty() )
-    {
       return null;
-    }
-    final IProfilPoint point = points.get( m_index );
+    final IRecord point = points.get( m_index );
     if( point == null )
-    {
       return null;
-    }
     return new IProfilChange[] { new PointPropertyEdit( point, m_property, m_value ), new ActiveObjectEdit( profil, point, m_property ) };
   }
 }

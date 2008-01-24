@@ -40,21 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.kalypso.observation.result.IComponent;
+
 /**
  * @author kimwerner
  */
 public interface IProfilPointPropertyProvider
-{/**
-   * @return all PointPropertyIds handled by this provider
-   * NOTE: the natural order in this Array is the initial columnsort used in the tableview
-   */
-  public String[] getPointProperties( );
-/**
- * @return true if the provider supports the propertyId
- */
-  public boolean providesPointProperty( final String pointPropertyId );
+{
   /**
-   * the pointProperty Factory
+   * @return all PointPropertyIds handled by this provider NOTE: the natural order in this Array is the initial
+   *         columnsort used in the tableview
    */
-  public IProfilPointProperty getPointProperty( final String pointPropertyId );
+  public IComponent[] getPointProperties( );
+
+  public IComponent getPointProperty( String propertyId );
+
+  /**
+   * @return true if the provider supports the propertyId
+   */
+  public boolean providesPointProperty( final String property );
+
 }

@@ -38,47 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile;
+package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 
 /**
  * @author kimwerner
  */
-public class BuildingProvider implements IProfileObjectProvider
+public class TuhhBuildingProvider implements IProfileObjectProvider
 {
   private static final String[] m_buildingTypes = { IWspmTuhhConstants.BUILDING_TYP_BRUECKE, IWspmTuhhConstants.BUILDING_TYP_KREIS, IWspmTuhhConstants.BUILDING_TYP_EI,
       IWspmTuhhConstants.BUILDING_TYP_MAUL, IWspmTuhhConstants.BUILDING_TYP_TRAPEZ, IWspmTuhhConstants.BUILDING_TYP_WEHR };
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#createObject(java.lang.String)
-   */
-  public IProfileObject createProfileObject( String profileObjectId )
-  {
-
-    if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( profileObjectId ) )
-      return new BuildingBruecke();
-    if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( profileObjectId ) )
-      return new BuildingWehr();
-    if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( profileObjectId ) )
-      return new BuildingKreis();
-    if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( profileObjectId ) )
-      return new BuildingMaul();
-    if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( profileObjectId ) )
-      return new BuildingEi();
-    if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( profileObjectId ) )
-      return new BuildingTrapez();
-
-    return null;
-  }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#getObjectIds()
@@ -91,9 +62,9 @@ public class BuildingProvider implements IProfileObjectProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#providesProfileObject(java.lang.String)
    */
-  public boolean providesProfileObject( String objectId )
+  public boolean providesProfileObject( final String objectId )
   {
-    for( String building : m_buildingTypes )
+    for( final String building : m_buildingTypes )
     {
       if( building.equals( objectId ) )
         return true;

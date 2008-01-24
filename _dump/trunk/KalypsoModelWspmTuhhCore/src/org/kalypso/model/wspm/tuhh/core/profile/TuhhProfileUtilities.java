@@ -69,11 +69,11 @@ public class TuhhProfileUtilities
     {
       ProfilSerializerUtilitites.writeProfile( new PrfSink(), profile, new BufferedOutputStream( out ) );
       final ByteArrayInputStream in = new ByteArrayInputStream( out.toByteArray() );
-      final IProfil profil = ProfilSerializerUtilitites.readProfile( profile.getType(), new PrfSource(), new BufferedInputStream( in ) );
-     
+      final IProfil profil = ProfilSerializerUtilitites.readProfile( new PrfSource(), new BufferedInputStream( in ), profile.getType() );
+
       return profil;
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       throw new InvalidObjectException( e.getLocalizedMessage() );
     }

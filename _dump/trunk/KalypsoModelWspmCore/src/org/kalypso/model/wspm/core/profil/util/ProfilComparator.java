@@ -42,18 +42,19 @@ package org.kalypso.model.wspm.core.profil.util;
 
 import java.util.Comparator;
 
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Compares profile points concerning a given property.
  * 
  * @author Thomas Jung
  */
-public class ProfilComparator implements Comparator<IProfilPoint>
+public class ProfilComparator implements Comparator<IRecord>
 {
-  private final String m_pointProperty;
+  private final IComponent m_pointProperty;
 
-  public ProfilComparator( final String pointProperty )
+  public ProfilComparator( final IComponent pointProperty )
   {
     m_pointProperty = pointProperty;
   }
@@ -61,13 +62,12 @@ public class ProfilComparator implements Comparator<IProfilPoint>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare( final IProfilPoint p1, final IProfilPoint p2 )
+  public int compare( final IRecord p1, final IRecord p2 )
   {
-    final double v1 = p1.getValueFor( m_pointProperty );
-    final double v2 = p2.getValueFor( m_pointProperty );
+    final double v1 = (Double) p1.getValue( m_pointProperty );
+    final double v2 = (Double) p2.getValue( m_pointProperty );
 
     return Double.compare( v1, v2 );
   }
-
 
 }

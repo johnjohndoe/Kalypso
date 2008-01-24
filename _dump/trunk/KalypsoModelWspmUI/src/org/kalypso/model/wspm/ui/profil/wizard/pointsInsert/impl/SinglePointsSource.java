@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
-
 import java.util.LinkedList;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -48,13 +47,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsSource;
-
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot
- * 
  */
 public class SinglePointsSource extends AbstractPointsSource
 {
@@ -70,25 +67,25 @@ public class SinglePointsSource extends AbstractPointsSource
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource#getPoints()
    */
-  public LinkedList<IProfilPoint> getPoints( )
+  public LinkedList<IRecord> getPoints( )
   {
     // ein einzelnen punkt interpolieren
-    
+
     // braucht das profil als randbedingung
     return null;
   }
 
   @Override
-  protected void loadState( IDialogSettings settings )
+  protected void loadState( final IDialogSettings settings )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
-  public void saveState( IDialogSettings settings )
+  public void saveState( final IDialogSettings settings )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

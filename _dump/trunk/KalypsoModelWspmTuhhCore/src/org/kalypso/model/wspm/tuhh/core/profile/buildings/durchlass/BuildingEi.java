@@ -40,21 +40,91 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
+import java.util.ArrayList;
+
+import org.kalypso.commons.metadata.MetadataObject;
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.Component;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author kimwerner
  */
-public class BuildingEi extends AbstractProfilDurchlass
+public class BuildingEi extends AbstractObservationBuilding
 {
-  public BuildingEi( )
+  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_EI;
+
+  public BuildingEi( final IProfil profil )
   {
-    super(IWspmTuhhConstants.BUILDING_TYP_EI,"Ei", new String[]{ IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X,
-        IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE,
-        IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE,
-        IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT },new String[]{"Bezugspunkt X","Bezugspunkt Y","Höhe","Breite","Sohlgefälle","Rauheit"} );
+    final TupleResult result = new TupleResult();
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
+
+    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
+
+    init( profil, observation );
   }
 
-  
- 
+  public BuildingEi( final IProfil profil, final IObservation<TupleResult> observation )
+  {
+    init( profil, observation );
+  }
+
+  private IComponent createComponent( final String type )
+  {
+    /* building observation properties */
+    if( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, "Bezugspunkt X", "Bezugspunkt X", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, "Bezugspunkt Y", "Bezugspunkt Y", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    if( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    if( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, "Sohlgefälle", "Sohlgefälle", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+
+    throw new NotImplementedException();
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
+   */
+  @Override
+  protected IComponent getPointProperty( final String id )
+  {
+    return createComponent( id );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getProfileProperties()
+   */
+  @Override
+  protected String[] getProfileProperties( )
+  {
+    return new String[] {};
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
+   */
+  public String getId( )
+  {
+    return ID;
+  }
 }

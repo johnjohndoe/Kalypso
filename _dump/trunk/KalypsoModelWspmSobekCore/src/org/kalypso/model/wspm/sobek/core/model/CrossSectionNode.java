@@ -92,17 +92,9 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
    */
   public IProfil getProfile( )
   {
-    Feature f = null;
-    final Feature feature = getFeature();
-    final Object objCsData = feature.getProperty( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE );
-
-    if( objCsData instanceof Feature )
-      // this branch should never be reached according to the schema file
-      f = (Feature) objCsData;
-    else
-      f = feature.getWorkspace().getFeature( (String) objCsData );
-    final WspmProfile wspmProfile = new WspmProfile( f );
+    final WspmProfile wspmProfile = getWspmProfile();
     final IProfil profil = wspmProfile.getProfil();
+
     return profil;
   }
 
@@ -120,5 +112,23 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
   public boolean isEmpty( )
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode#getWspmProfile()
+   */
+  public WspmProfile getWspmProfile( )
+  {
+    Feature f = null;
+    final Feature feature = getFeature();
+    final Object objCsData = feature.getProperty( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE );
+
+    if( objCsData instanceof Feature )
+      // this branch should never be reached according to the schema file
+      f = (Feature) objCsData;
+    else
+      f = feature.getWorkspace().getFeature( (String) objCsData );
+
+    return new WspmProfile( f );
   }
 }

@@ -52,9 +52,11 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -98,8 +100,8 @@ public class RoughnessIntersector
   {
     monitor.beginTask( "Rauheiten zuweisen - ", m_profileFeatures.length );
 
-    final List<FeatureChange> changes = new ArrayList<FeatureChange>(  );
-    
+    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+
     /* apply polygone data to profile data */
     for( final Object object : m_profileFeatures )
     {
@@ -109,13 +111,13 @@ public class RoughnessIntersector
       final String label = FeatureHelper.getAnnotationValue( profileFeature, IAnnotation.ANNO_LABEL );
       monitor.subTask( label );
 
-      final LinkedList<IProfilPoint> points = profil.getPoints();
-      for( final IProfilPoint point : points )
+      final LinkedList<IRecord> points = profil.getPoints();
+      for( final IRecord point : points )
       {
         if( !acceptPoint( profil, point ) )
           continue;
 
-        final GM_Point geoPoint = ProfileCacherFeaturePropertyFunction.convertPoint(profil, point );
+        final GM_Point geoPoint = ProfileCacherFeaturePropertyFunction.convertPoint( profil, point );
         if( geoPoint == null )
           continue;
         final Geometry jtsPoint = JTSAdapter.export( geoPoint );
@@ -124,22 +126,22 @@ public class RoughnessIntersector
 
       final FeatureChange[] fcs = ProfileFeatureFactory.toFeatureAsChanges( profil, profileFeature );
       Collections.addAll( changes, fcs );
-      
+
       monitor.worked( 1 );
     }
-    
+
     return changes.toArray( new FeatureChange[changes.size()] );
   }
 
   @SuppressWarnings("unchecked")
-  private List<Object> assignValueToPoint( final IProfil profil, final IProfilPoint point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
+  private List<Object> assignValueToPoint( final IProfil profil, final IRecord point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
   {
     /* find polygon for location */
     final List<Object> foundPolygones = m_polygoneFeatures.query( geoPoint.getPosition(), null );
     for( final Object polyObject : foundPolygones )
     {
       final Feature polygoneFeature = (Feature) polyObject;
-      
+
       // BUGFIX: use any gm_object here, because we do not know what is it (surface, multusurface, ...)
       final GM_Object gmObject = (GM_Object) polygoneFeature.getProperty( m_polygoneGeomType );
 
@@ -161,9 +163,10 @@ public class RoughnessIntersector
             {
               if( componentId != null )
               {
-                profil.addPointProperty( componentId );
+                final IComponent property = ProfilObsHelper.getPropertyFromId( profil, componentId );
+                profil.addPointProperty( property );
 
-                point.setValueFor( componentId, newValue );
+                point.setValue( property, newValue );
               }
             }
           }
@@ -175,7 +178,7 @@ public class RoughnessIntersector
     return foundPolygones;
   }
 
-  private boolean acceptPoint( final IProfil profil, final IProfilPoint point )
+  private boolean acceptPoint( final IProfil profil, final IRecord point )
   {
     for( final IProfilePointFilter pointFilter : m_pointFilters )
     {

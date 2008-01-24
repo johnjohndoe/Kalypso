@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -65,9 +66,9 @@ import de.belger.swtchart.layer.IChartLayer;
 
 public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
-  private IProfilEventManager m_pem;
+  private final IProfilEventManager m_pem;
 
-  private Color m_color;
+  private final Color m_color;
 
   public HochRechtsLayer( final ProfilChartView pcv )
   {
@@ -78,7 +79,7 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   }
 
   @Override
-  public IProfilView createLayerPanel( IProfilEventManager pem, ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
   {
     return null;
   }
@@ -86,8 +87,8 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[2];
-    changes[0] = new PointPropertyRemove( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT );
-    changes[1] = new PointPropertyRemove( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT );
+    changes[0] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) );
+    changes[1] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) );
 
     final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_pem, changes, true );
     new ProfilOperationJob( operation ).schedule();
@@ -105,18 +106,18 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   }
 
   @Override
-  public EditInfo getHoverInfo( Point point )
+  public EditInfo getHoverInfo( final Point point )
   {
     return null;
   }
 
   @Override
-  public void paintDrag( GCWrapper gc, Point editing, Object hoverData )
+  public void paintDrag( final GCWrapper gc, final Point editing, final Object hoverData )
   {
   }
 
   @Override
-  public void paintLegend( GCWrapper gc )
+  public void paintLegend( final GCWrapper gc )
   {
     final Rectangle clipping = gc.getClipping();
 
@@ -147,14 +148,14 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
    *      java.lang.Object)
    */
   @Override
-  protected void editProfil( Point point, Object data )
+  protected void editProfil( final Point point, final Object data )
   {
   }
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  public void paint( GCWrapper gc )
+  public void paint( final GCWrapper gc )
   {
   }
 
@@ -163,7 +164,7 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
    *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
   }
 }

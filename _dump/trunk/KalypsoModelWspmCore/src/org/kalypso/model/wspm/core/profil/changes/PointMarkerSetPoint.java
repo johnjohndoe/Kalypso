@@ -41,18 +41,18 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.observation.result.IRecord;
 
 public class PointMarkerSetPoint implements IProfilChange
 {
   private final IProfilPointMarker m_pointMarker;
 
-  private final IProfilPoint m_newPosition;
-  
-  private IProfilPoint m_oldPosition;
+  private final IRecord m_newPosition;
 
-  public PointMarkerSetPoint( IProfilPointMarker pointMarker, final IProfilPoint newPosition )
+  private IRecord m_oldPosition;
+
+  public PointMarkerSetPoint( final IProfilPointMarker pointMarker, final IRecord newPosition )
   {
     m_pointMarker = pointMarker;
     m_newPosition = newPosition;
@@ -65,7 +65,8 @@ public class PointMarkerSetPoint implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    if (hint!=null) hint.setMarkerMoved();
+    if( hint != null )
+      hint.setMarkerMoved();
 
     m_oldPosition = m_pointMarker.setPoint( m_newPosition );
 
@@ -77,7 +78,7 @@ public class PointMarkerSetPoint implements IProfilChange
    */
   public Object[] getObjects( )
   {
-        return new Object[]{m_pointMarker,m_oldPosition};
+    return new Object[] { m_pointMarker, m_oldPosition };
   }
 
   /**
@@ -85,7 +86,7 @@ public class PointMarkerSetPoint implements IProfilChange
    */
   public String getInfo( )
   {
-        return m_pointMarker.getMarkerId();
+    return m_pointMarker.toString();
   }
 
   /**
@@ -93,9 +94,7 @@ public class PointMarkerSetPoint implements IProfilChange
    */
   public Double getValue( )
   {
-       return null;
+    return null;
   }
 
-  
-
- }
+}

@@ -50,16 +50,17 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.axis.AxisRange;
 import de.belger.swtchart.util.LogicalRange;
@@ -71,7 +72,7 @@ public class GelaendeLayer extends AbstractPolyLineLayer
 {
   public GelaendeLayer( final ProfilChartView pcv )
   {
-    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelände", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_HOEHE }, true, true, true );
+    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelände", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_HOEHE } ), true, true, true );
     setColors( setColor( pcv.getColorRegistry() ) );
   }
 
@@ -91,7 +92,7 @@ public class GelaendeLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public List<IProfilPoint> getPoints( )
+  public List<IRecord> getPoints( )
   {
     return getProfil().getPoints();
   }
@@ -101,8 +102,10 @@ public class GelaendeLayer extends AbstractPolyLineLayer
    *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
+    // FIXME - insert new point at start or end of profile - chart view resized() event must be generated
+
     if( !(hint.isPointValuesChanged() || hint.isPointsChanged()) )
       return;
     final AxisRange domainRange = getDomainRange();
@@ -112,16 +115,16 @@ public class GelaendeLayer extends AbstractPolyLineLayer
     final double right = domainRange.getLogicalTo();
     final double top = valueRange.getLogicalTo();
     final double bottom = valueRange.getLogicalFrom();
-    for( IProfilChange change : changes )
+    for( final IProfilChange change : changes )
     {
       if( (change instanceof PointPropertyEdit) || (change instanceof PointAdd) )
       {
-        for( final IProfilPoint point : (IProfilPoint[]) change.getObjects() )
+        for( final IRecord point : (IRecord[]) change.getObjects() )
         {
           try
           {
-            final double breite = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-            final double hoehe = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+            final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+            final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
 
             if( (breite > right) || (breite < left) || (hoehe > top) || (hoehe < bottom) )
             {
@@ -129,7 +132,7 @@ public class GelaendeLayer extends AbstractPolyLineLayer
               domainRange.setLogicalRange( new LogicalRange( Math.min( breite, left ), Math.max( breite, right ) ) );
             }
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             return;
           }
@@ -139,7 +142,7 @@ public class GelaendeLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public void paintLegend( GCWrapper gc )
+  public void paintLegend( final GCWrapper gc )
   {
     final Rectangle clipping = gc.getClipping();
 

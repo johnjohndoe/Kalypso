@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
@@ -58,9 +59,9 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
  */
 public class TrapezBuildingLayer extends AbstractBuildingLayer
 {
-  public TrapezBuildingLayer( final ProfilChartView pcv)
+  public TrapezBuildingLayer( final ProfilChartView pcv )
   {
-    super(IWspmTuhhConstants.LAYER_TRAPEZ,"Trapez-Durchlaﬂ", pcv);
+    super( IWspmTuhhConstants.LAYER_TRAPEZ, "Trapez-Durchlaﬂ", pcv );
   }
 
   /**
@@ -74,7 +75,7 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
       final double[] trapezArray = createTrapez();
       return new Rectangle2D.Double( trapezArray[6], trapezArray[1], trapezArray[4] - trapezArray[6], trapezArray[5] - trapezArray[3] );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return new Rectangle2D.Double( Double.NaN, Double.NaN, Double.NaN, Double.NaN );
     }
@@ -131,14 +132,14 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
     gc.setBackground( background );
   }
 
-  private double[] createTrapez( ) 
+  private double[] createTrapez( )
   {
     final IProfileObject building = getBuilding();
-    final double bezX = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
-    final double bezY = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
-    final double lang = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-    final double hoch = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE );
-    final double dx = hoch * ((Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) / 100);
+    final double bezX = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
+    final double bezY = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
+    final double lang = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    final double hoch = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
+    final double dx = hoch * ((Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) ) / 100);
 
     final double[] trapezArray = new double[8];
     trapezArray[0] = bezX - (lang / 2 - dx);
@@ -167,7 +168,7 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
    *      java.lang.Object)
    */
   @Override
-  protected void editProfil( Point point, Object data )
+  protected void editProfil( final Point point, final Object data )
   {
 
   }
@@ -177,7 +178,7 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
    *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
 
   }

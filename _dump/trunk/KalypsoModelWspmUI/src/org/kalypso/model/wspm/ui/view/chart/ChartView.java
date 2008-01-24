@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.AbstractProfilPart;
 import org.kalypso.model.wspm.ui.view.AbstractProfilViewPart2;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartViewActionBarContributor;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author Gernot Belger
@@ -64,7 +65,7 @@ public class ChartView extends AbstractProfilViewPart2
     super();
   }
 
-  public ChartView( ProfilChartViewActionBarContributor actionContributor )
+  public ChartView( final ProfilChartViewActionBarContributor actionContributor )
   {
     super( actionContributor );
   }
@@ -128,8 +129,8 @@ public class ChartView extends AbstractProfilViewPart2
     // probably nothing to do
     if( (m_profilPart.getViewData() != null) && (m_profilPart.getProfil() != null) )
     {
-      final String[] markerTypes = m_profilPart.getProfil().getPointMarkerTypes();
-      for( final String markerTyp : markerTypes )
+      final IComponent[] markerTypes = m_profilPart.getProfil().getPointMarkerTypes();
+      for( final IComponent markerTyp : markerTypes )
       {
         m_profilPart.getViewData().setMarkerVisibility( markerTyp, true );
       }

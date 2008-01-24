@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
+
 /**
  * Contains constants for the wspm models.
  * 
@@ -47,6 +51,18 @@ package org.kalypso.model.wspm.core;
  */
 public interface IWspmConstants
 {
+  public static final QName Q_DATE_TIME = new QName( NS.XSD_SCHEMA, "dateTime" );
+
+  public static final QName Q_STRING = new QName( NS.XSD_SCHEMA, "string" );
+
+  public static final QName Q_INTEGER = new QName( NS.XSD_SCHEMA, "integer" );
+
+  public static final QName Q_DECIMAL = new QName( NS.XSD_SCHEMA, "decimal" );
+
+  public static final QName Q_DOUBLE = new QName( NS.XSD_SCHEMA, "double" );
+
+  public static final QName Q_BOOLEAN = new QName( NS.XSD_SCHEMA, "boolean" );
+
   public static String NS_WSPM = "org.kalypso.model.wspm";
 
   public static String NS_WSPMCOMMONS = "org.kalypso.model.wspmcommon";
@@ -88,7 +104,10 @@ public interface IWspmConstants
 
   /** Constant for coordinate-system of profile rw/hw. For example, it will be set by the GML-Profile converter. */
   public static final String PROFIL_PROPERTY_CRS = "COORDINATE_SYSTEM";
-  
+
+  // needed by IObservation Interface
+  public static final String PROFIL_DESCRIPTION = NS_WSPMPROF + "_DESCRIPTION";
+
   public static final String PROFIL_PROPERTY_COMMENT = NS_WSPMPROF + "_COMMENT";
 
 }

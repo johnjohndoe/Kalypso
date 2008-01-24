@@ -42,8 +42,11 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerAdd;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -67,17 +70,18 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected IProfilChange[] resolve( IProfil profil )
+  protected IProfilChange[] resolve( final IProfil profil )
   {
     if( m_deviderType == null )
-    {
       return null;
-    }
     final IProfilChange[] changes = new IProfilChange[2];
-    final IProfilPoint firstP = profil.getPoints().getFirst();
-    final IProfilPoint lastP = profil.getPoints().getLast();
-    changes[0] = new PointMarkerAdd( profil, firstP , m_deviderType);
-    changes[1] = new PointMarkerAdd( profil, lastP , m_deviderType);
+    final IRecord firstP = profil.getPoints().getFirst();
+    final IRecord lastP = profil.getPoints().getLast();
+
+    final IComponent component = ProfilObsHelper.getPropertyFromId( profil, m_deviderType );
+
+    changes[0] = new PointMarkerEdit( new ProfilDevider( component, firstP ), true );
+    changes[1] = new PointMarkerEdit( new ProfilDevider( component, lastP ), true );
     return changes;
   }
 

@@ -61,7 +61,7 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
 
   private final String m_editorID;
 
-  private XStream m_xstream;
+  private final XStream m_xstream;
 
   public ResourceValidatorMarkerCollector( final IResource resource, final String editorID )
   {
@@ -74,7 +74,7 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
 
   /**
    * Creates a (profile-)marker on the given resource. All validation rules should use this method, so changes in the
-   * implementation (e.g. the type of the marker) are reflekted on all rules.
+   * implementation (e.g. the type of the marker) are reflected on all rules.
    * 
    * @throws CoreException
    */
@@ -85,12 +85,13 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
       final String debugMsg = String.format( "Creating resource marker: isSever=%b, message=%s, location=%s, pointPos=%d", isSevere, message, location, pointPos );
       System.out.println( debugMsg );
     }
-    
+
     final String resSerialised = m_xstream.toXML( resolutionMarkers );
 
     final IMarker marker = m_resource.createMarker( KalypsoModelWspmUIPlugin.MARKER_ID );
 
-    final Object[] values = new Object[] { message, location, isSevere ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING, true, m_editorID, pointPos, pointProperty, resolutionPluginId, resSerialised };
+    final Object[] values = new Object[] { message, location, isSevere ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING, true, m_editorID, pointPos, pointProperty, resolutionPluginId,
+        resSerialised };
 
     marker.setAttributes( USED_ATTRIBUTES, values );
   }
@@ -99,4 +100,5 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
   {
     m_resource.deleteMarkers( KalypsoModelWspmUIPlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
   }
+
 }

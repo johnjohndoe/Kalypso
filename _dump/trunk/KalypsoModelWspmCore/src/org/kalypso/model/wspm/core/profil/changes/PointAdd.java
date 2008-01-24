@@ -44,7 +44,7 @@ import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -53,11 +53,11 @@ public class PointAdd implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final IProfilPoint m_pointBefore;
+  private final IRecord m_pointBefore;
 
-  private IProfilPoint m_point;
+  private final IRecord m_point;
 
-  public PointAdd( final IProfil profil, final IProfilPoint pointBefore, final IProfilPoint point )
+  public PointAdd( final IProfil profil, final IRecord pointBefore, final IRecord point )
   {
     m_profil = profil;
     m_pointBefore = pointBefore;
@@ -74,14 +74,14 @@ public class PointAdd implements IProfilChange
     {
       hint.setPointsChanged();
     }
-    IProfilPoint pointToAdd=null;
+    IRecord pointToAdd = null;
     if( m_point != null )
       pointToAdd = m_point;
     else if( m_pointBefore != null )
-      pointToAdd = m_pointBefore.clonePoint();
+      pointToAdd = m_pointBefore.cloneRecord();
     if( pointToAdd == null )
-      return new IllegalChange( "Profilpunkt existiert nicht.",this );
-    final LinkedList<IProfilPoint> points = m_profil.getPoints();
+      return new IllegalChange( "Profilpunkt existiert nicht.", this );
+    final LinkedList<IRecord> points = m_profil.getPoints();
     if( m_pointBefore == null )
     {
       points.addFirst( m_point );
@@ -90,7 +90,7 @@ public class PointAdd implements IProfilChange
     {
       final int i = points.indexOf( m_pointBefore );
       if( i < 0 )
-        return new IllegalChange( "Profilpunkt existiert nicht.",this );
+        return new IllegalChange( "Profilpunkt existiert nicht.", this );
       points.add( i + 1, pointToAdd );
     }
     return new PointRemove( m_profil, pointToAdd );
@@ -101,7 +101,7 @@ public class PointAdd implements IProfilChange
    */
   public Object[] getObjects( )
   {
-    return new IProfilPoint[]{m_point};
+    return new IRecord[] { m_point };
   }
 
   /**

@@ -84,7 +84,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
@@ -194,13 +194,13 @@ public class PiSobekModelUtils
     piCrossSection.setRoughnessType( "Sobek.RoughnessType.StricklerKs" ); // nofdp default kSt
 
     final IProfil profil = csNode.getProfile();
-    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final LinkedList<IRecord> points = profil.getPoints();
 
-    for( final IProfilPoint point : points )
+    for( final IRecord point : points )
     {
       final CrossSectionXdataComplexType csData = factory.createCrossSectionXdataComplexType();
-      csData.setCsy( point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) );
-      csData.setZ( point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      csData.setCsy( (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) ) );
+      csData.setZ( (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
 // TODO get real Roughness from nofdpIDSSProfile
 // csData.setRoughness( point.getValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) );
       csData.setRoughness( 2.1 );

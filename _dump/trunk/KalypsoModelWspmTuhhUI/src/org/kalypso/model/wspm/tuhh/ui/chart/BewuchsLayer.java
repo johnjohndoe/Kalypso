@@ -54,9 +54,9 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.layer.IChartLayer;
@@ -77,21 +78,20 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   private final Color m_color;
 
   private static String TOOLTIP_FORMAT = " AX: %.4f %n AY: %.4f %n DP: %.4f";
-  
 
-  public BewuchsLayer(final ProfilChartView pcv)
+  public BewuchsLayer( final ProfilChartView pcv )
   {
-    super(IWspmTuhhConstants.LAYER_BEWUCHS, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(),"Bewuchs");
+    super( IWspmTuhhConstants.LAYER_BEWUCHS, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Bewuchs" );
 
     m_pem = pcv.getProfilEventManager();
     final ColorRegistry cr = pcv.getColorRegistry();
-    if (!cr.getKeySet().contains(IWspmTuhhConstants.LAYER_BEWUCHS ))
+    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BEWUCHS ) )
       cr.put( IWspmTuhhConstants.LAYER_BEWUCHS, new RGB( 0, 255, 0 ) );
     m_color = cr.get( IWspmTuhhConstants.LAYER_BEWUCHS );
   }
 
   @Override
-  public IProfilView createLayerPanel( IProfilEventManager pem, ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
   {
     return null;
   }
@@ -99,43 +99,43 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new PointPropertyRemove( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
-    changes[1] = new PointPropertyRemove( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
-    changes[2] = new PointPropertyRemove( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
+    changes[0] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+    changes[1] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+    changes[2] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) );
     final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", m_pem, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }
 
   public Rectangle2D getBounds( )
   {
-//    try
-//    {
-//      final IProfilPoint p = m_pem.getProfil().getPoints().getFirst();
-//      final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-//      final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-//      final Point2D p2 = new Point2D.Double( x, y );
-//      return new Rectangle2D.Double( p2.getX(), p2.getY(), 0, 0 );
-//    }
-//    catch( Exception e )
-//    {
-//      e.printStackTrace();
-//      return new Rectangle2D.Double( 0, 0, 0, 0 );
+// try
+// {
+// final IProfilPoint p = m_pem.getProfil().getPoints().getFirst();
+// final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+// final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+// final Point2D p2 = new Point2D.Double( x, y );
+// return new Rectangle2D.Double( p2.getX(), p2.getY(), 0, 0 );
+// }
+// catch( Exception e )
+// {
+// e.printStackTrace();
+// return new Rectangle2D.Double( 0, 0, 0, 0 );
 //
-//    }
-return IChartLayer.MINIMAL_RECT;
+// }
+    return IChartLayer.MINIMAL_RECT;
   }
 
   private Point2D[] getPoints( )
   {
     try
     {
-      final List<IProfilPoint> ppoints = m_pem.getProfil().getPoints();
+      final List<IRecord> ppoints = m_pem.getProfil().getPoints();
       final Point2D[] points = new Point2D[ppoints.size()];
       int i = 0;
-      for( final IProfilPoint p : ppoints )
+      for( final IRecord p : ppoints )
       {
-        final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-        final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+        final double x = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+        final double y = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
         points[i++] = new Point2D.Double( x, y );
       }
       return points;
@@ -160,12 +160,12 @@ return IChartLayer.MINIMAL_RECT;
     final Point2D[] points = getPoints();
     for( int i = 0; i < points.length - 1; i++ )
     {
-      final IProfilPoint pp = m_pem.getProfil().getPoints().get( i );
+      final IRecord pp = m_pem.getProfil().getPoints().get( i );
       try
       {
-        final double ax = pp.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
-        final double ay = pp.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
-        final double dp = pp.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
+        final double ax = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+        final double ay = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+        final double dp = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) );
         if( ax * ay * dp != 0 )
         {
 
@@ -192,29 +192,29 @@ return IChartLayer.MINIMAL_RECT;
   }
 
   @Override
-  public void paintDrag( GCWrapper gc, Point editing, Object hoverData )
+  public void paintDrag( final GCWrapper gc, final Point editing, final Object hoverData )
   {
     // do nothing
 
   }
 
   @Override
-  public void paintLegend( GCWrapper gc )
+  public void paintLegend( final GCWrapper gc )
   {
     drawIcon( gc, gc.getClipping() );
   }
 
-  public void paint( GCWrapper gc )
+  public void paint( final GCWrapper gc )
   {
-    final LinkedList<IProfilPoint> points = m_pem.getProfil().getPoints();
+    final LinkedList<IRecord> points = m_pem.getProfil().getPoints();
     if( points.isEmpty() )
       return;
     Point2D p2dL = null;
     boolean hasValue = false;
-    for( IProfilPoint point : points )
+    for( final IRecord point : points )
     {
 
-      final Point2D p2dR = ProfilUtil.getPoint2D( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+      final Point2D p2dR = ProfilUtil.getPoint2D( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
       if( (p2dL != null) && hasValue )
       {
         final double xl = p2dL.getX();
@@ -225,8 +225,9 @@ return IChartLayer.MINIMAL_RECT;
         if( (p.x - logical2screen( p2dL ).x) > 12 )
           drawIcon( gc, new Rectangle( p.x - 10, p.y - 20, 20, 20 ) );
       }
-      hasValue = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) * point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY )
-          * point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) != 0.0;
+      hasValue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) )
+          * (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) )
+          * (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) ) != 0.0;
       p2dL = p2dR;
     }
   }
@@ -254,7 +255,7 @@ return IChartLayer.MINIMAL_RECT;
    *      java.lang.Object)
    */
   @Override
-  protected void editProfil( Point point, Object data )
+  protected void editProfil( final Point point, final Object data )
   {
   }
 
@@ -263,7 +264,7 @@ return IChartLayer.MINIMAL_RECT;
    *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
   }
 }

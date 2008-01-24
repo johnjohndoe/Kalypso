@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -49,13 +48,10 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-
 
 /**
  * @author Gernot
- * 
  */
 public class InsertPointsWizard extends Wizard
 {
@@ -101,8 +97,7 @@ public class InsertPointsWizard extends Wizard
         final IPointsSource choosenSource = m_pointsSourceChooserPage.getChoosenSource();
         final IPointsTarget selectedTarget = m_pointsTargetChooserPage.getSelectedTarget();
 
-        final LinkedList<IProfilPoint> points = choosenSource.getPoints();
-        selectedTarget.insertPoints( m_pem, points );
+        selectedTarget.insertPoints( m_pem, choosenSource.getPoints() );
       }
     };
 

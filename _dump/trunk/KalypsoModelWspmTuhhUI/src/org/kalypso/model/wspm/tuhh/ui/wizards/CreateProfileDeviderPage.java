@@ -69,6 +69,7 @@ import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
@@ -88,7 +89,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
   private final PropertyDescriptor m_geoPd;
 
-  private String m_deviderType = null;
+  private IComponent m_deviderType = null;
 
   private boolean m_deleteExisting = false;
 
@@ -195,13 +196,13 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     final ComboViewer viewer = new ComboViewer( group, SWT.READ_ONLY | SWT.DROP_DOWN );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider() );
-    
+
     viewer.setInput( new String[] { IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, IWspmTuhhConstants.MARKER_TYP_BORDVOLL } );
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleDeviderChanged( (String) ((IStructuredSelection) event.getSelection()).getFirstElement() );
+        handleDeviderChanged( (IComponent) ((IStructuredSelection) event.getSelection()).getFirstElement() );
       }
     } );
 
@@ -221,7 +222,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     return group;
   }
 
-  protected void handleDeviderChanged( final String type )
+  protected void handleDeviderChanged( final IComponent type )
   {
     if( m_deviderType == type )
       return;
@@ -230,7 +231,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
-      dialogSettings.put( SETTINGS_DEVIDER, type );
+      dialogSettings.put( SETTINGS_DEVIDER, type.getId() );
   }
 
   private IKalypsoFeatureTheme getTheme( )
@@ -293,7 +294,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     return false;
   }
 
-  public String getDeviderType( )
+  public IComponent getDeviderType( )
   {
     return m_deviderType;
   }

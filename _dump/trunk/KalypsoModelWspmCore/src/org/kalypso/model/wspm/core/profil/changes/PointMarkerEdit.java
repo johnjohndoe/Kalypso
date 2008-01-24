@@ -47,15 +47,11 @@ public class PointMarkerEdit implements IProfilChange
 {
   private final IProfilPointMarker m_pointMarker;
 
-  private final String m_property;
-
   private final Object m_newValue;
 
-  public PointMarkerEdit( final IProfilPointMarker pointMarker, final String property,
-      final Object newValue )
+  public PointMarkerEdit( final IProfilPointMarker pointMarker, final Object newValue )
   {
     m_pointMarker = pointMarker;
-    m_property = property;
     m_newValue = newValue;
   }
 
@@ -65,12 +61,13 @@ public class PointMarkerEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    if (hint!=null) hint.setMarkerDataChanged();
-    
-    final Object oldValue = m_pointMarker.getValueFor( m_property );
-    m_pointMarker.setValueFor( m_property, m_newValue );
-    
-    return new PointMarkerEdit( m_pointMarker, m_property, oldValue );
+    if( hint != null )
+      hint.setMarkerDataChanged();
+
+    final Object oldValue = m_pointMarker.getValue();
+    m_pointMarker.setInterpretedValue( m_newValue );
+
+    return new PointMarkerEdit( m_pointMarker, oldValue );
   }
 
   /**
@@ -78,7 +75,7 @@ public class PointMarkerEdit implements IProfilChange
    */
   public Object[] getObjects( )
   {
-        return new Object[]{m_pointMarker,m_property,m_newValue};
+    return new Object[] { m_pointMarker, m_newValue };
   }
 
   /**
@@ -86,7 +83,7 @@ public class PointMarkerEdit implements IProfilChange
    */
   public String getInfo( )
   {
-        return m_property;
+    return m_pointMarker.getId().getId();
   }
 
   /**
@@ -94,9 +91,8 @@ public class PointMarkerEdit implements IProfilChange
    */
   public Double getValue( )
   {
-    
+
     return null;
   }
 
- 
 }

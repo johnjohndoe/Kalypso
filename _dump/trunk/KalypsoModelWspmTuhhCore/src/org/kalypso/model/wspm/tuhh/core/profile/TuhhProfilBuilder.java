@@ -38,14 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.table;
+package org.kalypso.model.wspm.tuhh.core.profile;
 
-import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilBuilder;
+import org.kalypso.observation.result.TupleResult;
 
-public class FillValuesDelegate extends TableViewDelegate
+/**
+ * @author kuch
+ */
+public class TuhhProfilBuilder implements IProfilBuilder
 {
-  public FillValuesDelegate(  )
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilBuilder#createProfil()
+   */
+  public IProfil createProfil( )
   {
-    super( ProfilSWTTableView.ACTION_FILLVALUES );
+    return new TuhhProfil();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilBuilder#createProfil(org.kalypso.observation.IObservation)
+   */
+  public IProfil createProfil( final TupleResult result )
+  {
+    return new TuhhProfil( result );
   }
 }

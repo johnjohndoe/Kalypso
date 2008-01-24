@@ -45,12 +45,11 @@ import java.util.LinkedList;
 
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-
+import org.kalypso.observation.result.IRecord;
 
 public interface IPointsTarget extends IExecutableExtension
 {
-  public void insertPoints( final IProfilEventManager pem, final LinkedList<IProfilPoint> points ) throws InvocationTargetException;
+  public void insertPoints( final IProfilEventManager pem, final LinkedList<IRecord> points ) throws InvocationTargetException;
 
   public String getLabel( );
 

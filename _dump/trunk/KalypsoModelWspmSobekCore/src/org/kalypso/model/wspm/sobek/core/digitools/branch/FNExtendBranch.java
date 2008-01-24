@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.digitools.branch;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -54,6 +56,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
+import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -62,8 +65,11 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author kuch
  */
-public class FNExtendBranch extends AbstractWidget
+public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderExtensionProvider
 {
+
+  protected static String MAP_VIEW_ID = "org.kalypso.nofdpidss.core.common.viewpart.flow.network.map";
+
   private IGeometryBuilder m_geoBuilder = null;
 
   protected FNSnapPainterExtendBranches m_snapPainter = null;
@@ -82,7 +88,6 @@ public class FNExtendBranch extends AbstractWidget
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-
         m_snapPainter = new FNSnapPainterExtendBranches( SobekModelMember.getModel() );
         return Status.OK_STATUS;
       }
@@ -224,7 +229,7 @@ public class FNExtendBranch extends AbstractWidget
     if( mapPanel != null )
     {
       final IMapModell mapModell = mapPanel.getMapModell();
-      m_geoBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
+      m_geoBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem(), this );
     }
   }
 
@@ -238,4 +243,58 @@ public class FNExtendBranch extends AbstractWidget
     m_geoBuilder = null;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
+   */
+  @Override
+  public void rightClicked( final Point p )
+  {
+    m_geoBuilder.removeLastPoint();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderCursorProvider#setCursor(java.awt.Cursor)
+   */
+  public void setCursor( final Cursor cursor )
+  {
+    getMapPanel().setCursor( cursor );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderTooltipProvider#getTooltip()
+   */
+  public String[] getTooltip( )
+  {
+    return new String[] { "Left mouse button - create a new branch or point of branch.", "Double-click left mouse button - finish drawing branch.",
+        "Right mouse button - remove last drawed point of branch." };
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyReleased( final KeyEvent e )
+  {
+    final int keyCode = e.getKeyCode();
+    if( KeyEvent.VK_ESCAPE == keyCode )
+    {
+      super.finish();
+
+      reset();
+    }
+
+    super.keyPressed( e );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#middleClicked(java.awt.Point)
+   */
+  @Override
+  public void middleClicked( final Point p )
+  {
+    super.finish();
+    reset();
+
+    super.middleClicked( p );
+  }
 }

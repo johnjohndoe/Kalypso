@@ -92,8 +92,9 @@ public class ProfilEventManager implements IProfilEventManager
    */
   public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( (changes == null) || (changes.length == 0) )
+    if( (changes == null) && changes.length == 0 )
       return;
+
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener l : listeners )
     {

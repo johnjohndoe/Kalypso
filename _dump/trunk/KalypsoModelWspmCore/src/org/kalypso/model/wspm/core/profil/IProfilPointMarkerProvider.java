@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.core.profil;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -48,15 +50,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 public interface IProfilPointMarkerProvider
 {
   /**
-   * the Factory
-   * 
-   * @param markerId
-   *          the Id representing the PointMarker {@link org.kalypso.model.wspm.core.IWspmConstants}
-   */
-  public IProfilPointMarker createMarker( final String markerId );
-
-  /**
-   * @return all pointMarkerIds the provider supports
+   * @return all markers
    */
   public String[] getMarkerTypes( );
 
@@ -64,22 +58,17 @@ public interface IProfilPointMarkerProvider
    * @return true if the provider supports the pointMarker with given Id
    * @see #getMarkerTypes()
    */
-  public boolean providesPointMarker( final String markerId );
+  public boolean providesPointMarker( final IComponent marker );
+
+  /**
+   * component is type of marker?
+   */
+  public boolean isMarker( final IComponent component );
 
   /**
    * @return the icon for this markerId, used in the TableView
    */
-  public ImageDescriptor getImageFor( final String markerId );
+  public ImageDescriptor getImageFor( final String marker );
 
-  /**
-   * creates a PointMarker from Gml
-   * 
-   * @param compId
-   *          the markerId from the dictonary
-   *          <p>
-   *          {@see org.kalypso.model.wspm.tuhh.schema.dict.dict_profile_marker.gml}
-   * @param value
-   *          the valueObject from Gml
-   */
-  public IProfilPointMarker createMarkerFromGml( final String compId, final Object value );
+  public IProfilPointMarker createProfilPointMarker( String markerTypTrennflaeche, IRecord p1 );
 }

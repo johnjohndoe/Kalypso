@@ -49,8 +49,10 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -84,6 +86,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     return null;
   }
 
+  // $ANALYSIS-IGNORE
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
@@ -98,30 +101,34 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
       if( profil == null )
         return null;
 
-      final LinkedList<IProfilPoint> points = profil.getPoints();
+      final LinkedList<IRecord> points = profil.getPoints();
       final List<GM_Position> positions = new ArrayList<GM_Position>( points.size() );
 
       String srsName = wspmProfile.getSrsName();
-      for( final IProfilPoint point : points )
+      for( final IRecord point : points )
       {
         /* If there are no rw/hw create pseudo geometries from breite and station */
         final double rw;
         final double hw;
-        if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) && profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
+
+        final IComponent pRechtswert = ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+        final IComponent pHochwert = ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
+        if( profil.hasPointProperty( pRechtswert ) && profil.hasPointProperty( pHochwert ) )
         {
-          rw = point.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-          hw = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+          rw = (Double) point.getValue( pRechtswert );
+          hw = (Double) point.getValue( pHochwert );
         }
         else
         {
-          rw = point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+          rw = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
           hw = profil.getStation() * 1000;
         }
 
         if( rw == 0.0 && hw == 0.0 )
           continue;
 
-        final double h = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+        final double h = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
         /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
         if( srsName == null )
@@ -153,14 +160,22 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  public static GM_Point convertPoint( final IProfil profile, final IProfilPoint profilPoint ) throws Exception
+  public static GM_Point convertPoint( final IProfil profile, final IRecord profilPoint ) throws Exception
   {
-    if( !profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) || !profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT )
-        || !profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) )// ||ppRW == null || ppHW == null || ppH
+    if( !profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
+        || !profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
+        || !profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE ) ) )// ||ppRW
+      // ==
+      // null
+      // ||
+      // ppHW
+      // ==
+      // null
+      // ||
+      // ppH
       // == null )
       return null;
 
-    return WspmGeometryUtilities.pointFromRrHw( profilPoint.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), profilPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT ), profilPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    return WspmGeometryUtilities.pointFromRrHw( (Double) profilPoint.getValue( ProfilObsHelper.getPropertyFromId( profilPoint, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ), (Double) profilPoint.getValue( ProfilObsHelper.getPropertyFromId( profilPoint, IWspmConstants.POINT_PROPERTY_HOCHWERT ) ), (Double) profilPoint.getValue( ProfilObsHelper.getPropertyFromId( profilPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
   }
-
 }

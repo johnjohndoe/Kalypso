@@ -47,12 +47,11 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-
+import org.kalypso.observation.result.IRecord;
 
 public interface IPointsSource extends IExecutableExtension
 {
-  public LinkedList<IProfilPoint> getPoints( ) throws InvocationTargetException;
+  public LinkedList<IRecord> getPoints( ) throws InvocationTargetException;
 
   public void createControl( final Composite parent );
 

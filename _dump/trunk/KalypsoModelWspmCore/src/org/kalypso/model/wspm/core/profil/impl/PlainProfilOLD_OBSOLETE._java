@@ -60,11 +60,14 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarkerComparator;
 import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoint;
+import org.kalypso.observation.phenomenon.IPhenomenon;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
  */
-public class PlainProfil implements IProfil
+public class PlainProfilOLD_OBSOLETE implements IProfil
 {
 
   private IProfileObject m_building;
@@ -91,7 +94,7 @@ public class PlainProfil implements IProfil
 
   private String m_name = "";
 
-  public PlainProfil( final String type )
+  public PlainProfilOLD_OBSOLETE( final String type )
   {
     m_type = type;
     m_profilMetaData = new HashMap<Object, Object>();
@@ -165,12 +168,12 @@ public class PlainProfil implements IProfil
     if( ppp == null )
       return new String[0];
 
-    for( String pd : depending )
+    for( final String pd : depending )
     {
       final IProfilPointProperty pp = ppp.getPointProperty( pd );
       m_pointProperties.put( pd, pp );
 
-      for( IProfilPoint point : m_points )
+      for( final IProfilPoint point : m_points )
       {
         point.addProperty( pd );
       }
@@ -213,7 +216,7 @@ public class PlainProfil implements IProfil
    */
   public IProfilPoint[] getMarkedPoints( )
   {
-    ArrayList<IProfilPoint> pointList = new ArrayList<IProfilPoint>();
+    final ArrayList<IProfilPoint> pointList = new ArrayList<IProfilPoint>();
     for( final List<IProfilPointMarker> markers : m_pointMarker.values() )
     {
       for( final IProfilPointMarker marker : markers )
@@ -252,7 +255,7 @@ public class PlainProfil implements IProfil
 
   public IProfilPointMarker[] getPointMarkerFor( final IProfilPoint point )
   {
-    ArrayList<IProfilPointMarker> markerList = new ArrayList<IProfilPointMarker>();
+    final ArrayList<IProfilPointMarker> markerList = new ArrayList<IProfilPointMarker>();
     for( final List<IProfilPointMarker> markers : m_pointMarker.values() )
     {
       for( final IProfilPointMarker marker : markers )
@@ -299,7 +302,7 @@ public class PlainProfil implements IProfil
     return props.toArray( new IProfilPointProperty[0] );
   }
 
-  public IProfilPointProperty getPointProperty( String pointPrioperty )
+  public IProfilPointProperty getPointProperty( final String pointPrioperty )
 
   {
 
@@ -322,7 +325,7 @@ public class PlainProfil implements IProfil
     return m_building;
   }
 
-  public Object getProperty( Object key )
+  public Object getProperty( final Object key )
   {
     return m_profilMetaData.get( key );
   }
@@ -354,7 +357,7 @@ public class PlainProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(java.lang.String)
    */
-  public boolean hasPointProperty( String propertyId )
+  public boolean hasPointProperty( final String propertyId )
   {
     return m_pointProperties.containsKey( propertyId );
   }
@@ -426,7 +429,7 @@ public class PlainProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removeProperty(java.lang.Object)
    */
-  public Object removeProperty( Object key )
+  public Object removeProperty( final Object key )
   {
     final Object value = m_profilMetaData.get( key );
     m_profilMetaData.remove( key );
@@ -442,7 +445,7 @@ public class PlainProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setActiveproperty(org.kalypso.model.wspm.core.profil.IProfilPointProperty)
    */
-  public void setActivePointProperty( String pointProperty )
+  public void setActivePointProperty( final String pointProperty )
   {
     if( hasPointProperty( pointProperty ) )
       m_activeProperty = m_pointProperties.get( pointProperty );
@@ -468,7 +471,7 @@ public class PlainProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProperty(java.lang.Object, java.lang.Object)
    */
-  public void setProperty( Object key, Object value )
+  public void setProperty( final Object key, final Object value )
   {
     m_profilMetaData.put( key, value );
   }
@@ -483,12 +486,12 @@ public class PlainProfil implements IProfil
 
   public String getComment( )
   {
-    return m_profilMetaData.get(IWspmConstants.PROFIL_PROPERTY_COMMENT)==null?"":m_profilMetaData.get(IWspmConstants.PROFIL_PROPERTY_COMMENT).toString();
+    return m_profilMetaData.get( IWspmConstants.PROFIL_PROPERTY_COMMENT ) == null ? "" : m_profilMetaData.get( IWspmConstants.PROFIL_PROPERTY_COMMENT ).toString();
   }
 
   public void setComment( final String comment )
   {
-    m_profilMetaData.put(IWspmConstants.PROFIL_PROPERTY_COMMENT,comment);
+    m_profilMetaData.put( IWspmConstants.PROFIL_PROPERTY_COMMENT, comment );
   }
 
   public String getName( )
@@ -496,8 +499,77 @@ public class PlainProfil implements IProfil
     return m_name;
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     m_name = name;
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#getDescription()
+   */
+  public String getDescription( )
+  {
+    final Object object = m_profilMetaData.get( IWspmConstants.PROFIL_DESCRIPTION );
+
+    if( object != null )
+      return object.toString();
+
+    return "";
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#getMetadataList()
+   */
+  public List getMetadataList( )
+  {
+    throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#getPhenomenon()
+   */
+  public IPhenomenon getPhenomenon( )
+  {
+    throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#getResult()
+   */
+  public Object getResult( )
+  {
+    throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#setDescription(java.lang.String)
+   */
+  public void setDescription( final String desc )
+  {
+    m_profilMetaData.put( IWspmConstants.PROFIL_DESCRIPTION, desc );
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#setMedataList(java.util.List)
+   */
+  public void setMedataList( final List list )
+  {
+    throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#setPhenomenon(org.kalypso.observation.phenomenon.IPhenomenon)
+   */
+  public void setPhenomenon( final IPhenomenon phenomenon )
+  {
+    throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#setResult(java.lang.Object)
+   */
+  public void setResult( final Object values )
+  {
+    throw (new NotImplementedException());
   }
 }

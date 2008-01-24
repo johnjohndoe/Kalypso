@@ -44,11 +44,13 @@ import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -58,7 +60,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 {
   final private int m_deviderIndex;
 
-  final private String m_deviderTyp;
+  final private IComponent m_deviderTyp;
 
   final private int m_pointIndex;
 
@@ -66,9 +68,9 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
    * verschieben der Trennfläche auf den Profilpunkt IProfil.getPoints().get(index)
    * 
    * @param deviderTyp,deviderIndex
-   *          devider=IProfil.getDevider(deviderTyp)[deviderIndex]
+   *            devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
-  public MoveDeviderResolution( final int deviderIndex, final String deviderTyp, int pointIndex )
+  public MoveDeviderResolution( final int deviderIndex, final IComponent deviderTyp, final int pointIndex )
   {
     super( "verschieben der Trennfläche in den Gültigkeitsbereich", null, null );
     m_deviderIndex = deviderIndex;
@@ -81,15 +83,15 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected IProfilChange[] resolve( IProfil profil )
+  protected IProfilChange[] resolve( final IProfil profil )
   {
-    final IProfilPointMarker[] markers = profil.getPointMarkerFor(  m_deviderTyp );
+    final IProfilPointMarker[] markers = profil.getPointMarkerFor( m_deviderTyp );
     final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-    if( marker == null || m_pointIndex < 0 || m_pointIndex >= points.size())
+    final LinkedList<IRecord> points = profil.getPoints();
+    if( marker == null || m_pointIndex < 0 || m_pointIndex >= points.size() )
       return null;
-    final IProfilPoint point = points.get(m_pointIndex);
-    return new IProfilChange[] { new PointMarkerSetPoint( marker, point ), new ActiveObjectEdit( profil, point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) };
+    final IRecord point = points.get( m_pointIndex );
+    return new IProfilChange[] { new PointMarkerSetPoint( marker, point ), new ActiveObjectEdit( profil, point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) };
   }
 
 }

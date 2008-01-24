@@ -46,8 +46,10 @@ import java.util.List;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
@@ -59,16 +61,18 @@ public class AddFixValueOperator implements IPointPropertyCalculator
    * @see org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator#calculate(java.lang.Double,
    *      java.lang.String[], java.util.List)
    */
-  public IProfilChange[] calculate( Double operand, String[] properties, List<IProfilPoint> points )
+  public IProfilChange[] calculate( final Double operand, final IComponent[] properties, final List<IRecord> points )
   {
     final List<IProfilChange> changes = new ArrayList<IProfilChange>();
-    for( final IProfilPoint point : points )
+    for( final IRecord point : points )
     {
-      for( final String property : properties )
+      for( final IComponent property : properties )
       {
-        if( point.hasProperty( property ) )
+        final TupleResult result = point.getOwner();
+
+        if( result.hasComponent( property ) )
         {
-          final Double oldValue = point.getValueFor( property );
+          final Double oldValue = (Double) point.getValue( property );
           final double newValue = oldValue + operand;
           changes.add( new PointPropertyEdit( point, property, newValue ) );
         }

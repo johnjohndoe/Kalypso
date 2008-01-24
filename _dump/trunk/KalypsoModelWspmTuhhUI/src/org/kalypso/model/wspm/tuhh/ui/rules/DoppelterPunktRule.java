@@ -47,13 +47,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 public class DoppelterPunktRule extends AbstractValidatorRule
 {
@@ -64,18 +65,24 @@ public class DoppelterPunktRule extends AbstractValidatorRule
 
     try
     {
-      final List<IProfilPoint> points = profil.getPoints();
-      IProfilPoint prevPoint = null;
+      final List<IRecord> points = profil.getPoints();
+      IRecord prevPoint = null;
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      for( final IProfilPoint point : points )
+      for( final IRecord point : points )
       {
         if( prevPoint != null )
         {
-          if( ProfilUtil.comparePoints( new IProfilPointProperty[] { profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE ),
-              profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) }, prevPoint, point ) )
+          if( ProfilUtil.comparePoints( new IComponent[] { ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_BREITE ),
+              ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) }, prevPoint, point ) )
           {
-            collector.createProfilMarker( false, "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
+            final String msg = "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
+            final String location = "";
+            final int pointPos = profil.getPoints().indexOf( point );
+            final IComponent pointProperty = ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+
+            collector.createProfilMarker( false, msg, location, pointPos, pointProperty.getId(), pluginId, null );
           }
+
         }
         prevPoint = point;
       }
@@ -86,5 +93,4 @@ public class DoppelterPunktRule extends AbstractValidatorRule
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
     }
   }
-
 }

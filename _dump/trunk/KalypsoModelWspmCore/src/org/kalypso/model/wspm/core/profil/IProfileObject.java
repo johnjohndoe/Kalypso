@@ -40,55 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+
 /**
+ * HACK: WSPM Buildings always consists of one IRecord-Set in TupleResult - so we have only getValue(comp) and
+ * setValue(comp)
+ * 
  * @author kimwerner
  */
 public interface IProfileObject
 {
-
-  public String getId( );
-
   /**
    * @return the ProfilePointProperties used by this Object
    */
-  public String[] getPointProperties( );
+  public IComponent[] getPointProperties( );
 
   /**
    * @return the keys this Object held as a key,value
    * @see getValueFor(key)
    */
-  public String[] getObjectProperties( );
+  public IComponent[] getObjectProperties( );
 
-  /**
-   * @return the value this Object held as a key,value
-   * @throws IllegalArgumentException
-   *           if the key is not supported by this Object
-   * @see hasProperty(key)
-   * @see setValue(key,value)
-   */
-  public Object getValueFor( final String key ) throws IllegalArgumentException;
+  public Object getValue( IComponent component );
 
-  /**
-   * @return a friendly Name for the given key used as key,value, stored in this ProfileObject
-   */
-  public String getLabelFor( final String key );
+  public void setValue( IComponent component, Object value );
 
-  /**
-   * @return the added Object
-   * @throws IllegalArgumentException
-   *           if the key is not supported by this Object
-   * @see hasProperty(key)
-   * @see getValueFor(key)
-   */
-  public Object setValue( final String key, final Object value ) throws IllegalArgumentException;
+  public IObservation<TupleResult> getObservation( );
 
-  /**
-   * @return true if the Object support the given key
-   * @see setValue(key,value)
-   * @see getValueFor(key)
-   */
- public boolean hasProperty( final String key );
-
-  public String getName( );
-
+  public String getId( );
 }

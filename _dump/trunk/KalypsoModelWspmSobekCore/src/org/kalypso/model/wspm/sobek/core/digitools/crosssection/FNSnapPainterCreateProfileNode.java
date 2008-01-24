@@ -57,6 +57,8 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.pub.ISnapPainter;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider;
+import org.kalypso.ogc.gml.map.widgets.builders.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -77,11 +79,14 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
 
   private Feature[] m_lastSnappedCrossSections = new Feature[] {};
 
-  public FNSnapPainterCreateProfileNode( final ISobekModelMember model )
+  private final ToolTipRenderer m_renderer;
+
+  public FNSnapPainterCreateProfileNode( final ISobekModelMember model, final IGeometryBuilderExtensionProvider extender )
   {
     discoverBranchGeometries( model );
     discoverCrossSections( model.getWorkspace() );
 
+    m_renderer = new ToolTipRenderer( extender );
   }
 
   private void discoverBranchGeometries( final ISobekModelMember model )
@@ -162,6 +167,8 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
    */
   public Point paint( final Graphics g, final MapPanel panel, final Point currentPoint )
   {
+    m_renderer.paint( g );
+
     try
     {
       final Set<Entry<IBranch, GM_Curve>> branches = m_curves.entrySet();

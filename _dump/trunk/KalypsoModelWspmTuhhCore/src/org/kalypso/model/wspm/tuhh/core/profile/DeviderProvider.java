@@ -40,14 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.observation.result.Component;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
+ * TODO - IPointPropertyProvider and IMarkerProvider should be the same Provider Class - in TupleResult view, their is
+ * no difference between them - only column name (type) defines markers
+ * 
  * @author kimwerner
  */
 public class DeviderProvider implements IProfilPointMarkerProvider
@@ -55,11 +66,10 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   private static final String[] m_markerTypes = { IWspmTuhhConstants.MARKER_TYP_BORDVOLL, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE,
       IWspmTuhhConstants.MARKER_TYP_WEHR };
 
-  
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getImageFor(java.lang.String)
    */
-  public ImageDescriptor getImageFor( String markerId )
+  public ImageDescriptor getImageFor( final String markerId )
   {
     final String plgn = KalypsoModelWspmTuhhCorePlugin.getDefault().toString();
     if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) )
@@ -73,27 +83,8 @@ public class DeviderProvider implements IProfilPointMarkerProvider
     return null;
   }
 
- 
- 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createMarker(java.lang.String)
-   */
-  public IProfilPointMarker createMarker( String markerId )
-  {
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) )
-      return new ProfilDevider( markerId, "Trennfläche", new String[] { IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG, IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT} );
-    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) )
-      return new ProfilDevider( markerId, "Durchströmter Bereich", new String[] { IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT} );
-    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId ) )
-      return new ProfilDevider( markerId, "Bordvollpunkt", new String[0] );
-    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId ) )
-      return new ProfilDevider( markerId, "Wehrbereichstrenner", new String[] { IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT } );
-    return null;
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getMarkerTypes()
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getMarkers()
    */
   public String[] getMarkerTypes( )
   {
@@ -101,63 +92,62 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#providesPointMarker(java.lang.String)
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#isMarker(org.kalypso.observation.result.IComponent)
    */
-  public boolean providesPointMarker( String markerId )
+  public boolean isMarker( final IComponent component )
   {
-    return IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) || IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) || IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId )
-        || IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId );
+    // FIXME
+    throw new NotImplementedException();
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createMarkerFromGml(java.lang.String,
-   *      java.lang.Object)
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#providesPointMarker(org.kalypso.observation.result.IComponent)
    */
-  public IProfilPointMarker createMarkerFromGml( final String markerId, final Object value )
+  public boolean providesPointMarker( final IComponent marker )
   {
-    // Devider
-    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) )
-    {
-      final Boolean hasDevider = (Boolean) value;
-      if( hasDevider != null && hasDevider.booleanValue() )
-        return createMarker( markerId );
+    // FIXME
+    throw new NotImplementedException();
 
-      return null;
+// return IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) ||
+// IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) || IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals(
+// markerId )
+// || IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId );
+  }
+
+  private final IComponent createPointProperty( final String property )
+  {
+    if( property.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
+      return new Component( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, "Trennflaeche", "Trennflaeche", "", "", IWspmConstants.Q_STRING, "", null );
+    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
+      return new Component( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, "Bordvoll", "Bordvoll", "", "", IWspmConstants.Q_BOOLEAN, false, null );
+    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
+      return new Component( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Durchströmter Bereich", "", "", IWspmConstants.Q_BOOLEAN, false, null );
+
+    throw new IllegalStateException( "property not defined" );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createProfilPointMarker(java.lang.String,
+   *      org.kalypso.observation.result.IRecord)
+   */
+  public IProfilPointMarker createProfilPointMarker( final String markerType, final IRecord point )
+  {
+    /* first check, if provider provides markerType */
+    if( !ArrayUtils.contains( m_markerTypes, markerType ) )
+      throw new IllegalStateException( "ProfilPointMarkerProvider doesn't doesnt provides - " + markerType );
+
+    /* point has component already defined? */
+    final IComponent[] components = point.getOwner().getComponents();
+    IComponent comp = ProfilObsHelper.getComponentById( components, markerType );
+    if( comp == null )
+    {
+      /* create a new profile component */
+      comp = createPointProperty( markerType );
+      point.getOwner().addComponent( comp );
     }
 
-    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId ) )
-    {
-      final Boolean hasDevider = (Boolean) value;
-      if( hasDevider != null && hasDevider.booleanValue() )
-        return createMarker( markerId );
-
-      return null;
-    }
-
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) )
-    {
-      final String kind = (String) value;
-      if( "low".equals( kind ) || "high".equals( kind ) )
-      {
-        final IProfilPointMarker marker = createMarker( markerId );
-        final Boolean high = Boolean.valueOf( "high".equals( kind ) );
-        marker.setValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG, high );
-        return marker;
-      }
-
-      return null;
-    }
-    else if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId ) )
-    {
-      if( value == null )
-        return null;
-
-      final IProfilPointMarker marker = createMarker( markerId );
-      marker.setValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT, value );
-      return marker;
-    }
-
-    return null;
+    /* create a new profile point marker */
+    return new ProfilDevider( comp, point );
   }
 
 }

@@ -43,11 +43,12 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -58,14 +59,14 @@ public class VorlandlinksProfilePointFilter extends AbstractProfilePointFilter i
    * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
-  public boolean accept( final IProfil profil, final IProfilPoint point )
+  public boolean accept( final IProfil profil, final IRecord point )
   {
-    final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] devider = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( devider.length != 2 )
       return true;
 
-    final IProfilPoint leftPoint = devider[0].getPoint();
-    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final IRecord leftPoint = devider[0].getPoint();
+    final LinkedList<IRecord> points = profil.getPoints();
 
     final int left = points.indexOf( leftPoint );
     final int index = points.indexOf( point );

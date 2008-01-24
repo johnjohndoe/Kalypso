@@ -41,8 +41,9 @@
 package org.kalypso.model.wspm.core.strang;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -54,49 +55,47 @@ public class ProfilPropertyOperation
     // helper class
   }
 
-  
-  
-  public static void operationFixValue( final IProfil[] profiles, final IProfilePointFilter filter, final String property, final Double value )
+  public static void operationFixValue( final IProfil[] profiles, final IProfilePointFilter filter, final IComponent property, final Double value )
   {
     for( final IProfil profil : profiles )
     {
-      for( final IProfilPoint point : profil.getPoints() )
+      for( final IRecord point : profil.getPoints() )
       {
         if( filter.accept( profil, point ) )
         {
-           point.setValueFor( property, value );
+          point.setValue( property, value );
         }
       }
     }
   }
 
-  public static void operationPercent( final IProfil[] profiles, final IProfilePointFilter filter,final String property, final Double value )
+  public static void operationPercent( final IProfil[] profiles, final IProfilePointFilter filter, final IComponent property, final Double value )
   {
     for( final IProfil profil : profiles )
     {
-      for( final IProfilPoint point : profil.getPoints() )
+      for( final IRecord point : profil.getPoints() )
       {
         if( filter.accept( profil, point ) )
         {
-          final Double oldValue = point.getValueFor( property );
+          final Double oldValue = (Double) point.getValue( property );
           final Double newValue = oldValue * value;
-          point.setValueFor( property, newValue );
+          point.setValue( property, newValue );
         }
       }
     }
   }
 
-  public static void operationAdd( final IProfil[] profiles, final IProfilePointFilter filter,final String property, final Double value )
+  public static void operationAdd( final IProfil[] profiles, final IProfilePointFilter filter, final IComponent property, final Double value )
   {
     for( final IProfil profil : profiles )
     {
-      for( final IProfilPoint point : profil.getPoints() )
+      for( final IRecord point : profil.getPoints() )
       {
         if( filter.accept( profil, point ) )
         {
-          final Double oldValue = point.getValueFor( property );
+          final Double oldValue = (Double) point.getValue( property );
           final Double newValue = oldValue + value;
-          point.setValueFor( property, newValue );
+          point.setValue( property, newValue );
         }
       }
     }

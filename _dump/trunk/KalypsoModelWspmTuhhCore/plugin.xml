@@ -57,7 +57,14 @@
       <objectProvider
             id="KalypsoModelWspmTuhhCore.objectProviderTUHH"
             profiletype="org.kalypso.model.wspm.tuhh.profiletype"
-            provider="org.kalypso.model.wspm.tuhh.core.profile.BuildingProvider"/>
+            provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.TuhhBuildingProvider"/>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.core.profilbuilder">
+      <Profil_Builder
+            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.TuhhProfilBuilder">
+      </Profil_Builder>
    </extension>
 
 </plugin>

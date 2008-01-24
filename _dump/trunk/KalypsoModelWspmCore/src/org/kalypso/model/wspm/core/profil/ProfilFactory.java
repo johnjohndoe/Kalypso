@@ -40,8 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.impl.PlainProfil;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
@@ -50,14 +51,20 @@ public class ProfilFactory
 {
   public static IProfil createProfil( final String type )
   {
-    if( "org.kalypso.model.wspm.tuhh.profiletype".equals( type ) )
-    {
-      final PlainProfil tuhhProfile = new PlainProfil( type );
-      tuhhProfile.addPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-      tuhhProfile.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-     // tuhhProfile.addPoint( tuhhProfile.createProfilPoint() );
-      return tuhhProfile;
-    }
-    return new PlainProfil( type );
+    final IProfilBuilder builder = KalypsoModelWspmCoreExtensions.getProfilBuilder( type );
+    return builder.createProfil();
+  }
+
+  public static IProfil createProfil( final String type, final IObservation<TupleResult> observation )
+  {
+    final IProfilBuilder builder = KalypsoModelWspmCoreExtensions.getProfilBuilder( type );
+    final IProfil profile = builder.createProfil( observation.getResult() );
+
+    profile.setName( observation.getName() );
+    profile.setDescription( observation.getDescription() );
+    profile.setMedataList( observation.getMetadataList() );
+    profile.setPhenomenon( observation.getPhenomenon() );
+
+    return profile;
   }
 }

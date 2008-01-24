@@ -40,48 +40,81 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
+import org.kalypso.commons.metadata.MetadataObject;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.Component;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 
-public class BuildingWehr extends AbstractProfilBuilding
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+public class BuildingWehr extends AbstractObservationBuilding
 {
+  public static final String ID = IWspmTuhhConstants.BUILDING_TYP_WEHR;
 
-  public BuildingWehr( )
+  public BuildingWehr( final IProfil profil )
   {
-    super( IWspmTuhhConstants.BUILDING_TYP_WEHR,"Wehr", new String[]{ IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT },
-        new String[]{"Wehrart","Formbeiwert"}, new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR } );
-    m_buildingValues.put( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG );
+    final TupleResult result = new TupleResult();
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
+    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+
+    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
+
+    init( profil, observation );
   }
 
-  @Override
-  public void addProfilProperties( IProfil profil )
+  public BuildingWehr( final IProfil profil, final IObservation<TupleResult> observation )
   {
-    super.addProfilProperties( profil );
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-    for( IProfilPoint pt : points )
-    {
-
-      final double h = pt.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-      pt.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, h );
-
-    }
+    init( profil, observation );
   }
 
-  @Override
-  public void removeProfilProperties( final IProfil profil )throws IllegalProfileOperationException
+  private IComponent createComponent( final String type )
   {
-    super.removeProfilProperties( profil );
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
-    for( final IProfilPointMarker devider : deviders )
-    {
-      if( profil.removePointMarker( devider ) == null )
-        throw new IllegalProfileOperationException( devider.getValueFor( "label" ) + " kann nicht entfernt werden.", null );
-    }
+    /* building observation properties */
+    if( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_WEHRART, null, null );
+    else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_STRING, "", null );
+
+    /* profile observation properties */
+    else if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( type ) )
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+
+    throw new NotImplementedException();
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
+   */
+  @Override
+  protected IComponent getPointProperty( final String id )
+  {
+    return createComponent( id );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getProfileProperties()
+   */
+  @Override
+  protected String[] getProfileProperties( )
+  {
+    return new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR };
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
+   */
+  public String getId( )
+  {
+    return ID;
   }
 
 }

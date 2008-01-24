@@ -38,35 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.table.swt;
+package org.kalypso.model.wspm.tuhh.core.profile;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TableViewer;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
-public abstract class ProfilTableAction extends Action
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+/**
+ * @author kuch
+ */
+public class TuhhProfilHelper
 {
-  private final ProfilSWTTableView m_tableView;
 
-  public ProfilTableAction( final ProfilSWTTableView tableView )
+  public static IProfileObject transformProfileObject( final IProfil profil, final IObservation<TupleResult> observation )
   {
-    this( tableView, null, null );
-  }
+    final String id = observation.getName();
 
-  public ProfilTableAction( final ProfilSWTTableView tableView, final String text )
-  {
-    this( tableView, text, null );
-  }
+    if( BuildingBruecke.ID.equals( id ) )
+      return new BuildingBruecke( profil, observation );
 
-  public ProfilTableAction( final ProfilSWTTableView tableView, final String text, final ImageDescriptor image )
-  {
-    super( text, image );
-    
-    m_tableView = tableView;
-  }
-
-  protected final TableViewer getViewer( )
-  {
-    return m_tableView.getViewer();
+    // FIXME
+    throw (new NotImplementedException());
   }
 }

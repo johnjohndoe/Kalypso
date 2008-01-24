@@ -49,28 +49,17 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.metadata.MetadataObject;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider2;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
-import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -79,7 +68,6 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -91,17 +79,19 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class ProfileFeatureFactory implements IWspmConstants
 {
-  public final static QName QN_PROF_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
-
-  public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" );
+  private static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" );
 
   public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" );
 
+  public final static QName QN_PROF_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
+
   public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
+
+  private final static Map<Feature, IProfil> m_profiles = new HashMap<Feature, IProfil>();
 
   private ProfileFeatureFactory( )
   {
-    // private: never instantiate
+    // private: never instatiate
   }
 
   /**
@@ -132,19 +122,17 @@ public class ProfileFeatureFactory implements IWspmConstants
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
-    //
-    // Name + Description
-    //
+    /* name and description */
     final String name = profile.getName();
-    final List<String> namelist = new ArrayList<String>( 1 );
-    namelist.add( name );
-    changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_NAME ), namelist ) );
     final String description = profile.getComment();
+
+    final List<String> namelist = new ArrayList<String>();
+    namelist.add( name );
+
+    changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_NAME ), namelist ) );
     changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_DESCRIPTION ), description ) );
 
-    //
-    // Station
-    //
+    /* station */
     final double station = profile.getStation();
     if( Double.isNaN( station ) || Double.isInfinite( station ) )
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( ProfileFeatureFactory.QNAME_STATION ), null ) );
@@ -154,105 +142,34 @@ public class ProfileFeatureFactory implements IWspmConstants
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( ProfileFeatureFactory.QNAME_STATION ), bigStation ) );
     }
 
-    //
-    // Type
-    //
+    /* type */
     final String profiletype = profile.getType();
     changes.add( new FeatureChange( targetFeature, featureType.getProperty( ProfileFeatureFactory.QNAME_TYPE ), profiletype ) );
 
     /* Ensure that record-definition is there */
     final Feature recordDefinition = FeatureHelper.resolveLink( targetFeature, ObservationFeatureFactory.OM_RESULTDEFINITION );
     if( recordDefinition == null )
-    {
-      final GMLWorkspace workspace = targetFeature.getWorkspace();
-      final IRelationType rdParentRelation = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
-      final Feature rd = workspace.createFeature( targetFeature, rdParentRelation, workspace.getGMLSchema().getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE ) );
+      throw new NotImplementedException();
 
-      changes.add( new FeatureChange( targetFeature, rdParentRelation, rd ) );
-    }
-
-    //
-    // read tuple data into tuple-observation
-    //
-    final TupleResult result = new TupleResult();
-    final IProfilPointProperty[] pointProperties = profile.getPointProperties();
-    final Map<String, IComponent> compMap = new HashMap<String, IComponent>( pointProperties.length );
-
-    // add all devider types which have deviders
-    // if we don't do it here, we get later null entries in the result
-    final Map<String, IComponent> deviderComponents = new HashMap<String, IComponent>();
-    final String[] markerTypes = profile.getPointMarkerTypes();
-    for( final String markerType : markerTypes )
-    {
-      final IProfilPointMarker[] markers = profile.getPointMarkerFor( markerType );
-      for( final IProfilPointMarker marker : markers )
-      {
-        final String dTyp = marker.getMarkerId();
-        final IComponent deviderComponent = ObservationFeatureFactory.createDictionaryComponent( targetFeature, dTyp );
-        deviderComponents.put( dTyp, deviderComponent );
-        result.addComponent( deviderComponents.get( dTyp ) );
-        // the first one is enough!
-        break;
-      }
-    }
-    for( final IProfilPoint point : profile.getPoints() )
-    {
-      final IRecord record = result.createRecord();
-      result.add( record );
-
-      for( final IProfilPointProperty pp : pointProperties )
-      {
-        final String ppName = pp.getId();
-        if( !compMap.containsKey( ppName ) )
-        {
-          final IComponent component = ObservationFeatureFactory.createDictionaryComponent( targetFeature, ppName );
-
-          compMap.put( ppName, component );
-          result.addComponent( component );
-        }
-
-        final IComponent comp = compMap.get( ppName );
-        final double value = point.getValueFor( pp.getId() );
-        record.setValue( comp, new Double( value ) );
-      }
-
-      // Handle devider
-      final IProfilPointMarker[] markers = profile.getPointMarkerFor( point );
-
-      for( final IProfilPointMarker marker : markers )
-      {
-        final IComponent component = deviderComponents.get( marker.getMarkerId() );
-        // don't need to add it, because it should already has been added before
-        final Object value = marker.getGmlObject();
-
-        if( value == null )
-          throw new NullPointerException();
-        record.setValue( component, value );
-      }
-    }
-
-    // write the table into the main feature
-    final List<MetadataObject> metadata = new ArrayList<MetadataObject>();
-    final Observation<TupleResult> tableObs = new Observation<TupleResult>( name, description, result, metadata );
-    final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( tableObs, targetFeature );
+    final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( profile, targetFeature );
     Collections.addAll( changes, obsChanges );
 
-    //
-    // Building
-    //
+    /* Building */
     final QName memberQName = new QName( IWspmConstants.NS_WSPMPROF, "member" );
     final IRelationType buildingRT = (IRelationType) featureType.getProperty( memberQName );
-
-    final IProfileObject building = profile.getProfileObject();
     final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[] {} );
-    if( building != null )
+
+    final IProfileObject[] buildings = profile.getProfileObject();
+    for( final IProfileObject profileObject : buildings )
     {
       final IFeatureType buildingType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );
       final IRelationType buildingParentRelation = buildingList.getParentFeatureTypeProperty();
       final Feature buildingFeature = targetFeature.getWorkspace().createFeature( targetFeature, buildingParentRelation, buildingType );
       buildingList.add( buildingFeature );
-      final IObservation<TupleResult> buildingObs = ProfileFeatureFactory.observationFromBuilding( building, buildingFeature );
-      ObservationFeatureFactory.toFeature( buildingObs, buildingFeature );
+      final IObservation<TupleResult> buildingObs = ProfileFeatureFactory.observationFromBuilding( profileObject, buildingFeature );
+      final FeatureChange[] featureAsChanges = ObservationFeatureFactory.toFeatureAsChanges( buildingObs, buildingFeature );
+
+      Collections.addAll( changes, featureAsChanges );
     }
 
     /* Always to set the building, even if null */
@@ -263,163 +180,63 @@ public class ProfileFeatureFactory implements IWspmConstants
 
   private static IObservation<TupleResult> observationFromBuilding( final IProfileObject building, final Feature obsFeature )
   {
-    final String[] buildingProperties = building.getObjectProperties();
+    final IComponent[] buildingProperties = building.getObjectProperties();
 
     final TupleResult result = new TupleResult();
     final IRecord record = result.createRecord();
     result.add( record );
 
-    for( final String bp : buildingProperties )
+    for( final IComponent bp : buildingProperties )
     {
-      final IComponent component = ObservationFeatureFactory.createDictionaryComponent( obsFeature, bp );
+      final IComponent component = ObservationFeatureFactory.createDictionaryComponent( obsFeature, bp.getId() );
       result.addComponent( component );
-      final Object value = building.getValueFor( bp );
+      final Object value = building.getValue( component );
       record.setValue( component, value );
     }
 
-    final List<MetadataObject> metaList = new ArrayList<MetadataObject>();
-
-    final String typ = building.getId();
-
-    final IObservation<TupleResult> observation = new Observation<TupleResult>( typ, "Bauwerk-Observation", result, metaList );
-
-    observation.setPhenomenon( new Phenomenon( typ, null, null ) );
+    final IObservation<TupleResult> observation = building.getObservation();
+    observation.setPhenomenon( new Phenomenon( observation.getName(), null, null ) );
 
     return observation;
   }
 
-  public static IProfil toProfile( final Feature profileFeature )
+  public synchronized static IProfil toProfile( final Feature profileFeature )
   {
-    final IFeatureType featureType = profileFeature.getFeatureType();
 
-    if( !GMLSchemaUtilities.substitutes( featureType, ProfileFeatureFactory.QN_PROF_PROFILE ) )
-      throw new IllegalArgumentException( "Feature ist not a profile: " + profileFeature );
+    IProfil profil = m_profiles.get( profileFeature );
 
-    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( profileFeature );
-
-    final String profiletype = (String) profileFeature.getProperty( ProfileFeatureFactory.QNAME_TYPE );
-    final IProfil profil = ProfilFactory.createProfil( profiletype );
-    profil.setName( observation.getName() );
-    profil.setComment( observation.getDescription() );
-    final BigDecimal station = ProfileFeatureFactory.getProfileStation( profileFeature );
-    profil.setStation( station == null ? Double.NaN : station.doubleValue() );
-
-    final String srsName = (String) profileFeature.getProperty( WspmProfile.QNAME_SRS );
-    profil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, srsName );
-
-    //
-    // Building
-    //
-    // REMARK: handle buildings before table, because the setBuilding method resets the
-    // corresponding table properties.
-    final Feature buildingFeature = (Feature) FeatureHelper.getFirstProperty( profileFeature, new QName( IWspmConstants.NS_WSPMPROF, "member" ) );
-
-    final IProfileObject po = ProfileFeatureFactory.buildingFromFeature( profil, buildingFeature );
-    if( po != null )
-      profil.setProfileObject( po );
-
-    //
-    // Tabelle
-    //
-    final TupleResult result = observation.getResult();
-    final IComponent[] components = result.getComponents();
-    for( final IComponent component : components )
+    if( profil == null )
     {
-      final String pp = component.getId();
+      /* profile type */
+      final String type = (String) profileFeature.getProperty( QNAME_TYPE );
 
-      /* Test, if this component describes a pointProperty, if yes add it to the profile. */
-      if( profil.getPropertyProviderFor( pp ) != null )
-        profil.addPointProperty( pp );
-    }
+      /* observation of profile */
+      final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( profileFeature );
 
-    for( final IRecord record : result )
-    {
-      final IProfilPoint point = profil.createProfilPoint();
+      profil = ProfilFactory.createProfil( type, observation );
 
-      /* Add the profile point immediately, else the markers don't get added to the profile. */
-      profil.addPoint( point );
-
-      for( final IComponent component : components )
+      /* station of profile */
+      try
       {
-        final String compId = component.getId();
-        final Object value = record.getValue( component );
-        final IProfilPointPropertyProvider propertyProvider = profil.getPropertyProviderFor( compId );
-
-        if( propertyProvider != null )
-        {
-          Double doubleValue;
-          try
-          {
-            doubleValue = (Double) value;
-          }
-          catch( final NumberFormatException e )
-          {
-            doubleValue = (propertyProvider instanceof IProfilPointPropertyProvider2) ? ((IProfilPointPropertyProvider2) propertyProvider).createDoubleFor( compId, value ) : Double.NaN;
-          }
-          // should never be null, what to do in that case?
-          if( doubleValue.isNaN() )
-            throw new IllegalArgumentException( "Null value in profile km " + station );
-          point.setValueFor( compId, doubleValue );
-          continue;
-        }
-
-        final IProfilPointMarkerProvider markerProvider = profil.getMarkerProviderFor( compId );
-        if( markerProvider != null )
-        {
-          final IProfilPointMarker marker = markerProvider.createMarkerFromGml( compId, value );
-          if( marker != null )
-          {
-            marker.setPoint( point );
-            profil.addPointMarker( marker );
-          }
-        }
-        else
-        {
-          final IStatus status = StatusUtilities.createWarningStatus( "Unknown component in profile-observation: " + compId );
-          KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
-        }
+        final double station = ((BigDecimal) profileFeature.getProperty( QNAME_STATION )).doubleValue();
+        profil.setStation( station );
       }
+      catch( final NullPointerException e )
+      {
+        // nothing to do... (happens when you creating a new profile)*/
+      }
+
+      /* building of profile */
+      // REMARK: handle buildings before table, because the setBuilding method resets the
+      // corresponding table properties.
+      final IObservation<TupleResult>[] profileObjects = ProfilObsHelper.getProfileObjects( profileFeature );
+      if( profileObjects.length > 0 )
+        profil.createProfileObjects( profileObjects );
+
+      m_profiles.put( profileFeature, profil );
     }
+
     return profil;
   }
 
-  public static BigDecimal getProfileStation( final Feature profileFeature )
-  {
-    return (BigDecimal) profileFeature.getProperty( ProfileFeatureFactory.QNAME_STATION );
-  }
-
-  public static void setProfileStation( final Feature profileFeature, final BigDecimal decimal )
-  {
-    profileFeature.setProperty( ProfileFeatureFactory.QNAME_STATION, decimal );
-  }
-
-  private static IProfileObject buildingFromFeature( final IProfil profil, final Feature buildingFeature )
-  {
-    final IObservation<TupleResult> buildingObs = buildingFeature == null ? null : ObservationFeatureFactory.toObservation( buildingFeature );
-
-    final IPhenomenon phenomenon = buildingObs == null ? null : buildingObs.getPhenomenon();
-    if( phenomenon == null )
-      return null;
-
-    final IProfileObjectProvider pop = buildingObs == null ? null : profil.getObjectProviderFor( phenomenon.getID() );
-    final IProfileObject building = pop == null ? null : pop.createProfileObject( buildingObs.getName() );
-
-    final TupleResult result = buildingObs.getResult();
-    if( building == null || result == null )
-      return null;
-
-    if( result.isEmpty() )
-      return building;
-
-    /* transfrom building properties */
-    final IRecord record = result.get( 0 );
-    for( final IComponent component : result.getComponents() )
-    {
-      final String id = component.getId();
-      final Object value = record.getValue( component );
-      building.setValue( id, value );
-    }
-
-    return building;
-  }
 }

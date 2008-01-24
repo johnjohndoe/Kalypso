@@ -45,22 +45,17 @@ import java.util.logging.Logger;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
-
-/**
- * @author gernot
- * 
- */
 public class ProfilViewerSorter extends ViewerSorter
 {
-  private final IProfilPointProperty m_columnKey;
+  private final IComponent m_columnKey;
 
   private final int m_direction;
 
-  public ProfilViewerSorter( final IProfilPointProperty key, final boolean direction )
+  public ProfilViewerSorter( final IComponent key, final boolean direction )
   {
     m_columnKey = key;
     m_direction = direction ? -1 : 1;
@@ -85,16 +80,16 @@ public class ProfilViewerSorter extends ViewerSorter
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
     final Object input = viewer.getInput();
-    if( m_columnKey == null || input == null || !(input instanceof ProfilEventManager) || e1 == null || !(e1 instanceof IProfilPoint) || e2 == null || !(e2 instanceof IProfilPoint) )
+    if( m_columnKey == null || input == null || !(input instanceof ProfilEventManager) || e1 == null || !(e1 instanceof IRecord) || e2 == null || !(e2 instanceof IRecord) )
       return super.compare( viewer, e1, e2 );
 
-    final IProfilPoint point1 = (IProfilPoint) e1;
-    final IProfilPoint point2 = (IProfilPoint) e2;
+    final IRecord point1 = (IRecord) e1;
+    final IRecord point2 = (IRecord) e2;
 
     try
     {
-      final double v1 = point1.getValueFor( m_columnKey.toString() );
-      final double v2 = point2.getValueFor( m_columnKey.toString() );
+      final double v1 = (Double) point1.getValue( m_columnKey );
+      final double v2 = (Double) point2.getValue( m_columnKey );
 
       if( v1 < v2 )
         return -1 * m_direction;

@@ -63,22 +63,23 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerRemove;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.operation.changes.VisibleMarkerEdit;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author gernot
@@ -120,7 +121,7 @@ public class TrennerPanel extends AbstractProfilView
   }
 
   @Override
-  protected Control doCreateControl( final Composite parent, int style )
+  protected Control doCreateControl( final Composite parent, final int style )
   {
     final Display display = parent.getDisplay();
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
@@ -142,12 +143,12 @@ public class TrennerPanel extends AbstractProfilView
     m_fzl_text = new Text( fliesszoneGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_fzl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fzl_text.addModifyListener( doubleModifyListener );
-    m_fzl_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, 0 ) );
+    m_fzl_text.addFocusListener( new TrennerFocusListener( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), 0 ) );
 
     m_fzr_text = new Text( fliesszoneGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_fzr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fzr_text.addModifyListener( doubleModifyListener );
-    m_fzr_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, 1 ) );
+    m_fzr_text.addFocusListener( new TrennerFocusListener( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), 1 ) );
 
     m_fzl_combo = new Combo( fliesszoneGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_fzl_combo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
@@ -158,13 +159,13 @@ public class TrennerPanel extends AbstractProfilView
     {
 
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+        final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
         if( deviders.length < 1 )
           return;
         final IProfilPointMarker devider = deviders[0];
-        final PointMarkerEdit edit = new PointMarkerEdit( devider, IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG, m_fzl_combo.getSelectionIndex() == 0 );
+        final PointMarkerEdit edit = new PointMarkerEdit( devider, m_fzl_combo.getSelectionIndex() == 0 );
 
         final ProfilOperation operation = new ProfilOperation( "Lage der Trennfläche ändern", getProfilEventManager(), edit, true );
         new ProfilOperationJob( operation ).schedule();
@@ -180,14 +181,14 @@ public class TrennerPanel extends AbstractProfilView
     {
 
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+        final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
         if( deviders.length < 2 )
           return;
         final IProfilPointMarker devider = deviders[1];
 
-        final PointMarkerEdit edit = new PointMarkerEdit( devider, IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG, m_fzr_combo.getSelectionIndex() == 0 );
+        final PointMarkerEdit edit = new PointMarkerEdit( devider, m_fzr_combo.getSelectionIndex() == 0 );
 
         final ProfilOperation operation = new ProfilOperation( "Lage der Trennfläche ändern", getProfilEventManager(), edit, true );
         new ProfilOperationJob( operation ).schedule();
@@ -202,10 +203,10 @@ public class TrennerPanel extends AbstractProfilView
     m_fz_show.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), true );
-        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() ) );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), m_fz_show.getSelection() ) );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )
@@ -220,12 +221,12 @@ public class TrennerPanel extends AbstractProfilView
     m_dbl_text = new Text( durchstroemteGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_dbl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_dbl_text.addModifyListener( doubleModifyListener );
-    m_dbl_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, 0 ) );
+    m_dbl_text.addFocusListener( new TrennerFocusListener( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 0 ) );
 
     m_dbr_text = new Text( durchstroemteGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_dbr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_dbr_text.addModifyListener( doubleModifyListener );
-    m_dbr_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, 1 ) );
+    m_dbr_text.addFocusListener( new TrennerFocusListener( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 1 ) );
 
     m_db_show = new Button( durchstroemteGroup, SWT.CHECK );
     final GridData db_showData = new GridData();
@@ -235,15 +236,15 @@ public class TrennerPanel extends AbstractProfilView
     m_db_show.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), true );
-        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_db_show.getSelection() ) );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), m_db_show.getSelection() ) );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )
           KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
- 
+
       }
     } );
 
@@ -254,12 +255,12 @@ public class TrennerPanel extends AbstractProfilView
     m_bvl_text = new Text( bordvollGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_bvl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_bvl_text.addModifyListener( doubleModifyListener );
-    m_bvl_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, 0 ) );
+    m_bvl_text.addFocusListener( new TrennerFocusListener( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 0 ) );
 
     m_bvr_text = new Text( bordvollGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_bvr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_bvr_text.addModifyListener( doubleModifyListener );
-    m_bvr_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, 1 ) );
+    m_bvr_text.addFocusListener( new TrennerFocusListener( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 1 ) );
 
     m_bv_show = new Button( bordvollGroup, SWT.CHECK );
     final GridData bv_showData = new GridData();
@@ -269,10 +270,10 @@ public class TrennerPanel extends AbstractProfilView
     m_bv_show.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern:", getProfilEventManager(), true );
-        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_bv_show.getSelection() ) );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), m_bv_show.getSelection() ) );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )
@@ -287,20 +288,23 @@ public class TrennerPanel extends AbstractProfilView
     m_bv_add.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final IProfil profil = getProfil();
-        final IProfilPointMarker[] bv_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+        final IProfilPointMarker[] bv_devs = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
 
         if( bv_devs.length < 1 )
         {
-          final IProfilPointMarker[] db_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+          final IProfilPointMarker[] db_devs = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
           if( db_devs.length < 2 )
             return;
           final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte einfügen:", getProfilEventManager(), true );
-          operation.addChange( new PointMarkerAdd( profil, db_devs[0].getPoint(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
-          operation.addChange( new PointMarkerAdd( profil, db_devs[1].getPoint(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
-          operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, true ) );
+
+          final IComponent bordvoll = ProfilObsHelper.getPropertyFromId( db_devs[0].getPoint(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+
+          operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[0].getPoint() ), true ) );
+          operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[1].getPoint() ), true ) );
+          operation.addChange( new VisibleMarkerEdit( getViewData(), bordvoll, true ) );
 
           operation.addChange( new ActiveObjectEdit( getProfil(), db_devs[1].getPoint(), null ) );
           new ProfilOperationJob( operation ).schedule();
@@ -311,9 +315,9 @@ public class TrennerPanel extends AbstractProfilView
           final IProfilChange[] changes = new IProfilChange[bv_devs.length + 1];
           for( int i = 0; i < bv_devs.length; i++ )
           {
-            changes[i] = new PointMarkerRemove( profil, bv_devs[i] );
+            changes[i] = new PointMarkerEdit( bv_devs[i], null );
           }
-          changes[bv_devs.length] = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, false );
+          changes[bv_devs.length] = new VisibleMarkerEdit( getViewData(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), false );
           final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte entfernen:", getProfilEventManager(), changes, true );
           new ProfilOperationJob( operation ).schedule();
         }
@@ -333,9 +337,9 @@ public class TrennerPanel extends AbstractProfilView
    */
   protected void updateControls( )
   {
-    final IProfilPointMarker[] fz_devs = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final IProfilPointMarker[] db_devs = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final IProfilPointMarker[] bv_devs = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    final IProfilPointMarker[] fz_devs = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    final IProfilPointMarker[] db_devs = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+    final IProfilPointMarker[] bv_devs = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
 
     try
     {
@@ -344,16 +348,16 @@ public class TrennerPanel extends AbstractProfilView
         m_fz_show.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
       }
       if( (!m_fzl_text.isDisposed()) && (fz_devs.length > 0) )
-        m_fzl_text.setText( String.format( "%.4f", fz_devs[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
+        m_fzl_text.setText( String.format( "%.4f", fz_devs[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( fz_devs[0].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) );
       else
         m_fzl_text.setText( "unbekant" );
       if( !m_fzr_text.isDisposed() && (fz_devs.length > 1) )
-        m_fzr_text.setText( String.format( "%.4f", fz_devs[1].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
+        m_fzr_text.setText( String.format( "%.4f", fz_devs[1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( fz_devs[1].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) );
       else
         m_fzr_text.setText( "unbekant" );
       if( !m_fzl_combo.isDisposed() && (fz_devs.length > 0) )
       {
-        final Boolean valueFor = (Boolean) fz_devs[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG );
+        final Boolean valueFor = (Boolean) fz_devs[0].getIntepretedValue();
         if( valueFor == null || valueFor )
         {
           m_fzl_combo.select( 0 );
@@ -365,7 +369,7 @@ public class TrennerPanel extends AbstractProfilView
       }
       if( !m_fzr_combo.isDisposed() && (fz_devs.length > 1) )
       {
-        final Boolean valueFor = (Boolean) fz_devs[1].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG );
+        final Boolean valueFor = (Boolean) fz_devs[1].getIntepretedValue();
         if( valueFor == null || valueFor )
         {
           m_fzr_combo.select( 0 );
@@ -380,11 +384,11 @@ public class TrennerPanel extends AbstractProfilView
         m_db_show.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
       }
       if( !m_dbl_text.isDisposed() && (db_devs.length > 0) )
-        m_dbl_text.setText( String.format( "%.4f", db_devs[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
+        m_dbl_text.setText( String.format( "%.4f", db_devs[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( db_devs[0].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) );
       else
         m_dbl_text.setText( "unbekannt" );
       if( !m_dbr_text.isDisposed() && (db_devs.length > 1) )
-        m_dbr_text.setText( String.format( "%.4f", db_devs[1].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
+        m_dbr_text.setText( String.format( "%.4f", db_devs[1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( db_devs[1].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) );
       else
         m_dbr_text.setText( "unbekannt" );
       if( bv_devs.length == 0 )
@@ -420,7 +424,7 @@ public class TrennerPanel extends AbstractProfilView
         if( !m_bvl_text.isDisposed() && (bv_devs.length > 0) )
         {
           m_bvl_text.setVisible( true );
-          m_bvl_text.setText( String.format( "%.4f", bv_devs[0].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
+          m_bvl_text.setText( String.format( "%.4f", bv_devs[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( bv_devs[0].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) );
 
         }
         else
@@ -428,7 +432,7 @@ public class TrennerPanel extends AbstractProfilView
         if( !m_bvr_text.isDisposed() && (bv_devs.length > 1) )
         {
           m_bvr_text.setVisible( true );
-          m_bvr_text.setText( String.format( "%.4f", bv_devs[1].getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
+          m_bvr_text.setText( String.format( "%.4f", bv_devs[1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( bv_devs[1].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) );
         }
         else
           m_bvr_text.setText( "unbekannt" );
@@ -441,7 +445,7 @@ public class TrennerPanel extends AbstractProfilView
 
   }
 
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isProfilPropertyChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
     {
@@ -462,11 +466,11 @@ public class TrennerPanel extends AbstractProfilView
 
   public class TrennerFocusListener implements FocusListener
   {
-    private String m_type;
+    private final IComponent m_type;
 
     private final int m_pos;
 
-    public TrennerFocusListener( final String type, final int pos )
+    public TrennerFocusListener( final IComponent type, final int pos )
     {
       m_type = type;
       m_pos = pos;
@@ -499,19 +503,19 @@ public class TrennerPanel extends AbstractProfilView
           return;
         }
 
-        final IProfilPoint pointCloseTo = ProfilUtil.findNearestPoint( getProfil(), value );
+        final IRecord pointCloseTo = ProfilUtil.findNearestPoint( getProfil(), value );
         final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), true );
 
         if( devs.length <= m_pos )
         {
           operation.setLabel( m_type.toString() + " hinzufügen" );
-          operation.addChange( new PointMarkerAdd( getProfil(), pointCloseTo, m_type ) );
+          operation.addChange( new PointMarkerEdit( new ProfilDevider( m_type, pointCloseTo ), true ) );
         }
         else
         {
           final IProfilPointMarker key = devs[m_pos];
 
-          final IProfilPoint oldPos = key.getPoint();
+          final IRecord oldPos = key.getPoint();
           if( oldPos == pointCloseTo )
           {
             updateControls();

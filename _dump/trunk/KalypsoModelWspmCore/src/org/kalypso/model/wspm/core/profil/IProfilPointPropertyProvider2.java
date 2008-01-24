@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.kalypso.observation.result.IComponent;
+
 /**
  * @author kimwerner
  */
 public interface IProfilPointPropertyProvider2 extends IProfilPointPropertyProvider
 {
-  public Double createDoubleFor( final String pointPropertyId, final Object value );
+  public Double createDoubleFor( final IComponent pointPropertyId, final Object value );
 }

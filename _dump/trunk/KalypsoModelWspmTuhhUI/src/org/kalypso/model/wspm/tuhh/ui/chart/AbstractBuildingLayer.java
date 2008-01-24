@@ -69,16 +69,16 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getZOrder()
    */
-  
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point, java.lang.Object)
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point,
+   *      java.lang.Object)
    */
   @Override
-  protected void editProfil( Point point, Object data )
+  protected void editProfil( final Point point, final Object data )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
@@ -102,10 +102,10 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  public void paint( GCWrapper gc )
+  public void paint( final GCWrapper gc )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   private final Color m_color;
@@ -116,7 +116,7 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
     final ColorRegistry cr = pcv.getColorRegistry();
     if( !cr.getKeySet().contains( layerId ) )
       cr.put( layerId, new RGB( 220, 220, 0 ) );
-    m_color = cr.get( layerId);
+    m_color = cr.get( layerId );
   }
 
   protected final Color getColor( )
@@ -124,9 +124,14 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
     return m_color;
   }
 
+  // TODO IProfileObjects now returned as list from IProfile (but WSPM can only handle one building)
   protected final IProfileObject getBuilding( )
   {
-    return getProfil().getProfileObject();
+    final IProfileObject[] buildings = getProfil().getProfileObject();
+    if( buildings.length > 0 )
+      return buildings[0];
+
+    return null;
   }
 
   /**
@@ -157,7 +162,8 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
 
   public void removeYourself( )
   {
-    final IProfilChange pc = new ProfileObjectSet( getProfil(), (IProfileObject) null );
+    // FIXME
+    final IProfilChange pc = new ProfileObjectSet( getProfil(), new IProfileObject[] {} );
     final ProfilOperation operation = new ProfilOperation( "Bauwerk entfernen", getProfilEventManager(), pc, true );
     new ProfilOperationJob( operation ).schedule();
   }

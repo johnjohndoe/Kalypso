@@ -44,8 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -55,20 +56,19 @@ public class SetFixValueOperator implements IPointPropertyCalculator
 
   /**
    * @see org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator#calculate(java.lang.Double,
-   *      java.lang.String[], java.util.List)
+   *      java.lang.Strinfinal g[], java.util.List)
    */
-  public IProfilChange[] calculate( Double operand, String[] properties, List<IProfilPoint> points )
+  public final IProfilChange[] calculate( final Double operand, final IComponent[] properties, final List<IRecord> points )
   {
-    final List<IProfilChange>changes = new ArrayList<IProfilChange>();
-    for( final IProfilPoint point : points )
+    final List<IProfilChange> changes = new ArrayList<IProfilChange>();
+    for( final IRecord point : points )
     {
-      for( final String property : properties )
+      for( final IComponent property : properties )
       {
-               changes.add(new PointPropertyEdit(point,property,operand));
+        changes.add( new PointPropertyEdit( point, property, operand ) );
       }
     }
-    return changes.toArray(new IProfilChange[changes.size()]);
+    return changes.toArray( new IProfilChange[changes.size()] );
   }
 
-  
 }

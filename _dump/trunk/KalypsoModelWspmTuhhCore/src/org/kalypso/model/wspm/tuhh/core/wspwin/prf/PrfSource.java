@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
@@ -52,15 +51,25 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.math.Range;
 import org.kalypso.commons.math.geom.PolyLine;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.PrfReader;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
@@ -92,13 +101,13 @@ public class PrfSource implements IProfilSource
         readBordVoll( p, pr );
         readRauhheit( p, pr );
         readBewuchs( p, pr );
-        readComment(p, pr );
+        readComment( p, pr );
         readGeoCoord( p, pr );
         if( !(readWehr( p, pr ) || readBridge( p, pr )) )
           readBuilding( p, pr );
       }
     }
-    catch( IllegalArgumentException e )
+    catch( final IllegalArgumentException e )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, e.getMessage(), e ) );
     }
@@ -122,43 +131,53 @@ public class PrfSource implements IProfilSource
     p.setComment( sb.toString() );
   }
 
-  private void readBewuchs( IProfil p, PrfReader pr )
+  private void readBewuchs( final IProfil p, final PrfReader pr )
   {
     final IDataBlock dbx = pr.getDataBlock( "AX" );
     final IDataBlock dby = pr.getDataBlock( "AY" );
     final IDataBlock dbp = pr.getDataBlock( "DP" );
     if( dbx == null || dby == null || dbp == null )
       return;
-    writePointProperty( p, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, dbx );
-    writePointProperty( p, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, dby );
-    writePointProperty( p, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, dbp );
 
+    final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+    final IComponent prAx = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
+    final IComponent prAy = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
+    final IComponent prDp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
+
+    writePointProperty( p, prAx, dbx );
+    writePointProperty( p, prAy, dby );
+    writePointProperty( p, prDp, dbp );
   }
 
-  private void writePointProperty( final IProfil p, final String property, final IDataBlock db )
+  private void writePointProperty( final IProfil p, final IComponent property, final IDataBlock db )
   {
     p.addPointProperty( property );
     final double[] xs = db.getX();
     final double[] ys = db.getY();
     for( int i = 0; i < xs.length; i++ )
     {
-      final IProfilPoint point = ProfilUtil.findPoint( p, i, xs[i], 0 );
+      final IRecord point = ProfilUtil.findPoint( p, i, xs[i], 0 );
       if( point != null )
-        point.setValueFor( property, ys[i] );
+        point.setValue( property, ys[i] );
     }
   }
 
-  private void readGeoCoord( IProfil p, PrfReader pr )
+  private void readGeoCoord( final IProfil p, final PrfReader pr )
   {
     final IDataBlock dbh = pr.getDataBlock( "HOC" );
     final IDataBlock dbr = pr.getDataBlock( "REC" );
     if( dbh == null || dbr == null )
       return;
-    writePointProperty( p, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT, dbh );
-    writePointProperty( p, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT, dbr );
+
+    final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+    final IComponent hochwert = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent rechtswert = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT );
+
+    writePointProperty( p, hochwert, dbh );
+    writePointProperty( p, rechtswert, dbr );
   }
 
-  private void readBuilding( IProfil p, PrfReader pr )
+  private void readBuilding( final IProfil p, final PrfReader pr )
   {
     IDataBlock db = pr.getDataBlock( "EI" );
     if( db == null )
@@ -175,85 +194,81 @@ public class PrfSource implements IProfilSource
     {
       final StringTokenizer sT = new StringTokenizer( value[0], " " );
       double rauheit = 0.0;
-      IDataBlock dbRau = pr.getDataBlock( "RAU" );
+      final IDataBlock dbRau = pr.getDataBlock( "RAU" );
       if( dbRau != null && dbRau.getY().length > 0 )
         rauheit = dbRau.getY()[0];
       switch( dbh.getSpecification( 8 ) )
       {
         case 6:// Trapez
         {
-          final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
-          final IProfileObject building = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ );
+          final IProfileObject building = new BuildingTrapez( p );
 
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
-          building.setValue( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, rauheit );
-          p.setProfileObject( building );
+          building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
+          p.setProfileObject( new IProfileObject[] { building } );
           break;
         }
         case 7:// Kreis
         {
-          final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_KREIS );
-          final IProfileObject building = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_KREIS );
+          final IProfileObject building = new BuildingKreis( p );
 
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
-          building.setValue( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, rauheit );
-          p.setProfileObject( building );
+          building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
+          p.setProfileObject( new IProfileObject[] { building } );
           break;
         }
         case 8:// Ei
         {
-          final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_EI );
-          final IProfileObject building = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_EI );
+          final IProfileObject building = new BuildingEi( p );
 
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
-          building.setValue( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, rauheit );
-          p.setProfileObject( building );
+          building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
+          p.setProfileObject( new IProfileObject[] { building } );
           break;
         }
         case 9:// Maulprofil
         {
-          final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_MAUL );
-          final IProfileObject building = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_MAUL );
+          final IProfileObject building = new BuildingMaul( p );
 
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
-          building.setValue( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, rauheit );
-          p.setProfileObject( building );
+          building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
+          p.setProfileObject( new IProfileObject[] { building } );
           break;
         }
 
@@ -262,7 +277,7 @@ public class PrfSource implements IProfilSource
     }
   }
 
-  private final boolean writeBuildingProperty( final IProfileObject building, final StringTokenizer sT, final String property )
+  private final boolean writeBuildingProperty( final IProfileObject building, final StringTokenizer sT, final IComponent property )
   {
     if( sT.hasMoreTokens() && (building != null) )
     {
@@ -271,7 +286,7 @@ public class PrfSource implements IProfilSource
         building.setValue( property, Double.parseDouble( sT.nextToken() ) );
         return true;
       }
-      catch( IllegalArgumentException e )
+      catch( final IllegalArgumentException e )
       {
         KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, e.getMessage(), e ) );
         return false;
@@ -283,45 +298,44 @@ public class PrfSource implements IProfilSource
     return false;
   }
 
-  private boolean readBridge( IProfil p, PrfReader pr )
+  private boolean readBridge( final IProfil p, final PrfReader pr )
   {
     final IDataBlock dbo = pr.getDataBlock( "OK-B" );
     final IDataBlock dbu = pr.getDataBlock( "UK-B" );
     if( dbo == null || dbu == null )
       return false;
-    final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_BRUECKE );
-    final IProfileObject bridge = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_BRUECKE );
+
+    final IProfileObject bridge = new BuildingBruecke( p );
     final StringTokenizer sT = new StringTokenizer( dbu.getSecondLine(), " " );
     if( sT.countTokens() > 4 )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "", 0, "Ungültige Anzahl von Eigenschaften für die Brücke. Es werden nur die ersten Vier ausgewertet.", null ) );
     }
-    writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
-    writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-    writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
-    writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
-    final IProfilPointProperty pp = p.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    final double delta = pp == null ? 0.0001 : pp.getPrecision();
-    p.setProfileObject( bridge );
+    writeBuildingProperty( bridge, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) );
+    writeBuildingProperty( bridge, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    writeBuildingProperty( bridge, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
+    writeBuildingProperty( bridge, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    final IComponent pp = ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    final double delta = pp == null ? 0.0001 : ProfilObsHelper.getPrecision( pp );
+    p.setProfileObject( new IProfileObject[] { bridge } );
     final PolyLine polyLineO = new PolyLine( dbo.getX(), dbo.getY(), delta );
     final PolyLine polyLineU = new PolyLine( dbu.getX(), dbu.getY(), delta );
     final Range rangeO = new Range( polyLineO.getFirstX(), polyLineO.getLastX(), delta );
     final Range rangeU = new Range( polyLineU.getFirstX(), polyLineU.getLastX(), delta );
 
-    for( final Iterator<IProfilPoint> points = p.getPoints().iterator(); points.hasNext(); )
+    for( final IRecord point : p.getPoints() )
     {
-      final IProfilPoint point = points.next();
-      final double breite = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-      final double hoehe = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+      final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
 
       if( rangeO.contains( breite ) )
-        point.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, polyLineO.getYFor( breite ) );
+        point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), polyLineO.getYFor( breite ) );
       else
-        point.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, hoehe );
+        point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), hoehe );
       if( rangeU.contains( breite ) )
-        point.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, polyLineU.getYFor( breite ) );
+        point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), polyLineU.getYFor( breite ) );
       else
-        point.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, hoehe );
+        point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), hoehe );
     }
     return true;
 
@@ -334,13 +348,13 @@ public class PrfSource implements IProfilSource
       return 0;
     final double[] xs = db.getX();
     final double[] ys = db.getY();
-    p.addPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-    p.addPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+    p.addPointProperty( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+    p.addPointProperty( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
     for( int i = 0; i < xs.length; i++ )
     {
-      final IProfilPoint point = p.createProfilPoint();
-      point.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, xs[i] );
-      point.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, ys[i] );
+      final IRecord point = p.createProfilPoint();
+      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ), xs[i] );
+      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ), ys[i] );
       p.addPoint( point );
     }
     return xs.length;
@@ -352,15 +366,18 @@ public class PrfSource implements IProfilSource
     if( db == null )
       return;
 
+    final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+
     final String rks = db.getSecondLine().toUpperCase();
-    String rTyp = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
+    IComponent rTyp = ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
+
     if( rks.startsWith( "KST" ) )
     {
-      rTyp = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST;
+      rTyp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
     }
     else if( rks.startsWith( "KS" ) || rks.startsWith( "K-S " ) )
     {
-      rTyp = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
+      rTyp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
     }
     else
     {
@@ -370,15 +387,15 @@ public class PrfSource implements IProfilSource
     p.addPointProperty( rTyp );
     for( int i = 0; i < db.getCoordCount(); i++ )
     {
-      final IProfilPoint point = ProfilUtil.findPoint( p, i, db.getX()[i], 0 );
+      final IRecord point = ProfilUtil.findPoint( p, i, db.getX()[i], 0 );
       if( point != null )
-        point.setValueFor( rTyp, db.getY()[i] );
+        point.setValue( rTyp, db.getY()[i] );
     }
   }
 
   private void readTrennFl( final IProfil p, final PrfReader pr )
   {
-    final LinkedList<IProfilPoint> points = p.getPoints();
+    final LinkedList<IRecord> points = p.getPoints();
     if( points.isEmpty() )
       return;
     final IDataBlock db = pr.getDataBlock( "TRENNFLAECHEN" );
@@ -386,8 +403,8 @@ public class PrfSource implements IProfilSource
       return;
     final int pCount = db.getCoordCount();
 
-    IProfilPoint p1 = null;
-    IProfilPoint p2 = null;
+    IRecord p1 = null;
+    IRecord p2 = null;
     int pos1 = 0;
     int pos2 = 0;
 
@@ -406,36 +423,44 @@ public class PrfSource implements IProfilSource
 
     // TODO: KIM in den Reparator verschieben
     // --------------------
-//    if( p1 == null )
-//    {
-//      p1 = points.getFirst();
-//      pos1 = 0;
-//      m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ")  an Position [" + Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
-//    }
-//    if( p2 == null )
-//    {
-//      p2 = points.getLast();
-//      pos2 = 0;
-//      m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ")  an Position [" + Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
-//    }
+// if( p1 == null )
+// {
+// p1 = points.getFirst();
+// pos1 = 0;
+// m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ") an Position [" + Double.toString(
+// p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
+// }
+// if( p2 == null )
+// {
+// p2 = points.getLast();
+// pos2 = 0;
+// m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ") an Position [" + Double.toString(
+// p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
+// }
     // --------------------
+
+    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( p.getType() );
+    if( providers.length != 1 )
+      throw new IllegalStateException();
+
+    final IProfilPointMarkerProvider provider = providers[0];
+
     if( p1 != null )
     {
-      final IProfilPointMarker devider1 = p.addPointMarker( p1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-      if( devider1 != null )
-        devider1.setValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG, (pos1 == 3) );
+      final IProfilPointMarker marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p1 );
+      marker.setValue( (pos1 == 3) );
     }
+
     if( p2 != null )
     {
-      final IProfilPointMarker devider2 = p.addPointMarker( p2, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-      if( devider2 != null )
-        devider2.setValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG, (pos2 == 4) );
+      final IProfilPointMarker marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p2 );
+      marker.setValue( (pos2 == 4) );
     }
   }
 
   private void readDurchStr( final IProfil p, final PrfReader pr )
   {
-    final LinkedList<IProfilPoint> points = p.getPoints();
+    final LinkedList<IRecord> points = p.getPoints();
     if( points.isEmpty() )
       return;
     final IDataBlock db = pr.getDataBlock( "DURCHSTROEMTE" );
@@ -443,8 +468,8 @@ public class PrfSource implements IProfilSource
       return;
     final int pCount = db.getCoordCount();
 
-    IProfilPoint p1 = null;
-    IProfilPoint p2 = null;
+    IRecord p1 = null;
+    IRecord p2 = null;
 
     if( pCount > 0 )
     {
@@ -455,30 +480,42 @@ public class PrfSource implements IProfilSource
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     }
     if( pCount > 2 )
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensätze an Station(" + p.getStation() + ")  für Durchströmte Bereiche können nicht ausgewertet werden", null ) );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensätze an Station(" + p.getStation()
+          + ")  für Durchströmte Bereiche können nicht ausgewertet werden", null ) );
 
     // TODO: KIM in den Reparator verschieben
     // -------------
-//    if( p1 == null )
-//    {
-//      p1 = points.getFirst();
-//      m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ")  an Position [" + Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
-//          + "]" );
-//    }
-//    if( p2 == null )
-//    {
-//      p2 = points.getLast();
-//      m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ")  an Position [" + Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
-//          + "]" );
-//    }
-    // ---------------
+// if( p1 == null )
+// {
+// p1 = points.getFirst();
+// m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ") an Position [" +
+// Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
+// + "]" );
+// }
+// if( p2 == null )
+// {
+// p2 = points.getLast();
+// m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ") an Position [" +
+// Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
+// + "]" );
+// }
+
+    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( p.getType() );
+    if( providers.length != 1 )
+      throw new IllegalStateException();
+
+    final IProfilPointMarkerProvider provider = providers[0];
+
     if( p1 != null )
     {
-      p.addPointMarker( p1, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+      final IProfilPointMarker marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, p1 );
+      marker.setValue( true );
     }
+
     if( p2 != null )
     {
-      p.addPointMarker( p2, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+      final IProfilPointMarker marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, p2 );
+      marker.setValue( true );
     }
   }
 
@@ -490,13 +527,13 @@ public class PrfSource implements IProfilSource
     final double[] pos = dbt.getX();
     for( int i = 0; i < pos.length; i++ )
     {
-      final IProfilPoint point = ProfilUtil.findPoint( p, pos[i], 0 );
+      final IRecord point = ProfilUtil.findPoint( p, pos[i], 0 );
       if( point != null )
       {
         if( (values != null) && (values.length > i + 1) )
         {
-          final IProfilPointMarker marker = p.addPointMarker( point, IWspmTuhhConstants.MARKER_TYP_WEHR );
-          marker.setValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT, values[i + 1] );
+          final ProfilDevider devider = new ProfilDevider( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.MARKER_TYP_WEHR ), point );
+          devider.setValue( values[i + 1] );
         }
       }
     }
@@ -507,30 +544,29 @@ public class PrfSource implements IProfilSource
     final IDataBlock dbw = pr.getDataBlock( "OK-WEHR" );
     if( dbw == null )
       return false;
-    final IProfileObjectProvider pop = p.getObjectProviderFor( IWspmTuhhConstants.BUILDING_TYP_WEHR );
-    final IProfileObject wehr = pop == null ? null : pop.createProfileObject( IWspmTuhhConstants.BUILDING_TYP_WEHR );
+
+    final IProfileObject wehr = new BuildingWehr( p );
     final String secLine = dbw.getSecondLine();
     final String wa = getWehrart( secLine );
     final double[] wt = getWehrParameter( secLine );
     if( wa != null )
-      wehr.setValue( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, wa );
-    wehr.setValue( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, wt == null ? 0.0 : wt[0] );
-    p.setProfileObject( wehr );
+      wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), wa );
+    wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), wt == null ? 0.0 : wt[0] );
+    p.setProfileObject( new IProfileObject[] { wehr } );
     readWehrtrenner( wt, p, pr );
-    final IProfilPointProperty pp = p.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    final double delta = pp == null ? 0.0001 : pp.getPrecision();
+    final IComponent pp = ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    final double delta = pp == null ? 0.0001 : ProfilObsHelper.getPrecision( pp );
     final PolyLine polyLineO = new PolyLine( dbw.getX(), dbw.getY(), delta );
     final Range rangeO = new Range( polyLineO.getFirstX(), polyLineO.getLastX(), delta );
-    for( final Iterator<IProfilPoint> points = p.getPoints().iterator(); points.hasNext(); )
+    for( final IRecord point : p.getPoints() )
     {
-      final IProfilPoint point = points.next();
-      final double breite = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-      final double hoehe = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+      final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
 
       if( rangeO.contains( breite ) )
-        point.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, polyLineO.getYFor( breite ) );
+        point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), polyLineO.getYFor( breite ) );
       else
-        point.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, hoehe );
+        point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), hoehe );
 
     }
     return true;
@@ -541,9 +577,7 @@ public class PrfSource implements IProfilSource
     final StringTokenizer sT = new StringTokenizer( params, " " );
     final int paramCount = sT.countTokens() - 1;
     if( paramCount < 1 )
-    {
       return null;
-    }
     // skip first parameter
     sT.nextToken();
 
@@ -560,40 +594,30 @@ public class PrfSource implements IProfilSource
     final StringTokenizer sT = new StringTokenizer( secLine, " " );
     final int paramCount = sT.countTokens() - 1;
     if( paramCount < 0 )
-    {
       return null;
-    }
     final String wehrart = sT.nextToken().toUpperCase();
     if( wehrart.startsWith( "RUND" ) )
-    {
       return IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG;
-    }
     if( wehrart.startsWith( "BREI" ) )
-    {
       return IWspmTuhhConstants.WEHR_TYP_BREITKRONIG;
-    }
     if( wehrart.startsWith( "SCHA" ) )
-    {
       return IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG;
-    }
     if( wehrart.startsWith( "BEIW" ) )
-    {
       return IWspmTuhhConstants.WEHR_TYP_BEIWERT;
-    }
     return null;
   }
 
   private void readBordVoll( final IProfil p, final PrfReader pr )
   {
-    final LinkedList<IProfilPoint> points = p.getPoints();
+    final LinkedList<IRecord> points = p.getPoints();
     if( points.isEmpty() )
       return;
     final IDataBlock db = pr.getDataBlock( "BORDVOLL" );
     if( db == null )
       return;
     final int pCount = db.getCoordCount();
-    IProfilPoint p1 = null;
-    IProfilPoint p2 = null;
+    IRecord p1 = null;
+    IRecord p2 = null;
 
     if( pCount > 0 )
     {
@@ -608,24 +632,36 @@ public class PrfSource implements IProfilSource
 
     // TODO: KIM in den Reparator verschieben
     // ---------------
-//    if( p1 == null )
-//    {
-//      p1 = points.getFirst();
-//      m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" + Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
-//    }
-//    if( p2 == null )
-//    {
-//      p2 = points.getLast();
-//      m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" + Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
-//    }
+// if( p1 == null )
+// {
+// p1 = points.getFirst();
+// m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" +
+// Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
+// }
+// if( p2 == null )
+// {
+// p2 = points.getLast();
+// m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" +
+// Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
+// }
     // ----------------------------
+
+    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( p.getType() );
+    if( providers.length != 1 )
+      throw new IllegalStateException();
+
+    final IProfilPointMarkerProvider provider = providers[0];
+
     if( p1 != null )
     {
-      p.addPointMarker( p1, IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+      final IProfilPointMarker marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, p1 );
+      marker.setValue( true );
     }
+
     if( p2 != null )
     {
-      p.addPointMarker( p2, IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+      final IProfilPointMarker marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, p2 );
+      marker.setValue( true );
     }
   }
 
@@ -642,7 +678,7 @@ public class PrfSource implements IProfilSource
 
       return true;
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       // TODO: handle exception
       return false;

@@ -162,7 +162,13 @@ public class QIntervallResult extends AbstractFeatureBinder
     final Feature profileFeatureRef = new XLinkedFeature_Impl( feature, profileRelation, ftProfile, href, "", "", "", "", "" );
     feature.setProperty( profileRelation, profileFeatureRef );
 
-    final IProfileObject building = profile.getProfil().getProfileObject();
+    final IProfileObject[] buildings = profile.getProfil().getProfileObject();
+
+    // TODO getter returns now a list of buildings
+    IProfileObject building = null;
+    if( buildings.length > 0 )
+      building = buildings[0];
+
     if( building != null )
       feature.setProperty( QNAME_P_QIntervallResult_buildingId, building.getId() );
   }

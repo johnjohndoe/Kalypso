@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.dialogs.reducepoints;
 
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Provides profil points for the douglas peucker wizard.
@@ -49,9 +49,9 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint;
  */
 public interface IPointsProvider
 {
-  public IProfilPoint[] getPoints();
+  public IRecord[] getPoints( );
 
-  public String getErrorMessage();
-  
-  public String getName();
+  public String getErrorMessage( );
+
+  public String getName( );
 }

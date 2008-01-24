@@ -43,16 +43,17 @@ package org.kalypso.model.wspm.ui.profil.operation.changes;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.observation.result.IComponent;
 
 public class VisibleMarkerEdit implements IProfilChange
 {
-  private final String m_typ;
+  private final IComponent m_typ;
 
   private final boolean m_visible;
 
   private final ProfilViewData m_viewData;
 
-  public VisibleMarkerEdit( ProfilViewData viewData, final String typ, final boolean isVisible )
+  public VisibleMarkerEdit( final ProfilViewData viewData, final IComponent typ, final boolean isVisible )
   {
     m_typ = typ;
     m_visible = isVisible;
@@ -75,7 +76,7 @@ public class VisibleMarkerEdit implements IProfilChange
    */
   public Object[] getObjects( )
   {
-    return new Object[]{m_typ,m_visible};
+    return new Object[] { m_typ, m_visible };
   }
 
   /**

@@ -38,47 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil;
+package org.kalypso.model.wspm.tuhh.core.profile;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author kimwerner
+ * @author kuch
  */
-public interface IProfilPointProperty
+public class TuhhMarkerHelper
 {
-  /**
-   * @return the smallest doubleValue two values can differ(i.e. 0.00010)
-   */
-  public double getPrecision( );
 
-  /**
-   * @return false if this property is not removeable from profile
-   */
-  public boolean isOptional( );
+  public static IProfilPointMarker[] createPointMarkers( final IProfil profil, final IComponent markerColumn )
+  {
+    final List<IProfilPointMarker> myMarkers = new ArrayList<IProfilPointMarker>();
 
-  /**
-   * @return the doubleValue a new profilePoint should have for this property,
-   *         <p>
-   *         when added between two other profilePoints
-   * @param breite
-   *          the absolute position between the two points(i.e  {@link org.kalypso.model.wspm.core.IWspmConstants#POINT_PROPERTY_BREITE})
-   * @throws IllegalArgumentException
-   *           if {@link org.kalypso.model.wspm.core.IWspmConstants#POINT_PROPERTY_BREITE} is not available in both
-   *           points
-   */
-  public double doInterpolation( final IProfilPoint point1, final IProfilPoint point2, final double breite );
+    final TupleResult result = profil.getResult();
+    for( final IRecord record : result )
+    {
+      final Object value = record.getValue( markerColumn );
+      if( value != null )
+      {
+        myMarkers.add( new ProfilDevider( markerColumn, record ) );
+      }
+    }
 
-  /**
-   * @return all ProfilePointPropertyIds this Property depends on
-   */
-  public String[] getDependencies( );
+    return myMarkers.toArray( new IProfilPointMarker[] {} );
+  }
 
-  /**
-   * the id for this ProfilepointProperty should be the same used in the dictonary {@link IWspmConstants}
-   */
-  public String getId( );
-
-  /**
-   * @return a friendly name for this ProfilepointProperty 
-   */
-  public String getLabel( );
 }

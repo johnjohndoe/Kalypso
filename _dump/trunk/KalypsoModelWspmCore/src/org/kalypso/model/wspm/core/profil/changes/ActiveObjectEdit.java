@@ -42,18 +42,18 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 public class ActiveObjectEdit implements IProfilChange
 {
-  private final String m_property;
+  private final IComponent m_property;
 
-  private final IProfilPoint m_point;
+  private final IRecord m_point;
 
   private final IProfil m_profil;
 
-  public ActiveObjectEdit( final IProfil profil, final IProfilPoint point, final String property )
+  public ActiveObjectEdit( final IProfil profil, final IRecord point, final IComponent property )
   {
     m_profil = profil;
     m_property = property;
@@ -68,13 +68,13 @@ public class ActiveObjectEdit implements IProfilChange
     if( hint != null )
       hint.setActivePointChanged();
 
-    final IProfilPoint oldPoint = m_profil.getActivePoint();
-    final IProfilPointProperty oldProperty = m_profil.getActiveProperty();
+    final IRecord oldPoint = m_profil.getActivePoint();
+    final IComponent oldProperty = m_profil.getActiveProperty();
 
     m_profil.setActivePoint( m_point );
     m_profil.setActivePointProperty( m_property );
 
-    return new ActiveObjectEdit( m_profil, oldPoint, oldProperty == null ? null : oldProperty.toString() );
+    return new ActiveObjectEdit( m_profil, oldPoint, oldProperty == null ? null : oldProperty );
   }
 
   /**
@@ -82,7 +82,7 @@ public class ActiveObjectEdit implements IProfilChange
    */
   public Object[] getObjects( )
   {
-    return new IProfilPoint[]{m_point};
+    return new IRecord[] { m_point };
   }
 
   /**

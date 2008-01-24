@@ -49,12 +49,11 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.IPointsProvider;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SimplePointsProvider;
-
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Belger
@@ -86,9 +85,9 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
 
     // get profilpoints from selection and view
     // TODO: this does not work any more
-    //final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
-    final IProfilEventManager pem = (m_view instanceof TableView)?((TableView)m_view).getProfilEventManager():null;
-    
+    // final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
+    final IProfilEventManager pem = (m_view instanceof TableView) ? ((TableView) m_view).getProfilEventManager() : null;
+
     if( pem == null )
     {
       // should never happen
@@ -97,9 +96,9 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
     }
 
     final IProfil profil = pem.getProfil();
-    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( "aus allen Punkten des Profils", profil.getPoints().toArray( new IProfilPoint[0] ) );
+    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( "aus allen Punkten des Profils", profil.getPoints().toArray( new IRecord[0] ) );
     final IPointsProvider selectionPointProvider = new SelectionPointsProvider( profil, m_selection );
-    
+
     final DouglasPeuckerDialog dialog = new DouglasPeuckerDialog( viewShell, pem, new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );
     dialog.open();
   }

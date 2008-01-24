@@ -40,17 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.Record;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Belger
@@ -62,45 +68,99 @@ public class ProfilStartTarget extends AbstractPointsTarget
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget#insertPoints(org.kalypso.model.wspm.core.profil.impl.ProfilEventManager,
    *      IProfilPoints)
    */
-  public void insertPoints( final IProfilEventManager pem, final LinkedList<IProfilPoint> points )
+  public void insertPoints( final IProfilEventManager pem, final LinkedList<IRecord> points )
   {
-
-    final int pointsCount = points.size();
-    final IProfilPointProperty[] existingProps = pem.getProfil().getPointProperties();
-
-    final IProfilChange[] changes = new IProfilChange[pointsCount];
-    try
+    final TupleResult result = pem.getProfil().getResult();
+    if( points == null )
     {
-      final LinkedList<IProfilPoint> existingPoints = pem.getProfil().getPoints();
-      final IProfilPoint targetPkt =existingPoints.size()==0?null: existingPoints.getFirst();
-      final double deltaX = targetPkt == null ? 0.0 : points.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      final double deltaY = targetPkt == null ? 0.0 : points.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-      int i = pointsCount - 1;
-      for( IProfilPoint point : points )
+      IRecord record = null;
+      try
       {
-        final IProfilPoint newPoint = targetPkt == null ? pem.getProfil().createProfilPoint(): targetPkt.clonePoint();
-        newPoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - deltaX );
-        newPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - deltaY );
-        for( IProfilPointProperty prop : existingProps )
-        {
-          final String propId = prop.toString();
-          if( pem.getProfil().hasPointProperty( propId ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( propId ) && !IWspmConstants.POINT_PROPERTY_HOEHE.equals( propId ) )
-          {
-            if( point.hasProperty( propId ) )
-              newPoint.setValueFor( propId, point.getValueFor( propId ) );
-          }
-        }
-        changes[i--] = new PointAdd( pem.getProfil(), null, newPoint );
+        record = result.get( 0 );
       }
-    }
-    catch( Exception e )
-    {
-      // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
-      changes[0] = null;
-    }
-    final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes, false );
-    new ProfilOperationJob( operation ).schedule();
+      catch( final IndexOutOfBoundsException e )
+      {
+      }
 
+      if( record == null )
+      {
+        // no records in tuple result defined
+        final IComponent[] components = result.getComponents();
+        final Set<IComponent> set = new LinkedHashSet<IComponent>();
+        for( final IComponent component : components )
+        {
+          set.add( component );
+        }
+
+        record = new Record( result, set );
+        result.add( 0, record );
+      }
+      else
+      {
+        final IRecord myPoint = record.cloneRecord();
+
+        /* shift new point to an position located before old first point position */
+        final IComponent cBreite = ProfilObsHelper.getPropertyFromId( myPoint, IWspmConstants.POINT_PROPERTY_BREITE );
+        if( cBreite != null )
+        {
+          myPoint.setValue( cBreite, (Double) myPoint.getValue( cBreite ) - 10 );
+        }
+
+        // remove all markers from new point
+        final IComponent[] pointMarkerTypes = pem.getProfil().getPointMarkerTypes();
+        for( final IComponent pmt : pointMarkerTypes )
+        {
+          myPoint.setValue( pmt, null );
+        }
+
+        result.add( 0, myPoint );
+      }
+
+    }
+    else
+    {
+      final int pointsToAdd = points.size();
+      final IComponent[] existingProps = pem.getProfil().getPointProperties();
+
+      final IProfilChange[] changes = new IProfilChange[pointsToAdd];
+      try
+      {
+        final LinkedList<IRecord> existingPoints = pem.getProfil().getPoints();
+        final IRecord targetPkt = existingPoints.size() == 0 ? null : existingPoints.getFirst();
+        final double deltaX = targetPkt == null ? 0.0 : (Double) points.getLast().getValue( ProfilObsHelper.getPropertyFromId( points.getLast(), IWspmConstants.POINT_PROPERTY_BREITE ) )
+            - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_BREITE ) );
+        final double deltaY = targetPkt == null ? 0.0 : (Double) points.getLast().getValue( ProfilObsHelper.getPropertyFromId( points.getLast(), IWspmConstants.POINT_PROPERTY_HOEHE ) )
+            - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+        int i = pointsToAdd - 1;
+        for( final IRecord point : points )
+        {
+
+          final IRecord newPoint = targetPkt == null ? pem.getProfil().createProfilPoint() : targetPkt.cloneRecord();
+          newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_BREITE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) )
+              - deltaX );
+          newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) )
+              - deltaY );
+          for( final IComponent prop : existingProps )
+          {
+            if( pem.getProfil().hasPointProperty( prop ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) && !IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() ) )
+            {
+              final IComponent[] components = point.getOwner().getComponents();
+
+              if( ArrayUtils.contains( components, point ) )
+                newPoint.setValue( prop, point.getValue( prop ) );
+            }
+          }
+          changes[i--] = new PointAdd( pem.getProfil(), null, newPoint );
+        }
+      }
+      catch( final Exception e )
+      {
+        // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
+        changes[0] = null;
+      }
+      final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes, false );
+      new ProfilOperationJob( operation ).schedule();
+    }
     // final int pointsCount = points.getPoints().size();
     //
     // final Collection<POINT_PROPERTY> existingProps = pem.getProfil().getPointProperties( false );

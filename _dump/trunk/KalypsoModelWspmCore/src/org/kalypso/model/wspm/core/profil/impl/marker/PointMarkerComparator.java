@@ -43,24 +43,23 @@ package org.kalypso.model.wspm.core.profil.impl.marker;
 import java.util.Comparator;
 
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.observation.result.IComponent;
 
 public class PointMarkerComparator implements Comparator<IProfilPointMarker>
 {
-  private String m_property;
-public PointMarkerComparator (final String propertyToCompare)
-{
-  m_property = propertyToCompare;
-}
-  public int compare( IProfilPointMarker o1, IProfilPointMarker o2 )
+  private final IComponent m_property;
+
+  public PointMarkerComparator( final IComponent propertyToCompare )
   {
-    if( o1.getPoint().getValueFor(m_property) > o2.getPoint().getValueFor(m_property) )
-    {
+    m_property = propertyToCompare;
+  }
+
+  public int compare( final IProfilPointMarker o1, final IProfilPointMarker o2 )
+  {
+    if( (Double) o1.getPoint().getValue( m_property ) > (Double) o2.getPoint().getValue( m_property ) )
       return 1;
-    }
-    if( o1.getPoint().getValueFor(m_property) < o2.getPoint().getValueFor(m_property) )
-    {
+    if( (Double) o1.getPoint().getValue( m_property ) < (Double) o2.getPoint().getValue( m_property ) )
       return -1;
-    }
     return 0;
   }
 }

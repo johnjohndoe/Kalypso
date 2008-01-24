@@ -55,12 +55,12 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -90,12 +90,13 @@ public class PropertyEditWizard extends Wizard
 
   final private CommandableWorkspace m_workspace;
 
-  public PropertyEditWizard( CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
+  public PropertyEditWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
   {
     m_pem = null;
     m_workspace = workspace;
     m_profiles = profiles;
     m_selectedProfiles = selection;
+
     m_profiletype = (String) profiles.get( 0 ).getProperty( ProfileFeatureFactory.QNAME_TYPE );
     setWindowTitle( "Profileigenschaften zuweisen" );
     setNeedsProgressMonitor( true );
@@ -128,25 +129,25 @@ public class PropertyEditWizard extends Wizard
       addPage( m_profileChooserPage );
 
     final IProfilPointPropertyProvider[] ppps = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profiletype );
-    final List<IProfilPointProperty> properties = new ArrayList<IProfilPointProperty>();
+    final List<IComponent> properties = new ArrayList<IComponent>();
     for( final IProfilPointPropertyProvider ppp : ppps )
     {
-      for( final String property : ppp.getPointProperties() )
+      for( final IComponent property : ppp.getPointProperties() )
       {
-        properties.add( ppp.getPointProperty( property ) );
+        properties.add( property );
       }
     }
-    m_propertyChooserPage = new ArrayChooserPage( properties.toArray( new IProfilPointProperty[0] ), new Object[0], new Object[0], 1, "profilePropertiesChooserPage", "Profileigenschaften auswählen", null );
+    m_propertyChooserPage = new ArrayChooserPage( properties.toArray( new IComponent[0] ), new Object[0], new Object[0], 1, "profilePropertiesChooserPage", "Profileigenschaften auswählen", null );
     m_propertyChooserPage.setLabelProvider( new LabelProvider()
     {
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
-        if( element instanceof IProfilPointProperty )
-          return ((IProfilPointProperty) element).getLabel();
+        if( element instanceof IComponent )
+          return ((IComponent) element).getName();
         else
           return element.toString();
       }
@@ -175,7 +176,7 @@ public class PropertyEditWizard extends Wizard
     final IProfil[] choosenProfiles = new IProfil[features.length];
     for( int i = 0; i < features.length; i++ )
     {
-      final WspmProfile wspmProfile = new WspmProfile( (Feature)features[i] );
+      final WspmProfile wspmProfile = new WspmProfile( (Feature) features[i] );
       choosenProfiles[i] = wspmProfile.getProfil();
     }
     return choosenProfiles;
@@ -205,22 +206,22 @@ public class PropertyEditWizard extends Wizard
             change.doChange( null );
           }
         }
-        catch( IllegalProfileOperationException e )
+        catch( final IllegalProfileOperationException e )
         {
           KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( Status.ERROR, KalypsoModelWspmUIPlugin.getDefault().id(), e.getMessage() ) );
         }
-        featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature)profilFeatures[i] ) ) );
+        featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
       }
     }
     if( m_pem == null )
     {
-      GMLWorkspace workspace = m_profiles.get( 0 ).getWorkspace();
+      final GMLWorkspace workspace = m_profiles.get( 0 ).getWorkspace();
       final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[0] ) );
       try
       {
         m_workspace.postCommand( command );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();

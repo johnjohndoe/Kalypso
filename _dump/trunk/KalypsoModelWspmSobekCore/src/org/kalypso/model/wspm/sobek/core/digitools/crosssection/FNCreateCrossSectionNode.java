@@ -61,6 +61,7 @@ import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -69,7 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author kuch
  */
-public class FNCreateCrossSectionNode extends AbstractWidget
+public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometryBuilderExtensionProvider
 {
   final static private java.awt.Cursor CURSOR_CROSSHAIR = java.awt.Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
 
@@ -83,12 +84,12 @@ public class FNCreateCrossSectionNode extends AbstractWidget
   {
     super( "Create a new Flow Network geometry", "Create a new Flow Network geometry" );
 
-    new UIJob( "loading hydraulic model workspcae" )
+    new UIJob( "loading gml workspace of hydraulic model" )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        m_snapPainter = new FNSnapPainterCreateProfileNode( SobekModelMember.getModel() );
+        m_snapPainter = new FNSnapPainterCreateProfileNode( SobekModelMember.getModel(), FNCreateCrossSectionNode.this );
         return Status.OK_STATUS;
       }
     }.schedule();
@@ -223,5 +224,23 @@ public class FNCreateCrossSectionNode extends AbstractWidget
     }
 
     super.finish();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#getTooltip()
+   */
+  public String[] getTooltip( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#setCursor(java.awt.Cursor)
+   */
+  public void setCursor( final Cursor cursor )
+  {
+    // TODO Auto-generated method stub
+
   }
 }

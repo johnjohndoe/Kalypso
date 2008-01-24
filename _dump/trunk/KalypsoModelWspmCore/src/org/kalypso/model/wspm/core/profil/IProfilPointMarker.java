@@ -40,60 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+
+/**
+ * @author Dirk Kuch
+ */
 public interface IProfilPointMarker
 {
-  /**
-   * @return the stored objectValue belongs to this key
-   * @throws IllegalArgumentException
-   *           if the key is not supported
-   * @see setValueFor(key,value)
-   */
-  public Object getValueFor( final String key ) throws IllegalArgumentException;
+
+  IComponent getId( );
 
   /**
-   * @throws IllegalArgumentException
-   *           if the key is not supported
-   *           <p>
-   *           otherwise overwrite the stored object with the given value
+   * @return returns mapped profile point (type of IRecord)
    */
-  public void setValueFor( final String key, final Object value ) throws IllegalArgumentException;
+  IRecord getPoint( );
 
   /**
-   * @return all the keys supported by this pointMarker
+   * @param newPosition
+   *            new profile point
+   * @return returns old mapped profile point
    */
-  public String[] getKeys( );
+  IRecord setPoint( IRecord newPosition );
 
-  /**
-   * @return the ProfilePoint captured by this pointMarker
-   * @see {@link IProfil.getPointMarkerFor(point)}
-   */
-  public IProfilPoint getPoint( );
+  void setValue( Object newValue );
 
-  /**
-   * capture the profilePoint
-   * 
-   * @return the profilePoint captured before, may be null
-   * @see {@link IProfil.getPointMarkerFor(point)}
-   */
-  public IProfilPoint setPoint( final IProfilPoint point );
+  Object getValue( );
 
-  /**
-   * Muss dictionary id sein (und zwar see:ItemDefinition's)!
-   */
-  public String getMarkerId( );
+  /* Interpreted ui values to obtain backward compability */
+  public Object getIntepretedValue( );
 
-  /**
-   * Returns the value of this marker as it should be written into gml. Must fit to the type defined in the component
-   * ItemDefinition
-   * 
-   * @return May not return <code>null</code>.
-   * @see #getMarkerId()
-   */
-  public Object getGmlObject( );
-
-  /**
-   * @return a friendly name for this PointMarker should be the same used in the dictonary
-   */
-  public String getMarkerLabel( );
+  public void setInterpretedValue( Object value );
 
 }

@@ -1,0 +1,322 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraße 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.wspm.core.profil.impl;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.metadata.MetadataObject;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.observation.phenomenon.IPhenomenon;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+/**
+ * @author kimwerner Basisprofil mit Events, nur die Implementierung von IProfil
+ */
+public abstract class AbstractProfil implements IProfil
+{
+  private final String m_type;
+
+  private double m_station;
+
+  private IPhenomenon m_phenomenon;
+
+  private IRecord m_activePoint;
+
+  private IComponent m_activePointProperty;
+
+  private TupleResult m_result;
+
+  private String m_name;
+
+  private String m_description;
+
+  private List<MetadataObject> m_metaDataList;
+
+  private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
+
+  public AbstractProfil( final String type )
+  {
+    m_type = type;
+  }
+
+  public boolean addPoint( final IRecord point )
+  {
+    return getResult().add( point );
+  }
+
+  /**
+   * @return ein Array aller von der eigefügten PointProperty abhängigen pointProperties
+   * @see org.kalypso.model.wspm.core.profil.IProfil#addPointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
+   */
+  public void addPointProperty( final IComponent pointProperty )
+  {
+    if( pointProperty == null )
+      throw new IllegalStateException( "property can't be null!" );
+
+    getResult().addComponent( pointProperty );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#createProfilPoint()
+   */
+  public IRecord createProfilPoint( )
+  {
+    return m_result.createRecord();
+  }
+
+  /**
+   * @return Returns the activePoint.
+   */
+  public IRecord getActivePoint( )
+  {
+    return m_activePoint;
+  }
+
+  public IComponent getActiveProperty( )
+  {
+    return m_activePointProperty;
+  }
+
+  public String getComment( )
+  {
+    return getDescription();
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#getDescription()
+   */
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#getMetadataList()
+   */
+  public List<MetadataObject> getMetadataList( )
+  {
+    return m_metaDataList;
+  }
+
+  public String getName( )
+  {
+    return m_name;
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#getPhenomenon()
+   */
+  public IPhenomenon getPhenomenon( )
+  {
+    return m_phenomenon;
+  }
+
+  public IComponent[] getPointProperties( )
+  {
+    final TupleResult result = getResult();
+    return result.getComponents();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getPoints()
+   */
+  public LinkedList<IRecord> getPoints( )
+  {
+    return ProfilObsHelper.toProfilPoints( getResult() );
+  }
+
+  public Object getProperty( final Object key )
+  {
+    return m_additionalProfileSettings.get( key );
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#getResult()
+   */
+  public TupleResult getResult( )
+  {
+    return m_result;
+  }
+
+  public double getStation( )
+  {
+    return m_station;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getType()
+   */
+  public String getType( )
+  {
+    return m_type;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removePoint(org.kalypso.model.wspm.core.profilinterface.IPoint)
+   */
+  public boolean removePoint( final IRecord point )
+  {
+    throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removePointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
+   */
+  public boolean removePointProperty( final IComponent pointProperty )
+  {
+    return getResult().removeComponent( pointProperty );
+  }
+
+  /**
+   * @throws IllegalProfileOperationException
+   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removeBuilding()
+   */
+  public IProfileObject removeProfileObject( )
+  {
+    throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removeProperty(java.lang.Object)
+   */
+  public Object removeProperty( final Object key )
+  {
+    throw (new NotImplementedException());
+  }
+
+  public void setActivePoint( final IRecord point )
+  {
+    m_activePoint = point;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setActiveproperty(org.kalypso.model.wspm.core.profil.IComponent)
+   */
+  public void setActivePointProperty( final IComponent pointProperty )
+  {
+    m_activePointProperty = pointProperty;
+  }
+
+  public void setComment( final String comment )
+  {
+    setDescription( comment );
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#setDescription(java.lang.String)
+   */
+  public void setDescription( final String desc )
+  {
+    m_description = desc;
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#setMedataList(java.util.List)
+   */
+  public void setMedataList( final List<MetadataObject> metaDataList )
+  {
+    m_metaDataList = metaDataList;
+
+  }
+
+  public void setName( final String name )
+  {
+    m_name = name;
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#setPhenomenon(org.kalypso.observation.phenomenon.IPhenomenon)
+   */
+  public void setPhenomenon( final IPhenomenon phenomenon )
+  {
+    m_phenomenon = phenomenon;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setProperty(java.lang.Object, java.lang.Object)
+   */
+  public void setProperty( final Object key, final Object value )
+  {
+    m_additionalProfileSettings.put( key, value );
+  }
+
+  /**
+   * @see org.kalypso.observation.IObservation#setResult(java.lang.Object)
+   */
+  public void setResult( final TupleResult result )
+  {
+    m_result = result;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setStation(double)
+   */
+  public void setStation( final double station )
+  {
+    m_station = station;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
+   */
+  public boolean hasPointProperty( final IComponent property )
+  {
+    if( property == null )
+      return false;
+
+    final IComponent[] components = getResult().getComponents();
+    if( ArrayUtils.contains( components, property ) )
+      return true;
+
+    return false;
+  }
+
+}

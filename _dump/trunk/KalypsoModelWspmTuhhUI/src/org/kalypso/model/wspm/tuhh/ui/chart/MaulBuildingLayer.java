@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
@@ -60,7 +61,7 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
 {
   public MaulBuildingLayer( final ProfilChartView pcv )
   {
-    super(IWspmTuhhConstants.LAYER_MAUL,"Maul-Durchlaﬂ",pcv );
+    super( IWspmTuhhConstants.LAYER_MAUL, "Maul-Durchlaﬂ", pcv );
   }
 
   /**
@@ -73,7 +74,7 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
     {
       return createOval();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return new Rectangle2D.Double( Double.NaN, Double.NaN, Double.NaN, Double.NaN );
     }
@@ -118,23 +119,22 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
   private Rectangle2D createOval( )
   {
     final IProfileObject building = getBuilding();
-    final double bezX = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
-    final double bezY = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
-    final double durchmesser = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+    final double bezX = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
+    final double bezY = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
+    final double durchmesser = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
     final Point2D topLeft = new Point2D.Double( bezX - durchmesser / 2, bezY );
     final double w = durchmesser;
-    final double h = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE );
+    final double h = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
     final Rectangle2D oval = new Rectangle2D.Double( topLeft.getX(), topLeft.getY(), w, h );
     return oval;
   }
 
-  
   /**
    * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point,
    *      java.lang.Object)
    */
   @Override
-  protected void editProfil( Point point, Object data )
+  protected void editProfil( final Point point, final Object data )
   {
 
   }
@@ -144,7 +144,7 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
    *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
 
   }

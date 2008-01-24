@@ -49,26 +49,34 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 public class WehrRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( (profil == null) || (profil.getProfileObject() == null) || (!IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( profil.getProfileObject().getId() )) )
+    // TODO IProfileObjects now returned as list from IProfile
+    final IProfileObject[] profileObjects = profil.getProfileObject();
+    IProfileObject building = null;
+    if( profileObjects.length > 0 )
+      building = profileObjects[0];
+
+    if( (profil == null) || (building == null) || (!IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() )) )
       return;
     try
     {
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      final IProfilPoint leftP = validateLimits( profil, collector, pluginId );
+      final IRecord leftP = validateLimits( profil, collector, pluginId );
       validateProfilLines( profil, collector, pluginId );
       validateDevider( profil, collector, pluginId );
       validateParams( profil, collector, pluginId, leftP );
@@ -82,92 +90,98 @@ public class WehrRule extends AbstractValidatorRule
 
   private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
-    final IProfilPointMarker[] wehrDevider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    final IProfilPointMarker[] wehrDevider = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     if( wehrDevider.length < 1 )
       return;
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    final LinkedList<IRecord> points = profil.getPoints();
     final int index1 = points.indexOf( wehrDevider[0].getPoint() );
     final int index2 = points.indexOf( wehrDevider[wehrDevider.length - 1].getPoint() );
     final int index3 = points.indexOf( deviders[0].getPoint() );
     final int index4 = points.indexOf( deviders[deviders.length - 1].getPoint() );
     if( index1 < index3 )
     {
-      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_WEHR, index3 ) } );
+      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_WEHR ), index3 ) } );
     }
     if( index2 > index4 )
     {
-      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( wehrDevider.length - 1, IWspmTuhhConstants.MARKER_TYP_WEHR, index4 ) } );
+      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( wehrDevider.length - 1, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_WEHR ), index4 ) } );
     }
   }
 
-  private void validateParams( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId, final IProfilPoint p ) throws Exception
+  private void validateParams( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId, final IRecord p ) throws Exception
   {
 
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
-    final IProfileObject profileObject = profil.getProfileObject();
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_WEHR ) );
 
-    final Double beiwert = (Double) profileObject.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
-    IProfilPoint point = (beiwert == null || beiwert == 0.0) ? p : null;
+    // TODO IProfileObjects now returned as list from IProfile
+    final IProfileObject[] profileObjects = profil.getProfileObject();
+    IProfileObject building = null;
+    if( profileObjects.length > 0 )
+      building = profileObjects[0];
+
+    final Double beiwert = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    IRecord point = (beiwert == null || beiwert == 0.0) ? p : null;
 
     for( final IProfilPointMarker devider : deviders )
     {
-      final double value = devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT ) == null ? 0.0 : (Double) devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT );
+      final double value = devider.getValue() == null ? 0.0 : (Double) devider.getValue();
       if( value == 0.0 )
       {
         point = devider.getPoint();
         break;
       }
     }
-    for( final String property : profileObject.getObjectProperties() )
+    for( final IComponent property : building.getObjectProperties() )
     {
-      final Object prop = profileObject.getValueFor( property );
+      final Object prop = building.getValue( property );
       if( prop instanceof Double && ((Double) prop).isNaN() )
       {
-        collector.createProfilMarker( true, "Parameter <" + profileObject.getLabelFor( property ) + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+        collector.createProfilMarker( true, "Parameter <" + property.getName() + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
         break;
       }
     }
     if( point != null )
-      collector.createProfilMarker( true, "ungültiger Kronenparameter: 0.0", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, null );
+      collector.createProfilMarker( true, "ungültiger Kronenparameter: 0.0", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
   }
 
   private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
-    final List<IProfilPoint> points = profil.getPoints();
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final List<IRecord> points = profil.getPoints();
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( deviders.length < 1 )
       return;
     final int left = points.indexOf( deviders[0].getPoint() );
     final int right = points.indexOf( deviders[deviders.length - 1].getPoint() );
     if( (left + 1) > right )
       return;
-    final List<IProfilPoint> midPoints = points.subList( left + 1, right );
-    for( final IProfilPoint point : midPoints )
+    final List<IRecord> midPoints = points.subList( left + 1, right );
+    for( final IRecord point : midPoints )
     {
-      final double h = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-      final double wk = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+      final double h = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+      final double wk = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
       if( wk < h )
       {
-        collector.createProfilMarker( true, "Wehrkante[" + String.format( FMT_BREITE, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "] unterhalb Geländeniveau", "", points.indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, null );
+        collector.createProfilMarker( true, "Wehrkante[" + String.format( FMT_BREITE, point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) )
+            + "] unterhalb Geländeniveau", "", points.indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
       }
     }
   }
 
-  private IProfilPoint validateLimits( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
+  private IRecord validateLimits( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
-    final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] devider = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( devider.length < 2 )
       return null;
-    final IProfilPoint firstPoint = devider[0].getPoint();
-    final IProfilPoint lastPoint = devider[devider.length - 1].getPoint();
-    IProfilPoint point = null;
-    final double p1H = firstPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-    final double p1OkW = firstPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    final double p2H = lastPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-    final double p2OkW = lastPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    final IRecord firstPoint = devider[0].getPoint();
+    final IRecord lastPoint = devider[devider.length - 1].getPoint();
+    IRecord point = null;
+    final double p1H = (Double) firstPoint.getValue( ProfilObsHelper.getPropertyFromId( firstPoint, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    final double p1OkW = (Double) firstPoint.getValue( ProfilObsHelper.getPropertyFromId( firstPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
+    final double p2H = (Double) lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    final double p2OkW = (Double) lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
     // final double dB = profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE ).getPrecision();
-    final double dOkW = profil.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ).getPrecision();
+    final double dOkW = ProfilObsHelper.getPrecision( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
     if( Math.abs( p1H - p1OkW ) > dOkW )
       point = firstPoint;
     if( Math.abs( p2H - p2OkW ) > dOkW )
@@ -175,7 +189,8 @@ public class WehrRule extends AbstractValidatorRule
     if( point != null )
     {
       final int index = profil.getPoints().indexOf( point );
-      collector.createProfilMarker( true, "ungültige Randbedingung [" + String.format( FMT_BREITE, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.toString(), pluginId, new IMarkerResolution2[] { new EditPointResolution( index, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) } );
+      collector.createProfilMarker( true, "ungültige Randbedingung ["
+          + String.format( FMT_BREITE, (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) + "]", "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, new IMarkerResolution2[] { new EditPointResolution( index, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) ) } );
     }
     return firstPoint;
   }

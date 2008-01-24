@@ -54,15 +54,15 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerRemove;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.WehrPanel;
@@ -72,6 +72,7 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
@@ -83,7 +84,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 {
   public WehrBuildingLayer( final ProfilChartView pcv )
   {
-    super( IWspmTuhhConstants.LAYER_WEHR, "Wehr", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, }, false, false, false );
+    super( IWspmTuhhConstants.LAYER_WEHR, "Wehr", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, } ), false, false, false );
     super.setColors( setColor( pcv.getColorRegistry() ) );
   }
 
@@ -93,18 +94,18 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     return new WehrPanel( pem, viewData );
   }
 
-  public final void editDevider( final Point point, IProfilPointMarker devider )
+  public final void editDevider( final Point point, final IProfilPointMarker devider )
   {
     final IProfilPointMarker activeDevider = devider;
 
-    final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
+    final IRecord destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
 
-    final IProfilPoint oldPos = activeDevider.getPoint();
+    final IRecord oldPos = activeDevider.getPoint();
     if( oldPos != destinationPoint )
     {
       final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfilEventManager(), true );
       operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
-      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
+      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
       new ProfilOperationJob( operation ).schedule();
     }
   }
@@ -123,31 +124,33 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 
   private EditInfo getDeviderInfo( final Point mousePoint )
   {
-    if(!getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR   ))
+    if( !getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
       return null;
     final AxisRange valueRange = getValueRange();
     final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
-    final int top = valueRange.getScreenTo() + valueRange.getGapSpace() ;
-    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    final int top = valueRange.getScreenTo() + valueRange.getGapSpace();
+    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     int fieldNr = 0;
-    Double leftValue = (Double)getProfil().getProfileObject().getValueFor(  IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+
+    // TODO IProfileObjects now returned as list from IProfile
+    Double leftValue = (Double) getProfil().getProfileObject()[0].getValue( ProfilObsHelper.getPropertyFromId( getProfil().getProfileObject()[0], IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
     for( final IProfilPointMarker devider : deviders )
     {
 
-      final IProfilPoint deviderPos = devider.getPoint();
-      final double breite = deviderPos.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-      final Point point = logical2screen( new Point2D.Double( breite, deviderPos.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) );
+      final IRecord deviderPos = devider.getPoint();
+      final double breite = (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final Point point = logical2screen( new Point2D.Double( breite, (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) ) );
       final Rectangle devRect = new Rectangle( point.x - 5, top - 5, 10, bottom - top + 10 );
-      final Double rightValue = (Double)devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT );
+      final Double rightValue = (Double) devider.getValue();
       if( devRect.contains( mousePoint.x, mousePoint.y ) )
       {
-        final String text = String.format( "%s%n%s: %10.4f%n%s: %10.4f", new Object[] { "Wehrparameter",  "Feld " + Integer.toString( fieldNr + 1 ),
-            leftValue,"Feld "+Integer.toString( fieldNr + 2 ),rightValue } );
+        final String text = String.format( "%s%n%s: %10.4f%n%s: %10.4f", new Object[] { "Wehrparameter", "Feld " + Integer.toString( fieldNr + 1 ), leftValue,
+            "Feld " + Integer.toString( fieldNr + 2 ), rightValue } );
 
         return new EditInfo( this, devRect, devider, text );
       }
       fieldNr++;
-      leftValue=rightValue;
+      leftValue = rightValue;
     }
     return null;
   }
@@ -156,36 +159,32 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHoverInfo( Point mousePos )
+  public EditInfo getHoverInfo( final Point mousePos )
   {
     final EditInfo info = super.getHoverInfo( mousePos );
     return info == null ? getDeviderInfo( mousePos ) : info;
   }
 
   @Override
-  public List<IProfilPoint> getPoints( )
+  public List<IRecord> getPoints( )
   {
-    return ProfilUtil.getInnerPoints( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    return ProfilUtil.getInnerPoints( getProfil(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
   }
 
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractPolyLineLayer#isPointVisible(org.kalypso.model.wspm.core.profil.IProfilPoint)
    */
   @Override
-  protected boolean isPointVisible( IProfilPoint point )
+  protected boolean isPointVisible( final IRecord point )
   {
     final IProfil profil = getProfil();
-    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final LinkedList<IRecord> points = profil.getPoints();
     final int i = points.indexOf( point );
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( i < points.indexOf( deviders[0].getPoint() ) )
-    {
       return false;
-    }
     if( i > points.indexOf( deviders[deviders.length - 1].getPoint() ) )
-    {
       return false;
-    }
     return true;
   }
 
@@ -194,7 +193,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
    *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
   }
 
@@ -202,7 +201,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
   @Override
-  public void paint( GCWrapper gc )
+  public void paint( final GCWrapper gc )
   {
     super.paint( gc );
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
@@ -211,13 +210,13 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 
   private void paintDevider( final GCWrapper gc )
   {
-    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
-    int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
-    for( IProfilPointMarker devider : deviders )
+    final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
+    for( final IProfilPointMarker devider : deviders )
     {
-      final IProfilPoint point = devider.getPoint();
-      final double leftvalue = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+      final IRecord point = devider.getPoint();
+      final double leftvalue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
       final int left = (int) getDomainRange().logical2screen( leftvalue );
       gc.drawLine( left, top, left, bottom );
     }
@@ -229,7 +228,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
    *      org.eclipse.swt.graphics.Point, java.lang.Object)
    */
   @Override
-  public void paintDrag( GCWrapper gc, Point editing, Object data )
+  public void paintDrag( final GCWrapper gc, final Point editing, final Object data )
   {
     if( data instanceof IProfilPointMarker )
     {
@@ -240,29 +239,29 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 
   }
 
-  private void paintDragDevider( GCWrapper gc, Point editing )
+  private void paintDragDevider( final GCWrapper gc, final Point editing )
   {
     gc.setLineStyle( SWT.LINE_DOT );
     gc.setLineWidth( 1 );
 
     final AxisRange valueRange = getValueRange();
     final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
-    int top = valueRange.getScreenTo() + valueRange.getGapSpace();
+    final int top = valueRange.getScreenTo() + valueRange.getGapSpace();
 
     try
     {
-      final IProfilPoint destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( editing ).getX() );
-      final Point destP = logical2screen( new Point2D.Double( destinationPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ), destinationPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) );
+      final IRecord destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( editing ).getX() );
+      final Point destP = logical2screen( new Point2D.Double( (Double) destinationPoint.getValue( ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ), (Double) destinationPoint.getValue( ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) ) );
       gc.drawRectangle( destP.x - 5, top - 5, 10, bottom - top + 10 );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
   }
 
   @Override
-  public void paintLegend( GCWrapper gc )
+  public void paintLegend( final GCWrapper gc )
   {
     final Rectangle clipping = gc.getClipping();
 
@@ -287,13 +286,13 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   {
     final IProfilEventManager pem = getProfilEventManager();
     final IProfil profile = pem.getProfil();
-    final IProfilPointMarker[] deviders = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    final IProfilPointMarker[] deviders = profile.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     final IProfilChange[] changes = new IProfilChange[deviders.length + 2];
-    changes[0] = new ProfileObjectSet( profile, (IProfileObject) null );
-    changes[1] = new PointPropertyRemove( profile, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    changes[0] = new ProfileObjectSet( profile, new IProfileObject[] {} );
+    changes[1] = new PointPropertyRemove( profile, ProfilObsHelper.getPropertyFromId( profile, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
     for( int i = 0; i < deviders.length; i++ )
     {
-      changes[i + 2] = new PointMarkerRemove( profile, deviders[i] );
+      changes[i + 2] = new PointMarkerEdit( deviders[i], null );
     }
     final ProfilOperation operation = new ProfilOperation( "Wehr entfernen", pem, changes, true );
     new ProfilOperationJob( operation ).schedule();

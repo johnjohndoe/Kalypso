@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.core.profil.filter;
 
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -51,10 +51,10 @@ public interface IProfilePointFilter extends IExecutableExtension
 {
   public String getId( );
 
-  public String getName();
+  public String getName( );
 
-  public String getDescription();
-  
-  public boolean accept( final IProfil profil, final IProfilPoint point );
+  public String getDescription( );
+
+  public boolean accept( final IProfil profil, final IRecord point );
 
 }

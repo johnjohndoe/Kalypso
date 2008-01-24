@@ -49,8 +49,8 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.AbstractProfilDurchlass;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author belger
@@ -59,23 +59,29 @@ public class DurchlassRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    final IProfileObject profileObject = profil.getProfileObject();
-    if( (profil == null) || (profileObject == null) || (!(profileObject instanceof AbstractProfilDurchlass)) )
+
+    // TODO IProfileObjects now returned as list from IProfile
+    final IProfileObject[] profileObjects = profil.getProfileObject();
+    IProfileObject building = null;
+    if( profileObjects.length > 0 )
+      building = profileObjects[0];
+
+    if( (profil == null) || (building == null) || (!(building instanceof IProfileObject)) )
       return;
 
     try
     {
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      for( String property : profileObject.getObjectProperties() )
+      for( final IComponent property : building.getObjectProperties() )
       {
-        if( ((Double)profileObject.getValueFor( property )).isNaN() )
+        if( ((Double) building.getValue( property )).isNaN() )
         {
-          collector.createProfilMarker( true, "Parameter <" + profileObject.getLabelFor( property ) + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+          collector.createProfilMarker( true, "Parameter <" + property.getName() + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
           break;
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );

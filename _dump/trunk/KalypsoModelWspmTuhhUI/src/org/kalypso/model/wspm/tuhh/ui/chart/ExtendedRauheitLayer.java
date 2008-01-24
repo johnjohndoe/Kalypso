@@ -54,10 +54,10 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
+import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
@@ -94,13 +95,13 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   public Rectangle2D getBounds( )
   {
 
-    final List<IProfilPoint> points = m_pem.getProfil().getPoints();
+    final List<IRecord> points = m_pem.getProfil().getPoints();
     Rectangle2D bounds = null;
-    for( final IProfilPoint p : points )
+    for( final IRecord p : points )
     {
-      final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+      final double x = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
 
-      final double rauheit = p.getValueFor( m_rauheit );
+      final double rauheit = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, m_rauheit ) );
       final Rectangle2D area = new Rectangle2D.Double( x, rauheit, 0, 0 );
 
       if( bounds == null )
@@ -116,22 +117,22 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractRauheitLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
 
-  public void paint( GCWrapper gc )
+  public void paint( final GCWrapper gc )
   {
 
     final Color background = gc.getBackground();
     final IProfil profil = getProfil();
     if( profil == null )
       return;
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-    IProfilPoint lastP = null;
-    for( final IProfilPoint point : points )
+    final LinkedList<IRecord> points = profil.getPoints();
+    IRecord lastP = null;
+    for( final IRecord point : points )
     {
       if( lastP != null )
       {
-        final double x1 = lastP.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-        final double x2 = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-        final double y2 = lastP.getValueFor( m_rauheit );
+        final double x1 = (Double) lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+        final double x2 = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+        final double y2 = (Double) lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, m_rauheit ) );
         final Rectangle box = logical2screen( new Rectangle2D.Double( x1, 0.0, x2 - x1, y2 ) );
         box.width += 1;
         fillRectangle( gc, box );
@@ -145,12 +146,12 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
    * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.AbstractProfilChartLayer#setActivePoint(java.lang.Object)
    */
   @Override
-  public void setActivePoint( Object data )
+  public void setActivePoint( final Object data )
   {
     if( data instanceof EditData )
     {
       final EditData editData = (EditData) data;
-      final IProfilPoint activePoint = getProfil().getPoints().get( editData.getIndex() );
+      final IRecord activePoint = getProfil().getPoints().get( editData.getIndex() );
       NullProgressProfilOperation.execute( m_pem, new ActiveObjectEdit( getProfil(), activePoint, null ) );
     }
   }
@@ -160,14 +161,14 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
 
     if( hint.isPointValuesChanged() )
     {
       final AxisRange valueRange = getValueRange();
-      final double maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), m_rauheit );
-      final double minProfilValue = ProfilUtil.getMinValueFor( getProfil(), m_rauheit );
+      final double maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), ProfilObsHelper.getPropertyFromId( getProfil(), m_rauheit ) );
+      final double minProfilValue = ProfilUtil.getMinValueFor( getProfil(), ProfilObsHelper.getPropertyFromId( getProfil(), m_rauheit ) );
       if( Math.abs( maxProfilValue - valueRange.getLogicalTo() ) > 0.1 || minProfilValue < valueRange.getLogicalFrom() )
         valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
     }
@@ -192,11 +193,11 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractRauheitLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHoverInfo( Point point )
+  public EditInfo getHoverInfo( final Point point )
   {
 
     final IProfil profil = getProfil();
-    final Point2D[] points = ProfilUtil.getPoints2D( profil, m_rauheit );
+    final Point2D[] points = ProfilUtil.getPoints2D( profil, ProfilObsHelper.getPropertyFromId( profil, m_rauheit ) );
     if( points == null || points.length < 2 )
       return null;
     Rectangle hover = null;
@@ -210,7 +211,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
       if( hover.contains( point ) )
       {
         final String text = m_rauheit == IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ? "kst" : "ks";
-        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, m_rauheit ), String.format( "%.4f[" + text + "]", points[i].getY() ) );
+        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, ProfilObsHelper.getPropertyFromId( profil, m_rauheit ) ), String.format( "%.4f[" + text + "]", points[i].getY() ) );
       }
     }
     return null;
@@ -221,7 +222,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
    */
   public void removeYourself( )
   {
-    final IProfilChange change = new PointPropertyRemove( m_pem.getProfil(), m_rauheit );
+    final IProfilChange change = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), m_rauheit ) );
     final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_pem, change, true );
     new ProfilOperationJob( operation ).schedule();
   }

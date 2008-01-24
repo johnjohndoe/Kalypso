@@ -43,33 +43,22 @@ package org.kalypso.model.wspm.core.profil.changes;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 
 public class ProfileObjectSet implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final IProfileObject m_object;
-
-  private final String m_objectId;
+  private final IProfileObject[] m_object;
 
   /**
    * @param profil
    * @param building
-   *          maybe null to remove building
+   *            maybe null to remove building
    */
-  public ProfileObjectSet( final IProfil profil, final IProfileObject profileObject )
+  public ProfileObjectSet( final IProfil profil, final IProfileObject[] profileObjects )
   {
     m_profil = profil;
-    m_object = profileObject;
-    m_objectId = "null";
-  }
-
-  public ProfileObjectSet( final IProfil profil, final String objectId )
-  {
-    m_profil = profil;
-    m_object = null;
-    m_objectId = objectId;
+    m_object = profileObjects;
   }
 
   public IProfilChange doChange( final ProfilChangeHint hint )
@@ -79,19 +68,10 @@ public class ProfileObjectSet implements IProfilChange
     if( hint != null )
       hint.setPointPropertiesChanged();
 
-    final IProfileObject oldObject = m_profil.getProfileObject();
-    if( m_object != null  )
-      m_profil.setProfileObject( m_object );
-    else if ( m_objectId == "null")
-      m_profil.removeProfileObject();
-    else
-    {
-      final IProfileObjectProvider pop = m_profil.getObjectProviderFor( m_objectId );
-      final IProfileObject object = pop == null ? null : pop.createProfileObject( m_objectId );
-      if( object == null )
-        return new IllegalChange( m_objectId + " wird nicht unterstützt.",this );
-      m_profil.setProfileObject( object );
-    }
+    final IProfileObject[] oldObject = m_profil.getProfileObject();
+    m_profil.setProfileObject( m_object );
+
+    // TODO list implementation of IProfileObject
     return new ProfileObjectSet( m_profil, oldObject );
   }
 
@@ -100,7 +80,7 @@ public class ProfileObjectSet implements IProfilChange
    */
   public Object[] getObjects( )
   {
-    return new Object[]{m_object};
+    return new Object[] { m_object };
   }
 
   /**
@@ -108,8 +88,7 @@ public class ProfileObjectSet implements IProfilChange
    */
   public String getInfo( )
   {
-
-    return m_objectId;
+    return getClass().getName();
   }
 
   /**

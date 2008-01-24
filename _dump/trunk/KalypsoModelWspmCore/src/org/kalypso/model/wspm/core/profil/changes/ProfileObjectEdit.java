@@ -42,17 +42,17 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.observation.result.IComponent;
 
 public class ProfileObjectEdit implements IProfilChange
 {
   private final IProfileObject m_object;
 
-  private final String m_property;
+  private final IComponent m_property;
 
   private final Object m_newValue;
 
-  public ProfileObjectEdit( final IProfileObject profileObject, final String key,
-      final Object newValue )
+  public ProfileObjectEdit( final IProfileObject profileObject, final IComponent key, final Object newValue )
   {
     m_object = profileObject;
     m_property = key;
@@ -65,9 +65,10 @@ public class ProfileObjectEdit implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    if (hint!=null) hint.setObjectDataChanged();
-    
-    final Object oldValue = m_object.getValueFor( m_property );
+    if( hint != null )
+      hint.setObjectDataChanged();
+
+    final Object oldValue = m_object.getValue( m_property );
     m_object.setValue( m_property, m_newValue );
     return new ProfileObjectEdit( m_object, m_property, oldValue );
   }
@@ -77,7 +78,7 @@ public class ProfileObjectEdit implements IProfilChange
    */
   public Object[] getObjects( )
   {
-       return new Object[]{m_object, m_property};
+    return new Object[] { m_object, m_property };
   }
 
   /**
@@ -85,7 +86,7 @@ public class ProfileObjectEdit implements IProfilChange
    */
   public String getInfo( )
   {
-       return null;
+    return null;
   }
 
   /**
@@ -93,8 +94,7 @@ public class ProfileObjectEdit implements IProfilChange
    */
   public Double getValue( )
   {
-        return null;
+    return null;
   }
 
- 
 }

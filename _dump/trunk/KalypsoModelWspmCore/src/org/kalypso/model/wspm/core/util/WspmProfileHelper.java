@@ -43,15 +43,19 @@ package org.kalypso.model.wspm.core.util;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.observation.result.Component;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
@@ -96,16 +100,16 @@ public class WspmProfileHelper
    *            one).
    * @return The width (X-Direction) of the geo point projected on the profile.
    */
-  public static Double getWidthPosition( GM_Point geoPoint, IProfil profile, String srsName ) throws Exception
+  public static Double getWidthPosition( final GM_Point geoPoint, final IProfil profile, String srsName ) throws Exception
   {
     /* List for storing points of the profile, which have a geo reference. */
-    LinkedList<IProfilPoint> geoReferencedPoints = new LinkedList<IProfilPoint>();
+    final LinkedList<IRecord> geoReferencedPoints = new LinkedList<IRecord>();
 
-    LinkedList<IProfilPoint> points = profile.getPoints();
-    for( IProfilPoint point : points )
+    final LinkedList<IRecord> points = profile.getPoints();
+    for( final IRecord point : points )
     {
-      double rechtsWert = point.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      double hochWert = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final double rechtsWert = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+      final double hochWert = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
       if( rechtsWert > 0.0 || hochWert > 0.0 )
       {
@@ -124,44 +128,44 @@ public class WspmProfileHelper
 
     /* It is assumed that all points and values share the same coordinate system. */
     if( srsName == null )
-      srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( geoReferencedPoints.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) );
+      srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( (Double) geoReferencedPoints.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( geoReferencedPoints.get( 0 ), IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) ) );
 
-    CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
+    final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
     final CS_CoordinateSystem kalypsoCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     /* Transform geo point into the coord-system of the line. */
-    GeoTransformer transformer = new GeoTransformer( kalypsoCrs );
+    final GeoTransformer transformer = new GeoTransformer( kalypsoCrs );
     final GM_Point transformedGeoPoint = (GM_Point) transformer.transform( geoPoint );
-    Geometry comparePoint = JTSAdapter.export( transformedGeoPoint );
+    final Geometry comparePoint = JTSAdapter.export( transformedGeoPoint );
 
     double distance = Double.MAX_VALUE;
-    IProfilPoint pointOne = null;
-    IProfilPoint pointTwo = null;
+    IRecord pointOne = null;
+    IRecord pointTwo = null;
     LineSegment segment = null;
 
     /* No we have a list with fully geo referenced points of a profile. */
     for( int i = 0; i < geoReferencedPoints.size() - 1; i++ )
     {
       /* We need a line string of the to neighbour points. */
-      IProfilPoint tempPointOne = geoReferencedPoints.get( i );
-      double rechtsWertOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      double hochWertOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final IRecord tempPointOne = geoReferencedPoints.get( i );
+      final double rechtsWertOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+      final double hochWertOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
-      IProfilPoint tempPointTwo = geoReferencedPoints.get( i + 1 );
-      double rechtsWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      double hochWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final IRecord tempPointTwo = geoReferencedPoints.get( i + 1 );
+      final double rechtsWertTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+      final double hochWertTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
       /* Geo-Projection */
       final GM_Point geoPointOne = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, crs );
       final GM_Point geoPointTwo = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, crs );
 
       /* Build the line segment. */
-      Coordinate geoCoordOne = JTSAdapter.export( transformer.transform( geoPointOne ).getCentroid().getPosition() );
-      Coordinate geoCoordTwo = JTSAdapter.export( transformer.transform( geoPointTwo ).getCentroid().getPosition() );
-      LineSegment geoSegment = new LineSegment( geoCoordOne, geoCoordTwo );
+      final Coordinate geoCoordOne = JTSAdapter.export( transformer.transform( geoPointOne ).getCentroid().getPosition() );
+      final Coordinate geoCoordTwo = JTSAdapter.export( transformer.transform( geoPointTwo ).getCentroid().getPosition() );
+      final LineSegment geoSegment = new LineSegment( geoCoordOne, geoCoordTwo );
 
       /* Calculate the distance of the geo point to the line. */
-      double tempDistance = geoSegment.distance( comparePoint.getCoordinate() );
+      final double tempDistance = geoSegment.distance( comparePoint.getCoordinate() );
 
       /* If it is shorter than the last distance, remember it and the distance. */
       if( tempDistance <= distance )
@@ -176,17 +180,17 @@ public class WspmProfileHelper
     /* Now we have a segment and a distance. The two points of the segment are used to interpolate. */
 
     /* The point on the geo segment, which is closest to the comparePoint (originally geoPoint). */
-    Coordinate geoCoordinate = segment.closestPoint( comparePoint.getCoordinate() );
+    final Coordinate geoCoordinate = segment.closestPoint( comparePoint.getCoordinate() );
 
-    double geoSegmentLength = segment.getLength();
-    double toGeoPointLength = JTSUtilities.getLengthBetweenPoints( segment.getCoordinate( 0 ), geoCoordinate );
+    final double geoSegmentLength = segment.getLength();
+    final double toGeoPointLength = JTSUtilities.getLengthBetweenPoints( segment.getCoordinate( 0 ), geoCoordinate );
 
     /* Using Breite to build. */
-    final double breiteOne = pointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double breiteTwo = pointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double breiteOne = (Double) pointOne.getValue( ProfilObsHelper.getPropertyFromId( pointOne, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double breiteTwo = (Double) pointTwo.getValue( ProfilObsHelper.getPropertyFromId( pointTwo, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     /* Important: The interpolation is done here :). */
-    double toProfilePointLength = (toGeoPointLength / geoSegmentLength) * (breiteTwo - breiteOne);
+    final double toProfilePointLength = (toGeoPointLength / geoSegmentLength) * (breiteTwo - breiteOne);
 
     return breiteOne + toProfilePointLength;
   }
@@ -200,12 +204,12 @@ public class WspmProfileHelper
    *            profile
    * @return geo position as GM_Point
    */
-  public static GM_Point getGeoPosition( double width, IProfil profile ) throws Exception
+  public static GM_Point getGeoPosition( final double width, final IProfil profile ) throws Exception
   {
-    final LinkedList<IProfilPoint> geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
+    final LinkedList<IRecord> geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
 
     final String srsName = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
-    CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
+    final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
     /* If no or only one geo referenced points are found, return. */
     if( geoReferencedPoints.size() <= 1 )
       return null;
@@ -216,17 +220,17 @@ public class WspmProfileHelper
     for( int i = 0; i < geoReferencedPoints.size() - 1; i++ )
     {
       /* We need a line string of the to neighbour points. */
-      IProfilPoint tempPointOne = geoReferencedPoints.get( i );
-      double widthValueOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      double heigthValueOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-      double rechtsWertOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      double hochWertOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final IRecord tempPointOne = geoReferencedPoints.get( i );
+      final double widthValueOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double heigthValueOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      final double rechtsWertOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+      final double hochWertOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
-      IProfilPoint tempPointTwo = geoReferencedPoints.get( i + 1 );
-      double widthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      double heigthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-      double rechtsWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      double hochWertTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final IRecord tempPointTwo = geoReferencedPoints.get( i + 1 );
+      final double widthValueTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double heigthValueTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      final double rechtsWertTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+      final double hochWertTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
       /* find the right segment with the neighboring points */
       if( widthValueOne < width & widthValueTwo > width )
@@ -242,14 +246,9 @@ public class WspmProfileHelper
       }
       /* if the point is lying on the start point of the segment */
       else if( widthValueOne == width )
-      {
         return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, heigthValueOne, crs );
-      }
-      /* if the point is lying on the end point of the segment */
       else if( widthValueTwo == width )
-      {
         return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, heigthValueTwo, crs );
-      }
     }
     return null;
   }
@@ -264,35 +263,33 @@ public class WspmProfileHelper
    *            profile
    * @return The height
    */
-  public static Double getHeigthPositionByWidth( double width, IProfil profile ) throws Exception
+  public static Double getHeigthPositionByWidth( final double width, final IProfil profile ) throws Exception
   {
-    LinkedList<IProfilPoint> points = profile.getPoints();
+    final LinkedList<IRecord> points = profile.getPoints();
     if( points.size() < 1 )
       return null;
 
     for( int i = 0; i < points.size() - 1; i++ )
     {
       /* We need a line string of the to neighbour points. */
-      IProfilPoint tempPointOne = points.get( i );
-      double widthValueOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      double heigthValueOne = tempPointOne.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      final IRecord tempPointOne = points.get( i );
+      final double widthValueOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double heigthValueOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
-      IProfilPoint tempPointTwo = points.get( i + 1 );
-      double widthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      double heigthValueTwo = tempPointTwo.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      final IRecord tempPointTwo = points.get( i + 1 );
+      final double widthValueTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double heigthValueTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
       /* searching for the right segment */
       if( widthValueOne <= width & widthValueTwo >= width )
-      {
         /* calculate the heigth */
         return ((width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne)) + heigthValueOne;
-      }
 
     }
-    if( width < points.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) )
-      return points.get( 0 ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    else if( width > points.get( points.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) )
-      return points.get( points.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    if( width < (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_BREITE ) ) )
+      return (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    else if( width > (Double) points.get( points.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( points.size() - 1 ), IWspmConstants.POINT_PROPERTY_BREITE ) ) )
+      return (Double) points.get( points.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( points.size() - 1 ), IWspmConstants.POINT_PROPERTY_HOEHE ) );
     return null;
   }
 
@@ -311,29 +308,30 @@ public class WspmProfileHelper
     // IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT : null;
     // final POINT_PROPERTY ppHW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ?
     // IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT : null;
-    if( !profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) || !profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) // ignore
+    if( !profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
+        || !profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) ) // ignore
       // profile
       // without
       // geo-coordinates
       return new GM_Point[] {};
 
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-    final IProfilPoint firstPoint = points.getFirst();
-    final IProfilPoint lastPoint = points.getLast();
+    final LinkedList<IRecord> points = profil.getPoints();
+    final IRecord firstPoint = points.getFirst();
+    final IRecord lastPoint = points.getLast();
 
-    final double firstX = firstPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double firstY = firstPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final double lastX = lastPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double lastY = lastPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final double firstX = (Double) firstPoint.getValue( ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double firstY = (Double) firstPoint.getValue( ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    final double lastX = (Double) lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double lastY = (Double) lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
-    final Double[] breiteValues = ProfilUtil.getValuesFor( profil, IWspmConstants.POINT_PROPERTY_BREITE );
+    final Double[] breiteValues = ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
-    final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, IWspmConstants.POINT_PROPERTY_HOEHE ), 0.0001 );
+    final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) ), 0.0001 );
 
     /* Same for RW and HW, but filter 0-values */
-    final PolyLine rwLine = createPolyline( profil, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final PolyLine hwLine = createPolyline( profil, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final PolyLine rwLine = createPolyline( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ), ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+    final PolyLine hwLine = createPolyline( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ), ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
     final double[] intersectionXs = profilLine.intersect( wspLine );
 
@@ -362,19 +360,18 @@ public class WspmProfileHelper
     return poses;
   }
 
-  private static PolyLine createPolyline( final IProfil profil, final String xProperty, final String yProperty )
+  private static PolyLine createPolyline( final IProfil profil, final IComponent xProperty, final IComponent yProperty )
   {
-    final LinkedList<IProfilPoint> points = profil.getPoints();
+    final LinkedList<IRecord> points = profil.getPoints();
 
     final double[] xValues = new double[points.size()];
     final double[] yValues = new double[points.size()];
-    final IProfilPointProperty pp = profil.getPointProperty( yProperty );
-    final double dy = pp == null ? 0.001 : pp.getPrecision();
+    final double dy = yProperty == null ? 0.001 : ProfilObsHelper.getPrecision( yProperty );
     int count = 0;
-    for( final IProfilPoint point : points )
+    for( final IRecord point : points )
     {
-      final double x = point.getValueFor( xProperty );
-      final double y = point.getValueFor( yProperty );
+      final double x = (Double) point.getValue( xProperty );
+      final double y = (Double) point.getValue( yProperty );
 
       if( Math.abs( y ) > dy )
       {
@@ -434,48 +431,52 @@ public class WspmProfileHelper
     final double heigth1 = WspmProfileHelper.getHeigthPositionByWidth( startWidth, orgIProfil );
     final double heigth2 = WspmProfileHelper.getHeigthPositionByWidth( endWidth, orgIProfil );
 
-    final LinkedList<IProfilPoint> profilPointList = profile.getPoints();
+    final LinkedList<IRecord> profilPointList = profile.getPoints();
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
     /* set the coordinate system */
-    CS_CoordinateSystem crs = (CS_CoordinateSystem) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+    final CS_CoordinateSystem crs = (CS_CoordinateSystem) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
     tmpProfil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
 
-    tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cBreite = createPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent cHoehe = createPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final IComponent cHochwert = createPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent cRechtswert = createPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
 
-    final IProfilPoint point1 = tmpProfil.createProfilPoint();
-    final IProfilPoint point2 = tmpProfil.createProfilPoint();
+    tmpProfil.addPointProperty( cBreite );
+    tmpProfil.addPointProperty( cHoehe );
+    tmpProfil.addPointProperty( cHochwert );
+    tmpProfil.addPointProperty( cRechtswert );
+
+    final IRecord point1 = tmpProfil.createProfilPoint();
+    final IRecord point2 = tmpProfil.createProfilPoint();
 
     /* calculate the width of the intersected profile */
     // sort intersection points by width
-    point1.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, startWidth );
-    point1.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth1 );
-    point1.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint1.getX() );
-    point1.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint1.getY() );
+    point1.setValue( cBreite, startWidth );
+    point1.setValue( cHoehe, heigth1 );
+    point1.setValue( cHochwert, geoPoint1.getY() );
+    point1.setValue( cRechtswert, geoPoint1.getX() );
 
-    point2.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endWidth );
-    point2.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth2 );
-    point2.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint2.getX() );
-    point2.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint2.getY() );
+    point2.setValue( cBreite, endWidth );
+    point2.setValue( cHoehe, heigth2 );
+    point2.setValue( cHochwert, geoPoint2.getY() );
+    point2.setValue( cRechtswert, geoPoint2.getX() );
 
     tmpProfil.addPoint( point1 );
 
-    for( final IProfilPoint point : profilPointList )
+    for( final IRecord point : profilPointList )
     {
-      final double currentWidth = point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double currentWidth = (Double) point.getValue( cBreite );
       if( currentWidth > startWidth & currentWidth < endWidth )
       {
-        final IProfilPoint pt = tmpProfil.createProfilPoint();
+        final IRecord pt = tmpProfil.createProfilPoint();
 
-        final IProfilPointProperty[] properties = orgIProfil.getPointProperties();
-        for( final IProfilPointProperty property : properties )
+        final IComponent[] properties = orgIProfil.getPointProperties();
+        for( final IComponent property : properties )
         {
-          final String propertyId = property.toString();
-          final double value = point.getValueFor( propertyId );
-          pt.setValueFor( propertyId, value );
+          final Object value = point.getValue( property );
+          pt.setValue( property, value );
         }
         tmpProfil.addPoint( pt );
       }
@@ -485,5 +486,19 @@ public class WspmProfileHelper
 
     tmpProfil.setStation( orgIProfil.getStation() );
     return tmpProfil;
+  }
+
+  private final static IComponent createPointProperty( final String property )
+  {
+    if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_BREITE ), null, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_HOEHE ), null, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), null, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_HOCHWERT ), null, null );
+
+    throw new IllegalStateException( "property not defined" );
   }
 }

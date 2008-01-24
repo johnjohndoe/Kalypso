@@ -56,6 +56,8 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  * @author Gernot Belger
  */
@@ -114,12 +116,14 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
 
   public BigDecimal getBigStation( )
   {
-    return ProfileFeatureFactory.getProfileStation( getFeature() );
+// return ProfileFeatureFactory.getProfileStation( getFeature() );
+    throw (new NotImplementedException());
   }
 
   public void setBigStation( final BigDecimal bigStation )
   {
-    ProfileFeatureFactory.setProfileStation( getFeature(), bigStation );
+// ProfileFeatureFactory.setProfileStation( getFeature(), bigStation );
+    throw (new NotImplementedException());
   }
 
   public IProfil getProfil( )

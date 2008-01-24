@@ -45,7 +45,7 @@ import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -54,18 +54,18 @@ public class PointMove implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final List<IProfilPoint> m_points = new ArrayList<IProfilPoint>();
+  private final List<IRecord> m_points = new ArrayList<IRecord>();
 
   private int m_direction;
 
-  public PointMove( final IProfil profil, final IProfilPoint point, final int direction )
+  public PointMove( final IProfil profil, final IRecord point, final int direction )
   {
     m_profil = profil;
     m_points.add( point );
     m_direction = direction;
   }
 
-  public PointMove( final IProfil profil, final List<IProfilPoint> points, final int direction )
+  public PointMove( final IProfil profil, final List<IRecord> points, final int direction )
   {
     m_profil = profil;
     m_points.addAll( points );
@@ -83,7 +83,7 @@ public class PointMove implements IProfilChange
     }
     if( m_direction == 0 )
       return new PointMove( m_profil, m_points, 0 );
-    final List<IProfilPoint> points = m_profil.getPoints();
+    final List<IRecord> points = m_profil.getPoints();
     final int index = points.indexOf( m_points.get( 0 ) );
     final int newPosition = index + m_direction;
     if( newPosition < 0 || newPosition >= points.size() )

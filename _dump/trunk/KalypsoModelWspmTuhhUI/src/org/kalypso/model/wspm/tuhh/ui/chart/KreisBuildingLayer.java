@@ -50,21 +50,19 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-
 /**
  * @author kimwerner
- * 
  */
 public class KreisBuildingLayer extends AbstractBuildingLayer
 {
   public KreisBuildingLayer( final ProfilChartView pcv )
   {
-    super(IWspmTuhhConstants.LAYER_KREIS,"Kreis-Durchlaﬂ", pcv);
+    super( IWspmTuhhConstants.LAYER_KREIS, "Kreis-Durchlaﬂ", pcv );
   }
- 
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
@@ -76,10 +74,9 @@ public class KreisBuildingLayer extends AbstractBuildingLayer
     {
       return createOval();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      return new Rectangle2D.Double( Double.NaN, Double.NaN, Double.NaN,
-          Double.NaN );
+      return new Rectangle2D.Double( Double.NaN, Double.NaN, Double.NaN, Double.NaN );
     }
   }
 
@@ -90,13 +87,13 @@ public class KreisBuildingLayer extends AbstractBuildingLayer
   public void paintLegend( final GCWrapper gc )
   {
     final Rectangle clipping = gc.getClipping();
-    
+
     final Color background = gc.getBackground();
-    
+
     gc.setBackground( getColor() );
     gc.fillOval( clipping.x + 2, clipping.y + 2, clipping.width - 4, clipping.height - 4 );
     gc.drawOval( clipping.x + 2, clipping.y + 2, clipping.width - 4, clipping.height - 4 );
-    
+
     gc.setBackground( background );
   }
 
@@ -112,54 +109,50 @@ public class KreisBuildingLayer extends AbstractBuildingLayer
     final Rectangle2D oval = createOval();
 
     final Rectangle ovalScreen = logical2screen( oval );
-    gc.fillOval( ovalScreen.x, ovalScreen.y, ovalScreen.width,
-        ovalScreen.height );
- //    gc.drawOval( ovalScreen.x, ovalScreen.y, ovalScreen.width,
- //        ovalScreen.height );
+    gc.fillOval( ovalScreen.x, ovalScreen.y, ovalScreen.width, ovalScreen.height );
+    // gc.drawOval( ovalScreen.x, ovalScreen.y, ovalScreen.width,
+    // ovalScreen.height );
 
     gc.setBackground( background );
   }
 
-  private Rectangle2D createOval( ) 
+  private Rectangle2D createOval( )
   {
     final IProfileObject building = getBuilding();
-    final double bezX = (Double)building
-        .getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X );
-    final double bezY = (Double)building
-        .getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y );
-    final double durchmesser = (Double)building
-        .getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-    final Point2D topLeft = new Point2D.Double( bezX - durchmesser / 2, bezY);
+    final double bezX = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
+    final double bezY = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
+    final double durchmesser = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    final Point2D topLeft = new Point2D.Double( bezX - durchmesser / 2, bezY );
     final double w = durchmesser;
     final double h = durchmesser;
-    final Rectangle2D oval = new Rectangle2D.Double( topLeft.getX(), topLeft
-        .getY(), w, h );
+    final Rectangle2D oval = new Rectangle2D.Double( topLeft.getX(), topLeft.getY(), w, h );
     return oval;
   }
+
   @Override
   public String toString( )
   {
     return "Kreis";
   }
 
-
   /**
-   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point, java.lang.Object)
+   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point,
+   *      java.lang.Object)
    */
   @Override
-  protected void editProfil( Point point, Object data )
+  protected void editProfil( final Point point, final Object data )
   {
-    
-  }
 
+  }
 
   /**
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint, com.bce.eind.core.profil.IProfilChange[])
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
+   *      com.bce.eind.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    
+
   }
- 
+
 }

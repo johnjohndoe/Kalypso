@@ -41,24 +41,25 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 public final class PointPropertyEdit implements IProfilChange
 {
-  private final IProfilPoint[] m_points;
+  private final IRecord[] m_points;
 
-  private final String m_property;
+  private final IComponent m_property;
 
   private final Double[] m_newValues;
 
-  public PointPropertyEdit( final IProfilPoint p, final String property, final Double newValue )
+  public PointPropertyEdit( final IRecord p, final IComponent property, final Double newValue )
   {
-    m_points = new IProfilPoint[] { p };
+    m_points = new IRecord[] { p };
     m_property = property;
     m_newValues = new Double[] { newValue };
   }
 
-  public PointPropertyEdit( final IProfilPoint[] points, final String property, final Double[] newValues )
+  public PointPropertyEdit( final IRecord[] points, final IComponent property, final Double[] newValues )
   {
     m_points = points;
     m_property = property;
@@ -75,12 +76,13 @@ public final class PointPropertyEdit implements IProfilChange
       hint.setPointValuesChanged();
     final Double[] oldValues = new Double[m_points.length];
     int i = 0;
-    for( final IProfilPoint point : m_points )
+    for( final IRecord point : m_points )
     {
       if( i < oldValues.length )
       {
-        oldValues[i] = point.getValueFor( m_property );
-        point.setValueFor( m_property, i < m_newValues.length ? m_newValues[i] : Double.NaN );
+        oldValues[i] = (Double) point.getValue( m_property );
+
+        point.setValue( m_property, i < m_newValues.length ? m_newValues[i] : Double.NaN );
       }
       i++;
     }
@@ -100,7 +102,7 @@ public final class PointPropertyEdit implements IProfilChange
    */
   public String getInfo( )
   {
-    return m_property;
+    return m_property.toString();
   }
 
   /**

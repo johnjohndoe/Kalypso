@@ -45,15 +45,26 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.impl.points.ProfilPoint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.Component;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.Record;
+import org.kalypso.observation.result.TupleResult;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -79,7 +90,7 @@ public class ImportTrippleHelper
 
     /* read profiles, show warnings */
     final List<IProfil> profiles = new ArrayList<IProfil>();
-    final List<IProfilPoint> profilPointList = new ArrayList<IProfilPoint>();
+    final List<IRecord> profilPointList = new ArrayList<IRecord>();
 
     /* file loading */
     BufferedReader fileReader = null;
@@ -131,7 +142,7 @@ public class ImportTrippleHelper
             currentStation = station;
           }
 
-          final IProfilPoint point = ImportTrippleHelper.createProfilePoint( profilPointList, tokenizer );
+          final IRecord point = ImportTrippleHelper.createProfilePoint( profilPointList, tokenizer );
           if( point != null )
             profilPointList.add( point );
 
@@ -178,16 +189,16 @@ public class ImportTrippleHelper
    * @param profiles
    *            the list of the already imported profiles
    */
-  private static void storeProfile( final List<IProfilPoint> profilPointList, final double station, final List<IProfil> profiles, final String profiletype )
+  private static void storeProfile( final List<IRecord> profilPointList, final double station, final List<IProfil> profiles, final String profiletype )
   {
     final IProfil profile = ProfilFactory.createProfil( profiletype );
 
-    profile.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    profile.addPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    profile.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    profile.addPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    profile.addPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    profile.addPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    profile.addPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+    profile.addPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
 
-    for( final IProfilPoint point : profilPointList )
+    for( final IRecord point : profilPointList )
       profile.addPoint( point );
 
     profile.setStation( station );
@@ -204,22 +215,30 @@ public class ImportTrippleHelper
    * @param tokenizer
    *            holds the point data (x, y, z)
    */
-  private static IProfilPoint createProfilePoint( final List<IProfilPoint> profilPointList, final StringTokenizer tokenizer )
+  private static IRecord createProfilePoint( final List<IRecord> profilPointList, final StringTokenizer tokenizer )
   {
-    double x;
-    double y;
-    double z;
+    final double x;
+    final double y;
+    final double z;
+    /* observation of profile */
 
-    final ProfilPoint profilPoint = new ProfilPoint();
-    profilPoint.addProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    profilPoint.addProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    profilPoint.addProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    profilPoint.addProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final Set<IComponent> myComponents = new LinkedHashSet<IComponent>();
+
+    // TODO phenomenon
+    final Component rechtswert = new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), null, null );
+    final Component hochwert = new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_HOCHWERT ), null, null );
+    final Component hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_HOEHE ), null, null );
+    final Component breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_BREITE ), null, null );
+
+    final TupleResult result = new TupleResult( myComponents.toArray( new IComponent[] {} ) );
+    final IObservation<TupleResult> observation = new Observation<TupleResult>( "profiles", "profiles", result, new ArrayList<MetadataObject>() );
+
+    final IRecord profilPoint = new Record( observation.getResult(), myComponents );
 
     if( tokenizer.hasMoreElements() )
     {
       x = Double.parseDouble( tokenizer.nextToken() );
-      profilPoint.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, x );
+      profilPoint.setValue( rechtswert, x );
     }
     else
       return null;
@@ -227,7 +246,7 @@ public class ImportTrippleHelper
     if( tokenizer.hasMoreElements() )
     {
       y = Double.parseDouble( tokenizer.nextToken() );
-      profilPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, y );
+      profilPoint.setValue( hochwert, y );
     }
     else
       return null;
@@ -235,7 +254,7 @@ public class ImportTrippleHelper
     if( tokenizer.hasMoreElements() )
     {
       z = Double.parseDouble( tokenizer.nextToken() );
-      profilPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, z );
+      profilPoint.setValue( hoehe, z );
     }
     else
       return null;
@@ -247,7 +266,7 @@ public class ImportTrippleHelper
     else
       width = 0;
 
-    profilPoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
+    profilPoint.setValue( breite, width );
 
     return profilPoint;
   }
@@ -258,19 +277,19 @@ public class ImportTrippleHelper
    * @param profilPointList
    *            point list of the current profile
    */
-  private static double calculateSegmentLength( final List<IProfilPoint> profilPointList, final ProfilPoint profilPoint )
+  private static double calculateSegmentLength( final List<IRecord> profilPointList, final IRecord profilPoint )
   {
     double distance = 0;
     final GeometryFactory factory = new GeometryFactory();
 
     /* get the segment length of the already imported profile points */
-    distance = profilPointList.get( profilPointList.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    distance = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( profilPointList.get( profilPointList.size() - 1 ), IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     /* add the segment length of the segment defined by the last imported profile point and the new to add profile point */
-    final double x1 = profilPointList.get( profilPointList.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final double y1 = profilPointList.get( profilPointList.size() - 1 ).getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final double x2 = profilPoint.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final double y2 = profilPoint.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final double x1 = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( profilPointList.get( profilPointList.size() - 1 ), IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+    final double y1 = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( profilPointList.get( profilPointList.size() - 1 ), IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+    final double x2 = (Double) profilPoint.getValue( ProfilObsHelper.getPropertyFromId( profilPoint, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+    final double y2 = (Double) profilPoint.getValue( ProfilObsHelper.getPropertyFromId( profilPoint, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
     final Coordinate coordinates1 = new Coordinate( x1, y1 );
     final Coordinate coordinates2 = new Coordinate( x2, y2 );

@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author belger
@@ -83,12 +84,18 @@ public class BuildingPanel extends AbstractProfilView
   {
     super( pem, viewdata );
 
-    m_building = getProfil().getProfileObject();
+    // TODO IProfileObjects now returned as list from IProfile
+    final IProfileObject[] profileObjects = getProfil().getProfileObject();
+    if( profileObjects.length > 0 )
+      m_building = profileObjects[0];
+    else
+      m_building = null;
+
   }
 
-  private String getLabel( final String property )
+  private String getLabel( final IComponent property )
   {
-    return m_building.getLabelFor( property );
+    return property.getName();
   }
 
   /**
@@ -109,7 +116,7 @@ public class BuildingPanel extends AbstractProfilView
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-    for( final String buildingProperty : m_building.getObjectProperties() )
+    for( final IComponent buildingProperty : m_building.getObjectProperties() )
     {
       final String tooltip = ""; // TODO: Kim labelProvider.getTooltipFor(buildingProperty);
 
@@ -128,7 +135,7 @@ public class BuildingPanel extends AbstractProfilView
       bldText.addFocusListener( new FocusAdapter()
       {
         @Override
-        public void focusGained( FocusEvent e )
+        public void focusGained( final FocusEvent e )
         {
           bldText.selectAll();
         }
@@ -141,7 +148,14 @@ public class BuildingPanel extends AbstractProfilView
         {
           final double value = NumberUtils.parseQuietDouble( bldText.getText() );
           final IProfil profil = getProfil();
-          final IProfileObject building = profil.getProfileObject();
+
+          // TODO IProfileObjects now returned as list from IProfile
+          final IProfileObject[] buildings = profil.getProfileObject();
+          IProfileObject building = null;
+
+          if( buildings.length > 0 )
+            building = buildings[0];
+
           if( Double.isNaN( value ) || (building == null) )
           {
             updateControls();
@@ -149,14 +163,14 @@ public class BuildingPanel extends AbstractProfilView
           }
           try
           {
-            final double currentValue = (Double) building.getValueFor( buildingProperty );
+            final double currentValue = (Double) building.getValue( buildingProperty );
             if( value == currentValue )
               return;
-            final ProfileObjectEdit edit = new ProfileObjectEdit( profil.getProfileObject(), buildingProperty, value );
+            final ProfileObjectEdit edit = new ProfileObjectEdit( building, buildingProperty, value );
             final ProfilOperation operation = new ProfilOperation( /* TODO: labelProvider */"" + " ändern", getProfilEventManager(), edit, true );
             new ProfilOperationJob( operation ).schedule();
           }
-          catch( Exception e1 )
+          catch( final Exception e1 )
           {
             updateControls();
           }
@@ -177,7 +191,7 @@ public class BuildingPanel extends AbstractProfilView
       {
         if( !text.isDisposed() )
         {
-          text.setText( String.format( "%.2f", m_building.getValueFor( text.getData().toString() ) ) );
+          text.setText( String.format( "%.2f", m_building.getValue( (IComponent) text.getData() ) ) );
           if( text.isFocusControl() )
             text.selectAll();
         }

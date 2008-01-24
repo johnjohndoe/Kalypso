@@ -60,10 +60,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsSource;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Belger
@@ -75,7 +75,7 @@ public class FilePointsSource extends AbstractPointsSource
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource#getPoints()
    */
-  public LinkedList<IProfilPoint> getPoints( )
+  public LinkedList<IRecord> getPoints( )
   {
     final File f = new File( m_fileName.getText() );
     final FileReader fr;
@@ -83,7 +83,7 @@ public class FilePointsSource extends AbstractPointsSource
     {
       fr = new FileReader( f );
     }
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       e.printStackTrace();
       return null;
@@ -94,6 +94,7 @@ public class FilePointsSource extends AbstractPointsSource
       final IProfilSource prfS = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
       // TODO: here the profile type is directly given (always read as pasche)
       // change this later to let the user choose how to read
+
       final IProfil profil = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" );
       if( prfS.read( profil, fr ) )
         return profil.getPoints();
@@ -125,9 +126,9 @@ public class FilePointsSource extends AbstractPointsSource
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        FileDialog dlg = new FileDialog( parent.getShell() );
+        final FileDialog dlg = new FileDialog( parent.getShell() );
         final String fileName = dlg.open();
         if( fileName != null )
         {
@@ -140,7 +141,7 @@ public class FilePointsSource extends AbstractPointsSource
   }
 
   @Override
-  protected void loadState( IDialogSettings settings )
+  protected void loadState( final IDialogSettings settings )
   {
     final String fileName = settings.get( "DLG_SETTINGS_FILENAME" );
     if( fileName != null )
@@ -148,7 +149,7 @@ public class FilePointsSource extends AbstractPointsSource
 
   }
 
-  public void saveState( IDialogSettings settings )
+  public void saveState( final IDialogSettings settings )
   {
     settings.put( "DLG_SETTINGS_FILENAME", m_fileName.getText() );
 

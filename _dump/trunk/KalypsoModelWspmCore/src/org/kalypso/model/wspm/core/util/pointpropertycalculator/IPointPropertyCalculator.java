@@ -43,12 +43,13 @@ package org.kalypso.model.wspm.core.util.pointpropertycalculator;
 import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
  */
 public interface IPointPropertyCalculator
 {
-  public IProfilChange[] calculate (final Double operand,final String[] properties,final List<IProfilPoint> points); 
+  public IProfilChange[] calculate( final Double operand, final IComponent[] properties, final List<IRecord> points );
 }

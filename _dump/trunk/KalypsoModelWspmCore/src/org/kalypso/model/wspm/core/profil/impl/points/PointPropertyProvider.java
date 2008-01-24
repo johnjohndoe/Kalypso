@@ -40,100 +40,102 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl.points;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider2;
+import org.kalypso.observation.result.Component;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author kimwerner
  */
 public class PointPropertyProvider implements IProfilPointPropertyProvider2
 {
-  private final Map<String, IProfilPointProperty> m_properties = new HashMap<String, IProfilPointProperty>();
+  private final Set<IComponent> m_properties = new LinkedHashSet<IComponent>();
 
   public PointPropertyProvider( )
   {
-    m_properties.put( IWspmConstants.POINT_PROPERTY_BREITE, null );
-    m_properties.put( IWspmConstants.POINT_PROPERTY_HOEHE, null );
-    m_properties.put( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, null );
-    m_properties.put( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, null );
-    m_properties.put( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, null );
-    m_properties.put( IWspmConstants.POINT_PROPERTY_HOCHWERT, null );
-    m_properties.put( IWspmConstants.POINT_PROPERTY_RECHTSWERT, null );
-    m_properties.put( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, null );
-    m_properties.put( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, null );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) );
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#getPointProperties()
    */
-  public String[] getPointProperties( )
+  public IComponent[] getPointProperties( )
   {
     /**
      * the order in the array is the columnsort_order in the tableview
      */
-    return new String[] { IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT,
-         IWspmConstants.POINT_PROPERTY_RAUHEIT_KS,IWspmConstants.POINT_PROPERTY_RAUHEIT_KST,IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP };
+    return this.m_properties.toArray( new IComponent[] {} );
   }
 
-  private final IProfilPointProperty createPointProperty( final String property )
+  private final IComponent createPointProperty( final String property )
   {
+    // FIXME phenomen
     if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
-      return new PointProperty( property, "Breite", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_HOEHE }, false, true );
-    if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
-      return new PointProperty( property, "Höhe", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BREITE }, false, true );
-    if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-      return new PointProperty( property, "Bewuchs Ax", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP }, true, false );
-    if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
-      return new PointProperty( property, "Bewuchs Ay", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP }, true, false );
-    if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
-      return new PointProperty( property, "Bewuchs dP", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY }, true, false );
-    if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
-      return new PointProperty( property, "Rechtswert", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_HOEHE }, true, true );
-    if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
-      return new PointProperty( property, "Hochwert", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_RECHTSWERT }, true, true );
-    if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
-      return new PointProperty( property, "Rauheit-ks", 0.0001, new String[0], false, false );
-    if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
-      return new PointProperty( property, "Rauheit-kst", 0.0001, new String[0], false, false );
-    return null;
+      return new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, "Bewuchs Ax", "Bewuchs Ax", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, "Bewuchs Ay", "Bewuchs Ay", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, "Bewuchs dP", "Bewuchs dP", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, "Rauheit-ks", "Rauheit-ks", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+    else if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+      return new Component( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, "Rauheit-kst", "Rauheit-kst", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+
+    throw new IllegalStateException( "property not defined" );
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createPointProperty(java.lang.String)
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider2#createDoubleFor(java.lang.String,
+   *      java.lang.Object)
    */
-  public IProfilPointProperty getPointProperty( final String pointPropertyId )
-  {
-    IProfilPointProperty prop = m_properties.get( pointPropertyId );
-    if( prop != null )
-      return prop;
-    if( m_properties.containsKey( pointPropertyId ) )
-    {
-      prop = createPointProperty( pointPropertyId );
-      if( prop != null )
-        m_properties.put( pointPropertyId, prop );
-    }
-    return prop;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#providesPointProperty(java.lang.String)
-   */
-  public boolean providesPointProperty( String pointPropertyId )
-  {
-    return m_properties.containsKey( pointPropertyId );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider2#createDoubleFor(java.lang.String, java.lang.Object)
-   */
-  public Double createDoubleFor( String pointPropertyId, Object value )
+  public Double createDoubleFor( final IComponent component, final Object value )
   {
     // TODO Auslesen einer Rauheiten-, oder Bewuchsklassendatei (z.B. 0.34 für Sträucher)
     return Double.NaN;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#providesPointProperty(org.kalypso.observation.result.IComponent)
+   */
+  public boolean providesPointProperty( final String property )
+  {
+    for( final IComponent component : m_properties )
+    {
+      if( component.getId().equals( property ) )
+        return true;
+    }
+
+    return false;
+  }
+
+  public IComponent getPointProperty( final String propertyId )
+  {
+    for( final IComponent component : m_properties )
+    {
+      if( component.getId().equals( propertyId ) )
+        return component;
+    }
+
+    return null;
+  }
 }

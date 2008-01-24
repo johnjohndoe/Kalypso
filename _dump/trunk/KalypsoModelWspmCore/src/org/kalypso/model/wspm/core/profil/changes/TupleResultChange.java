@@ -40,50 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 
-public class PointMarkerRemove implements IProfilChange
+/**
+ * @author kuch
+ */
+public class TupleResultChange implements IProfilChange
 {
-  private final IProfil m_profil;
-
-  private final IProfilPointMarker m_pointMarker;
-
-
-  public PointMarkerRemove(final IProfil profil, final IProfilPointMarker pointMarker)
-      
-  {
-    m_pointMarker = pointMarker;
-    m_profil = profil;
-  }
 
   /**
-   * @throws IllegalProfileOperationException
-   * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint)
    */
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
   {
-    if (hint!=null) hint.setMarkerMoved();
-    
-    m_profil.removePointMarker( m_pointMarker);
-    return new PointMarkerAdd(m_profil, m_pointMarker);
+    hint.setPointsChanged();
+
+    return this;
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObject()
-   */
-  public Object[] getObjects( )
-  {
-        return new Object[]{m_pointMarker};
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getPointProperty()
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getInfo()
    */
   public String getInfo( )
   {
-        return m_pointMarker.getMarkerLabel();
+    return "";
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#getObjects()
+   */
+  public Object[] getObjects( )
+  {
+    return new Object[] {};
   }
 
   /**
@@ -91,8 +80,7 @@ public class PointMarkerRemove implements IProfilChange
    */
   public Double getValue( )
   {
-       return null;
+    return Double.NaN;
   }
 
- 
 }

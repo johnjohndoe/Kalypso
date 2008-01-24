@@ -49,9 +49,10 @@ public class IllegalChange implements IProfilChange
 {
 
   private final String m_message;
+
   private final IProfilChange m_change;
 
-  public IllegalChange(  final String msg,final IProfilChange change )
+  public IllegalChange( final String msg, final IProfilChange change )
   {
     m_message = msg;
     m_change = change;
@@ -66,7 +67,7 @@ public class IllegalChange implements IProfilChange
     /**
      * do nothing
      */
-     return null;
+    return null;
   }
 
   /**
@@ -74,7 +75,7 @@ public class IllegalChange implements IProfilChange
    */
   public Object[] getObjects( )
   {
-        return new IProfilChange[]{m_change};
+    return new IProfilChange[] { m_change };
   }
 
   /**
@@ -82,7 +83,7 @@ public class IllegalChange implements IProfilChange
    */
   public String getInfo( )
   {
-       return m_message;
+    return m_message;
   }
 
   /**
@@ -90,8 +91,7 @@ public class IllegalChange implements IProfilChange
    */
   public Double getValue( )
   {
-        return null;
+    return null;
   }
 
-  
 }

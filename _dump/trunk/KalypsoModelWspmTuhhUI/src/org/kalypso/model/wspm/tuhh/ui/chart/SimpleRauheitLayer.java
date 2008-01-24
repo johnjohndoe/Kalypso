@@ -52,15 +52,16 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
+import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
@@ -89,25 +90,25 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
     final IProfil profil = getProfil();
     if( profil == null )
       return MINIMAL_RECT;
-    Rectangle2D bounds = MINIMAL_RECT;
-    IProfilPointMarker[] deviders1 = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    IProfilPointMarker[] deviders2 = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final Rectangle2D bounds = MINIMAL_RECT;
+    final IProfilPointMarker[] deviders1 = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+    final IProfilPointMarker[] deviders2 = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     for( final IProfilPointMarker dev : deviders1 )
     {
-      final Double value = (Double) dev.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      final Double value = (Double) dev.getValue();
       final double y = value == null ? 0.0 : value;
-      final IProfilPoint point = dev.getPoint();
-      final Double breite = point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final IRecord point = dev.getPoint();
+      final Double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
       final double x = breite == null ? 0.0 : breite;
       final Rectangle2D area = new Rectangle2D.Double( x, y, 0, 0 );
       bounds.add( area );
     }
     for( final IProfilPointMarker dev : deviders2 )
     {
-      final Double value = (Double) dev.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      final Double value = (Double) dev.getValue();
       final double y = value == null ? 0.0 : value;
-      final IProfilPoint point = dev.getPoint();
-      final Double breite = point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final IRecord point = dev.getPoint();
+      final Double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
       final double x = breite == null ? 0.0 : breite;
       final Rectangle2D area = new Rectangle2D.Double( x, y, 0, 0 );
       bounds.add( area );
@@ -123,28 +124,28 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
    */
 
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
 
     if( !hint.isMarkerDataChanged() )
       return;
     final AxisRange valueRange = getValueRange();
 
-    IProfilPointMarker[] deviders1 = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    IProfilPointMarker[] deviders2 = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] deviders1 = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+    final IProfilPointMarker[] deviders2 = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
 
     double maxProfilValue = 0.0;
     double minProfilValue = 0.0;
     for( final IProfilPointMarker dev : deviders1 )
     {
-      final Double value = (Double) dev.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      final Double value = (Double) dev.getValue();
       final double y = value == null ? 0.0 : value;
       minProfilValue = Math.min( minProfilValue, y );
       maxProfilValue = Math.max( maxProfilValue, y );
     }
     for( final IProfilPointMarker dev : deviders2 )
     {
-      final Double value = (Double) dev.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      final Double value = (Double) dev.getValue();
       final double y = value == null ? 0.0 : value;
       minProfilValue = Math.min( minProfilValue, y );
       maxProfilValue = Math.max( maxProfilValue, y );
@@ -157,7 +158,7 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
   @Override
   public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
   {
-    return new RauheitenPanel( pem, viewData);
+    return new RauheitenPanel( pem, viewData );
   }
 
   /**
@@ -166,46 +167,48 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
 
   private void getRauheiten( final Double[] values, final Double[] breite )
   {
-    IProfilPointMarker[] durchstroemte = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    IProfilPointMarker[] trennflaechen = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] durchstroemte = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+    final IProfilPointMarker[] trennflaechen = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
 
     if( durchstroemte.length > 1 && trennflaechen.length > 1 )
     {
 
-      values[0] = (Double) durchstroemte[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      values[0] = (Double) durchstroemte[0].getValue();
       if( values[0] == null )
       {
-        durchstroemte[0].setValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, 0.0 );
+        durchstroemte[0].setValue( 0.0 );
         values[0] = 0.0;
       }
-      breite[0] = durchstroemte[0].getPoint().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
 
-      values[1] = (Double) trennflaechen[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      breite[0] = (Double) durchstroemte[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( durchstroemte[0].getPoint(), IWspmConstants.POINT_PROPERTY_BREITE ) );
+
+      values[1] = (Double) trennflaechen[0].getValue();
       if( values[1] == null )
       {
-        trennflaechen[0].setValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, 0.0 );
+        trennflaechen[0].setValue( 0.0 );
         values[1] = 0.0;
       }
-      breite[1] = trennflaechen[0].getPoint().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      breite[1] = (Double) trennflaechen[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( trennflaechen[0].getPoint(), IWspmConstants.POINT_PROPERTY_BREITE ) );
 
-      values[2] = (Double) trennflaechen[trennflaechen.length - 1].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      values[2] = (Double) trennflaechen[trennflaechen.length - 1].getValue();
       if( values[2] == null )
       {
-        trennflaechen[trennflaechen.length - 1].setValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, 0.0 );
+        trennflaechen[trennflaechen.length - 1].setValue( 0.0 );
         values[2] = 0.0;
       }
-      breite[2] = trennflaechen[trennflaechen.length - 1].getPoint().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      values[3] = (Double) durchstroemte[durchstroemte.length - 1].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+
+      breite[2] = (Double) trennflaechen[trennflaechen.length - 1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( trennflaechen[trennflaechen.length - 1].getPoint(), IWspmConstants.POINT_PROPERTY_BREITE ) );
+      values[3] = (Double) durchstroemte[durchstroemte.length - 1].getValue();
       if( values[3] == null )
       {
-        durchstroemte[durchstroemte.length - 1].setValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, 0.0 );
+        durchstroemte[durchstroemte.length - 1].setValue( 0.0 );
         values[3] = 0.0;
       }
-      breite[3] = durchstroemte[durchstroemte.length - 1].getPoint().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      breite[3] = (Double) durchstroemte[durchstroemte.length - 1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( durchstroemte[durchstroemte.length - 1].getPoint(), IWspmConstants.POINT_PROPERTY_BREITE ) );
     }
   }
 
-  public void paint( GCWrapper gc )
+  public void paint( final GCWrapper gc )
   {
     final Color background = gc.getBackground();
     final Double[] values = new Double[4];
@@ -272,10 +275,10 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractRauheitLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHoverInfo( Point point )
+  public EditInfo getHoverInfo( final Point point )
   {
-    Double[] values = new Double[4];
-    Double[] breite = new Double[4];
+    final Double[] values = new Double[4];
+    final Double[] breite = new Double[4];
     getRauheiten( values, breite );
     Rectangle hover = null;
     for( int i = 0; i < 3; i++ )
@@ -285,8 +288,10 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
       hover = new Rectangle( lp.x, lp.y, rp.x - lp.x, getValueRange().getScreenFrom() - lp.y );
       if( hover.contains( point ) )
       {
-        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, m_rauheit ), String.format( "%.4f[" + m_rauheit == IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ? "kst" : "ks"
-            + "]", values[i] ) );
+        final EditData editData = new EditData( i, ProfilObsHelper.getPropertyFromId( getProfil(), m_rauheit ) );
+        final String text = String.format( "%.4f[" + m_rauheit == IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ? "kst" : "ks" + "]", values[i] );
+
+        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), editData, text );
       }
     }
     return null;

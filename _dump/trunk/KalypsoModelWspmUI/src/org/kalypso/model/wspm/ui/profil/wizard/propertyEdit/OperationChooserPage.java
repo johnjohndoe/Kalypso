@@ -74,11 +74,11 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -125,7 +125,7 @@ public class OperationChooserPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
 // the panel
     final Composite panel = new Composite( parent, SWT.NONE );
@@ -184,7 +184,7 @@ public class OperationChooserPage extends WizardPage
     {
       return m_calculators.size() > 0 && m_filters.size() > 0 && !m_value.isNaN();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return false;
     }
@@ -276,7 +276,7 @@ public class OperationChooserPage extends WizardPage
     bldText.addFocusListener( new FocusAdapter()
     {
       @Override
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
         bldText.selectAll();
       }
@@ -299,7 +299,7 @@ public class OperationChooserPage extends WizardPage
 
       @SuppressWarnings("synthetic-access")
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         final IDialogSettings dialogSettings = getDialogSettings();
         if( dialogSettings != null )
@@ -346,26 +346,24 @@ public class OperationChooserPage extends WizardPage
     } );
   }
 
-  private final boolean isValid( final IProfil profil, final IProfilPoint point, final Set<String> filterSet )
+  private final boolean isValid( final IProfil profil, final IRecord point, final Set<String> filterSet )
   {
 
     for( final String filterId : filterSet )
     {
       final IProfilePointFilter filter = m_filters.get( filterId );
       if( filter != null && filter.accept( profil, point ) )
-      {
         return true;
-      }
     }
     return false;
   }
 
   public IProfilChange[] changeProfile( final IProfil profil, final Object[] properties )
   {
-    final String[] propertyIds = new String[properties.length];
+    final IComponent[] propertyIds = new IComponent[properties.length];
     for( int i = 0; i < properties.length; i++ )
     {
-      propertyIds[i] = ((IProfilPointProperty) properties[i]).getId();
+      propertyIds[i] = (IComponent) properties[i];
     }
     final IDialogSettings dialogSettings = getDialogSettings();
     final Set<String> filterSet = new HashSet<String>();
@@ -390,8 +388,8 @@ public class OperationChooserPage extends WizardPage
         }
       }
     }
-    final List<IProfilPoint> selectedPoints = new ArrayList<IProfilPoint>();
-    for( final IProfilPoint point : profil.getPoints() )
+    final List<IRecord> selectedPoints = new ArrayList<IRecord>();
+    for( final IRecord point : profil.getPoints() )
     {
 
       if( isValid( profil, point, filterSet ) )

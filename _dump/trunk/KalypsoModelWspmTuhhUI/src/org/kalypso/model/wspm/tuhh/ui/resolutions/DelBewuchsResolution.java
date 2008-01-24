@@ -45,10 +45,11 @@ import java.util.List;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -67,29 +68,25 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected IProfilChange[] resolve( IProfil profil )
+  protected IProfilChange[] resolve( final IProfil profil )
   {
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final LinkedList<IRecord> points = profil.getPoints();
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( deviders.length < 1 )
-    {
       return null;
-    }
     final int l = points.indexOf( deviders[0].getPoint() );
     final int r = points.indexOf( deviders[deviders.length - 1].getPoint() );
-    final List<IProfilPoint> fluss = points.subList( l, r );
+    final List<IRecord> fluss = points.subList( l, r );
     if( fluss.isEmpty() )
-    {
       return null;
-    }
     int index = 0;
     final IProfilChange[] changes = new IProfilChange[fluss.size() * 3];
-    for( IProfilPoint point : fluss )
+    for( final IRecord point : fluss )
     {
       final int i = index * 3;
-      changes[i] = new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, 0.0 );
-      changes[i + 1] = new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, 0.0 );
-      changes[i + 2] = new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, 0.0 );
+      changes[i] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ), 0.0 );
+      changes[i + 1] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ), 0.0 );
+      changes[i + 2] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ), 0.0 );
       index++;
     }
     return changes;

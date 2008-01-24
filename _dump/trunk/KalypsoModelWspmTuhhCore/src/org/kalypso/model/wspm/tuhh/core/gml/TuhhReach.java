@@ -57,11 +57,13 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -171,21 +173,21 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
         continue;
 
       final IProfil profil = profileMember.getProfil();
-      final IProfilPointMarker[] deviders = profil.getPointMarkerFor(profil.getType());
+      final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, profil.getType() ) );
       for( final IProfilPointMarker devider : deviders )
       {
         try
         {
-          final String typ = devider.getMarkerId();
-          final IProfilPoint point = devider.getPoint();
+          final IComponent typ = devider.getId();
+          final IRecord point = devider.getPoint();
           // REMARK: create the point before the marker because we may have an exception
-          final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint(profil, point );
+          final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint( profil, point );
 
           final TuhhMarker marker = createMarker( list );
           list.add( marker.getFeature() );
 
-          marker.setName( typ );
-          marker.setType( typ );
+          marker.setName( typ.getName() );
+          marker.setType( typ.getId() );
           marker.setLocation( location );
 
         }
