@@ -55,12 +55,13 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
+import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -221,7 +222,7 @@ public class NodeResultHelper
 
     // final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
     // final GM_Curve curve = cutProfileAtWaterlevel( waterlevel, profil, crs );
-    GM_Curve curve = ProfilUtil.getLine( profil, crs );
+    final GM_Curve curve = ProfilUtil.getLine( profil, crs );
 
     /* simplify the profile */
     final double epsThinning = 0.10;
@@ -254,9 +255,9 @@ public class NodeResultHelper
     return new BigDecimal( computeResult ).setScale( 4, BigDecimal.ROUND_HALF_UP );
   }
 
-  public static Double[] getPosTriangleArray( GM_Position[] positions )
+  public static Double[] getPosTriangleArray( final GM_Position[] positions )
   {
-    Double[] posArray = new Double[positions.length * 3];
+    final Double[] posArray = new Double[positions.length * 3];
 
     for( int i = 0; i < positions.length; i++ )
     {
@@ -322,10 +323,10 @@ public class NodeResultHelper
   {
     // we create a profile in order to use already implemented methods
     final IProfil boundaryProfil = ProfilFactory.createProfil( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    boundaryProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    boundaryProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    boundaryProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    boundaryProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    boundaryProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    boundaryProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    boundaryProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+    boundaryProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( boundaryProfil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
     double width = 0;
     for( int i = 0; i < linePoints.length; i++ )
@@ -335,14 +336,14 @@ public class NodeResultHelper
       if( i > 0 )
         width = width + geoPoint.distance( linePoints[i - 1] );
 
-      final IProfilPoint point = boundaryProfil.createProfilPoint();
+      final IRecord point = boundaryProfil.createProfilPoint();
 
       /* calculate the width of the intersected profile */
       // sort intersection points by width
-      point.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
-      point.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, geoPoint.getZ() );
-      point.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint.getX() );
-      point.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint.getY() );
+      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ), width );
+      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ), geoPoint.getZ() );
+      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), geoPoint.getX() );
+      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOCHWERT ), geoPoint.getY() );
 
       boundaryProfil.addPoint( point );
     }

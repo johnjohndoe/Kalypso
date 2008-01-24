@@ -172,7 +172,7 @@ public class HMOTriangleEater implements ITriangleEater
 
     /* create filename */
     final String param = m_parameter.name();
-    // FIXME: chang to file name based on time, we have no timestep any more
+    // FIXME: change to file name based on time, we have no timestep any more
     final int timestep = 0;
     final String paramName = substring + "_" + param + "_" + timestep + extension;
     final File paramFile = new File( paramName );

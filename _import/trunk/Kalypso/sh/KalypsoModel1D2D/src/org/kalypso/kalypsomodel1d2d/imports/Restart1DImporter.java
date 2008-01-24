@@ -73,7 +73,7 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -173,7 +173,7 @@ public class Restart1DImporter
       final WspmProfile profileMember = segment.getProfileMember();
       final BigDecimal station = profileMember.getBigStation();
       final IProfil profil = profileMember.getProfil();
-      final IProfilPoint sohlPoint = ProfilUtil.getMinPoint( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
+      final IRecord sohlPoint = ProfilUtil.getMinPoint( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint );
       map.put( station, point );
     }

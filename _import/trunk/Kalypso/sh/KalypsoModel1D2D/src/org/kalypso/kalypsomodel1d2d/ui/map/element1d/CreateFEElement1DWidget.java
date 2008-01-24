@@ -91,7 +91,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
     m_node = m_model1d2d.findNode( m_currentPos, grabDistance );
     // TODO: check if this repaint is necessary for the widget
-    MapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaint();
   }
@@ -228,7 +228,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
         break;
 
       case KeyEvent.VK_BACK_SPACE:
-        m_lineBuilder.removeLast();
+        m_lineBuilder.removeLastPoint();
         getMapPanel().repaint();
         break;
 
