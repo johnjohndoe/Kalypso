@@ -310,6 +310,19 @@
           factory="org.kalypso.afgui.scenarios.KalypsoAFGUIThemeFactory">
     </themeFactory>
  </extension>
+ <extension
+       point="org.eclipse.core.runtime.adapters">
+    <factory
+          adaptableType="de.renew.workflow.connector.cases.CaseHandlingProjectNature"
+          class="de.renew.workflow.connector.cases.CaseAdapterFactory">
+       <adapter
+             type="org.eclipse.ui.model.IWorkbenchAdapter">
+       </adapter>
+       <adapter
+             type="org.eclipse.ui.model.IWorkbenchAdapter2">
+       </adapter>
+    </factory>
+ </extension>
  
    
 </plugin>

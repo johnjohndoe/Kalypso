@@ -41,6 +41,8 @@
 package de.renew.workflow.connector.cases;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -48,6 +50,8 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.ui.model.IWorkbenchAdapter2;
 import org.eclipse.ui.model.WorkbenchAdapter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -79,9 +83,24 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object[] getChildren( final Object o )
   {
+    if( o instanceof CaseHandlingProjectNature )
+    {
+      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      try
+      {
+        final ICaseManager caseManager = nature.getCaseManager();
+        return caseManager.getCases().toArray();
+      }
+      catch( final CoreException e )
+      {
+        // ignore
+        e.printStackTrace();
+      }
+    }
     return NO_CHILDREN;
   }
 
@@ -89,9 +108,19 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
    */
   @Override
-  public ImageDescriptor getImageDescriptor( final Object object )
+  public ImageDescriptor getImageDescriptor( final Object o )
   {
-    return m_caseImage;
+    if( o instanceof CaseHandlingProjectNature )
+    {
+      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final IProject project = nature.getProject();
+      final IWorkbenchAdapter adapter = (IWorkbenchAdapter) project.getAdapter( IWorkbenchAdapter.class );
+      return adapter.getImageDescriptor( project );
+    }
+    else if( o instanceof Case )
+      return m_caseImage;
+    else
+      return null;
   }
 
   /**
@@ -100,7 +129,14 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   @Override
   public String getLabel( final Object o )
   {
-    if( o instanceof Case )
+    if( o instanceof CaseHandlingProjectNature )
+    {
+      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final IProject project = nature.getProject();
+      final IWorkbenchAdapter adapter = (IWorkbenchAdapter) project.getAdapter( IWorkbenchAdapter.class );
+      return adapter.getLabel( project );
+    }
+    else if( o instanceof Case )
     {
       return ((Case) o).getName();
     }
@@ -113,7 +149,14 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   @Override
   public FontData getFont( final Object o )
   {
-    if( o instanceof Case )
+    if( o instanceof CaseHandlingProjectNature )
+    {
+      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final IProject project = nature.getProject();
+      final IWorkbenchAdapter2 adapter = (IWorkbenchAdapter2) project.getAdapter( IWorkbenchAdapter2.class );
+      return adapter.getFont( project );
+    }
+    else if( o instanceof Case )
     {
       final Case caze = (Case) o;
       final IWorkbench workbench = PlatformUI.getWorkbench();
