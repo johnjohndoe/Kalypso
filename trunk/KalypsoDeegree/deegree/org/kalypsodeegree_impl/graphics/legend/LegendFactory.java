@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.graphics.legend;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -335,11 +336,11 @@ public class LegendFactory
       // Operator-ID: AND = 200, OR = 201, NOT = 202
       if( logOp.getOperatorId() == OperationDefines.AND )
       {
-        final ArrayList andlist = logOp.getArguments();
+        final List<Operation> andlist = logOp.getArguments();
         String andstring = "";
         for( int i = 0; i < andlist.size(); i++ )
         {
-          andstring += getPropertyNameFromOperation( (Operation) andlist.get( i ) );
+          andstring += getPropertyNameFromOperation( andlist.get( i ) );
           if( i < andlist.size() - 1 )
           {
             andstring += operatorstring;
@@ -349,11 +350,11 @@ public class LegendFactory
       }
       else if( logOp.getOperatorId() == OperationDefines.OR )
       {
-        final ArrayList orlist = logOp.getArguments();
+        final List<Operation> orlist = logOp.getArguments();
         String orstring = "";
         for( int i = 0; i < orlist.size(); i++ )
         {
-          orstring += getPropertyNameFromOperation( (Operation) orlist.get( i ) );
+          orstring += getPropertyNameFromOperation( orlist.get( i ) );
           if( i < orlist.size() - 1 )
           {
             orstring += operatorstring;
@@ -363,8 +364,8 @@ public class LegendFactory
       }
       else if( logOp.getOperatorId() == OperationDefines.NOT )
       {
-        final ArrayList notlist = logOp.getArguments();
-        final String notstring = getPropertyNameFromOperation( (Operation) notlist.get( 0 ) );
+        final List<Operation> notlist = logOp.getArguments();
+        final String notstring = getPropertyNameFromOperation( notlist.get( 0 ) );
         // not is followed by brackets: not (ID = 1 and ID = 2)
         legendlabel = operatorstring + "(" + notstring + ")";
       }
@@ -511,13 +512,17 @@ public class LegendFactory
 /***********************************************************************************************************************
  * **************************************************************************** Changes to this class. What the people
  * have been up to: $Log$
- * have been up to: Revision 1.15  2007/12/13 10:09:30  devgernot
- * have been up to: Visualization of border-egdes in 1d2d.
- * have been up to: have been up to: Revision 1.14 2005/08/12 11:00:54 doemming have been
- * up to: *** empty log message *** have been up to: have been up to: Revision 1.13 2005/06/29 10:41:17 belger have been
- * up to: *** empty log message *** have been up to: have been up to: Revision 1.12 2005/06/20 14:07:49 belger have been
- * up to: Formatierung have been up to: Revision 1.19 2004/08/26 12:42:20 poth no message Revision 1.18 2004/08/10
- * 11:45:57 poth no message Revision 1.17 2004/08/10 10:31:26 poth no message Revision 1.16 2004/07/09 07:17:20 poth no
- * message Revision 1.15 2004/06/01 15:55:05 poth no message Revision 1.14 2004/05/14 07:45:59 poth no message Revision
- * 1.13 2004/04/07 10:58:46 axel_schaefer bugfix
+ * have been up to: Revision 1.16  2008/01/24 16:08:13  devgernot
+ * have been up to: NEW - bug 859: [SLD] <ElseFilter/> is always applied
+ * have been up to: http://dev.bjoernsen.de/cgi-bin/bugzilla/show_bug.cgi?id=859
+ * have been up to:
+ * have been up to: Did not fix anything, just hunted some yellow thingies!
+ * have been up to: have been up to: Revision 1.15 2007/12/13 10:09:30 devgernot have been
+ * up to: Visualization of border-egdes in 1d2d. have been up to: have been up to: Revision 1.14 2005/08/12 11:00:54
+ * doemming have been up to: *** empty log message *** have been up to: have been up to: Revision 1.13 2005/06/29
+ * 10:41:17 belger have been up to: *** empty log message *** have been up to: have been up to: Revision 1.12 2005/06/20
+ * 14:07:49 belger have been up to: Formatierung have been up to: Revision 1.19 2004/08/26 12:42:20 poth no message
+ * Revision 1.18 2004/08/10 11:45:57 poth no message Revision 1.17 2004/08/10 10:31:26 poth no message Revision 1.16
+ * 2004/07/09 07:17:20 poth no message Revision 1.15 2004/06/01 15:55:05 poth no message Revision 1.14 2004/05/14
+ * 07:45:59 poth no message Revision 1.13 2004/04/07 10:58:46 axel_schaefer bugfix
  **********************************************************************************************************************/

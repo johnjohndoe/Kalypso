@@ -30,6 +30,7 @@
 package org.kalypso.ogc.gml.filterdialog.actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
@@ -48,28 +49,28 @@ public class CreateOGCLogicalOROpsActionDelegate extends AbstractCreateOperation
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   @Override
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( m_selection != null && action.isEnabled() )
     {
       if( m_selection instanceof TreeSelection )
       {
-        Object firstElement = m_selection.getFirstElement();
+        final Object firstElement = m_selection.getFirstElement();
         if( firstElement instanceof ComplexFilter )
         {
-          ComplexFilter filter = (ComplexFilter)firstElement;
+          final ComplexFilter filter = (ComplexFilter) firstElement;
           filter.setOperation( new LogicalOperation( OperationDefines.OR, new ArrayList<Operation>() ) );
         }
         if( firstElement instanceof LogicalOperation )
         {
-          final LogicalOperation operation = (LogicalOperation)firstElement;
-          //add new Logical Operation
-          ArrayList<Operation> arguments = operation.getArguments();
+          final LogicalOperation operation = (LogicalOperation) firstElement;
+          // add new Logical Operation
+          List<Operation> arguments = operation.getArguments();
           if( arguments == null )
             arguments = new ArrayList<Operation>();
           arguments.add( new LogicalOperation( OperationDefines.OR, new ArrayList<Operation>() ) );
         }
-        ( (TreeSelection)m_selection ).structureChanged();
+        ((TreeSelection) m_selection).structureChanged();
       }
     }
   }

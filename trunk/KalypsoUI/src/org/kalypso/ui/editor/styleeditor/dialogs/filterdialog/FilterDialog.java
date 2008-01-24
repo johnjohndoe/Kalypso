@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.event.EventListenerList;
 
@@ -467,10 +468,10 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           }
         }
         // ArrayList with Operations (logic, comp, spatial)
-        final ArrayList arguments = logOp.getArguments();
+        final List<Operation> arguments = logOp.getArguments();
         for( int i = 0; i < arguments.size(); i++ )
         {
-          final ComplexFilter tmpFilter = new ComplexFilter( (Operation) arguments.get( i ) );
+          final ComplexFilter tmpFilter = new ComplexFilter( arguments.get( i ) );
           tmpNode.addNode( parseFilterIntoTree( tmpFilter ) );
         }
         return tmpNode;

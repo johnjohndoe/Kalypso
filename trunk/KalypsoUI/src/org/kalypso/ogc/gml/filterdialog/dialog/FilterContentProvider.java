@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.filterdialog.dialog;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -74,8 +74,8 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
       }
       else if( parentElement instanceof ComplexFilter )
       {
-        ComplexFilter cf = (ComplexFilter) parentElement;
-        Operation operation = cf.getOperation();
+        final ComplexFilter cf = (ComplexFilter) parentElement;
+        final Operation operation = cf.getOperation();
         if( operation != null )
         {
           return new Object[] { operation };
@@ -95,15 +95,15 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
         return new Object[0];
       else if( parentElement instanceof Operation )
       {
-        Operation operation = ((Operation) parentElement);
-        int operatorId = operation.getOperatorId();
-        int typeId = OperationDefines.getTypeById( operatorId );
+        final Operation operation = ((Operation) parentElement);
+        final int operatorId = operation.getOperatorId();
+        final int typeId = OperationDefines.getTypeById( operatorId );
         if( typeId == OperationDefines.TYPE_SPATIAL )
           return new Object[0];
 
         if( typeId == OperationDefines.TYPE_LOGICAL )
         {
-          ArrayList arguments = ((LogicalOperation) operation).getArguments();
+          final List<Operation> arguments = ((LogicalOperation) operation).getArguments();
           if( arguments == null )
           {
             return new Object[0];
@@ -117,7 +117,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
       }
       return new Object[0];
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.getLocalizedMessage();
       // do noting at the moment
@@ -150,7 +150,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   {
     if( inputElement instanceof Object[] )
     {
-      Object[] roots = (Object[]) inputElement;
+      final Object[] roots = (Object[]) inputElement;
       if( roots.length > 0 )
         return new Object[] { roots[0] };
     }
@@ -181,7 +181,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
       }
       if( newInput != null && newInput instanceof Object[] )
       {
-        Object test = ((Object[]) newInput)[0];
+        final Object test = ((Object[]) newInput)[0];
         if( test instanceof FilterRootElement )
           ((FilterRootElement) test).addPropertyChangeListener( this );
       }
@@ -192,10 +192,10 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   /**
    * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
    */
-  public void propertyChange( PropertyChangeEvent event )
+  public void propertyChange( final PropertyChangeEvent event )
   {
-    Object source = event.getSource();
-    Object newValue = event.getNewValue();
+    final Object source = event.getSource();
+    final Object newValue = event.getNewValue();
     if( source instanceof FilterRootElement && m_viewer instanceof TreeViewer )
     {
       ((TreeViewer) m_viewer).update( newValue, null );

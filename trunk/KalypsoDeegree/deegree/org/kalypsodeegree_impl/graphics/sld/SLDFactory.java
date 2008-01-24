@@ -72,7 +72,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -89,6 +88,7 @@ import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.Extent;
@@ -974,24 +974,22 @@ public class SLDFactory
     // if( featureTypeQName == null && featureTypeName != null )
     // featureTypeQName = new QName( featureTypeName );
 
-    final NodeList elementsByTagNameNS = element.getElementsByTagNameNS( CommonNamespaces.SLDNS, "FeatureTypeName" );
-
-    final Node node = elementsByTagNameNS.item( 0 );
-
     // optional: several <Rule> / <SemanticTypeIdentifier>
     final NodeList nodelist = element.getChildNodes();
-    final ArrayList ruleList = new ArrayList();
-    final ArrayList typeIdentifierList = new ArrayList();
+    final List<Rule> ruleList = new ArrayList<Rule>();
+    final List<String> typeIdentifierList = new ArrayList<String>();
 
     // collect Filters of all Rules
-    final ArrayList filters = new ArrayList();
+    final List<Filter> filters = new ArrayList<Filter>();
     // collect all Rules that have an ElseFilter
-    final ArrayList elseRules = new ArrayList();
+    final List<Rule> elseRules = new ArrayList<Rule>();
 
     for( int i = 0; i < nodelist.getLength(); i++ )
-      if( nodelist.item( i ) instanceof Element )
+    {
+      final Node item = nodelist.item( i );
+      if( item instanceof Element )
       {
-        final Element child = (Element) nodelist.item( i );
+        final Element child = (Element) item;
         final String namespace = child.getNamespaceURI();
 
         if( !CommonNamespaces.SLDNS.equals( namespace ) )
@@ -1011,6 +1009,7 @@ public class SLDFactory
         else if( childName.equals( "SemanticTypeIdentifier" ) )
           typeIdentifierList.add( XMLTools.getStringValue( child ) );
       }
+    }
 
     // compute and set the ElseFilter for all ElseFilter-Rules
     Filter elseFilter = null;
@@ -1021,30 +1020,26 @@ public class SLDFactory
     else if( filters.size() == 1 )
     {
       elseFilter = new ComplexFilter( OperationDefines.NOT );
-      final ArrayList arguments = ((LogicalOperation) ((ComplexFilter) elseFilter).getOperation()).getArguments();
+      final List<Operation> arguments = ((LogicalOperation) ((ComplexFilter) elseFilter).getOperation()).getArguments();
       final ComplexFilter complexFilter = (ComplexFilter) filters.get( 0 );
       arguments.add( complexFilter.getOperation() );
-      // several Rules with Filters exist -> elseFilter = NOT (Filter1 OR
-      // Filter2 OR...)
     }
     else if( filters.size() > 1 )
     {
+      // several Rules with Filters exist -> elseFilter = NOT (Filter1 OR Filter2 OR...)
       final ComplexFilter innerFilter = new ComplexFilter( OperationDefines.OR );
       elseFilter = new ComplexFilter( innerFilter, null, OperationDefines.NOT );
-      final ArrayList arguments = ((LogicalOperation) innerFilter.getOperation()).getArguments();
-      final Iterator it = filters.iterator();
-      while( it.hasNext() )
-      {
-        final ComplexFilter complexFilter = (ComplexFilter) it.next();
-        arguments.add( complexFilter.getOperation() );
-      }
-    }
-    final Iterator it = elseRules.iterator();
-    while( it.hasNext() )
-      ((Rule) it.next()).setFilter( elseFilter );
+      final List<Operation> arguments = ((LogicalOperation) innerFilter.getOperation()).getArguments();
 
-    final Rule[] rules = (Rule[]) ruleList.toArray( new Rule[ruleList.size()] );
-    final String[] typeIdentifiers = (String[]) typeIdentifierList.toArray( new String[typeIdentifierList.size()] );
+      for( final Filter complexFilter : filters )
+        arguments.add( ((ComplexFilter) complexFilter).getOperation() );
+    }
+
+    for( final Rule elseRule : elseRules )
+      elseRule.setFilter( elseFilter );
+
+    final Rule[] rules = ruleList.toArray( new Rule[ruleList.size()] );
+    final String[] typeIdentifiers = typeIdentifierList.toArray( new String[typeIdentifierList.size()] );
 
     return new FeatureTypeStyle_Impl( name, title, abstract_, featureTypeQName, typeIdentifiers, rules );
   }
@@ -1755,16 +1750,16 @@ public class SLDFactory
       final Double opacity = colorMapEntry.getOpacity();
       final Double quantity = colorMapEntry.getQuantity();
       final String label = colorMapEntry.getLabel();
-      
+
       final double realOpacity = opacity == null ? 1.0 : opacity;
 
       // REMARK: what to do without quantity? i makes no sense, but what else...
       final double realQuantity = quantity == null ? i : quantity;
-      
+
       final String realLabel = label == null ? "" : label.trim();
-      
+
       final ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, realOpacity, realQuantity, realLabel );
-      
+
       colorMap.put( realQuantity, colorMapEntryObject );
     }
 

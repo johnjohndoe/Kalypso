@@ -30,6 +30,7 @@
 package org.kalypso.ogc.gml.filterdialog.actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
@@ -49,14 +50,14 @@ public class CreateOGCSpatialOperationDelegate extends AbstractCreateOperationAc
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   @Override
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( m_selection != null && action.isEnabled() )
     {
       if( m_selection instanceof TreeSelection )
       {
-        Object firstElement = m_selection.getFirstElement();
-        SpatialOperation operation = new SpatialOperation( OperationDefines.UNKNOWN, null, null );
+        final Object firstElement = m_selection.getFirstElement();
+        final SpatialOperation operation = new SpatialOperation( OperationDefines.UNKNOWN, null, null );
         if( firstElement instanceof ComplexFilter )
         {
           ((ComplexFilter) firstElement).setOperation( operation );
@@ -64,7 +65,7 @@ public class CreateOGCSpatialOperationDelegate extends AbstractCreateOperationAc
         }
         else if( firstElement instanceof LogicalOperation )
         {
-          ArrayList<Operation> arguments = ((LogicalOperation) firstElement).getArguments();
+          List<Operation> arguments = ((LogicalOperation) firstElement).getArguments();
           if( arguments == null )
             arguments = new ArrayList<Operation>();
           arguments.add( operation );

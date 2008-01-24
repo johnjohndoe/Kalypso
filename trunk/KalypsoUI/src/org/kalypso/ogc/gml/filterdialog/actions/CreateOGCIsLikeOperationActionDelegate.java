@@ -30,6 +30,7 @@
 package org.kalypso.ogc.gml.filterdialog.actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.ogc.gml.filterdialog.dialog.TreeSelection;
@@ -56,17 +57,17 @@ public class CreateOGCIsLikeOperationActionDelegate extends AbstractCreateOperat
     {
       if( m_selection instanceof TreeSelection )
       {
-        Object firstElement = m_selection.getFirstElement();
+        final Object firstElement = m_selection.getFirstElement();
         if( firstElement instanceof ComplexFilter )
         {
-          ComplexFilter filter = (ComplexFilter) firstElement;
+          final ComplexFilter filter = (ComplexFilter) firstElement;
           filter.setOperation( new PropertyIsLikeOperation( null, null, '*', '$', '/' ) );
         }
         if( firstElement instanceof LogicalOperation )
         {
-          LogicalOperation operation = (LogicalOperation) firstElement;
+          final LogicalOperation operation = (LogicalOperation) firstElement;
           // add new Logical Operation
-          ArrayList<Operation> arguments = operation.getArguments();
+          List<Operation> arguments = operation.getArguments();
           if( arguments == null )
             arguments = new ArrayList<Operation>();
           arguments.add( new PropertyIsLikeOperation( null, null, '*', '$', '/' ) );
