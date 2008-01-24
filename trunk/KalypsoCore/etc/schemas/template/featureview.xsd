@@ -97,8 +97,14 @@
 			<xs:complexContent>
 				<xs:extension base="fv:ControlType">
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:element name="tabLabel" type="xs:string" />
-						<xs:element ref="fv:control" minOccurs="1" maxOccurs="1" />
+						<xs:element name="tabItem">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="tabLabel" type="xs:string" />
+									<xs:element ref="fv:control" minOccurs="1" maxOccurs="1" />
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
@@ -228,6 +234,9 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="fv:PropertyControlType">
+					<xs:sequence>
+						<xs:element name="text" type="xs:string" />
+					</xs:sequence>
 					<xs:attribute name="editable" type="xs:boolean" use="optional" default="true" />
 				</xs:extension>
 			</xs:complexContent>
