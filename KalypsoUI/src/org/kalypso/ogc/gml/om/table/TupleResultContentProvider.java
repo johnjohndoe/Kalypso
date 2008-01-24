@@ -251,18 +251,19 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
                 tableViewer.remove( records );
                 break;
 
-              // FIXME
-// case CHANGED:
-// if( records == null )
-// {
-// tableViewer.refresh();
-// // REMARK: at this place it is OK to force the selection to be shown
-// // as it is quite probable that the user changed the value of the current selection
-// tableViewer.getTable().showSelection();
-// }
-// else
-// tableViewer.update( records, null );
-// break;
+              case CHANGED:
+              {
+                if( records == null )
+                {
+                  tableViewer.refresh();
+                  // REMARK: at this place it is OK to force the selection to be shown
+                  // as it is quite probable that the user changed the value of the current selection
+                  tableViewer.getTable().showSelection();
+                }
+                else
+                  tableViewer.update( records, null );
+              }
+                break;
             }
           }
         }
