@@ -86,7 +86,10 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
       System.out.println( debugMsg );
     }
 
-    final String resSerialised = m_xstream.toXML( resolutionMarkers );
+    // FIXME: does not work any more, as the resolution marker contains a FeatureComposite, so the whole gml will be
+    // serialized here...
+// final String resSerialised = m_xstream.toXML( resolutionMarkers );
+    final String resSerialised = null;// m_xstream.toXML( resolutionMarkers );
 
     final IMarker marker = m_resource.createMarker( KalypsoModelWspmUIPlugin.MARKER_ID );
 
