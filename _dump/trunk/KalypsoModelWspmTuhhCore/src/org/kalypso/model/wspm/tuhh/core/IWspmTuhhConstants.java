@@ -162,15 +162,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
 // public static final String DEFAULT_RAUHEIT_TYP = RAUHEIT_TYP_KS;
   /* Wehrtypen */
   /* MUST keep this -wrong- id string in order to be backwards-compatible! */
-  public static final String WEHR_TYP = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_";
-
-  public static final String WEHR_TYP_BEIWERT = WEHR_TYP + "BEIWERT";
-
-  public static final String WEHR_TYP_BREITKRONIG = WEHR_TYP + "BREITKRONIG";
-
-  public static final String WEHR_TYP_RUNDKRONIG = WEHR_TYP + "RUNDKRONIG";
-
-  public static final String WEHR_TYP_SCHARFKANTIG = WEHR_TYP + "SCHARFKANTIG";
 
   /* Layer */
   public static String PROFILE_LAYER = "org.kalypso.model.wspm.tuhh.ui.chart.LAYER_";

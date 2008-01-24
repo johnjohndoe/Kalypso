@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr.WEHRART;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
@@ -547,10 +548,10 @@ public class PrfSource implements IProfilSource
 
     final IProfileObject wehr = new BuildingWehr( p );
     final String secLine = dbw.getSecondLine();
-    final String wa = getWehrart( secLine );
+    final WEHRART wehrart = getWehrart( secLine );
     final double[] wt = getWehrParameter( secLine );
-    if( wa != null )
-      wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), wa );
+    if( wehrart != null )
+      wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), wehrart );
     wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), wt == null ? 0.0 : wt[0] );
     p.setProfileObject( new IProfileObject[] { wehr } );
     readWehrtrenner( wt, p, pr );
@@ -589,21 +590,23 @@ public class PrfSource implements IProfilSource
     return wp;
   }
 
-  private final String getWehrart( final String secLine )
+  private final WEHRART getWehrart( final String secLine )
   {
     final StringTokenizer sT = new StringTokenizer( secLine, " " );
     final int paramCount = sT.countTokens() - 1;
     if( paramCount < 0 )
       return null;
     final String wehrart = sT.nextToken().toUpperCase();
+
     if( wehrart.startsWith( "RUND" ) )
-      return IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG;
+      return WEHRART.eRundkronig;
     if( wehrart.startsWith( "BREI" ) )
-      return IWspmTuhhConstants.WEHR_TYP_BREITKRONIG;
+      return WEHRART.eBreitkronig;
     if( wehrart.startsWith( "SCHA" ) )
-      return IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG;
+      return WEHRART.eScharfkantig;
     if( wehrart.startsWith( "BEIW" ) )
-      return IWspmTuhhConstants.WEHR_TYP_BEIWERT;
+      return WEHRART.eBeiwert;
+
     return null;
   }
 

@@ -45,6 +45,9 @@ import java.util.ArrayList;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
+import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
@@ -58,6 +61,69 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class BuildingWehr extends AbstractObservationBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_WEHR;
+
+  public enum WEHRART
+  {
+    eScharfkantig,
+    eRundkronig,
+    eBreitkronig,
+    eBeiwert;
+
+    private static final String WEHR_TYP = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_";
+
+    private static final String WEHR_TYP_BEIWERT = WEHR_TYP + "BEIWERT";
+
+    private static final String WEHR_TYP_BREITKRONIG = WEHR_TYP + "BREITKRONIG";
+
+    private static final String WEHR_TYP_RUNDKRONIG = WEHR_TYP + "RUNDKRONIG";
+
+    private static final String WEHR_TYP_SCHARFKANTIG = WEHR_TYP + "SCHARFKANTIG";
+
+    /**
+     * @see java.lang.Enum#toString()
+     */
+    @Override
+    public String toString( )
+    {
+      final WEHRART wehrart = valueOf( name() );
+
+      switch( wehrart )
+      {
+        case eScharfkantig:
+          return "Scharfkantig";
+
+        case eRundkronig:
+          return "Rundkronig";
+
+        case eBreitkronig:
+          return "Breitkronig";
+
+        case eBeiwert:
+          return "Überfallbeiwert";
+
+        default:
+          throw new NotImplementedException();
+      }
+    }
+
+    public static WEHRART toWehrart( final String wehrart )
+    {
+      if( WEHR_TYP_BEIWERT.equals( wehrart ) )
+        return eBeiwert;
+      else if( WEHR_TYP_BREITKRONIG.equals( wehrart ) )
+        return eBreitkronig;
+      else if( WEHR_TYP_RUNDKRONIG.equals( wehrart ) )
+        return eRundkronig;
+      else if( WEHR_TYP_SCHARFKANTIG.equals( wehrart ) )
+        return eScharfkantig;
+
+      final WEHRART type = valueOf( wehrart );
+      if( type == null )
+        throw new NotImplementedException();
+
+      return type;
+    }
+  }
 
   public BuildingWehr( final IProfil profil )
   {
@@ -98,6 +164,25 @@ public class BuildingWehr extends AbstractObservationBuilding
   protected IComponent getPointProperty( final String id )
   {
     return createComponent( id );
+  }
+
+  public IProfilChange getWehrartProfileChange( final WEHRART type )
+  {
+
+    switch( type )
+    {
+      case eBeiwert:
+        return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eBeiwert.name() );
+      case eBreitkronig:
+        return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eBreitkronig.name() );
+      case eRundkronig:
+        return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eRundkronig.name() );
+      case eScharfkantig:
+        return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eScharfkantig.name() );
+
+      default:
+        throw new NotImplementedException();
+    }
   }
 
   /**

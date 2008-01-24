@@ -178,15 +178,12 @@
    <swe:representation>
     <swe:Word>
      <swe:restriction>
-      <xst:enumeration value="rundkronig"/>
-      <xst:enumeration value="breitkronig"/>
-      <xst:enumeration value="scharfkantig"/>
-      <xst:enumeration value="Beiwert"/>
+      <xst:pattern value=".*"/>
      </swe:restriction>
      <swe:classification/>
     </swe:Word>
    </swe:representation>
   </swe:ItemDefinition>
  </gml:dictionaryEntry>
-
+ 
 </gml:Dictionary>

@@ -44,6 +44,13 @@ import java.util.LinkedList;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -54,7 +61,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -76,6 +82,8 @@ import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr.WEHRART;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -227,7 +235,7 @@ public class WehrPanel extends AbstractProfilView
     }
   }
 
-  private Combo m_Wehrart;
+  private ComboViewer m_Wehrart;
 
   protected Button m_WehrfeldVisible;
 
@@ -242,6 +250,8 @@ public class WehrPanel extends AbstractProfilView
   protected final Image m_deleteImg;
 
   private final Image m_addImg;
+
+  protected WEHRART m_selection = null;
 
   public WehrPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
@@ -278,33 +288,38 @@ public class WehrPanel extends AbstractProfilView
     label.setText( "Wehrart:" );
     label.setToolTipText( tooltip );
     // TODO: do not use combo! Use ComboViewer instead, than you do not need the .setData/.getData stuff
-    m_Wehrart = new Combo( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
-    // TODO: isnt there another solution for the wehrarts?
-    m_Wehrart.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
-    m_Wehrart.setItems( new String[] { "Scharfkantig", "Rundkronig", "Breitkronig", "Überfallbeiwert" } );
-    m_Wehrart.setData( "Scharfkantig", IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG );
-    m_Wehrart.setData( "Rundkronig", IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG );
-    m_Wehrart.setData( "Breitkronig", IWspmTuhhConstants.WEHR_TYP_BREITKRONIG );
-    m_Wehrart.setData( "Überfallbeiwert", IWspmTuhhConstants.WEHR_TYP_BEIWERT );
-    m_Wehrart.setData( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG, "Scharfkantig" );
-    m_Wehrart.setData( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG, "Rundkronig" );
-    m_Wehrart.setData( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG, "Breitkronig" );
-    m_Wehrart.setData( IWspmTuhhConstants.WEHR_TYP_BEIWERT, "Überfallbeiwert" );
-    m_Wehrart.addSelectionListener( new SelectionAdapter()
+
+    m_Wehrart = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER );
+    m_Wehrart.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
+
+    m_Wehrart.setContentProvider( new ArrayContentProvider() );
+    m_Wehrart.setLabelProvider( new LabelProvider() );
+
+    final WEHRART[] input = new WEHRART[] { WEHRART.eScharfkantig, WEHRART.eRundkronig, WEHRART.eBreitkronig, WEHRART.eBeiwert };
+    m_Wehrart.setInput( input );
+
+    m_Wehrart.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      @SuppressWarnings("synthetic-access")
-      @Override
-      public void widgetSelected( final SelectionEvent e )
+
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         // TODO IProfileObjects now returned as list from IProfile
         final IProfileObject[] profileObjects = getProfil().getProfileObject();
-        IProfileObject building = null;
-        if( profileObjects.length > 0 )
-          building = profileObjects[0];
+        if( profileObjects.length < 1 || !(profileObjects[0] instanceof BuildingWehr) )
+          return;
 
-        final IProfilChange change = new ProfileObjectEdit( building, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), m_Wehrart.getData( m_Wehrart.getText() ) );
+        final BuildingWehr building = (BuildingWehr) profileObjects[0];
+        final IStructuredSelection selection = (IStructuredSelection) m_Wehrart.getSelection();
+        final WEHRART type = (WEHRART) selection.getFirstElement();
+
+        if( type.equals( m_selection ) )
+          return;
+
+        final IProfilChange change = building.getWehrartProfileChange( type );
         final ProfilOperation operation = new ProfilOperation( "Wehrart ändern", getProfilEventManager(), change, true );
         new ProfilOperationJob( operation ).schedule();
+
+        m_selection = type;
       }
     } );
 
@@ -418,21 +433,18 @@ public class WehrPanel extends AbstractProfilView
 
   protected void updateControls( )
   {
-
-    if( m_Wehrart.isDisposed() )
+    if( m_Wehrart.getCombo().isDisposed() )
       return;
 
     // TODO IProfileObjects now returned as list from IProfile
     final IProfileObject[] profileObjects = getProfil().getProfileObject();
-    IProfileObject building = null;
-    if( profileObjects.length > 0 )
-      building = profileObjects[0];
-
-    if( building == null )
+    if( profileObjects.length < 1 || !(profileObjects[0] instanceof BuildingWehr) )
       return;
-    final String wehrart = (String) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
-    final String comboString = m_Wehrart.getData( wehrart ).toString();
-    m_Wehrart.select( m_Wehrart.indexOf( comboString ) );
+
+    final BuildingWehr building = (BuildingWehr) profileObjects[0];
+    final String sWehrart = (String) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
+    m_Wehrart.setSelection( new StructuredSelection( WEHRART.toWehrart( sWehrart ) ) );
+
     m_WehrfeldVisible.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     m_kronenParameter.setText( building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ).toString() );
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );

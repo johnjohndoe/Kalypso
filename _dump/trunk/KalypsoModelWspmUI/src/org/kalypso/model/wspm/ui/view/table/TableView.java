@@ -75,7 +75,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.TupleResultChange;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
@@ -147,19 +146,19 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     public void recordsChanged( final IRecord[] records, final TYPE type )
     {
-      /** not fired, because of eventloop with pem */
-      final ProfilChangeHint hint = new ProfilChangeHint();
-      hint.setPointsChanged();
-
-      m_pem.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
+// /** not fired, because of eventloop with pem */
+// final ProfilChangeHint hint = new ProfilChangeHint();
+// hint.setPointsChanged();
+//
+// m_pem.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
     }
 
     public void valuesChanged( final ValueChange[] changes )
     {
-      final ProfilChangeHint hint = new ProfilChangeHint();
-      hint.setPointValuesChanged();
-
-      m_pem.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
+// final ProfilChangeHint hint = new ProfilChangeHint();
+// hint.setPointValuesChanged();
+//
+// m_pem.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
     }
   };
 

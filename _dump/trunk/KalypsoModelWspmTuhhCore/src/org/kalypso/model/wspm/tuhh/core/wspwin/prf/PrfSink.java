@@ -67,6 +67,8 @@ import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  * @author kimwerner
  */
@@ -75,17 +77,18 @@ public class PrfSink implements IProfilSink
 
   private String toDataBlockKey( final Object profilKey )
   {
-    final String value = profilKey.toString();
-    if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_BEIWERT ) == 0 )
-      return "BEIWERT";
-    else if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG ) == 0 )
-      return "RUNDKRONIG";
-    else if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG ) == 0 )
-      return "SCHARFKANTIG";
-    else if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG ) == 0 )
-      return "BREITKRONIG";
-    else
-      return value;
+    throw (new NotImplementedException());
+// final String value = profilKey.toString();
+// if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_BEIWERT ) == 0 )
+// return "BEIWERT";
+// else if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG ) == 0 )
+// return "RUNDKRONIG";
+// else if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG ) == 0 )
+// return "SCHARFKANTIG";
+// else if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG ) == 0 )
+// return "BREITKRONIG";
+// else
+// return value;
   }
 
   private void extractDataBlocks( final PrfWriter pw, final IProfil p )
@@ -314,6 +317,7 @@ public class PrfSink implements IProfilSink
       try
       {
         final Object wehrart = building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
+
         final StringBuffer secLine = new StringBuffer( toDataBlockKey( wehrart ) );
         secLine.append( String.format( Locale.US, " %12.4f", building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ) ) );
         final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_WEHR ) );
