@@ -26,6 +26,7 @@
         <!-- copy modell -->
         <copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml" />
         <copy file="${project.dir}/ombrometer.gml" tofile="${calc.dir}/ombrometer.gml" />
+        <copy file="${project.dir}/rcm.gml" tofile="${calc.dir}/rcm.gml" />
         <copy file="${project.dir}/.model/observationConf/ObsTMapping.gml"
               tofile="${calc.dir}/.obsT.gml" />
         <!-- copy others -->
@@ -88,7 +89,11 @@
         <property name="pegelLocalSpurULink" value="local4" />
         <property name="pegelLocalSpurOLink" value="local5" />
         <property name="pegelMappingURL"
-                  value="${project.url}/.model/observationConf/PegelMapping.gml" />
+                   value="${project.url}/.model/observationConf/PegelMapping.gml" />
+        <property name="pegelMappingPrognoseQURL"
+                   value="${project.url}/.model/observationConf/PegelVorhersageQMapping.gml" />
+        <property name="pegelMappingPrognoseWURL"
+                   value="${project.url}/.model/observationConf/PegelVorhersageWMapping.gml" />
 
         <kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
             <property name="stopsim"
@@ -123,6 +128,7 @@
                   value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
         <property name="filterQ"
                   value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+    	
         <!-- T: intensity/average-filter -->
         <!-- Temperatur wird als Tageswert benötigt,
              der hydrologische Tag geht von 7 Uhr bis 7 Uhr, denn
@@ -135,7 +141,14 @@
 		-->
         <property name="filterT"
                   value="${requestT}&lt;filter&gt;&lt;intervallFilter amount=&quot;${intervalT.amount}&quot; calendarField=&quot;${intervalT.field}&quot; mode=&quot;intensity&quot;  defaultStatus=&quot;2&quot; defaultValue=&quot;5.0&quot;  xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+        <property name="filterCommitPrognoseQ"
+                  value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
 
+    	<property name="filterCommitPrognoseWDown" 
+    		value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;3&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;false&quot; xmlns=&quot;filters.zml.kalypso.org&quot;&gt;&lt;roundFilter factor=&quot;5&quot; mode=&quot;ROUND_DOWN&quot; axisType=&quot;W&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/interpolationFilter&gt;&lt;/filter&gt;"/>
+    	<property name="filterCommitPrognoseWUp" 
+    		value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;3&quot; calendarField=&quot;HOUR_OF_DAY&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;false&quot; xmlns=&quot;filters.zml.kalypso.org&quot;&gt;&lt;roundFilter factor=&quot;5&quot; mode=&quot;ROUND_UP&quot; axisType=&quot;W&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/interpolationFilter&gt;&lt;/filter&gt;"/>
+    	
         <echo message=" # " />
         <echo message=" # - Parameter-Informationen -" />
         <echo message=" # " />
@@ -159,6 +172,8 @@
         <echo message=" # Filter Pegel        : ${filterW}" />
         <echo message=" # " />
         <echo message=" # Filter Zufluss      : ${filterQ}" />
+        <echo message=" # " />
+        <echo message=" # Filter Vorhersage   : ${filterCommitPrognoseWDown}" />
         <echo message=" # " />
     </target>
 
@@ -187,17 +202,33 @@
 		 -->
         <echo message="aktualisiere Gebietsniederschläge (Messung)" />
 
-        <kalypso.copyObservation gml="${project.url}/.model/kriging/mapping.gml"
+    	<kalypso.gmlWeight 
+    				modelurl="${calc.url}/rcm.gml" 
+    				featurepathtarget="catchmentCollectionMember/catchmentMember" 
+    				propzmltarget="rainfall" 
+    				proprelationweightmember="rainfallWeightMember" 
+    				propweight="weight" 
+    				proprelationsourcefeature="ombrometerAssociation" 
+    				propzmlsource="timeserie" 
+    				targetcontext="${calc.url}" 
+    				sourceFrom="${startsim}" 
+    				sourceTo="${startforecast}" 
+    				targetFrom="${startforecast}" 
+    				targetTo="${stopsim}" 
+    				forecastfrom="${startforecast}" 
+    				forecastto="${stopsim}" 
+    	/>
+    	
+        <!--kalypso.copyObservation gml="${project.url}/.model/kriging/mapping.gml"
                                  featurePath="mappingMember"
                                  context="${calc.url}"
                                  targetObservation="outObservationLink"
                                  forecastFrom="${startforecast}"
                                  forecastTo="${stopsim}">
             <source property="inObservationLink" from="${startsim}" to="${startforecast}" />
-            <!-- Vorhersage übernehmen -->
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
             <metadata name="Szenario" value="${scenarioId}" />
-        </kalypso.copyObservation>
+        </kalypso.copyObservation-->
     </target>
 
     <target name="fetchRaster" depends="setProperties">
@@ -278,7 +309,7 @@
             <source property="${pegelRemoteMessungLink}"
                     from="${startsim}"
                     to="${startforecast}"
-                    filter="${filterW}" />
+                    filter="${filterQ}" />
             <metadata name="Szenario" value="${scenarioId}" />
         </kalypso.copyObservation>
         <!--        <kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml"
@@ -379,15 +410,21 @@
         <echo message="aktualisiere Zeitreihen: ${calc.dir}" />
     </target>
     
-    
     <target name="exportVorhersagen" depends="setProperties" description="Exportiert die Prognosen nach PSICompact">
         <echo message="Vorhersagezeitreihen werden nach PSICompact geschrieben..."/>
  		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
 
      	<!-- Einmal normal und je einmal für die untere und die obere Umhüllende -->
-     	<!-- TODO: Filter für Umhüllende konfigurieren -->
+    	
+    	<!-- Die normale Umhüllende soll nicht mehr abgelegt werden
      	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingURL}" localobs="${pegelLocalSpurMLink}" remoteobs="${pegelRemoteSpurMLink}" runasync="false"/>
-     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingURL}" localobs="${pegelLocalSpurULink}" remoteobs="${pegelRemoteSpurULink}" runasync="false"/>
-     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingURL}" localobs="${pegelLocalSpurOLink}" remoteobs="${pegelRemoteSpurOLink}" runasync="false"/>
+     	-->
+
+     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseQ}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseQURL}" localobs="${pegelLocalSpurULink}" remoteobs="${pegelRemoteSpurULink}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseQ}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseQURL}" localobs="${pegelLocalSpurOLink}" remoteobs="${pegelRemoteSpurOLink}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+    	
+     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseWDown}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseWURL}" localobs="${pegelLocalSpurULink}" remoteobs="${pegelRemoteSpurULink}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseWUp}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseWURL}" localobs="${pegelLocalSpurOLink}" remoteobs="${pegelRemoteSpurOLink}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+    	
      </target>
 </project>

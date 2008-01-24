@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <calcwizard xmlns="xml.model.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!-- Allgemeine Argumente -->
+	<arg name="showSaveButton" value="false"/>
+	<arg name="askForSaveOnFinish" value="false"/>
 
 	<!-- Ansicht Ombrometer -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ansicht Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif" >
@@ -9,6 +12,7 @@
         <arg name="rightSash" value="50"/>
         <arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=name#linkColumn=N"/>   
         <arg name="maximizeMap" value="true"/>
+		<arg name="mapWidgetID" value="SELECT"/>
     </page>
 
 	<!-- Ansicht Gebietsniederschläge -->
@@ -299,9 +303,6 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 9/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Weida 9/17" 
@@ -325,9 +326,6 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 10/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Gera 10/17" 
@@ -351,9 +349,6 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 11/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Zeitz 11/17" 
@@ -377,9 +372,6 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 12/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Kleindalzig 12/17" 
@@ -481,9 +473,6 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 	<!-- 16/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Neukirchen 16/17" 
@@ -534,9 +523,6 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
 		<arg name="ignoreType1" value="W"/>
-		<arg name="ignoreType2" value="Q"/>
-		<arg name="ignoreLabel1" value="Abfluss"/>
-		<arg name="ignoreLabel2" value="Wasserstand"/>
 	</page>
 
 	<!-- Ergebniskontrolle NA-Modelle-->
