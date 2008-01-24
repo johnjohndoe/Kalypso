@@ -48,11 +48,14 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.chart.ui.view.ChartView;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -79,10 +82,9 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
 
     try
     {
-      IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
 
       final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-      final ChartView chartView = (ChartView) window.getActivePage().findView( ChartView.ID );
 
       // open wizard
       final SelectLengthSectionWizard selectLengthSectionWizard = new SelectLengthSectionWizard( scenarioFolder, resultModel );
@@ -90,15 +92,18 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
       if( wizardDialog2.open() == Window.OK )
       {
         // get file from wizard
-        IFile file = selectLengthSectionWizard.getSelection();
+        final IFile file = selectLengthSectionWizard.getSelection();
 
         // set file to chart view
+        final ChartView chartView = (ChartView) window.getActivePage().showView( ChartView.ID );
+        final Image lsImage = Kalypso1d2dProjectPlugin.getImageProvider().getImage( Kalypso1d2dProjectImages.DESCRIPTORS.RESULT_META_DOCUMENT_LENGTH_SECTION );
+        chartView.setTitleImage( lsImage );
         chartView.setInput( file );
 
         return Status.OK_STATUS;
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }

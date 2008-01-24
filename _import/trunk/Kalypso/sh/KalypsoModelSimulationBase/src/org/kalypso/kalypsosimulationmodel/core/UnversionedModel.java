@@ -44,14 +44,13 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author kurzbach
  * 
  */
-public class UnversionedModel extends AbstractFeatureBinder implements IFeatureWrapper2
+public class UnversionedModel extends AbstractFeatureBinder implements IModel
 {
   public UnversionedModel( final Feature featureToBind, final QName qnameToBind )
   {

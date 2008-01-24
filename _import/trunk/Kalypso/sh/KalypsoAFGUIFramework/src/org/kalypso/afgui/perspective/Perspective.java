@@ -53,10 +53,9 @@ public class Perspective implements IPerspectiveFactory
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
     rightTop.addPlaceholder( DiagramViewPart.ID );
+    rightTop.addPlaceholder( ChartView.ID );
 
-    rightBottom.addPlaceholder( org.kalypso.chart.ui.view.ChartView.ID );
     rightBottom.addPlaceholder( FeatureView.ID );
-    rightBottom.addPlaceholder( ChartView.ID );
     rightBottom.addPlaceholder( TableViewPart.ID );
 
     veryRight.addPlaceholder( MapWidgetView.ID );
@@ -81,5 +80,7 @@ public class Perspective implements IPerspectiveFactory
     // layout.getViewLayout( MapView.ID + ":*").setCloseable( false );
     layout.getViewLayout( MapView.ID ).setCloseable( false );
     layout.getViewLayout( MapView.ID ).setMoveable( false );
+    layout.getViewLayout( ChartView.ID ).setMoveable( false );
+    layout.getViewLayout( ChartView.ID ).setCloseable( false );
   }
 }

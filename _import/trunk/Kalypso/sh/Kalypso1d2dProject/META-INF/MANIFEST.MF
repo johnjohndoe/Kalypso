@@ -23,7 +23,8 @@ Require-Bundle: org.junit4,
  org.kalypso.simulation.ui,
  org.kalypso.model.wspm.ui,
  org.kalypso.chart.ui,
- org.kalypso.model1d2d
+ org.kalypso.model1d2d,
+ org.kalypso.chart.factory
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.ui.wizards.imports,
  org.kalypso.ui.wizards.imports.baseMap,

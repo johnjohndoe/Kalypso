@@ -41,20 +41,24 @@
 package org.kalypso.ui.wizards.lengthsection;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -64,6 +68,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
+import org.ksp.chart.factory.ChartConfigurationDocument;
+import org.ksp.chart.factory.ChartType;
 
 /**
  * Wizard to show length sections to the chart view.
@@ -80,7 +86,7 @@ public class SelectLengthSectionWizard extends Wizard
 
   private IFile m_selectedResultFile;
 
-  public SelectLengthSectionWizard( IFolder scenarioFolder, final IScenarioResultMeta resultModel )
+  public SelectLengthSectionWizard( final IFolder scenarioFolder, final IScenarioResultMeta resultModel )
   {
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;
@@ -117,7 +123,7 @@ public class SelectLengthSectionWizard extends Wizard
       return false;
     }
 
-    for( IResultMeta result : results )
+    for( final IResultMeta result : results )
     {
       if( !(result instanceof IDocumentResultMeta) )
       {
@@ -130,19 +136,22 @@ public class SelectLengthSectionWizard extends Wizard
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
       @SuppressWarnings("synthetic-access")
-      public IStatus execute( final IProgressMonitor monitor )
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
         IResultMeta result = null;
-        monitor.beginTask( "Längsschnittanzeige...", 1 );
+        monitor.beginTask( "Längsschnittanzeige...", 2 );
 
         // get the first length section element
-        for( IResultMeta resultMeta : results )
+        for( final IResultMeta resultMeta : results )
         {
           if( resultMeta instanceof IDocumentResultMeta )
           {
             IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
             if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.lengthSection )
+            {
               result = docResult;
+              break;
+            }
           }
         }
         monitor.worked( 1 );
@@ -161,17 +170,33 @@ public class SelectLengthSectionWizard extends Wizard
 
         try
         {
-          FileUtils.copyURLToFile( getClass().getResource( "resources/lengthSection.kod" ), m_selectedResultFile.getLocation().toFile() );
-          m_selectedResultFile.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
-          monitor.worked( 1 );
+          final IResultMeta stepResult = result.getParent();
+          final IResultMeta unitResult = stepResult.getParent();
+          final String title = String.format( "Lägsschnitt %s - %s", unitResult.getName(), stepResult.getName() );
+
+          final ChartConfigurationLoader loader = new ChartConfigurationLoader( getClass().getResource( "resources/lengthSection.kod" ) );
+          final ChartConfigurationDocument chartDoc = loader.getChartConfigurationDocument();
+          final ChartType[] chartArray = chartDoc.getChartConfiguration().getChartArray();
+          for( ChartType chart : chartArray )
+            chart.setTitle( title );
+
+          final XmlOptions options = ChartConfigurationLoader.configureXmlOptions( m_selectedResultFile.getCharset() );
+          final InputStream is = chartDoc.newInputStream( options );
+          if( m_selectedResultFile.exists() )
+            m_selectedResultFile.setContents( is, false, true, new SubProgressMonitor( monitor, 1 ) );
+          else
+          {
+            FolderUtilities.mkdirs( m_selectedResultFile.getParent() );
+            m_selectedResultFile.create( is, false, new SubProgressMonitor( monitor, 1 ) );
+          }
         }
         catch( IOException e )
         {
-          e.printStackTrace();
+          throw new InvocationTargetException( e );
         }
-        catch( CoreException e )
+        catch( XmlException e )
         {
-          e.printStackTrace();
+          throw new InvocationTargetException( e );
         }
         return StatusUtilities.createOkStatus( "Längsschnitt dargestellt." );
       }
