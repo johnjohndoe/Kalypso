@@ -415,5 +415,30 @@
                tooltip="alle ausgewählten Profileigenschaften werden mit diesem Faktor multipliziert">
          </pointPropertyCalculator>
       </extension>
+      <extension
+            point="org.eclipse.ui.menus">
+         <menuContribution
+               locationURI="toolbar:org.kalypso.model.wspm.ui.view.table.TableView">
+            <command
+                  commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
+                  style="push">
+            </command>
+         </menuContribution>
+         <menuContribution
+               locationURI="popup:org.kalypso.model.wspm.ui.view.table.TableView">
+            <command
+                  commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
+                  style="push">
+            </command>
+         </menuContribution>
+      </extension>
 
 </plugin>

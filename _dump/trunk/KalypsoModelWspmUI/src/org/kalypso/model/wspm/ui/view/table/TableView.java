@@ -49,15 +49,18 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
@@ -88,6 +91,7 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
+import org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -98,7 +102,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author belger
  */
-public class TableView extends ViewPart implements IPropertyChangeListener, IAdapterEater, IProfilProviderListener
+public class TableView extends ViewPart implements IPropertyChangeListener, IAdapterEater, IProfilProviderListener, ITupleResultViewerProvider
 {
   private final AdapterPartListener m_profilProviderListener = new AdapterPartListener( IProfilProvider2.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
@@ -137,6 +141,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   {
     public void componentsChanged( final IComponent[] components, final TYPE type )
     {
+      // FIXME
       /** not fired, because of eventloop with pem */
 // final ProfilChangeHint hint = new ProfilChangeHint();
 // hint.setProfilPropertyChanged( true );
@@ -146,6 +151,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     public void recordsChanged( final IRecord[] records, final TYPE type )
     {
+      // FIXME
 // /** not fired, because of eventloop with pem */
 // final ProfilChangeHint hint = new ProfilChangeHint();
 // hint.setPointsChanged();
@@ -155,12 +161,15 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     public void valuesChanged( final ValueChange[] changes )
     {
+      // FIXME
 // final ProfilChangeHint hint = new ProfilChangeHint();
 // hint.setPointValuesChanged();
 //
 // m_pem.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
     }
   };
+
+  private MenuManager m_menuManager;
 
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
@@ -171,6 +180,9 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     super.init( site );
 
     m_profilProviderListener.init( site.getPage() );
+
+    m_menuManager = new MenuManager();
+    m_menuManager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
 
     KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener( this );
   }
@@ -183,10 +195,17 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     if( m_pem != null )
       m_pem.removeProfilListener( m_profileListener );
 
-    unhookProvider();
+    m_menuManager.dispose();
+    m_menuManager = null;
 
-    m_tupleResultContentProvider.dispose();
-    m_tupleResultLabelProvider.dispose();
+    unhookProvider();
+    unregisterGlobalActions();
+
+    if( m_tupleResultContentProvider != null )
+      m_tupleResultContentProvider.dispose();
+
+    if( m_tupleResultLabelProvider != null )
+      m_tupleResultLabelProvider.dispose();
 
     m_profilProviderListener.dispose();
 
@@ -206,7 +225,6 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
       m_provider.removeProfilProviderListener( this );
       m_provider = null;
     }
-
   }
 
   /**
@@ -215,7 +233,6 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   @Override
   public void createPartControl( final Composite parent )
   {
-
     final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
     if( contextService != null )
       contextService.activateContext( "org.kalypso.model.wspm.ui.view.table.swt.context" );
@@ -225,6 +242,21 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
     m_control.setLayout( gridLayout );
+
+    m_view = new DefaultTableViewer( m_control, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+    m_view.getTable().setHeaderVisible( true );
+    m_view.getTable().setLinesVisible( true );
+
+    m_view.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    getSite().setSelectionProvider( m_view );
+    getSite().registerContextMenu( m_menuManager, m_view );
+
+    m_view.getTable().setMenu( m_menuManager.createContextMenu( m_view.getTable() ) );
+
+    registerGlobalActions( m_view );
+
+    m_control.layout();
 
     updateControl();
   }
@@ -245,103 +277,92 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
   protected void updateControl( )
   {
-    if( (m_control == null) || m_control.isDisposed() )
+    if( m_control == null || m_control.isDisposed() )
       return;
-
-    final Control[] childcontrols = m_control.getChildren();
-    for( final Control c : childcontrols )
-      c.dispose();
-
-    unregisterGlobalActions();
 
     final IProfilEventManager pem = m_provider == null ? null : m_provider.getEventManager();
     final ProfilViewData pvd = m_provider == null ? null : m_provider.getViewData();
 
-    if( (pem == null) || (pvd == null) )
+    if( pem == null || pvd == null )
     {
-      final Label label = new Label( m_control, SWT.BORDER );
-      label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-      label.setText( "Kein Profil geladen." );
+      setContentDescription( "Kein Profil geladen" );
+
+      final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
+      tableGrid.exclude = true;
+      m_view.getTable().setVisible( false );
+
+      return;
     }
-    else
+
+    /* Create handlers for this profile */
+    setContentDescription( "" );
+    final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
+    tableGrid.exclude = false;
+    m_view.getTable().setVisible( true );
+
+    final List<IComponentUiHandler> myHandlers = new ArrayList<IComponentUiHandler>();
+    final IProfil profil = getProfilEventManager().getProfil();
+    final IComponent[] pointMarkerTypes = profil.getPointMarkerTypes();
+
+    final IComponent[] components = profil.getPointProperties();
+    for( final IComponent component : components )
     {
-      m_view = new DefaultTableViewer( m_control, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
-      m_view.getTable().setHeaderVisible( true );
-      m_view.getTable().setLinesVisible( true );
+      /* marker?!? yes -> continue */
+      if( ArrayUtils.contains( pointMarkerTypes, component ) )
+        continue;
 
-      m_view.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+      final int spacing = 100 / components.length;
 
-      final List<IComponentUiHandler> myHandlers = new ArrayList<IComponentUiHandler>();
+      final QName valueTypeName = component.getValueTypeName();
 
-      final IProfil profil = getProfilEventManager().getProfil();
-      final IComponent[] pointMarkerTypes = profil.getPointMarkerTypes();
-
-      final IComponent[] components = profil.getPointProperties();
-      for( final IComponent component : components )
+      // TODO: let a table-column-provider create the handlers (profile-type dependent)
+      if( ComponentUiHandlerFactory.Q_DATE_TIME.equals( valueTypeName ) )
       {
-        /* marker?!? yes -> continue */
-        if( ArrayUtils.contains( pointMarkerTypes, component ) )
-          continue;
-
-        final int spacing = 100 / components.length;
-
-        final QName valueTypeName = component.getValueTypeName();
-
-        // TODO: let a table-column-provider create the handlers (profile-type dependent)
-        if( ComponentUiHandlerFactory.Q_DATE_TIME.equals( valueTypeName ) )
-        {
-          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-        }
-        else if( ComponentUiHandlerFactory.Q_STRING.equals( valueTypeName ) )
-        {
-          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-        }
-        else if( ComponentUiHandlerFactory.Q_INTEGER.equals( valueTypeName ) )
-        {
-          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-        }
-        else if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
-        {
-          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
-        }
-        else if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
-        {
-          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
-        }
-        else
-          myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
+        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
       }
-
-      m_tupleResultContentProvider = new TupleResultContentProvider( myHandlers.toArray( new IComponentUiHandler[] {} ) );
-      m_tupleResultLabelProvider = new TupleResultLabelProvider( myHandlers.toArray( new IComponentUiHandler[] {} ) );
-
-      m_view.setContentProvider( m_tupleResultContentProvider );
-      m_view.setLabelProvider( m_tupleResultLabelProvider );
-      m_view.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
-
-      final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType( KalypsoCorePlugin.getDefault().getSelectionManager(), ObservationFeatureFactory.OM_OBSERVATION );
-      if( obsFeatures.length > 0 )
+      else if( ComponentUiHandlerFactory.Q_STRING.equals( valueTypeName ) )
       {
-        final IProfil profile = ProfileFeatureFactory.toProfile( obsFeatures[0] );
-        m_view.setInput( profile.getResult() );
-
-        final TupleResult result = profile.getResult();
-        result.remove( m_changedListener );
-        result.addChangeListener( m_changedListener );
-
+        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
+      }
+      else if( ComponentUiHandlerFactory.Q_INTEGER.equals( valueTypeName ) )
+      {
+        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
+      }
+      else if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
+      {
+        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
+      }
+      else if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
+      {
+        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
       }
       else
-        m_view.setInput( null );
+        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
 
-      registerGlobalActions( m_view );
-
-      // FIXME
-// getSite().registerContextMenu( m_view.getContextMenuManager(), m_view.getSelectionProvider() );
-// getSite().setSelectionProvider( m_view.getSelectionProvider() );
     }
 
-    m_control.layout();
+    if( m_view.getContentProvider() != null )
+      m_view.setInput( null ); // Reset input in order to avoid double refresh
 
+    m_tupleResultContentProvider = new TupleResultContentProvider( myHandlers.toArray( new IComponentUiHandler[] {} ) );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( myHandlers.toArray( new IComponentUiHandler[] {} ) );
+
+    m_view.setContentProvider( m_tupleResultContentProvider );
+    m_view.setLabelProvider( m_tupleResultLabelProvider );
+    m_view.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
+
+    final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType( KalypsoCorePlugin.getDefault().getSelectionManager(), ObservationFeatureFactory.OM_OBSERVATION );
+    if( obsFeatures.length > 0 )
+    {
+      final IProfil profile = ProfileFeatureFactory.toProfile( obsFeatures[0] );
+      m_view.setInput( profile.getResult() );
+
+      final TupleResult result = profile.getResult();
+      result.remove( m_changedListener );
+      result.addChangeListener( m_changedListener );
+    }
+    else
+      m_view.setInput( null );
   }
 
   private void registerGlobalActions( final DefaultTableViewer tableView )
@@ -465,5 +486,37 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   public IProfilEventManager getProfilEventManager( )
   {
     return m_pem;
+  }
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == ITupleResultViewerProvider.class )
+      return this;
+
+    return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider#getTupleResult()
+   */
+  public TupleResult getTupleResult( )
+  {
+    if( m_view == null )
+      return null;
+
+    return (TupleResult) m_view.getInput();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider#getTupleResultViewer()
+   */
+  public TableViewer getTupleResultViewer( )
+  {
+    return m_view;
   }
 }
