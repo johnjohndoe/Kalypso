@@ -255,7 +255,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             for( int i = 0; i < shapeFeatureList.size(); i++ )
             {
               final Feature shpFeature = (Feature) shapeFeatureList.get( i );
-              final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getLocalPart(), landuseProperty );
+              final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
               final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
               if( !m_landuseTypeSet.contains( shpPropertyValue ) )
                 m_landuseTypeSet.add( shpPropertyValue );

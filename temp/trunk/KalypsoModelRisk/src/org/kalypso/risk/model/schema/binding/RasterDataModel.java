@@ -1,12 +1,12 @@
 package org.kalypso.risk.model.schema.binding;
 
-import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
+import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
-public class RasterDataModel extends VersionedModel implements IRasterDataModel
+public class RasterDataModel extends UnversionedModel implements IRasterDataModel
 {
   private final IFeatureWrapperCollection<IAnnualCoverageCollection> m_waterlevelCoverageCollection;
 
