@@ -114,20 +114,7 @@
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:enumeration value="NEW">
-									<xs:annotation>
-										<xs:documentation
-											xml:lang="de">
-											<xs:label>Neueste</xs:label>
-										</xs:documentation>
-										<xs:documentation
-											xml:lang="en">
-											<xs:label>latest</xs:label>
-										</xs:documentation>
-									</xs:annotation>
-								</xs:enumeration>
-								<xs:enumeration value="Version3.5" />
-								<xs:enumeration value="Test" />
+								<xs:enumeration value="Version 3.5" />
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
