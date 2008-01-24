@@ -177,9 +177,12 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       for( final Feature feature : foundNodes )
       {
         if( feature == null )
-          continue;
+          continue; // TODO: this is a non-test: it should never happen, so we shouldnt test it here...
         final IFE1D2DNode currentNode = new FE1D2DNode( feature );
-        final double currentDistance = nodeLocation.distance( currentNode.getPoint() );
+        final GM_Point point = currentNode.getPoint();
+        if( point == null )
+          throw new IllegalArgumentException( "Found node with null-geometry: " + currentNode );
+        final double currentDistance = nodeLocation.distance( point );
         if( minDistance > currentDistance )
         {
           nearestNode = currentNode;
