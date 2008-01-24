@@ -43,6 +43,7 @@
 			<gft:columnDescriptor
 				component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"
 				alignment="SWT.LEFT" displayFormat="%.1f" />
+			<gft:toolbar/>
 		</gft:tupleResult>
 	</gft:view>
 
