@@ -2,7 +2,8 @@
 <gft:featuretemplate xmlns:gft="featureview.template.kalypso.org"
 	xmlns:ns1="gistableview.template.kalypso.org"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:gml="http://www.opengis.net/gml">
+	xmlns:gml="http://www.opengis.net/gml" 
+	name="Berechnungseinstellungen">
 	<gft:layer id="layer_1" featurePath="#fid#root" linktype="gml"
 		xlink:href="../models/control.gml" />
 
@@ -39,10 +40,10 @@
 			<gft:columnDescriptor
 				component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"
 				alignment="SWT.LEFT" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM"
-				parseFormat="dd.MM.yyyy HH:mm" />
+				parseFormat="dd.MM.yyyy HH:mm" width="150"/>
 			<gft:columnDescriptor
 				component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"
-				alignment="SWT.LEFT" displayFormat="%.1f" />
+				alignment="SWT.LEFT" displayFormat="%.1f" width="200"/>
 			<gft:toolbar/>
 		</gft:tupleResult>
 	</gft:view>
