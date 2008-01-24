@@ -329,13 +329,16 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   final boolean dummy )
   {
     m_isApplyTemplate = true;
-    disposeTheme( getInput() );
 
     if( tableView != null )
     {
       final Layer layer = tableView.getLayer();
       if( layer.getHref() != null )
       {
+        // Only dispose theme if we really replace it
+        // TODO: check this: sometimes we get a theme from outside... what to do in that case?
+        disposeTheme( getInput() );
+
         final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
 
         final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, pseudoModell, null );
@@ -357,11 +360,12 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     if( getContentProvider() != null )
       setInput( null );
-    else
-      disposeTheme( getInput() );
 
     if( tableView != null )
     {
+      // Only dispose theme if we really replace it
+      disposeTheme( getInput() );
+
       final Layer layer = tableView.getLayer();
 
       final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );

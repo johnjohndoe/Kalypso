@@ -141,7 +141,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
   @Override
   protected Control createControl( final Composite parent )
   {
-    m_viewer = new ComboViewer( parent, getStyle() );
+    m_viewer = new ComboViewer( parent, getStyle() | SWT.READ_ONLY | SWT.DROP_DOWN );
 
     return m_viewer.getControl();
   }
