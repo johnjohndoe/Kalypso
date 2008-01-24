@@ -230,29 +230,11 @@ public class CalculationUnitLogComponent
 
       final IFolder calcUnitFolder = scenarioFolder.getFolder( calcUnitMeta.getFullPath() );
       final IResource logResource = calcUnitFolder.findMember( "simulation_log.gml" );
+      if( logResource == null )
+        return null;
+
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( logResource ), null );
       return (List<IGeoStatus>) workspace.getRootFeature().getAdapter( IStatusCollection.class );
-
-      // final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
-      // for( final IResultMeta resultMeta : children )
-      // {
-      // if( resultMeta instanceof IDocumentResultMeta )
-      // {
-      // final IDocumentResultMeta doc = (IDocumentResultMeta) resultMeta;
-      // if( doc.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.log )
-      // {
-      // // HACK at the moment, the log has no unique identifier, so we use the end of the file name
-      // if( doc.getPath().toString().endsWith( "log.gml" ) )
-      // {
-      // final IPath fullPath = doc.getFullPath();
-      // final IFile logFile = scenarioFolder.getFile( fullPath );
-      // final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( logFile ), null
-      // );
-      // return (List<IGeoStatus>) workspace.getRootFeature().getAdapter( IStatusCollection.class );
-      // }
-      // }
-      // }
-      // }
     }
     catch( final Throwable e )
     {
