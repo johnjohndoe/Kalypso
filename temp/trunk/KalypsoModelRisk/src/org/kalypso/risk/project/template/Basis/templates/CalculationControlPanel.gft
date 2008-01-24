@@ -30,7 +30,7 @@
 				<ns1:gistableview>
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="name" width="200" />
+							format="" label="Landnutzungsklasse" name="name" width="200" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="landuseRiskTypeLink" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
@@ -38,7 +38,7 @@
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="colorStyle" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="description" width="1600" />
+							format="" label="Angabe" name="description" width="1600" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>
@@ -59,18 +59,18 @@
 				<ns1:gistableview>
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="name" width="200" />
+							format="" label="Schadenfunktionsname" name="name" width="200" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="function" width="200" />
+							format="" label="Funktion" name="function" width="200" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="description" width="300" />
+							format="" label="Angabe" name="description" width="250" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>
 			</gft:table>
 		</gft:group>
 
-		<gft:group text="Asset values" style="0">
+		<gft:group text="Schadenspotentials" style="0">
 			<gft:gridData horizontalSpan="1" verticalSpan="2"
 				minimumHeight="200" horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
@@ -89,9 +89,9 @@
 							format="" name="administrationUnitLink" width="150" />
 						-->
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="value" width="120" />
+							format="" name="value" width="150" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="description" width="200" />
+							format="" label="Angabe" name="description" width="200" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>

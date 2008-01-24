@@ -28,19 +28,19 @@
 				<ns1:gistableview>
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="false"
-							format="" name="name" width="180" />
+							format="" label="Farbe der Landnutzungsklasse" name="colorStyle" width="180" />
+						<ns1:column alignment="SWT.LEFT" editable="false"
+							format="" label="Landnutzungsklasse" name="name" width="180" />
+						<ns1:column alignment="SWT.LEFT" editable="false"
+							format="%.2f" name="minDamage" width="120" />
+						<ns1:column alignment="SWT.LEFT" editable="false"
+							format="%.2f" name="maxDamage" width="120" />
+						<ns1:column alignment="SWT.LEFT" editable="false"
+							format="%.2f" name="averageAnnualDamage" width="2400" />
 							<!-- 
 						<ns1:column alignment="SWT.LEFT" editable="false"
-							format="" name="colorStyle" width="120" />
+							format="%.2f" name="totalDamage" width="2000" />
 							 -->
-						<ns1:column alignment="SWT.LEFT" editable="false"
-							format="" name="minDamage" width="120" />
-						<ns1:column alignment="SWT.LEFT" editable="false"
-							format="" name="maxDamage" width="120" />
-						<ns1:column alignment="SWT.LEFT" editable="false"
-							format="" name="averageAnnualDamage" width="240" />
-						<ns1:column alignment="SWT.LEFT" editable="false"
-							format="" name="totalDamage" width="2000" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>
@@ -49,7 +49,4 @@
 
 	</gft:view>
 
-
-
 </gft:featuretemplate>
-
