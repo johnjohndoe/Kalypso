@@ -4,6 +4,10 @@
 	<!ENTITY hid "org.kalypso.manual.">
 ]>
 <calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="25" helpId="&hid;SA_Assi_allg_00_Start">
+	<!-- Allgemeine Argumente -->
+	<arg name="showSaveButton" value="false"/>
+	<arg name="askForSaveOnFinish" value="false"/>
+
 	<!-- KONTROLLE UND UMRECHNUNG DER ZEITREIHEN - NIEDERSCHLAG -->
 	<!-- Niederschlag an Stationen (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -29,7 +33,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf -->
 		<arg name="buttonText" value="Gebietsniederschlag berechnen"/>
@@ -61,7 +64,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- KONTROLLE DER ZEITREIHEN - UNTERHALB WENDEFURTH -->
 	<!-- Wasserstand / Abfluss (Messung) -->
@@ -93,7 +95,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Abgabe Speicher (Messung und Prognose) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -117,10 +118,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
+		<arg name="ignoreType1" value="W"/> <!-- ignoreType sicherheitshalber gesetzt-->
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE UNTERHALB WENDEFURTH -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose unterhalb Wendefurth" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -153,7 +154,6 @@
 		<!-- 
          Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf für Berechnung -->
 		<arg name="buttonText" value="Q-Prognose uh. Wendefurth"/>
@@ -191,7 +191,6 @@
 		 
         Tabelle 
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 -->
 	<!-- KONTROLLE DER ZEITREIHEN - OBERHALB SPEICHER -->
@@ -225,7 +224,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- BERECHNUNG - Q-PROGNOSE OBERHALB SPEICHER -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Berechnung - Q-Prognose oberhalb Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -257,7 +255,6 @@
 		<!--
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 		<!-- 
         Ant-Knopf für Berechnung -->
 		<arg name="buttonText" value="Q-Prognose oh. Speicher"/>
@@ -297,7 +294,6 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- Abgabe Speicher (Messung und ggf. auch Prognose (wird f. BAT3 benötigt)) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abgabe - Speicher" imageLocation="icons/calcwizard/kalypso32.gif">
@@ -321,10 +317,10 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Abgabe"/>
+		<arg name="ignoreType1" value="W"/> <!-- ignoreType sicherheitshalber gesetzt-->
 		<!-- 
          Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="zmlTableThresholdResizeOff" value="4"/>
 	</page>
 	<!-- SPEICHERRECHNUNG BAT 3  -->
 	<!-- BERECHNUNG - SPEICHERRECHNUNG  BAT 3 -->
@@ -492,14 +488,17 @@
 			</arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Abflussgrafik"/>
+				<arg name="category" value="Pegel;Abflussgrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagQ.odt"/>
 			</arg>
 			<arg name="templateDiagW">
 				<arg name="label" value="Wasserstandsgrafik"/>
+				<arg name="category" value="Pegel;Wasserstandsgrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagW.odt"/>
 			</arg>
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (Q / W / P)"/>
+				<arg name="category" value="Pegel;Übersichtstabelle (Q / W / P)"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelle.ott"/>
 			</arg>
 		</arg>
@@ -510,32 +509,73 @@
 			<arg name="templateTableEingabeW">
 				<arg name="documentName" value="EingangsdatenW"/>
 				<arg name="label" value="Eingangsdaten Wasserstand"/>
-				<arg name="category" value="Pegel Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Pegel;Eingang Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingW.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisW">
 				<arg name="documentName" value="ErgebnisdatenW"/>
 				<arg name="label" value="Ergebnisdaten Wasserstand"/>
-				<arg name="category" value="Pegel Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Pegel;Vorhersage Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgW.ott"/>
 			</arg>
 			<arg name="templateTableEingabeQ">
 				<arg name="documentName" value="EingangsdatenQ"/>
 				<arg name="label" value="Eingangsdaten Abfluss"/>
-				<arg name="category" value="Pegel Übersicht Eingangsdaten Abfluss"/>
+				<arg name="category" value="Übersichten Pegel;Eingang Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleEingQ.ott"/>
 			</arg>
 			<arg name="templateTableErgebnisQ">
 				<arg name="documentName" value="ErgebnisdatenQ"/>
 				<arg name="label" value="Ergebnisdaten Abfluss"/>
-				<arg name="category" value="Pegel Übersicht Ergebnisdaten Abfluss"/>
+				<arg name="category" value="Übersichten Pegel;Vorhersage Abfluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleErgQ.ott"/>
 			</arg>
 			<arg name="templateTableGebietsN">
 				<arg name="documentName" value="DatenGebietsniederschlag"/>
 				<arg name="label" value="Gebietsniederschlag"/>
-				<arg name="category" value="Pegel Übersicht Gebietsniederschlag"/>
+				<arg name="category" value="Übersichten Pegel;Gebietsniederschlag"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleGebietsN.ott"/>
+			</arg>
+		</arg>
+		<!-- Längsschnitte  -->
+		<arg name="exporter5">
+			<arg name="id" value="simpleTemplateExporter"/>
+			<arg name="name" value="Längsschnitte"/>
+			<arg name="templateDiagLSBodeQ_Speicher">
+				<arg name="documentName" value="LängsschnittBodeQ_Speicher"/>
+				<arg name="label" value="Bode-Längsschnitt (Abfluss)"/>
+				<arg name="category" value="Längsschnitt Pegel;Bode Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeQ_Speicher.odt"/>
+			</arg>
+			<arg name="templateDiagLSBodeW">
+				<arg name="documentName" value="LängsschnittBodeW"/>
+				<arg name="label" value="Bode-Längsschnitt (Wasserstand)"/>
+				<arg name="category" value="Längsschnitt Pegel;Bode Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittBodeW.odt"/>
+			</arg>
+			<arg name="templateDiagLSSelkeQ">
+				<arg name="documentName" value="LängsschnittSelkeQ"/>
+				<arg name="label" value="Selke-Längsschnitt (Abfluss)"/>
+				<arg name="category" value="Längsschnitt Pegel;Selke Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittSelkeQ.odt"/>
+			</arg>
+			<arg name="templateDiagLSSelkeW">
+				<arg name="documentName" value="LängsschnittSelkeW"/>
+				<arg name="label" value="Selke-Längsschnitt (Wasserstand)"/>
+				<arg name="category" value="Längsschnitt Pegel;Selke Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittSelkeW.odt"/>
+			</arg>
+			<arg name="templateDiagLSHoltemmeQ">
+				<arg name="documentName" value="LängsschnittHoltemmeQ"/>
+				<arg name="label" value="Holtemme-Längsschnitt (Abfluss)"/>
+				<arg name="category" value="Längsschnitt Pegel;Holtemme Abfluss"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittHoltemmeQ.odt"/>
+			</arg>
+			<arg name="templateDiagLSHoltemmeW">
+				<arg name="documentName" value="LängsschnittHoltemmeW"/>
+				<arg name="label" value="Holtemme-Längsschnitt (Wasserstand)"/>
+				<arg name="category" value="Längsschnitt Pegel;Holtemme Wasserstand"/>
+				<arg name="href" value="project:/.templates/.wizard/berichtLängsschnittHoltemmeW.odt"/>
 			</arg>
 		</arg>
 		<!-- Scheitelwert-Tabellen W / Q -->
@@ -546,7 +586,7 @@
 			<arg name="exporter3a">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand"/>
-				<arg name="category" value="Pegel Scheitelwerte Wasserstand"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Wasserstand"/>
 				<arg name="documentName" value="ScheitelwerteW.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -645,7 +685,7 @@
 			<arg name="exporter4">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss"/>
-				<arg name="category" value="Pegel Scheitelwerte Abfluss"/>
+				<arg name="category" value="Übersichten Pegel;Scheitelwerte Abfluss"/>
 				<arg name="documentName" value="ScheitelwerteQ.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -770,7 +810,7 @@
 		Exporte  -->
 		<!-- Name of the feature-property, used for display/selection purposes -->
 		<arg name="pegelNameProperty" value="Name"/>
-		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
+		<arg name="resultProperty" value="Zufluss_gerechnet"/>
 		<!-- für alle Speicher V-Diag, D-V / W / Z / A-Tabelle-->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>
@@ -788,10 +828,12 @@
 			</arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Volumengrafik"/>
+				<arg name="category" value="Speicher;Volumengrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagSpeicherV.odt"/>
 			</arg>
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (V / W / Z / A)"/>
+				<arg name="category" value="Speicher;Übersichtstabelle (V / W / Z / A)"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicher.ott"/>
 			</arg>
 		</arg>
@@ -802,37 +844,37 @@
 			<arg name="templateTableSpeicherEingabeW">
 				<arg name="documentName" value="EingangsdatenSpeicherW"/>
 				<arg name="label" value="Eingangsdaten Wasserstand"/>
-				<arg name="category" value="Speicher Übersicht Eingangsdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Speicher;Eingang Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingW.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherErgebnisW">
 				<arg name="documentName" value="ErgebnisdatenSpeicherW"/>
 				<arg name="label" value="Ergebnisdaten Wasserstand"/>
-				<arg name="category" value="Speicher Übersicht Ergebnisdaten Wasserstand"/>
+				<arg name="category" value="Übersichten Speicher;Vorhersage Wasserstand"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgW.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherEingabeQ">
 				<arg name="documentName" value="EingangsdatenSpeicherV"/>
 				<arg name="label" value="Eingangsdaten Volumen"/>
-				<arg name="category" value="Speicher Übersicht Eingangsdaten Volumen"/>
+				<arg name="category" value="Übersichten Speicher;Eingang Volumen"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherEingV.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherErgebnisQ">
 				<arg name="documentName" value="ErgebnisdatenSpeicherV"/>
 				<arg name="label" value="Ergebnisdaten Volumen"/>
-				<arg name="category" value="Speicher Übersicht Ergebnisdaten Volumen"/>
+				<arg name="category" value="Übersichten Speicher;Vorhersage Volumen"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgV.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherAbgabe">
 				<arg name="documentName" value="DatenSpeicherAbgabe"/>
 				<arg name="label" value="Speicherabgabe"/>
-				<arg name="category" value="Speicher Übersicht Speicherabgabe"/>
+				<arg name="category" value="Übersichten Speicher;Speicherabgabe"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherAbgabe.ott"/>
 			</arg>
 			<arg name="templateTableSpeicherErgebnisZufluss">
 				<arg name="documentName" value="ErgebnisdatenSpeicherZufluss"/>
 				<arg name="label" value="Ergebnisdaten Zufluss"/>
-				<arg name="category" value="Speicher Übersicht Ergebnisdaten Zufluss"/>
+				<arg name="category" value="Übersichten Speicher;Vorhersage Zufluss"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicherErgZufluss.ott"/>
 			</arg>
 		</arg>
@@ -844,7 +886,7 @@
 			<arg name="exporter3a">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Volumen"/>
-				<arg name="category" value="Speicher Scheitelwerte Volumen"/>
+				<arg name="category" value="Übersichten Speicher;Scheitelwerte Volumen"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherV.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -879,7 +921,7 @@
 			<arg name="exporter4">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Wasserstand"/>
-				<arg name="category" value="Speicher Scheitelwerte Wasserstand"/>
+				<arg name="category" value="Übersichten Speicher;Scheitelwerte Wasserstand"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherW.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
@@ -914,7 +956,7 @@
 			<arg name="exporter5">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Speicherabgabe"/>
-				<arg name="category" value="Speicher Scheitelwerte Speicherabgabe"/>
+				<arg name="category" value="Übersichten Speicher;Scheitelwerte Speicherabgabe"/>
 				<arg name="documentName" value="ScheitelwerteSpeicherAbgabe.csv"/>
 				<arg name="separator" value=";"/>
 				<!--arg name="charset" value="cp1252"/-->
