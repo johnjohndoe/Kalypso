@@ -233,7 +233,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   public Control createControl( final Composite parent, final int style, final IFeatureType ft )
   {
+
     final FeatureviewType view = m_featureviewFactory.get( ft, getFeature() );
+
+// m_formToolkit = new FormToolkit( parent.getDisplay() );
+
+    if( m_formToolkit != null )
+      m_formToolkit.adapt( parent );
 
     m_control = createControl( parent, style, view );
 
@@ -264,6 +270,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   private Control createControl( final Composite parent, final int style, final ControlType controlType )
   {
     final Control control = createControlFromControlType( parent, style, controlType );
+
+    /* If a toolkit is set, use it. */
+    if( m_formToolkit != null )
+      m_formToolkit.adapt( control, true, true );
 
     control.setData( DATA_CONTROL_TYPE, controlType );
 
@@ -405,10 +415,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       if( layoutType != null )
         composite.setLayout( createLayout( layoutType ) );
 
-      /* If a toolkit is set, use it. */
-      if( m_formToolkit != null )
-        m_formToolkit.adapt( composite, true, true );
-
       for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
         createControl( composite, SWT.NONE, element.getValue() );
 
@@ -429,24 +435,20 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
          * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
          */
         @Override
-        public void widgetSelected( SelectionEvent e )
+        public void widgetSelected( final SelectionEvent e )
         {
           super.widgetSelected( e );
 // TODO: remove me
         }
       } );
 
-      /* If a toolkit is set, use it. */
-      if( m_formToolkit != null )
-        m_formToolkit.adapt( tabFolder );
-
-      List<org.kalypso.template.featureview.TabFolder.TabItem> tabItem = tabFolderType.getTabItem();
-      for( org.kalypso.template.featureview.TabFolder.TabItem tabItemType : tabItem )
+      final List<org.kalypso.template.featureview.TabFolder.TabItem> tabItem = tabFolderType.getTabItem();
+      for( final org.kalypso.template.featureview.TabFolder.TabItem tabItemType : tabItem )
       {
-        String label = tabItemType.getTabLabel();
-        ControlType control = tabItemType.getControl().getValue();
+        final String label = tabItemType.getTabLabel();
+        final ControlType control = tabItemType.getControl().getValue();
 
-        TabItem item = new TabItem( tabFolder, SWT.NONE );
+        final TabItem item = new TabItem( tabFolder, SWT.NONE );
         item.setText( label );
 
         final Control tabControl = createControl( tabFolder, SWT.NONE, control );
@@ -474,10 +476,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       if( property != null )
         applyAnnotation( label, property, feature );
 
-      /* If a toolkit is set, use it. */
-      if( m_formToolkit != null )
-        m_formToolkit.adapt( label, true, true );
-
       return label;
     }
     else if( controlType instanceof ValidatorLabelType )
@@ -493,10 +491,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         addFeatureControl( vfc );
         // System.out.println( this );
 
-        /* If a toolkit is set, use it. */
-        if( m_formToolkit != null )
-          m_formToolkit.adapt( control, true, true );
-
         return control;
       }
     }
@@ -506,10 +500,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final GeometryFeatureControl vfc = new GeometryFeatureControl( feature, ftp );
       final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( geometryLabelType.getStyle() ) );
       addFeatureControl( vfc );
-
-      /* If a toolkit is set, use it. */
-      if( m_formToolkit != null )
-        m_formToolkit.adapt( control, true, true );
 
       return control;
     }
@@ -522,10 +512,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( colorLabelType.getStyle() ) );
 
       addFeatureControl( vfc );
-
-      /* If a toolkit is set, use it. */
-      if( m_formToolkit != null )
-        m_formToolkit.adapt( control, true, true );
 
       return control;
     }
@@ -556,7 +542,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof Checkbox )
     {
       final Checkbox checkboxType = (Checkbox) controlType;
-      String text = checkboxType.getText();
+      final String text = checkboxType.getText();
 
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
       final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, vpt, text );
@@ -786,10 +772,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
     final Label label = new Label( parent, SWT.NONE );
     label.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.create" ) ); //$NON-NLS-1$
-
-    /* If a toolkit is set, use it. */
-    if( m_formToolkit != null )
-      m_formToolkit.adapt( label, true, true );
 
     return label;
   }
