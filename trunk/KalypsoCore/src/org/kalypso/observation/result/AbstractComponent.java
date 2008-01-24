@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
@@ -57,25 +60,83 @@ public abstract class AbstractComponent implements IComponent
     final XsdBaseTypeHandler handler = ObservationFeatureFactory.typeHanderForComponent( this );
 
     if( handler == null )
-    {
       // TODO what to do now??
       return 0;
-    }
 
     if( (objFirst == null) && (objSecond == null) )
-    {
       return 0; // equals
-    }
     else if( objFirst == null )
-    {
       return -1; // lesser
-    }
     else if( objSecond == null )
-    {
       return 1; // greater
-    }
 
     return handler.compare( objFirst, objSecond );
   }
 
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( !(obj instanceof IComponent) )
+      return false;
+    else if( this == obj )
+      return true;
+    else if( this instanceof FeatureComponent && obj instanceof FeatureComponent )
+    {
+      // Identity of FeatureComponents are declared about their itemDefinitons (Dictionary)
+      final FeatureComponent c1 = (FeatureComponent) this;
+      final FeatureComponent c2 = (FeatureComponent) obj;
+
+      return c1.getItemDefinition().equals( c2.getItemDefinition() );
+    }
+    else if( this instanceof Component && obj instanceof Component )
+    {
+      // generated components are defined about their basic settings
+      if( !getClass().getName().equals( obj.getClass().getName() ) )
+        return false;
+
+      final IComponent comp = (IComponent) obj;
+      final EqualsBuilder builder = new EqualsBuilder();
+
+      fillEqualsBuilder( comp, builder );
+
+      return builder.isEquals();
+    }
+    else
+    {
+      // here, we have to compare "äpfel mit birnen..." - lke featureComp <-> comp
+      final IComponent other = (IComponent) obj;
+
+      return getId().equals( other.getId() );
+    }
+  }
+
+  protected void fillEqualsBuilder( final IComponent comp, final EqualsBuilder builder )
+  {
+    builder.append( comp.getId(), getId() );
+    builder.append( comp.getDefaultValue(), getDefaultValue() );
+    builder.append( comp.getDescription(), getDescription() );
+    builder.append( comp.getName(), getName() );
+    builder.append( comp.getValueTypeName(), getValueTypeName() );
+  }
+
+  protected void fillHashCodeBuilder( final HashCodeBuilder builder )
+  {
+    builder.append( getId() );
+    builder.append( getValueTypeName() );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    fillHashCodeBuilder( builder );
+
+    return builder.toHashCode();
+  }
 }

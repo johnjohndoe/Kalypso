@@ -65,9 +65,9 @@ public interface ITooltipProvider
    * 
    * @param g
    * @param p
-   *          The point, where the tooltip starts to paint.
+   *            The point, where the tooltip starts to paint.
    * @param tooltip
-   *          You can get the tooltip from getTooltip() and modify it as you like, than pass it here for painting.
+   *            You can get the tooltip from getTooltip() and modify it as you like, than pass it here for painting.
    */
   public void paintTooltip( Graphics g, Point p, String tooltip );
 }

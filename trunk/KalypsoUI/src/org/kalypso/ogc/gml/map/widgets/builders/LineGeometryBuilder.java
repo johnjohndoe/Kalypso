@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.builders;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -73,6 +74,14 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   private GM_Object m_result;
 
+  private final ToolTipRenderer m_renderer;
+
+  final java.awt.Cursor CROSSHAIR_CURSOR = java.awt.Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
+
+  final java.awt.Cursor DEFAULT_CURSOR = java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
+
+  private final IGeometryBuilderExtensionProvider m_extender;
+
   /**
    * The constructor.
    * 
@@ -82,14 +91,25 @@ public class LineGeometryBuilder implements IGeometryBuilder
    * @param targetCrs
    *            The target coordinate system.
    */
-  public LineGeometryBuilder( final int cnt_points, final CS_CoordinateSystem targetCrs )
+  public LineGeometryBuilder( final int cnt_points, final CS_CoordinateSystem targetCrs, final IGeometryBuilderExtensionProvider extender )
   {
+    m_extender = extender;
     m_cnt_points = 0;
 
     if( cnt_points > 1 )
       m_cnt_points = cnt_points;
 
     m_crs = targetCrs;
+
+    m_renderer = new ToolTipRenderer( extender );
+
+    if( m_extender != null )
+      m_extender.setCursor( CROSSHAIR_CURSOR );
+  }
+
+  public LineGeometryBuilder( final int cnt_points, final CS_CoordinateSystem targetCrs )
+  {
+    this( cnt_points, targetCrs, null );
   }
 
   /**
@@ -106,10 +126,28 @@ public class LineGeometryBuilder implements IGeometryBuilder
   }
 
   /**
+   * This function creates the geometry (GM_Curve).
+   */
+  private GM_Object createGeometry( final GM_Position[] poses ) throws GM_Exception
+  {
+    return GeometryFactory.createGM_Curve( poses, m_crs );
+  }
+
+  private void drawHandles( final Graphics g, final int[] x, final int[] y )
+  {
+    final int sizeOuter = 6;
+    for( int i = 0; i < y.length; i++ )
+      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
+  }
+
+  /**
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
   public GM_Object finish( ) throws Exception
   {
+    if( m_extender != null )
+      m_extender.setCursor( DEFAULT_CURSOR );
+
     if( m_result != null )
       return m_result;
 
@@ -129,36 +167,6 @@ public class LineGeometryBuilder implements IGeometryBuilder
     }
 
     return null;
-  }
-
-  /**
-   * This function creates the geometry (GM_Curve).
-   */
-  private GM_Object createGeometry( final GM_Position[] poses ) throws GM_Exception
-  {
-    return GeometryFactory.createGM_Curve( poses, m_crs );
-  }
-
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
-  public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
-  {
-    // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
-    // because the projection depends on the current map-extent, so this builder
-    // is stable in regard to zoom in/out
-    if( !m_points.isEmpty() )
-    {
-      final int[][] points = getPointArrays( projection, currentPoint );
-
-      final int[] arrayX = points[0];
-      final int[] arrayY = points[1];
-
-      /* Paint a linestring. */
-      g.drawPolyline( arrayX, arrayY, arrayX.length );
-      drawHandles( g, arrayX, arrayY );
-    }
   }
 
   private int[][] getPointArrays( final GeoTransform projection, final Point currentPoint )
@@ -189,19 +197,47 @@ public class LineGeometryBuilder implements IGeometryBuilder
     return new int[][] { xs, ys };
   }
 
-  private void drawHandles( final Graphics g, final int[] x, final int[] y )
+  /**
+   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
+   */
+  public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
-    final int sizeOuter = 6;
-    for( int i = 0; i < y.length; i++ )
-      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
+    // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
+    // because the projection depends on the current map-extent, so this builder
+    // is stable in regard to zoom in/out
+    if( !m_points.isEmpty() )
+    {
+      final int[][] points = getPointArrays( projection, currentPoint );
+
+      final int[] arrayX = points[0];
+      final int[] arrayY = points[1];
+
+      /* Paint a linestring. */
+      g.drawPolyline( arrayX, arrayY, arrayX.length );
+      drawHandles( g, arrayX, arrayY );
+    }
+
+    m_renderer.paint( g );
   }
 
-  /* Remove the last add from this line builder. */
-  public void removeLast( )
+  /**
+   * @see org.kalypso.nofdpidss.ui.view.wizard.measure.construction.create.builders.geometry.IMyGeometryBuilder#removeLastPoint()
+   */
+  public void removeLastPoint( )
   {
-    if( m_points.isEmpty() )
-      return;
+    if( m_points.size() > 0 )
+      m_points.remove( m_points.size() - 1 );
+  }
 
-    m_points.remove( m_points.size() - 1 );
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#removePoints()
+   */
+  public void reset( )
+  {
+    m_cnt_points = 0;
+    m_points.clear();
+
+    m_extender.setCursor( CROSSHAIR_CURSOR );
   }
 }

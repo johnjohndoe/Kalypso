@@ -196,7 +196,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
         Object value = null;
         if( "null".equals( token ) )
           value = null;
-        else // FIXME implement other type handlers over an fabrication method
+        else // TODO fabrication method needed!
         if( handler instanceof XsdBaseTypeHandlerString )
         {
           final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;

@@ -5,7 +5,7 @@
          point="org.eclipse.ui.commandImages">
       <image
             commandId="org.kalypso.google.earth.export.command"
-            icon="icons/googleEarth.gif">
+            icon="icons/googleEarth.png">
       </image>
    </extension>
    <extension

@@ -57,7 +57,7 @@ public interface IRecord
    * @throws IllegalArgumentException
    *             if the component is unknown to this record
    */
-  public Object getValue( IComponent comp );
+  public Object getValue( IComponent comp ) throws IllegalArgumentException;
 
   /**
    * Sets the value for the given component<br>
@@ -69,4 +69,6 @@ public interface IRecord
    *             if the component is unknown to this record
    */
   public void setValue( IComponent comp, Object value );
+
+  public IRecord cloneRecord( );
 }
