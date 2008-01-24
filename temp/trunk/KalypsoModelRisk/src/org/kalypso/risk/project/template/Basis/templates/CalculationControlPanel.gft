@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gft:featuretemplate name="Risk control panel"
+<gft:featuretemplate name="Festlegen der Berechnungsparameter"
 	xmlns:gft="featureview.template.kalypso.org"
 	xmlns:ns1="gistableview.template.kalypso.org"
-	xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml">
 	<gft:layer id="layer_1" featurePath="#fid#root" linktype="gml"
 		xlink:href="../models/RasterizationControlModel.gml" />
 
-	<gft:view typename="krrcm:RasterizationControlModel" style="SWT.NONE"
+	<gft:view typename="krrcm:RasterizationControlModel"
+		style="SWT.NONE"
 		xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel">
 		<gft:gridData verticalAlignment="GridData.FILL"
 			horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
@@ -82,10 +84,10 @@
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="landuseClassLink" width="150" />
-							<!-- 
-						<ns1:column alignment="SWT.LEFT" editable="true"
+						<!-- 
+							<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="administrationUnitLink" width="150" />
-							 -->
+						-->
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="value" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
@@ -95,7 +97,7 @@
 				</ns1:gistableview>
 			</gft:table>
 		</gft:group>
-		
+
 	</gft:view>
 
 

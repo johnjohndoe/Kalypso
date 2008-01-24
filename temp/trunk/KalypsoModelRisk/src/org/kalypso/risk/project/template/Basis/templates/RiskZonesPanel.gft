@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gft:featuretemplate name="Risk control panel"
+<gft:featuretemplate name="Risikozonierung"
 	xmlns:gft="featureview.template.kalypso.org"
 	xmlns:ns1="gistableview.template.kalypso.org"
-	xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml">
 	<gft:layer id="layer_1" featurePath="#fid#root" linktype="gml"
 		xlink:href="../models/RasterizationControlModel.gml" />
 
-	<gft:view typename="krrcm:RasterizationControlModel" style="SWT.NONE"
+	<gft:view typename="krrcm:RasterizationControlModel"
+		style="SWT.NONE"
 		xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel">
 		<gft:gridData verticalAlignment="GridData.FILL"
 			horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
