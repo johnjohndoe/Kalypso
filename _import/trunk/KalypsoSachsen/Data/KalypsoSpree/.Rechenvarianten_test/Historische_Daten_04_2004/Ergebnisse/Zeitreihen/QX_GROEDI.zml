@@ -8,12 +8,14 @@
         <metadata name="Vorhersage" value="27.04.2004 10:00:00;29.04.2004 10:00:00"/>
         <metadata name="Flussgebiet" value=""/>
         <metadata name="Name" value="583121"/>
-        <metadata name="WQ-Parameter" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt; &lt;wechmann xmlns=&quot;wechmann.kalypso.org&quot;&gt;     &lt;set&gt;         &lt;validity format=&quot;yyyy-MM-dd'T'HH:mm:ss&quot;&gt;0001-01-01T00:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;-20.01&lt;/w1&gt;             &lt;lnk1&gt;-13.03851&lt;/lnk1&gt;             &lt;k2&gt;3.48364&lt;/k2&gt;             &lt;wgr&gt;20.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-0.01&lt;/w1&gt;             &lt;lnk1&gt;-4.46986&lt;/lnk1&gt;             &lt;k2&gt;1.43458&lt;/k2&gt;             &lt;wgr&gt;170.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;6.59&lt;/w1&gt;             &lt;lnk1&gt;-10.52398&lt;/lnk1&gt;             &lt;k2&gt;2.63409&lt;/k2&gt;             &lt;wgr&gt;-1.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  "/>
+        <metadata name="WQ-Parameter">
+            <data>&lt;![CDATA[&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt; &lt;wechmann xmlns="wechmann.kalypso.org"&gt;     &lt;set&gt;         &lt;validity format="yyyy-MM-dd'T'HH:mm:ss"&gt;0001-01-01T00:00:00&lt;/validity&gt;         &lt;params&gt;             &lt;w1&gt;-20.01&lt;/w1&gt;             &lt;lnk1&gt;-13.03851&lt;/lnk1&gt;             &lt;k2&gt;3.48364&lt;/k2&gt;             &lt;wgr&gt;20.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;-0.01&lt;/w1&gt;             &lt;lnk1&gt;-4.46986&lt;/lnk1&gt;             &lt;k2&gt;1.43458&lt;/k2&gt;             &lt;wgr&gt;170.0&lt;/wgr&gt;         &lt;/params&gt;         &lt;params&gt;             &lt;w1&gt;6.59&lt;/w1&gt;             &lt;lnk1&gt;-10.52398&lt;/lnk1&gt;             &lt;k2&gt;2.63409&lt;/k2&gt;             &lt;wgr&gt;-1.0&lt;/wgr&gt;         &lt;/params&gt;     &lt;/set&gt; &lt;/wechmann&gt;  ]]&gt;</data>
+        </metadata>
         <metadata name="Alarmstufe 4" value="290.0"/>
-        <metadata name="Messtischblattnummer" value="0"/>
         <metadata name="Alarmstufe 3" value="270.0"/>
-        <metadata name="Hochwert" value="0"/>
+        <metadata name="Messtischblattnummer" value="0"/>
         <metadata name="Alarmstufe 2" value="250.0"/>
+        <metadata name="Hochwert" value="0"/>
         <metadata name="Alarmstufe 1" value="170.0"/>
         <metadata name="Rechtswert" value="0"/>
         <metadata name="Höhenangabeart" value=""/>

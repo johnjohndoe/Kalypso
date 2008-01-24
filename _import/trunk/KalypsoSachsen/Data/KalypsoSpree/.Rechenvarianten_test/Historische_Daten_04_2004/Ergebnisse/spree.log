@@ -1,15 +1,14 @@
 Spree - Modell Berechnung wird gestartet
 
 Dateien für Rechenkern werden erzeugt
-Lese Steuerparameter: .calculation
-Lese Modelldaten: \\LFUG-KV-01\kalypsotemp$\CalcJob-26-1110190626913\input\calc\.calculation
+Lese Steuerparameter: jar:file:/d:/Programme/kalypso/Tomcat5.0/temp/CalcJobInputData42285.jar!/.prognose/Historische_Daten_04_2004/.calculation
 Erzeuge _vhs Datei: HW040427_vhs.dbf
-Erzeuge _flp Datei: \\LFUG-KV-01\kalypsotemp$\CalcJob-26-1110190626913\input\native\HW040427_flp
-Erzeuge _nap Datei: \\LFUG-KV-01\kalypsotemp$\CalcJob-26-1110190626913\input\native\HW040427_nap
-Erzeuge Zeitreihen-Datei: \\LFUG-KV-01\kalypsotemp$\CalcJob-26-1110190626913\input\native\HW040427
+Erzeuge _flp Datei: d:\Programme\kalypso\Tomcat5.0\temp\CalcJob-1-1140624676670\native\HW040427_flp
+Erzeuge _nap Datei: d:\Programme\kalypso\Tomcat5.0\temp\CalcJob-1-1140624676670\native\HW040427_nap
+Erzeuge Zeitreihen-Datei: d:\Programme\kalypso\Tomcat5.0\temp\CalcJob-1-1140624676670\native\HW040427
 Rechenkern wird aufgerufen
 Rechenkern wird vorbereitet
-\\LFUG-KV-01\kalypsotemp$\CalcJob-26-1110190626913\input\native\spree.exe 2004,04,27,10,00,00 \\LFUG-KV-01\kalypsotemp$\CalcJob-26-1110190626913\input\native\HW040427.dbf
+d:\Programme\kalypso\Tomcat5.0\temp\CalcJob-1-1140624676670\native\spree.exe 2004,04,27,10,00,00 HW040427.dbf
 Ausgabe des Rechenkerns
 #######################
 #########START#########
@@ -17,7 +16,7 @@ Ausgabe des Rechenkerns
 
 Initialisiere xHwKernel.dll
 Setze Zeitpunkt: 27.4.2004  10:0:0
-Oeffne Datei:\\LFUG-KV-01\kalypsotemp$\CalcJob-26-1110190626913\input\native\HW040427.dbf
+Oeffne Datei:HW040427.dbf
 Berechnung wird gestartet
 Schrigiswalde
 Bautzen WB

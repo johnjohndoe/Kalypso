@@ -759,6 +759,8 @@
 						<Stroke>
 							<CssParameter name="stroke">#000088</CssParameter>
 							<CssParameter name="stroke-width">2</CssParameter>
+							<CssParameter name="stroke-linejoin">round</CssParameter>
+							<CssParameter name="stroke-linecap">round</CssParameter>
 						</Stroke>
 					</LineSymbolizer>
 				</Rule>
