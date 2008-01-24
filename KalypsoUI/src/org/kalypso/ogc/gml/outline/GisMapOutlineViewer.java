@@ -84,8 +84,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 @SuppressWarnings("restriction")
 public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, IMapModellListener
 {
-  // private final ITreeContentProvider m_contentProvider = new WorkbenchContentProvider();
-
   private final ITreeContentProvider m_contentProvider = new GisMapOutlineContentProvider();
 
   private final GisMapOutlineLabelProvider m_labelProvider;
@@ -171,6 +169,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
 
         final Color leftColor = c.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND_GRADIENT );
         final Color rightColor = c.getDisplay().getSystemColor( SWT.COLOR_WHITE );
+        final Color fontColor = c.getDisplay().getSystemColor( SWT.COLOR_BLACK );
 
         final GC gc = event.gc;
         final int clientWidth = event.width;
@@ -184,7 +183,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
         gc.setBackground( oldBackground );
         event.detail &= ~SWT.SELECTED;
 
-        gc.setForeground( rightColor );
+        gc.setForeground( fontColor );
       }
     } );
 
@@ -193,14 +192,14 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
       /**
        * @see org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse.jface.viewers.TreeExpansionEvent)
        */
-      public void treeCollapsed( TreeExpansionEvent event )
+      public void treeCollapsed( final TreeExpansionEvent event )
       {
       }
 
       /**
        * @see org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse.jface.viewers.TreeExpansionEvent)
        */
-      public void treeExpanded( TreeExpansionEvent event )
+      public void treeExpanded( final TreeExpansionEvent event )
       {
         resetCheckState( m_mapModel );
       }
