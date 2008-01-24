@@ -104,9 +104,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
 
   public final Control getControl( )
   {
-    if( m_control == null )
-      throw new IllegalStateException( "createControl not yet called" );
-
     return m_control;
   }
 

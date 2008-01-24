@@ -108,6 +108,9 @@ public class BuildingWehr extends AbstractObservationBuilding
 
     public static WEHRART toWehrart( final String wehrart )
     {
+      if( wehrart == null )
+        return null;
+
       if( WEHR_TYP_BEIWERT.equals( wehrart ) )
         return eBeiwert;
       else if( WEHR_TYP_BREITKRONIG.equals( wehrart ) )
@@ -145,9 +148,9 @@ public class BuildingWehr extends AbstractObservationBuilding
   {
     /* building observation properties */
     if( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_WEHRART, null, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, null, null );
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_STRING, "", null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
 
     /* profile observation properties */
     else if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( type ) )

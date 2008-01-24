@@ -108,6 +108,16 @@ public class ProfileFeatureFactory implements IWspmConstants
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
   }
 
+  public static BigDecimal getProfileStation( final Feature profileFeature )
+  {
+    return (BigDecimal) profileFeature.getProperty( ProfileFeatureFactory.QNAME_STATION );
+  }
+
+  public static void setProfileStation( final Feature profileFeature, final BigDecimal decimal )
+  {
+    profileFeature.setProperty( ProfileFeatureFactory.QNAME_STATION, decimal );
+  }
+
   /**
    * Converts a profile to a feature. The feature is not yet changed but the needed changes are returned as feature
    * changes.

@@ -133,7 +133,9 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     int fieldNr = 0;
 
     // TODO IProfileObjects now returned as list from IProfile
-    Double leftValue = (Double) getProfil().getProfileObject()[0].getValue( ProfilObsHelper.getPropertyFromId( getProfil().getProfileObject()[0], IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    final IProfileObject building = getProfil().getProfileObject()[0];
+    final Object value = building.getValue( ProfilObsHelper.getPropertyFromId( getProfil().getProfileObject()[0], IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    Double leftValue = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( getProfil().getProfileObject()[0], IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
     for( final IProfilPointMarker devider : deviders )
     {
 

@@ -443,7 +443,9 @@ public class WehrPanel extends AbstractProfilView
 
     final BuildingWehr building = (BuildingWehr) profileObjects[0];
     final String sWehrart = (String) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
-    m_Wehrart.setSelection( new StructuredSelection( WEHRART.toWehrart( sWehrart ) ) );
+    final WEHRART wehrart = WEHRART.toWehrart( sWehrart );
+    if( wehrart != null )
+      m_Wehrart.setSelection( new StructuredSelection( wehrart ) );
 
     m_WehrfeldVisible.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     m_kronenParameter.setText( building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ).toString() );
