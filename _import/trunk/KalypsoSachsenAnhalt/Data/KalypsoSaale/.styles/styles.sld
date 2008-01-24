@@ -762,21 +762,24 @@
 						</Stroke>
 					</LineSymbolizer>
 				</Rule>
-<!--				
+<!--			
 				<Rule>
+					<Title>RuleName0815 - Labels</Title>
+					<MinScaleDenominator>0</MinScaleDenominator>
+          			<MaxScaleDenominator>1500000.0</MaxScaleDenominator>
 					<TextSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>GEOM</ogc:PropertyName>
 						</Geometry>
 						<Label>
-							<ogc:PropertyName>NAME</ogc:PropertyName>
+							<ogc:PropertyName>GEWAESSER</ogc:PropertyName>
 						</Label>
 						<Font>
 							<CssParameter name="font-family">Serif</CssParameter>
 							<CssParameter name="font-style">normal</CssParameter>
-							<CssParameter name="font-weight">normal</CssParameter>
+							<CssParameter name="font-weight">bold</CssParameter>
 							<CssParameter name="font-size">12</CssParameter>
-							<CssParameter name="font-color">#000000</CssParameter>
+							<CssParameter name="font-color">#000080</CssParameter>
 						</Font>
 						<LabelPlacement>
 							<LinePlacement>
@@ -785,9 +788,22 @@
 								<Gap>10</Gap>
 							</LinePlacement>
 						</LabelPlacement>
-					</TextSymbolizer>
+			            <Halo>
+			              <Fill>
+			                <CssParameter name="fill-opacity">0.0</CssParameter>
+			                <CssParameter name="fill">#808080</CssParameter>
+			              </Fill>
+			              <Stroke>
+			                <CssParameter name="stroke">#000000</CssParameter>
+			                <CssParameter name="stroke-width">1.0</CssParameter>
+			                <CssParameter name="stroke-linejoin">round</CssParameter>
+			                <CssParameter name="stroke-opacity">0.0</CssParameter>
+			                <CssParameter name="stroke-linecap">square</CssParameter>
+			              </Stroke>
+			            </Halo>
+            		</TextSymbolizer>
 				</Rule>
--->				
+-->			
 			</FeatureTypeStyle>
 		</UserStyle>
 

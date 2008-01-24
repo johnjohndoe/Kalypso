@@ -45,10 +45,10 @@
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>-11</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:Feuchte>0</pegel:Feuchte>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -222,10 +222,10 @@
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>10</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:Feuchte>0</pegel:Feuchte>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -394,9 +394,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -409,7 +409,7 @@
           <pegel:Reserve10>Saale-TS-Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5251900.0,5614500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -418,7 +418,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570000.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -502,12 +502,6 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-570000-gewicht-0">
-              <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-100816"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
-          <pegel:gewichtung>
             <pegel:GewichtungsElement fid="Pegel-570000-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
               <pegel:ombrometerMember xlink:href="#Ombrometer-43032"/>
@@ -571,9 +565,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -748,9 +742,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -924,10 +918,10 @@
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>2</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:Feuchte>0</pegel:Feuchte>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1102,9 +1096,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1135,37 +1129,37 @@
           <pegel:LM2>0</pegel:LM2>
           <pegel:LM3>0</pegel:LM3>
           <pegel:LM4>0</pegel:LM4>
-          <pegel:L>11</pegel:L>
-          <pegel:N>14</pegel:N>
-          <pegel:M>48</pegel:M>
+          <pegel:L>3</pegel:L>
+          <pegel:N>4</pegel:N>
+          <pegel:M>36</pegel:M>
           <pegel:IWE>80</pegel:IWE>
           <pegel:ISOA>140</pegel:ISOA>
           <pegel:ISOE>270</pegel:ISOE>
           <pegel:IWA>330</pegel:IWA>
-          <pegel:NRH>1</pegel:NRH>
-          <pegel:IP9>3</pegel:IP9>
+          <pegel:NRH>2</pegel:NRH>
+          <pegel:IP9>1</pegel:IP9>
           <pegel:IP10>0</pegel:IP10>
-          <pegel:PAR_1>0.9988</pegel:PAR_1>
+          <pegel:PAR_1>0.9975</pegel:PAR_1>
           <pegel:PAR_2>0.0015</pegel:PAR_2>
-          <pegel:PAR_3>4.0E-4</pegel:PAR_3>
-          <pegel:PAR_4>4.5</pegel:PAR_4>
-          <pegel:PAR_5>12.0</pegel:PAR_5>
-          <pegel:PAR_6>1.25</pegel:PAR_6>
-          <pegel:PAR_7>0.042</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
-          <pegel:PAR_9>3.0</pegel:PAR_9>
+          <pegel:PAR_3>7.0E-4</pegel:PAR_3>
+          <pegel:PAR_4>2.7</pegel:PAR_4>
+          <pegel:PAR_5>9.0</pegel:PAR_5>
+          <pegel:PAR_6>1.5</pegel:PAR_6>
+          <pegel:PAR_7>0.04</pegel:PAR_7>
+          <pegel:PAR_8>0.4</pegel:PAR_8>
+          <pegel:PAR_9>4.0</pegel:PAR_9>
           <pegel:PAR_10>0.8</pegel:PAR_10>
-          <pegel:G_1>0.094</pegel:G_1>
-          <pegel:G_2>0.108</pegel:G_2>
-          <pegel:G_3>0.121</pegel:G_3>
-          <pegel:G_4>0.134</pegel:G_4>
-          <pegel:G_5>0.148</pegel:G_5>
-          <pegel:G_6>0.125</pegel:G_6>
-          <pegel:G_7>0.117</pegel:G_7>
-          <pegel:G_8>0.098</pegel:G_8>
-          <pegel:G_9>0.078</pegel:G_9>
-          <pegel:G_10>0.059</pegel:G_10>
-          <pegel:G_11>0.039</pegel:G_11>
+          <pegel:G_1>0.689</pegel:G_1>
+          <pegel:G_2>0.455</pegel:G_2>
+          <pegel:G_3>0.201</pegel:G_3>
+          <pegel:G_4>0.086</pegel:G_4>
+          <pegel:G_5>0.037</pegel:G_5>
+          <pegel:G_6>0.017</pegel:G_6>
+          <pegel:G_7>0.0070</pegel:G_7>
+          <pegel:G_8>0.0030</pegel:G_8>
+          <pegel:G_9>0.0020</pegel:G_9>
+          <pegel:G_10>0.0010</pegel:G_10>
+          <pegel:G_11>0.0</pegel:G_11>
           <pegel:G_12>0.0</pegel:G_12>
           <pegel:G_13>0.0</pegel:G_13>
           <pegel:G_14>0.0</pegel:G_14>
@@ -1173,17 +1167,17 @@
           <pegel:G_16>0.0</pegel:G_16>
           <pegel:G_17>0.0</pegel:G_17>
           <pegel:G_18>0.0</pegel:G_18>
-          <pegel:H_1>0.0080</pegel:H_1>
-          <pegel:H_2>0.012</pegel:H_2>
-          <pegel:H_3>0.013</pegel:H_3>
-          <pegel:H_4>0.014</pegel:H_4>
-          <pegel:H_5>0.014</pegel:H_5>
-          <pegel:H_6>0.013</pegel:H_6>
-          <pegel:H_7>0.011</pegel:H_7>
-          <pegel:H_8>0.0090</pegel:H_8>
-          <pegel:H_9>0.0070</pegel:H_9>
-          <pegel:H_10>0.0050</pegel:H_10>
-          <pegel:H_11>0.0020</pegel:H_11>
+          <pegel:H_1>0.05</pegel:H_1>
+          <pegel:H_2>0.1</pegel:H_2>
+          <pegel:H_3>0.1</pegel:H_3>
+          <pegel:H_4>0.0</pegel:H_4>
+          <pegel:H_5>0.0</pegel:H_5>
+          <pegel:H_6>0.0</pegel:H_6>
+          <pegel:H_7>0.0</pegel:H_7>
+          <pegel:H_8>0.0</pegel:H_8>
+          <pegel:H_9>0.0</pegel:H_9>
+          <pegel:H_10>0.0</pegel:H_10>
+          <pegel:H_11>0.0</pegel:H_11>
           <pegel:H_12>0.0</pegel:H_12>
           <pegel:H_13>0.0</pegel:H_13>
           <pegel:H_14>0.0</pegel:H_14>
@@ -1279,9 +1273,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1393,12 +1387,6 @@
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-572920-gewicht-1">
-              <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-100655"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
-          <pegel:gewichtung>
             <pegel:GewichtungsElement fid="Pegel-572920-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
               <pegel:ombrometerMember xlink:href="#Ombrometer-43184"/>
@@ -1456,9 +1444,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1581,18 +1569,6 @@
               <pegel:ombrometerMember xlink:href="#Ombrometer-110814"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
-          <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-574210-gewicht-3">
-              <pegel:faktor>0.3</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-43739"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
-          <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-574210-gewicht-4">
-              <pegel:faktor>0.3</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-43753"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
           <pegel:Niederschlag>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/574210.zml"/>
           </pegel:Niederschlag>
@@ -1645,9 +1621,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1816,9 +1792,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -1831,7 +1807,7 @@
           <pegel:Reserve10>Straußfurt Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5216500.0,5674800.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -1840,7 +1816,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573090.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -1987,9 +1963,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2158,9 +2134,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2335,9 +2311,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2449,12 +2425,6 @@
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-573110-gewicht-1">
-              <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-43872"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
-          <pegel:gewichtung>
             <pegel:GewichtungsElement fid="Pegel-573110-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
               <pegel:ombrometerMember xlink:href="#Ombrometer-43935"/>
@@ -2512,9 +2482,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2683,9 +2653,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -2860,9 +2830,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3031,9 +3001,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3081,7 +3051,7 @@
           <pegel:PAR_5>3.5</pegel:PAR_5>
           <pegel:PAR_6>0.25</pegel:PAR_6>
           <pegel:PAR_7>0.03</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.5</pegel:PAR_9>
           <pegel:PAR_10>0.5</pegel:PAR_10>
           <pegel:G_1>0.035</pegel:G_1>
@@ -3202,9 +3172,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3252,7 +3222,7 @@
           <pegel:PAR_5>8.0</pegel:PAR_5>
           <pegel:PAR_6>0.9</pegel:PAR_6>
           <pegel:PAR_7>0.07</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.017</pegel:G_1>
@@ -3379,9 +3349,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3429,7 +3399,7 @@
           <pegel:PAR_5>50.0</pegel:PAR_5>
           <pegel:PAR_6>1.5</pegel:PAR_6>
           <pegel:PAR_7>0.01</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.056</pegel:G_1>
@@ -3486,12 +3456,6 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-573360-gewicht-0">
-              <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-43872"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
           <pegel:gewichtung>
             <pegel:GewichtungsElement fid="Pegel-573360-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
@@ -3556,9 +3520,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3606,7 +3570,7 @@
           <pegel:PAR_5>50.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.01</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.129</pegel:G_1>
@@ -3733,9 +3697,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>1</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
+          <pegel:Steuerung>0</pegel:Steuerung>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3783,7 +3747,7 @@
           <pegel:PAR_5>17.0</pegel:PAR_5>
           <pegel:PAR_6>5.5</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.5</pegel:PAR_10>
           <pegel:G_1>0.162</pegel:G_1>
@@ -3904,9 +3868,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -3954,7 +3918,7 @@
           <pegel:PAR_5>60.0</pegel:PAR_5>
           <pegel:PAR_6>5.3</pegel:PAR_6>
           <pegel:PAR_7>0.07</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.5</pegel:PAR_10>
           <pegel:G_1>0.239</pegel:G_1>
@@ -4075,9 +4039,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4125,7 +4089,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>1.8</pegel:PAR_6>
           <pegel:PAR_7>0.05</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.215</pegel:G_1>
@@ -4252,9 +4216,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4267,7 +4231,7 @@
           <pegel:Reserve10>Böhlen</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5317544.257262139,5678500.760759538</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -4302,7 +4266,7 @@
           <pegel:PAR_5>28.0</pegel:PAR_5>
           <pegel:PAR_6>2.0</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.025</pegel:G_1>
@@ -4435,9 +4399,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4485,7 +4449,7 @@
           <pegel:PAR_5>25.0</pegel:PAR_5>
           <pegel:PAR_6>1.6</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.196</pegel:G_1>
@@ -4606,9 +4570,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4656,7 +4620,7 @@
           <pegel:PAR_5>35.0</pegel:PAR_5>
           <pegel:PAR_6>1.3</pegel:PAR_6>
           <pegel:PAR_7>0.025</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.141</pegel:G_1>
@@ -4777,9 +4741,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4827,7 +4791,7 @@
           <pegel:PAR_5>7.0</pegel:PAR_5>
           <pegel:PAR_6>1.2</pegel:PAR_6>
           <pegel:PAR_7>0.06</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.017</pegel:G_1>
@@ -4909,7 +4873,7 @@
           <pegel:PNR>578420</pegel:PNR>
           <pegel:Name>Mansfeld-Leimbach</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -4948,9 +4912,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -4996,9 +4960,9 @@
           <pegel:PAR_3>8.5E-4</pegel:PAR_3>
           <pegel:PAR_4>2.6</pegel:PAR_4>
           <pegel:PAR_5>6.0</pegel:PAR_5>
-          <pegel:PAR_6>0.575</pegel:PAR_6>
+          <pegel:PAR_6>0.58</pegel:PAR_6>
           <pegel:PAR_7>0.05</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.6</pegel:PAR_10>
           <pegel:G_1>0.01</pegel:G_1>
@@ -5080,7 +5044,7 @@
           <pegel:PNR>578430</pegel:PNR>
           <pegel:Name>Großschierstedt</pegel:Name>
           <pegel:Gewaesser>Wipper</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -5119,9 +5083,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5169,7 +5133,7 @@
           <pegel:PAR_5>18.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -5251,7 +5215,7 @@
           <pegel:PNR>570910</pegel:PNR>
           <pegel:Name>Bernburg</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>50</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -5290,9 +5254,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5340,7 +5304,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.03</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.217</pegel:G_1>
@@ -5461,9 +5425,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5511,7 +5475,7 @@
           <pegel:PAR_5>8.0</pegel:PAR_5>
           <pegel:PAR_6>0.5</pegel:PAR_6>
           <pegel:PAR_7>0.08</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.8</pegel:PAR_10>
           <pegel:G_1>0.02</pegel:G_1>
@@ -5632,9 +5596,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5682,7 +5646,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.8</pegel:PAR_10>
           <pegel:G_1>0.0080</pegel:G_1>
@@ -5803,9 +5767,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5853,7 +5817,7 @@
           <pegel:PAR_5>20.0</pegel:PAR_5>
           <pegel:PAR_6>0.3</pegel:PAR_6>
           <pegel:PAR_7>0.055</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.2</pegel:PAR_10>
           <pegel:G_1>0.012</pegel:G_1>
@@ -5980,9 +5944,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -5995,7 +5959,7 @@
           <pegel:Reserve10>Rappbode-TS-Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5216700.0,5737300.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6004,7 +5968,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579011.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6030,7 +5994,7 @@
           <pegel:PAR_5>20.0</pegel:PAR_5>
           <pegel:PAR_6>0.75</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.134</pegel:G_1>
@@ -6157,9 +6121,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6172,7 +6136,7 @@
           <pegel:Reserve10>TS-Wendefurth-Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5216700.0,5740000.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6181,7 +6145,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579015.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
           <pegel:QuantNr./>
@@ -6207,7 +6171,7 @@
           <pegel:PAR_5>15.0</pegel:PAR_5>
           <pegel:PAR_6>0.2</pegel:PAR_6>
           <pegel:PAR_7>0.05</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0080</pegel:G_1>
@@ -6334,9 +6298,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6384,7 +6348,7 @@
           <pegel:PAR_5>15.0</pegel:PAR_5>
           <pegel:PAR_6>1.4</pegel:PAR_6>
           <pegel:PAR_7>0.05</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -6505,9 +6469,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6555,7 +6519,7 @@
           <pegel:PAR_5>18.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.04</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -6676,9 +6640,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6691,7 +6655,7 @@
           <pegel:Reserve10>Wegeleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5237817.465321006,5757262.428122178</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -6726,7 +6690,7 @@
           <pegel:PAR_5>18.0</pegel:PAR_5>
           <pegel:PAR_6>1.3</pegel:PAR_6>
           <pegel:PAR_7>0.045</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -6847,9 +6811,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -6897,7 +6861,7 @@
           <pegel:PAR_5>9.0</pegel:PAR_5>
           <pegel:PAR_6>1.25</pegel:PAR_6>
           <pegel:PAR_7>0.06</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -7024,9 +6988,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7074,7 +7038,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -7201,9 +7165,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7251,7 +7215,7 @@
           <pegel:PAR_5>50.0</pegel:PAR_5>
           <pegel:PAR_6>0.8</pegel:PAR_6>
           <pegel:PAR_7>0.02</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.022</pegel:G_1>
@@ -7372,9 +7336,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7422,7 +7386,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>0.7</pegel:PAR_6>
           <pegel:PAR_7>0.03</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.196</pegel:G_1>
@@ -7543,9 +7507,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
-          <pegel:Steuerung>1</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
+          <pegel:Steuerung>0</pegel:Steuerung>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7593,7 +7557,7 @@
           <pegel:PAR_5>30.0</pegel:PAR_5>
           <pegel:PAR_6>2.5</pegel:PAR_6>
           <pegel:PAR_7>0.0090</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.0</pegel:G_1>
@@ -7720,9 +7684,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7735,7 +7699,7 @@
           <pegel:Reserve10>Löben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5367754.704416813,5738921.4626806555</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -7770,7 +7734,7 @@
           <pegel:PAR_5>35.0</pegel:PAR_5>
           <pegel:PAR_6>1.0</pegel:PAR_6>
           <pegel:PAR_7>0.018</pegel:PAR_7>
-          <pegel:PAR_8>0.8</pegel:PAR_8>
+          <pegel:PAR_8>0.2</pegel:PAR_8>
           <pegel:PAR_9>3.0</pegel:PAR_9>
           <pegel:PAR_10>0.7</pegel:PAR_10>
           <pegel:G_1>0.037</pegel:G_1>
@@ -7858,7 +7822,7 @@
           <pegel:PNR>570250</pegel:PNR>
           <pegel:Name>Kaulsdorf</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>10</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -7896,10 +7860,10 @@
           <pegel:MHQ>-1</pegel:MHQ>
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
-          <pegel:Feuchte>8</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:Feuchte>0</pegel:Feuchte>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -7968,9 +7932,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8000,7 +7964,7 @@
           <pegel:PNR>573100</pegel:PNR>
           <pegel:Name>Straußfurt Abgabe</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8039,9 +8003,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8110,9 +8074,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8125,7 +8089,7 @@
           <pegel:Reserve10>Wippermündung</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8181,9 +8145,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8196,7 +8160,7 @@
           <pegel:Reserve10>oh. Bretleben</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8252,9 +8216,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8267,7 +8231,7 @@
           <pegel:Reserve10>Kelbra Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5224983.699596131,5708497.272501556</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5218345.9150316175,5709320.405627218</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8284,7 +8248,7 @@
           <pegel:PNR>575406</pegel:PNR>
           <pegel:Name>Kelbra-Abgabe</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8323,9 +8287,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8338,7 +8302,7 @@
           <pegel:Reserve10>Kelbra-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5224983.699596131,5708497.272501556</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8347,7 +8311,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575406.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8394,9 +8358,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8426,7 +8390,7 @@
           <pegel:PNR>575450</pegel:PNR>
           <pegel:Name>Nikolausrieth</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>40</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>TH</pegel:Land>
           <pegel:WN1>MG</pegel:WN1>
@@ -8465,9 +8429,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8480,7 +8444,7 @@
           <pegel:Reserve10>Nikolausrieth</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8536,9 +8500,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8551,7 +8515,7 @@
           <pegel:Reserve10>Kleindalzig</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8607,9 +8571,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8622,7 +8586,7 @@
           <pegel:Reserve10>Elstermündung</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8639,7 +8603,7 @@
           <pegel:PNR>579621</pegel:PNR>
           <pegel:Name>Mündung</pegel:Name>
           <pegel:Gewaesser>Selke</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>70</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8678,9 +8642,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8693,7 +8657,7 @@
           <pegel:Reserve10>Mündung</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8749,9 +8713,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8764,7 +8728,7 @@
           <pegel:Reserve10>HWR Kalte Bode -Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5204800.0,5742900.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8773,7 +8737,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579306.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8781,7 +8745,7 @@
           <pegel:PNR>579330</pegel:PNR>
           <pegel:Name>Königsh./HWR - Abgabe</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8820,9 +8784,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8850,7 +8814,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579000">
           <pegel:PNR>579000</pegel:PNR>
-          <pegel:Name>Ül-Spere, Zulauf</pegel:Name>
+          <pegel:Name>Ül-Sperre, Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8891,9 +8855,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8906,7 +8870,7 @@
           <pegel:Reserve10>Ül-Spere, Zulauf</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5210386.313997258,5741854.435113958</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5209800.0,5742200.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8915,7 +8879,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579000.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8923,7 +8887,7 @@
           <pegel:PNR>579999</pegel:PNR>
           <pegel:Name>ÜL zur Rappbode</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -8962,9 +8926,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -8977,7 +8941,7 @@
           <pegel:Reserve10>ÜL zur Rappbode</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5211600.0,5741500.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -8986,7 +8950,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579999.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -8994,7 +8958,7 @@
           <pegel:PNR>579012</pegel:PNR>
           <pegel:Name>Rappbode-TS-Abgabe</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>65</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9033,9 +8997,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9048,7 +9012,7 @@
           <pegel:Reserve10>Rappbode-TS-Abgabe</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5216700.0,5739000.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9057,7 +9021,7 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579012.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
+          <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
       <pegel:PegelMember>
@@ -9065,7 +9029,7 @@
           <pegel:PNR>579013</pegel:PNR>
           <pegel:Name>Rappbode-TS, TWA</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>65</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9084,7 +9048,7 @@
           <pegel:QGMAX>9999</pegel:QGMAX>
           <pegel:Vorsp>24</pegel:Vorsp>
           <pegel:WDAT>0</pegel:WDAT>
-          <pegel:QDAT>0</pegel:QDAT>
+          <pegel:QDAT>1</pegel:QDAT>
           <pegel:VORGP>0</pegel:VORGP>
           <pegel:KUM>0</pegel:KUM>
           <pegel:WMIN>-9999</pegel:WMIN>
@@ -9104,9 +9068,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9119,7 +9083,7 @@
           <pegel:Reserve10>Rappbode-TS, TWA</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5216355.047892633,5741809.036940231</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9136,7 +9100,7 @@
           <pegel:PNR>579001</pegel:PNR>
           <pegel:Name>Hirtenstieg/ÜL-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9175,9 +9139,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9246,9 +9210,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9260,8 +9224,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>TS-Wendefurth, Bode-Anteil</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4423629.0,5734516.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9278,7 +9242,7 @@
           <pegel:PNR>579006</pegel:PNR>
           <pegel:Name>TS-Wendefurth-Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>70</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9317,9 +9281,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9349,7 +9313,7 @@
           <pegel:PNR>579713</pegel:PNR>
           <pegel:Name>Mdg</pegel:Name>
           <pegel:Gewaesser>Holtemme</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9388,9 +9352,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9403,7 +9367,7 @@
           <pegel:Reserve10>Mdg Holtemme</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9420,7 +9384,7 @@
           <pegel:PNR>579069</pegel:PNR>
           <pegel:Name>an Holtemme</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>0</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>80</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SO</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
@@ -9459,9 +9423,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9474,7 +9438,7 @@
           <pegel:Reserve10>an Holtemme</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -9530,9 +9494,9 @@
           <pegel:HHQ>-1</pegel:HHQ>
           <pegel:Bodenfrost>0</pegel:Bodenfrost>
           <pegel:Feuchte>0</pegel:Feuchte>
-          <pegel:SchneeTyp>0</pegel:SchneeTyp>
+          <pegel:SchneeTyp>2</pegel:SchneeTyp>
           <pegel:Steuerung>0</pegel:Steuerung>
-          <pegel:Variante>Test</pegel:Variante>
+          <pegel:Variante/>
           <pegel:STATUS>0</pegel:STATUS>
           <pegel:Reserve2>0</pegel:Reserve2>
           <pegel:Reserve3>0</pegel:Reserve3>
@@ -9545,7 +9509,7 @@
           <pegel:Reserve10>Hilfspunkt</pegel:Reserve10>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -19377,7 +19341,7 @@
           <speicher:STEUNAME>Rudolstadt</speicher:STEUNAME>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
-          <speicher:ST_Art>2</speicher:ST_Art>
+          <speicher:ST_Art>1</speicher:ST_Art>
           <speicher:QG1>120</speicher:QG1>
           <speicher:T1>5</speicher:T1>
           <speicher:T2>9</speicher:T2>
@@ -19410,7 +19374,7 @@
           <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5250296.764031515,5612930.604731154</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
@@ -19480,7 +19444,7 @@
           <speicher:RE_KOR>11</speicher:RE_KOR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5219296.780060047,5676253.972874419</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
@@ -19550,7 +19514,7 @@
           <speicher:RE_KOR>21</speicher:RE_KOR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5218345.9150316175,5709320.405627218</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5224503.682718802,5708516.954357042</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
@@ -19620,7 +19584,7 @@
           <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5206105.142186547,5743473.325752091</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
@@ -19729,7 +19693,7 @@
           <speicher:STEUNAME>Zulauf TS Wendefuth</speicher:STEUNAME>
           <speicher:UELNAME>TWA</speicher:UELNAME>
           <speicher:DATEINAME/>
-          <speicher:ST_Art>2</speicher:ST_Art>
+          <speicher:ST_Art>1</speicher:ST_Art>
           <speicher:QG1>100</speicher:QG1>
           <speicher:T1>0</speicher:T1>
           <speicher:T2>0</speicher:T2>
@@ -19762,7 +19726,7 @@
           <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5216488.833129135,5741919.7331032455</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
@@ -19801,7 +19765,7 @@
           <speicher:STEUNAME>Wegeleben</speicher:STEUNAME>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
-          <speicher:ST_Art>2</speicher:ST_Art>
+          <speicher:ST_Art>1</speicher:ST_Art>
           <speicher:QG1>35</speicher:QG1>
           <speicher:T1>11</speicher:T1>
           <speicher:T2>16</speicher:T2>
@@ -19834,7 +19798,7 @@
           <speicher:RE_KOR>0</speicher:RE_KOR>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5218272.874608937,5742160.828668987</gml:coordinates>
             </gml:Point>
           </gml:location>
           <speicher:Inhalt>
@@ -19884,7 +19848,7 @@
           <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5232477.593074382,5731604.24666157</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -19899,7 +19863,7 @@
           <ombrometer:NR-Ersatz>90838</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5242506.493735254,5701350.411202377</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -19914,7 +19878,7 @@
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5308164.472169368,5703587.602584293</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -19929,7 +19893,7 @@
           <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5338255.312898752,5753092.481565241</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -19959,7 +19923,7 @@
           <ombrometer:NR-Ersatz>143102</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5367126.880618143,5686285.301443918</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -19974,7 +19938,7 @@
           <ombrometer:NR-Ersatz>110421</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5201030.851839392,5621769.001812091</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -19989,7 +19953,7 @@
           <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5216867.22356173,5658097.274336445</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20004,7 +19968,7 @@
           <ombrometer:NR-Ersatz>110731</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5225922.964118127,5603179.801405623</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20019,7 +19983,7 @@
           <ombrometer:NR-Ersatz>110814</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5228632.2311253855,5589046.67737567</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20034,7 +19998,7 @@
           <ombrometer:NR-Ersatz>143300</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5273356.920111481,5608885.081496356</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5273742.198917001,5608606.103291392</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20094,7 +20058,7 @@
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5349666.209716228,5632119.973304373</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20199,7 +20163,7 @@
           <ombrometer:NR-Ersatz>43038</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5241300.0,5626600.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20379,7 +20343,7 @@
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5236606.335220502,5722095.0122990385</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20409,7 +20373,7 @@
           <ombrometer:NR-Ersatz>44414</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5267275.88086912,5783754.133899418</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20424,7 +20388,7 @@
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5197740.741044546,5750304.842533607</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20439,7 +20403,7 @@
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5208405.85022201,5755251.973518407</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20484,7 +20448,7 @@
           <ombrometer:NR-Ersatz>44499</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5305340.468499323,5553508.506535939</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20499,7 +20463,7 @@
           <ombrometer:NR-Ersatz>44407</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5285346.352070248,5554312.191802888</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20513,8 +20477,8 @@
           <ombrometer:NR>44430</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4416067.0,5741910.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20604,7 +20568,7 @@
           <ombrometer:NR-Ersatz>82023</ombrometer:NR-Ersatz>
           <gml:location>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">4664196.763917435,5.73355970000558E-14</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5322424.623526108,5660818.349311084</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
