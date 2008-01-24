@@ -268,7 +268,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       }
     };
 
-    if( editable )
+    if( !editable )
     {
       m_viewer.setContentProvider( m_tupleResultContentProvider );
       m_viewer.setLabelProvider( m_tupleResultLabelProvider );

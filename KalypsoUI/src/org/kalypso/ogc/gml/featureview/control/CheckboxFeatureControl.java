@@ -71,9 +71,13 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private final Collection<ModifyListener> m_modlistener = new ArrayList<ModifyListener>();
 
-  public CheckboxFeatureControl( final Feature feature, final IValuePropertyType ftp )
+  private final String m_text;
+
+  public CheckboxFeatureControl( final Feature feature, final IValuePropertyType ftp, String text )
   {
     super( feature, ftp );
+
+    m_text = text;
 
     m_modifier = new BooleanModifier( ftp );
   }
@@ -99,7 +103,6 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
     m_checkbox.addSelectionListener( new SelectionListener()
     {
-
       public void widgetSelected( final SelectionEvent e )
       {
         fireFeatureChange( getChange() );
@@ -150,6 +153,9 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
       if( newvalue.booleanValue() != oldValue )
         m_checkbox.setSelection( newvalue.booleanValue() );
     }
+
+    if( m_text != null )
+      m_checkbox.setText( m_text );
   }
 
   protected ICommand getChange( )

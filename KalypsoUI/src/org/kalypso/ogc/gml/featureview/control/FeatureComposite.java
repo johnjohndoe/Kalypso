@@ -45,7 +45,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +64,8 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
@@ -199,11 +200,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     for( final Control control : m_swtControls )
       updateLayoutData( control );
 
-    if( m_control != null && !m_control.isDisposed() )
-    {
-      if( m_control instanceof Composite )
-        ((Composite) m_control).layout();
-    }
+    if( m_control != null && !m_control.isDisposed() && m_control instanceof Composite )
+      ((Composite) m_control).layout();
   }
 
   /**
@@ -332,16 +330,24 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( layoutDataType == NULL_LAYOUT_DATA_TYPE )
       control.setLayoutData( new GridData() );
 
-    /* Update visibility, eneblement, ... */
+    /* Update visibility, enablement, ... */
     final ControlType controlType = (ControlType) control.getData( DATA_CONTROL_TYPE );
 
-    final Object visibleOperation = controlType.getVisibleOperation();
-    final boolean visible = evaluateOperation( getFeature(), visibleOperation, controlType.isVisible() );
-    control.setVisible( visible );
+    // REMARK: Special case for direct children of Tab-Folders. Setting the visibility here
+    // breaks the tab folder behavior. We assume, that the visibility of a
+    // tab folder item is never changed depending on a value of a feature.
+    if( !(control.getParent() instanceof org.eclipse.swt.widgets.TabFolder) )
+    {
+      final Object visibleOperation = controlType.getVisibleOperation();
+      final boolean visible = evaluateOperation( getFeature(), visibleOperation, controlType.isVisible() );
+      if( control.getVisible() != visible )
+        control.setVisible( visible );
+    }
 
     final Object enabledOperation = controlType.getEnabledOperation();
     final boolean enabled = evaluateOperation( getFeature(), enabledOperation, controlType.isEnabled() );
-    control.setEnabled( enabled );
+    if( control.getEnabled() != enabled )
+      control.setEnabled( enabled );
   }
 
   private boolean evaluateOperation( final Feature feature, final Object operationElement, final boolean defaultValue )
@@ -417,20 +423,30 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final org.eclipse.swt.widgets.TabFolder tabFolder = new org.eclipse.swt.widgets.TabFolder( parent, tabStyle );
 
+      tabFolder.addSelectionListener( new SelectionAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        @Override
+        public void widgetSelected( SelectionEvent e )
+        {
+          super.widgetSelected( e );
+// TODO: remove me
+        }
+      } );
+
       /* If a toolkit is set, use it. */
       if( m_formToolkit != null )
         m_formToolkit.adapt( tabFolder );
 
-      final List<JAXBElement< ? >> tabLabelAndControl = tabFolderType.getTabLabelAndControl();
-      for( final Iterator<JAXBElement< ? >> iterator = tabLabelAndControl.iterator(); iterator.hasNext(); )
+      List<org.kalypso.template.featureview.TabFolder.TabItem> tabItem = tabFolderType.getTabItem();
+      for( org.kalypso.template.featureview.TabFolder.TabItem tabItemType : tabItem )
       {
-        final JAXBElement< ? > labelElement = iterator.next();
-        final JAXBElement< ? > controlElement = iterator.next();
+        String label = tabItemType.getTabLabel();
+        ControlType control = tabItemType.getControl().getValue();
 
-        final String label = (String) labelElement.getValue();
-        final ControlType control = (ControlType) controlElement.getValue();
-
-        final TabItem item = new TabItem( tabFolder, SWT.NONE );
+        TabItem item = new TabItem( tabFolder, SWT.NONE );
         item.setText( label );
 
         final Control tabControl = createControl( tabFolder, SWT.NONE, control );
@@ -540,9 +556,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof Checkbox )
     {
       final Checkbox checkboxType = (Checkbox) controlType;
+      String text = checkboxType.getText();
 
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, vpt );
+      final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, vpt, text );
 
       final Control control = cfc.createControl( parent, SWTUtilities.createStyleFromString( checkboxType.getStyle() ) );
       cfc.setEnabled( checkboxType.isEditable() );
