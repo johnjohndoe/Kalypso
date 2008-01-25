@@ -204,7 +204,7 @@ public abstract class AbstractProfil implements IProfil
    */
   public boolean removePoint( final IRecord point )
   {
-    throw (new NotImplementedException());
+    return getResult().remove( point );
   }
 
   /**
