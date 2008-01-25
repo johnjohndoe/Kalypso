@@ -53,6 +53,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -376,17 +377,19 @@ public class Control1D2DConverter
         /* Unsteady state: a block for each time step */
 
         // TODO: check for right time zone
-        XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( componentTime );
+        // As we are using UTC for all our timeseries, this is the timezone that should be used here
+        final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone( "UTC" );
 
+        XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( componentTime );
         Calendar lastStepCal = cal.toGregorianCalendar();
+        lastStepCal.setTimeZone( DEFAULT_TIMEZONE );
         int stepCount = 1;
         for( ; iterator.hasNext(); stepCount++ )
         {
           final IRecord record = iterator.next();
           final float uRVal = ((BigDecimal) record.getValue( componentRelaxationsFaktor )).floatValue();
-
           final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( componentTime )).toGregorianCalendar();
-
+          stepCal.setTimeZone( DEFAULT_TIMEZONE );
           final String unsteadyMsg = String.format( Messages.getString( "Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
           writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
 
@@ -434,6 +437,14 @@ public class Control1D2DConverter
       kalypsoCallendarPreviousStep.setTime( lastStepCal.getTime() );
 
       timeStepInterval = kalypsoCalendarStep.getTimeInMillis() - kalypsoCallendarPreviousStep.getTimeInMillis();
+      // if timeStepInterval is zero, step will be ignored
+      // (this will happen on summertime to wintertime transition)
+      if(timeStepInterval == 0)
+      {
+        formatter.format( "com Summertime/Wintertime transition; repeated step ignored%n" );
+        return;
+      }
+      
       timeStepHours = (double) timeStepInterval / (60 * 60 * 1000);
       ihre = getTimeInPercentage( kalypsoCalendarStep );
     }
