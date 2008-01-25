@@ -124,7 +124,8 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
       return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
 
     if( modelElement instanceof IFELine )
-      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
+//      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
+      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
 
     return new IBoundaryConditionDescriptor[] {};
   }

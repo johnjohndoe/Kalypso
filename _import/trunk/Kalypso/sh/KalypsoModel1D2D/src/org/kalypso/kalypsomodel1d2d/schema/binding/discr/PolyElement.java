@@ -8,6 +8,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
@@ -176,28 +177,34 @@ public class PolyElement extends Element2D implements IPolyElement
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    // TODO Patrice use ModelGeometryBuilder createSurface
-    final List<IFE1D2DNode> nodes = getNodes();
-    final int SIZE = nodes.size();
-    /* Positions from nodes */
-    final GM_Position[] poses = new GM_Position[SIZE];
-
-    if( SIZE <= 3 )
-    {
-      return null;
-    }
-
-    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
-    if( crs == null )
-      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-
-    for( int i = 0; i < poses.length; i++ )
-    {
-      final GM_Point point = nodes.get( i ).getPoint();
-      poses[i] = point.getPosition();
-    }
-
-    return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
+    final GM_Surface surface = ModelGeometryBuilder.createSurfaceFromNode( getNodes() );
+    if(surface==null)
+      System.out.println("Geometry cannot be calculated for "+getGmlID());
+    return surface;
+    
+//    
+//    // TODO Patrice use ModelGeometryBuilder createSurface
+//    final List<IFE1D2DNode> nodes = getNodes();
+//    final int SIZE = nodes.size();
+//    /* Positions from nodes */
+//    final GM_Position[] poses = new GM_Position[SIZE];
+//
+//    if( SIZE <= 3 )
+//    {
+//      return null;
+//    }
+//
+//    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+//    if( crs == null )
+//      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+//
+//    for( int i = 0; i < poses.length; i++ )
+//    {
+//      final GM_Point point = nodes.get( i ).getPoint();
+//      poses[i] = point.getPosition();
+//    }
+//
+//    return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
   }
 
   public static IPolyElement createPolyElement( final IFEDiscretisationModel1d2d discModel )

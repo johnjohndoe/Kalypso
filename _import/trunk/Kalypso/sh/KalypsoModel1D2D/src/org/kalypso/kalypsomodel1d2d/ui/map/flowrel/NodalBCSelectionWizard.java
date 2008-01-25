@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -151,6 +152,11 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
         bc.setObservation( obs );
         bc.setStationaryCondition( m_selectionPage.getSteadyValue() );
         bc.setParentElement( m_parentModelElement );
+
+        // isAbsolute property is available only for the BCs with element as a parent
+        if( m_parentModelElement instanceof IFELine )
+          bc.setIsAbsolute( null );
+
         if( m_boundaryPosition != null )
         {
           bc.setPosition( m_boundaryPosition );

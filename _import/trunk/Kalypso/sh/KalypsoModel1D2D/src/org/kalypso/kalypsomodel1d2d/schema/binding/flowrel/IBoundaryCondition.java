@@ -92,6 +92,8 @@ public interface IBoundaryCondition extends IFlowRelationship
 
   public Boolean isAbsolute( );
 
+  public void setIsAbsolute( final Boolean value );
+
   public void setParentElement( final IFeatureWrapper2 parentElement );
 
   public String getParentElementID( );

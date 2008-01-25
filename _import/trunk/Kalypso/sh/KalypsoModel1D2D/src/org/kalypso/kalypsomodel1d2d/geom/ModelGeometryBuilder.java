@@ -87,7 +87,7 @@ public class ModelGeometryBuilder
 
     if( SIZE <= 3 )
     {
-      System.out.println( Messages.ModelGeometryBuilder_1 );
+//      System.out.println( Messages.ModelGeometryBuilder_1 );
       return null;
     }
 

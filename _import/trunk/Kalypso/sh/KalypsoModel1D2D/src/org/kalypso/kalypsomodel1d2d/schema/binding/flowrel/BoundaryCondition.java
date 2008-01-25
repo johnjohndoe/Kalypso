@@ -95,10 +95,11 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
       getFeature().setProperty( QNAME_P_DIRECTION, null );
 
     if( (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ))
-        || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )) )
-      getFeature().setProperty( QNAME_P_ISABSOLUTE, new Boolean( true ) );
+        || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )) 
+      || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )) )
+      setIsAbsolute( true );
     else
-      getFeature().setProperty( QNAME_P_ISABSOLUTE, null );
+      setIsAbsolute( null );
 
     final String[] componentUrns = new String[] { domainComponentUrn, valueComponentUrn };
     final IComponent[] components = new IComponent[componentUrns.length];
@@ -246,6 +247,14 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   public Boolean isAbsolute( )
   {
     return (Boolean) getFeature().getProperty( QNAME_P_ISABSOLUTE );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setIsAbsolute(java.lang.Boolean)
+   */
+  public void setIsAbsolute( final Boolean value )
+  {
+    getFeature().setProperty( QNAME_P_ISABSOLUTE, value );
   }
 
 }
