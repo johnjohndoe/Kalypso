@@ -84,7 +84,9 @@ public class SelectLengthSectionWizard extends Wizard
 
   private final IFolder m_scenarioFolder;
 
-  private IFile m_selectedResultFile;
+  private IFile m_selectedKodResultFile;
+
+  private String m_selectedLGmlResultPath;
 
   public SelectLengthSectionWizard( final IFolder scenarioFolder, final IScenarioResultMeta resultModel )
   {
@@ -164,15 +166,16 @@ public class SelectLengthSectionWizard extends Wizard
         // make an IFile
         IPath fullPath = result.getFullPath();
 
-        final String kodPath = fullPath.toPortableString().replace( ".gml", ".kod" );
+        m_selectedLGmlResultPath = fullPath.toPortableString();
+        final String kodPath = m_selectedLGmlResultPath.replace( ".gml", ".kod" );
 
-        m_selectedResultFile = m_scenarioFolder.getFile( Path.fromPortableString( kodPath ) );
+        m_selectedKodResultFile = m_scenarioFolder.getFile( Path.fromPortableString( kodPath ) );
 
         try
         {
           final IResultMeta stepResult = result.getParent();
           final IResultMeta unitResult = stepResult.getParent();
-          final String title = String.format( "Lägsschnitt %s - %s", unitResult.getName(), stepResult.getName() );
+          final String title = String.format( "Längsschnitt %s - %s", unitResult.getName(), stepResult.getName() );
 
           final ChartConfigurationLoader loader = new ChartConfigurationLoader( getClass().getResource( "resources/lengthSection.kod" ) );
           final ChartConfigurationDocument chartDoc = loader.getChartConfigurationDocument();
@@ -180,14 +183,14 @@ public class SelectLengthSectionWizard extends Wizard
           for( ChartType chart : chartArray )
             chart.setTitle( title );
 
-          final XmlOptions options = ChartConfigurationLoader.configureXmlOptions( m_selectedResultFile.getCharset() );
+          final XmlOptions options = ChartConfigurationLoader.configureXmlOptions( m_selectedKodResultFile.getCharset() );
           final InputStream is = chartDoc.newInputStream( options );
-          if( m_selectedResultFile.exists() )
-            m_selectedResultFile.setContents( is, false, true, new SubProgressMonitor( monitor, 1 ) );
+          if( m_selectedKodResultFile.exists() )
+            m_selectedKodResultFile.setContents( is, false, true, new SubProgressMonitor( monitor, 1 ) );
           else
           {
-            FolderUtilities.mkdirs( m_selectedResultFile.getParent() );
-            m_selectedResultFile.create( is, false, new SubProgressMonitor( monitor, 1 ) );
+            FolderUtilities.mkdirs( m_selectedKodResultFile.getParent() );
+            m_selectedKodResultFile.create( is, false, new SubProgressMonitor( monitor, 1 ) );
           }
         }
         catch( IOException e )
@@ -213,8 +216,13 @@ public class SelectLengthSectionWizard extends Wizard
 
   public IFile getSelection( )
   {
-    return m_selectedResultFile;
+    return m_selectedKodResultFile;
 
+  }
+
+  public String getSelectedLGmlResultPath( )
+  {
+    return m_selectedLGmlResultPath;
   }
 
 }

@@ -76,6 +76,11 @@
 		systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.KingFlowRelation.kod" />
 
+	<!--  Lengthsection - Results -->
+	<catalog:system
+		systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Lengthsection:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults.Lengthsection.kod" />
+
 	<!--  Hydrograph - Results -->
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Hydrograph:featureview:default"

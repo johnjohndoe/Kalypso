@@ -40,23 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.net.URL;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.chart.ui.view.ChartView;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -93,12 +100,60 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
       {
         // get file from wizard
         final IFile file = selectLengthSectionWizard.getSelection();
+        //
+        // // set file to chart view
+        // final ChartView chartView = (ChartView) window.getActivePage().showView( ChartView.ID );
+        // final Image lsImage = Kalypso1d2dProjectPlugin.getImageProvider().getImage(
+        // Kalypso1d2dProjectImages.DESCRIPTORS.RESULT_META_DOCUMENT_LENGTH_SECTION );
+        // chartView.setTitleImage( lsImage );
+        // chartView.setInput( file );
 
         // set file to chart view
-        final ChartView chartView = (ChartView) window.getActivePage().showView( ChartView.ID );
-        final Image lsImage = Kalypso1d2dProjectPlugin.getImageProvider().getImage( Kalypso1d2dProjectImages.DESCRIPTORS.RESULT_META_DOCUMENT_LENGTH_SECTION );
-        chartView.setTitleImage( lsImage );
-        chartView.setInput( file );
+        final FeatureTemplateView featureView = (FeatureTemplateView) window.getActivePage().showView( FeatureTemplateView.ID );
+
+        final String gmlResultPath = selectLengthSectionWizard.getSelectedLGmlResultPath();
+        if( gmlResultPath == null )
+          return StatusUtilities.createErrorStatus( "Längsschnitt-Ergebnisdatei konnte nicht geladen werden." );
+
+        final UIJob job = new UIJob( "Loading " + file.getName() )
+        {
+          @Override
+          public IStatus runInUIThread( IProgressMonitor monitor )
+          {
+            try
+            {
+              // load template
+              // load template from resource:
+              final URL url = getClass().getResource( "resources/lengthsection.gft" );
+
+              Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( url, new NullProgressMonitor() );
+
+              URL urlContext = ResourceUtilities.createURL( scenarioFolder );
+
+              // root feature
+              String featurePath = "";
+
+              // path to gml, relative to context
+              String href = gmlResultPath;
+
+              final String linkType = "gml";
+
+              // set template to view in ui thread, sepcify href, featurePath and linkType
+              featureView.setTemplate( template, urlContext, featurePath, href, linkType );
+
+              return Status.OK_STATUS;
+            }
+            catch( Throwable e )
+            {
+              return StatusUtilities.statusFromThrowable( e );
+            }
+          }
+        };
+        job.schedule();
+
+        // final Image lsImage = Kalypso1d2dProjectPlugin.getImageProvider().getImage(
+        // Kalypso1d2dProjectImages.DESCRIPTORS.RESULT_META_DOCUMENT_LENGTH_SECTION );
+        // chartView.setTitleImage( lsImage );
 
         return Status.OK_STATUS;
       }

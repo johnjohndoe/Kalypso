@@ -6,9 +6,9 @@
 		<Description>Längsschnitt</Description>
 		<Layers>
 			<LayerRef ref="gridLayer" />
-			<LayerRef ref="wsp" />
-			<LayerRef ref="runoff" />
-			<LayerRef ref="velocity" />
+			<LayerRef ref="wspLayer" />
+			 <LayerRef ref="dischargeLayer" /> 
+			<!--<LayerRef ref="velocityLayer" /> -->
 			<LayerRef ref="soil" />
 		</Layers>
 	</Chart>
@@ -38,7 +38,7 @@
 		<Type>LINE</Type>
 	</Style>
 
-	<Layer id="wsp" visible="true">
+	<Layer id="wspLayer" visible="true">
 		<Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
 			<Parameters>
 				<Parameter value="lengthSection.gml" name="href" />
@@ -55,11 +55,12 @@
 			<TargetAxisRef ref="NN_Axis" />
 		</Mapper>
 		<Style>
-			<StyleRef ref="wspStyle" />
+			<StyleRef ref="wspLineStyle" />
+			<StyleRef ref="wspPointStyle" />
 		</Style>
 	</Layer>
 
-	<Layer id="runoff" visible="true">
+	<Layer id="dischargeLayer" visible="true">
 		<Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
 			<Parameters>
 				<Parameter value="lengthSection.gml" name="href" />
@@ -78,11 +79,12 @@
 			<TargetAxisRef ref="M3S_Axis" />
 		</Mapper>
 		<Style>
-			<StyleRef ref="runoffStyle" />
+			<StyleRef ref="dischargeLineStyle" />
+			<StyleRef ref="dischargePointStyle" />
 		</Style>
 
 	</Layer>
-	<Layer id="velocity" visible="true">
+	<Layer id="velocityLayer" visible="true">
 		<Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
 			<Parameters>
 				<Parameter value="lengthSection.gml" name="href" />
@@ -101,7 +103,8 @@
 			<TargetAxisRef ref="MS_Axis" />
 		</Mapper>
 		<Style>
-			<StyleRef ref="veloStyle" />
+			<StyleRef ref="velocityLineStyle" />
+			<StyleRef ref="velocityPointStyle" />
 		</Style>
 
 	</Layer>
@@ -216,7 +219,7 @@
 	</Layer>
 
 	<Axis id="Station_Axis">
-		<Provider epid="org.kalypso.chart.ext.axis.provider.Number"></Provider>
+		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
 		<Label>Station [km]</Label>
 		<Direction>NEGATIVE</Direction>
 		<Position>BOTTOM</Position>
@@ -242,7 +245,7 @@
 		<Position>RIGHT</Position>
 		<MinVal>-5.0</MinVal>
 		<MaxVal>10.0</MaxVal>
-		<RendererRef ref="NumberAxisRenderer" />
+		<RendererRef ref="NumberDisAxisRenderer" />
 	</Axis>
 
 	<Axis id="MS_Axis">
@@ -252,7 +255,7 @@
 		<Position>RIGHT</Position>
 		<MinVal>-5.0</MinVal>
 		<MaxVal>10.0</MaxVal>
-		<RendererRef ref="NumberAxisRenderer" />
+		<RendererRef ref="NumberVelAxisRenderer" />
 	</Axis>
 
 
@@ -261,65 +264,122 @@
 			<Parameters>
 				<Parameter name="color" value="#000000" />
 				<Parameter name="inset_tick" value="2" />
-				<!--
-					<Parameter name="inset_tick_right" value="0"/>
-					<Parameter name="inset_tick_left" value="0"/>
-					<Parameter name="inset_label_left " value=""/>
-					<Parameter name="inset_label_right" value="1"/>
-					<Parameter name="inset_label_bottom " value="1"/>
-					<Parameter name="inset_label_top " value="1"/>
-				-->
 				<Parameter name="inset_label" value="2" />
 				<Parameter name="line_width" value="2" />
 				<Parameter name="tick_length" value="5" />
 				<Parameter name="gap" value="0" />
-
 			</Parameters>
 		</Provider>
 	</AxisRenderer>
 
-	<Style id="wspStyle">
+	<AxisRenderer id="NumberDisAxisRenderer">
+		<Provider epid="org.kalypso.chart.ext.axisrenderer.provider.Number">
+			<Parameters>
+				<Parameter name="color" value="#00aa00" />
+				<Parameter name="inset_tick" value="1" />
+			</Parameters>
+		</Provider>
+	</AxisRenderer>
+	
+	<AxisRenderer id="NumberVelAxisRenderer">
+		<Provider epid="org.kalypso.chart.ext.axisrenderer.provider.Number">
+			<Parameters>
+				<Parameter name="color" value="#aa0000" />
+				<Parameter name="inset_tick" value="1" />
+			</Parameters>
+		</Provider>
+	</AxisRenderer>
+
+
+	<Style id="wspLineStyle">
+		<StyleID></StyleID>
+		<Type>LINE</Type>
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
 			<Parameters>
 				<Parameter value="2" name="lineWidth" />
 				<Parameter value="SOLID" name="lineStyle" />
-				<Parameter value="#0000ff" name="lineColor" />
+				<Parameter value="#0000aa" name="lineColor" />
 			</Parameters>
 		</Provider>
-		<StyleID></StyleID>
-		<Type>LINE</Type>
 	</Style>
 
-	<Style id="runoffStyle">
-		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
+	<Style id="wspPointStyle">
+		<StyleID></StyleID>
+		<Type>POINT</Type>
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
 			<Parameters>
-				<Parameter value="2" name="lineWidth" />
-				<Parameter value="SOLID" name="lineStyle" />
-				<Parameter value="#ff0000" name="lineColor" />
+				<Parameter name="pointWidth" value="5" />
+				<Parameter name="pointHeight" value="5" />
+				<Parameter name="borderWidth" value="1" />
+				<Parameter name="fillColor" value="#3333aa" />
+				<Parameter name="borderColor" value="#0000aa" />
+				<Parameter name="alpha" value="255" />
 			</Parameters>
 		</Provider>
-		<StyleID></StyleID>
-		<Type>LINE</Type>
 	</Style>
 
-	<Style id="veloStyle">
-		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
-			<Parameters>
-				<Parameter value="2" name="lineWidth" />
-				<Parameter value="SOLID" name="lineStyle" />
-				<Parameter value="#ffff00" name="lineColor" />
-			</Parameters>
-		</Provider>
+
+	<Style id="dischargeLineStyle">
 		<StyleID></StyleID>
 		<Type>LINE</Type>
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
+			<Parameters>
+				<Parameter value="1" name="lineWidth" />
+				<Parameter value="SOLID" name="lineStyle" />
+				<Parameter value="#00aa00" name="lineColor" />
+			</Parameters>
+		</Provider>
 	</Style>
+
+	<Style id="dischargePointStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
+			<Parameters>
+				<Parameter name="pointWidth" value="3" />
+				<Parameter name="pointHeight" value="3" />
+				<Parameter name="borderWidth" value="1" />
+				<Parameter name="fillColor" value="#33aa33" />
+				<Parameter name="borderColor" value="#00aa00" />
+				<Parameter name="alpha" value="255" />
+			</Parameters>
+		</Provider>
+	</Style>
+
+	<Style id="velocityLineStyle">
+		<StyleID></StyleID>
+		<Type>LINE</Type>
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
+			<Parameters>
+				<Parameter value="1" name="lineWidth" />
+				<Parameter value="SOLID" name="lineStyle" />
+				<Parameter value="#aa0000" name="lineColor" />
+			</Parameters>
+		</Provider>
+	</Style>
+
+	<Style id="velocityPointStyle">
+		<StyleID></StyleID>
+		<Type>POINT</Type>
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
+			<Parameters>
+				<Parameter name="pointWidth" value="3" />
+				<Parameter name="pointHeight" value="3" />
+				<Parameter name="borderWidth" value="1" />
+				<Parameter name="fillColor" value="#aa3333" />
+				<Parameter name="borderColor" value="#aa0000" />
+				<Parameter name="alpha" value="255" />
+			</Parameters>
+		</Provider>
+	</Style>
+
 
 	<Style id="soilStyle">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
 			<Parameters>
-				<Parameter value="2" name="lineWidth" />
+				<Parameter value="3" name="lineWidth" />
 				<Parameter value="SOLID" name="lineStyle" />
-				<Parameter value="#00ff00" name="lineColor" />
+				<Parameter value="#b48232" name="lineColor" />
 			</Parameters>
 		</Provider>
 		<StyleID></StyleID>
