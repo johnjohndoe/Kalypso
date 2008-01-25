@@ -56,6 +56,6 @@ public class ScrabThemeWizard extends AbstractOtherThemeWizard implements IKalyp
   @Override
   protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
   {
-    return new AddThemeCommand( mapModell, themeName, "legend", "", "" );
+    return new AddThemeCommand( mapModell, themeName, "scrab", "", "" );
   }
 }
