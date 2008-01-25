@@ -28,7 +28,7 @@
 					<WellKnownName>circle</WellKnownName>
 					<Fill>
 						<CssParameter name="fill-opacity">1.0</CssParameter>
-						<CssParameter name="fill">#FFEE00</CssParameter>
+						<CssParameter name="fill">#FFd900</CssParameter>
 					</Fill>
 					<Stroke>
 						<CssParameter name="stroke">#000000</CssParameter>
@@ -43,6 +43,42 @@
 				<Rotation>0.0</Rotation>
 			</Graphic>
 		</PointSymbolizer>
+		<TextSymbolizer>
+			<Geometry>
+		    	<ogc:PropertyName>simBase:position</ogc:PropertyName>
+		  	</Geometry>
+            <Label>
+              <ogc:PropertyName>gml:name</ogc:PropertyName>
+            </Label>
+            <Font>
+	    		<CssParameter name="font-family">Dialog</CssParameter>
+	    		<CssParameter name="font-color">#000000</CssParameter>
+	    		<CssParameter name="font-size">12.0</CssParameter>
+	    		<CssParameter name="font-style">normal</CssParameter>
+	    		<CssParameter name="font-weight">normal</CssParameter>
+	  		</Font>
+	  		<LabelPlacement>
+              <PointPlacement auto="true">
+                <Displacement>
+                  <DisplacementX>11.0</DisplacementX>
+                  <DisplacementY>11.0</DisplacementY>
+                </Displacement>
+              </PointPlacement>
+            </LabelPlacement>
+            <Halo>
+              <Fill>
+                <CssParameter name="fill-opacity">0.75</CssParameter>
+                <CssParameter name="fill">#ffd933</CssParameter>
+              </Fill>
+              <Stroke>
+                <CssParameter name="stroke">#000000</CssParameter>
+                <CssParameter name="stroke-width">1.0</CssParameter>
+                <CssParameter name="stroke-linejoin">round</CssParameter>
+                <CssParameter name="stroke-opacity">1.0</CssParameter>
+                <CssParameter name="stroke-linecap">square</CssParameter>
+              </Stroke>
+            </Halo>            
+		</TextSymbolizer>
 	</Rule>
 	<Rule>
 		<Name>with_direction</Name>
@@ -57,6 +93,7 @@
 		</ogc:Filter>
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>10000000.00</MaxScaleDenominator>
+		
 		<PointSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>simBase:position</ogc:PropertyName>
@@ -66,7 +103,7 @@
 					<WellKnownName>circle</WellKnownName>
 					<Fill>
 						<CssParameter name="fill-opacity">1.0</CssParameter>
-						<CssParameter name="fill">#FFEE00</CssParameter>
+						<CssParameter name="fill">#FFd933</CssParameter>
 					</Fill>
 					<Stroke>
 						<CssParameter name="stroke">#000000</CssParameter>
@@ -90,7 +127,7 @@
 					<WellKnownName>kalypsoArrow</WellKnownName>
 					<Fill>
 						<CssParameter name="fill-opacity">1.0</CssParameter>
-						<CssParameter name="fill">#FFEE00</CssParameter>
+						<CssParameter name="fill">#FFd933</CssParameter>
 					</Fill>
 					<Stroke>
 						<CssParameter name="stroke">#000000</CssParameter>
@@ -111,5 +148,41 @@
 				</Rotation>
 			</Graphic>
 		</PointSymbolizer>
+		<TextSymbolizer>
+			<Geometry>
+		    	<ogc:PropertyName>simBase:position</ogc:PropertyName>
+		  	</Geometry>
+		  	<Label>
+              <ogc:PropertyName>gml:name</ogc:PropertyName>
+            </Label>
+            <Font>
+	    		<CssParameter name="font-family">Dialog</CssParameter>
+	    		<CssParameter name="font-color">#000000</CssParameter>
+	    		<CssParameter name="font-size">12.0</CssParameter>
+	    		<CssParameter name="font-style">normal</CssParameter>
+	    		<CssParameter name="font-weight">normal</CssParameter>
+	  		</Font>
+	  		<LabelPlacement>
+              <PointPlacement auto="true">
+                <Displacement>
+                  <DisplacementX>11.0</DisplacementX>
+                  <DisplacementY>11.0</DisplacementY>
+                </Displacement>
+              </PointPlacement>
+            </LabelPlacement>
+            <Halo>
+              <Fill>
+                <CssParameter name="fill-opacity">0.75</CssParameter>
+                <CssParameter name="fill">#FFd933</CssParameter>
+              </Fill>
+              <Stroke>
+                <CssParameter name="stroke">#000000</CssParameter>
+                <CssParameter name="stroke-width">1.0</CssParameter>
+                <CssParameter name="stroke-linejoin">round</CssParameter>
+                <CssParameter name="stroke-opacity">1.0</CssParameter>
+                <CssParameter name="stroke-linecap">square</CssParameter>
+              </Stroke>
+            </Halo>            
+		</TextSymbolizer>
 	</Rule>
 </FeatureTypeStyle>
