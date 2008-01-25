@@ -248,7 +248,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Help><![CDATA[Das Längsschnittdiagramm konfigurieren.]]></Help>
 				<Name>Längsschnitt konfigurieren</Name>
 			</Task>
-			<Task context="LengthSectionView"
+			<Task 
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultLengthSectionView">
 				<Help><![CDATA[Einen Längsschnitt anzeigen.]]></Help>
 				<Name>Längsschnitt anzeigen</Name>
