@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -70,22 +71,20 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * 
- * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
 public class ParameterValueType_Impl implements ParameterValueType, Marshallable
 {
-  private ArrayList components = new ArrayList();
+  private final ArrayList components = new ArrayList();
 
   /**
    * Constructs a new <tt>ParameterValueType_Impl</tt>.
    * <p>
    * 
    * @param components
-   *          <tt>String</tt>s/<tt>Expression</tt> s that make up the contents of the
-   *          <tt>ParameterValueType_Impl</tt>
+   *            <tt>String</tt>s/<tt>Expression</tt> s that make up the contents of the
+   *            <tt>ParameterValueType_Impl</tt>
    */
   public ParameterValueType_Impl( Object[] components )
   {
@@ -99,7 +98,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * 
    * @return mix of <tt>String</tt>/<tt>Expression</tt> -objects
    */
-  public Object[] getComponents()
+  public Object[] getComponents( )
   {
     return components.toArray( new Object[components.size()] );
   }
@@ -109,7 +108,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * <p>
    * 
    * @param components
-   *          mix of <tt>String</tt> and <tt>Expression</tt> -objects
+   *            mix of <tt>String</tt> and <tt>Expression</tt> -objects
    */
   public void setComponents( Object[] components )
   {
@@ -130,7 +129,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * <p>
    * 
    * @param component
-   *          either a <tt>String</tt> or an <tt>Expression</tt> -object
+   *            either a <tt>String</tt> or an <tt>Expression</tt> -object
    */
   public void addComponent( Object component )
   {
@@ -142,7 +141,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * <p>
    * 
    * @param component
-   *          either a <tt>String</tt> or an <tt>Expression</tt> -object
+   *            either a <tt>String</tt> or an <tt>Expression</tt> -object
    */
   public void removeComponent( Object component )
   {
@@ -155,10 +154,10 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * <p>
    * 
    * @param feature
-   *          used for the evaluation of the underlying 'wfs:Expression'-elements
+   *            used for the evaluation of the underlying 'wfs:Expression'-elements
    * @return the (evaluated) String value
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   public String evaluate( Feature feature ) throws FilterEvaluationException
   {
@@ -169,11 +168,25 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
       Object component = components.get( i );
       if( component instanceof Expression )
       {
-        sb.append( ( (Expression)component ).evaluate( feature ) );
+        final Object expr = ((Expression) component).evaluate( feature );
+        if( expr instanceof List< ? > )
+        {
+          final List list = (List) expr;
+          if( list.size() == 1 )
+          {
+            Object object = list.get( 0 );
+            if( object == null )
+              sb.append( expr );
+            else
+              sb.append( object );
+          }
+        }
+        else
+          sb.append( expr );
       }
       else if( component != null && component instanceof String )
       {
-        sb.append( ( (String)component ).trim() );
+        sb.append( ((String) component).trim() );
       }
       else
       {
@@ -189,7 +202,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
    * 
    * @return xml representation of the ParameterValueType
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
@@ -199,11 +212,11 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
       Object component = components.get( i );
       if( component instanceof Expression )
       {
-        sb.append( ( (Expression)component ).toXML() );
+        sb.append( ((Expression) component).toXML() );
       }
       else if( component != null && component instanceof String )
       {
-        sb.append( ( (String)component ).trim() );
+        sb.append( ((String) component).trim() );
       }
       else
       {
