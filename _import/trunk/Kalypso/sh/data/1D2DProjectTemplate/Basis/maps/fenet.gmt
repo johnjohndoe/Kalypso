@@ -4,18 +4,22 @@
     <mapv:layers>
         <mapv:layer visible="false" name="Knoten" id="ID_2" featurePath="#fid#root/node[Node]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:FE1D2DNode:rule:Node</templ:legendicon>
         </mapv:layer>
         <mapv:layer visible="true" name="1D-Netzparameter" id="ID_3" featurePath="#fid#root/flowRelationshipMember" linktype="gml" xlink:type="simple" xlink:href="../models/flowrelations.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:polynome</templ:legendicon>
         </mapv:layer>
         <mapv:layer visible="true" name="Randbedingungen" id="ID_4" featurePath="#fid#root/flowRelationshipMember[BoundaryCondition]" linktype="gml" xlink:type="simple" xlink:href="../models/flowrelations.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:no_direction</templ:legendicon>
         </mapv:layer>
         <mapv:layer visible="true" name="Kontinuitätslinien" id="ID_5" featurePath="#fid#root/continuityLine" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Kanten" id="ID_6" featurePath="#fid#root/edge[Edge]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:FE1D2DEdge:rule:borderEdge</templ:legendicon>
         </mapv:layer>
         <mapv:layer visible="true" name="1D-Elemente" id="ID_7" featurePath="#fid#root/element[Element1D]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
@@ -29,6 +33,7 @@
         <mapv:layer visible="true" name="Rauheiten" id="ID_9" featurePath="#fid#root/element[PolyElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
             <templ:property name="deleteable">false</templ:property>
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:Roughness style:rule:undefinierterStilID</templ:legendicon>
         </mapv:layer>
         <mapv:layer visible="true" name="2D-Elemente" id="ID_10" featurePath="#fid#root/element[PolyElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
