@@ -113,6 +113,8 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
 
     try
     {
+      // TODO: it should also be possible to use a url-context here in order to load .kod relative to the gft file
+      // IN order to do this, we need the context-url from the framework.
       final URL configUrl = new URL( configurationUrl );
 
       final ChartConfigurationLoader ccl = new ChartConfigurationLoader( configUrl );
