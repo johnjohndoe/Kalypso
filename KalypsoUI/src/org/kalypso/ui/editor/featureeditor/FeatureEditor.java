@@ -45,7 +45,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
@@ -74,6 +73,8 @@ import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -87,14 +88,14 @@ public class FeatureEditor extends EditorPart
 {
   private final Runnable m_dirtyRunnable = new Runnable()
   {
-    public void run()
+    public void run( )
     {
       final Shell shell = getSite().getShell();
       if( shell != null )
       {
         shell.getDisplay().asyncExec( new Runnable()
         {
-          public void run()
+          public void run( )
           {
             fireDirtyChange();
           }
@@ -103,8 +104,7 @@ public class FeatureEditor extends EditorPart
     }
   };
 
-  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget(
-      new DefaultCommandManager(), m_dirtyRunnable );
+  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
 
   private final FeatureTemplateviewer m_viewer = new FeatureTemplateviewer( m_commandTarget, 5, 5 );
 
@@ -112,7 +112,7 @@ public class FeatureEditor extends EditorPart
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     m_commandTarget.dispose();
 
@@ -125,7 +125,7 @@ public class FeatureEditor extends EditorPart
    * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
    */
   @Override
-  public boolean isSaveAsAllowed()
+  public boolean isSaveAsAllowed( )
   {
     return false;
   }
@@ -134,7 +134,7 @@ public class FeatureEditor extends EditorPart
    * @see org.eclipse.ui.part.EditorPart#doSaveAs()
    */
   @Override
-  public void doSaveAs()
+  public void doSaveAs( )
   {
     throw new UnsupportedOperationException();
   }
@@ -145,7 +145,7 @@ public class FeatureEditor extends EditorPart
   @Override
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
-    if( !( input instanceof IStorageEditorInput ) )
+    if( !(input instanceof IStorageEditorInput) )
       throw new PartInitException( "Can only use IStorageEditorInput" );
 
     setSite( site );
@@ -159,12 +159,12 @@ public class FeatureEditor extends EditorPart
   @Override
   protected final void setInput( final IEditorInput input )
   {
-    if( !( input instanceof IStorageEditorInput ) )
+    if( !(input instanceof IStorageEditorInput) )
       throw new IllegalArgumentException( "Only IStorageEditorInput supported" );
 
     super.setInput( input );
 
-    load( (IStorageEditorInput)input );
+    load( (IStorageEditorInput) input );
   }
 
   /**
@@ -190,7 +190,7 @@ public class FeatureEditor extends EditorPart
    * @see org.eclipse.ui.part.EditorPart#isDirty()
    */
   @Override
-  public boolean isDirty()
+  public boolean isDirty( )
   {
     return m_commandTarget.isDirty();
   }
@@ -199,9 +199,9 @@ public class FeatureEditor extends EditorPart
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
   @Override
-  public void setFocus()
+  public void setFocus( )
   {
-  // nix
+    // nix
   }
 
   /**
@@ -240,7 +240,7 @@ public class FeatureEditor extends EditorPart
 
       setPartName( input.getName() );
       if( input instanceof IFileEditorInput )
-        setContentDescription( ( (IFileEditorInput)input ).getFile().getFullPath().toOSString() );
+        setContentDescription( ((IFileEditorInput) input).getFile().getFullPath().toOSString() );
     }
     catch( final InvocationTargetException e )
     {
@@ -250,7 +250,7 @@ public class FeatureEditor extends EditorPart
 
       final IStatus status;
       if( targetException instanceof CoreException )
-        status = ( (CoreException)targetException ).getStatus();
+        status = ((CoreException) targetException).getStatus();
       else
       {
         final String locmsg = targetException.getLocalizedMessage();
@@ -266,8 +266,7 @@ public class FeatureEditor extends EditorPart
     }
   }
 
-  protected final void loadInput( final IStorageEditorInput input, final IProgressMonitor monitor )
-      throws CoreException
+  protected final void loadInput( final IStorageEditorInput input, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Ansicht laden", 1000 );
 
@@ -280,7 +279,9 @@ public class FeatureEditor extends EditorPart
       final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
       final URL context = ResourceUtilities.createURL( file );
 
-      m_viewer.loadInput( contents, context, monitor, new Properties() );
+      Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
+      m_viewer.setTemplate( template, context, null, null, null );
+
       contents.close();
     }
     catch( final MalformedURLException e )
@@ -292,7 +293,7 @@ public class FeatureEditor extends EditorPart
     catch( final CoreException e )
     {
       e.printStackTrace();
-      
+
       throw e;
     }
     catch( final Throwable e )
@@ -308,7 +309,7 @@ public class FeatureEditor extends EditorPart
     }
   }
 
-  protected void fireDirtyChange()
+  protected void fireDirtyChange( )
   {
     firePropertyChange( PROP_DIRTY );
   }

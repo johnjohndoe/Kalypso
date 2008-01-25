@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
@@ -69,8 +70,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.ReaderUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -117,18 +120,79 @@ public class GisTemplateHelper
     // never instantiate this class
   }
 
-  public static final Featuretemplate loadGisFeatureTemplate( final IFile file, final Properties replaceProps ) throws CoreException, IOException, JAXBException
+  public static final Featuretemplate loadGisFeatureTemplate( final IFile file ) throws CoreException, IOException, JAXBException
   {
-    // TODO: replace with 'ReplaceToken'
-    final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
-    final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
-    return GisTemplateHelper.loadGisFeatureTemplate( new InputSource( new StringReader( contents ) ) );
+    InputStream is = null;
+
+    try
+    {
+      is = new BufferedInputStream( file.getContents() );
+
+      final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( new InputSource( is ) );
+
+      is.close();
+
+      return template;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+  }
+
+  public final static Featuretemplate loadGisFeatureTemplate( final URL url, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Ansicht laden", 1000 );
+
+    InputStream inputStream = null;
+    try
+    {
+      inputStream = new BufferedInputStream( url.openStream() );
+      final InputSource is = new InputSource( inputStream );
+      final Featuretemplate template = loadGisFeatureTemplate( is );
+
+      inputStream.close();
+
+      return template;
+    }
+    catch( final JAXBException e )
+    {
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Lesen der Vorlage", e ) );
+    }
+    catch( IOException e )
+    {
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Lesen der Vorlage", e ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inputStream );
+      monitor.done();
+    }
+  }
+
+  public final Featuretemplate loadGisFeatureTemplate( final InputStream inputStream, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Ansicht laden", 1000 );
+    try
+    {
+      final InputSource is = new InputSource( inputStream );
+      return loadGisFeatureTemplate( is );
+    }
+    catch( final JAXBException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen der Vorlage" ) );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   public static final Featuretemplate loadGisFeatureTemplate( final InputSource is ) throws JAXBException
   {
     final JAXBContext context = JaxbUtilities.createQuiet( org.kalypso.template.featureview.ObjectFactory.class );
     final Unmarshaller unmarshaller = context.createUnmarshaller();
+
     return (Featuretemplate) unmarshaller.unmarshal( is );
   }
 

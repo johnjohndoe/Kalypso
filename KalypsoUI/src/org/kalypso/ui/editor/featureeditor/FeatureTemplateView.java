@@ -40,23 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
@@ -64,11 +52,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -79,15 +63,13 @@ public class FeatureTemplateView extends ViewPart
 {
   public static final String ID = "org.kalypso.ui.views.featuretemplateview";
 
-  private static final String MEMENTO_FILE = "file";
+// private static final String MEMENTO_FILE = "file";
 
-  private static final String RELOAD_MAP_ON_OPEN = "reloadMapOnOpen";
+// private static final String RELOAD_MAP_ON_OPEN = "reloadMapOnOpen";
 
   protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
   private final FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( m_commandTarget, 0, 0 );
-
-  protected IFile m_file;
 
   private String m_partName;
 
@@ -99,15 +81,15 @@ public class FeatureTemplateView extends ViewPart
   {
     super.init( site, memento );
 
-    if( memento != null )
-    {
-      final String fullPath = memento.getString( MEMENTO_FILE );
-      if( fullPath != null )
-      {
-        final IPath path = Path.fromPortableString( fullPath );
-        m_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
-      }
-    }
+// if( memento != null )
+// {
+// final String fullPath = memento.getString( MEMENTO_FILE );
+// if( fullPath != null )
+// {
+// final IPath path = Path.fromPortableString( fullPath );
+// m_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
+// }
+// }
   }
 
   /**
@@ -116,12 +98,12 @@ public class FeatureTemplateView extends ViewPart
   @Override
   public void saveState( final IMemento memento )
   {
-    if( m_file != null )
-    {
-      final IPath fullPath = m_file.getFullPath();
-      if( fullPath != null )
-        memento.putString( MEMENTO_FILE, fullPath.toPortableString() );
-    }
+// if( m_file != null )
+// {
+// final IPath fullPath = m_file.getFullPath();
+// if( fullPath != null )
+// memento.putString( MEMENTO_FILE, fullPath.toPortableString() );
+// }
   }
 
   /**
@@ -134,12 +116,12 @@ public class FeatureTemplateView extends ViewPart
 
     m_templateviewer.createControls( parent, SWT.BORDER );
 
-    // Stefan: Now we can restore the file if the view is configured to do so
-    final String reloadOnOpen = getConfigurationElement().getAttribute( RELOAD_MAP_ON_OPEN );
-    if( m_file != null && "true".equals( reloadOnOpen ) )
-    {
-      loadFromTemplate( m_file );
-    }
+// // Stefan: Now we can restore the file if the view is configured to do so
+// final String reloadOnOpen = getConfigurationElement().getAttribute( RELOAD_MAP_ON_OPEN );
+// if( m_file != null && "true".equals( reloadOnOpen ) )
+// {
+// loadFromTemplate( m_file );
+// }
 
     final IActionBars actionBars = getViewSite().getActionBars();
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
@@ -147,51 +129,21 @@ public class FeatureTemplateView extends ViewPart
     actionBars.updateActionBars();
   }
 
-  public void loadFromTemplate( final IFile file )
+  /**
+   * @exception SWTException
+   *                <ul>
+   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
+   *                </ul>
+   */
+  public void setTemplate( final Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
   {
-    final Display display = m_templateviewer.getControl().getDisplay();
-    final FeatureTemplateviewer templateviewer = m_templateviewer;
-    final UIJob job = new UIJob( display, "Feature Template laden" )
-    {
-      /**
-       * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-       */
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        String partName = null;
-        InputStream contents = null;
-        try
-        {
-          if( file != null && file.exists() )
-          {
-            contents = new BufferedInputStream( file.getContents() );
-            final URL context = ResourceUtilities.createURL( file );
-            final Featuretemplate template = templateviewer.loadInput( contents, context, monitor, new Properties() );
-            contents.close();
-            partName = template.getName();
-            m_file = file;
-            final String fileName = m_file != null ? FileUtilities.nameWithoutExtension( m_file.getName() ) : "<input not a file>";
-            if( partName == null )
-            {
-              partName = fileName;
-            }
-            setCustomName( partName );
-          }
-          return Status.OK_STATUS;
-        }
-        catch( final Throwable e )
-        {
-          e.printStackTrace();
-          return StatusUtilities.statusFromThrowable( e );
-        }
-        finally
-        {
-          IOUtils.closeQuietly( contents );
-        }
-      }
-    };
-    job.schedule();
+    m_templateviewer.setTemplate( template, context, featurePath, href, linkType );
+
+    final String partName = template.getName();
+
+    if( partName != null )
+      setCustomName( partName );
+
   }
 
   public void setCustomName( final String name )
