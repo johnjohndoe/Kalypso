@@ -40,16 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -91,7 +86,6 @@ import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.xml.sax.InputSource;
 
 /**
  * @author belger
@@ -189,55 +183,35 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     return Status.OK_STATUS;
   }
 
-  public final Featuretemplate loadInput( final InputStream inputStream, final URL context, final IProgressMonitor monitor, final Properties props ) throws CoreException
+  public void setTemplate( Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
   {
-    monitor.beginTask( "Ansicht laden", 1000 );
-    Featuretemplate template = null;
-    try
+    final List<FeatureviewType> view = template.getView();
+    for( final FeatureviewType featureviewType : view )
+      m_fvFactory.addView( featureviewType );
+
+    final Layer layer = template.getLayer();
+    final String source;
+    final String linktype;
+    if( layer == null )
     {
-      final InputSource is = new InputSource( inputStream );
-
-      final Unmarshaller unmarshaller = JC.createUnmarshaller();
-
-      template = (Featuretemplate) unmarshaller.unmarshal( is );
-      final List<FeatureviewType> view = template.getView();
-      for( final FeatureviewType featureviewType : view )
-        m_fvFactory.addView( featureviewType );
-
-      final Layer layer = template.getLayer();
-      final String href;
-      final String linktype;
-      if( layer != null )
-      {
-        m_featurePath = layer.getFeaturePath();
-        href = layer.getHref();
-        linktype = layer.getLinktype();
-      }
-      else
-      {
-        m_featurePath = props.getProperty( "featurepath", "" );
-        href = props.getProperty( "href", null );
-        linktype = props.getProperty( "linktype", "gml" );
-      }
-
-      // only load, if href non null; in this case, the feature must be set via setFeature()
-      if( href != null )
-      {
-        m_key = new PoolableObjectType( linktype, href, context );
-        m_pool.addPoolListener( this, m_key );
-      }
+      m_featurePath = featurePath;
+      source = href;
+      linktype = linkType;
     }
-    catch( final JAXBException e )
+    else
     {
-      e.printStackTrace();
+      m_featurePath = layer.getFeaturePath();
+      source = layer.getHref();
+      linktype = layer.getLinktype();
+    }
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen der Vorlage" ) );
-    }
-    finally
+    // only load, if href non null; in this case, the feature must be set via setFeature()
+    if( source != null )
     {
-      monitor.done();
+      m_key = new PoolableObjectType( linktype, source, context );
+      m_pool.addPoolListener( this, m_key );
     }
-    return template;
+
   }
 
   private void setWorkspace( final CommandableWorkspace workspace )
@@ -364,7 +338,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       }
       else
       {
-        // todo Fehlermeldung anzeigen
         m_label = new Label( m_panel, SWT.CENTER );
         m_label.setText( errorMessage );
         m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
