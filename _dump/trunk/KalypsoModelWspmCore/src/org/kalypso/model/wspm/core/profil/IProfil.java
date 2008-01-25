@@ -178,7 +178,15 @@ public interface IProfil extends IObservation<TupleResult>
 
   public IComponent[] getPointMarkerTypes( );
 
+  /**
+   * Gets all markers of a given type.
+   */
   public IProfilPointMarker[] getPointMarkerFor( IComponent propertyFromId );
+
+  /**
+   * Gets all markers for this record.
+   */
+  public IProfilPointMarker[] getPointMarkerFor( IRecord record );
 
   /*
    * obsolete - point markers will be automatically set by their setValue() implementation (value will be directly added
