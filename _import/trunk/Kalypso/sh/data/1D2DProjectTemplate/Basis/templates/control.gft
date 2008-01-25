@@ -1498,7 +1498,7 @@
 			horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="false"
 			grabExcessHorizontalSpace="true" />
 		<gft:gridLayout numColumns="4" />
-		<gft:label text="Select model: " visible="true"
+		<gft:label text="Modell auswählen: " visible="true"
 			style="SWT.NONE">
 			<gft:gridData verticalAlignment="GridData.CENTER"
 				horizontalAlignment="GridData.BEGINNING"
