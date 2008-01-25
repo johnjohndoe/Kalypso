@@ -189,6 +189,8 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
    */
   public String getColumnLabel( )
   {
+    if( m_columnLabel == null )
+      return m_component.getName();
     return m_columnLabel;
   }
 
