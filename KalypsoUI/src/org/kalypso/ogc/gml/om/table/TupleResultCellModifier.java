@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.om.table;
 
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
@@ -65,11 +64,8 @@ public class TupleResultCellModifier implements ICellModifier
   {
     final IRecord record = (IRecord) element;
     final IComponentUiHandler handler = m_contentProvider.getHandler( handlerId );
-    final IComponent component = handler.getComponent();
 
-    final Object value = record.getValue( component );
-
-    return handler.formatValue( value );
+    return handler.getValue( record );
   }
 
   public void modify( final Object element, final String property, final Object value )
@@ -89,10 +85,7 @@ public class TupleResultCellModifier implements ICellModifier
   public void modifyRecord( final IRecord record, final String handlerId, final Object value )
   {
     final IComponentUiHandler compHandler = m_contentProvider.getHandler( handlerId );
-    final IComponent component = compHandler.getComponent();
 
-    final Object valueToSet = compHandler.parseValue( value );
-
-    record.setValue( component, valueToSet );
+    compHandler.setValue( record, value );
   }
 }

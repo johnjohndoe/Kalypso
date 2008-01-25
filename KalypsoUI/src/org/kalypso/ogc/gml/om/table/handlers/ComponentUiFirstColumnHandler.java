@@ -42,7 +42,9 @@ package org.kalypso.ogc.gml.om.table.handlers;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Table;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * This is the handler for a invisible, empty column. Used to fill the first column of a table with a dummy column, in
@@ -50,13 +52,8 @@ import org.eclipse.swt.widgets.Table;
  * 
  * @author Gernot Belger
  */
-public class ComponentUiFirstColumnHandler extends AbstractComponentUiHandler
+public class ComponentUiFirstColumnHandler implements IComponentUiHandler
 {
-  public ComponentUiFirstColumnHandler( )
-  {
-    super( null, false, false, false, "-", SWT.CENTER, 0, -1, "", "", "" );
-  }
-
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
@@ -68,15 +65,95 @@ public class ComponentUiFirstColumnHandler extends AbstractComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
    */
-  public Object formatValue( final Object value )
+  public Object getValue( final IRecord record )
   {
     return null;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
+   *      java.lang.Object)
    */
-  public Object parseValue( final Object value )
+  public void setValue( final IRecord record, final Object value )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnLabel()
+   */
+  public String getColumnLabel( )
+  {
+    return "-";
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnStyle()
+   */
+  public int getColumnStyle( )
+  {
+    return SWT.CENTER;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnWidth()
+   */
+  public int getColumnWidth( )
+  {
+    return 0;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnWidthPercent()
+   */
+  public int getColumnWidthPercent( )
+  {
+    return -1;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getIdentity()
+   */
+  public String getIdentity( )
+  {
+    return getClass().getName();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
+   */
+  public String getStringRepresentation( final IRecord value )
+  {
+    return "";
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isEditable()
+   */
+  public boolean isEditable( )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isMoveable()
+   */
+  public boolean isMoveable( )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isResizeable()
+   */
+  public boolean isResizeable( )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getImage(org.kalypso.observation.result.IRecord)
+   */
+  public Image getImage( final IRecord record )
   {
     return null;
   }

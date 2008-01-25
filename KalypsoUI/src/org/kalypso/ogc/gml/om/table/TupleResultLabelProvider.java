@@ -44,7 +44,6 @@ import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
@@ -98,6 +97,23 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
    */
   public Image getColumnImage( final Object element, final int columnIndex )
   {
+    if( columnIndex >= m_handlers.length )
+      return null;
+
+    if( element instanceof IRecord )
+    {
+      try
+      {
+        final IRecord record = (IRecord) element;
+        final IComponentUiHandler handler = m_handlers[columnIndex];
+        return handler.getImage( record );
+      }
+      catch( final IllegalArgumentException e )
+      {
+        return null;
+      }
+    }
+
     return null;
   }
 
@@ -111,22 +127,11 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
 
     if( element instanceof IRecord )
     {
-      final IRecord record = (IRecord) element;
-
-      final IComponentUiHandler handler = m_handlers[columnIndex];
-      final IComponent component = handler.getComponent();
-      if( component == null )
-        return "";
-
-      /* tupleresult updated? component removed -> so return "" */
-      if( !record.getOwner().hasComponent( component ) )
-        return "";
-
       try
       {
-        final Object value = record.getValue( component );
-
-        return handler.getStringRepresentation( value );
+        final IRecord record = (IRecord) element;
+        final IComponentUiHandler handler = m_handlers[columnIndex];
+        return handler.getStringRepresentation( record );
       }
       catch( final IllegalArgumentException e )
       {

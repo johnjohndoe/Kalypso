@@ -127,8 +127,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 
       // TODO: we should handle the case, where the table does not contain the desired component
 
-      final IComponent component = handler.getComponent();
-
       final int columnWidth = handler.getColumnWidth();
       final int columnWidthPercent = handler.getColumnWidthPercent();
       final int columnStyle = handler.getColumnStyle();
@@ -137,10 +135,9 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
       final boolean moveable = handler.isMoveable();
 
       final String label = handler.getColumnLabel();
-      final String columnLabel = label == null ? component.getName() : label;
-      final String tooltip = component == null ? null : component.getDescription();
 
-      m_tableViewer.addColumn( "" + i, columnLabel, tooltip, columnWidth, columnWidthPercent, editable, columnStyle, resizeable, moveable );
+      final String tooltip = null;
+      m_tableViewer.addColumn( "" + i, label, tooltip, columnWidth, columnWidthPercent, editable, columnStyle, resizeable, moveable );
 
       cellEditors[i] = handler.createCellEditor( m_tableViewer.getTable() );
     }

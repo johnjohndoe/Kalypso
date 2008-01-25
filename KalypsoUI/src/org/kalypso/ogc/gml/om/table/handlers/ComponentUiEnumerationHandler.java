@@ -43,9 +43,7 @@ package org.kalypso.ogc.gml.om.table.handlers;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -57,6 +55,7 @@ import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
 /**
@@ -107,37 +106,21 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
    */
-  public Object formatValue( final Object value )
+  public Object getValue( final IRecord record )
   {
-    return value;
+    return record.getValue( getComponent() );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
+   *      java.lang.Object)
    */
-  public Object parseValue( final Object value )
+  public void setValue( final IRecord record, final Object value )
   {
     if( value == null )
-      return null;
-
-    final String lang = AnnotationAdapterFactory.getPlatformLang();
-
-    final Set<Entry<Object, ILanguageAnnontationProvider>> set = m_items.entrySet();
-    for( final Entry<Object, ILanguageAnnontationProvider> entry : set )
-    {
-      final Object key = entry.getKey();
-
-      final ILanguageAnnontationProvider provider = entry.getValue();
-      final String label = provider.getAnnotation( lang ).getLabel().trim();
-
-      if( label.equals( value ) )
-        return key;
-
-      else if( key.equals( value ) ) // because of "-9999" -> nodata
-        return key;
-    }
-
-    throw new NotImplementedException();
+      record.setValue( getComponent(), null );
+    else
+      record.setValue( getComponent(), value );
   }
 
   private Map<Object, ILanguageAnnontationProvider> getEnumerationItems( final IRestriction[] restrictions )
@@ -158,13 +141,15 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
    */
   @Override
-  public String getStringRepresentation( final Object value )
+  public String getStringRepresentation( final IRecord record )
   {
-    if( value == null )
-      return "";
+    if( getComponent() == null )
+      throw new UnsupportedOperationException( "No compoentn specified, overwrite this method." );
+
+    final Object value = record.getValue( getComponent() );
 
     final ILanguageAnnontationProvider provider = ComponentUtilities.getLanguageProvider( getComponent().getRestrictions(), value );
     if( provider == null )

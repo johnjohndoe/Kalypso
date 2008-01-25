@@ -41,8 +41,9 @@
 package org.kalypso.ogc.gml.om.table.handlers;
 
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Table;
-import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Implementors of this class are responsible for UI-representation of values of tuple-result components.
@@ -64,26 +65,24 @@ public interface IComponentUiHandler
 
   boolean isMoveable( );
 
-  IComponent getComponent( );
-
   /**
    * Format value for the cell editor
    * 
    * @return Must not return <code>null</code>.
    */
-  Object formatValue( Object value );
+  Object getValue( IRecord record );
 
   /**
-   * Parses a value from a user input.
-   * 
-   * @return return object from celleditor converted into celleditor data type
+   * Sets a value to this column.
    */
-  Object parseValue( Object value );
+  void setValue( final IRecord record, Object value );
 
   /**
    * String representation of the value. Used to show the value in a table.
    */
-  String getStringRepresentation( Object value );
+  String getStringRepresentation( IRecord value );
+
+  Image getImage( IRecord record );
 
   /**
    * The width of the column in pixels.

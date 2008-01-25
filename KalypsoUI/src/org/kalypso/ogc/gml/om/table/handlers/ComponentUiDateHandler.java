@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.DateTimeCellEditor;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -73,29 +74,34 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.IComponentUiHandler#formatValue(java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(org.kalypso.observation.result.IRecord)
    */
-  public Object formatValue( final Object value )
+  public Object getValue( final IRecord record )
   {
-    // No formatting/parsing needed, the DateTimeCellEditor works for XMLGregorianCalendar's
-    return value;
+    return record.getValue( getComponent() );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.IComponentUiHandler#parseValue(java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
+   *      java.lang.Object)
    */
-  public Object parseValue( final Object value )
+  public void setValue( final IRecord record, final Object value )
   {
-    // No formatting/parsing needed, the DateTimeCellEditor works for XMLGregorianCalendar's
-    return value;
+    record.setValue( getComponent(), value );
   }
 
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(java.lang.Object)
    */
   @Override
-  public String getStringRepresentation( final Object value )
+  public String getStringRepresentation( final IRecord record )
   {
+    final IComponent component = getComponent();
+    if( component == null )
+      throw new UnsupportedOperationException( "No compoentn specified, overwrite this method." );
+
+    final Object value = record.getValue( component );
+
     if( value instanceof XMLGregorianCalendar )
     {
       final XMLGregorianCalendar xmlCal = (XMLGregorianCalendar) value;
@@ -104,9 +110,9 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
       if( date == null )
         return String.format( getNullFormat() );
 
-      Calendar instance = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+      final Calendar instance = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
       instance.setTime( date );
-      String displayFormat = getDisplayFormat();
+      final String displayFormat = getDisplayFormat();
 
       return String.format( displayFormat, instance );
     }
