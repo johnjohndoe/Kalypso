@@ -199,4 +199,13 @@ public class TuhhProfil extends AbstractProfil
     return m_profileObjects.toArray( new IProfileObject[] {} );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IRecord)
+   */
+  public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

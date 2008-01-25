@@ -40,12 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -92,7 +86,6 @@ import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -300,52 +293,14 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     tableGrid.exclude = false;
     m_view.getTable().setVisible( true );
 
-    final List<IComponentUiHandler> myHandlers = new ArrayList<IComponentUiHandler>();
     final IProfil profil = getProfilEventManager().getProfil();
-    final IComponent[] pointMarkerTypes = profil.getPointMarkerTypes();
-
-    final IComponent[] components = profil.getPointProperties();
-    for( final IComponent component : components )
-    {
-      /* marker?!? yes -> continue */
-      if( ArrayUtils.contains( pointMarkerTypes, component ) )
-        continue;
-
-      final int spacing = 100 / components.length;
-
-      final QName valueTypeName = component.getValueTypeName();
-
-      // TODO: let a table-column-provider create the handlers (profile-type dependent)
-      if( ComponentUiHandlerFactory.Q_DATE_TIME.equals( valueTypeName ) )
-      {
-        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-      }
-      else if( ComponentUiHandlerFactory.Q_STRING.equals( valueTypeName ) )
-      {
-        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-      }
-      else if( ComponentUiHandlerFactory.Q_INTEGER.equals( valueTypeName ) )
-      {
-        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-      }
-      else if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
-      {
-        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
-      }
-      else if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
-      {
-        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
-      }
-      else
-        myHandlers.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-
-    }
+    final IComponentUiHandler[] componentHandler = ComponentHandlerFactory.createComponentHandler( profil );
 
     if( m_view.getContentProvider() != null )
       m_view.setInput( null ); // Reset input in order to avoid double refresh
 
-    m_tupleResultContentProvider = new TupleResultContentProvider( myHandlers.toArray( new IComponentUiHandler[] {} ) );
-    m_tupleResultLabelProvider = new TupleResultLabelProvider( myHandlers.toArray( new IComponentUiHandler[] {} ) );
+    m_tupleResultContentProvider = new TupleResultContentProvider( componentHandler );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( componentHandler );
 
     m_view.setContentProvider( m_tupleResultContentProvider );
     m_view.setLabelProvider( m_tupleResultLabelProvider );
@@ -363,6 +318,8 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     }
     else
       m_view.setInput( null );
+
+    m_view.getControl().getParent().layout();
   }
 
   private void registerGlobalActions( final DefaultTableViewer tableView )

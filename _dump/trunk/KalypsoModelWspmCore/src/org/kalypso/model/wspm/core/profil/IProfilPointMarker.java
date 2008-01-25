@@ -48,7 +48,6 @@ import org.kalypso.observation.result.IRecord;
  */
 public interface IProfilPointMarker
 {
-
   IComponent getId( );
 
   /**
