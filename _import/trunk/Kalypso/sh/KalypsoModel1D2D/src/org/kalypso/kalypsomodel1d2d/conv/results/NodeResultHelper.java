@@ -205,7 +205,7 @@ public class NodeResultHelper
    *            1d-node
    * 
    */
-  public static GM_Curve getProfileCurveFor1dNode( final WspmProfile profile ) throws Exception
+  public static GM_Curve getProfileCurveFor1dNode( final WspmProfile profile ) throws GM_Exception
   {
     final IProfil profil = profile.getProfil();
 

@@ -53,6 +53,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,10 @@ import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.deegree2.KalypsoDeegree2Plugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
@@ -118,6 +122,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private final HashMap<Integer, ArcResult> m_arcIndex = new HashMap<Integer, ArcResult>();
 
   private final HashMap<Integer, ElementResult> m_elemIndex = new HashMap<Integer, ElementResult>();
+
+  private final Set<String> m_lengthsection1dNodes = new HashSet<String>();
 
   private final GMLWorkspace m_resultWorkspace;
 
@@ -314,9 +320,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // is it a 1d- or 2d-element
       if( currentRougthnessClassID == 89 ) // 1d
       {
+        /* 1d elements */
         try
         {
-          handle1dElement( nodeDown, nodeUp );
+          final IStatus status = handle1dElement( nodeDown, nodeUp );
+          if( status != Status.OK_STATUS )
+            KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "error while handling 1d element:" + status.getMessage() );
+
         }
         catch( final Exception e )
         {
@@ -327,7 +337,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       }
       else if( currentRougthnessClassID >= 904 )
       {
-        // weir / bridge
+        /* weirs & bridges */
         try
         {
           // TODO: right now, we handle them as normal 2d - element. Do we need more?
@@ -343,6 +353,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       }
       else
       {
+        /* 2d elements */
         if( currentArc.elementLeftID == id )
         {
           elementResult.setCornerNodes( nodeDown );
@@ -442,14 +453,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         /* check water levels for dry nodes */
         elementResult.checkWaterlevels();
-
-        // TODO: wrong place for this, because now there is only one assignment. Actually the wetted elements can
-        // extrapolate the water level to other elements. Maybe we can do this optionally.
-
-        /* create the center node */
-        // elementResult.createCenterNode();
-        /* split the element */
-        // splitElement( elementResult );
       }
     }
     else
@@ -464,7 +467,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   }
 
-  private ITeschkeFlowRelation getFlowRelation( final INodeResult nodeResult ) throws Exception
+  private ITeschkeFlowRelation getFlowRelation( final INodeResult nodeResult )
   {
     final GM_Position nodePos = nodeResult.getPoint().getPosition();
 
@@ -488,7 +491,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * collects the necessary data for the length section and stores it in an observation.
    */
-  private void handleLengthSectionData( final GMLNodeResult nodeResult, final ITeschkeFlowRelation teschkeRelation )
+  private IStatus handleLengthSectionData( final GMLNodeResult nodeResult, final ITeschkeFlowRelation teschkeRelation )
   {
     final WspmProfile profile = teschkeRelation.getProfile();
     final IProfil profil = profile.getProfil();
@@ -509,18 +512,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // depth
     final BigDecimal depth = new BigDecimal( nodeResult.getDepth() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
-    // discharge
+    /* discharge */
     // Q = v x A
     // A = A(y) //get it from the polynomials
-
     final BigDecimal area = NodeResultHelper.getCrossSectionArea( teschkeRelation, depth );
 
-    BigDecimal discharge = null;
-    if( area != null )
-    {
-      discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      nodeResult.setDischarge( discharge.doubleValue() );
-    }
+    if( area == null )
+      return StatusUtilities.createErrorStatus( "Es konnten keine Profilflächendaten gelesen werden (Knoten: " + nodeResult.getGmlID() + ", Station: " + station.doubleValue() );
+
+    BigDecimal discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    nodeResult.setDischarge( discharge.doubleValue() );
 
     // markers for Trennflächen / Bordvollpunkte u.ä.
 
@@ -545,13 +546,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     newRecord.setValue( velocityComp, velocity );
     // newRecord.setValue( depthComp, depth );
     // newRecord.setValue( slopeComp, slope );
-    // if( discharge != null )
     newRecord.setValue( dischargeComp, discharge );
 
     tuples.add( newRecord );
+
+    return Status.OK_STATUS;
   }
 
-  private void handle1dElement( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp ) throws Exception, FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
+  private IStatus handle1dElement( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp ) throws GM_Exception
   {
     final GMLNodeResult[] nodes = new GMLNodeResult[2];
     nodes[0] = nodeDown;
@@ -561,29 +563,32 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     for( int i = 0; i < nodes.length; i++ )
     {
       final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodes[i] );
-      handleLengthSectionData( nodes[i], teschkeRelation );
 
       if( teschkeRelation == null )
         break;
+
+      /* check, if node was already handled for lengthsection */
+      if( !m_lengthsection1dNodes.contains( nodes[i].getGmlID() ) )
+      {
+        IStatus status = handleLengthSectionData( nodes[i], teschkeRelation );
+        // TODO: right now, no consequences of the returned status
+        m_lengthsection1dNodes.add( nodes[i].getGmlID() );
+      }
 
       final WspmProfile profile = teschkeRelation.getProfile();
 
       // get the profile Curves of the two nodes defining the current element
       curves[i] = NodeResultHelper.getProfileCurveFor1dNode( profile );
-
     }
 
+    /* Probably profile information missing */
     if( curves[0] == null || curves[1] == null )
-    {
-      /* Probably profile information missing */
-      System.out.print( "Error while handling 1d-result file: There are no information of the profile in the model." );
-      return;
-    }
+      return StatusUtilities.createErrorStatus( "Error while handling 1d-result file: There are no information of the profile in the model." );
 
     final double curveDistance = curves[0].distance( curves[1] );
+    create1dTriangles( nodes, curves, curveDistance );
 
-    if( curves[0] != null && curves[1] != null )
-      create1dTriangles( nodes, curves, curveDistance );
+    return Status.OK_STATUS;
   }
 
   /**
