@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Handles integer (xml) values (i.e. BigInteger in java).
@@ -71,26 +72,25 @@ public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
    */
-  public Object formatValue( final Object value )
+  public Object getValue( final IRecord record )
   {
+    final Object value = record.getValue( getComponent() );
     if( value == null )
       return "";
 
-    return getStringRepresentation( value );
+    return getStringRepresentation( record );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
+   *      java.lang.Object)
    */
-  public Object parseValue( final Object value )
+  public void setValue( final IRecord record, final Object value )
   {
     if( value == null )
-      return null;
-
-    if( "".equals( value.toString().trim() ) ) // so we can delete rows!
-      return null;
-
-    return new BigInteger( value.toString() );
+      record.setValue( getComponent(), null );
+    else
+      record.setValue( getComponent(), new BigInteger( value.toString() ) );
   }
 
 }

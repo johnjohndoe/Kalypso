@@ -41,7 +41,9 @@
 package org.kalypso.ogc.gml.om.table.handlers;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.swt.graphics.Image;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Default implementation of {@link IComponentUiHandler}, implements most of the default behaviour.
@@ -73,7 +75,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
 
   private final boolean m_moveable;
 
-  public AbstractComponentUiHandler( final IComponent component, final boolean editable, final boolean resizeable, boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public AbstractComponentUiHandler( final IComponent component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     m_component = component;
     m_editable = editable;
@@ -89,14 +91,6 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getComponent()
-   */
-  public IComponent getComponent( )
-  {
-    return m_component;
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getIdentity()
    */
   public String getIdentity( )
@@ -104,15 +98,33 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
     return ObjectUtils.identityToString( this );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(java.lang.Object)
-   */
-  public String getStringRepresentation( final Object value )
+  protected IComponent getComponent( )
   {
+    return m_component;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
+   */
+  public String getStringRepresentation( final IRecord record )
+  {
+    if( m_component == null )
+      throw new UnsupportedOperationException( "No component specified, overwrite this method." );
+
+    final Object value = record.getValue( m_component );
+
     if( value == null )
       return String.format( m_nullFormat );
 
     return String.format( m_displayFormat, value );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getImage(org.kalypso.observation.result.IRecord)
+   */
+  public Image getImage( final IRecord record )
+  {
+    return null;
   }
 
   /**
