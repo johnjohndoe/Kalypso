@@ -170,11 +170,19 @@ public class DBFDataSection
           }
           else
           {
-            b = ((String) recdata).getBytes();
+            String string = (String) recdata;
+            b = (string).getBytes();
+
+            if( b.length > fddata[16] )
+            {
+              final byte[] otherB = new byte[fddata[16]];
+              System.arraycopy( b, 0, otherB, 0, fddata[16] );
+              b = otherB;
+            }
           }
-          if( b.length > fddata[16] )
-            // TODO: at least cut the String
-            throw new DBaseException( "string contains too many characters " + (String) recdata );
+// if( b.length > fddata[16] )
+// // TODO: at least cut the String
+// throw new DBaseException( "string contains too many characters " + (String) recdata );
           for( int j = 0; j < b.length; j++ )
             datasec.data[offset + j] = b[j];
           for( int j = b.length; j < fddata[16]; j++ )
