@@ -324,8 +324,12 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       return getDefaultIcon();
     }
 
+    /* If the image is disposed; this theme was disposed */
+    if( m_externIcon != null && m_externIcon.isDisposed() )
+      return null;
+
     /* If the m_legendIcon string was already evaluated and an image does exist, return this image. */
-    if( m_externIcon != null )
+    if( m_externIcon != null && !m_externIcon.isDisposed() )
       return ImageDescriptor.createFromImage( m_externIcon );
 
     /* Check, if it is a special URN. */
