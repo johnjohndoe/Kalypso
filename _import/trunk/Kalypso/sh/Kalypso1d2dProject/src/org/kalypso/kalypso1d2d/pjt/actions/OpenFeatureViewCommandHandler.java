@@ -3,6 +3,7 @@
  */
 package org.kalypso.kalypso1d2d.pjt.actions;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -14,12 +15,18 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -47,23 +54,49 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
     try
     {
       if( m_resource == null )
-      {
-        throw new CoreException( StatusUtilities.createErrorStatus( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString( "OpenFeatureViewCommandHandler.2" ) ) ); //$NON-NLS-1$
-      }
+        throw new ExecutionException( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString( "OpenFeatureViewCommandHandler.2" ) ); //$NON-NLS-1$
 
       final IWorkbenchWindow activeWorkbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+      if( activeWorkbenchWindow == null )
+        throw new ExecutionException( "No active workbench window available" );
+
       final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
       final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_resource );
-      IFile file = null;
-      if( folder != null )
-        file = folder.getFile( m_resource );
+      if( folder == null )
+        throw new ExecutionException( "Folder not found: " + m_resource );
 
-      if( file != null && file.exists() && activeWorkbenchWindow != null )
+      final IFile file = folder.getFile( m_resource );
+      if( !file.exists() )
+        throw new ExecutionException( "File does not exist: " + file.getFullPath() );
+
+      if( activeWorkbenchWindow != null )
       {
         final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
         final FeatureTemplateView featureView = (FeatureTemplateView) workbenchPage.showView( FeatureTemplateView.ID );
-        featureView.loadFromTemplate( file );
+
+        final UIJob job = new UIJob( "Loading " + file.getName() )
+        {
+          @Override
+          public IStatus runInUIThread( IProgressMonitor monitor )
+          {
+            try
+            {
+              Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
+
+              URL urlContext = ResourceUtilities.createURL( file );
+
+              featureView.setTemplate( template, urlContext, null, null, null );
+
+              return Status.OK_STATUS;
+            }
+            catch( Throwable e )
+            {
+              return StatusUtilities.statusFromThrowable( e );
+            }
+          }
+        };
+        job.schedule();
       }
     }
     catch( final CoreException e )

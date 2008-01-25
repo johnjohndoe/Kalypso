@@ -3,6 +3,7 @@
  */
 package org.kalypso.afgui.handlers;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -12,12 +13,19 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -52,11 +60,14 @@ public class FeatureViewInputContextHandler extends AbstractHandler implements I
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    // TODO: that is strange and probably bug-prone. Why not just use scenario-relative pathews for the .gft file?
+    // TODO: that is strange and probably bug-prone. Why not just use scenario-relative paths for the .gft file?
     final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_featureViewInput );
-    IFile file = null;
+    // TODO: directly throw exceptions if something is missing
+    final IFile file;
     if( folder != null && m_featureViewInput != null )
       file = folder.getFile( m_featureViewInput );
+    else
+      file = null;
 
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage page = window == null ? null : window.getActivePage();
@@ -65,7 +76,30 @@ public class FeatureViewInputContextHandler extends AbstractHandler implements I
     if( file != null && file.exists() && view != null && view instanceof FeatureTemplateView )
     {
       final FeatureTemplateView mapView = (FeatureTemplateView) view;
-      mapView.loadFromTemplate( file );
+
+      final UIJob job = new UIJob( "Loading " + file.getName() )
+      {
+        @Override
+        public IStatus runInUIThread( IProgressMonitor monitor )
+        {
+          try
+          {
+            Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
+
+            URL urlContext = ResourceUtilities.createURL( file );
+
+            mapView.setTemplate( template, urlContext, null, null, null );
+
+            return Status.OK_STATUS;
+          }
+          catch( Throwable e )
+          {
+            return StatusUtilities.statusFromThrowable( e );
+          }
+        }
+      };
+      job.schedule();
+
       return Status.OK_STATUS;
     }
     else
