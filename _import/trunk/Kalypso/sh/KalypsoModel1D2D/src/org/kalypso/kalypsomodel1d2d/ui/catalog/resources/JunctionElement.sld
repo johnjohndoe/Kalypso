@@ -4,12 +4,12 @@
 	xmlns:ogc="http://www.opengis.net/ogc"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>TransitionElement</Name>
-	<Title>TransitionElement</Title>
-	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement</FeatureTypeName>
+	<Name>JunctionElement</Name>
+	<Title>JunctionElement</Title>
+	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionElement</FeatureTypeName>
 	<Rule>
-		<Name>TransitionElement</Name>
-		<Title>TransitionElement</Title>
+		<Name>JunctionElement</Name>
+		<Title>JunctionElement</Title>
 		<Abstract>default</Abstract>
 		<MinScaleDenominator>0.0</MinScaleDenominator>
 		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
