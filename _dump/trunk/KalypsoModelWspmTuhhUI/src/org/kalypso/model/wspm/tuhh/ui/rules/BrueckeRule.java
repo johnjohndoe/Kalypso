@@ -70,7 +70,7 @@ public class BrueckeRule extends AbstractValidatorRule
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     // TODO IProfileObjects now returned as list from IProfile
-    final IProfileObject[] profileObjects = profil.getProfileObject();
+    final IProfileObject[] profileObjects = profil.getProfileObjects();
     IProfileObject building = null;
     if( profileObjects.length > 0 )
       building = profileObjects[0];

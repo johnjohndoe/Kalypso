@@ -66,7 +66,7 @@ public class WehrRule extends AbstractValidatorRule
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
     // TODO IProfileObjects now returned as list from IProfile
-    final IProfileObject[] profileObjects = profil.getProfileObject();
+    final IProfileObject[] profileObjects = profil.getProfileObjects();
     IProfileObject building = null;
     if( profileObjects.length > 0 )
       building = profileObjects[0];
@@ -78,8 +78,8 @@ public class WehrRule extends AbstractValidatorRule
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
       final IRecord leftP = validateLimits( profil, collector, pluginId );
       validateProfilLines( profil, collector, pluginId );
-      validateDevider( profil, collector, pluginId );
-      validateParams( profil, collector, pluginId, leftP );
+      //FIXME validateDevider( profil, collector, pluginId );
+      //FIXME validateParams( profil, collector, pluginId, leftP );
     }
     catch( final Exception e )
     {
@@ -91,7 +91,7 @@ public class WehrRule extends AbstractValidatorRule
   private void validateDevider( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
     final IProfilPointMarker[] wehrDevider = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_WEHR ) );
-    if( wehrDevider.length < 1 )
+    if( wehrDevider == null || wehrDevider.length < 1 )
       return;
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     final LinkedList<IRecord> points = profil.getPoints();
@@ -115,21 +115,23 @@ public class WehrRule extends AbstractValidatorRule
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_WEHR ) );
 
     // TODO IProfileObjects now returned as list from IProfile
-    final IProfileObject[] profileObjects = profil.getProfileObject();
+    final IProfileObject[] profileObjects = profil.getProfileObjects();
     IProfileObject building = null;
     if( profileObjects.length > 0 )
       building = profileObjects[0];
 
     final Double beiwert = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
     IRecord point = (beiwert == null || beiwert == 0.0) ? p : null;
-
-    for( final IProfilPointMarker devider : deviders )
+    if( deviders != null )
     {
-      final double value = devider.getValue() == null ? 0.0 : (Double) devider.getValue();
-      if( value == 0.0 )
+      for( final IProfilPointMarker devider : deviders )
       {
-        point = devider.getPoint();
-        break;
+        final double value = devider.getValue() == null ? 0.0 : (Double) devider.getValue();
+        if( value == 0.0 )
+        {
+          point = devider.getPoint();
+          break;
+        }
       }
     }
     for( final IComponent property : building.getObjectProperties() )
@@ -165,6 +167,13 @@ public class WehrRule extends AbstractValidatorRule
         collector.createProfilMarker( true, "Wehrkante[" + String.format( FMT_BREITE, point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) )
             + "] unterhalb Geländeniveau", "", points.indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
       }
+// if( point.hasProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) && (point.getValueFor(
+// IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) != 0.0) )
+// {
+// collector.createProfilMarker( true, "ungültiger Bewuchs im Wehrbereich[" + String.format( FMT_BREITE,
+// point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ), "", points.indexOf( point ),
+// IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX.toString(), pluginId, null );
+// }
     }
   }
 

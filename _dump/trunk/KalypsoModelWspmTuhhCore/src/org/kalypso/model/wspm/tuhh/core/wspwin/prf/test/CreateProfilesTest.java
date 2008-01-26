@@ -40,6 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin.prf.test;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Locale;
+
+import org.apache.commons.io.IOUtils;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
+
 import junit.framework.TestCase;
 
 /**
@@ -206,4 +222,63 @@ public class CreateProfilesTest extends TestCase
 //    p.addPoint( 100, 100 );
 //    return p;
 //  }
+  //kann man eventuell im WSPWINEXPORTER benutzen
+//  private static void writeWspWinFiles( final TuhhCalculation calculation, final boolean isDirectionUpstreams, final File strFile, final File cfgFile ) throws IOException
+//  {
+//    final TuhhReach reach = calculation.getReach();
+//    final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
+//    final String[] wspWinPrfNames = new String[segments.length];
+//    final Double[] wspWinPrfStations = new Double[segments.length];
+//
+//    final TuhhStationRange stationRange = new TuhhStationRange( calculation, isDirectionUpstreams );
+//    final TuhhSegmentStationComparator stationComparator = new TuhhSegmentStationComparator( isDirectionUpstreams );
+//
+//    Arrays.sort( segments, stationComparator );
+//
+//    PrintWriter cfgWriter = null;
+//    PrintWriter strWriter = null;
+//    try
+//    {
+//      cfgFile.getParentFile().mkdirs();
+//      cfgWriter = new PrintWriter( new BufferedWriter( new FileWriter( cfgFile ) ) );
+//
+//      strFile.getParentFile().mkdirs();
+//      strWriter = new PrintWriter( new BufferedWriter( new FileWriter( strFile ) ) );
+//
+//      strWriter.println( String.format( Locale.US, "%5d", wspWinPrfNames.length ) + " " + String.format( Locale.US, "%5d", wspWinPrfNames.length - 1 ) + "     WspWin    Export" );
+//
+//      int fileCount = 0;
+//      for( final TuhhReachProfileSegment segment : segments )
+//      {
+//        final BigDecimal station = segment.getStation();
+//        if( stationRange.isOutside( station ) )
+//          continue;
+//
+//        wspWinPrfNames[fileCount] = "Prf_" + fileCount + ".prf";
+//        wspWinPrfStations[fileCount++] = station.doubleValue();
+//      }
+//      for( int i = 0; i < wspWinPrfStations.length; i++ )
+//      {
+//        strWriter.println( "WspWin      " + String.format( Locale.US, "%.4f", wspWinPrfStations[i] ) + "  0         0   Export    " + wspWinPrfNames[i] );
+//      }
+//      strWriter.println( "" );
+//      for( int i = 1; i < wspWinPrfStations.length; i++ )
+//      {
+//        final String dist = String.format( Locale.US, "%.4f", wspWinPrfStations[i] - wspWinPrfStations[i - 1] );
+//        strWriter.println( String.format( Locale.US, "%.6f", wspWinPrfStations[i] ) + " " + String.format( Locale.US, "%.6f", wspWinPrfStations[i] ) + " " + dist + " " + dist + " " + dist + " "
+//            + wspWinPrfNames[i - 1] + " " + wspWinPrfNames[i] );
+//      }
+//      cfgWriter.println( "   19    1   20 b" );
+//      cfgWriter.println( "WspWin         Export         11.11.1111       " + String.format( Locale.US, "%.6f", wspWinPrfStations[0] ) + "       "
+//          + String.format( Locale.US, "%.6f", wspWinPrfStations[wspWinPrfStations.length - 1] ) + "   WspWin.str" );
+//      cfgWriter.close();
+//      strWriter.close();
+//    }
+//    finally
+//    {
+//      IOUtils.closeQuietly( cfgWriter );
+//      IOUtils.closeQuietly( strWriter );
+//    }
+//  }
+  
 }

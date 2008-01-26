@@ -156,8 +156,10 @@ public class PropertyEditWizard extends Wizard
     m_operationChooserPage = new OperationChooserPage();
     m_operationChooserPage.setPageComplete( false );
 
-    addPage( m_operationChooserPage );
+    
     addPage( m_propertyChooserPage );
+    addPage( m_operationChooserPage );
+  
   }
 
   /**

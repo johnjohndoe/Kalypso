@@ -53,27 +53,32 @@ import org.kalypso.observation.result.TupleResult;
 public interface IProfil extends IObservation<TupleResult>
 {
   /**
-   * @return something stored in the profile as Strings
-   */
-  public String getComment( );
-
-  public void setComment( final String comment );
-
-  /**
-   * @return false if the point does not match all the properties in this profile, otherwise true and adds the given
-   *         point at the end of the pointlist
+   * @return true
+   *         <p>
+   *         adds a new Record at the end of this Observation and copies the values of the Components existing in both
+   *         records
    */
   public boolean addPoint( final IRecord point );
 
   /**
    * @param pointProperty
-   * @return POINT_PROPERTY[] with all current pointproperties
    */
   public void addPointProperty( final IComponent pointProperty );
 
   /**
+   * remove the current ProfileObject and adds the given ProfileObject
+   * 
+   * @return the oldObject
+   * @param building
+   *            must not be null, in this case use removeProfileObject()
+   */
+  public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects );
+
+  public void createProfileObjects( IObservation<TupleResult>[] profileObjects );
+
+  /**
    * @return a valid profilPoint, addable to this profile
-   * @see #addPoint(IProfilPoint)
+   * @see #addPoint(IRecord)
    */
   public IRecord createProfilPoint( );
 
@@ -88,24 +93,50 @@ public interface IProfil extends IObservation<TupleResult>
   public IComponent getActiveProperty( );
 
   /**
+   * @return something stored in the profile as Strings
+   */
+  public String getComment( );
+
+  public IRecord[] getMarkedPoints( );
+
+  /**
+   * Gets all PointMarker of the given type in this profile.
+   */
+  public IProfilPointMarker[] getPointMarkerFor( IComponent pointMarker );
+
+  /**
+   * Gets all markers for this record.
+   */
+  public IProfilPointMarker[] getPointMarkerFor( IRecord record );
+
+  /**
+   * @return all Marker-Types stored in This profile, NOT all available Marker-Types registered for this
+   *         {@link #getType()}
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider
+   */
+  public IComponent[] getPointMarkerTypes( );
+
+  /**
    * @return all PointProperties used by this profile
    */
   public IComponent[] getPointProperties( );
 
   /**
-   * @return the nested PointList of this profile, changes will be reflected in the profile.
-   * @note May cause ConcurrentModificationException
+   * @return a new LinkedList of the obervations TupleResultSet nested in this profile.
+   *         <p>
+   *         Pointmodifications will be reflected in the profile. listoperations not.
+   * @see #getresult()
    */
   public LinkedList<IRecord> getPoints( );
 
   /**
    * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
    */
-  public IProfileObject[] getProfileObject( );
+  public IProfileObject[] getProfileObjects( );
 
   /**
    * @param key
-   * @return the value from HashMap<key,ProfileObject>
+   * @return the value from internal HashMap<Object,Object>
    */
   public Object getProperty( Object key );
 
@@ -123,14 +154,20 @@ public interface IProfil extends IObservation<TupleResult>
    */
   public String getType( );
 
+  /**
+   * @return true if the profile contains the property
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
+   */
   public boolean hasPointProperty( final IComponent property );
 
-  /**
-   * @param point
-   *            to remove
-   * @return false if the point is captured by a marker and will NOT remove the point from pointList
-   */
   public boolean removePoint( final IRecord point );
+
+  /*
+   * obsolete - point markers will be automatically set by their own setValue() implementation (value will be directly
+   * added to observation, and so the point marker is registered)
+   */
+// public Object addPointMarker( IProfilPointMarker marker );
+  public Object removePointMarker( IProfilPointMarker devider );
 
   /**
    * @param pointProperty
@@ -139,18 +176,11 @@ public interface IProfil extends IObservation<TupleResult>
    */
   public boolean removePointProperty( final IComponent pointProperty );
 
-  /**
-   * @return the extracted ProfileObject
-   *         <p>
-   *         all pointProperties used by this Object will be removed
-   *         <p>
-   *         the ProfileObject is set to null
-   */
-  public IProfileObject removeProfileObject( );
+  public boolean removeProfileObject( IProfileObject profileObject );
 
   /**
    * @param key
-   *            removes the key and its value of the profiles HashMap
+   *            removes the key and its value from the profiles internal HashMap<Object,Object>
    */
   public Object removeProperty( final Object key );
 
@@ -158,44 +188,14 @@ public interface IProfil extends IObservation<TupleResult>
 
   public void setActivePointProperty( final IComponent activeProperty );
 
-  /**
-   * remove the current ProfileObject and adds the given ProfileObject
-   * 
-   * @return the oldObject
-   * @param building
-   *            must not be null, in this case use removeProfileObject()
-   */
-  public IProfileObject[] setProfileObject( final IProfileObject[] profileObjects );
+  public void setComment( final String comment );
 
   /**
    * @param key
    * @param value
-   *            saves the the key,value in its own HashMap
+   *            saves any (key,value-Object) in the profiles internal HashMap
    */
   public void setProperty( final Object key, final Object value );
 
   public void setStation( final double station );
-
-  public IComponent[] getPointMarkerTypes( );
-
-  /**
-   * Gets all markers of a given type.
-   */
-  public IProfilPointMarker[] getPointMarkerFor( IComponent propertyFromId );
-
-  /**
-   * Gets all markers for this record.
-   */
-  public IProfilPointMarker[] getPointMarkerFor( IRecord record );
-
-  /*
-   * obsolete - point markers will be automatically set by their setValue() implementation (value will be directly added
-   * to observation, and so the point marker is registered)
-   */
-// public Object addPointMarker( IProfilPointMarker marker );
-  public Object removePointMarker( IProfilPointMarker devider );
-
-  public IRecord[] getMarkedPoints( );
-
-  public void createProfileObjects( IObservation<TupleResult>[] profileObjects );
 }

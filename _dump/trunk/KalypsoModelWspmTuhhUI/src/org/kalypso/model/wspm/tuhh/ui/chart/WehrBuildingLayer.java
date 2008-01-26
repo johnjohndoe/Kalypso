@@ -133,9 +133,9 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     int fieldNr = 0;
 
     // TODO IProfileObjects now returned as list from IProfile
-    final IProfileObject building = getProfil().getProfileObject()[0];
-    final Object value = building.getValue( ProfilObsHelper.getPropertyFromId( getProfil().getProfileObject()[0], IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
-    Double leftValue = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( getProfil().getProfileObject()[0], IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    final IProfileObject building = getProfil().getProfileObjects()[0];
+    final Object value = building.getValue( ProfilObsHelper.getPropertyFromId( getProfil().getProfileObjects()[0], IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    Double leftValue = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( getProfil().getProfileObjects()[0], IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
     for( final IProfilPointMarker devider : deviders )
     {
 
@@ -211,17 +211,19 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   }
 
   private void paintDevider( final GCWrapper gc )
-  {
-    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
-    final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
-    final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
-    for( final IProfilPointMarker devider : deviders )
-    {
-      final IRecord point = devider.getPoint();
-      final double leftvalue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-      final int left = (int) getDomainRange().logical2screen( leftvalue );
-      gc.drawLine( left, top, left, bottom );
-    }
+  {//FIXME
+
+//    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
+//    if (deviders == null)return;
+//    final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
+//    final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
+//    for( final IProfilPointMarker devider : deviders )
+//    {
+//      final IRecord point = devider.getPoint();
+//      final double leftvalue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+//      final int left = (int) getDomainRange().logical2screen( leftvalue );
+//      gc.drawLine( left, top, left, bottom );
+//    }
 
   }
 

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,9 +48,13 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.metadata.MetadataObject;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
+import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -62,6 +67,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public abstract class AbstractProfil implements IProfil
 {
+  protected static String PROFILE_OBJECTS = "org.kalypso.model.wspm.core.profilobjects";
+
   private final String m_type;
 
   private double m_station;
@@ -93,7 +100,6 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
-   * @return ein Array aller von der eigefügten PointProperty abhängigen pointProperties
    * @see org.kalypso.model.wspm.core.profil.IProfil#addPointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
    */
   public void addPointProperty( final IComponent pointProperty )
@@ -102,6 +108,35 @@ public abstract class AbstractProfil implements IProfil
       throw new IllegalStateException( "property can't be null!" );
 
     getResult().addComponent( pointProperty );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
+   */
+  @SuppressWarnings("unchecked")
+  public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects )
+  {
+    if( m_additionalProfileSettings.get( PROFILE_OBJECTS ) == null )
+      m_additionalProfileSettings.put( PROFILE_OBJECTS, new ArrayList<IProfileObject>() );
+    final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
+
+    for( final IProfileObject profileObject : profileObjects )
+    {
+      profileObjectList.add( profileObject );
+    }
+
+    return profileObjectList.toArray( new IProfileObject[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso.observation.result.TupleResult>[])
+   *      override this method if you have got the org.kalypso.model.wspm.core.profil.IProfileObjectProvider for your
+   *      m_type
+   */
+  public void createProfileObjects( IObservation<TupleResult>[] profileObjects )
+  {
+    throw new NotImplementedException();
+
   }
 
   /**
@@ -139,6 +174,21 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getMarkedPoints()
+   */
+  public IRecord[] getMarkedPoints( )
+  {
+    final ArrayList<IRecord> records = new ArrayList<IRecord>();
+
+    for( final IRecord record : getResult() )
+    {
+      if( getPointMarkerFor( record ).length > 0 )
+        records.add( record );
+    }
+    return records.toArray( new IRecord[] {} );
+  }
+
+  /**
    * @see org.kalypso.observation.IObservation#getMetadataList()
    */
   public List<MetadataObject> getMetadataList( )
@@ -159,6 +209,66 @@ public abstract class AbstractProfil implements IProfil
     return m_phenomenon;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IComponent)
+   */
+  public IProfilPointMarker[] getPointMarkerFor( IComponent markerColumn )
+  {
+
+    final List<IProfilPointMarker> markers = new ArrayList<IProfilPointMarker>();
+
+    final TupleResult result = getResult();
+    for( final IRecord record : result )
+    {
+      final Object value = record.getValue( markerColumn );
+      if( value != null )
+      {
+        markers.add( new PointMarker( markerColumn, record ) );
+      }
+    }
+
+    return markers.toArray( new IProfilPointMarker[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IRecord)
+   */
+  public IProfilPointMarker[] getPointMarkerFor( IRecord record )
+  {
+    final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
+    final IComponent[] markers = getPointMarkerTypes();
+    for( final IComponent marker : markers )
+    {
+      if( record.getValue( marker ) != null )
+        pointMarkers.add( new PointMarker( marker, record ) );
+    }
+    return pointMarkers.toArray( new PointMarker[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerTypes()
+   */
+  public IComponent[] getPointMarkerTypes( )
+  {
+    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( this.getType() );
+    if( providers.length == 0 )
+      return new IComponent[] {};
+
+    final List<IComponent> marker = new ArrayList<IComponent>();
+    final IComponent[] properties = getPointProperties();
+
+    for( final IProfilPointMarkerProvider provider : providers )
+    {
+      final String[] markerTypes = provider.getMarkerTypes();
+      for( final IComponent component : properties )
+      {
+        if( ArrayUtils.contains( markerTypes, component.getId() ) && !marker.contains( component ) )
+          marker.add( component );
+      }
+    }
+    return marker.toArray( new IComponent[] {} );
+  }
+
   public IComponent[] getPointProperties( )
   {
     final TupleResult result = getResult();
@@ -170,7 +280,24 @@ public abstract class AbstractProfil implements IProfil
    */
   public LinkedList<IRecord> getPoints( )
   {
-    return ProfilObsHelper.toProfilPoints( getResult() );
+    final LinkedList<IRecord> points = new LinkedList<IRecord>();
+    for( final IRecord record : getResult() )
+    {
+      points.add( record );
+    }
+    return points;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
+   */
+  @SuppressWarnings("unchecked")
+  public IProfileObject[] getProfileObjects( )
+  {
+    final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
+    if( profileObjectList == null )
+      return new IProfileObject[] {};
+    return profileObjectList.toArray( new IProfileObject[] {} );
   }
 
   public Object getProperty( final Object key )
@@ -200,11 +327,37 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
+   */
+  public boolean hasPointProperty( final IComponent property )
+  {
+    if( property == null )
+      return false;
+
+    final IComponent[] components = getResult().getComponents();
+    if( ArrayUtils.contains( components, property ) )
+      return true;
+
+    return false;
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removePoint(org.kalypso.model.wspm.core.profilinterface.IPoint)
    */
   public boolean removePoint( final IRecord point )
   {
     return getResult().remove( point );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removePointMarker(org.kalypso.model.wspm.core.profil.IProfilPointMarker)
+   */
+  public Object removePointMarker( IProfilPointMarker marker )
+  {
+    final Object oldValue = marker.getValue();
+    marker.setValue( null );
+
+    return oldValue;
   }
 
   /**
@@ -216,12 +369,15 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
-   * @throws IllegalProfileOperationException
-   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removeBuilding()
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removeProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject)
    */
-  public IProfileObject removeProfileObject( )
+  @SuppressWarnings("unchecked")
+  public boolean removeProfileObject( IProfileObject profileObject )
   {
-    throw (new NotImplementedException());
+    final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
+    if( profileObjectList == null )
+      return true;
+    return profileObjectList.remove( profileObject );
   }
 
   /**
@@ -229,7 +385,9 @@ public abstract class AbstractProfil implements IProfil
    */
   public Object removeProperty( final Object key )
   {
-    throw (new NotImplementedException());
+    final Object old = m_additionalProfileSettings.get( key );
+    m_additionalProfileSettings.remove( key );
+    return old;
   }
 
   public void setActivePoint( final IRecord point )
@@ -302,21 +460,6 @@ public abstract class AbstractProfil implements IProfil
   public void setStation( final double station )
   {
     m_station = station;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
-   */
-  public boolean hasPointProperty( final IComponent property )
-  {
-    if( property == null )
-      return false;
-
-    final IComponent[] components = getResult().getComponents();
-    if( ArrayUtils.contains( components, property ) )
-      return true;
-
-    return false;
   }
 
 }

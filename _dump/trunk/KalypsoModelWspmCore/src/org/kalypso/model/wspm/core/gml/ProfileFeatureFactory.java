@@ -169,7 +169,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     final IRelationType buildingRT = (IRelationType) featureType.getProperty( memberQName );
     final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[] {} );
 
-    final IProfileObject[] buildings = profile.getProfileObject();
+    final IProfileObject[] buildings = profile.getProfileObjects();
     for( final IProfileObject profileObject : buildings )
     {
       final IFeatureType buildingType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );

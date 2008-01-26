@@ -217,7 +217,7 @@ public class PrfSource implements IProfilSource
           if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
           building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
-          p.setProfileObject( new IProfileObject[] { building } );
+          p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
         case 7:// Kreis
@@ -233,7 +233,7 @@ public class PrfSource implements IProfilSource
           if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
           building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
-          p.setProfileObject( new IProfileObject[] { building } );
+          p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
         case 8:// Ei
@@ -251,7 +251,7 @@ public class PrfSource implements IProfilSource
           if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
           building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
-          p.setProfileObject( new IProfileObject[] { building } );
+          p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
         case 9:// Maulprofil
@@ -269,7 +269,7 @@ public class PrfSource implements IProfilSource
           if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
           building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
-          p.setProfileObject( new IProfileObject[] { building } );
+          p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
 
@@ -318,7 +318,7 @@ public class PrfSource implements IProfilSource
     writeBuildingProperty( bridge, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
     final IComponent pp = ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
     final double delta = pp == null ? 0.0001 : ProfilObsHelper.getPrecision( pp );
-    p.setProfileObject( new IProfileObject[] { bridge } );
+    p.addProfileObjects( new IProfileObject[] { bridge } );
     final PolyLine polyLineO = new PolyLine( dbo.getX(), dbo.getY(), delta );
     final PolyLine polyLineU = new PolyLine( dbu.getX(), dbu.getY(), delta );
     final Range rangeO = new Range( polyLineO.getFirstX(), polyLineO.getLastX(), delta );
@@ -553,7 +553,7 @@ public class PrfSource implements IProfilSource
     if( wehrart != null )
       wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), wehrart );
     wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), wt == null ? 0.0 : wt[0] );
-    p.setProfileObject( new IProfileObject[] { wehr } );
+    p.addProfileObjects( new IProfileObject[] { wehr } );
     readWehrtrenner( wt, p, pr );
     final IComponent pp = ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     final double delta = pp == null ? 0.0001 : ProfilObsHelper.getPrecision( pp );

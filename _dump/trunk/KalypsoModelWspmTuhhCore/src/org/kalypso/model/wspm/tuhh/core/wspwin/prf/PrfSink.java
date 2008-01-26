@@ -96,7 +96,7 @@ public class PrfSink implements IProfilSink
     writePoints( pw, p );
     writeDevider( pw, p );
     writeRauheit( pw, p );
-    if( p.getProfileObject() != null )
+    if( p.getProfileObjects() != null )
       writeBuilding( pw, p );
     if( p.hasPointProperty( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ) )
       writeHochRechts( pw, p );
@@ -159,7 +159,7 @@ public class PrfSink implements IProfilSink
     else
       return;
 
-    final IProfileObject[] buildings = profil.getProfileObject();
+    final IProfileObject[] buildings = profil.getProfileObjects();
 
     // TODO IProfileObject is now implemented as list!
     IProfileObject building = null;
@@ -277,7 +277,7 @@ public class PrfSink implements IProfilSink
 
   private void writeBuilding( final PrfWriter pw, final IProfil profil )
   {
-    final IProfileObject[] buildings = profil.getProfileObject();
+    final IProfileObject[] buildings = profil.getProfileObjects();
 
     // FIXME getter is now a list
     IProfileObject building = null;

@@ -40,16 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.TuhhBuildingHelper;
@@ -60,14 +54,12 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * @author kuch
+ * @author kimwerner
  */
 public class TuhhProfil extends AbstractProfil
 {
-  List<IProfileObject> m_profileObjects = new ArrayList<IProfileObject>();
 
   public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype";
 
@@ -91,121 +83,43 @@ public class TuhhProfil extends AbstractProfil
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerTypes()
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
+   * @note for tuhh-profiles only ONE ProfileObject is allowed at same time, all other objects will be removed
+   * @see #removeProfileObject(IProfileObject)
+   * @throws IllegalStateException
    */
-  public IComponent[] getPointMarkerTypes( )
+  @Override
+  public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects )
   {
-    final IProfilPointMarkerProvider[] provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( this.getType() );
-    if( provider.length > 1 )
-      throw new IllegalStateException();
-    else if( provider.length == 0 )
-      return new IComponent[] {};
-
-    final String[] markerTypes = provider[0].getMarkerTypes();
-
-    final List<IComponent> marker = new ArrayList<IComponent>();
-
-    final IComponent[] myProperties = getPointProperties();
-    for( final IComponent component : myProperties )
-    {
-      if( ArrayUtils.contains( markerTypes, component.getId() ) )
-      {
-        marker.add( component );
-      }
-    }
-
-    return marker.toArray( new IComponent[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.observation.IObservation<org.kalypso.observation.result.TupleResult>[])
-   */
-  public IProfileObject[] setProfileObject( final IObservation<TupleResult>[] profileObjects )
-  {
-    for( final IObservation<TupleResult> observation : profileObjects )
-    {
-      final IProfileObject obj = TuhhProfilHelper.transformProfileObject( this, observation );
-      m_profileObjects.add( obj );
-    }
-
-    return m_profileObjects.toArray( new IProfileObject[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
-   */
-  public IProfileObject[] getProfileObject( )
-  {
-    return m_profileObjects.toArray( new IProfileObject[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getMarkedPoints()
-   */
-  public IRecord[] getMarkedPoints( )
-  {
-    // FIXME
-    throw (new NotImplementedException());
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IComponent)
-   */
-  public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
-  {
-    if( markerColumn == null )
-      return new IProfilPointMarker[] {};
-    final IProfilPointMarker[] markers = TuhhMarkerHelper.createPointMarkers( this, markerColumn );
-
-    return markers;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#removePointMarker(org.kalypso.model.wspm.core.profil.IProfilPointMarker)
-   */
-  public Object removePointMarker( final IProfilPointMarker marker )
-  {
-    final Object oldValue = marker.getValue();
-    marker.setValue( null );
-
-    return oldValue;
+    if( profileObjects == null || profileObjects.length > 1 )
+      throw new IllegalStateException( "only one profileObject allowed" );
+    setProperty( PROFILE_OBJECTS, null );
+    return super.addProfileObjects( profileObjects );
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso.observation.result.TupleResult>[])
    */
+  @Override
   public void createProfileObjects( final IObservation<TupleResult>[] profileObjects )
   {
     for( final IObservation<TupleResult> observation : profileObjects )
     {
       final IProfileObject profileObject = TuhhBuildingHelper.createProfileObject( this, observation );
-      m_profileObjects.add( profileObject );
+      addProfileObjects( new IProfileObject[] { profileObject } );
     }
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
+   * @return false if the point is captured by a marker and will NOT remove the point from pointList
    */
-  public IProfileObject[] setProfileObject( final IProfileObject[] profileObjects )
+  @Override
+  public boolean removePoint( IRecord point )
   {
-    /* remove old buildings - tuhh special hack */
-    m_profileObjects.clear();
-
-    for( final IProfileObject profileObject : profileObjects )
-    {
-      m_profileObjects.add( profileObject );
-    }
-
-    return m_profileObjects.toArray( new IProfileObject[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IRecord)
-   */
-  public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
-  {
-    // TODO Auto-generated method stub
-    return null;
+    final IProfilPointMarker[] markers = getPointMarkerFor( point );
+    if( markers.length == 0 )
+      return super.removePoint( point );
+    return false;
   }
 
 }

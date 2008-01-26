@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilBuilder;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -61,7 +62,7 @@ import org.kalypso.observation.result.IRecord;
 /**
  * Trennflächen und Bordvollpunkte dürfen nur innerhalb der durchströmten Bereiche liegen
  * 
- * @author belger
+ * @author kimwerner
  */
 public class TrennerRule extends AbstractValidatorRule
 {
@@ -79,16 +80,22 @@ public class TrennerRule extends AbstractValidatorRule
     if( db.length == 0 )
       collector.createProfilMarker( true, "keine durchströmten Bereiche vorhanden", "", 0, null, pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) } );
 
-    // TODO IProfileObjects now returned as list from IProfile
-    final IProfileObject[] profileObjects = profil.getProfileObject();
+    final IProfileObject[] profileObjects = profil.getProfileObjects();
     IProfileObject building = null;
     if( profileObjects.length > 0 )
       building = profileObjects[0];
-
-    if( tf.length == 0 && !(building != null && building instanceof IProfileObject) )
+    // Regel für fehlende Trennflächen bei Durchlässen erlauben
+    // TUHH-Hack
+    if( tf.length == 0 && !isDurchlass( building ) )
       collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, null, pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) } );
+
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
+  }
+
+  private boolean isDurchlass( final IProfileObject building )
+  {
+    return !((building == null) || building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) || building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_WEHR ));
   }
 
   private void validatePosition( final IProfilPointMarker[] db, final IProfilPointMarker[] toValidate, final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
@@ -109,13 +116,15 @@ public class TrennerRule extends AbstractValidatorRule
       if( (xleft < left) || (xleft > right) )
       {
         collector.createProfilMarker( true, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), null, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp, profil.getPoints().indexOf( leftP ) ) } );
+
       }
       if( (xright < left) || (xright > right) )
       {
         collector.createProfilMarker( true, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), null, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp, profil.getPoints().indexOf( rightP ) ) } );
+
       }
     }
-    catch( final CoreException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );

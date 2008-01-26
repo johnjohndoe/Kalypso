@@ -165,7 +165,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
       if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( devider.getId().getId() ) )
       {
-        final Boolean position = (Boolean) devider.getValue();
+        final Boolean position = (Boolean) devider.getIntepretedValue();
         final boolean pos = position == null ? false : position;
 
         return String.format( "%s %s%n%10.4f [m]", new Object[] { devider.getId().getName(), pos ? "Böschungsfuss" : "Vorland",

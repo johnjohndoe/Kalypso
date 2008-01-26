@@ -38,68 +38,90 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile;
+package org.kalypso.model.wspm.core.profil.impl.marker;
 
-import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author kimwerner
  */
-public class ProfilDevider extends PointMarker
+public class PointMarker implements IProfilPointMarker
 {
-  public ProfilDevider( final IComponent typ, final IRecord point )
+  final private IComponent m_type;
+
+  IRecord m_point = null;
+
+  public PointMarker( final IComponent typ, final IRecord point )
   {
-    super(typ,point);
+    m_type = typ;
+    m_point = point;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getId()
+   */
+  public IComponent getId( )
+  {
+    return m_type;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getPoint()
+   */
+  public IRecord getPoint( )
+  {
+    return m_point;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getValue()
+   */
+  public Object getValue( )
+  {
+    return m_point.getValue( getId() );
   }
 
   /* Interpreted ui values to obtain backward compability */
-  @Override
   public Object getIntepretedValue( )
   {
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getId().getId() ) )
-    {
-      final Object value = getValue();
-
-      if( value == null )
-        return null;
-      else if( "low".equals( value.toString().toLowerCase() ) )
-        return false;
-      else if( "high".equals( value.toString().toLowerCase() ) )
-        return true;
-
-      return null;
-    }
 
     return getValue();
   }
 
-  @Override
   public void setInterpretedValue( final Object value )
   {
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getId().getId() ) )
-    {
-      if( value instanceof Boolean )
-      {
-        final Boolean flag = (Boolean) value;
-
-        if( flag )
-          setValue( "high" );
-        else
-          setValue( "low" );
-
-        return;
-      }
-
-      throw new NotImplementedException();
-    }
 
     setValue( value );
   }
 
-  
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setPoint(org.kalypso.observation.result.IRecord)
+   */
+  public IRecord setPoint( final IRecord newPosition )
+  {
+    final IRecord oldPoint = m_point;
+    if( m_point != null )
+    {
+      /*
+       * get old value of point, change point mapping and set old value to new point and null old point value
+       */
+      final Object old = m_point.getValue( getId() );
+      m_point.setValue( getId(), null );
+
+      m_point = newPosition;
+      m_point.setValue( getId(), old );
+    }
+
+    return oldPoint;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setValue(java.lang.Object)
+   */
+  public void setValue( final Object value )
+  {
+    m_point.setValue( getId(), value );
+  }
 }

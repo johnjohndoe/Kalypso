@@ -61,31 +61,36 @@ public class DurchlassRule extends AbstractValidatorRule
   {
 
     // TODO IProfileObjects now returned as list from IProfile
-    final IProfileObject[] profileObjects = profil.getProfileObject();
-    IProfileObject building = null;
-    if( profileObjects.length > 0 )
-      building = profileObjects[0];
-
-    if( (profil == null) || (building == null) || (!(building instanceof IProfileObject)) )
-      return;
-
-    try
-    {
-      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      for( final IComponent property : building.getObjectProperties() )
-      {
-        if( ((Double) building.getValue( property )).isNaN() )
-        {
-          collector.createProfilMarker( true, "Parameter <" + property.getName() + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
-          break;
-        }
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
-    }
+    
+    
+    // TODO FIXME Durchlässe und (Brücken,Wehre) können nicht mehr über den ProfilObjectTyp unterschieden werden
+    
+    
+//    final IProfileObject[] profileObjects = profil.getProfileObject();
+//    IProfileObject building = null;
+//    if( profileObjects.length > 0 )
+//      building = profileObjects[0];
+//
+//    if( (profil == null) || (building == null) || (!(building instanceof IProfileObject)) )
+//      return;
+//
+//    try
+//    {
+//      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+//      for( final IComponent property : building.getObjectProperties() )
+//      {
+//        if( ((Double) building.getValue( property )).isNaN() )
+//        {
+//          collector.createProfilMarker( true, "Parameter <" + property.getName() + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+//          break;
+//        }
+//      }
+//    }
+//    catch( final Exception e )
+//    {
+//      e.printStackTrace();
+//      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
+//    }
 
   }
 

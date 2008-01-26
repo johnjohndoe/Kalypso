@@ -85,7 +85,7 @@ public class BuildingPanel extends AbstractProfilView
     super( pem, viewdata );
 
     // TODO IProfileObjects now returned as list from IProfile
-    final IProfileObject[] profileObjects = getProfil().getProfileObject();
+    final IProfileObject[] profileObjects = getProfil().getProfileObjects();
     if( profileObjects.length > 0 )
       m_building = profileObjects[0];
     else
@@ -150,7 +150,7 @@ public class BuildingPanel extends AbstractProfilView
           final IProfil profil = getProfil();
 
           // TODO IProfileObjects now returned as list from IProfile
-          final IProfileObject[] buildings = profil.getProfileObject();
+          final IProfileObject[] buildings = profil.getProfileObjects();
           IProfileObject building = null;
 
           if( buildings.length > 0 )

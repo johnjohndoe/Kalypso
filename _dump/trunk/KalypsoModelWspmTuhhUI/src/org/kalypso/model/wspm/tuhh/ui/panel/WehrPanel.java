@@ -304,7 +304,7 @@ public class WehrPanel extends AbstractProfilView
       public void selectionChanged( final SelectionChangedEvent event )
       {
         // TODO IProfileObjects now returned as list from IProfile
-        final IProfileObject[] profileObjects = getProfil().getProfileObject();
+        final IProfileObject[] profileObjects = getProfil().getProfileObjects();
         if( profileObjects.length < 1 || !(profileObjects[0] instanceof BuildingWehr) )
           return;
 
@@ -357,7 +357,7 @@ public class WehrPanel extends AbstractProfilView
         if( !Double.isNaN( value ) )
         {
           // TODO IProfileObjects now returned as list from IProfile
-          final IProfileObject[] profileObjects = getProfil().getProfileObject();
+          final IProfileObject[] profileObjects = getProfil().getProfileObjects();
           IProfileObject building = null;
           if( profileObjects.length > 0 )
             building = profileObjects[0];
@@ -378,7 +378,7 @@ public class WehrPanel extends AbstractProfilView
       public void widgetSelected( final SelectionEvent e )
       {
         // TODO IProfileObjects now returned as list from IProfile
-        final IProfileObject[] profileObjects = getProfil().getProfileObject();
+        final IProfileObject[] profileObjects = getProfil().getProfileObjects();
         IProfileObject building = null;
         if( profileObjects.length > 0 )
           building = profileObjects[0];
@@ -437,7 +437,7 @@ public class WehrPanel extends AbstractProfilView
       return;
 
     // TODO IProfileObjects now returned as list from IProfile
-    final IProfileObject[] profileObjects = getProfil().getProfileObject();
+    final IProfileObject[] profileObjects = getProfil().getProfileObjects();
     if( profileObjects.length < 1 || !(profileObjects[0] instanceof BuildingWehr) )
       return;
 
@@ -449,13 +449,14 @@ public class WehrPanel extends AbstractProfilView
 
     m_WehrfeldVisible.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     m_kronenParameter.setText( building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ).toString() );
-    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
+    final IProfilPointMarker[] deviders = null;//FIXME getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
+    final int deviders_length = deviders == null ? 0 : deviders.length;
     {
-      while( m_deviderLines.size() < deviders.length )
+      while( m_deviderLines.size() < deviders_length )
       {
         m_deviderLines.add( new DeviderLine( m_deviderLines.size() + 1 ) );
       }
-      while( m_deviderLines.size() > deviders.length )
+      while( m_deviderLines.size() > deviders_length )
       {
         m_deviderLines.getLast().dispose();
         m_deviderLines.removeLast();

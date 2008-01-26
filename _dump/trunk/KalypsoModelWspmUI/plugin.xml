@@ -427,6 +427,10 @@
                   commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
                   style="push">
             </command>
+            <command
+                  commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
+                  style="push">
+            </command>
          </menuContribution>
          <menuContribution
                locationURI="popup:org.kalypso.model.wspm.ui.view.table.TableView">
@@ -436,6 +440,10 @@
             </command>
             <command
                   commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
                   style="push">
             </command>
          </menuContribution>

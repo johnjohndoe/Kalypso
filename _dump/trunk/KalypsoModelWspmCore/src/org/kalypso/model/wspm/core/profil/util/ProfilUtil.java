@@ -545,61 +545,57 @@ public class ProfilUtil
    */
   public static void croppProfile( final IProfil profile, final double start, final double end )
   {
-    // FIXME
-    throw (new NotImplementedException());
 
-// final LinkedList<IRecord> points = profile.getPoints();
-// final IRecord[] segment1 = getSegment( profile, start );
-// final IRecord[] segment2 = getSegment( profile, end );
-// IRecord startPoint = null;
-// IRecord endPoint = null;
-// int index1 = 0;
-// int index2 = 0;
-//
-// startPoint = splitSegment( profile, segment1[0], segment1[1] );
-// if( startPoint == null )
-// {
-// System.out.println( "Profil konnte nicht abgeschnitten werden. Startpunkt nicht auf Profil. Setze ersten
-// Profilpunkt." );
-// startPoint = profile.getPoints().getFirst();
-// index1 = 0;
-// }
-// else
-// index1 = points.indexOf( segment1[1] );
-//
-// points.add( index1, startPoint );
-//
-// endPoint = splitSegment( profile, segment2[0], segment2[1] );
-// if( endPoint == null )
-// {
-// System.out.println( "Profil konnte nicht abgeschnitten werden. Endpunkt nicht auf Profil. Setze letzten Profilpunkt."
-// );
-// endPoint = profile.getPoints().getLast();
-// index2 = points.size() - 1;
-// }
-// else
-// index2 = points.indexOf( segment2[1] );
-//
-// points.add( index2, endPoint );
-//
-// final IRecord[] toDelete_1 = points.subList( 0, index1 ).toArray( new IRecord[0] );
-// final IRecord[] toDelete_2 = points.subList( index2 + 1, points.size() ).toArray( new IRecord[0] );
-// for( final IRecord element : toDelete_1 )
-// {
-// for( final IProfilPointMarker marker : provider.getPointMarkerFor( element ) )
-// {
-// profile.removePointMarker( marker );
-// }
-// profile.removePoint( element );
-// }
-// for( final IRecord element : toDelete_2 )
-// {
-// for( final IProfilPointMarker marker : profile.getPointMarkerFor( element ) )
-// {
-// profile.removePointMarker( marker );
-// }
-// profile.removePoint( element );
-// }
+    final LinkedList<IRecord> points = profile.getPoints();
+    final IRecord[] segment1 = getSegment( profile, start );
+    final IRecord[] segment2 = getSegment( profile, end );
+    IRecord startPoint = null;
+    IRecord endPoint = null;
+    int index1 = 0;
+    int index2 = 0;
+
+    startPoint = splitSegment( profile, segment1[0], segment1[1] );
+    if( startPoint == null )
+    {
+      System.out.println( "Profil konnte nicht abgeschnitten werden. Startpunkt nicht auf Profil. Setze ersten Profilpunkt." );
+      startPoint = profile.getPoints().getFirst();
+      index1 = 0;
+    }
+    else
+      index1 = points.indexOf( segment1[1] );
+
+    points.add( index1, startPoint );
+
+    endPoint = splitSegment( profile, segment2[0], segment2[1] );
+    if( endPoint == null )
+    {
+      System.out.println( "Profil konnte nicht abgeschnitten werden. Endpunkt nicht auf Profil. Setze letzten Profilpunkt." );
+      endPoint = profile.getPoints().getLast();
+      index2 = points.size() - 1;
+    }
+    else
+      index2 = points.indexOf( segment2[1] );
+
+    points.add( index2, endPoint );
+
+    final IRecord[] toDelete_1 = points.subList( 0, index1 ).toArray( new IRecord[0] );
+    final IRecord[] toDelete_2 = points.subList( index2 + 1, points.size() ).toArray( new IRecord[0] );
+    for( final IRecord element : toDelete_1 )
+    {
+//      for( final IProfilPointMarker marker : provider.getPointMarkerFor( element ) )
+//      {
+//        profile.removePointMarker( marker );
+//      }
+      profile.removePoint( element );
+    }
+    for( final IRecord element : toDelete_2 )
+    {
+//      for( final IProfilPointMarker marker : profile.getPointMarkerFor( element ) )
+//      {
+//        profile.removePointMarker( marker );
+//      }
+      profile.removePoint( element );
+    }
   }
 
   /**

@@ -122,7 +122,8 @@ public class DeviderProvider implements IProfilPointMarkerProvider
       return new Component( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, "Bordvoll", "Bordvoll", "", "", IWspmConstants.Q_BOOLEAN, false, null );
     else if( property.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
       return new Component( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Durchströmter Bereich", "", "", IWspmConstants.Q_BOOLEAN, false, null );
-
+    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+      return new Component( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner", "Wehrfeldtrenner", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
     throw new IllegalStateException( "property not defined" );
   }
 

@@ -68,8 +68,8 @@ public class ProfileObjectSet implements IProfilChange
     if( hint != null )
       hint.setPointPropertiesChanged();
 
-    final IProfileObject[] oldObject = m_profil.getProfileObject();
-    m_profil.setProfileObject( m_object );
+    final IProfileObject[] oldObject = m_profil.getProfileObjects();
+    m_profil.addProfileObjects( m_object );
 
     // TODO list implementation of IProfileObject
     return new ProfileObjectSet( m_profil, oldObject );

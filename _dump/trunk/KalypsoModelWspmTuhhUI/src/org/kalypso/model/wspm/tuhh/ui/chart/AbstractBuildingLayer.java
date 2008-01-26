@@ -127,7 +127,7 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
   // TODO IProfileObjects now returned as list from IProfile (but WSPM can only handle one building)
   protected final IProfileObject getBuilding( )
   {
-    final IProfileObject[] buildings = getProfil().getProfileObject();
+    final IProfileObject[] buildings = getProfil().getProfileObjects();
     if( buildings.length > 0 )
       return buildings[0];
 

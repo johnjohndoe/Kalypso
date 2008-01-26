@@ -107,7 +107,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       existingLayers.add( layer.getId() );
 
     final IProfil profile = view.getProfil();
-    if( profile.getProfileObject().length == 0 )
+    if( profile.getProfileObjects().length == 0 )
     {
       addableLayer.add( IWspmTuhhConstants.LAYER_BRUECKE );
       addableLayer.add( IWspmTuhhConstants.LAYER_WEHR );
@@ -283,7 +283,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
     // TODO IProfileObjects now returned as list from IProfile, but we can only handle one IProfileObject (WSPM can't
     // handle more!)
-    final IProfileObject[] buildings = profile.getProfileObject();
+    final IProfileObject[] buildings = profile.getProfileObjects();
 
     IProfileObject building = null;
     if( buildings.length > 0 )
