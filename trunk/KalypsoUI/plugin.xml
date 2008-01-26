@@ -2168,6 +2168,12 @@
           id="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
           name="Löschen">
     </command>
+    <command
+          categoryId="org.kalypso.ui.tupleResult.category"
+          description="verschiebt die selektierten Zeilen der Tabelle nach oben"
+          id="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
+          name="nach Oben">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -2179,6 +2185,10 @@
           class="org.kalypso.ogc.gml.om.table.command.DeleteSelectedRowsHandler"
           commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand">
     </handler>
+    <handler
+          class="org.kalypso.ogc.gml.om.table.command.MoveUpSelectedRowsHandler"
+          commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand">
+    </handler>
  </extension>
  <extension
        point="org.eclipse.ui.commandImages">
@@ -2189,6 +2199,10 @@
     <image
           commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
           icon="icons/table/remove.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
+          icon="icons/util/up.gif">
     </image>
  </extension>
 </plugin>
