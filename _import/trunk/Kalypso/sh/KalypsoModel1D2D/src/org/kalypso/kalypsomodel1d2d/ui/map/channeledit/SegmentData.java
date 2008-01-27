@@ -495,6 +495,8 @@ public class SegmentData
 
     tmpProfil.setStation( profile.getStation() );
 
+    // TODO: no rw/hw properties available, ask kim or dirk what to do
+
     tmpProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_BREITE ) );
     tmpProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
     tmpProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );

@@ -210,6 +210,15 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       // reinit();
       return;
     }
+    else
+    {
+      if( m_nodeList.size() == 1 )
+      {
+        m_lineType = IContinuityLine1D.QNAME;
+        createBoundaryLine();
+        m_nodeList.clear();
+      }
+    }
     createBoundaryLine();
   }
 

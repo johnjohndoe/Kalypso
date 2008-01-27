@@ -122,7 +122,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
   public CalculationUnitWidget( )
   {
-    this( Messages.getString( "CalculationUnitWidget.0" ), Messages.getString( "CalculationUnitWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( "Berechnungseinheiten definieren", "Berechnungseinheiten definieren" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public CalculationUnitWidget( final String name, final String toolTip )

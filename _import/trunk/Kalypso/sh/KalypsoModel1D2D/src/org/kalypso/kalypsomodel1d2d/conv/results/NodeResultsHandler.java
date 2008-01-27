@@ -495,9 +495,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     final WspmProfile profile = teschkeRelation.getProfile();
     final IProfil profil = profile.getProfil();
-
+    final double profileStation = profile.getStation();
     // station
-    final BigDecimal station = WspmProfile.stationToBigDecimal( profil.getStation() );
+    final BigDecimal station = WspmProfile.stationToBigDecimal( profileStation );
 
     // thalweg
     final BigDecimal thalweg = new BigDecimal( nodeResult.getPoint().getZ() ).setScale( 4, BigDecimal.ROUND_HALF_UP );

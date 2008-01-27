@@ -134,6 +134,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
     final FeatureList elementList = (FeatureList) model.getFeature().getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
 
     // get all elements touching this node
+    // REMARK: for some reason sometimes the search query in SplitSort does not return anything.
     final List touchingElements = elementList.query( getPoint().getPosition(), null );
 
     final List<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>> foundElements = new ArrayList<IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>>();
