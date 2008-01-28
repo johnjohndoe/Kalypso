@@ -159,6 +159,13 @@ public interface IProfil extends IObservation<TupleResult>
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
    */
   public boolean hasPointProperty( final IComponent property );
+  /**
+   * @return the FIRST component with the given Id, if the profile contains the property otherwise null
+   * @note the Id maybe NOT unique in the profiles TupleResult
+   * @see #hasPointProperty(IComponent)
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
+   */
+  public IComponent hasPointProperty( final String propertyId );
 
   public boolean removePoint( final IRecord point );
 

@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.profil.util;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,8 +58,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author kimwerner
@@ -131,65 +130,75 @@ public class ProfilUtil
    */
   public static final void flipProfile( final IProfil profile )
   {
+    final TupleResult result = profile.getResult();
+    final HashMap<String, IComponent> properties = getComponentsFromProfile( profile );
+    final IComponent cmpBreite = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    if( cmpBreite == null )
+      throw new IllegalStateException( "Das Profil muss eine Breiteninformation haben" );
     final LinkedList<IRecord> points = profile.getPoints();
     for( final IRecord point : points )
     {
-      final TupleResult result = point.getOwner();
 
-      if( result.hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) ) )
-      {
-        final Double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
-        point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ), -breite );
-      }
-      if( result.hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) ) )
-      {
-        final Double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-        point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ), -hoehe );
-      }
+      final Double breite = (Double) point.getValue( cmpBreite );
+      point.setValue( cmpBreite, -breite );
+
     }
     Collections.reverse( points );
     IRecord previousPoint = null;
     for( final IRecord point : points )
     {
-      final TupleResult result = point.getOwner();
-
       if( previousPoint == null )
       {
         previousPoint = point;
         continue;
       }
 
-      if( result.hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) )
+      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
       {
-        final Double value = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) );
-        previousPoint.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ), value );
+        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+        final Double value = (Double) point.getValue( cmp );
+        previousPoint.setValue( cmp, value );
       }
 
-      if( result.hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ) )
+      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
       {
-        final Double value = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) );
-        previousPoint.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ), value );
+        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+        final Double value = (Double) point.getValue( cmp );
+        previousPoint.setValue( cmp, value );
       }
 
-      if( result.hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) )
+      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
       {
-        final Double value = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-        previousPoint.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ), value );
+        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+        final Double value = (Double) point.getValue( cmp );
+        previousPoint.setValue( cmp, value );
       }
 
-      if( result.hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) ) )
+      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
       {
-        final Double value = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-        previousPoint.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), value );
+        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+        final Double value = (Double) point.getValue( cmp );
+        previousPoint.setValue( cmp, value );
       }
 
-      if( result.hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) ) )
+      if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
       {
-        final Double value = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
-        previousPoint.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ), value );
+        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
+        final Double value = (Double) point.getValue( cmp );
+        previousPoint.setValue( cmp, value );
       }
       previousPoint = point;
     }
+  }
+
+  public final static HashMap<String, IComponent> getComponentsFromProfile( final IProfil profile )
+  {
+    final HashMap<String, IComponent> propHash = new HashMap<String, IComponent>();
+    for( final IComponent component : profile.getPointProperties() )
+    {
+      propHash.put( component.getId(), component );
+    }
+    return propHash;
   }
 
   public static final IRecord splitSegment( final IProfil profile, final IRecord startPoint, final IRecord endPoint )
@@ -582,18 +591,18 @@ public class ProfilUtil
     final IRecord[] toDelete_2 = points.subList( index2 + 1, points.size() ).toArray( new IRecord[0] );
     for( final IRecord element : toDelete_1 )
     {
-//      for( final IProfilPointMarker marker : provider.getPointMarkerFor( element ) )
-//      {
-//        profile.removePointMarker( marker );
-//      }
+// for( final IProfilPointMarker marker : provider.getPointMarkerFor( element ) )
+// {
+// profile.removePointMarker( marker );
+// }
       profile.removePoint( element );
     }
     for( final IRecord element : toDelete_2 )
     {
-//      for( final IProfilPointMarker marker : profile.getPointMarkerFor( element ) )
-//      {
-//        profile.removePointMarker( marker );
-//      }
+// for( final IProfilPointMarker marker : profile.getPointMarkerFor( element ) )
+// {
+// profile.removePointMarker( marker );
+// }
       profile.removePoint( element );
     }
   }

@@ -346,6 +346,19 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
+   */
+  public IComponent hasPointProperty( final String propertyId )
+  {
+    for( final IComponent component : getResult().getComponents() )
+    {
+      if( component.getId().equals( propertyId ) )
+        return component;
+    }
+    return null;
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removePoint(org.kalypso.model.wspm.core.profilinterface.IPoint)
    */
   public boolean removePoint( final IRecord point )
