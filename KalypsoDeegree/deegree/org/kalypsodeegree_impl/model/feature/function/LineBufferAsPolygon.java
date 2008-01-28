@@ -57,6 +57,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -144,10 +145,10 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       try
       {
         GMLXPath path = new GMLXPath( feature );
-        for( int ii = 0; ii < m_userCanSetPolyIfLineIsNullXPathSegs.length; ii++ )
+        for( final String element : m_userCanSetPolyIfLineIsNullXPathSegs )
         {
-          if( m_userCanSetPolyIfLineIsNullXPathSegs[ii] != null )
-            path = new GMLXPath( path, QName.valueOf( m_userCanSetPolyIfLineIsNullXPathSegs[ii] ) );
+          if( element != null )
+            path = new GMLXPath( path, QName.valueOf( element ) );
         }
         final Object obj = GMLXPathUtilities.query( path, workspace );
 
@@ -157,7 +158,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
         else
           userCanSetPolyIfLineIsNull = ((Boolean) obj).booleanValue();
       }
-      catch( GMLXPathException e )
+      catch( final GMLXPathException e )
       {
         e.printStackTrace();
         return null;
@@ -168,10 +169,10 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
     try
     {
       GMLXPath path = new GMLXPath( feature );
-      for( int ii = 0; ii < m_lineXPathSegs.length; ii++ )
+      for( final String element : m_lineXPathSegs )
       {
-        if( m_lineXPathSegs[ii] != null )
-          path = new GMLXPath( path, QName.valueOf( m_lineXPathSegs[ii] ) );
+        if( element != null )
+          path = new GMLXPath( path, QName.valueOf( element ) );
       }
       final Object objGeometry = GMLXPathUtilities.query( path, workspace );
 
@@ -183,7 +184,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
         return null;
       lineValue = (GM_Curve) objGeometry;
     }
-    catch( GMLXPathException e )
+    catch( final GMLXPathException e )
     {
       e.printStackTrace();
       return null;
@@ -195,16 +196,25 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
     try
     {
       GMLXPath path = new GMLXPath( feature );
-      for( int ii = 0; ii < m_widthXPathSegs.length; ii++ )
+      for( final String element : m_widthXPathSegs )
       {
-        if( m_widthXPathSegs[ii] != null )
-          path = new GMLXPath( path, QName.valueOf( m_widthXPathSegs[ii] ) );
+        if( element != null )
+          path = new GMLXPath( path, QName.valueOf( element ) );
       }
       final Object obj = GMLXPathUtilities.query( path, workspace );
 
       if( !(obj instanceof Number) )
-        // read as constant
-        widthValue = Double.parseDouble( m_widthXPathSegs[0] );
+      {
+        try
+        {
+          // read as constant
+          widthValue = Double.parseDouble( m_widthXPathSegs[0] );
+        }
+        catch( final NumberFormatException e )
+        {
+          widthValue = 0.0;
+        }
+      }
       else
       {
         final Number widthNumber = (Number) obj;
@@ -213,7 +223,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
         widthValue = widthNumber.doubleValue();
       }
     }
-    catch( GMLXPathException e )
+    catch( final GMLXPathException e )
     {
       e.printStackTrace();
       return null;
@@ -226,10 +236,10 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       try
       {
         GMLXPath path = new GMLXPath( feature );
-        for( int ii = 0; ii < m_widthFactorXPathSegs.length; ii++ )
+        for( final String element : m_widthFactorXPathSegs )
         {
-          if( m_widthFactorXPathSegs[ii] != null )
-            path = new GMLXPath( path, QName.valueOf( m_widthFactorXPathSegs[ii] ) );
+          if( element != null )
+            path = new GMLXPath( path, QName.valueOf( element ) );
         }
         final Object obj = GMLXPathUtilities.query( path, workspace );
         if( !(obj instanceof Number) )
@@ -242,7 +252,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
             widthFactor = widthNumber.doubleValue();
         }
       }
-      catch( GMLXPathException e )
+      catch( final GMLXPathException e )
       {
         e.printStackTrace();
         return null;
@@ -255,10 +265,10 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       try
       {
         GMLXPath path = new GMLXPath( feature );
-        for( int ii = 0; ii < m_offsetXPathSegs.length; ii++ )
+        for( final String element : m_offsetXPathSegs )
         {
-          if( m_offsetXPathSegs[ii] != null )
-            path = new GMLXPath( path, QName.valueOf( m_offsetXPathSegs[ii] ) );
+          if( element != null )
+            path = new GMLXPath( path, QName.valueOf( element ) );
         }
         final Object obj = GMLXPathUtilities.query( path, workspace );
         if( !(obj instanceof Number) )
@@ -271,7 +281,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
             offset = offsetNumber.doubleValue();
         }
       }
-      catch( GMLXPathException e )
+      catch( final GMLXPathException e )
       {
         e.printStackTrace();
         return null;
@@ -284,10 +294,10 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       try
       {
         GMLXPath path = new GMLXPath( feature );
-        for( int ii = 0; ii < m_endCapStyleXPathSegs.length; ii++ )
+        for( final String element : m_endCapStyleXPathSegs )
         {
-          if( m_endCapStyleXPathSegs[ii] != null )
-            path = new GMLXPath( path, QName.valueOf( m_endCapStyleXPathSegs[ii] ) );
+          if( element != null )
+            path = new GMLXPath( path, QName.valueOf( element ) );
         }
         final Object obj = GMLXPathUtilities.query( path, workspace );
         if( !(obj instanceof Number) )
@@ -300,7 +310,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
             offset = endCapNumber.intValue();
         }
       }
-      catch( GMLXPathException e )
+      catch( final GMLXPathException e )
       {
         e.printStackTrace();
         return null;
@@ -313,10 +323,10 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       try
       {
         GMLXPath path = new GMLXPath( feature );
-        for( int ii = 0; ii < m_quadrantSegmentsXPathSegs.length; ii++ )
+        for( final String element : m_quadrantSegmentsXPathSegs )
         {
-          if( m_quadrantSegmentsXPathSegs[ii] != null )
-            path = new GMLXPath( path, QName.valueOf( m_quadrantSegmentsXPathSegs[ii] ) );
+          if( element != null )
+            path = new GMLXPath( path, QName.valueOf( element ) );
         }
         final Object obj = GMLXPathUtilities.query( path, workspace );
         if( !(obj instanceof Number) )
@@ -329,7 +339,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
             quadrantSegments = quadrantSegmentsNumber.intValue();
         }
       }
-      catch( GMLXPathException e )
+      catch( final GMLXPathException e )
       {
         e.printStackTrace();
         return null;
@@ -340,6 +350,14 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
     {
       final LineString lineString = (LineString) JTSAdapter.export( lineValue );
       final Geometry geometry = lineString.buffer( widthValue * widthFactor + offset, quadrantSegments, endCapStyle );
+
+      if( geometry instanceof GeometryCollection )
+      {
+        final GeometryCollection gc = (GeometryCollection) geometry;
+        if( gc.isEmpty() )
+          return null;
+      }
+
       final GM_Surface< ? > polygon = (GM_Surface< ? >) JTSAdapter.wrap( geometry );
       return polygon;
     }
@@ -430,11 +448,11 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       try
       {
         GMLXPath path = new GMLXPath( feature );
-        for( int ii = 0; ii < m_userCanSetPolyIfLineIsNullXPathSegs.length; ii++ )
+        for( final String element : m_userCanSetPolyIfLineIsNullXPathSegs )
         {
-          if( m_userCanSetPolyIfLineIsNullXPathSegs[ii] != null )
+          if( element != null )
           {
-            path = new GMLXPath( path, QName.valueOf( m_userCanSetPolyIfLineIsNullXPathSegs[ii] ) );
+            path = new GMLXPath( path, QName.valueOf( element ) );
           }
         }
         obj = GMLXPathUtilities.query( path, workspace );
@@ -445,7 +463,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
         else
           userCanSetPolyIfLineIsNull = ((Boolean) obj).booleanValue();
       }
-      catch( GMLXPathException e )
+      catch( final GMLXPathException e )
       {
         e.printStackTrace();
         return null;
@@ -457,11 +475,11 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
     try
     {
       GMLXPath path = new GMLXPath( feature );
-      for( int ii = 0; ii < m_lineXPathSegs.length; ii++ )
+      for( final String element : m_lineXPathSegs )
       {
-        if( m_lineXPathSegs[ii] != null )
+        if( element != null )
         {
-          path = new GMLXPath( path, QName.valueOf( m_lineXPathSegs[ii] ) );
+          path = new GMLXPath( path, QName.valueOf( element ) );
         }
       }
       obj = GMLXPathUtilities.query( path, workspace );
@@ -469,7 +487,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       if( (obj instanceof GM_Curve) )
         polyline = (GM_Curve) obj;
     }
-    catch( GMLXPathException e )
+    catch( final GMLXPathException e )
     {
       e.printStackTrace();
       return null;
