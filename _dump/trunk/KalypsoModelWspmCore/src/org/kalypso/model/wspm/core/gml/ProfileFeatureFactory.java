@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -79,16 +79,16 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class ProfileFeatureFactory implements IWspmConstants
 {
-  private static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" );
+  public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" );
 
   public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" );
-
+  
   public final static QName QN_PROF_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
 
   public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
 
-  private final static Map<Feature, IProfil> m_profiles = new HashMap<Feature, IProfil>();
-
+  private final static ProfileFeatureManager m_profileManager = new ProfileFeatureManager();
+  
   private ProfileFeatureFactory( )
   {
     // private: never instatiate
@@ -219,40 +219,9 @@ public class ProfileFeatureFactory implements IWspmConstants
   public synchronized static IProfil toProfile( final Feature profileFeature )
   {
 
-    IProfil profil = m_profiles.get( profileFeature );
-
-    if( profil == null )
-    {
-      /* profile type */
-      final String type = (String) profileFeature.getProperty( QNAME_TYPE );
-
-      /* observation of profile */
-      final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( profileFeature );
-
-      profil = ProfilFactory.createProfil( type, observation );
-
-      /* station of profile */
-      try
-      {
-        final double station = ((BigDecimal) profileFeature.getProperty( QNAME_STATION )).doubleValue();
-        profil.setStation( station );
-      }
-      catch( final NullPointerException e )
-      {
-        // nothing to do... (happens when you creating a new profile)*/
-      }
-
-      /* building of profile */
-      // REMARK: handle buildings before table, because the setBuilding method resets the
-      // corresponding table properties.
-      final IObservation<TupleResult>[] profileObjects = ProfilObsHelper.getProfileObjects( profileFeature );
-      if( profileObjects.length > 0 )
-        profil.createProfileObjects( profileObjects );
-
-      m_profiles.put( profileFeature, profil );
-    }
-
-    return profil;
+    IProfil profile = m_profileManager.getProfile(profileFeature); 
+    
+    return profile;
   }
 
 }
