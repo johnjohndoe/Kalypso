@@ -107,6 +107,10 @@ public abstract class AbstractProfil implements IProfil
     if( pointProperty == null )
       throw new IllegalStateException( "property can't be null!" );
 
+    final IComponent[] pointProperties = getPointProperties();
+    if( ArrayUtils.contains( pointProperties, pointProperty ) )
+      return;
+
     getResult().addComponent( pointProperty );
   }
 
