@@ -85,7 +85,7 @@ public abstract class AbstractProfil implements IProfil
 
   private String m_description;
 
-  private List<MetadataObject> m_metaDataList;
+  private List<MetadataObject> m_metaDataList = new ArrayList<MetadataObject>();
 
   private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
 
@@ -133,7 +133,7 @@ public abstract class AbstractProfil implements IProfil
    *      override this method if you have got the org.kalypso.model.wspm.core.profil.IProfileObjectProvider for your
    *      m_type
    */
-  public void createProfileObjects( IObservation<TupleResult>[] profileObjects )
+  public void createProfileObjects( final IObservation<TupleResult>[] profileObjects )
   {
     throw new NotImplementedException();
 
@@ -212,7 +212,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IComponent)
    */
-  public IProfilPointMarker[] getPointMarkerFor( IComponent markerColumn )
+  public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {
 
     final List<IProfilPointMarker> markers = new ArrayList<IProfilPointMarker>();
@@ -233,7 +233,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IRecord)
    */
-  public IProfilPointMarker[] getPointMarkerFor( IRecord record )
+  public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
   {
     final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
     final IComponent[] markers = getPointMarkerTypes();
@@ -352,7 +352,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removePointMarker(org.kalypso.model.wspm.core.profil.IProfilPointMarker)
    */
-  public Object removePointMarker( IProfilPointMarker marker )
+  public Object removePointMarker( final IProfilPointMarker marker )
   {
     final Object oldValue = marker.getValue();
     marker.setValue( null );
@@ -372,7 +372,7 @@ public abstract class AbstractProfil implements IProfil
    * @see org.kalypso.model.wspm.core.profil.IProfil#removeProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject)
    */
   @SuppressWarnings("unchecked")
-  public boolean removeProfileObject( IProfileObject profileObject )
+  public boolean removeProfileObject( final IProfileObject profileObject )
   {
     final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
     if( profileObjectList == null )

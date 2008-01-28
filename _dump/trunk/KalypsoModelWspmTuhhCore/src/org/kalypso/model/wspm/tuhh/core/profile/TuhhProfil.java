@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -67,8 +65,8 @@ public class TuhhProfil extends AbstractProfil
   {
     super( PROFIL_TYPE );
 
-    final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, "none", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_HOEHE ), null, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-    final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, "none", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_BREITE ), null, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, "none", "", IWspmConstants.Q_DOUBLE, null, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, "none", "", IWspmConstants.Q_DOUBLE, null, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     final TupleResult result = new TupleResult( new IComponent[] { hoehe, breite } );
 
@@ -114,7 +112,7 @@ public class TuhhProfil extends AbstractProfil
    * @return false if the point is captured by a marker and will NOT remove the point from pointList
    */
   @Override
-  public boolean removePoint( IRecord point )
+  public boolean removePoint( final IRecord point )
   {
     final IProfilPointMarker[] markers = getPointMarkerFor( point );
     if( markers.length == 0 )
