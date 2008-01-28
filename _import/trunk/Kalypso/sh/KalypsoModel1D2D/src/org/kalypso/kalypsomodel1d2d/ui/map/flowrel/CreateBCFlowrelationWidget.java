@@ -114,18 +114,20 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
 
     // TODO: ask ingenieurs what is right here:
     if( modelElement instanceof IElement1D )
-      return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser, wqDescriptor };
+      return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser };
+//    return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser, wqDescriptor };
 
     if( modelElement instanceof IPolyElement )
-      return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser, wqDescriptor };
+      return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
+//    return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser, wqDescriptor };
 
     // TODO: probably comment the next two lines out
     if( modelElement instanceof IFE1D2DNode )
-      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
+      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+//    return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
 
     if( modelElement instanceof IFELine )
-//      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
-      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+      return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser, wqDescriptor };
 
     return new IBoundaryConditionDescriptor[] {};
   }
