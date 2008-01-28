@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
+import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -90,19 +91,19 @@ final public class BuildingBruecke extends AbstractObservationBuilding
   {
     /* building observation properties */
     if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite" ) );
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER, "Unterwasser", "Unterwasser", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER, "Unterwasser", "Unterwasser", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER, "Unterwasser", "Unterwasser" ) );
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Pfeilerformbeiwert", "Pfeilerformbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Pfeilerformbeiwert", "Pfeilerformbeiwert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Pfeilerformbeiwert", "Pfeilerformbeiwert" ) );
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit" ) );
 
     /* profile observation properties */
     else if( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE.equals( type ) )
-      return new Component( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke" ) );
     else if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE.equals( type ) )
-      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke" ) );
 
     throw new NotImplementedException();
 

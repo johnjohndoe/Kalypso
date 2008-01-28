@@ -43,13 +43,11 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
-import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -114,19 +112,6 @@ public class DeviderProvider implements IProfilPointMarkerProvider
 // || IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId );
   }
 
-  private final IComponent createPointProperty( final String property )
-  {
-    if( property.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
-      return new Component( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, "Trennflaeche", "Trennflaeche", "", "", IWspmConstants.Q_STRING, "", null );
-    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
-      return new Component( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, "Bordvoll", "Bordvoll", "", "", IWspmConstants.Q_BOOLEAN, false, null );
-    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
-      return new Component( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Durchströmter Bereich", "", "", IWspmConstants.Q_BOOLEAN, false, null );
-    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
-      return new Component( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner", "Wehrfeldtrenner", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
-    throw new IllegalStateException( "property not defined" );
-  }
-
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createProfilPointMarker(java.lang.String,
    *      org.kalypso.observation.result.IRecord)
@@ -143,7 +128,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
     if( comp == null )
     {
       /* create a new profile component */
-      comp = createPointProperty( markerType );
+      comp = PointPropertyProviderTUHH.createPointProperty( markerType );
       point.getOwner().addComponent( comp );
     }
 

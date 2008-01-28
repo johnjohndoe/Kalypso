@@ -43,8 +43,6 @@ package org.kalypso.model.wspm.core.util;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.JTSUtilities;
@@ -53,6 +51,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -491,13 +490,13 @@ public class WspmProfileHelper
   private final static IComponent createPointProperty( final String property )
   {
     if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_BREITE ), null, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_HOEHE ), null, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), null, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", new QName( IWspmConstants.NS_WSPM, IWspmConstants.POINT_PROPERTY_HOCHWERT ), null, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert" ) );
 
     throw new IllegalStateException( "property not defined" );
   }

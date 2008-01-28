@@ -46,6 +46,7 @@ import java.util.Set;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 
@@ -76,20 +77,22 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
     return m_properties.toArray( new IComponent[] {} );
   }
 
-  private final IComponent createPointProperty( final String property )
+  public static final IComponent createPointProperty( final String property )
   {
     if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) )
-      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke" ) );
     else if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) )
-      return new Component( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke" ) );
     else if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) )
-      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr" ) );
     else if( property.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
-      return new Component( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, "Trennflaeche", "Trennflaeche", "", "", IWspmConstants.Q_STRING, "", null );
+      return new Component( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, "Trennflaeche", "Trennflaeche", "", "", IWspmConstants.Q_STRING, "", new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, "Trennfläche", "Trennfläche" ) );
     else if( property.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
-      return new Component( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, "Bordvoll", "Bordvoll", "", "", IWspmConstants.Q_BOOLEAN, "false", null );
+      return new Component( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, "Bordvoll", "Bordvoll", "", "", IWspmConstants.Q_BOOLEAN, "false", new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, "Bordvoll", "Bordvoll" ) );
     else if( property.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
-      return new Component( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Durchströmter Bereich", "", "", IWspmConstants.Q_BOOLEAN, "false", null );
+      return new Component( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Durchströmter Bereich", "", "", IWspmConstants.Q_BOOLEAN, "false", new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Duchströmter Bereich" ) );
+    else if( property.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
+      return new Component( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner", "Wehrfeldtrenner", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner", "Wehrfeldtrenner" ) );
 
     throw new IllegalStateException( "property not defined" );
   }

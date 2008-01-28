@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
+import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -85,15 +86,15 @@ public class BuildingKreis extends AbstractObservationBuilding
   {
     /* building observation properties */
     if( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, "Bezugspunkt X", "Bezugspunkt X", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, "Bezugspunkt X", "Bezugspunkt X", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, "Bezugspunkt X", "Bezugspunkt X" ) );
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, "Bezugspunkt Y", "Bezugspunkt Y", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, "Bezugspunkt Y", "Bezugspunkt Y", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, "Bezugspunkt Y", "Bezugspunkt Y" ) );
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite" ) );
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, "Sohlgefälle", "Sohlgefälle", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, "Sohlgefälle", "Sohlgefälle", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, "Sohlgefälle", "Sohlgefälle" ) );
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit" ) );
 
     throw new NotImplementedException();
 

@@ -45,6 +45,7 @@ import java.util.Set;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider2;
+import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 
@@ -83,23 +84,23 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider2
   {
     // FIXME phenomen
     if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, "Bewuchs Ax", "Bewuchs Ax", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, "Bewuchs Ax", "Bewuchs Ax", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, "Bewuchs Ax", "Bewuchs Ax" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, "Bewuchs Ay", "Bewuchs Ay", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, "Bewuchs Ay", "Bewuchs Ay", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, "Bewuchs Ay", "Bewuchs Ay" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, "Bewuchs dP", "Bewuchs dP", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, "Bewuchs dP", "Bewuchs dP", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, "Bewuchs Dp", "Bewuchs Dp" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, "Rauheit-ks", "Rauheit-ks", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, "Rauheit-ks", "Rauheit-ks", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, "Rauheit-ks", "Rauheit-ks" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, "Rauheit-kst", "Rauheit-kst", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
+      return new Component( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, "Rauheit-kst", "Rauheit-kst", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, "Rauheit-kst", "Rauheit-kst" ) );
 
     throw new IllegalStateException( "property not defined" );
   }
