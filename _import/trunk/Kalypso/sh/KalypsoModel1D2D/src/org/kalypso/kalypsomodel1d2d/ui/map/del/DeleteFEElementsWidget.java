@@ -12,6 +12,9 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -31,6 +34,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
@@ -200,7 +204,8 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
 
     try
     {
-      // to be allowed to delete the element, no continuity line cannot be positioned on that element
+      // to be allowed to delete the 2D element, no continuity line cannot be positioned on that element
+      // to be allowed to delete the 1D element, that element cannot be the last one that touches some continuity line
 
       final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
       final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
@@ -215,8 +220,10 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
         clNodes.addAll( line.getNodes() ); // usually lines are not overlapped so there is no need to check if some of
       // the nodes are already in the list
 
-      // check if any of the selected elements have nodes that belongs to any continuity line
-      // if so, deleting os not allowed
+      // 2D: check if any of the selected elements have nodes that belongs to any continuity line; if so, deleting is
+      // not allowed
+      // 1D: check if any of the selected elements have nodes that belongs to any continuity line; if that element is
+      // the last one on the line, deleting is not allowed
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )
       {
         if( easyFeatureWrapper == null )
@@ -226,9 +233,26 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
         for( final IFE1D2DNode node : nodes )
           if( clNodes.contains( node ) )
           {
-            SWT_AWT_Utilities.showSwtMessageBoxInformation( "Deletion forbidden", "At least one of the selected elements is positioned at the continuity line. Please delete the continuity line before deleting the element(s)." );
-            // selectionManager.clear();
-            return;
+            if( element instanceof IElement2D )
+            {
+              SWT_AWT_Utilities.showSwtMessageBoxInformation( "Deletion forbidden", "At least one of the selected 2D elements is positioned at the continuity line. Please delete the continuity line before deleting such 2D element(s)." );
+              // selectionManager.clear();
+              return;
+            }
+            if( element instanceof IElement1D )
+            {
+              final IFeatureWrapperCollection containers = node.getContainers();
+              int numberOfEdgeContainers = 0;
+              for( final Object container : containers )
+                if( container instanceof IFE1D2DEdge ) // container can be also a line
+                  numberOfEdgeContainers++;
+              if( numberOfEdgeContainers < 2 )
+              {
+                SWT_AWT_Utilities.showSwtMessageBoxInformation( "Deletion forbidden", "At least one of the selected 1D elements is positioned as the last 1D element that touches the continuity line. Please either delete the continuity line before deleting such 1D element(s) or connect the continuity line to another 1D element(s)." );
+                // selectionManager.clear();
+                return;
+              }
+            }
           }
       }
 
