@@ -56,7 +56,7 @@ public class ImportWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     m_data.setSzenarioDataProvider( szenarioDataProvider );
-    setWindowTitle( Messages.getString( "org.kalypso.wizards.import1d2d.ImportWizard.Title" ) );  //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.wizards.import1d2d.ImportWizard.Title" ) ); //$NON-NLS-1$
     selection = iSelection;
   }
 
@@ -78,7 +78,7 @@ public class ImportWizard extends Wizard implements INewWizard
   {
     try
     {
-      IResource resource = (IResource) selection.getFirstElement();
+      final IResource resource = (IResource) selection.getFirstElement();
       if( resource != null )
         resource.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
@@ -94,19 +94,19 @@ public class ImportWizard extends Wizard implements INewWizard
   {
     m_pageMain.saveDataToModel();
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
+    if( status.isOK() )
+      try
+      {
+        /* post empty command(s) in order to make pool dirty. */
+        m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( org.kalypso.wizards.import1d2d.Messages.getString( "ImportWizard.1" ), false ) ); //$NON-NLS-1$
+      }
+      catch( final Exception e )
+      {
+        // will never happen?
+        e.printStackTrace();
+      }
 
-    try
-    {
-      /* post empty command(s) in order to make pool dirty. */
-      m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( org.kalypso.wizards.import1d2d.Messages.getString("ImportWizard.1"), false ) );  //$NON-NLS-1$
-    }
-    catch( final Exception e )
-    {
-      // will never happen?
-      e.printStackTrace();
-    }
-
-    ErrorDialog.openError( getShell(), getWindowTitle(), "", status );  //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), "", status ); //$NON-NLS-1$
 
     return status.isOK();
   }

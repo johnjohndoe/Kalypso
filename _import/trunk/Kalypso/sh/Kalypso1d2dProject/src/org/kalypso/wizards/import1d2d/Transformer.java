@@ -49,7 +49,6 @@ public class Transformer implements ICoreRunnableWithProgress
       /* post empty command(s) in order to make pool dirty. */
       // m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString("Transformer.0"),
       // false ) ); //$NON-NLS-1$
-
     }
     catch( Exception e )
     {
