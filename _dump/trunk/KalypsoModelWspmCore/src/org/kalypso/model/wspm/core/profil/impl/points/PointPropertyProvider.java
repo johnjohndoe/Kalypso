@@ -59,7 +59,7 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider2
   public PointPropertyProvider( )
   {
     m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
-    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
+    m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) );
     m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
     m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
     m_properties.add( createPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
