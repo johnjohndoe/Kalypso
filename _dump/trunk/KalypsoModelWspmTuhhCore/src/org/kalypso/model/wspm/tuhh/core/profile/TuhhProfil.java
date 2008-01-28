@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -120,4 +123,43 @@ public class TuhhProfil extends AbstractProfil
     return false;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.impl.AbstractProfil#getPointMarkerFor(org.kalypso.observation.result.IRecord)
+   */
+  @Override
+  public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
+  {
+    final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
+    final IComponent[] markers = getPointMarkerTypes();
+    for( final IComponent marker : markers )
+    {
+      if( record.getValue( marker ) != null )
+        pointMarkers.add( new ProfilDevider( marker, record ) );
+    }
+    return pointMarkers.toArray( new IProfilPointMarker[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.impl.AbstractProfil#getPointMarkerFor(org.kalypso.observation.result.IComponent)
+   */
+  @Override
+  public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
+  {
+    if( markerColumn == null )
+      return new IProfilPointMarker[] {};
+
+    final List<IProfilPointMarker> markers = new ArrayList<IProfilPointMarker>();
+
+    final TupleResult result = getResult();
+    for( final IRecord record : result )
+    {
+      final Object value = record.getValue( markerColumn );
+      if( value != null )
+      {
+        markers.add( new ProfilDevider( markerColumn, record ) );
+      }
+    }
+
+    return markers.toArray( new IProfilPointMarker[] {} );
+  }
 }

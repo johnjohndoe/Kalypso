@@ -139,7 +139,7 @@ public class ImportTrippleHelper
             if( !Double.isNaN( currentStation ) )
             {
               // store current profile points as IProfil
-              ImportTrippleHelper.storeProfile( profile, profilPointList, currentStation, profiles, profileType );
+              ImportTrippleHelper.storeProfile( profile, profilPointList, currentStation, profiles );
               profilPointList.clear();
               numStations = numStations + 1;
             }
@@ -158,7 +158,6 @@ public class ImportTrippleHelper
           final IRecord point = profile.createProfilPoint();
           if( ImportTrippleHelper.createProfilePoint( point, profilPointList, tokenizer ) )
             profilPointList.add( point );
-
         }
         else
         {
@@ -167,13 +166,12 @@ public class ImportTrippleHelper
           throw new Exception( message );
           // continue;
         }
-
       }
 
       fileReader.close();
 
       /* store the last profile */
-      ImportTrippleHelper.storeProfile( profile, profilPointList, station, profiles, profileType );
+      ImportTrippleHelper.storeProfile( profile, profilPointList, station, profiles );
       profilPointList.clear();
       numStations = numStations + 1;
 
@@ -202,7 +200,7 @@ public class ImportTrippleHelper
    * @param profiles
    *            the list of the already imported profiles
    */
-  private static void storeProfile( final IProfil profile, final List<IRecord> profilPointList, final double station, final List<IProfil> profiles, final String profiletype )
+  private static void storeProfile( final IProfil profile, final List<IRecord> profilPointList, final double station, final List<IProfil> profiles )
   {
 
     for( final IRecord point : profilPointList )
