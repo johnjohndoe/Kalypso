@@ -78,12 +78,13 @@ public class ImportTrippleHelper
    */
   public static List<IProfil> importTrippelData( final File trippleFile, final String separator, final String profileType )
   {
-    final IProfil profile = ProfilFactory.createProfil( profileType );
 
     final IComponent rechtswert = new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
     final IComponent hochwert = new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
     final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE ) );
     final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE ) );
+
+    IProfil profile = ProfilFactory.createProfil( profileType );
 
     profile.addPointProperty( rechtswert );
     profile.addPointProperty( hochwert );
@@ -142,6 +143,13 @@ public class ImportTrippleHelper
               profilPointList.clear();
               numStations = numStations + 1;
             }
+
+            profile = ProfilFactory.createProfil( profileType );
+
+            profile.addPointProperty( rechtswert );
+            profile.addPointProperty( hochwert );
+            profile.addPointProperty( hoehe );
+            profile.addPointProperty( breite );
 
             // update profile station
             currentStation = station;
