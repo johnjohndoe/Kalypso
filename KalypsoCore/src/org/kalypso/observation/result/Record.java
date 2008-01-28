@@ -87,6 +87,8 @@ public class Record implements IRecord
 
   private void checkComponent( final IComponent comp )
   {
+    final IComponent[] components = m_owner.getComponents();
+
     if( !m_owner.hasComponent( comp ) )
       throw new IllegalArgumentException( "Unknown component: " + comp );
   }
