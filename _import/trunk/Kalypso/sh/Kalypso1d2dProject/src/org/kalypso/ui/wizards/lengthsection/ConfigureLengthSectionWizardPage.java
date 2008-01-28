@@ -48,6 +48,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -374,7 +375,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     m_comboRiverLineNameField.setInput( properties );
     // set river name field to "NAME". If it does not exist, set it to the first field
-    final String customNamespace = feature.getFeatureType().getGMLSchema().getTargetNamespace(); //TODO: shape api?
+    final String customNamespace = feature.getFeatureType().getGMLSchema().getTargetNamespace(); // TODO: shape api?
     if( feature.getFeatureType().getProperty( new QName( customNamespace, RIVER_NAME_FIELD ) ) != null )
     {
       m_comboRiverLineNameField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( customNamespace, RIVER_NAME_FIELD ) ) ) );
@@ -388,6 +389,12 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
         m_comboRiverLineNameField.setSelection( new StructuredSelection( elementAt ) );
         m_riverNameField = properties[0].getQName().getLocalPart();
       }
+    }
+
+    if( m_riverNameField == null )
+    {
+      MessageDialog.openInformation( getShell(), "Linienthema auswählen", "Kein geeignetes Linienthema ausgewählt.");
+      return;
     }
 
     // set the station fields to "RIVER_A" and "RIVER_B", If they does not exist, set them to the first field
@@ -466,7 +473,13 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
       }
     }
     m_comboRiverLineName.setInput( m_riverNameSet );
-    m_comboRiverLineName.setSelection( new StructuredSelection( m_comboRiverLineName.getElementAt( 0 ) ) );
+    final Object element = m_comboRiverLineName.getElementAt( 0 );
+    if( element == null )
+    {
+      MessageDialog.openInformation( getShell(), "Gewässerfeld auswählen", "Ausgewähltes Feld enthält keine geeigneten Informationen." );
+      return;
+    }
+    m_comboRiverLineName.setSelection( new StructuredSelection( element ) );
   }
 
   public LengthSectionParameters getLengthSectionParameters( )
