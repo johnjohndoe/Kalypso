@@ -46,6 +46,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.model.feature.Feature;
@@ -99,15 +100,30 @@ public class WizardFeatureLabel
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType().getProperty( qname ) );
       draw( annotation.getLabel(), body, gridData );
     }
+  }
 
+  public WizardFeatureLabel( final Feature feature, final QName qname, final Composite body, final FormToolkit toolkit )
+  {
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType().getProperty( qname ) );
+    draw( annotation.getLabel(), body, new GridData( GridData.FILL, GridData.CENTER, false, false ), toolkit );
   }
 
   private void draw( final String text, final Composite body, final GridData gridData )
   {
-    final Label label = new Label( body, SWT.NONE );
-    label.setLayoutData( gridData );
+    draw( text, body, gridData, null );
+  }
 
-    label.setText( text );
+  private void draw( final String text, final Composite body, final GridData gridData, final FormToolkit toolkit )
+  {
+    if( toolkit == null )
+    {
+      final Label label = new Label( body, SWT.NONE );
+      label.setLayoutData( gridData );
+
+      label.setText( text );
+    }
+    else
+      toolkit.createLabel( body, text ).setLayoutData( gridData );
 
   }
 }

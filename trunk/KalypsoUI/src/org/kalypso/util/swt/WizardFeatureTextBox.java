@@ -56,6 +56,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -89,9 +90,17 @@ public class WizardFeatureTextBox
     m_listener.add( runnable );
   }
 
-  public void draw( final Composite parent, final GridData layout, final int style )
+  public void draw( final Composite parent, final FormToolkit toolkit, final GridData layout, final int style )
   {
-    m_textBox = new Text( parent, style );
+    if( toolkit == null )
+    {
+      m_textBox = new Text( parent, style );
+    }
+    else
+    {
+      m_textBox = toolkit.createText( parent, "", style );
+    }
+
     m_textBox.setLayoutData( layout );
 
     if( m_feature != null )
@@ -115,7 +124,6 @@ public class WizardFeatureTextBox
           m_textBox.setText( m_property.toString() );
           m_text = m_property.toString();
         }
-
     }
 
     m_textBox.addModifyListener( new ModifyListener()
@@ -128,6 +136,11 @@ public class WizardFeatureTextBox
       }
     } );
 
+  }
+
+  public void draw( final Composite parent, final GridData layout, final int style )
+  {
+    draw( parent, null, layout, style );
   }
 
   public String getText( )
@@ -169,4 +182,5 @@ public class WizardFeatureTextBox
     m_textBox.setEnabled( enabled );
 
   }
+
 }
