@@ -145,6 +145,8 @@ public class CreateMainChannelComposite extends Composite
   {
     super( parent, style );
 
+    data.setShell( getShell() );
+
     m_toolkit = toolkit;
     m_toolkit.adapt( this );
 
@@ -1033,7 +1035,7 @@ public class CreateMainChannelComposite extends Composite
       SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
       try
       {
-        DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, 1 );
+        DragBankLineWidget widget = new DragBankLineWidget( getShell(), m_data, currentSegment, 1 );
         m_widget.setDelegate( widget );
 
       }
@@ -1060,7 +1062,7 @@ public class CreateMainChannelComposite extends Composite
       SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
       try
       {
-        DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, 2 );
+        DragBankLineWidget widget = new DragBankLineWidget( getShell(), m_data, currentSegment, 2 );
         m_widget.setDelegate( widget );
       }
       catch( GM_Exception e1 )

@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -61,7 +60,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHOR
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.util.ProfilComparator;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
@@ -69,6 +67,7 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -149,11 +148,16 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     Point nearestProfScreenPoint = null;
 
     final IProfil origProfil = m_data.getProfilEventManager().getProfil();
+
+    /* get / create components */
+    final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( origProfil, IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( origProfil, IWspmConstants.POINT_PROPERTY_HOEHE );
+
     final IRecord nearestProfPoint = ProfilUtil.findNearestPoint( origProfil, currentWidth );
     if( nearestProfPoint != null )
     {
-      final double xCoord = (Double) nearestProfPoint.getValue( ProfilObsHelper.getPropertyFromId( nearestProfPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double yCoord = (Double) nearestProfPoint.getValue( ProfilObsHelper.getPropertyFromId( nearestProfPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      final double xCoord = (Double) nearestProfPoint.getValue( breiteComponent );
+      final double yCoord = (Double) nearestProfPoint.getValue( hoeheComponent );
       final Point2D point2 = new Point2D.Double( xCoord, yCoord );
       nearestProfScreenPoint = logical2screen( point2 );
 
@@ -166,14 +170,13 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     if( !Double.isNaN( widthDifference ) && widthDifference < 5 )
     {
       /* check, if there is already a intersection profile point at that position */
-      final IRecord nearestIntersectedProfPoint = ProfilUtil.findNearestPoint( m_profile, (Double) nearestProfPoint.getValue( ProfilObsHelper.getPropertyFromId( nearestProfPoint, IWspmConstants.POINT_PROPERTY_BREITE ) ) );
-      if( (Double) nearestIntersectedProfPoint.getValue( ProfilObsHelper.getPropertyFromId( nearestIntersectedProfPoint, IWspmConstants.POINT_PROPERTY_BREITE ) )
-          - (Double) nearestProfPoint.getValue( ProfilObsHelper.getPropertyFromId( nearestProfPoint, IWspmConstants.POINT_PROPERTY_BREITE ) ) == 0 )
+      final IRecord nearestIntersectedProfPoint = ProfilUtil.findNearestPoint( m_profile, (Double) nearestProfPoint.getValue( breiteComponent ) );
+      if( (Double) nearestIntersectedProfPoint.getValue( breiteComponent ) - (Double) nearestProfPoint.getValue( breiteComponent ) == 0 )
         /* set the drawn point back to start */
         return;
       else
         /* set the new drawn width to the snapped width position */
-        width = (Double) nearestProfPoint.getValue( ProfilObsHelper.getPropertyFromId( nearestProfPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
+        width = (Double) nearestProfPoint.getValue( breiteComponent );
     }
     else
     {
@@ -215,11 +218,15 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     }
 
     /* save the first and last widths of the intersected profile for comparing them later with the new widths */
-    final double oldStartWdith = (Double) m_profile.getPoints().getFirst().getValue( ProfilObsHelper.getPropertyFromId( m_profile.getPoints().getFirst(), IWspmConstants.POINT_PROPERTY_BREITE ) );
-    final double oldEndWdith = (Double) m_profile.getPoints().getLast().getValue( ProfilObsHelper.getPropertyFromId( m_profile.getPoints().getFirst(), IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double oldStartWdith = (Double) m_profile.getPoints().getFirst().getValue( breiteComponent );
+    final double oldEndWdith = (Double) m_profile.getPoints().getLast().getValue( breiteComponent );
 
     /* set the new profile */
     m_profile = createNewProfile( profilePoint, width, heigth, geoPoint );
+
+    if( breiteComponent != null )
+      m_profile.getResult().setSortComponents( new IComponent[] { breiteComponent } );
+
     // TODO: not so nice, use the same profile object for both segments, so that changes goes to both segmetns directly
     updateProfileForNeighbourSegment();
 
@@ -243,6 +250,9 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     else
       m_profile = currentSegment.getProfDownIntersProfile();
 
+    if( breiteComponent != null )
+      m_profile.getResult().setSortComponents( new IComponent[] { breiteComponent } );
+
     getProfilChartView().getChart().repaint();
     m_widget.getPanel().repaint();
 
@@ -250,28 +260,45 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
 
   private IProfil createNewProfile( final IRecord profilePoint, final double width, final double heigth, final GM_Point geoPoint )
   {
+
+    /* get / create components */
+    final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE );
+    final IComponent rwComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hwComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
     /* set the new values for the moved profile point */
-    profilePoint.setValue( ProfilObsHelper.getPropertyFromId( profilePoint, IWspmConstants.POINT_PROPERTY_HOEHE ), heigth );
-    profilePoint.setValue( ProfilObsHelper.getPropertyFromId( profilePoint, IWspmConstants.POINT_PROPERTY_BREITE ), width );
-    profilePoint.setValue( ProfilObsHelper.getPropertyFromId( profilePoint, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), geoPoint.getX() );
-    profilePoint.setValue( ProfilObsHelper.getPropertyFromId( profilePoint, IWspmConstants.POINT_PROPERTY_HOCHWERT ), geoPoint.getY() );
+    profilePoint.setValue( breiteComponent, width );
+    profilePoint.setValue( hoeheComponent, heigth );
+    profilePoint.setValue( rwComponent, geoPoint.getX() );
+    profilePoint.setValue( hwComponent, geoPoint.getY() );
 
     /* sort profile points by width */
     final LinkedList<IRecord> points = m_profile.getPoints();
-    final ProfilComparator comparator = new ProfilComparator( ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BREITE ) );
-    Collections.sort( points, comparator );
 
     // TODO: save the sorted points as new m_profile
     final IProfil tmpProfil = ProfilFactory.createProfil( m_profile.getType() );
 
-    tmpProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_BREITE ) );
-    tmpProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-    tmpProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
-    tmpProfil.addPointProperty( ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+    tmpProfil.addPointProperty( breiteComponent );
+    tmpProfil.addPointProperty( hoeheComponent );
+    tmpProfil.addPointProperty( rwComponent );
+    tmpProfil.addPointProperty( hwComponent );
 
     for( int i = 0; i < points.size(); i++ )
     {
-      tmpProfil.addPoint( points.get( i ) );
+      final IRecord profilPoint = tmpProfil.createProfilPoint();
+
+      final double breite = (Double) points.get( i ).getValue( breiteComponent );
+      final double hoehe = (Double) points.get( i ).getValue( hoeheComponent );
+      final double rw = (Double) points.get( i ).getValue( rwComponent );
+      final double hw = (Double) points.get( i ).getValue( hwComponent );
+
+      profilPoint.setValue( breiteComponent, breite );
+      profilPoint.setValue( hoeheComponent, hoehe );
+      profilPoint.setValue( rwComponent, rw );
+      profilPoint.setValue( hwComponent, hw );
+
+      tmpProfil.addPoint( profilPoint );
     }
     /* station */
     tmpProfil.setStation( m_profile.getStation() );
@@ -294,8 +321,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    */
   private static double checkInsideProfile( final double width, final IProfil profil )
   {
-    final double firstProfileWidth = (Double) profil.getPoints().getFirst().getValue( ProfilObsHelper.getPropertyFromId( profil.getPoints().getFirst(), IWspmConstants.POINT_PROPERTY_BREITE ) );
-    final double lastProfileWidth = (Double) profil.getPoints().getLast().getValue( ProfilObsHelper.getPropertyFromId( profil.getPoints().getFirst(), IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double firstProfileWidth = (Double) profil.getPoints().getFirst().getValue( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double lastProfileWidth = (Double) profil.getPoints().getLast().getValue( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     /* if not force it to do so */
     if( width < firstProfileWidth )
@@ -317,11 +344,15 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   @SuppressWarnings("unchecked")
   private void checkIntersectionPoints( final double oldStartWdith, final double oldEndWdith ) throws Exception
   {
+    /* get / create components */
+    final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE );
+
     final IRecord firstPoint = m_profile.getPoints().getFirst();
     final IRecord lastPoint = m_profile.getPoints().getLast();
 
-    final double newStartWidth = (Double) firstPoint.getValue( ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
-    final double newEndWidth = (Double) lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double newStartWidth = (Double) firstPoint.getValue( breiteComponent );
+    final double newEndWidth = (Double) lastPoint.getValue( breiteComponent );
 
     final CreateChannelData.PROF prof = m_data.getCurrentProfile();
 
@@ -347,7 +378,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       /* update the first intersection point */
       currentSegment.setIntersPoint( point1, prof, widthorder1, width1 );
       /* intersection points have to have the same heigth as the orig profile */
-      firstPoint.setValue( ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), point1.getZ() );
+      firstPoint.setValue( hoeheComponent, point1.getZ() );
 
       // LAST
       final WIDTHORDER widthorder2 = CreateChannelData.WIDTHORDER.LAST;
@@ -357,7 +388,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       /* update the last intersection point */
       currentSegment.setIntersPoint( point2, prof, widthorder2, width2 );
       /* intersection points have to have the same heigth as the orig profile */
-      lastPoint.setValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), point2.getZ() );
+      lastPoint.setValue( hoeheComponent, point2.getZ() );
 
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( m_profile, prof );
@@ -378,7 +409,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       /* update the last intersection point */
       currentSegment.setIntersPoint( point, prof, widthorder, width );
       /* intersection points have to have the same heigth as the orig profile */
-      firstPoint.setValue( ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), point.getZ() );
+      firstPoint.setValue( hoeheComponent, point.getZ() );
 
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( m_profile, prof );
@@ -396,7 +427,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       /* update the last intersection point */
       currentSegment.setIntersPoint( point, prof, widthorder, width );
       /* intersection points have to have the same heigth as the orig profile */
-      lastPoint.setValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), point.getZ() );
+      lastPoint.setValue( hoeheComponent, point.getZ() );
 
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( m_profile, prof );
@@ -595,7 +626,6 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       final Rectangle hover = RectangleUtils.buffer( p );
       if( hover.contains( point ) )
       {
-
         final String string = String.format( "Breite: %.4f  \nRW: %.4f \nHW: %.4f", points.get( index ).getValue( ProfilObsHelper.getPropertyFromId( points.get( index ), IWspmConstants.POINT_PROPERTY_BREITE ) ), points.get( index ).getValue( ProfilObsHelper.getPropertyFromId( points.get( index ), IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ), points.get( index ).getValue( ProfilObsHelper.getPropertyFromId( points.get( index ), IWspmConstants.POINT_PROPERTY_HOCHWERT ) ) );
 
         return new EditInfo( this, hover, new EditData( index, null ), string );
@@ -664,6 +694,10 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   @Override
   public void paintDrag( final GCWrapper gc, final Point currentScreenPoint, final Object hoverData )
   {
+    /* get components */
+    final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE );
+
     /* draw the vertical line at the current mouse position */
     drawVerticalLine( gc, currentScreenPoint, m_color, SWT.LINE_DASH, 1 );
 
@@ -677,8 +711,10 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
 
     final IProfil origProfil = m_data.getProfilEventManager().getProfil();
     final IRecord point = ProfilUtil.findNearestPoint( origProfil, currentWidth );
-    final double xCoord = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
-    final double yCoord = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+
+    final double xCoord = (Double) point.getValue( breiteComponent );
+    final double yCoord = (Double) point.getValue( hoeheComponent );
+
     final Point2D point2 = new Point2D.Double( xCoord, yCoord );
     final Point profScreenPoint = logical2screen( point2 );
 
@@ -692,7 +728,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
          * a red line
          */
         final IRecord nearestIntersectedProfPoint = ProfilUtil.findNearestPoint( m_profile, xCoord );
-        if( (Double) nearestIntersectedProfPoint.getValue( ProfilObsHelper.getPropertyFromId( nearestIntersectedProfPoint, IWspmConstants.POINT_PROPERTY_BREITE ) ) - xCoord == 0 )
+        if( (Double) nearestIntersectedProfPoint.getValue( breiteComponent ) - xCoord == 0 )
         {
           final Color color = new Color( null, 255, 70, 70 );
           final int lineStyle = SWT.LINE_SOLID;
@@ -737,9 +773,13 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    */
   private Point getNearestProfileScreenPoint( final IProfil profile, final double currentWidth )
   {
+    /* get components */
+    final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE );
+
     final IRecord intersectedPoint = ProfilUtil.findNearestPoint( profile, currentWidth );
-    final double xCoordInters = (Double) intersectedPoint.getValue( ProfilObsHelper.getPropertyFromId( intersectedPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
-    final double yCoordInters = (Double) intersectedPoint.getValue( ProfilObsHelper.getPropertyFromId( intersectedPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    final double xCoordInters = (Double) intersectedPoint.getValue( breiteComponent );
+    final double yCoordInters = (Double) intersectedPoint.getValue( hoeheComponent );
     final Point2D point2Inters = new Point2D.Double( xCoordInters, yCoordInters );
     final Point profScreenPointInters = logical2screen( point2Inters );
     return profScreenPointInters;
@@ -758,6 +798,14 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     m_profile = profile;
     m_data = data;
     m_widget = widget;
+
+    if( m_profile != null )
+    {
+      final IComponent breiteComponent = m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+      if( breiteComponent != null )
+        m_profile.getResult().setSortComponents( new IComponent[] { breiteComponent } );
+    }
+
   }
 
   /**

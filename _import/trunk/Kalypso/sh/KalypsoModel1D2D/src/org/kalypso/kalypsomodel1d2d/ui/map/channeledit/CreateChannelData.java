@@ -59,7 +59,9 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.commons.command.ICommand;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -156,6 +158,8 @@ public class CreateChannelData
   public int m_selectedSegment;
 
   private CreateChannelData.PROF m_selectedProfile;
+
+  private Shell m_shell;
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
@@ -402,7 +406,11 @@ public class CreateChannelData
     // TODO: error handling implementation!!
     {
       manageQuadMesher();
-      mergeMeshList();
+      final IStatus status = mergeMeshList();
+      if( status != Status.OK_STATUS && m_shell != null )
+      {
+        MessageDialog.openInformation( m_shell, "Schlauchgenerator", "Es traten Fehler bei der Erzeugung des Flussschlauches auf. Bitte überprüfen Sie Ihre Eingangsdaten." );
+      }
     }
   }
 
@@ -425,17 +433,13 @@ public class CreateChannelData
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final CommandableWorkspace workspace = theme.getWorkspace();
 
-    final TempGrid tempGrid = new TempGrid();
+    final TempGrid tempGrid = new TempGrid( false );
     tempGrid.importMesh( importingGridPoints );
-    try
-    {
-      final ICommand command = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, 0 );
-      workspace.postCommand( command );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    final double searchDistance = 0.1;
+    final IStatus status = tempGrid.getAddToModelCommand( mapModel, model1d2d, workspace, searchDistance );
+
+    // TODO: handle status!
+
   }
 
   /**
@@ -501,7 +505,6 @@ public class CreateChannelData
         {
           initSegments();
           updateSegment( true, i + 1 );
-          return;
         }
         // now the two lines are right oriented...
         final LineString topLine = lines[0];
@@ -531,41 +534,51 @@ public class CreateChannelData
   /**
    * erases the double coords and merges the coords list to an array of coords
    */
-  private void mergeMeshList( )
+  private IStatus mergeMeshList( )
   {
-    m_meshCoords = null;
-    final int overallYCoordNum = calculateOverallYCoordNum();
-    final int numX = m_numbProfileIntersections;
-    final int numY = overallYCoordNum;
-    final Coordinate[][] newCoords = new Coordinate[numX][numY];
-
-    int coordYPosPointer = 0;
-    int coordSegmentPointer = 0;
-
-    // loop over all segments -> coords
-    for( int i = 0; i < m_coordList.size(); i++ )
+    try
     {
-      final Coordinate[][] coordinates = m_coordList.get( i );
-      if( numX != coordinates.length )
-        return;
-      // coordSegmentPointer = coordYPosPointer;
-      // loop over all profile intersections -> coords [x][]
-      for( int j = 0; j < coordinates.length; j++ )
+      m_meshCoords = null;
+      final int overallYCoordNum = calculateOverallYCoordNum();
+      final int numX = m_numbProfileIntersections;
+      final int numY = overallYCoordNum;
+      final Coordinate[][] newCoords = new Coordinate[numX][numY];
+
+      int coordYPosPointer = 0;
+      int coordSegmentPointer = 0;
+
+      // loop over all segments -> coords
+      for( int i = 0; i < m_coordList.size(); i++ )
       {
-        // loop over all bank intersections -> coords [][x]
-
-        for( int k = 0; k < coordinates[j].length; k++ )
+        final Coordinate[][] coordinates = m_coordList.get( i );
+        if( numX != coordinates.length )
+          return StatusUtilities.createErrorStatus( "Schlauchgenerator: Unterteilungsgrößen stimmen nicht überein." );
+        // coordSegmentPointer = coordYPosPointer;
+        // loop over all profile intersections -> coords [x][]
+        for( int j = 0; j < coordinates.length; j++ )
         {
-          coordYPosPointer = coordSegmentPointer + k;
-          newCoords[j][coordYPosPointer] = coordinates[j][k];
-        }
-      }
-      coordSegmentPointer = coordSegmentPointer + coordinates[0].length - 1;
-    }
-    if( coordYPosPointer != overallYCoordNum - 1 )
-      System.out.println( "consolidateMesh: wrong number of coord array!! " );
+          // loop over all bank intersections -> coords [][x]
 
-    m_meshCoords = newCoords;
+          for( int k = 0; k < coordinates[j].length; k++ )
+          {
+            coordYPosPointer = coordSegmentPointer + k;
+            newCoords[j][coordYPosPointer] = coordinates[j][k];
+          }
+        }
+        coordSegmentPointer = coordSegmentPointer + coordinates[0].length - 1;
+      }
+      if( coordYPosPointer != overallYCoordNum - 1 )
+        System.out.println( "consolidateMesh: wrong number of coord array!! " );
+
+      m_meshCoords = newCoords;
+
+      return Status.OK_STATUS;
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, "Schlauchgenerator: Fehler bei Erstellung des FLussschlauches. Überprüfen Sie Ihre Eingangsdaten." );
+    }
   }
 
   private int calculateOverallYCoordNum( )
@@ -934,6 +947,7 @@ public class CreateChannelData
    */
   public void updateSegments( final boolean edit )
   {
+
     // loop over all segments
     final SegmentData[] datas = m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
     for( final SegmentData segment : datas )
@@ -963,7 +977,7 @@ public class CreateChannelData
   public void drawBankLine( final int segment, final int side, final Graphics g )
   {
     final MapPanel panel = m_widget.getPanel();
-    if( m_segmentList.size() < segment - 1 )
+    if( m_segmentList.size() < segment - 1 || m_segmentList.size() == 0 )
       return;
     m_segmentList.get( segment - 1 ).paintBankLineLineString( panel, g, side, new Color( 20, 20, 255 ) );
   }
@@ -1056,6 +1070,11 @@ public class CreateChannelData
       return CreateChannelData.PROF.DOWN;
 
     return null;
+  }
+
+  public void setShell( final Shell shell )
+  {
+    m_shell = shell;
   }
 
 }

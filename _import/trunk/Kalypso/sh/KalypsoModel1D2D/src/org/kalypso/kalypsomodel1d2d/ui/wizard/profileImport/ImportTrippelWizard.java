@@ -203,9 +203,9 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     for( final IProfil profile : profiles )
     {
       final Feature profileFeature = FeatureHelper.addFeature( network.getWrappedFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
+      profileFeature.invalidEnvelope();
       ProfileFeatureFactory.toFeature( profile, profileFeature );
       new WspmProfile( profileFeature ).setSrsName( crs.getName() );
-      profileFeature.invalidEnvelope();
       addedFeatures.add( profileFeature );
     }
 

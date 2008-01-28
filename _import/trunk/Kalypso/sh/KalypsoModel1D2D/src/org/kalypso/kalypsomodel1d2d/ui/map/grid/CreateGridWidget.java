@@ -5,11 +5,11 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -53,7 +53,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   public CreateGridWidget( )
   {
-    super( Messages.getString("CreateGridWidget.0"), Messages.getString("CreateGridWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "CreateGridWidget.0" ), Messages.getString( "CreateGridWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -80,7 +80,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     CS_CoordinateSystem targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
     if( targetCrs == null )
       targetCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-    
+
     // m_builder = new LineGeometryBuilder( 0, targetCrs );
     gridPointCollector.reset( targetCrs );// SideToBuild( targetCrs );
 
@@ -242,7 +242,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   public static final boolean isSamePoint( final Point ref, final GM_Point toCompare, final int m_radius, final GeoTransform transform )
   {
-    Assert.throwIAEOnNull( transform, Messages.getString("CreateGridWidget.6") ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( transform, Messages.getString( "CreateGridWidget.6" ) ); //$NON-NLS-1$
     if( ref == null || toCompare == null )
     {
       return false;
@@ -297,8 +297,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
       final int pointRectSize = currentLPCConfig.getPointRectSize();
       final int pointRectSizeHalf = pointRectSize / 2;
-// g.drawRect( (int) currentPoint.getX() - pointRectSizeHalf, (int) currentPoint.getY() - pointRectSizeHalf,
-// pointRectSize, pointRectSize );
+      // g.drawRect( (int) currentPoint.getX() - pointRectSizeHalf, (int) currentPoint.getY() - pointRectSizeHalf,
+      // pointRectSize, pointRectSize );
 
     }
 
@@ -580,16 +580,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
 
     final CommandableWorkspace workspace = theme.getWorkspace();
-    try
-    {
-      final ICommand command = gridPointCollector.getAddToModelCommand( mapPanel, model1d2d, workspace );
-
-      workspace.postCommand( command );
-      reinit();// gridPointCollector.reset( mapModel.getCoordinatesSystem() );
-    }
-    catch( final Throwable e1 )
-    {
-      e1.printStackTrace();
-    }
+    IStatus status = gridPointCollector.getAddToModelCommand( mapPanel, model1d2d, workspace );
+    // TODO: handle status
+    reinit();
   }
 }

@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.commons.command.ICommand;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -60,132 +60,123 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
 
-
-
-@SuppressWarnings("unchecked") //$NON-NLS-1$
-public class GridPointCollector /*implements IGeometryBuilder*/
+@SuppressWarnings("unchecked")//$NON-NLS-1$
+public class GridPointCollector /* implements IGeometryBuilder */
 {
-  private static final Logger logger=
-        Logger.getLogger( GridPointCollector.class.getName() );
-  
-  public static final int SIDE_MAX_NUM=4;
-  public static final int SIDE_TOP=0;
-  public static final int SIDE_BOTTOM=2;
-  public static final int SIDE_LEFT=1;
-  public static final int SIDE_RIGHT=3;
-  
+  private static final Logger logger = Logger.getLogger( GridPointCollector.class.getName() );
+
+  public static final int SIDE_MAX_NUM = 4;
+
+  public static final int SIDE_TOP = 0;
+
+  public static final int SIDE_BOTTOM = 2;
+
+  public static final int SIDE_LEFT = 1;
+
+  public static final int SIDE_RIGHT = 3;
+
   private int actualSideKey;
-  
-  private boolean hasAllSides=false;
-  
-  private LinePointCollector sides[] = new LinePointCollector[SIDE_MAX_NUM];
-  
-  private LinePointCollectorConfig lpcConfigs[]= new LinePointCollectorConfig[SIDE_MAX_NUM];
-  
-  
-  
-  private TempGrid tempGrid = new TempGrid(true);
-  
-  private List<IGridPointCollectorStateListener> stateListeners=
-        new ArrayList<IGridPointCollectorStateListener>();
-  
-  public GridPointCollector()
+
+  private boolean hasAllSides = false;
+
+  private final LinePointCollector sides[] = new LinePointCollector[SIDE_MAX_NUM];
+
+  private final LinePointCollectorConfig lpcConfigs[] = new LinePointCollectorConfig[SIDE_MAX_NUM];
+
+  private final TempGrid tempGrid = new TempGrid( true );
+
+  private final List<IGridPointCollectorStateListener> stateListeners = new ArrayList<IGridPointCollectorStateListener>();
+
+  public GridPointCollector( )
   {
     initLPCConfigs();
   }
-  
-  private final void initLPCConfigs()
+
+  private final void initLPCConfigs( )
   {
-    Color colors[] = GridWidgetFace.getLineColors();//{Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
+    Color colors[] = GridWidgetFace.getLineColors();// {Color.BLUE,Color.DARK_GRAY,Color.RED, Color.GREEN};
     int pointRectSize = GridWidgetFace.getPointRectSize();
-    for(int i=0;i<sides.length;i++)
+    for( int i = 0; i < sides.length; i++ )
     {
-      lpcConfigs[i]= 
-        new LinePointCollectorConfig(Messages.getString("GridPointCollector.1")+(i+1),colors[i],sides[i]); //$NON-NLS-1$
+      lpcConfigs[i] = new LinePointCollectorConfig( Messages.getString( "GridPointCollector.1" ) + (i + 1), colors[i], sides[i] ); //$NON-NLS-1$
       lpcConfigs[i].setPointRectSize( pointRectSize );
     }
   }
-  
-  
-  
-  
-  public void reset(CS_CoordinateSystem targetCrs)
+
+  public void reset( CS_CoordinateSystem targetCrs )
   {
-    for(LinePointCollector b:sides)
+    for( LinePointCollector b : sides )
     {
-      if(b!=null)
+      if( b != null )
       {
-        b.reset( targetCrs );        
+        b.reset( targetCrs );
       }
       else
       {
-        b=new LinePointCollector(0,targetCrs);
+        b = new LinePointCollector( 0, targetCrs );
       }
     }
-    actualSideKey=0;
-    hasAllSides=false;
-    tempGrid.resetTempGrid(targetCrs);
-    if(sides[actualSideKey]==null)
+    actualSideKey = 0;
+    hasAllSides = false;
+    tempGrid.resetTempGrid( targetCrs );
+    if( sides[actualSideKey] == null )
     {
-      sides[actualSideKey]=new LinePointCollector( 0, targetCrs );
+      sides[actualSideKey] = new LinePointCollector( 0, targetCrs );
       lpcConfigs[actualSideKey].setConfigLinePointCollector( sides[actualSideKey] );
     }
-    fireStateChanged();    
+    fireStateChanged();
   }
-  
+
   public GM_Object addPoint( GM_Point p ) throws Exception
   {
-    if(hasAllSides)
+    if( hasAllSides )
     {
-      System.out.println(Messages.getString("GridPointCollector.2")); //$NON-NLS-1$
+      System.out.println( Messages.getString( "GridPointCollector.2" ) ); //$NON-NLS-1$
       return null;
     }
-    if(actualSideKey>=SIDE_MAX_NUM)
+    if( actualSideKey >= SIDE_MAX_NUM )
     {
       return null;
     }
-    Assert.throwIAEOnNull( 
-        sides[actualSideKey], 
-        Messages.getString("GridPointCollector.3") ); //$NON-NLS-1$
-    
-    GM_Point lastAdded= (GM_Point)sides[actualSideKey].addPoint( p );
-    GM_Point autocompleted=autoComplete();
-    if(autocompleted!=null)
+    Assert.throwIAEOnNull( sides[actualSideKey], Messages.getString( "GridPointCollector.3" ) ); //$NON-NLS-1$
+
+    GM_Point lastAdded = (GM_Point) sides[actualSideKey].addPoint( p );
+    GM_Point autocompleted = autoComplete();
+    if( autocompleted != null )
     {
       return this.finishSide();
     }
     else
     {
       fireStateChanged();
-      return lastAdded;//(autocompleted==null)?lastAdded:autocompleted;
+      return lastAdded;// (autocompleted==null)?lastAdded:autocompleted;
     }
-    
+
   }
 
   /**
-   * Auto complete this line collector and returns the 
-   * completing point if done.
-   * Auto completion is only done for the last side because
+   * Auto complete this line collector and returns the completing point if done. Auto completion is only done for the
+   * last side because
    * 
-   * @return the auto completion point 
+   * @return the auto completion point
    */
-  public GM_Point autoComplete() throws Exception
+  public GM_Point autoComplete( ) throws Exception
   {
-    if(actualSideKey==3)
+    if( actualSideKey == 3 )
     {
-      System.out.println("Autocompleting:"); //$NON-NLS-1$
-      if(sides[actualSideKey].getRemainingPointCnt()==1)
+      System.out.println( "Autocompleting:" ); //$NON-NLS-1$
+      if( sides[actualSideKey].getRemainingPointCnt() == 1 )
       {
-        GM_Point point= sides[0].getFirstPoint();
-        if(point instanceof MutableGMPoint)
+        GM_Point point = sides[0].getFirstPoint();
+        if( point instanceof MutableGMPoint )
         {
           sides[actualSideKey].addPoint( point );
           return point;
         }
         else
         {
-          throw new RuntimeException(Messages.getString("GridPointCollector.5")); //$NON-NLS-1$
-//          return null;
+          throw new RuntimeException( Messages.getString( "GridPointCollector.5" ) ); //$NON-NLS-1$
+          // return null;
         }
       }
       else
@@ -195,9 +186,9 @@ public class GridPointCollector /*implements IGeometryBuilder*/
     }
     else
     {
-      if(sides[actualSideKey].getRemainingPointCnt()==0)
+      if( sides[actualSideKey].getRemainingPointCnt() == 0 )
       {
-        return (GM_Point)sides[actualSideKey].finish();//getLastPoint();
+        return (GM_Point) sides[actualSideKey].finish();// getLastPoint();
       }
       else
       {
@@ -205,90 +196,82 @@ public class GridPointCollector /*implements IGeometryBuilder*/
       }
     }
   }
-  public GM_Point getLastPoint() throws Exception
+
+  public GM_Point getLastPoint( ) throws Exception
   {
-    if(actualSideKey>=SIDE_MAX_NUM)
+    if( actualSideKey >= SIDE_MAX_NUM )
     {
       return null;
     }
-    Assert.throwIAEOnNull( 
-        sides[actualSideKey], 
-        Messages.getString("GridPointCollector.6") ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( sides[actualSideKey], Messages.getString( "GridPointCollector.6" ) ); //$NON-NLS-1$
     return sides[actualSideKey].getLastPoint();
   }
-  
- 
+
   public GM_Object finishSide( ) throws Exception
   {
-    Assert.throwIAEOnNull( 
-            sides[actualSideKey], 
-            Messages.getString("GridPointCollector.7") ); //$NON-NLS-1$
-    if(actualSideKey>=SIDE_MAX_NUM)
+    Assert.throwIAEOnNull( sides[actualSideKey], Messages.getString( "GridPointCollector.7" ) ); //$NON-NLS-1$
+    if( actualSideKey >= SIDE_MAX_NUM )
     {
       return null;
     }
-    LinePointCollector oldBuilder=sides[actualSideKey];      
-    GM_Object gmObject=sides[actualSideKey].finish();
-    if(gmObject==null)
+    LinePointCollector oldBuilder = sides[actualSideKey];
+    GM_Object gmObject = sides[actualSideKey].finish();
+    if( gmObject == null )
     {
-      //not finish
+      // not finish
       return null;
     }
     actualSideKey++;
-    if(actualSideKey<SIDE_MAX_NUM)
+    if( actualSideKey < SIDE_MAX_NUM )
     {
-      //actualSideKey++;
-      LinePointCollector newSide=sides[actualSideKey];
-      if(newSide==null)
+      // actualSideKey++;
+      LinePointCollector newSide = sides[actualSideKey];
+      if( newSide == null )
       {
-        newSide=oldBuilder.getNewBuilder();
-        sides[actualSideKey]= newSide;     
-        lpcConfigs[actualSideKey].setConfigLinePointCollector(newSide);
+        newSide = oldBuilder.getNewBuilder();
+        sides[actualSideKey] = newSide;
+        lpcConfigs[actualSideKey].setConfigLinePointCollector( newSide );
       }
-      
-      GM_Point lastP=oldBuilder.getLastPoint();  
+
+      GM_Point lastP = oldBuilder.getLastPoint();
       newSide.setCntPoints( computeSize() );
-      if(lastP!=null)
+      if( lastP != null )
       {
         newSide.addPoint( lastP );
       }
       else
       {
-        logger.warning( Messages.getString("GridPointCollector.8") ); //$NON-NLS-1$
+        logger.warning( Messages.getString( "GridPointCollector.8" ) ); //$NON-NLS-1$
       }
     }
     else
     {
-      hasAllSides=true;
+      hasAllSides = true;
       updateTempGrid();
     }
-//    logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+ 
-//                "\n\tactualSide="+actualSideKey );
+    // logger.info( "Curve="+((GM_Curve)gmObject).getAsLineString()+
+    // "\n\tactualSide="+actualSideKey );
     fireStateChanged();
-    return gmObject;      
+    return gmObject;
   }
-  
-  private final void updateTempGrid() throws GM_Exception
+
+  private final void updateTempGrid( ) throws GM_Exception
   {
-    tempGrid.setTempGrid( 
-        sides[SIDE_TOP],
-        sides[SIDE_BOTTOM], 
-        sides[SIDE_LEFT], 
-        sides[SIDE_RIGHT] );
-    
+    tempGrid.setTempGrid( sides[SIDE_TOP], sides[SIDE_BOTTOM], sides[SIDE_LEFT], sides[SIDE_RIGHT] );
+
   }
-  
-  private final int computeSize()
+
+  private final int computeSize( )
   {
-    if(actualSideKey==0 || actualSideKey==1)
+    if( actualSideKey == 0 || actualSideKey == 1 )
     {
-      return 0; 
+      return 0;
     }
-    else if(actualSideKey==2)
+    else if( actualSideKey == 2 )
     {
       return sides[0].getCurrentPointCnt();
     }
-    else if(actualSideKey==3)
+    else if( actualSideKey == 3 )
     {
       return sides[1].getCurrentPointCnt();
     }
@@ -297,358 +280,217 @@ public class GridPointCollector /*implements IGeometryBuilder*/
       return 0;
     }
   }
-  
+
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
    */
   public void paint( Graphics g, GeoTransform projection, Point currentPoint )
   {
-    LinePointCollector builder=null;
-    if(actualSideKey<SIDE_MAX_NUM)
+    LinePointCollector builder = null;
+    if( actualSideKey < SIDE_MAX_NUM )
     {
-      if ( sides[actualSideKey] == null )
+      if( sides[actualSideKey] == null )
         return;
-     
-      builder=sides[actualSideKey];
-      Assert.throwIAEOnNull( 
-      builder, Messages.getString("GridPointCollector.9") ); //$NON-NLS-1$
+
+      builder = sides[actualSideKey];
+      Assert.throwIAEOnNull( builder, Messages.getString( "GridPointCollector.9" ) ); //$NON-NLS-1$
     }
-    
-//    logger.info( "Curves="+Arrays.asList( sides ) );
-    final Color curColor=g.getColor();
-    
-    int i=0;
-    for(LinePointCollector b:sides)
+
+    // logger.info( "Curves="+Arrays.asList( sides ) );
+    final Color curColor = g.getColor();
+
+    int i = 0;
+    for( LinePointCollector b : sides )
     {
-        if(b==null)
-        {
-          continue;
-        }
-        g.setColor( lpcConfigs[i].getColor());
-        int pointRectSize=lpcConfigs[i].getPointRectSize();
-        if(b!=builder)
-        {
-          b.paint( g, projection, null, pointRectSize);
-        }
-        else
-        {
-          b.paint( g, projection, currentPoint, pointRectSize );
-        }
-        i++;
+      if( b == null )
+      {
+        continue;
+      }
+      g.setColor( lpcConfigs[i].getColor() );
+      int pointRectSize = lpcConfigs[i].getPointRectSize();
+      if( b != builder )
+      {
+        b.paint( g, projection, null, pointRectSize );
+      }
+      else
+      {
+        b.paint( g, projection, currentPoint, pointRectSize );
+      }
+      i++;
     }
     /* draw selected line */
-    if(actualSideKey<SIDE_MAX_NUM)
+    if( actualSideKey < SIDE_MAX_NUM )
     {
-      builder=sides[actualSideKey];
+      builder = sides[actualSideKey];
       builder.paintLine( g, projection, i, lpcConfigs[actualSideKey].getColor() );
-      g.setColor( curColor );     
+      g.setColor( curColor );
     }
-    
+
     /* draw temp grid */
-    tempGrid.paint( g, projection,lpcConfigs[0].getPointRectSize());
-   
-  }  
-  
-  public void clearCurrent()
+    tempGrid.paint( g, projection );
+
+  }
+
+  public void clearCurrent( )
   {
-    if(actualSideKey>=SIDE_MAX_NUM)
+    if( actualSideKey >= SIDE_MAX_NUM )
     {
-      return ;
+      return;
     }
-    
-    LinePointCollector builder=
-                  sides[actualSideKey];
+
+    LinePointCollector builder = sides[actualSideKey];
     builder.clear();
-    if(actualSideKey>0)
+    if( actualSideKey > 0 )
     {
-      LinePointCollector previousBuilder=sides[actualSideKey-1];
-      if(previousBuilder!=null)
+      LinePointCollector previousBuilder = sides[actualSideKey - 1];
+      if( previousBuilder != null )
       {
-        GM_Point point=previousBuilder.getLastPoint();
-        if(point!=null)
+        GM_Point point = previousBuilder.getLastPoint();
+        if( point != null )
         {
-          
+
           try
           {
             builder.addPoint( point );
           }
           catch( Exception e )
           {
-            logger.log(Level.INFO, Messages.getString("GridPointCollector.10"), e ); //$NON-NLS-1$
+            logger.log( Level.INFO, Messages.getString( "GridPointCollector.10" ), e ); //$NON-NLS-1$
           }
         }
       }
     }
-    hasAllSides=false;
+    hasAllSides = false;
     fireStateChanged();
   }
-  
-  public void gotoPreviousSide()
+
+  public void gotoPreviousSide( )
   {
     LinePointCollector curBuilder;
-    if(actualSideKey>=SIDE_MAX_NUM)
+    if( actualSideKey >= SIDE_MAX_NUM )
     {
-      //empty
+      // empty
     }
     else
     {
-      curBuilder= sides[actualSideKey];
-      if(curBuilder!=null)
+      curBuilder = sides[actualSideKey];
+      if( curBuilder != null )
       {
         curBuilder.clear();
       }
     }
-    if(actualSideKey>0)
+    if( actualSideKey > 0 )
     {
       actualSideKey--;
       sides[actualSideKey].removeLastPoint( false );
-      if ( actualSideKey < 2 )
-        sides[actualSideKey].removeMaxNum(  );
+      if( actualSideKey < 2 )
+        sides[actualSideKey].removeMaxNum();
     }
-    
+
     fireStateChanged();
   }
-  
-  public void removeLastPoint()
+
+  public void removeLastPoint( )
   {
-    if(actualSideKey>=SIDE_MAX_NUM)
+    if( actualSideKey >= SIDE_MAX_NUM )
     {
-      //goto to the last line builder
-      actualSideKey=SIDE_MAX_NUM-1;
+      // goto to the last line builder
+      actualSideKey = SIDE_MAX_NUM - 1;
     }
-    
-    LinePointCollector builder=
-                  sides[actualSideKey];
-    
-    builder.removeLastPoint( actualSideKey==0 );   
-    fireStateChanged(  );
+
+    LinePointCollector builder = sides[actualSideKey];
+
+    builder.removeLastPoint( actualSideKey == 0 );
+    fireStateChanged();
   }
-  
-  public void replaceLastPoint(GM_Point point)
+
+  public void replaceLastPoint( GM_Point point )
   {
-    if(actualSideKey>=SIDE_MAX_NUM)
+    if( actualSideKey >= SIDE_MAX_NUM )
     {
       return;
     }
-    //TODO check going to previous side
-    LinePointCollector builder=
-                  sides[actualSideKey];
-    
-    builder.replaceLastPoint( point );   
+    // TODO check going to previous side
+    LinePointCollector builder = sides[actualSideKey];
+
+    builder.replaceLastPoint( point );
   }
-  
-  
-  public void selectNext()
+
+  public void selectNext( )
   {
-    if(actualSideKey<SIDE_MAX_NUM)
+    if( actualSideKey < SIDE_MAX_NUM )
     {
       sides[actualSideKey].setSelected( false );
-      
+
     }
-    
-    actualSideKey=(actualSideKey+1) %SIDE_MAX_NUM;
+
+    actualSideKey = (actualSideKey + 1) % SIDE_MAX_NUM;
     sides[actualSideKey].setSelected( true );
     fireStateChanged();
   }
-  
-  public void selectPoint(
-                  GM_Point squareCenter, 
-                  double squareWidth)
+
+  public void selectPoint( GM_Point squareCenter, double squareWidth )
   {
-    if(actualSideKey<SIDE_MAX_NUM)
+    if( actualSideKey < SIDE_MAX_NUM )
     {
-      sides[actualSideKey].selectPoint( squareCenter, squareWidth );   
+      sides[actualSideKey].selectPoint( squareCenter, squareWidth );
     }
     else
     {
-      return;   
+      return;
     }
   }
-  
-  public void changeSelectedPoint(  GM_Point newPosition ) throws GM_Exception
+
+  public void changeSelectedPoint( GM_Point newPosition ) throws GM_Exception
   {
-    
-    if(actualSideKey<SIDE_MAX_NUM)
+
+    if( actualSideKey < SIDE_MAX_NUM )
     {
       sides[actualSideKey].changeSelected( newPosition );
       updateTempGrid();
     }
     else
     {
-      return;      
+      return;
     }
-    
+
   }
-  
-  public GM_Point getSelectedPoint(  )
+
+  public GM_Point getSelectedPoint( )
   {
-    
-    if(actualSideKey<SIDE_MAX_NUM)
+
+    if( actualSideKey < SIDE_MAX_NUM )
     {
       return sides[actualSideKey].getSelectedPoint();
     }
     else
     {
-      return null;      
+      return null;
     }
-    
   }
-  
-  public boolean getHasAllSides()
+
+  public boolean getHasAllSides( )
   {
     return hasAllSides;
   }
-  
-//  public void enableOnTheFlyMesh()
-//  {
-//    
-//  }
-//  
-  
-  
-  
-  
-  
 
-  
-  
-  //TODO separate in create horizontal and vertical edges
-  //TODO introduce inverted edges along
-  //TODO create test case for this
-  //TODO Prevent premature double click
-  //TODO Caching 
-  //TODO on the fly meching plus displaying
-  //TODO get the map to be redrawn after last point
- 
-//  private final void  addEdgesH(
-//      IFEDiscretisationModel1d2d model,
-//      AddNodeCommand[][] newNodesArray2D,
-//      ChangeDiscretiationModelCommand compositeCommand,
-//      AddEdgeCommand[][] addEdgeH2D,
-//      AddEdgeInvCommand[][] addEdgeH2DInv
-//      )
-//  {
-//    final int LAST_INDEX_I=newNodesArray2D.length-1;
-//    for(int i=0;i<newNodesArray2D.length;i++)
-//    {
-//      final int LAST_INDEX_J=newNodesArray2D[0].length-2;
-//      AddNodeCommand[] addNodeLine1=newNodesArray2D[i];
-//      for(int j=0; j<=LAST_INDEX_J;j++)
-//      {
-//        //horidonzal edges
-//        
-//        if(i==0 )
-//        {//first line only one direction
-//          AddEdgeCommand edgeCommand=
-//              new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
-//          compositeCommand.addCommand( edgeCommand );
-//          addEdgeH2D[i][j]=edgeCommand;
-//        }
-//        else if(i==LAST_INDEX_I)
-//        {//last line back direction
-//          AddEdgeCommand edgeCommand=
-//                    new AddEdgeCommand(
-//                        model,addNodeLine1[j+1], addNodeLine1[j]);
-//          compositeCommand.addCommand( edgeCommand );
-//          addEdgeH2D[i][j]=edgeCommand;
-//        }            
-//        else
-//        {
-//          AddEdgeCommand edgeCommand=
-//                new AddEdgeCommand(model, addNodeLine1[j],addNodeLine1[j+1]);
-//          compositeCommand.addCommand( edgeCommand );
-//          addEdgeH2D[i][j]=edgeCommand;
-//          
-//          ////create inverted
-//            AddEdgeInvCommand edgeInvCommand = 
-//                  new AddEdgeInvCommand(model,edgeCommand);
-//            addEdgeH2DInv[i][j] =edgeInvCommand;
-//            compositeCommand.addCommand( edgeInvCommand );
-//        }          
-//      }
-//    }    
-//  }
-  
-//  private final void  addEdgesV(
-//                  IFEDiscretisationModel1d2d model,
-//                  AddNodeCommand[][] newNodesArray2D,
-//                  ChangeDiscretiationModelCommand compositeCommand,
-//                  AddEdgeCommand[][] addEdgeV2D,
-//                  AddEdgeInvCommand[][] addEdgeV2DInv)
-//  {
-//    for(int i=0;i<newNodesArray2D.length-1;i++)
-//    {
-//      final int LENGTH = newNodesArray2D[0].length;
-//      final int LAST_INDEX=LENGTH-1;
-//      for(int j=0; j<LENGTH;j++)
-//      {
-//              
-//        if(j==0 )
-//        {
-//          AddEdgeCommand edgeCommand=
-//            new AddEdgeCommand(
-//                model, 
-//                newNodesArray2D[i+1][j],
-//                newNodesArray2D[i][j]);
-//          compositeCommand.addCommand( edgeCommand );
-//          addEdgeV2D[i][j]=edgeCommand;
-//        }
-//        else if(j==LAST_INDEX)
-//        {
-//          AddEdgeCommand edgeCommand=
-//                      new AddEdgeCommand(
-//                          model,
-//                          newNodesArray2D[i][j], 
-//                          newNodesArray2D[i+1][j]);
-//          compositeCommand.addCommand( edgeCommand );
-//          addEdgeV2D[i][j]=edgeCommand;
-//        }            
-//        else
-//        {
-//          AddEdgeCommand edgeCommand=
-//            new AddEdgeCommand(
-//                model, 
-//                newNodesArray2D[i][j],
-//                newNodesArray2D[i+1][j]);
-//          compositeCommand.addCommand( edgeCommand );
-//          addEdgeV2D[i][j]=edgeCommand;
-//          
-//          //create inverted
-//          AddEdgeInvCommand edgeInvCommand=
-//            new AddEdgeInvCommand(model, edgeCommand);
-//          addEdgeV2DInv[i][j] =edgeInvCommand;
-//          compositeCommand.addCommand( edgeInvCommand );
-//        }          
-//      }
-//    }    
-//  }
-  
-  public ICommand getAddToModelCommand(
-      MapPanel mapPanel,
-      IFEDiscretisationModel1d2d model,
-      CommandableWorkspace commandableWorkspace) throws GM_Exception
+  public IStatus getAddToModelCommand( MapPanel mapPanel, IFEDiscretisationModel1d2d model, CommandableWorkspace commandableWorkspace )
   {
-    int pointRectSize=lpcConfigs[0].getPointRectSize();
-    double searchRectWidth = 
-        sides[0].getHandleWidthAsWorldDistance( mapPanel,pointRectSize);
-    ICommand addGridCommand=
-      tempGrid.getAddToModelCommand( 
-                      mapPanel, model, 
-                      commandableWorkspace, 
-                      searchRectWidth );
-    return addGridCommand;
+    final int pointRectSize = lpcConfigs[0].getPointRectSize();
+    final double searchRectWidth = sides[0].getHandleWidthAsWorldDistance( mapPanel, pointRectSize );
+    return tempGrid.getAddToModelCommand( mapPanel.getMapModell(), model, commandableWorkspace, searchRectWidth );
   }
-  
-  
-  public LinePointCollectorConfig[] getSideconfigsAsArray()
+
+  public LinePointCollectorConfig[] getSideconfigsAsArray( )
   {
     LinePointCollectorConfig[] cloneCollectorConfigs = lpcConfigs.clone();
     return cloneCollectorConfigs;
   }
-  
-  public LinePointCollectorConfig getCurrentLPCConfig()
+
+  public LinePointCollectorConfig getCurrentLPCConfig( )
   {
-    if(actualSideKey<SIDE_MAX_NUM)
+    if( actualSideKey < SIDE_MAX_NUM )
     {
       return lpcConfigs[actualSideKey];
     }
@@ -657,21 +499,16 @@ public class GridPointCollector /*implements IGeometryBuilder*/
       return null;
     }
   }
-  
-  
+
   /**
-   * To get the with for the square that are drawn to show 
-   * point. 
-   * if ther is an active {@link LinePointCollectorConfig} its 
-   * actual point rect size  is resturn otherwise the point 
-   * square size of the first {@link LinePointCollectorConfig}
-   *  
-   * @return Returns the with for the square that are drawn to show 
-   * point
+   * To get the with for the square that are drawn to show point. if ther is an active {@link LinePointCollectorConfig}
+   * its actual point rect size is resturn otherwise the point square size of the first {@link LinePointCollectorConfig}
+   * 
+   * @return Returns the with for the square that are drawn to show point
    */
-  public int getPointRectSize()
+  public int getPointRectSize( )
   {
-    if(actualSideKey<SIDE_MAX_NUM)
+    if( actualSideKey < SIDE_MAX_NUM )
     {
       return lpcConfigs[actualSideKey].getPointRectSize();
     }
@@ -680,13 +517,11 @@ public class GridPointCollector /*implements IGeometryBuilder*/
       return lpcConfigs[0].getPointRectSize();
     }
   }
-  
-  
-  public void addGridPointCollectorStateChangeListener(
-                              IGridPointCollectorStateListener listener)
+
+  public void addGridPointCollectorStateChangeListener( IGridPointCollectorStateListener listener )
   {
     Assert.throwIAEOnNullParam( listener, "listener" ); //$NON-NLS-1$
-    if(stateListeners.contains( listener ))
+    if( stateListeners.contains( listener ) )
     {
       return;
     }
@@ -695,39 +530,31 @@ public class GridPointCollector /*implements IGeometryBuilder*/
       stateListeners.add( listener );
     }
   }
-  
-  private final void fireStateChanged(GridPointColectorChangeEvent event)
+
+  private final void fireStateChanged( )
   {
-    for(IGridPointCollectorStateListener listener:stateListeners)
+    for( IGridPointCollectorStateListener listener : stateListeners )
     {
-      listener.stateChanged( event );
-    }    
+      listener.stateChanged( null );
+    }
   }
-  
-  private final void fireStateChanged()
+
+  public void setPointRectSize( int pointRectSize )
   {
-    for(IGridPointCollectorStateListener listener:stateListeners)
+    if( pointRectSize <= 0 )
     {
-      listener.stateChanged(null);
-    }    
-  }
-  
-  public void setPointRectSize(int pointRectSize)
-  {
-    if(pointRectSize<=0)
-    {
-      throw new IllegalArgumentException(Messages.getString("GridPointCollector.12")+pointRectSize); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "GridPointCollector.12" ) + pointRectSize ); //$NON-NLS-1$
     }
     else
     {
-      for(LinePointCollectorConfig config:lpcConfigs)
+      for( LinePointCollectorConfig config : lpcConfigs )
       {
-       config.setPointRectSize( pointRectSize ) ;
+        config.setPointRectSize( pointRectSize );
       }
     }
   }
-  
-  public void setColor(int lineIndex, Color lineColor)
+
+  public void setColor( int lineIndex, Color lineColor )
   {
     lpcConfigs[lineIndex].setColor( lineColor );
     fireStateChanged();

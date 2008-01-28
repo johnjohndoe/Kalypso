@@ -46,27 +46,40 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.commons.command.ICommand;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
@@ -82,25 +95,23 @@ import com.vividsolutions.jts.geom.LineString;
  * supposed to be in the same coordinate reference system so that no no reference system convertion is done
  * 
  * @author Patrice Congo
+ * @author Thomas Jung
  */
 public class TempGrid
 {
   /**
-   * The target coodinate reference system for the created grid point
+   * The target coordinate reference system for the created grid point
    */
   private CS_CoordinateSystem m_crs;
 
   /**
-   * Cache for screen point coordinate
-   */
-  private int[][] drawPoints;
-
-  /**
    * Cache for grid computed grid points
    */
-  private GM_Point[][] gridPoints;
+  private GM_Point[][] m_gridPoints;
 
-  private final boolean ignoreZCoordinate;
+  private final boolean m_ignoreZCoordinate;
+
+  private double m_searchRectWidth;
 
   /**
    * Create a temp grid, with a transformation into a model accepting the all coordinate of the grid points.
@@ -124,7 +135,7 @@ public class TempGrid
    */
   public TempGrid( final boolean ignoreZCoordinate )
   {
-    this.ignoreZCoordinate = ignoreZCoordinate;
+    m_ignoreZCoordinate = ignoreZCoordinate;
   }
 
   /**
@@ -139,7 +150,7 @@ public class TempGrid
   public void setCoodinateSystem( final CS_CoordinateSystem targetCrs ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( targetCrs, "targetCrs" ); //$NON-NLS-1$
-    this.m_crs = targetCrs;
+    m_crs = targetCrs;
   }
 
   /**
@@ -152,18 +163,14 @@ public class TempGrid
    * @param pointRectSize
    *            the side lengtth for square representing the points
    */
-  public void paint( final Graphics g, final GeoTransform projection, final int pointRectSize )
+  public void paint( final Graphics g, final GeoTransform projection )
   {
     // IMPORTANT: we remember GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
-    if( gridPoints.length != 0 )
+    if( m_gridPoints.length != 0 )
     {
       /* Paint a linestring. */
-      // g.drawPolyline( arrayX, arrayY, arrayX.length );
-      // drawHandles( g, arrayX, arrayY, pointRectSize);
-      // cache draw points
-      // drawPoints=points;
       try
       {
         paintEdges( g, projection );
@@ -177,64 +184,7 @@ public class TempGrid
 
   }
 
-  /**
-   * compute screen points from gm points
-   */
-  private int[][] getPointArrays( final GeoTransform projection )
-  {
-    if( drawPoints != null )
-    {
-      return drawPoints;
-    }
-
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
-
-    for( final GM_Point points[] : gridPoints )
-    {
-      for( final GM_Point point : points )
-      {
-        if( point != null )
-        {
-          final int x = (int) projection.getDestX( point.getX() );
-          final int y = (int) projection.getDestY( point.getY() );
-
-          xArray.add( new Integer( x ) );
-          yArray.add( new Integer( y ) );
-        }
-      }
-    }
-
-    final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[xArray.size()] ) );
-    final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[yArray.size()] ) );
-
-    return new int[][] { xs, ys };
-  }
-
-  /**
-   * draws the temp grid point on the screen
-   */
-  private static final void drawHandles( final Graphics g, final int[] x, final int[] y, final int pointRectWidth )
-  {
-    final Color oldColor = g.getColor();
-    g.setColor( oldColor.darker() );
-    // int sizeOuter = 4;
-    final int halfRectWidth = pointRectWidth / 2;
-
-    for( int i = 0; i < y.length; i++ )
-    {
-      // g.drawRect(
-      // x[i] - halfRectWidth,
-      // y[i] - halfRectWidth,
-      // pointRectWidth,
-      // pointRectWidth );
-      g.fill3DRect( x[i] - halfRectWidth, y[i] - halfRectWidth, pointRectWidth, pointRectWidth, true// raised
-      );
-    }
-    g.setColor( oldColor );
-
-  }
-
+  @SuppressWarnings("unchecked")
   private void paintEdges( final Graphics g, final GeoTransform projection ) throws GM_Exception, CoreException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
@@ -248,9 +198,8 @@ public class TempGrid
 
     final GM_Position[] pos = new GM_Position[2];
 
-    for( final GM_Point[] element : gridPoints )
+    for( final GM_Point[] element : m_gridPoints )
     {
-      final org.kalypsodeegree_impl.model.geometry.GeometryFactory factory = new org.kalypsodeegree_impl.model.geometry.GeometryFactory();
       for( int j = 0; j < element.length - 1; j++ )
       {
         pos[0] = element[j].getPosition();
@@ -260,13 +209,12 @@ public class TempGrid
         de.paint( g, projection, new NullProgressMonitor() );
       }
     }
-    for( int j = 0; j < gridPoints[0].length; j++ )
+    for( int j = 0; j < m_gridPoints[0].length; j++ )
     {
-      final GeometryFactory factory = new GeometryFactory();
-      for( int i = 0; i < gridPoints.length - 1; i++ )
+      for( int i = 0; i < m_gridPoints.length - 1; i++ )
       {
-        pos[0] = gridPoints[i][j].getPosition();
-        pos[1] = gridPoints[i + 1][j].getPosition();
+        pos[0] = m_gridPoints[i][j].getPosition();
+        pos[1] = m_gridPoints[i + 1][j].getPosition();
         final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( pos, m_crs );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
         de.paint( g, projection, new NullProgressMonitor() );
@@ -285,7 +233,7 @@ public class TempGrid
    */
   public void resetTempGrid( final CS_CoordinateSystem crs ) throws IllegalArgumentException
   {
-    gridPoints = new GM_Point[0][0];
+    m_gridPoints = new GM_Point[0][0];
     m_crs = crs;
   }
 
@@ -309,16 +257,15 @@ public class TempGrid
     Assert.throwIAEOnNullParam( bottomSidePoints, "bottomSidePoints" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" ); //$NON-NLS-1$
-    this.gridPoints = computeMesh( topSidePoints, bottomSidePoints, leftSidePoints, rightSidePoints );
-    drawPoints = null;
+    m_gridPoints = computeMesh( topSidePoints, bottomSidePoints, leftSidePoints, rightSidePoints );
   }
 
   /**
-   * in case that the data comes allready as mesh
+   * in case that the data comes already as mesh
    */
   public void importMesh( final GM_Point[][] importedGridPoints )
   {
-    this.gridPoints = importedGridPoints;
+    m_gridPoints = importedGridPoints;
   }
 
   /**
@@ -326,7 +273,6 @@ public class TempGrid
    */
   private final GM_Point[][] computeMesh( final LinePointCollector topSidePoints, final LinePointCollector bottomSidePoints, final LinePointCollector leftSidePoints, final LinePointCollector rightSidePoints ) throws GM_Exception
   {
-    // GeometryFactory geometryFactory= new GeometryFactory();
     final LineString topLine = pointToLineString( topSidePoints );
     final LineString bottomLine = pointToLineString( bottomSidePoints );
     final LineString leftLine = pointToLineString( leftSidePoints );
@@ -354,71 +300,145 @@ public class TempGrid
   /**
    * To get an {@link ICommand} that can be use to hat the temp grid to the model
    */
-  public ICommand getAddToModelCommand( final MapPanel mapPanel, final IFEDiscretisationModel1d2d model, final CommandableWorkspace commandableWorkspace, final double searchRectWidth ) throws GM_Exception
+  public IStatus getAddToModelCommand( final IMapModell mapModell, final IFEDiscretisationModel1d2d model, final CommandableWorkspace commandableWorkspace, final double searchRectWidth )
   {
-    final ChangeDiscretiationModelCommand compositeCommand = new ChangeDiscretiationModelCommand( commandableWorkspace, model );// new
-    // CompositeCommand("Grid
-    // Command");
-    // compute Points
-    final GM_Point[][] points2D = gridPoints;// computeMesh();
-    final int DIM_X = points2D.length;
-    if( DIM_X == 0 )
+    m_searchRectWidth = searchRectWidth;
+
+    final GM_Point[][] points2D = m_gridPoints;
+
+    if( points2D.length == 0 )
+      return StatusUtilities.createErrorStatus( "FE-Griderzeugung schlug fehl." );
+
+    // we must have the node theme. First node theme gets it
+    final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    if( nodeTheme != null && model != null && commandableWorkspace != null )
     {
-      System.out.println( "DimX is null" ); //$NON-NLS-1$
-      return compositeCommand;
+      try
+      {
+        addElements( commandableWorkspace, nodeTheme );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        return StatusUtilities.statusFromThrowable( e, "FE-Griderzeugung schlug fehl." );
+      }
     }
+    else
+      return StatusUtilities.createErrorStatus( "FE-Griderzeugung schlug fehl. Kein FE-Thema verfügbar." );
 
-    final int DIM_Y = points2D[0].length;
-    // add nodes
-    final AddNodeCommand[][] newNodesArray2D = new AddNodeCommand[DIM_X][DIM_Y];
-    addNodesFromPoints( model, newNodesArray2D, compositeCommand, points2D, searchRectWidth );
-
-    addElementsFromNodes( model, newNodesArray2D, compositeCommand );
-    return compositeCommand;
+    return Status.OK_STATUS;
   }
 
-  /**
-   * Make the add node command
-   */
-  private final void addNodesFromPoints( final IFEDiscretisationModel1d2d model, final AddNodeCommand[][] newNodesArray2D, final ChangeDiscretiationModelCommand compositeCommand, final GM_Point[][] points2D, final double searchRectWidth )
+  private void addElements( final CommandableWorkspace workspace, IKalypsoFeatureTheme nodeTheme ) throws Exception
   {
-    for( int i = 0; i < points2D.length; i++ )
+    final FeatureList featureList = nodeTheme.getFeatureList();
+    final Feature parentFeature = featureList.getParentFeature();
+    final IFeatureType parentType = parentFeature.getFeatureType();
+    final IRelationType parentNodeProperty = featureList.getParentFeatureTypeProperty();
+    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
+    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
+    final IGMLSchema schema = workspace.getGMLSchema();
+
+    final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
+
+    final IFeatureType edgeFeatureType = schema.getFeatureType( IFE1D2DEdge.QNAME );
+    final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
+
+    /* Initialize elements needed for edges and elements */
+    final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
+    final List<GM_Ring> elements = getRingsFromPoses();
+
+    for( GM_Ring ring : elements )
     {
-      final GM_Point[] points1D = points2D[i];
-      // AddNodeCommand[] newNodesArray1D=
-      // new AddNodeCommand[points1D.length];
-      // newNodesArray2D[i]=newNodesArray1D;
-      for( int j = 0; j < points1D.length; j++ )
+      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
+
+      final List<GM_Point> nodes = new ArrayList<GM_Point>();
+      final GM_Position[] positions = ring.getPositions();
+      for( int i = 0; i < positions.length - 1; i++ )
       {
-        // TODO check node for existance
-        final AddNodeCommand nodeCommand = new AddNodeCommand( model, points1D[j], searchRectWidth, this.ignoreZCoordinate );
-        newNodesArray2D[i][j] = nodeCommand;// newNodesArray1D[j]=nodeCommand;
-        compositeCommand.addCommand( nodeCommand );
+        nodes.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( positions[i], m_crs ) );
+      }
+
+      // create the new elements
+      if( nodes.size() == 3 || nodes.size() == 4 )
+      {
+        ElementGeometryHelper.createAddElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, nodes );
+        nodeTheme.getWorkspace().postCommand( command );
       }
     }
   }
 
-  /**
-   * make the add element command. element are added based on their nodes
-   */
-  private final void addElementsFromNodes( final IFEDiscretisationModel1d2d model, final AddNodeCommand[][] newNodesArray2D, final ChangeDiscretiationModelCommand compositeCommand )
+  @SuppressWarnings("unchecked")
+  private List<GM_Ring> getRingsFromPoses( ) throws GM_Exception
   {
-    final int LAST_INDEX_I = newNodesArray2D.length - 2;
-    for( int i = 0; i <= LAST_INDEX_I/* i<addEdgeH2D.length-1 */; i++ )
-    {
-      final int LAST_INDEX_J = newNodesArray2D[0].length - 2;
-      for( int j = 0; j <= LAST_INDEX_J; j++ )
-      {
-        final AddNodeCommand node0 = newNodesArray2D[i][j];
-        final AddNodeCommand node1 = newNodesArray2D[i][j + 1];
-        final AddNodeCommand node2 = newNodesArray2D[i + 1][j + 1];
-        final AddNodeCommand node3 = newNodesArray2D[i + 1][j];
-        final AddNodeCommand node4 = newNodesArray2D[i][j];
+    // TODO: here we can implement some nice checkies!
+    // intersections
+    // duplicate nodes
+    // ...
+    final List<GM_Ring> rings = new ArrayList<GM_Ring>();
 
-        final AddElementCmdFromNodeCmd addElementCommand = new AddElementCmdFromNodeCmd( model, new AddNodeCommand[] { node0, node1, node2, node3, node4 } );
-        compositeCommand.addCommand( addElementCommand );
+    for( int i = 0; i < m_gridPoints.length - 1; i++ )
+    {
+      for( int j = 0; j < m_gridPoints[0].length - 1; j++ )
+      {
+        GM_Position[] poses = new GM_Position[5];
+
+        poses[0] = m_gridPoints[i][j].getPosition();
+        poses[1] = m_gridPoints[i + 1][j].getPosition();
+        poses[2] = m_gridPoints[i + 1][j + 1].getPosition();
+        poses[3] = m_gridPoints[i][j + 1].getPosition();
+        poses[4] = m_gridPoints[i][j].getPosition();
+
+        final GM_Position[] checkedPoses = checkPoses( poses );
+        if( checkedPoses.length >= 4 )
+          rings.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Ring( checkedPoses, m_crs ) );
       }
     }
+    return rings;
+  }
+
+  private GM_Position[] checkPoses( GM_Position[] poses )
+  {
+    final List<GM_Position> posToDeleteList = new ArrayList<GM_Position>();
+    final List<GM_Position> posList = new ArrayList<GM_Position>();
+
+    for( int i = 0; i < poses.length - 1; i++ )
+    {
+      posList.add( poses[i] );
+
+      /* check the distance to each other */
+      for( int j = 0; j < poses.length - 1; j++ )
+      {
+        if( i != j )
+        {
+          final double distance = poses[i].getDistance( poses[j] );
+          if( distance < m_searchRectWidth && !posToDeleteList.contains( poses[j] ) )
+          {
+            posToDeleteList.add( poses[i] );
+          }
+        }
+      }
+    }
+
+    for( GM_Position position : posToDeleteList )
+    {
+      posList.remove( position );
+    }
+
+    final GM_Position[] positions = posList.toArray( new GM_Position[posList.size() + 1] );
+    positions[posList.size()] = positions[0];
+    return positions;
+  }
+
+  private static boolean nodeExistsInList( List<GM_Position> posList, GM_Position position )
+  {
+    for( int i = 0; i < posList.size(); i++ )
+    {
+      if( posList.get( i ).equals( position ) )
+        return true;
+    }
+    return false;
   }
 
   /**
