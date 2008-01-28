@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -79,10 +80,10 @@ public class ImportTrippleHelper
   {
     final IProfil profile = ProfilFactory.createProfil( profileType );
 
-    final IComponent rechtswert = new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, null, null );
-    final IComponent hochwert = new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", IWspmConstants.Q_DOUBLE, null, null );
-    final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, null, null );
-    final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, null, null );
+    final IComponent rechtswert = new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+    final IComponent hochwert = new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+    final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     profile.addPointProperty( rechtswert );
     profile.addPointProperty( hochwert );

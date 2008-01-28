@@ -148,7 +148,7 @@ public class BuildingWehr extends AbstractObservationBuilding
   {
     /* building observation properties */
     if( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, null, null );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, "", null );
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
       return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, null );
 
