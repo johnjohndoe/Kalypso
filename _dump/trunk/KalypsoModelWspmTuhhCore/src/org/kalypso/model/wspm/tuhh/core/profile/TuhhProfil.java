@@ -65,8 +65,8 @@ public class TuhhProfil extends AbstractProfil
   {
     super( PROFIL_TYPE );
 
-    final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, "none", "", IWspmConstants.Q_DOUBLE, null, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-    final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, "none", "", IWspmConstants.Q_DOUBLE, null, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     final TupleResult result = new TupleResult( new IComponent[] { hoehe, breite } );
 
