@@ -68,6 +68,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
+import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.phenomenon.PhenomenonUtilities;
@@ -379,7 +380,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IGMLSchema schema = targetObsFeature.getWorkspace().getGMLSchema();
 
     final IFeatureType recordDefinitionFT;
-    if( sortComponents == null )
+    if( sortComponents == null || sortComponents.length == 0 )
       recordDefinitionFT = schema.getFeatureType( ObservationFeatureFactory.SWE_RECORDDEFINITIONTYPE );
     else
       recordDefinitionFT = schema.getFeatureType( ObservationFeatureFactory.QNAME_F_SORTED_RECORD_DEFINITION );
@@ -399,7 +400,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
       FeatureHelper.addProperty( featureRD, ObservationFeatureFactory.SWE_COMPONENT, featureItemDef );
     }
 
-    if( sortComponents != null )
+    if( sortComponents != null || sortComponents.length != 0 )
     {
       final IRelationType sortedItemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
       for( final IComponent comp : sortComponents )
@@ -425,9 +426,13 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     /* Phenomenon */
     final IRelationType phenomenonRelation = (IRelationType) itemDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_PROPERTY );
-
     final IPhenomenon phenomenon = comp.getPhenomenon();
+
     final Feature featurePhenomenon = PhenomenonUtilities.createPhenomenonFeature( phenomenon, itemDefinition, phenomenonRelation );
+    // FIXME: hack, ask gernot - dictionary components were wrongly written to resultDefinition
+    if( phenomenon instanceof DictionaryPhenomenon )
+      return featurePhenomenon;
+
     itemDefinition.setProperty( phenomenonRelation, featurePhenomenon );
 
     /* Representation type */
