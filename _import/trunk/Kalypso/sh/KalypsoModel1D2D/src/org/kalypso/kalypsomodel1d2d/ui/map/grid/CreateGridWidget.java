@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
@@ -16,12 +15,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -51,7 +46,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   private boolean isActivated = false;
 
-  private final int m_radius = 20;
+  private final int m_radius = 10;
 
   private final IWidget m_delegateWidget = null;
 
@@ -61,15 +56,9 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   private IKalypsoFeatureTheme m_nodeTheme;
 
-  private IKalypsoFeatureTheme m_polyElementTheme;
-
-  private IKalypsoFeatureTheme m_edgeTheme;
-
-  private IKalypsoFeatureTheme m_continuityLineTheme;
-
-  private IKalypsoFeatureTheme m_flowRelationsTheme;
-
   private IFEDiscretisationModel1d2d m_discModel;
+
+  private boolean m_snappingActive;
 
   @SuppressWarnings("unchecked")
   private IFE1D2DNode m_snapNode;
@@ -98,10 +87,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     m_mapModell = mapPanel.getMapModell();
     m_nodeTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     gridPointCollector.setNodeTheme( m_nodeTheme );
-    m_polyElementTheme = UtilMap.findEditableTheme( m_mapModell, IPolyElement.QNAME );
-    m_edgeTheme = UtilMap.findEditableTheme( m_mapModell, IFE1D2DEdge.QNAME );
-    m_continuityLineTheme = UtilMap.findEditableTheme( m_mapModell, IFELine.QNAME );
-    m_flowRelationsTheme = UtilMap.findEditableTheme( m_mapModell, IBoundaryCondition.QNAME );
 
     m_discModel = UtilMap.findFEModelTheme( m_mapModell );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
@@ -147,27 +132,10 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     if( gridPointCollector.getHasAllSides() )
     {
-      // gridPointCollector.selectPoint( lowerCorner, upperCorner );
-      final int centerX = (int) p.getX();
-      final int centerY = (int) p.getY();
-
-      final int halfWidth = m_radius / 2;
-      final Point lower = new Point( centerX - halfWidth, centerY - halfWidth );
-
       final MapPanel mapPanel = getMapPanel();
-      final GM_Point gmLower = MapUtilities.transform( mapPanel, lower );
-      final GM_Point selectedPoint = gridPointCollector.getSelectedPoint();
-      gridPointCollector.selectPoint( gmLower, MapUtilities.calculateWorldDistance( mapPanel, gmLower, m_radius * 2 ) );
-      final GM_Point newSelectedPoint = gridPointCollector.getSelectedPoint();
-      if( !ObjectUtils.equals( selectedPoint, newSelectedPoint ) )
-      {
-        // TODO: check if this repaint is necessary for the widget
-        final MapPanel panel = getMapPanel();
-        if( panel != null )
-          panel.repaint();
-      }
+      final GM_Point point = MapUtilities.transform( mapPanel, p );
+      gridPointCollector.selectPoint( point, MapUtilities.calculateWorldDistance( mapPanel, point, m_radius ) );
     }
-    // TODO: check if this repaint is really necessary
     final MapPanel panel = getMapPanel();
     if( panel != null )
     {
@@ -198,25 +166,26 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     if( p == null )
       return;
 
-    // TODO: check if this repaint is really necessary
     final MapPanel panel = getMapPanel();
     if( panel != null )
     {
       panel.repaint();
-
       checkGrid( panel );
-    }
 
-    try
-    {
-      final GM_Point currentPos = MapUtilities.transform( getMapPanel(), m_currentPoint );
-
-      gridPointCollector.addPoint( currentPos );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      try
+      {
+        GM_Point currentPos;
+        if( newNode instanceof IFE1D2DNode )
+          currentPos = ((IFE1D2DNode) newNode).getPoint();
+        else
+          currentPos = MapUtilities.transform( panel, m_currentPoint );
+        gridPointCollector.addPoint( currentPos );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
   }
 
@@ -228,10 +197,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   {
     gridPointCollector.finishSide();
   }
-
-  private Point draggedPoint;
-
-  private boolean m_snappingActive;
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
@@ -251,16 +216,20 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     {
       if( gridPointCollector.getHasAllSides() )
       {
-        if( isSamePoint( m_currentPoint, gridPointCollector.getSelectedPoint(), m_radius * 2, getMapPanel().getProjection() ) || true )// TODO
+        if( isSamePoint( m_currentPoint, gridPointCollector.getSelectedPoint(), m_radius * 2, getMapPanel().getProjection() ) || true )
         {
-          final GM_Point nextPoint = MapUtilities.transform( getMapPanel(), m_currentPoint );
-          gridPointCollector.changeSelectedPoint( nextPoint );
+          GM_Point point;
+          if( newNode instanceof IFE1D2DNode )
+            point = ((IFE1D2DNode) newNode).getPoint();
+          else
+            point = MapUtilities.transform( getMapPanel(), m_currentPoint );
+
+          gridPointCollector.changeSelectedPoint( point );
           getMapPanel().repaint();
         }
       }
       else
       {
-        draggedPoint = p;
         final GM_Point lastSaved = gridPointCollector.getLastPoint();
         if( !isSamePoint( p, lastSaved, m_radius, getMapPanel().getProjection() ) )
         {
@@ -288,7 +257,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     if( panel != null )
     {
       panel.repaint();
-
       checkGrid( panel );
     }
   }

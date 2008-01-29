@@ -57,7 +57,6 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -83,17 +82,11 @@ public class LinePointCollector
 
   private CS_CoordinateSystem m_crs;
 
-  private boolean isFinished = false;
-
-  private boolean isSelected = false;
-
-  private int[][] drawPoints;
+  private boolean m_isSelected = false;
 
   private final int highlightDeltaX = 1;
 
-  // private int pointRectSize = 6;
-
-  private int selection = -1;
+  private int m_selection = -1;
 
   /**
    * The constructor.
@@ -140,10 +133,7 @@ public class LinePointCollector
     if( ((m_points.size() == m_cnt_points) && m_cnt_points != 0) || (m_cnt_points == 0) )
     {
       m_cnt_points = m_points.size();
-      isFinished = true;
       return getLastPoint();
-      // FIXME changed to prevent the curve geometry not to be drawn
-      // return createGeometry( poses );
     }
     else
     {
@@ -151,14 +141,6 @@ public class LinePointCollector
       return null;
     }
 
-  }
-
-  /**
-   * This function creates the geometry (GM_Curve).
-   */
-  private GM_Object createGeometry( final GM_Position[] poses ) throws GM_Exception
-  {
-    return GeometryFactory.createGM_Curve( poses, m_crs );
   }
 
   /**
@@ -173,7 +155,7 @@ public class LinePointCollector
     if( !m_points.isEmpty() )
     {
 
-      if( isSelected )
+      if( m_isSelected )
       {
         final int[][] points = getPointArrays( projection, null );
         final int[][] polygonPoints = toPolygonPoints( points, highlightDeltaX );
@@ -181,7 +163,7 @@ public class LinePointCollector
         g.drawPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
         g.fillPolygon( polygonPoints[0], polygonPoints[1], polygonPoints[0].length );
 
-        drawHandles( g, points[0], points[1], pointRectSize, selection );
+        drawHandles( g, points[0], points[1], pointRectSize, m_selection );
       }
       else
       {
@@ -193,14 +175,7 @@ public class LinePointCollector
         /* Paint a linestring. */
         g.drawPolyline( arrayX, arrayY, arrayX.length );
 
-        // paintLine(g, projection, width , color );
-        // if(!isFinished)
-        // {
-        // do not draw handle if finish and not selected
-        drawHandles( g, arrayX, arrayY, pointRectSize, selection );
-        // }
-
-        drawPoints = points;
+        drawHandles( g, arrayX, arrayY, pointRectSize, m_selection );
       }
     }
   }
@@ -302,15 +277,13 @@ public class LinePointCollector
   void clear( )
   {
     m_points.clear();
-    isFinished = false;
     m_cnt_points = 0;
   }
 
   void reset( final CS_CoordinateSystem crs )
   {
     m_points.clear();
-    isFinished = false;
-    isSelected = false;
+    m_isSelected = false;
     m_cnt_points = 0;
     m_crs = crs;
   }
@@ -331,8 +304,6 @@ public class LinePointCollector
         m_points.remove( index );
       }
     }
-
-    isFinished = false;
   }
 
   /**
@@ -465,24 +436,24 @@ public class LinePointCollector
 
   public void changeSelected( final GM_Point point )
   {
-    if( selection >= 0 )
+    if( m_selection >= 0 )
     {
       // m_points.set( selection, point );
-      m_points.get( selection ).setPoint( point );
+      m_points.get( m_selection ).setPoint( point );
 
     }
     else
     {
-      System.out.println( "selection=" + selection ); //$NON-NLS-1$
+      System.out.println( "selection=" + m_selection ); //$NON-NLS-1$
     }
 
   }
 
   public GM_Point getSelectedPoint( )
   {
-    if( selection >= 0 )
+    if( m_selection >= 0 )
     {
-      return m_points.get( selection );
+      return m_points.get( m_selection );
     }
     else
     {
@@ -498,49 +469,14 @@ public class LinePointCollector
 
   public void clearSelection( )
   {
-    selection = -1;
-  }
-
-  private int selectPoint( final GM_Point lowerCorner, final GM_Point upperCorner )
-  {
-    if( !isSelected )
-    {
-      selection = -1;
-      return -1;
-    }
-
-    final double lowX = lowerCorner.getX();
-    final double lowY = lowerCorner.getY();
-
-    final double upperX = upperCorner.getX();
-    final double upperY = upperCorner.getY();
-
-    final int SIZE = m_points.size();
-    GM_Point curPoint;
-    double curCoordY, curCoordX;
-    for( int i = 0; i < SIZE; i++ )
-    {
-      curPoint = m_points.get( i );
-      curCoordX = curPoint.getX();
-      if( lowX <= curCoordX && upperX >= curCoordX )
-      {
-        curCoordY = curPoint.getY();
-        if( lowY <= curCoordY && upperY >= curCoordY )
-        {
-          selection = i;
-          return i;
-        }
-      }
-    }
-    selection = -1;
-    return -1;
+    m_selection = -1;
   }
 
   public int selectPoint( final GM_Point lowerCorner, final double squareWidth )
   {
-    if( !isSelected )
+    if( !m_isSelected )
     {
-      selection = -1;
+      m_selection = -1;
       return -1;
     }
 
@@ -551,19 +487,17 @@ public class LinePointCollector
     final double upperX = lowX + squareWidth;
     final double upperY = lowY + squareWidth;
 
-    final int SIZE = m_points.size();
-    GM_Point curPoint;
-    double curCoordY, curCoordX;
     final double distance = Double.MAX_VALUE;
     int nextSel = -1;
 
-    for( int i = 0; i < SIZE; i++ )
+    for( int i = 0; i < m_points.size(); i++ )
     {
-      curPoint = m_points.get( i );
-      curCoordX = curPoint.getX();
+      GM_Point curPoint = m_points.get( i );
+      final double curCoordX = curPoint.getX();
       if( lowX <= curCoordX && upperX >= curCoordX )
       {
-        curCoordY = curPoint.getY();
+        final double curCoordY = curPoint.getY();
+
         if( lowY <= curCoordY && upperY >= curCoordY )
         {
           if( distance > curPoint.distance( lowerCorner ) )
@@ -575,8 +509,8 @@ public class LinePointCollector
       }
     }
 
-    selection = nextSel;
-    return selection;
+    m_selection = nextSel;
+    return m_selection;
   }
 
   /**
@@ -588,10 +522,10 @@ public class LinePointCollector
    */
   public void setSelected( boolean isSelected )
   {
-    this.isSelected = isSelected;
+    m_isSelected = isSelected;
     if( !isSelected )
     {
-      selection = -1;
+      m_selection = -1;
     }
   }
 
@@ -611,9 +545,10 @@ public class LinePointCollector
 
   public boolean isSelected( )
   {
-    return isSelected;
+    return m_isSelected;
   }
 
+  @SuppressWarnings("unchecked")
   public void paintLine( final Graphics g, final GeoTransform projection, final double width, final Color color )
   {
     final GM_Position[] positions = new GM_Position[m_points.size()];
@@ -637,7 +572,6 @@ public class LinePointCollector
 
       stroke.setWidth( width );
       stroke.setStroke( color );
-      // stroke.setDashArray( dArray );
       symb.setStroke( stroke );
 
       final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );

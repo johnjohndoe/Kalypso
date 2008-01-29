@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -58,8 +59,11 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
@@ -77,13 +81,17 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -112,6 +120,8 @@ public class TempGrid
   private final boolean m_ignoreZCoordinate;
 
   private double m_searchRectWidth;
+
+  private IKalypsoFeatureTheme m_nodeTheme;
 
   /**
    * Create a temp grid, with a transformation into a model accepting the all coordinate of the grid points.
@@ -189,10 +199,13 @@ public class TempGrid
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
-    final Color grey = new Color( 100, 100, 100 );
+
+    Color color = new Color( 100, 100, 100 ); // default is it set to green
+    if( isValid() != Status.OK_STATUS )
+      color = new Color( 255, 100, 100 );
 
     stroke.setWidth( 1 );
-    stroke.setStroke( grey );
+    stroke.setStroke( color );
     symb.setStroke( stroke );
     DisplayElement de;
 
@@ -220,6 +233,11 @@ public class TempGrid
         de.paint( g, projection, new NullProgressMonitor() );
       }
     }
+  }
+
+  public IStatus isValid( )
+  {
+    return checkElements();
   }
 
   /**
@@ -251,13 +269,23 @@ public class TempGrid
    * @throws IllegalArgumentException
    *             if one the the side point collector is null
    */
-  public void setTempGrid( final LinePointCollector topSidePoints, final LinePointCollector bottomSidePoints, final LinePointCollector leftSidePoints, final LinePointCollector rightSidePoints ) throws GM_Exception
+  public IStatus setTempGrid( final LinePointCollector topSidePoints, final LinePointCollector bottomSidePoints, final LinePointCollector leftSidePoints, final LinePointCollector rightSidePoints )
   {
     Assert.throwIAEOnNullParam( topSidePoints, "topSidePoints" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( bottomSidePoints, "bottomSidePoints" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" ); //$NON-NLS-1$
-    m_gridPoints = computeMesh( topSidePoints, bottomSidePoints, leftSidePoints, rightSidePoints );
+
+    try
+    {
+      m_gridPoints = computeMesh( topSidePoints, bottomSidePoints, leftSidePoints, rightSidePoints );
+      return Status.OK_STATUS;
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return StatusUtilities.statusFromThrowable( e, "Griderzeugung fehlgeschlagen." );
+    }
   }
 
   /**
@@ -370,6 +398,49 @@ public class TempGrid
   }
 
   @SuppressWarnings("unchecked")
+  private IStatus checkElements( )
+  {
+    if( m_nodeTheme == null )
+      return StatusUtilities.createErrorStatus( "kein Knotenthema vorhanden, daher keine Netzprüfung." );
+    try
+    {
+      final IFEDiscretisationModel1d2d discModel = DiscretisationModelUtils.modelForTheme( m_nodeTheme );
+      List<GM_Ring> rings = getRingsFromPoses();
+      for( GM_Ring ring : rings )
+      {
+        // 4) New Element self-intersects
+        if( GeometryUtilities.isSelfIntersecting( ring.getPositions() ) )
+          return StatusUtilities.createErrorStatus( "Ungültiges Polygon: selbstschneidend" );
+
+        // New Element intersects other elements
+        final GM_Surface<GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, null, KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+        final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
+        for( final IFE1D2DElement element : elements )
+        {
+          if( element instanceof IElement2D )
+          {
+            final GM_Surface<GM_SurfacePatch> eleGeom = ((IElement2D) element).getGeometry();
+            if( eleGeom.intersects( newSurface ) )
+            {
+              final GM_Object intersection = eleGeom.intersection( newSurface );
+              if( intersection instanceof GM_Surface )
+                return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
+            }
+          }
+        }
+      }
+      return Status.OK_STATUS;
+    }
+    catch( GM_Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    return Status.OK_STATUS;
+  }
+
+  @SuppressWarnings("unchecked")
   private List<GM_Ring> getRingsFromPoses( ) throws GM_Exception
   {
     // TODO: here we can implement some nice checkies!
@@ -413,7 +484,7 @@ public class TempGrid
         if( i != j )
         {
           final double distance = poses[i].getDistance( poses[j] );
-          if( distance < m_searchRectWidth && !posToDeleteList.contains( poses[j] ) )
+          if( distance < 2 * m_searchRectWidth && !posToDeleteList.contains( poses[j] ) )
           {
             posToDeleteList.add( poses[i] );
           }
@@ -457,5 +528,10 @@ public class TempGrid
     final GeometryFactory geometryFactory = new GeometryFactory();
     final LineString lineString = geometryFactory.createLineString( coordinates );
     return lineString;
+  }
+
+  public void setNodeTheme( IKalypsoFeatureTheme nodeTheme )
+  {
+    m_nodeTheme = nodeTheme;
   }
 }
