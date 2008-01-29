@@ -48,12 +48,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -107,6 +107,10 @@ public class Control1D2DConverter
   private final IControlModel1D2D m_controlModel;
 
   private final IRoughnessClsCollection m_roughnessModel;
+
+  private final Map<String, TupleResultIndex> m_BCTupleResultIndexCache = new HashMap<String, TupleResultIndex>();
+
+  private boolean m_isBCTupleResultIndexCached = false;
 
   public Control1D2DConverter( final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider )
   {
@@ -224,6 +228,7 @@ public class Control1D2DConverter
     if( m_controlModel.getVegeta() )
       formatter.format( "VEGETA%n" ); //$NON-NLS-1$
 
+    formatter.format( "ENERGY%n" ); //$NON-NLS-1$
     formatter.format( "KAL_BC%n" ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
@@ -377,19 +382,18 @@ public class Control1D2DConverter
         /* Unsteady state: a block for each time step */
 
         // TODO: check for right time zone
-        // As we are using UTC for all our timeseries, this is the timezone that should be used here
-        final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone( "UTC" );
-
+        // // As we are using UTC for all our timeseries, this is the timezone that should be used here
+        // final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone( "UTC" );
         XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( componentTime );
         Calendar lastStepCal = cal.toGregorianCalendar();
-        lastStepCal.setTimeZone( DEFAULT_TIMEZONE );
+        // lastStepCal.setTimeZone( DEFAULT_TIMEZONE );
         int stepCount = 1;
         for( ; iterator.hasNext(); stepCount++ )
         {
           final IRecord record = iterator.next();
           final float uRVal = ((BigDecimal) record.getValue( componentRelaxationsFaktor )).floatValue();
           final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( componentTime )).toGregorianCalendar();
-          stepCal.setTimeZone( DEFAULT_TIMEZONE );
+          // stepCal.setTimeZone( DEFAULT_TIMEZONE );
           final String unsteadyMsg = String.format( Messages.getString( "Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
           writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
 
@@ -439,12 +443,12 @@ public class Control1D2DConverter
       timeStepInterval = kalypsoCalendarStep.getTimeInMillis() - kalypsoCallendarPreviousStep.getTimeInMillis();
       // if timeStepInterval is zero, step will be ignored
       // (this will happen on summertime to wintertime transition)
-      if(timeStepInterval == 0)
+      if( timeStepInterval == 0 )
       {
         formatter.format( "com Summertime/Wintertime transition; repeated step ignored%n" );
         return;
       }
-      
+
       timeStepHours = (double) timeStepInterval / (60 * 60 * 1000);
       ihre = getTimeInPercentage( kalypsoCalendarStep );
     }
@@ -505,10 +509,32 @@ public class Control1D2DConverter
   }
 
   /**
+   * For big timeseries, creating TupleResultIndex for every time step is extremely slow. Cacheing those indexes for
+   * performances reason is nesessary.
+   */
+  private void cacheBCTupleResultIndexes( )
+  {
+    m_BCTupleResultIndexCache.clear();
+    for( final IBoundaryCondition boundaryCondition : m_unitBoundaryConditions )
+    {
+      if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D ) || boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
+      {
+        final IObservation<TupleResult> obs = boundaryCondition.getObservation();
+        final TupleResult obsResult = obs.getResult();
+        final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+        m_BCTupleResultIndexCache.put( boundaryCondition.getGmlID(), new TupleResultIndex( obsResult, timeComponent ) );
+      }
+    }
+    m_isBCTupleResultIndexCached = true;
+  }
+
+  /**
    * Formats the lines for one type of boundary condition (QC or HC or ... ).
    */
   private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final String bcAbscissaComponentType, final String bcOrdinateComponentType ) throws IOException
   {
+    if( !m_isBCTupleResultIndexCached )
+      cacheBCTupleResultIndexes();
     for( final IBoundaryCondition boundaryCondition : m_unitBoundaryConditions )
     {
       if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D ) || boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
@@ -530,15 +556,15 @@ public class Control1D2DConverter
         {
           if( stepCal != null )
           {
-            final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-            final TupleResultIndex tupleResultIndex = new TupleResultIndex( obsResult, timeComponent );
+            final TupleResultIndex tupleResultIndex = m_BCTupleResultIndexCache.get( boundaryCondition.getGmlID() );
             final Number result = (Number) tupleResultIndex.getValue( ordinateComponent, stepCal.getTime() );
             stepValue = (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
           }
           else
             stepValue = boundaryCondition.getStationaryCondition();
 
-          if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE) && boundaryCondition.isAbsolute() == null )
+          if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE )
+              && (boundaryCondition.isAbsolute() == null) )
           {
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
             formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
@@ -553,8 +579,15 @@ public class Control1D2DConverter
           {
             formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 0.000, 20.000 );
           }
-          else if( (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ))
-              || (bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )))
+          else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D )
+              && boundaryCondition.getParentElementID().startsWith( "Element1D" ) )
+          {
+            final Boolean isAbsoluteProperty = boundaryCondition.isAbsolute();
+            final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
+            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 0.0, 20.000 );
+          }
+          else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )
+              && !boundaryCondition.getParentElementID().startsWith( "Element1D" ) )
           {
             final Boolean isAbsoluteProperty = boundaryCondition.isAbsolute();
             final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
