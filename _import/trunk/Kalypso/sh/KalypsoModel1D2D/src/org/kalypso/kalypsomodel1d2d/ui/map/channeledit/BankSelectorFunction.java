@@ -123,8 +123,16 @@ public class BankSelectorFunction implements IRectangleMapFunction
       final Feature feature = FeatureHelper.getFeature( workspace, o );
 
       final GM_MultiCurve multiline = (GM_MultiCurve) feature.getDefaultGeometryProperty();
-      if( multiline.getSize() > 1 )
+      if( multiline == null )
+      {
+        SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion nicht möglich. Überprüfen Sie bitte Ihre Eingangsdaten." );
         return;
+      }
+      if( multiline.getSize() > 1 )
+      {
+        SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion fehlgeschlagen. Linie nicht zusammenhängend." );
+        return;
+      }
       final GM_Curve line = multiline.getCurveAt( 0 );
 
       try
