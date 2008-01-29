@@ -128,6 +128,8 @@ public class RMA10S2GmlConv
     final LineNumberReader lnReader = new LineNumberReader( reader );
     for( String line = lnReader.readLine(); line != null; line = lnReader.readLine() )
     {
+      if( m_monitor.isCanceled() )
+        return;
       if( traceProgress && (++numberOfLinesProcessed == m_monitorStep) )
       {
         numberOfLinesProcessed = 0;
