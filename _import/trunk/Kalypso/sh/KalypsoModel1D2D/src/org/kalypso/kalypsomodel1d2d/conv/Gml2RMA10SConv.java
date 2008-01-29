@@ -52,10 +52,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.vecmath.Vector3d;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
@@ -413,12 +410,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
               }
               final GM_Point point2 = node2.getPoint();
               final double vx1 = point2.getX() - x0;
-              final double vy1 = point2.getY() - y0;              
+              final double vy1 = point2.getY() - y0;
               final double magnitude = vx0 * vy1 - vy0 * vx1;
               if( magnitude > 0 )
               {
                 // positive cross product
-                if(leftElement == null) 
+                if( leftElement == null )
                   leftElement = element;
                 else
                   System.out.println();
@@ -635,7 +632,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     if( elementsInBBox.size() == 0 )
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Das Modell enthält keine Elemente. Berechnung nicht möglich.", null ) );
-    
+
     for( final IFE1D2DElement element : elementsInBBox )
     {
       // TODO: shouldn't the check for calculation unit always happens? -> So export is per calculation unit?
@@ -680,7 +677,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         // TODO: find 1D-calc unit in which this element resides
         // TODO write new lp line
         final ICalculationUnit1D calcUnit1D = find1dCalcUnit( m_calculationUnit, element1D );
-        if( calcUnit1D != null )
+        if( calcUnit1D != null && building == null )
         {
           final int interpolationCount = calcUnit1D.getInterpolationCount();
           formatter.format( "IP%10d%10d%n", id, interpolationCount );
@@ -690,7 +687,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       {
         for( final IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
         {
-           edgeSet.add( edge );
+          edgeSet.add( edge );
         }
 
         final int roughnessID = m_roughnessIDProvider == null ? 0 : getRoughnessID( element );
