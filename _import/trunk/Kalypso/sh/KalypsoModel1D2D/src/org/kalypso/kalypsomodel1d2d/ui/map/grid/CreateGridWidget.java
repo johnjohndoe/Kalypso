@@ -1,5 +1,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -15,7 +16,13 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -27,10 +34,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -50,6 +54,25 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   private final int m_radius = 20;
 
   private final IWidget m_delegateWidget = null;
+
+  private PointSnapper m_pointSnapper;
+
+  private IMapModell m_mapModell;
+
+  private IKalypsoFeatureTheme m_nodeTheme;
+
+  private IKalypsoFeatureTheme m_polyElementTheme;
+
+  private IKalypsoFeatureTheme m_edgeTheme;
+
+  private IKalypsoFeatureTheme m_continuityLineTheme;
+
+  private IKalypsoFeatureTheme m_flowRelationsTheme;
+
+  private IFEDiscretisationModel1d2d m_discModel;
+
+  @SuppressWarnings("unchecked")
+  private IFE1D2DNode m_snapNode;
 
   public CreateGridWidget( )
   {
@@ -71,25 +94,57 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       reinit();
       isActivated = true;
     }
+
+    m_mapModell = mapPanel.getMapModell();
+    m_nodeTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    gridPointCollector.setNodeTheme( m_nodeTheme );
+    m_polyElementTheme = UtilMap.findEditableTheme( m_mapModell, IPolyElement.QNAME );
+    m_edgeTheme = UtilMap.findEditableTheme( m_mapModell, IFE1D2DEdge.QNAME );
+    m_continuityLineTheme = UtilMap.findEditableTheme( m_mapModell, IFELine.QNAME );
+    m_flowRelationsTheme = UtilMap.findEditableTheme( m_mapModell, IBoundaryCondition.QNAME );
+
+    m_discModel = UtilMap.findFEModelTheme( m_mapModell );
+    m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
+
   }
 
   private final void reinit( )
   {
-    // m_builder = null;
-
     CS_CoordinateSystem targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
     if( targetCrs == null )
       targetCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
-    // m_builder = new LineGeometryBuilder( 0, targetCrs );
-    gridPointCollector.reset( targetCrs );// SideToBuild( targetCrs );
-
+    gridPointCollector.reset( targetCrs );
   }
 
+  @SuppressWarnings("unchecked")
+  private Object checkNewNode( final Point p )
+  {
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return null;
+
+    final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
+
+    if( m_snappingActive )
+      m_snapNode = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
+
+    final Object newNode = m_snapNode == null ? currentPoint : m_snapNode;
+
+    return newNode;
+  }
+
+  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
-    m_currentPoint = p;
+    Object newNode = checkNewNode( p );
+
+    if( newNode instanceof IFE1D2DNode )
+      m_currentPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
+    else
+      m_currentPoint = p;
+
     if( gridPointCollector.getHasAllSides() )
     {
       // gridPointCollector.selectPoint( lowerCorner, upperCorner );
@@ -106,36 +161,54 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       final GM_Point newSelectedPoint = gridPointCollector.getSelectedPoint();
       if( !ObjectUtils.equals( selectedPoint, newSelectedPoint ) )
       {
-        System.out.println( "selected On moved=" + gridPointCollector.getSelectedPoint() ); //$NON-NLS-1$
         // TODO: check if this repaint is necessary for the widget
         final MapPanel panel = getMapPanel();
         if( panel != null )
           panel.repaint();
       }
     }
-    // TODO: check if this repaint is necessary for the widget
+    // TODO: check if this repaint is really necessary
     final MapPanel panel = getMapPanel();
     if( panel != null )
+    {
       panel.repaint();
+
+      checkGrid( panel );
+    }
   }
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void leftClicked( final Point p )
   {
-    System.out.println( "Click=" + p ); //$NON-NLS-1$
+    final Object newNode = checkNewNode( p );
+    if( newNode instanceof IFE1D2DNode )
+      m_currentPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
+    else
+      m_currentPoint = p;
+
+    if( newNode == null )
+      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
+    else
+      getMapPanel().setCursor( Cursor.getDefaultCursor() );
+
+    if( p == null )
+      return;
+
+    // TODO: check if this repaint is really necessary
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
+    {
+      panel.repaint();
+
+      checkGrid( panel );
+    }
+
     try
     {
-      // if( m_builder != null )
-      // {
-      // final GM_Point currentPos =
-      // MapUtilities.transform( getMapPanel(), m_currentPoint );
-      //
-      // m_builder.addPoint( currentPos );
-      // }
-
       final GM_Point currentPos = MapUtilities.transform( getMapPanel(), m_currentPoint );
 
       gridPointCollector.addPoint( currentPos );
@@ -153,66 +226,43 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void doubleClickedLeft( final Point p )
   {
-    try
-    {
-      // final GM_Curve curve = (GM_Curve) m_builder.finish();
-      gridPointCollector.finishSide();
-      System.out.println( "DoubleClick:" + p ); //$NON-NLS-1$
-      // validate geometry: doppelte punkte
-    }
-    catch( final Exception e )
-    {
-
-    }
-    finally
-    {
-      // reinit();
-    }
+    gridPointCollector.finishSide();
   }
 
   private Point draggedPoint;
 
+  private boolean m_snappingActive;
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void dragged( final Point p )
   {
-    m_currentPoint = p;
+    Object newNode = checkNewNode( p );
+
+    if( newNode instanceof IFE1D2DNode )
+      m_currentPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
+    else
+      m_currentPoint = p;
+
     try
     {
       if( gridPointCollector.getHasAllSides() )
       {
-        final GM_Point selectedPoint = gridPointCollector.getSelectedPoint();
-        if( selectedPoint != null )
+        if( isSamePoint( m_currentPoint, gridPointCollector.getSelectedPoint(), m_radius * 2, getMapPanel().getProjection() ) || true )// TODO
         {
-          // System.out.println( "HasAllSides:" + selectedPoint.getX() + " " + selectedPoint.getY() );
-        }
-        if( isSamePoint( p, gridPointCollector.getSelectedPoint(), m_radius * 2, getMapPanel().getProjection() ) || true )// TODO
-        // remove
-        // true
-        {
-          System.out.println( "HasAllSides:dragged change posted" ); //$NON-NLS-1$
-          final GM_Point nextPoint = MapUtilities.transform( getMapPanel(), p );
+          final GM_Point nextPoint = MapUtilities.transform( getMapPanel(), m_currentPoint );
           gridPointCollector.changeSelectedPoint( nextPoint );
           getMapPanel().repaint();
-        }
-        else
-        {
-          // System.out.println( "HasAllSides: no dragged change posted" );
         }
       }
       else
       {
         draggedPoint = p;
-        // System.out.println( "Dragged point=" + p );
         final GM_Point lastSaved = gridPointCollector.getLastPoint();
-        final GeoTransform transform = getMapPanel().getProjection();
-        if( isSamePoint( p, lastSaved, m_radius, getMapPanel().getProjection() ) )
-        {
-
-        }
-        else if( isSamePoint( m_currentPoint, p, m_radius ) )
+        if( !isSamePoint( p, lastSaved, m_radius, getMapPanel().getProjection() ) )
         {
           m_currentPoint = p;
           // TODO: check if this repaint is really necessary
@@ -236,17 +286,27 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     // TODO: check if this repaint is really necessary
     final MapPanel panel = getMapPanel();
     if( panel != null )
+    {
       panel.repaint();
 
+      checkGrid( panel );
+    }
+  }
+
+  private void checkGrid( final MapPanel panel )
+  {
+    final IStatus status = gridPointCollector.isValid();
+    if( status.isOK() )
+      panel.setMessage( "" );
+    else
+      panel.setMessage( status.getMessage() );
   }
 
   public static final boolean isSamePoint( final Point ref, final GM_Point toCompare, final int m_radius, final GeoTransform transform )
   {
     Assert.throwIAEOnNull( transform, Messages.getString( "CreateGridWidget.6" ) ); //$NON-NLS-1$
     if( ref == null || toCompare == null )
-    {
       return false;
-    }
     else
     {
       final int x = (int) transform.getDestX( toCompare.getX() );
@@ -259,14 +319,11 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   public static final boolean isSamePoint( final Point ref, final Point toCompare, final int m_radius )
   {
     if( ref == null )
-    {
       return false;
-    }
     else
     {
       return (toCompare.getX() > (ref.getX() - m_radius)) && (toCompare.getY() > (ref.getY() - m_radius)) && (toCompare.getX() < (ref.getX() + m_radius))
           && (toCompare.getY() < (ref.getY() + m_radius));
-
     }
   }
 
@@ -278,30 +335,19 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   {
     final Point currentPoint = m_currentPoint;
 
-    // if( currentPoint != null )
-    // {
-    // if( m_builder != null )
-    // m_builder.paint( g, getMapPanel().getProjection(), currentPoint );
-    // g.drawRect( (int) currentPoint.getX() - 10, (int) currentPoint.getY() - 10, 20, 20 );
-    // }
-
     if( currentPoint != null )
     {
       gridPointCollector.paint( g, getMapPanel().getProjection(), currentPoint );
+
       // TODO check what it is doing
       LinePointCollectorConfig currentLPCConfig = gridPointCollector.getCurrentLPCConfig();
       if( currentLPCConfig == null )
-      {
         currentLPCConfig = gridPointCollector.getSideconfigsAsArray()[0];
-      }
 
-      final int pointRectSize = currentLPCConfig.getPointRectSize();
-      final int pointRectSizeHalf = pointRectSize / 2;
-      // g.drawRect( (int) currentPoint.getX() - pointRectSizeHalf, (int) currentPoint.getY() - pointRectSizeHalf,
-      // pointRectSize, pointRectSize );
-
+      /* paint the snap */
+      if( m_pointSnapper != null )
+        m_pointSnapper.paint( g );
     }
-
   }
 
   public static final char ESC = 0X01B;
@@ -313,148 +359,12 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    final int code = e.getKeyCode();
 
     final MapPanel mapPanel = getMapPanel();
 
-    // TODO:
-    // zoom in "-"
+    if( e.getKeyCode() == KeyEvent.VK_SHIFT )
+      m_snappingActive = true;
 
-    if( e.isActionKey() )
-    {
-      System.out.println( "e:" + e ); //$NON-NLS-1$
-    }
-    /* zoom in */
-    if( code == KeyEvent.VK_PLUS )
-    {
-      // if( e.isShiftDown() )
-      // {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 10;
-      final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 10;
-      final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
-      final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 10;
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-
-      // }
-      // else
-      // {
-      // mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
-      // }
-
-    }
-    /* zoom out */
-    else if( code == KeyEvent.VK_MINUS )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
-      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 10;
-      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 10;
-      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 10;
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
-
-    // pan "arrows
-    else if( code == KeyEvent.VK_RIGHT )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 20;
-      final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 20;
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
-      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
-    else if( code == KeyEvent.VK_LEFT )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
-      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
-      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
-    else if( code == KeyEvent.VK_UP )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 20;
-      final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 20;
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
-      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
-    else if( code == KeyEvent.VK_DOWN )
-    {
-      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-      GM_Envelope wishBBox = null;
-
-      final GM_Position currentMax = currentBBox.getMax();
-      final GM_Position currentMin = currentBBox.getMin();
-
-      final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 20;
-      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 20;
-
-      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
-      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
-
-      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-
-      mapPanel.setBoundingBox( wishBBox );
-    }
     if( m_delegateWidget != null )
       m_delegateWidget.keyPressed( e );
 

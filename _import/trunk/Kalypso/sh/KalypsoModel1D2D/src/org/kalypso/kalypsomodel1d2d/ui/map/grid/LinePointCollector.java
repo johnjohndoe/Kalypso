@@ -114,26 +114,20 @@ public class LinePointCollector
     m_crs = targetCrs;
   }
 
-  public GM_Object addPoint( GM_Point p ) throws Exception
+  public GM_Object addPoint( GM_Point p )
   {
     if( !(p instanceof MutableGMPoint) )
-    {
       p = new MutableGMPoint( p );
-    }
 
     m_points.add( (MutableGMPoint) p );
 
     if( m_points.size() == m_cnt_points )
-    {
       return finish();
-    }
     else
-    {
       return null;
-    }
   }
 
-  public GM_Object finish( ) throws Exception
+  public GM_Object finish( )
   {
     final int size = m_points.size();
 
@@ -173,10 +167,6 @@ public class LinePointCollector
    */
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint, final int pointRectSize )
   {
-
-    // Color curColor=g.getColor();
-    // g.setColor( Color.BLUE );
-
     // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
@@ -644,9 +634,7 @@ public class LinePointCollector
 
       Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
       defaultstroke = symb.getStroke();
-      // float[] dArray = new float[3];
-      // dArray[0] = 6;
-      // dArray[1] = 3;
+
       stroke.setWidth( width );
       stroke.setStroke( color );
       // stroke.setDashArray( dArray );
@@ -656,6 +644,7 @@ public class LinePointCollector
       de.paint( g, projection, new NullProgressMonitor() );
 
       // Set the Stroke back to default
+      defaultstroke.setWidth( 1 );
       symb.setStroke( defaultstroke );
     }
     catch( final Exception e1 )
@@ -664,5 +653,4 @@ public class LinePointCollector
       e1.printStackTrace();
     }
   }
-
 }
