@@ -44,7 +44,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 
@@ -53,7 +52,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public interface IBuildingFlowRelation extends IFlowRelationship
 {
-  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "BuildingFlowRelation" ); //$NON-NLS-1$
+  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BuildingFlowRelation" ); //$NON-NLS-1$
 
   public static final QName QNAME_PROP_KIND = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "kind" );
 
