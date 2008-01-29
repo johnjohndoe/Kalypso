@@ -1,4 +1,4 @@
-!     Last change:  WP   14 Jan 2008    3:15 pm
+!     Last change:  WP   21 Jan 2008    8:13 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -2011,6 +2011,9 @@ all_arcs: DO i=1,arccnt
       if (ao (arc (i, 5)) + 9999.0 < 1.0e-3) then
         WRITE(lout,*) 'recalculating elevation        '
         ao (arc (i, 5)) = 0.5 * (ao (arc (i, 1)) + ao (arc (i, 2)))
+        if (kmx (arc(i,1)) /= 0.0 .and. kmx (arc(i, 2)) /= 0.0) then
+          kmx (arc (i, 5)) = 0.5 * (kmx (arc (i, 1)) + kmx (arc (i, 2)))
+        end if
       end if
       CYCLE all_arcs
     ELSE
@@ -2028,6 +2031,9 @@ all_arcs: DO i=1,arccnt
         cord (arc(i,5),1) = 0.5 * (cord (arc(i,1),1) + cord (arc(i,2),1) )
         cord (arc(i,5),2) = 0.5 * (cord (arc(i,1),2) + cord (arc(i,2),2) )
           ao (arc(i,5)  ) = 0.5 * (  ao (arc(i,1)  ) +   ao (arc(i,2)  ) )
+        if (kmx (arc(i,1)) /= 0.0 .and. kmx (arc(i, 2)) /= 0.0) then
+          kmx (arc (i, 5)) = 0.5 * (kmx (arc (i, 1)) + kmx (arc (i, 2)))
+        end if
       ENDIF
     ENDIF
   ELSE
@@ -2794,6 +2800,9 @@ do i = 1, statElSz
         cord (nop (i, 2), 2) = 0.5 * (cord (nop (i, 1), 2) + cord (nop (i, 3), 2))
         ao (nop (i, 2)) = 0.5 * (ao (nop (i, 1)) + ao (nop (i, 3)))
         kmWeight (nop (i, 2)) = 0.5 / REAL (IntPolNo (i) + 1, KIND = 8)
+        if (DIST /= 0.0) then
+          kmx (nop (i, 2)) = kmx (nop (i, 1)) + 0.5 * DIST
+        end if
       !generate the middle elements of interpolation, it's first interesting, if there are more than 2 intersections
       elseif (j > 1) then
         NewElt = NewElt + 1
@@ -2826,7 +2835,9 @@ do i = 1, statElSz
         cord (nop (NewElt, 2), 2) = 0.5 * (cord (nop (NewElt, 1), 2) + cord (nop (NewElt, 3), 2))
         ao (NewNode) = 0.5 * (ao (nop (NewElt, 1)) + ao (nop (NewElt, 3)))
         kmWeight (NewNode) = (j - 0.5) / REAL (IntPolNo (i) + 1, KIND = 8)
-
+        if (DIST /= 0.0) then
+          kmx (NewNode) = kmx (nop (i, 1)) + (j - 0.5) * DIST
+        end if
       end if
       !Generate the last element
       if (j == IntPolNo (i) ) then
@@ -2849,6 +2860,9 @@ do i = 1, statElSz
         cord (NewNode, 2) = 0.5 * (cord (nop (NewElt, 1), 2) + cord (nop (NewElt, 3), 2))
         ao (NewNode) = 0.5 * (ao (nop (NewElt, 1)) + ao (nop (NewElt, 3)))
         kmWeight (NewNode) = (j + 0.5) / REAL (IntPolNo (i) + 1, KIND = 8)
+        if (DIST /= 0.0) then
+          kmx (NewNode) = kmx (nop (i, 1)) + (j + 0.5) * DIST
+        end if
       end if
     end do
   end if

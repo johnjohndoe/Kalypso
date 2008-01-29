@@ -1,4 +1,4 @@
-C     Last change:  NIS  13 Jan 2008    3:35 pm
+C     Last change:  WP   28 Jan 2008    4:30 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -789,7 +789,6 @@ CIPK MAR01
       ALLOCATE (qpoly      (1: MaxPolyQ, 1: maxp, 0:12))
       ALLOCATE (alphapoly  (1: MaxPolyB, 1: maxp, 0:12))
       ALLOCATE (betapoly   (1: MaxPolyB, 1: maxp, 0:12))
-      WRITE(*,*) maxpolya, maxpolyq, maxpolyb
       ALLOCATE (polyrangeA (1: maxp, 1: MaxPolyA))
       ALLOCATE (polyrangeQ (1: maxp, 1: MaxPolyQ))
       ALLOCATE (polyrangeB (1: maxp, 1: MaxPolyB))

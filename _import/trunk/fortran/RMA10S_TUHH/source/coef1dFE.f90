@@ -1,4 +1,4 @@
-!Last change:  NIS  13 Jan 2008    7:48 pm
+!Last change:  WP   21 Jan 2008    8:18 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -470,14 +470,14 @@ do i = 1, 2
     qh(n)    = CalcPolynomial (qpoly (PPQ (1), n, 0:12), h)
   else
     !A(h)
-    ah(n)    =          kmWeight (n)  * CalcPolynomial (apoly (PPA (1), NeighProf (n, 1), 0: 12), h) &
-             & + (1.0 - kmWeight (n)) * CalcPolynomial (apoly (PPA (2), NeighProf (n, 2), 0: 12), h)
+    ah(n)    =   (1.0 - kmWeight (n)) * CalcPolynomial (apoly (PPA (1), NeighProf (n, 1), 0: 12), h) &
+             & +        kmWeight (n)  * CalcPolynomial (apoly (PPA (2), NeighProf (n, 2), 0: 12), h)
     ![A(h)]
-    Intah(i) =          kmWeight (n)  * CalcPolynomialIntegral (apoly (PPA (1), NeighProf (n, 1), 0: 12), h) &
-             & + (1.0 - kmWeight (n)) * CalcPolynomialIntegral (apoly (PPA (2), NeighProf (n, 2), 0: 12), h)
+    Intah(i) =   (1.0 - kmWeight (n)) * CalcPolynomialIntegral (apoly (PPA (1), NeighProf (n, 1), 0: 12), h) &
+             & +        kmWeight (n)  * CalcPolynomialIntegral (apoly (PPA (2), NeighProf (n, 2), 0: 12), h)
     !QSch(h)
-    qh(n)    =          kmWeight (n)  * CalcPolynomial (qpoly (PPQ (1), NeighProf (n, 1), 0:12), h) &
-             & + (1.0 - kmWeight (n)) * CalcPolynomial (qpoly (PPQ (2), NeighProf (n, 2), 0:12), h)
+    qh(n)    =   (1.0 - kmWeight (n)) * CalcPolynomial (qpoly (PPQ (1), NeighProf (n, 1), 0:12), h) &
+             & +        kmWeight (n)  * CalcPolynomial (qpoly (PPQ (2), NeighProf (n, 2), 0:12), h)
   endif
 
   !Sf
@@ -513,13 +513,13 @@ do i = 1, 2
       !get the weighting for the calculated value influencing node n
       if (j == 1) then
         if (IntPolProf (n)) then
-          LocalWeight = kmWeight (n)
+          LocalWeight = (1.0 - kmWeight (n))
         else
           LocalWeight = 1.0D0
         end if
       ELSEIF (j == 2) then
         if (IntPolProf (n)) then
-          LocalWeight = (1.0 - kmWeight (n))
+          LocalWeight = kmWeight (n)
         else
           LocalWeight = 0.0D0
         end if
@@ -672,9 +672,9 @@ Gaussloop: DO I = 1, NGP
     if (IntPolProf (n1)) then
       RefNodeN1 = NeighProf (n1, k)
       if (k == 1) then
-        WeightN1 = kmWeight (n1)
+        WeightN1 = 1.0D0 - kmWeight (n1)
       else
-        WeightN1 = 1.0 - kmWeight (n1)
+        WeightN1 = kmWeight (n1)
       endif
     else
       RefNodeN1 = n1
@@ -688,9 +688,9 @@ Gaussloop: DO I = 1, NGP
     if (IntPolProf (n3)) then
       RefNodeN3 = NeighProf (n3, k)
       if (k == 1) then
-        WeightN3 = kmWeight (n3)
+        WeightN3 = 1.0 - kmWeight (n3)
       else
-        WeightN3 = 1.0D0 - kmWeight (n3)
+        WeightN3 = kmWeight (n3)
       end if
     else
       RefNodeN3 = n3

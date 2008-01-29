@@ -1,4 +1,4 @@
-C     Last change:  WP   14 Jan 2008    3:15 pm
+C     Last change:  WP   21 Jan 2008    8:14 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -72,8 +72,9 @@ C-
         do i = 1, maxp
           if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
             do j = 1, 3
-              vel (j, i) = kmWeight(i) * vel (j, NeighProf(i, 1)) +
-     +                  (1.0d0 - kmWeight(i)) * vel (j, NeighProf(i, 2))
+              vel (j, i) =
+     +                (1.0D0 - kmWeight(i)) * vel (j, NeighProf(i, 1)) +
+     +                         kmWeight(i)  * vel (j, NeighProf(i, 2))
             end do
           end if
         end do

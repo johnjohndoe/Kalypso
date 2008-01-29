@@ -1,4 +1,4 @@
-C     Last change:  NIS  13 Jan 2008    7:41 pm
+C     Last change:  WP   28 Jan 2008    4:32 pm
 C     LAST UPDATE JAN 13 2008 modernize structure of subroutine and add for interpolated profiles in polynomial approach
 CIPK  LAST UPDATE JAN 13 2003 ADD MOMENTUM
       SUBROUTINE LNFLO (N, SF_in, QQAL, NEST, LN, ELINX, ELINY)
@@ -65,7 +65,6 @@ CIPK JAN03  ADD MOMENTUM
       IF (NEST /= 0) THEN
         IF (LN == 0) THEN
           SF = SF / TVOLC (N)
-          WRITE(*,*) n, TVOLC (n), SF
         ELSEIF (LN == 1) THEN
           SF = SF / TVOL (N)
         ELSE
