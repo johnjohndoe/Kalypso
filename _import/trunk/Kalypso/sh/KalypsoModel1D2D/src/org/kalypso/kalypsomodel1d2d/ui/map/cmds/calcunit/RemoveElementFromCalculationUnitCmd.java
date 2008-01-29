@@ -46,17 +46,9 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -68,63 +60,58 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
   private final IFE1D2DElement[] elementsToRemove;
+
   private boolean added = false;
+
   private final ICalculationUnit calculationUnit;
+
   private final IFEDiscretisationModel1d2d model1d2d;
-  
-//  @SuppressWarnings("hiding")
-//  public RemoveElementFromCalculationUnitCmd(
-//                      ICalculationUnit1D calculationUnit,
-//                      IElement1D[] elementsToRemove,
-//                      IFEDiscretisationModel1d2d model1d2d )
-//  {
-//    this.calculationUnit = calculationUnit;
-//    this.elementsToRemove = elementsToRemove;
-//    this.model1d2d = model1d2d;
-//  }
-  
-  
-  public RemoveElementFromCalculationUnitCmd(
-      ICalculationUnit calculationUnit,
-      Feature[] elementsToRemove,
-      IFEDiscretisationModel1d2d model1d2d )
+
+  // @SuppressWarnings("hiding")
+  // public RemoveElementFromCalculationUnitCmd(
+  // ICalculationUnit1D calculationUnit,
+  // IElement1D[] elementsToRemove,
+  // IFEDiscretisationModel1d2d model1d2d )
+  // {
+  // this.calculationUnit = calculationUnit;
+  // this.elementsToRemove = elementsToRemove;
+  // this.model1d2d = model1d2d;
+  // }
+
+  public RemoveElementFromCalculationUnitCmd( ICalculationUnit calculationUnit, Feature[] elementsToRemove, IFEDiscretisationModel1d2d model1d2d )
   {
     this.calculationUnit = calculationUnit;
-    this.elementsToRemove = 
-      CalcUnitOps.toAddableElements( calculationUnit, elementsToRemove );
+    this.elementsToRemove = CalcUnitOps.toAddableElements( calculationUnit, elementsToRemove );
     this.model1d2d = model1d2d;
   }
-  
-  public RemoveElementFromCalculationUnitCmd(
-      ICalculationUnit calculationUnit,
-      IFE1D2DElement[] elementsToRemove,
-      IFEDiscretisationModel1d2d model1d2d )
+
+  public RemoveElementFromCalculationUnitCmd( ICalculationUnit calculationUnit, IFE1D2DElement[] elementsToRemove, IFEDiscretisationModel1d2d model1d2d )
   {
     this.calculationUnit = calculationUnit;
-    this.elementsToRemove = 
-      CalcUnitOps.toAddableElements( calculationUnit, elementsToRemove );
+    this.elementsToRemove = CalcUnitOps.toAddableElements( calculationUnit, elementsToRemove );
     this.model1d2d = model1d2d;
   }
-//  public RemoveElementFromCalculationUnitCmd(
-//      ICalculationUnit2D calculationUnit,
-//      IElement2D[] elementsToRemove,
-//      IFEDiscretisationModel1d2d model1d2d )
-//  {
-//    this.calculationUnit = calculationUnit;
-//    this.elementsToRemove = elementsToRemove;
-//    this.model1d2d = model1d2d;
-//  }
-  
-//  public RemoveElementFromCalculationUnitCmd(
-//      ICalculationUnit1D2D calculationUnit,
-//      IFE1D2DElement[] elementsToRemove,
-//      IFEDiscretisationModel1d2d model1d2d )
-//  {
-//    this.calculationUnit = calculationUnit;
-//    this.elementsToRemove = elementsToRemove;
-//    this.model1d2d = model1d2d;
-//  }
-  
+
+  // public RemoveElementFromCalculationUnitCmd(
+  // ICalculationUnit2D calculationUnit,
+  // IElement2D[] elementsToRemove,
+  // IFEDiscretisationModel1d2d model1d2d )
+  // {
+  // this.calculationUnit = calculationUnit;
+  // this.elementsToRemove = elementsToRemove;
+  // this.model1d2d = model1d2d;
+  // }
+
+  // public RemoveElementFromCalculationUnitCmd(
+  // ICalculationUnit1D2D calculationUnit,
+  // IFE1D2DElement[] elementsToRemove,
+  // IFEDiscretisationModel1d2d model1d2d )
+  // {
+  // this.calculationUnit = calculationUnit;
+  // this.elementsToRemove = elementsToRemove;
+  // this.model1d2d = model1d2d;
+  // }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
@@ -161,31 +148,31 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
    * @see org.kalypso.commons.command.ICommand#process()
    */
   public void process( ) throws Exception
-  {  
+  {
 
-    for (IFE1D2DElement element : elementsToRemove){
+    for( IFE1D2DElement element : elementsToRemove )
+    {
       LinksOps.delRelationshipElementAndComplexElement( element, calculationUnit );
     }
     fireProcessChanges();
   }
 
-  private final void fireProcessChanges()
+  private final void fireProcessChanges( )
   {
     List<Feature> features = new ArrayList<Feature>( elementsToRemove.length * 2 );
     features.add( calculationUnit.getWrappedFeature() );
-    for( IFE1D2DElement ele: elementsToRemove )
+    for( IFE1D2DElement ele : elementsToRemove )
     {
       features.remove( ele.getWrappedFeature() );
     }
-    
+
     GMLWorkspace workspace = calculationUnit.getWrappedFeature().getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            workspace,//final GMLWorkspace workspace, 
-            model1d2d.getWrappedFeature(),// Feature parentFeature, 
-            features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE//final int changeType
-            );
+    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
+                                                                                                // workspace,
+    model1d2d.getWrappedFeature(),// Feature parentFeature,
+    features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
+    FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType
+    );
     workspace.fireModellEvent( event );
   }
 
@@ -194,7 +181,7 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public void redo( ) throws Exception
   {
-    
+
   }
 
   /**
@@ -202,6 +189,6 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public void undo( ) throws Exception
   {
-    
+
   }
 }

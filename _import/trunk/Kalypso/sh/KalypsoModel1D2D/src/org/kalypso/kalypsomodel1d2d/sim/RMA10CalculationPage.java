@@ -189,7 +189,8 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
     m_statusComp.setStatus( m_simulationStatus );
 
-    m_startResultProcessingCheck.setEnabled( false );
+    if( !m_startResultProcessingCheck.isDisposed() )
+      m_startResultProcessingCheck.setEnabled( false );
   }
 
   public IStatus getSimulationStatus( )

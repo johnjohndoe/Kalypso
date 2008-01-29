@@ -176,11 +176,11 @@ public class AddRemoveElementToCalcUnitWidget extends FENetConceptSelectionWidge
       {
         final Feature[] selectedFeatures = getSelectedFeature();
         final Object selectedWrapper = m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-        IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+        final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
         if( selectedWrapper instanceof ICalculationUnit )
         {
-          ICalculationUnit calUnit = (ICalculationUnit) selectedWrapper;
-          AddElementToCalculationUnitWithPostCall command = new AddElementToCalculationUnitWithPostCall( calUnit, selectedFeatures, model1d2d );
+          final ICalculationUnit calUnit = (ICalculationUnit) selectedWrapper;
+          final AddElementToCalculationUnitWithPostCall command = new AddElementToCalculationUnitWithPostCall( calUnit, selectedFeatures, model1d2d );
           KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
         }
         getMapPanel().getSelectionManager().clear();

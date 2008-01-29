@@ -98,7 +98,7 @@ public class RoughnessAssignListener implements ModellEventListener
 
     // m_job.setSystem( true );
     m_job.setUser( false );
-    m_job.setPriority( Job.LONG );
+    m_job.setPriority( Job.SHORT );
     m_job.setRule( m_mutexRule );
     m_job.schedule( 500 );
   }
