@@ -400,7 +400,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
       FeatureHelper.addProperty( featureRD, ObservationFeatureFactory.SWE_COMPONENT, featureItemDef );
     }
 
-    if( sortComponents != null || sortComponents.length != 0 )
+    if( sortComponents != null && sortComponents.length > 0 )
     {
       final IRelationType sortedItemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
       for( final IComponent comp : sortComponents )
