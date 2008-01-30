@@ -2174,6 +2174,18 @@
           id="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
           name="nach Oben">
     </command>
+    <command
+          categoryId="org.kalypso.ui.tupleResult.category"
+          description="erzeugt einen neuen Punk"
+          id="org.kalypso.ui.tupleResult.addRowCommand"
+          name="einfügen">
+    </command>
+    <command
+          categoryId="org.kalypso.ui.tupleResult.category"
+          description="verschiebt die selektierten Zeilen der Tabelle nach unten"
+          id="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand"
+          name="nach Unten">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -2189,6 +2201,14 @@
           class="org.kalypso.ogc.gml.om.table.command.MoveUpSelectedRowsHandler"
           commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand">
     </handler>
+    <handler
+          class="org.kalypso.ogc.gml.om.table.command.AddRowHandler"
+          commandId="org.kalypso.ui.tupleResult.addRowCommand">
+    </handler>
+    <handler
+          class="org.kalypso.ogc.gml.om.table.command.MoveDownSelectedRowsHandler"
+          commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand">
+    </handler>
  </extension>
  <extension
        point="org.eclipse.ui.commandImages">
@@ -2203,6 +2223,14 @@
     <image
           commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
           icon="icons/util/up.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.tupleResult.addRowCommand"
+          icon="icons/gistable/add_row.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand"
+          icon="icons/util/down.gif">
     </image>
  </extension>
 </plugin>
