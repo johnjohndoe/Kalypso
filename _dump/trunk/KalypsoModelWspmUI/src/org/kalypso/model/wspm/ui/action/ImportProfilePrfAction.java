@@ -209,7 +209,8 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
       }
     }
 
-    ErrorDialog.openError( shell, action.getText(), "Fehler beim Import der .prf Dateien", prfReadStatus );
+    if( prfReadStatus.getChildren().length > 0 )
+      ErrorDialog.openError( shell, action.getText(), "Fehler beim Import der .prf Dateien", prfReadStatus );
     return prfReadStatus;
   }
 

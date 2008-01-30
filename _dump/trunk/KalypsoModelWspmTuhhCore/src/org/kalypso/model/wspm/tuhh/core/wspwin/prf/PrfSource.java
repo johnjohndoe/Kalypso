@@ -449,13 +449,13 @@ public class PrfSource implements IProfilSource
     if( p1 != null )
     {
       final IProfilPointMarker marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p1 );
-      marker.setValue( (pos1 == 3) );
+      marker.setInterpretedValue( (pos1 == 3) );
     }
 
     if( p2 != null )
     {
       final IProfilPointMarker marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p2 );
-      marker.setValue( (pos2 == 4) );
+      marker.setInterpretedValue( (pos2 == 4) );
     }
   }
 
