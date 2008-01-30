@@ -84,15 +84,15 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marshallable
 {
-  private ArrayList m_layers = null;
+  private ArrayList<Layer> m_layers = null;
 
-  private String version = null;
+  private String m_version = null;
 
-  private String abstract_ = null;
+  private String m_abstract = null;
 
   private String m_name = null;
 
-  private String title = null;
+  private String m_title = null;
 
   /**
    * @param name
@@ -101,9 +101,9 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param abstract_
    * @param layers
    */
-  StyledLayerDescriptor_Impl( String name, String title, String version, String abstract_, Layer[] layers )
+  public StyledLayerDescriptor_Impl( final String name, final String title, final String version, final String abstract_, final Layer[] layers )
   {
-    this.m_layers = new ArrayList( layers.length );
+    m_layers = new ArrayList<Layer>( layers.length );
     setLayers( layers );
     setVersion( version );
     setAbstract( abstract_ );
@@ -114,9 +114,9 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   /**
    * constructor initializing the class with the <StyledLayerDescriptor>
    */
-  StyledLayerDescriptor_Impl( Layer[] layers, String version )
+  public StyledLayerDescriptor_Impl( final Layer[] layers, final String version )
   {
-    this.m_layers = new ArrayList( layers.length );
+    m_layers = new ArrayList<Layer>( layers.length );
     setLayers( layers );
     setVersion( version );
   }
@@ -126,7 +126,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public Layer[] getLayers( )
   {
-    return (Layer[]) m_layers.toArray( new Layer[m_layers.size()] );
+    return m_layers.toArray( new Layer[m_layers.size()] );
   }
 
   /**
@@ -137,13 +137,13 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public void setLayers( Layer[] layers )
   {
-    this.m_layers.clear();
+    m_layers.clear();
 
     if( layers != null )
     {
       for( int i = 0; i < layers.length; i++ )
       {
-        this.m_layers.add( layers[i] );
+        m_layers.add( layers[i] );
       }
     }
   }
@@ -154,9 +154,9 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param layer
    *            a Layer to add
    */
-  public void addLayer( Layer layer )
+  public void addLayer( final Layer layer )
   {
-    m_layers.add( m_layers );
+    m_layers.add( layer );
   }
 
   /**
@@ -165,7 +165,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param layer
    *            a Layer to remove
    */
-  public void removeLayer( Layer layer )
+  public void removeLayer( final Layer layer )
   {
     if( m_layers.indexOf( layer ) != -1 )
     {
@@ -183,15 +183,15 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public UserLayer[] getUserLayers( )
   {
-    ArrayList list = new ArrayList( m_layers.size() );
+    final List<UserLayer> list = new ArrayList<UserLayer>( m_layers.size() );
     for( int i = 0; i < m_layers.size(); i++ )
     {
       if( m_layers.get( i ) instanceof UserLayer )
       {
-        list.add( m_layers.get( i ) );
+        list.add( (UserLayer) m_layers.get( i ) );
       }
     }
-    return (UserLayer[]) list.toArray( new UserLayer[list.size()] );
+    return list.toArray( new UserLayer[list.size()] );
   }
 
   /**
@@ -202,7 +202,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public NamedLayer[] getNamedLayers( )
   {
-    List<NamedLayer> list = new ArrayList<NamedLayer>();
+    final List<NamedLayer> list = new ArrayList<NamedLayer>();
     for( int i = 0; i < m_layers.size(); i++ )
     {
       if( m_layers.get( i ) instanceof NamedLayer )
@@ -237,7 +237,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public String getVersion( )
   {
-    return version;
+    return m_version;
   }
 
   /**
@@ -246,9 +246,9 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param version
    *            the version of the SLD
    */
-  public void setVersion( String version )
+  public void setVersion( final String version )
   {
-    this.version = version;
+    m_version = version;
   }
 
   /**
@@ -256,16 +256,16 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public String getAbstract( )
   {
-    return abstract_;
+    return m_abstract;
   }
 
   /**
    * @param abstract_
    *            The abstract_ to set.
    */
-  public void setAbstract( String abstract_ )
+  public void setAbstract( final String abstract_ )
   {
-    this.abstract_ = abstract_;
+    m_abstract = abstract_;
   }
 
   /**
@@ -280,9 +280,9 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * @param name
    *            The name to set.
    */
-  public void setName( String name )
+  public void setName( final String name )
   {
-    this.m_name = name;
+    m_name = name;
   }
 
   /**
@@ -290,16 +290,16 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public String getTitle( )
   {
-    return title;
+    return m_title;
   }
 
   /**
    * @param title
    *            The title to set.
    */
-  public void setTitle( String title )
+  public void setTitle( final String title )
   {
-    this.title = title;
+    m_title = title;
   }
 
   /**
@@ -311,9 +311,11 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 10000 );
-    sb.append( "<StyledLayerDescriptor version='" + version + "' " );
+    final StringBuffer sb = new StringBuffer( 1000 );
+    sb.append( "<StyledLayerDescriptor version='" ).append( m_version ).append( "' " );
     sb.append( "xmlns='http://www.opengis.net/sld' " );
+    sb.append( "xmlns:sld='http://www.opengis.net/sld' " );
+    sb.append( "xmlns:sldExt='http://www.opengis.net/sldExt' " );
     sb.append( "xmlns:gml='http://www.opengis.net/gml' " );
     sb.append( "xmlns:ogc='http://www.opengis.net/ogc' " );
     sb.append( "xmlns:xlink='http://www.w3.org/1999/xlink' " );
