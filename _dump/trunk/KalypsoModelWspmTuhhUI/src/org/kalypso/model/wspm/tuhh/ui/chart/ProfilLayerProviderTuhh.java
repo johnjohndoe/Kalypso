@@ -212,9 +212,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
-      final IProfilChange[] changes = new IProfilChange[2];
-      changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
-      changes[1] = new ProfileObjectSet( profil, new IProfileObject[] { new BuildingWehr( profil ) } );
+      final IProfilChange[] changes = new IProfilChange[1];
+      //changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
+      changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { new BuildingWehr( profil ) } );
 
       final ProfilOperation operation = new ProfilOperation( "Wehr einfügen", view.getProfilEventManager(), changes, true );
       new ProfilOperationJob( operation ).schedule();

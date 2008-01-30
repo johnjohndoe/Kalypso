@@ -45,9 +45,7 @@ import java.util.ArrayList;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
@@ -55,89 +53,30 @@ import org.kalypso.observation.Observation;
 import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+/**
+ * @author kimwerner
+ */
 public class BuildingWehr extends AbstractObservationBuilding
 {
   public static final String ID = IWspmTuhhConstants.BUILDING_TYP_WEHR;
-
-  public enum WEHRART
-  {
-    eScharfkantig,
-    eRundkronig,
-    eBreitkronig,
-    eBeiwert;
-
-    private static final String WEHR_TYP = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_";
-
-    private static final String WEHR_TYP_BEIWERT = WEHR_TYP + "BEIWERT";
-
-    private static final String WEHR_TYP_BREITKRONIG = WEHR_TYP + "BREITKRONIG";
-
-    private static final String WEHR_TYP_RUNDKRONIG = WEHR_TYP + "RUNDKRONIG";
-
-    private static final String WEHR_TYP_SCHARFKANTIG = WEHR_TYP + "SCHARFKANTIG";
-
-    /**
-     * @see java.lang.Enum#toString()
-     */
-    @Override
-    public String toString( )
-    {
-      final WEHRART wehrart = valueOf( name() );
-
-      switch( wehrart )
-      {
-        case eScharfkantig:
-          return "Scharfkantig";
-
-        case eRundkronig:
-          return "Rundkronig";
-
-        case eBreitkronig:
-          return "Breitkronig";
-
-        case eBeiwert:
-          return "Überfallbeiwert";
-
-        default:
-          throw new NotImplementedException();
-      }
-    }
-
-    public static WEHRART toWehrart( final String wehrart )
-    {
-      if( wehrart == null )
-        return null;
-
-      if( WEHR_TYP_BEIWERT.equals( wehrart ) )
-        return eBeiwert;
-      else if( WEHR_TYP_BREITKRONIG.equals( wehrart ) )
-        return eBreitkronig;
-      else if( WEHR_TYP_RUNDKRONIG.equals( wehrart ) )
-        return eRundkronig;
-      else if( WEHR_TYP_SCHARFKANTIG.equals( wehrart ) )
-        return eScharfkantig;
-
-      final WEHRART type = valueOf( wehrart );
-      if( type == null )
-        throw new NotImplementedException();
-
-      return type;
-    }
-  }
 
   public BuildingWehr( final IProfil profil )
   {
     final TupleResult result = new TupleResult();
     result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
     result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    final IRecord emptyRecord = result.createRecord();
+    result.add( emptyRecord );
 
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
 
     init( profil, observation );
+
   }
 
   public BuildingWehr( final IProfil profil, final IObservation<TupleResult> observation )
@@ -149,14 +88,14 @@ public class BuildingWehr extends AbstractObservationBuilding
   {
     /* building observation properties */
     if( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, "", new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart" ) );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, IWspmTuhhConstants.WEHR_TYP_BEIWERT, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart" ) );
 
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert" ) );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert" ) );
 
     /* profile observation properties */
     else if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( type ) )
-      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr" ) );
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr" ) );
 
     throw new NotImplementedException();
 
@@ -171,24 +110,28 @@ public class BuildingWehr extends AbstractObservationBuilding
     return createComponent( id );
   }
 
-  public IProfilChange getWehrartProfileChange( final WEHRART type )
-  {
-
-    switch( type )
-    {
-      case eBeiwert:
-        return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eBeiwert.name() );
-      case eBreitkronig:
-        return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eBreitkronig.name() );
-      case eRundkronig:
-        return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eRundkronig.name() );
-      case eScharfkantig:
-        return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eScharfkantig.name() );
-
-      default:
-        throw new NotImplementedException();
-    }
-  }
+// public IProfilChange getWehrartProfileChange( final WEHRART type )
+// {
+//
+// switch( type )
+// {
+// case eBeiwert:
+// return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this,
+// IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eBeiwert.name() );
+// case eBreitkronig:
+// return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this,
+// IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eBreitkronig.name() );
+// case eRundkronig:
+// return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this,
+// IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eRundkronig.name() );
+// case eScharfkantig:
+// return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this,
+// IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eScharfkantig.name() );
+//
+// default:
+// throw new NotImplementedException();
+// }
+// }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getProfileProperties()
@@ -207,4 +150,20 @@ public class BuildingWehr extends AbstractObservationBuilding
     return ID;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#init(org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.kalypso.observation.IObservation)
+   */
+  @Override
+  protected void init( IProfil profil, IObservation<TupleResult> observation )
+  {
+     super.init( profil, observation );
+     final IComponent cmpHoehe = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+     final IComponent cmpWehr = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+     if (cmpHoehe==null || cmpWehr==null)return;
+     for(final IRecord record :profil.getResult())
+     {
+       record.setValue( cmpWehr, record.getValue( cmpHoehe ) );
+     }
+  }
 }

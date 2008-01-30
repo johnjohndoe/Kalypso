@@ -156,7 +156,12 @@ public abstract class AbstractProfil implements IProfil
    */
   public IRecord getActivePoint( )
   {
-    return m_activePoint;
+    if( m_result.isEmpty() )
+      return null;
+    else if( m_activePoint == null )
+      return m_result.get( 0 );
+    else
+      return m_activePoint;
   }
 
   public IComponent getActiveProperty( )

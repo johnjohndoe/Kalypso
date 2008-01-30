@@ -134,9 +134,12 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
       int i = 0;
       for( final IRecord p : ppoints )
       {
-        final double x = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-        final double y = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
-        points[i++] = new Point2D.Double( x, y );
+        final Object x =  p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+        final Object y =  p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+        if (x==null||y==null)
+          points[i++] = new Point2D.Double( 0,0);
+        else
+        points[i++] = new Point2D.Double( (Double)x, (Double)y );
       }
       return points;
     }

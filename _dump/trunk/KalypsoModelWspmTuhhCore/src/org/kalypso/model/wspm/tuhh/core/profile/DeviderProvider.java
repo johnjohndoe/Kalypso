@@ -94,8 +94,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
    */
   public boolean isMarker( final IComponent component )
   {
-    // FIXME
-    throw new NotImplementedException();
+    return ArrayUtils.contains( m_markerTypes, component.getId() );
   }
 
   /**
@@ -103,13 +102,15 @@ public class DeviderProvider implements IProfilPointMarkerProvider
    */
   public boolean providesPointMarker( final IComponent marker )
   {
-    // FIXME
-    throw new NotImplementedException();
-
-// return IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) ||
-// IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) || IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals(
-// markerId )
-// || IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId );
+    try
+    {
+      PointPropertyProviderTUHH.createPointProperty( marker.getId() );
+      return true;
+    }
+    catch( IllegalStateException e )
+    {
+      return false;
+    }
   }
 
   /**

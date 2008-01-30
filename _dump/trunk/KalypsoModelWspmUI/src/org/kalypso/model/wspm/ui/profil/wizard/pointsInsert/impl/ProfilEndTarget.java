@@ -44,15 +44,18 @@ import java.util.LinkedList;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Belger
@@ -66,7 +69,36 @@ public class ProfilEndTarget extends AbstractPointsTarget
    */
   public void insertPoints( final IProfilEventManager pem, final LinkedList<IRecord> points )
   {
+    if( points != null )
+      insertPointsInternal( pem, points );
+    else
+      addPointInternal( pem.getProfil() );
+  }
 
+  private final void addPointInternal( final IProfil profile )
+  {
+    final TupleResult result = profile.getResult();
+    if (result.isEmpty())return;
+    final IRecord endPoint = result.get( result.size()-1 );
+    final IRecord point = result.createRecord();
+    final IComponent[] properties = profile.getPointProperties();
+    for( final IComponent property : properties )
+    {
+      if( IWspmConstants.POINT_PROPERTY_BREITE.equals( property.getId() ) )
+      {
+         point.setValue( property, (Double) endPoint.getValue( property ) +20);
+      }
+      
+      else if (!ArrayUtils.contains(profile.getPointMarkerTypes(),property))
+        point.setValue( property, endPoint.getValue( property ) );
+    }
+    
+    
+    result.add( point );
+  }
+
+  public void insertPointsInternal( final IProfilEventManager pem, final LinkedList<IRecord> points )
+  {
     final int pointsCount = points.size();
     final IComponent[] existingProps = pem.getProfil().getPointProperties();
 

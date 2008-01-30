@@ -72,6 +72,7 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.EditInfo;
@@ -211,19 +212,22 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   }
 
   private void paintDevider( final GCWrapper gc )
-  {//FIXME
-
-//    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
-//    if (deviders == null)return;
-//    final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
-//    final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
-//    for( final IProfilPointMarker devider : deviders )
-//    {
-//      final IRecord point = devider.getPoint();
-//      final double leftvalue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-//      final int left = (int) getDomainRange().logical2screen( leftvalue );
-//      gc.drawLine( left, top, left, bottom );
-//    }
+  {
+    final IComponent cmpTrenner = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    if( cmpTrenner == null )
+      return;
+    final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
+    if( deviders == null )
+      return;
+    final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
+    final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
+    for( final IProfilPointMarker devider : deviders )
+    {
+      final IRecord point = devider.getPoint();
+      final double leftvalue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final int left = (int) getDomainRange().logical2screen( leftvalue );
+      gc.drawLine( left, top, left, bottom );
+    }
 
   }
 

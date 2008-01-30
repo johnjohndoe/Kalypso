@@ -64,7 +64,6 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr.WEHRART;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
@@ -548,7 +547,7 @@ public class PrfSource implements IProfilSource
 
     final IProfileObject wehr = new BuildingWehr( p );
     final String secLine = dbw.getSecondLine();
-    final WEHRART wehrart = getWehrart( secLine );
+    final String wehrart = getWehrart( secLine );
     final double[] wt = getWehrParameter( secLine );
     if( wehrart != null )
       wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), wehrart );
@@ -590,7 +589,7 @@ public class PrfSource implements IProfilSource
     return wp;
   }
 
-  private final WEHRART getWehrart( final String secLine )
+  private final String getWehrart( final String secLine )
   {
     final StringTokenizer sT = new StringTokenizer( secLine, " " );
     final int paramCount = sT.countTokens() - 1;
@@ -599,13 +598,13 @@ public class PrfSource implements IProfilSource
     final String wehrart = sT.nextToken().toUpperCase();
 
     if( wehrart.startsWith( "RUND" ) )
-      return WEHRART.eRundkronig;
+      return IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG;
     if( wehrart.startsWith( "BREI" ) )
-      return WEHRART.eBreitkronig;
+      return IWspmTuhhConstants.WEHR_TYP_BREITKRONIG;
     if( wehrart.startsWith( "SCHA" ) )
-      return WEHRART.eScharfkantig;
+      return IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG;
     if( wehrart.startsWith( "BEIW" ) )
-      return WEHRART.eBeiwert;
+      return IWspmTuhhConstants.WEHR_TYP_BEIWERT;
 
     return null;
   }

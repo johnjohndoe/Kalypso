@@ -62,7 +62,7 @@ import org.kalypso.observation.result.IRecord;
 /**
  * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen Oberkante darf nicht unter Unterkante
  * 
- * @author belger
+ * @author kimwerner
  */
 public class BewuchsRule extends AbstractValidatorRule
 {

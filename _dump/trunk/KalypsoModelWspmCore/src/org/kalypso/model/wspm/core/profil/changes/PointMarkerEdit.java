@@ -64,7 +64,7 @@ public class PointMarkerEdit implements IProfilChange
     if( hint != null )
       hint.setMarkerDataChanged();
 
-    final Object oldValue = m_pointMarker.getValue();
+    final Object oldValue = m_pointMarker.getIntepretedValue();
     m_pointMarker.setInterpretedValue( m_newValue );
 
     return new PointMarkerEdit( m_pointMarker, oldValue );

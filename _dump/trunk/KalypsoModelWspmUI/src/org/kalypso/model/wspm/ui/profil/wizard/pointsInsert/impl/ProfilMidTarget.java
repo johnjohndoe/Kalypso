@@ -44,15 +44,18 @@ import java.util.LinkedList;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Belger
@@ -64,6 +67,23 @@ public class ProfilMidTarget extends AbstractPointsTarget
    *      IProfilPoints)
    */
   public void insertPoints( final IProfilEventManager pem, final LinkedList<IRecord> points )
+  {
+   if (points!=null)
+     insertPointsInternal(pem,points);
+   else
+     addPointInternal(pem.getProfil());
+  }
+  private final void addPointInternal(final IProfil profile)
+  {
+    final IRecord activePoint = profile.getActivePoint();
+    final IRecord endPoint = ProfilUtil.getPointAfter( profile, activePoint );
+    final IRecord point = ProfilUtil.splitSegment( profile, activePoint, endPoint );
+    final TupleResult result =  profile.getResult();
+    result.add(result.indexOf( endPoint ), point );
+    
+    
+  }
+  private final void insertPointsInternal( final IProfilEventManager pem, final LinkedList<IRecord> points )
   {
     final int pointsCount = points.size();
     final IComponent[] existingProps = pem.getProfil().getPointProperties();

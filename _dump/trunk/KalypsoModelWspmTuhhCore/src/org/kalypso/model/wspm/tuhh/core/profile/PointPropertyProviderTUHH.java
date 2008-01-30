@@ -67,6 +67,7 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
     m_properties.add( createPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     m_properties.add( createPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
     m_properties.add( createPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+    m_properties.add( createPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
   }
 
   /**

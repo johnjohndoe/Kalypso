@@ -77,18 +77,17 @@ public class PrfSink implements IProfilSink
 
   private String toDataBlockKey( final Object profilKey )
   {
-    throw (new NotImplementedException());
-// final String value = profilKey.toString();
-// if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_BEIWERT ) == 0 )
-// return "BEIWERT";
-// else if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG ) == 0 )
-// return "RUNDKRONIG";
-// else if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG ) == 0 )
-// return "SCHARFKANTIG";
-// else if( value.compareTo( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG ) == 0 )
-// return "BREITKRONIG";
-// else
-// return value;
+
+    if( IWspmTuhhConstants.WEHR_TYP_BEIWERT.equals( profilKey ) )
+      return "BEIWERT";
+    else if( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG.equals( profilKey ) )
+      return "RUNDKRONIG";
+    else if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( profilKey ) )
+      return "SCHARFKANTIG";
+    else if( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG.equals( profilKey ) )
+      return "BREITKRONIG";
+    else
+      return profilKey.toString();
   }
 
   private void extractDataBlocks( final PrfWriter pw, final IProfil p )

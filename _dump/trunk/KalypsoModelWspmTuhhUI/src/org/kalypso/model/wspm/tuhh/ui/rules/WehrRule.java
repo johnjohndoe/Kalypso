@@ -75,9 +75,9 @@ public class WehrRule extends AbstractValidatorRule
       return;
     try
     {
-      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      final IRecord leftP = validateLimits( profil, collector, pluginId );
-      validateProfilLines( profil, collector, pluginId );
+    //FIXMEfinal String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+    //FIXMEfinal IRecord leftP = validateLimits( profil, collector, pluginId );
+    //FIXMEvalidateProfilLines( profil, collector, pluginId );
       //FIXME validateDevider( profil, collector, pluginId );
       //FIXME validateParams( profil, collector, pluginId, leftP );
     }

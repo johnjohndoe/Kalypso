@@ -70,4 +70,6 @@ public interface IProfileObject
   public IObservation<TupleResult> getObservation( );
 
   public String getId( );
+  
+  public IComponent getObjectProperty(final String componentId);
 }

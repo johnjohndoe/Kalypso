@@ -81,12 +81,16 @@ public final class PointPropertyAdd implements IProfilChange
     }
 
     m_profil.addPointProperty( m_property );
-    final LinkedList<IRecord> points = m_profil.getPoints();
-    int i = 0;
-    for( final IRecord point : points )
-    {
-      point.setValue( m_property, m_values[i++] );
 
+    final LinkedList<IRecord> points = m_profil.getPoints();
+    if( (m_values != null) && (points.size() == m_values.length) )
+    {
+      int i = 0;
+      for( final IRecord point : points )
+      {
+        point.setValue( m_property, m_values[i++] );
+
+      }
     }
     return new PointPropertyRemove( m_profil, m_property );
   }

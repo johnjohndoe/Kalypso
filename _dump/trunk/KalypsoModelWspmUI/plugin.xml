@@ -424,11 +424,19 @@
                   style="push">
             </command>
             <command
-                  commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
+                  commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand"
                   style="push">
             </command>
             <command
                   commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.ui.tupleResult.addRowCommand"
                   style="push">
             </command>
          </menuContribution>
@@ -439,11 +447,19 @@
                   style="push">
             </command>
             <command
-                  commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
+                  commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand"
                   style="push">
             </command>
             <command
                   commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.ui.tupleResult.addRowCommand"
                   style="push">
             </command>
          </menuContribution>

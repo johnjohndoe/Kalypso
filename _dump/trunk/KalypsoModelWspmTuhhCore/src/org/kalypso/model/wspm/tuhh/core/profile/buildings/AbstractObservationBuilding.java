@@ -59,6 +59,22 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractObservationBuilding implements IProfileObject
 {
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getObjectProperty(java.lang.String)
+   */
+  public IComponent getObjectProperty( String componentId )
+  {
+    final IComponent[] components = getObjectProperties();
+    if (components.length<1)
+      return null;
+    for (final IComponent component : components )
+    {
+      if (component.getId().equals( componentId ))
+        return component;
+    }
+    return null;
+  }
+
   private IProfil m_profil;
 
   private IObservation<TupleResult> m_observation;

@@ -72,18 +72,20 @@ public class RuecksprungRule extends AbstractValidatorRule
       {
         if( prevPoint != null )
         {
-          final double x1 = (Double) prevPoint.getValue( ProfilObsHelper.getPropertyFromId( prevPoint, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-          final double x2 = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-          final double y1 = (Double) prevPoint.getValue( ProfilObsHelper.getPropertyFromId( prevPoint, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
-          final double y2 = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+          final Object x1 = prevPoint.getValue( ProfilObsHelper.getPropertyFromId( prevPoint, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+          final Object x2 = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+          final Object y1 = prevPoint.getValue( ProfilObsHelper.getPropertyFromId( prevPoint, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+          final Object y2 = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+          if( x1 == null || x2 == null || y1 == null || y2 == null )
+            continue;
           final IComponent ppB = ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_BREITE );
           final IComponent ppH = ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
           final double deltaX = ppB == null ? 0.0001 : ProfilObsHelper.getPrecision( ppB );
           final double deltaY = ppB == null ? 0.0001 : ProfilObsHelper.getPrecision( ppH );
-          if( (x1 - x2) > deltaX )
-            collector.createProfilMarker( true, "Gauss-Rücksprung bei Breite = " + String.format( FMT_BREITE, x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
-          else if( (Math.abs( x2 - x1 ) < deltaX) && (Math.abs( y2 - y1 ) > deltaY) )
-            collector.createProfilMarker( false, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE, x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
+          if( ((Double)x1 - (Double)x2) > deltaX )
+            collector.createProfilMarker( true, "Gauss-Rücksprung bei Breite = " + String.format( FMT_BREITE, (Double)x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
+          else if( (Math.abs( (Double)x2 - (Double)x1 ) < deltaX) && (Math.abs( (Double)y2 - (Double)y1 ) > deltaY) )
+            collector.createProfilMarker( false, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE, (Double)x2 ), "", profil.getPoints().indexOf( point ), IWspmTuhhConstants.POINT_PROPERTY_BREITE, pluginId, null );
         }
 
         prevPoint = point;

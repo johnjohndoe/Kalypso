@@ -46,6 +46,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
@@ -70,51 +71,66 @@ public class ProfilStartTarget extends AbstractPointsTarget
    */
   public void insertPoints( final IProfilEventManager pem, final LinkedList<IRecord> points )
   {
+    if( points != null )
+      insertPointsInternal( pem, points );
+    else
+      addPointInternal( pem.getProfil() );
+  }
+
+  private final void addPointInternal( final IProfil profile )
+  {
+    final TupleResult result = profile.getResult();
+    IRecord record = null;
+    try
+    {
+      record = result.get( 0 );
+    }
+    catch( final IndexOutOfBoundsException e )
+    {
+    }
+
+    if( record == null )
+    {
+      // no records in tuple result defined
+      final IComponent[] components = result.getComponents();
+      final Set<IComponent> set = new LinkedHashSet<IComponent>();
+      for( final IComponent component : components )
+      {
+        set.add( component );
+      }
+
+      record = new Record( result, set );
+      result.add( 0, record );
+    }
+    else
+    {
+      final IRecord myPoint = record.cloneRecord();
+
+      /* shift new point to an position located before old first point position */
+      final IComponent cBreite = ProfilObsHelper.getPropertyFromId( myPoint, IWspmConstants.POINT_PROPERTY_BREITE );
+      if( cBreite != null )
+      {
+        myPoint.setValue( cBreite, (Double) myPoint.getValue( cBreite ) - 10 );
+      }
+
+      // remove all markers from new point
+      final IComponent[] pointMarkerTypes = profile.getPointMarkerTypes();
+      for( final IComponent pmt : pointMarkerTypes )
+      {
+        myPoint.setValue( pmt, null );
+      }
+
+      result.add( 0, myPoint );
+    }
+
+  }
+
+  public void insertPointsInternal( final IProfilEventManager pem, final LinkedList<IRecord> points )
+  {
+
     final TupleResult result = pem.getProfil().getResult();
     if( points == null )
     {
-      IRecord record = null;
-      try
-      {
-        record = result.get( 0 );
-      }
-      catch( final IndexOutOfBoundsException e )
-      {
-      }
-
-      if( record == null )
-      {
-        // no records in tuple result defined
-        final IComponent[] components = result.getComponents();
-        final Set<IComponent> set = new LinkedHashSet<IComponent>();
-        for( final IComponent component : components )
-        {
-          set.add( component );
-        }
-
-        record = new Record( result, set );
-        result.add( 0, record );
-      }
-      else
-      {
-        final IRecord myPoint = record.cloneRecord();
-
-        /* shift new point to an position located before old first point position */
-        final IComponent cBreite = ProfilObsHelper.getPropertyFromId( myPoint, IWspmConstants.POINT_PROPERTY_BREITE );
-        if( cBreite != null )
-        {
-          myPoint.setValue( cBreite, (Double) myPoint.getValue( cBreite ) - 10 );
-        }
-
-        // remove all markers from new point
-        final IComponent[] pointMarkerTypes = pem.getProfil().getPointMarkerTypes();
-        for( final IComponent pmt : pointMarkerTypes )
-        {
-          myPoint.setValue( pmt, null );
-        }
-
-        result.add( 0, myPoint );
-      }
 
     }
     else
@@ -161,47 +177,6 @@ public class ProfilStartTarget extends AbstractPointsTarget
       final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes, false );
       new ProfilOperationJob( operation ).schedule();
     }
-    // final int pointsCount = points.getPoints().size();
-    //
-    // final Collection<POINT_PROPERTY> existingProps = pem.getProfil().getPointProperties( false );
-    // final Collection<POINT_PROPERTY> newProps = points.getPoints().getFirst().getProperties();
-    // Collection<POINT_PROPERTY> propsToAdd = new ArrayList<POINT_PROPERTY>();
-    // for( POINT_PROPERTY prop : newProps )
-    // {
-    // if( !existingProps.contains( prop ) )
-    // propsToAdd.add( prop );
-    // }
-    // final IProfilChange[] changes = new IProfilChange[pointsCount + propsToAdd.size()];
-    // int ii = 0;
-    // for( POINT_PROPERTY prop : existingProps )
-    // {
-    // points.addProperty( prop );
-    // }
-    // for( POINT_PROPERTY prop : propsToAdd )
-    // {
-    // changes[ii++] = new PointPropertyAdd( pem.getProfil(), prop, 0.0 );
-    // }
-    // try
-    // {
-    // final double deltaX = points.getPoints().getLast().getValueFor( POINT_PROPERTY.BREITE ) -
-    // pem.getProfil().getPoints().getFirst().getValueFor( POINT_PROPERTY.BREITE );
-    // final double deltaY = points.getPoints().getLast().getValueFor( POINT_PROPERTY.HOEHE ) -
-    // pem.getProfil().getPoints().getFirst().getValueFor( POINT_PROPERTY.HOEHE );
-    // int i = changes.length - 1;
-    // for( IProfilPoint point : points.getPoints() )
-    // {
-    // point.setValueFor( POINT_PROPERTY.BREITE, point.getValueFor( POINT_PROPERTY.BREITE ) - deltaX );
-    // point.setValueFor( POINT_PROPERTY.HOEHE, point.getValueFor( POINT_PROPERTY.HOEHE ) - deltaY );
-    // changes[i--] = new PointAdd( pem.getProfil(), null, point );
-    // }
-    // }
-    // catch( IllegalProfileOperationException e )
-    // {
-    // // should never happen, raise NullPointerException in ProfilOperation.doChange
-    // changes[0] = null;
-    // }
-    // final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes );
-    // new ProfilOperationJob( operation ).schedule();
 
   }
 }

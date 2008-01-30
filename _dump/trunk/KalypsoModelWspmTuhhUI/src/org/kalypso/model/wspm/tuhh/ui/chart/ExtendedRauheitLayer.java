@@ -99,10 +99,11 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
     Rectangle2D bounds = null;
     for( final IRecord p : points )
     {
-      final double x = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-
-      final double rauheit = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, m_rauheit ) );
-      final Rectangle2D area = new Rectangle2D.Double( x, rauheit, 0, 0 );
+      final Object x = p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final Object rauheit = p.getValue( ProfilObsHelper.getPropertyFromId( p, m_rauheit ) );
+      if( x == null || rauheit == null )
+        continue;
+      final Rectangle2D area = new Rectangle2D.Double( (Double) x, (Double) rauheit, 0, 0 );
 
       if( bounds == null )
         bounds = area;
@@ -130,12 +131,15 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
     {
       if( lastP != null )
       {
-        final double x1 = (Double) lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-        final double x2 = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-        final double y2 = (Double) lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, m_rauheit ) );
-        final Rectangle box = logical2screen( new Rectangle2D.Double( x1, 0.0, x2 - x1, y2 ) );
-        box.width += 1;
-        fillRectangle( gc, box );
+        final Object x1 = lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+        final Object x2 =  point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+        final Object y2 =  lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, m_rauheit ) );
+        if( x1 != null && x2 != null && y2 != null )
+        {
+          final Rectangle box = logical2screen( new Rectangle2D.Double( (Double)x1, 0.0, (Double)x2 - (Double)x1, (Double)y2 ) );
+          box.width += 1;
+          fillRectangle( gc, box );
+        }
       }
       lastP = point;
     }
