@@ -65,20 +65,20 @@ public class ProfileFeatureManager
 
     public IProfil profil;
 
-    public CachedFeature( Feature f, IProfil p )
+    public CachedFeature( final Feature f, final IProfil p )
     {
       feature = f;
       profil = p;
     }
   }
 
-  private static final int CACHE_SIZE = 10;
+  private static final int CACHE_SIZE = 1;
 
   private final CachedFeature[] m_cache = new CachedFeature[CACHE_SIZE];
 
   private int m_pCache = 0;
 
-  public IProfil getProfile( Feature profileFeature )
+  public IProfil getProfile( final Feature profileFeature )
   {
     IProfil profil = getFromCache( profileFeature );
 
@@ -117,9 +117,9 @@ public class ProfileFeatureManager
 
   }
 
-  private IProfil getFromCache( Feature profileFeature )
+  private IProfil getFromCache( final Feature profileFeature )
   {
-    for( CachedFeature cache : m_cache )
+    for( final CachedFeature cache : m_cache )
     {
       if( cache == null )
         continue;
@@ -131,7 +131,7 @@ public class ProfileFeatureManager
     return null;
   }
 
-  private void appendToCache( Feature feature, IProfil profil )
+  private void appendToCache( final Feature feature, final IProfil profil )
   {
     if( m_pCache >= CACHE_SIZE )
       m_pCache = 0;
