@@ -53,20 +53,20 @@ public final class PointPropertyAdd implements IProfilChange
 
   private final IComponent m_property;
 
-  private final Double[] m_values;
+  private final Object[] m_values;
 
-  public PointPropertyAdd( final IProfil profil, final IComponent property, final Double[] values )
+  public PointPropertyAdd( final IProfil profil, final IComponent property, final Object[] values )
   {
     m_profil = profil;
     m_property = property;
     m_values = values;
   }
 
-  public PointPropertyAdd( final IProfil profil, final IComponent property, final double defaultValue )
+  public PointPropertyAdd( final IProfil profil, final IComponent property, final Object defaultValue )
   {
     m_profil = profil;
     m_property = property;
-    m_values = new Double[profil.getPoints().size()];
+    m_values = new Object[profil.getPoints().size()];
     for( int i = 0; i < m_values.length; i++ )
     {
       m_values[i] = defaultValue;

@@ -223,7 +223,6 @@ public abstract class AbstractProfil implements IProfil
    */
   public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {
-
     final List<IProfilPointMarker> markers = new ArrayList<IProfilPointMarker>();
 
     final TupleResult result = getResult();
