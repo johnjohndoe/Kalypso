@@ -171,6 +171,9 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   public void valuesChanged( final ValueChange[] changes )
   {
     final IRecord[] records = new IRecord[changes.length];
+    if( m_result == null )
+      return;
+
     final IComponent[] components = m_result.getComponents();
 
     final Set<String> properties = new HashSet<String>();
