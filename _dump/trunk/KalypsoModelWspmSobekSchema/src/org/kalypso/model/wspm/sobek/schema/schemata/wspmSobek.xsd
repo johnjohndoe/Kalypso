@@ -61,7 +61,7 @@
 	<!--
 		LinkageNode
 	-->
-	<element name="nodeMember" type="wspmSobek:NodePropertyType">
+	<element name="nodeMember" type="wspmSobek:AbstractNodePropertyType" abstract="true">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>nodeMember</name>
@@ -237,7 +237,7 @@
 			<extension base="wspmSobek:AbstractNodeType"/>
 		</complexContent>
 	</complexType>
-	<complexType name="NodePropertyType">
+	<complexType name="AbstractNodePropertyType" abstract="true">
 		<sequence>
 			<element ref="wspmSobek:AbstractNode"/>
 		</sequence>
