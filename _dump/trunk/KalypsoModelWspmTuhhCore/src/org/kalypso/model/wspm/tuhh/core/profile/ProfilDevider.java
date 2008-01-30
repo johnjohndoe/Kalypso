@@ -54,7 +54,7 @@ public class ProfilDevider extends PointMarker
 {
   public ProfilDevider( final IComponent typ, final IRecord point )
   {
-    super(typ,point);
+    super( typ, point );
   }
 
   /* Interpreted ui values to obtain backward compability */
@@ -101,5 +101,4 @@ public class ProfilDevider extends PointMarker
     setValue( value );
   }
 
-  
 }

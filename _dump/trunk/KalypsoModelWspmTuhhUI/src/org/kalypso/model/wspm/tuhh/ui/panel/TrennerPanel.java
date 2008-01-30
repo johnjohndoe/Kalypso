@@ -60,10 +60,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
@@ -300,7 +302,11 @@ public class TrennerPanel extends AbstractProfilView
             return;
           final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte einfügen:", getProfilEventManager(), true );
 
-          final IComponent bordvoll = ProfilObsHelper.getPropertyFromId( db_devs[0].getPoint(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+          final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+          final IComponent bordvoll = ProfilObsHelper.getPropertyFromId( providers, IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+
+          if( !profil.hasPointProperty( bordvoll ) )
+            profil.addPointProperty( bordvoll );
 
           operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[0].getPoint() ), true ) );
           operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[1].getPoint() ), true ) );

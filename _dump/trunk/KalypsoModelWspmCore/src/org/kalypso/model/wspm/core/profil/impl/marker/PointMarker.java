@@ -55,6 +55,10 @@ public class PointMarker implements IProfilPointMarker
 
   public PointMarker( final IComponent typ, final IRecord point )
   {
+
+    if( typ == null || point == null )
+      throw new IllegalStateException();
+
     m_type = typ;
     m_point = point;
   }
