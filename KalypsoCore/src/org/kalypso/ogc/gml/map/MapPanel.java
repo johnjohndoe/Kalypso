@@ -61,6 +61,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
@@ -468,28 +470,36 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final SelectionChangedEvent e = new SelectionChangedEvent( this, getSelection() );
     for( final ISelectionChangedListener l : listenersArray )
     {
-      final SafeRunnable safeRunnable = new SafeRunnable()
+      Display display = PlatformUI.getWorkbench().getDisplay();
+      display.asyncExec( new Runnable()
       {
-        /**
-         * Overwritten because opening the message dialog here results in a NPE
-         * 
-         * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
-         */
-        @Override
-        public void handleException( final Throwable t )
-        {
-          t.printStackTrace();
-        }
 
         public void run( )
         {
-          // TODO: fire in SWT display thread!
-          // FIXE: for the moment: just commented out, it does not work
-          l.selectionChanged( e );
-        }
-      };
+          final SafeRunnable safeRunnable = new SafeRunnable()
+          {
+            /**
+             * Overwritten because opening the message dialog here results in a NPE
+             * 
+             * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
+             */
+            @Override
+            public void handleException( final Throwable t )
+            {
+              t.printStackTrace();
+            }
 
-      SafeRunnable.run( safeRunnable );
+            public void run( )
+            {
+              // TODO: fire in SWT display thread!
+              // FIXE: for the moment: just commented out, it does not work
+              l.selectionChanged( e );
+            }
+          };
+
+          SafeRunnable.run( safeRunnable );
+        }
+      } );
     }
   }
 
