@@ -93,36 +93,36 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class Rule_Impl implements Rule, Marshallable
 {
-  private ArrayList symbolizers = null;
+  private ArrayList<Symbolizer> m_symbolizers = null;
 
-  private Filter filter = null;
+  private Filter m_filter = null;
 
-  private LegendGraphic legendGraphic = null;
+  private LegendGraphic m_legendGraphic = null;
 
-  private String abstract_ = null;
+  private String m_abstract = null;
 
-  private String name = null;
+  private String m_name = null;
 
-  private String title = null;
+  private String m_title = null;
 
-  private boolean elseFilter = false;
+  private boolean m_elseFilter = false;
 
-  private double maxScaleDenominator = 0;
+  private double m_maxScaleDenominator = 0;
 
-  private double minScaleDenominator = 0;
+  private double m_minScaleDenominator = 0;
 
   /**
    * default constructor
    */
-  Rule_Impl( )
+  public Rule_Impl( )
   {
-    symbolizers = new ArrayList();
+    m_symbolizers = new ArrayList<Symbolizer>();
   }
 
   /**
    * constructor initializing the class with the <Rule>
    */
-  Rule_Impl( Symbolizer[] symbolizers, String name, String title, String abstract_, LegendGraphic legendGraphic, Filter filter, boolean elseFilter, double minScaleDenominator, double maxScaleDenominator )
+  public Rule_Impl( final Symbolizer[] symbolizers, final String name, final String title, final String abstract_, final LegendGraphic legendGraphic, final Filter filter, final boolean elseFilter, final double minScaleDenominator, final double maxScaleDenominator )
   {
     this();
     setSymbolizers( symbolizers );
@@ -143,7 +143,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public String getName( )
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -152,9 +152,9 @@ public class Rule_Impl implements Rule, Marshallable
    * @param name
    *            the name of the rule
    */
-  public void setName( String name )
+  public void setName( final String name )
   {
-    this.name = name;
+    m_name = name;
   }
 
   /**
@@ -164,7 +164,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public String getTitle( )
   {
-    return title;
+    return m_title;
   }
 
   /**
@@ -173,9 +173,9 @@ public class Rule_Impl implements Rule, Marshallable
    * @param title
    *            the title of the rule
    */
-  public void setTitle( String title )
+  public void setTitle( final String title )
   {
-    this.title = title;
+    m_title = title;
   }
 
   /**
@@ -185,7 +185,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public String getAbstract( )
   {
-    return abstract_;
+    return m_abstract;
   }
 
   /**
@@ -194,9 +194,9 @@ public class Rule_Impl implements Rule, Marshallable
    * @param abstract_
    *            the abstract of the rule
    */
-  public void setAbstract( String abstract_ )
+  public void setAbstract( final String abstract_ )
   {
-    this.abstract_ = abstract_;
+    m_abstract = abstract_;
   }
 
   /**
@@ -206,7 +206,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public LegendGraphic getLegendGraphic( )
   {
-    return legendGraphic;
+    return m_legendGraphic;
   }
 
   /**
@@ -215,9 +215,9 @@ public class Rule_Impl implements Rule, Marshallable
    * @param legendGraphic
    *            the legendGraphic of the rule
    */
-  public void setLegendGraphic( LegendGraphic legendGraphic )
+  public void setLegendGraphic( final LegendGraphic legendGraphic )
   {
-    this.legendGraphic = legendGraphic;
+    m_legendGraphic = legendGraphic;
   }
 
   /**
@@ -228,7 +228,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public Filter getFilter( )
   {
-    return filter;
+    return m_filter;
   }
 
   /**
@@ -237,9 +237,9 @@ public class Rule_Impl implements Rule, Marshallable
    * @param filter
    *            the filter element
    */
-  public void setFilter( Filter filter )
+  public void setFilter( final Filter filter )
   {
-    this.filter = filter;
+    m_filter = filter;
   }
 
   /**
@@ -250,7 +250,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public boolean hasElseFilter( )
   {
-    return elseFilter;
+    return m_elseFilter;
   }
 
   /**
@@ -259,9 +259,9 @@ public class Rule_Impl implements Rule, Marshallable
    * @param elseFilter
    *            an elseFilter
    */
-  public void setElseFilter( boolean elseFilter )
+  public void setElseFilter( final boolean elseFilter )
   {
-    this.elseFilter = elseFilter;
+    m_elseFilter = elseFilter;
   }
 
   /**
@@ -273,7 +273,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public double getMinScaleDenominator( )
   {
-    return minScaleDenominator;
+    return m_minScaleDenominator;
   }
 
   /**
@@ -282,9 +282,9 @@ public class Rule_Impl implements Rule, Marshallable
    * @param minScaleDenominator
    *            the MinScaleDenominator for the rule
    */
-  public void setMinScaleDenominator( double minScaleDenominator )
+  public void setMinScaleDenominator( final double minScaleDenominator )
   {
-    this.minScaleDenominator = minScaleDenominator;
+    m_minScaleDenominator = minScaleDenominator;
   }
 
   /**
@@ -296,7 +296,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public double getMaxScaleDenominator( )
   {
-    return maxScaleDenominator;
+    return m_maxScaleDenominator;
   }
 
   /**
@@ -305,9 +305,9 @@ public class Rule_Impl implements Rule, Marshallable
    * @param maxScaleDenominator
    *            the MaxScaleDenominator for the rule
    */
-  public void setMaxScaleDenominator( double maxScaleDenominator )
+  public void setMaxScaleDenominator( final double maxScaleDenominator )
   {
-    this.maxScaleDenominator = maxScaleDenominator;
+    m_maxScaleDenominator = maxScaleDenominator;
   }
 
   /**
@@ -326,7 +326,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public Symbolizer[] getSymbolizers( )
   {
-    return (Symbolizer[]) symbolizers.toArray( new Symbolizer[symbolizers.size()] );
+    return m_symbolizers.toArray( new Symbolizer[m_symbolizers.size()] );
   }
 
   /**
@@ -335,15 +335,15 @@ public class Rule_Impl implements Rule, Marshallable
    * @param symbolizers
    *            symbolizers for the rule
    */
-  public void setSymbolizers( Symbolizer[] symbolizers )
+  public void setSymbolizers( final Symbolizer[] symbolizers )
   {
-    this.symbolizers.clear();
+    m_symbolizers.clear();
 
     if( symbolizers != null )
     {
       for( int i = 0; i < symbolizers.length; i++ )
       {
-        this.symbolizers.add( symbolizers[i] );
+        m_symbolizers.add( symbolizers[i] );
       }
     }
   }
@@ -354,9 +354,10 @@ public class Rule_Impl implements Rule, Marshallable
    * @param symbolizer
    *            symbolizer to add
    */
-  public void addSymbolizer( Symbolizer symbolizer )
+  public void addSymbolizer( final Symbolizer symbolizer )
   {
-    symbolizers.add( symbolizer );
+    if( symbolizer != null )
+      m_symbolizers.add( symbolizer );
   }
 
   /**
@@ -365,12 +366,13 @@ public class Rule_Impl implements Rule, Marshallable
    * @param symbolizer
    *            symbolizer to remove
    */
-  public void removeSymbolizer( Symbolizer symbolizer )
+  public void removeSymbolizer( final Symbolizer symbolizer )
   {
-    if( symbolizers.indexOf( symbolizer ) != -1 )
-    {
-      symbolizers.remove( symbolizers.indexOf( symbolizer ) );
-    }
+    if( symbolizer != null )
+      if( m_symbolizers.indexOf( symbolizer ) != -1 )
+      {
+        m_symbolizers.remove( m_symbolizers.indexOf( symbolizer ) );
+      }
   }
 
   /**
@@ -382,39 +384,39 @@ public class Rule_Impl implements Rule, Marshallable
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Rule>" );
-    if( name != null && !name.equals( "" ) )
+    if( m_name != null && !m_name.equals( "" ) )
     {
-      sb.append( "<Name>" ).append( name ).append( "</Name>" );
+      sb.append( "<Name>" ).append( m_name ).append( "</Name>" );
     }
-    if( title != null && !title.equals( "" ) )
+    if( m_title != null && !m_title.equals( "" ) )
     {
-      sb.append( "<Title>" ).append( title ).append( "</Title>" );
+      sb.append( "<Title>" ).append( m_title ).append( "</Title>" );
     }
-    if( abstract_ != null && !abstract_.equals( "" ) )
+    if( m_abstract != null && !m_abstract.equals( "" ) )
     {
-      sb.append( "<Abstract>" ).append( abstract_ ).append( "</Abstract>" );
+      sb.append( "<Abstract>" ).append( m_abstract ).append( "</Abstract>" );
     }
-    if( legendGraphic != null )
+    if( m_legendGraphic != null )
     {
-      sb.append( "<LegendGraphic>" ).append( legendGraphic ).append( "</LegendGraphic>" );
+      sb.append( "<LegendGraphic>" ).append( m_legendGraphic ).append( "</LegendGraphic>" );
     }
-    if( filter != null )
+    if( m_filter != null )
     {
-      sb.append( filter.toXML() );
+      sb.append( m_filter.toXML() );
     }
-    if( elseFilter )
+    if( m_elseFilter )
     {
       sb.append( "<ogc:ElseFilter/>" );
     }
-    sb.append( "<MinScaleDenominator>" ).append( minScaleDenominator );
+    sb.append( "<MinScaleDenominator>" ).append( m_minScaleDenominator );
     sb.append( "</MinScaleDenominator>" );
-    sb.append( "<MaxScaleDenominator>" ).append( maxScaleDenominator );
+    sb.append( "<MaxScaleDenominator>" ).append( m_maxScaleDenominator );
     sb.append( "</MaxScaleDenominator>" );
-    for( int i = 0; i < symbolizers.size(); i++ )
+    for( int i = 0; i < m_symbolizers.size(); i++ )
     {
-      sb.append( ((Marshallable) symbolizers.get( i )).exportAsXML() );
+      sb.append( ((Marshallable) m_symbolizers.get( i )).exportAsXML() );
     }
     sb.append( "</Rule>" );
 
