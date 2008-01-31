@@ -81,6 +81,11 @@
                id="org.kalypsodeegree_impl.model.feature.function.ListSizePropertyFunction"
                name="List Size">
          </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.Addition"
+               id="org.kalypso.gmlschema.functionProperty.addition"
+               name="Addition">
+         </function>
      </extension>
      <extension
            point="org.kalypso.deegree.featureRule">
