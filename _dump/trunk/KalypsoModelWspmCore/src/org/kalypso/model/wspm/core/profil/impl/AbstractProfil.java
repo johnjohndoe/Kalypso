@@ -284,8 +284,10 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * @deprecated don't use this function list is copied and not part of the result tupleresult
    * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getPoints()
    */
+  @Deprecated
   public LinkedList<IRecord> getPoints( )
   {
     final LinkedList<IRecord> points = new LinkedList<IRecord>();
@@ -294,6 +296,14 @@ public abstract class AbstractProfil implements IProfil
       points.add( record );
     }
     return points;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getRecordPoints()
+   */
+  public IRecord[] getRecordPoints( )
+  {
+    return getResult().toArray( new IRecord[] {} );
   }
 
   /**

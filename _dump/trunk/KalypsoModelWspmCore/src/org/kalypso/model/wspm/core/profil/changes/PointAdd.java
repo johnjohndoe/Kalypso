@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import java.util.LinkedList;
-
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.observation.result.IRecord;
@@ -69,7 +68,6 @@ public class PointAdd implements IProfilChange
    */
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
-
     if( hint != null )
     {
       hint.setPointsChanged();
@@ -81,17 +79,21 @@ public class PointAdd implements IProfilChange
       pointToAdd = m_pointBefore.cloneRecord();
     if( pointToAdd == null )
       return new IllegalChange( "Profilpunkt existiert nicht.", this );
-    final LinkedList<IRecord> points = m_profil.getPoints();
+
+    final IRecord[] points = m_profil.getRecordPoints();
+
     if( m_pointBefore == null )
     {
-      points.addFirst( m_point );
+      m_profil.getResult().add( 0, m_point );
+
     }
     else
     {
-      final int i = points.indexOf( m_pointBefore );
-      if( i < 0 )
+      final int index = ArrayUtils.indexOf( points, m_pointBefore );
+      if( index < 0 )
         return new IllegalChange( "Profilpunkt existiert nicht.", this );
-      points.add( i + 1, pointToAdd );
+
+      m_profil.getResult().add( index + 1, pointToAdd );
     }
     return new PointRemove( m_profil, pointToAdd );
   }

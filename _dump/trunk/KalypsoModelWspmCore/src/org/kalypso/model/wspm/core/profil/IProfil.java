@@ -126,8 +126,12 @@ public interface IProfil extends IObservation<TupleResult>
    *         <p>
    *         Pointmodifications will be reflected in the profile. listoperations not.
    * @see #getresult()
+   * @deprecated a new LinkedList<> will be created - this list doesn't representing the TupleResult of Profile
    */
+  @Deprecated
   public LinkedList<IRecord> getPoints( );
+
+  public IRecord[] getRecordPoints( );
 
   /**
    * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
@@ -159,6 +163,7 @@ public interface IProfil extends IObservation<TupleResult>
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
    */
   public boolean hasPointProperty( final IComponent property );
+
   /**
    * @return the FIRST component with the given Id, if the profile contains the property otherwise null
    * @note the Id maybe NOT unique in the profiles TupleResult
