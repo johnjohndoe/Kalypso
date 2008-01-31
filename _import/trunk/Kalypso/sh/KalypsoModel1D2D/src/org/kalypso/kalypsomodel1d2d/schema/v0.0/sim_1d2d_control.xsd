@@ -544,7 +544,7 @@
 						<xs:simpleType>
 							<xs:restriction base="xs:int">
 								<xs:minInclusive value="1" />
-								<xs:maxInclusive value="50" />
+								<xs:maxInclusive value="500" />
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
