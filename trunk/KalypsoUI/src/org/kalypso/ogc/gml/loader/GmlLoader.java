@@ -75,8 +75,8 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IModelAdaptor;
 import org.kalypso.util.pool.KeyInfo;
+import org.kalypso.util.pool.ModelAdapterExtension;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypso.util.pool.ScenarioDataExtension;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -107,7 +107,9 @@ public class GmlLoader extends AbstractLoader
           final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
           final KeyInfo info = pool.getInfo( workspace );
           if( info != null )
+          {
             info.setDirty( source.isDirty() );
+          }
         }
       }
     }
@@ -118,7 +120,7 @@ public class GmlLoader extends AbstractLoader
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Object loadIntern( final String source, final URL context, IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) );
     final List<IStatus> resultList = new ArrayList<IStatus>();
@@ -139,7 +141,9 @@ public class GmlLoader extends AbstractLoader
 
       TimeLogger perfLogger = null;
       if( doTrace )
+      {
         perfLogger = new TimeLogger( "Start transforming gml workspace" );
+      }
 
       final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       monitor.subTask( "in das Zielkoordinatensystem transformieren." );
@@ -147,7 +151,9 @@ public class GmlLoader extends AbstractLoader
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
       if( gmlFile != null )
+      {
         addResource( gmlFile, workspace );
+      }
 
       if( perfLogger != null )
       {
@@ -157,7 +163,7 @@ public class GmlLoader extends AbstractLoader
 
       final Feature rootFeature = workspace.getRootFeature();
 // final String version = FeatureHelper.getAsString( rootFeature, "version" );
-      final IModelAdaptor[] modelAdaptors = ScenarioDataExtension.getModelAdaptor( rootFeature.getFeatureType().getQName().toString() );
+      final IModelAdaptor[] modelAdaptors = ModelAdapterExtension.getModelAdaptor( rootFeature.getFeatureType().getQName().toString() );
 
       for( final IModelAdaptor modelAdaptor : modelAdaptors )
       {
@@ -273,7 +279,9 @@ public class GmlLoader extends AbstractLoader
         GmlSerializer.serializeWorkspace( w, workspace );
       }
       else
+      {
         throw new LoaderException( "Die URL kann nicht beschrieben werden: " + gmlURL );
+      }
     }
     catch( final MalformedURLException e )
     {
@@ -295,7 +303,9 @@ public class GmlLoader extends AbstractLoader
         {
           final IMarker[] markers = file.findMarkers( source, false, IResource.DEPTH_ZERO );
           for( final IMarker marker : markers )
+          {
             marker.delete();
+          }
         }
         catch( final CoreException e )
         {
