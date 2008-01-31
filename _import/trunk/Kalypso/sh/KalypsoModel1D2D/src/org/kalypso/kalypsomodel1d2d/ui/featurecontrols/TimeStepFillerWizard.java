@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -101,6 +102,9 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     final GregorianCalendar calendarTo = new GregorianCalendar();
     calendarFrom.setTime( m_timeStepFillerWizardPage.getStartDate() );
     calendarTo.setTime( m_timeStepFillerWizardPage.getFinishDate() );
+    calendarFrom.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+    calendarTo.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+    
     int ordinalNumber = 1;
     while( !calendarFrom.after( calendarTo ) )
     {
