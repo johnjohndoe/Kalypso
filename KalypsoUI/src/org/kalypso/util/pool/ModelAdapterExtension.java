@@ -55,11 +55,9 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * 
  * @author Stefan Kurzbach
  */
-public class ScenarioDataExtension
+public class ModelAdapterExtension
 {
   private final static String MODEL_ADAPTER_EXTENSION_POINT = "org.kalypso.ui.modelAdapter"; //$NON-NLS-1$
-
-// private static final String ATTRIBUTE_VERSION = "version"; //$NON-NLS-1$
 
   private static final String ATTRIBUTE_ADAPTER_CLASS = "adapterClass"; //$NON-NLS-1$
 
@@ -83,7 +81,6 @@ public class ScenarioDataExtension
       final String elFeatureType = element.getAttribute( ATTRIBUTE_FEATURE_TYPE );
       if( featureType.equals( elFeatureType ) )
       {
-// final String version = element.getAttribute( ATTRIBUTE_VERSION );
         try
         {
           final IModelAdaptor adaptor = (IModelAdaptor) element.createExecutableExtension( ATTRIBUTE_ADAPTER_CLASS );
