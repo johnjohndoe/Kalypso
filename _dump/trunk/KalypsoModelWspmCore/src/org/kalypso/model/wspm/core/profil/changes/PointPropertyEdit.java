@@ -50,16 +50,16 @@ public final class PointPropertyEdit implements IProfilChange
 
   private final IComponent m_property;
 
-  private final Double[] m_newValues;
+  private final Object[] m_newValues;
 
-  public PointPropertyEdit( final IRecord p, final IComponent property, final Double newValue )
+  public PointPropertyEdit( final IRecord p, final IComponent property, final Object newValue )
   {
     m_points = new IRecord[] { p };
     m_property = property;
-    m_newValues = new Double[] { newValue };
+    m_newValues = new Object[] { newValue };
   }
 
-  public PointPropertyEdit( final IRecord[] points, final IComponent property, final Double[] newValues )
+  public PointPropertyEdit( final IRecord[] points, final IComponent property, final Object[] newValues )
   {
     m_points = points;
     m_property = property;

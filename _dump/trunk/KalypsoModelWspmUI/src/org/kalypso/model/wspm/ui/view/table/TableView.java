@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -71,11 +74,14 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -154,11 +160,19 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     public void valuesChanged( final ValueChange[] changes )
     {
-      // FIXME
-// final ProfilChangeHint hint = new ProfilChangeHint();
-// hint.setPointValuesChanged();
-//
-// m_pem.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
+      final List<IProfilChange> profileChanges = new ArrayList<IProfilChange>();
+
+      for( ValueChange change : changes )
+      {
+        IRecord record = change.getRecord();
+        IComponent component = change.getComponent();
+        Object value = change.getNewValue();
+
+        profileChanges.add( new PointPropertyEdit( record, component, value ) );
+      }
+
+      final ProfilOperation operation = new ProfilOperation( "Applying profile changes...", m_pem, profileChanges.toArray( new IProfilChange[] {} ), true );
+      new ProfilOperationJob( operation ).schedule();
     }
   };
 
