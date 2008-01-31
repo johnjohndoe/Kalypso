@@ -72,7 +72,7 @@ public class NodalBCSelectionWizardPage extends WizardPage
     m_descriptorPage = descriptorPage;
 
     setTitle( "Art der Randbedingung" );
-    setDescription( "Geben sie auf dieser Seite die Art der Randbedingung ein." );
+    setDescription( "Geben Sie auf dieser Seite die Art der Randbedingung ein." );
     m_descriptors = descriptors;
     m_radioBtnGroup = new Button[m_descriptors.length];
   }
@@ -117,7 +117,7 @@ public class NodalBCSelectionWizardPage extends WizardPage
     final Group radioGroup = new Group( container, SWT.NONE );
     radioGroup.setLayoutData( radioGroupGridData );
     radioGroup.setLayout( (new GridLayout( 1, false )) );
-    radioGroup.setText( " Instationäre randbedinungen " );
+    radioGroup.setText( " Instationäre Randbedinungen " );
     for( int i = 0; i < m_radioBtnGroup.length; i++ )
     {
       final GridData radioButtonGridData = new GridData( SWT.FILL, SWT.BEGINNING, true, false );
