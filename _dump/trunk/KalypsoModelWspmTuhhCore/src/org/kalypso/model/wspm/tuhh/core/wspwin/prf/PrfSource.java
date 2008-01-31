@@ -203,17 +203,17 @@ public class PrfSource implements IProfilSource
         {
           final IProfileObject building = new BuildingTrapez( p );
 
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
           building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
           p.addProfileObjects( new IProfileObject[] { building } );
@@ -223,15 +223,15 @@ public class PrfSource implements IProfilSource
         {
           final IProfileObject building = new BuildingKreis( p );
 
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
-          building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
+          building.setValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
           p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
@@ -239,17 +239,17 @@ public class PrfSource implements IProfilSource
         {
           final IProfileObject building = new BuildingEi( p );
 
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
-          building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
+          building.setValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
           p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
@@ -257,17 +257,17 @@ public class PrfSource implements IProfilSource
         {
           final IProfileObject building = new BuildingMaul( p );
 
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) )
             return;
-          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
+          if( !writeBuildingProperty( building, sT, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) )
             return;
-          building.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
+          building.setValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ), rauheit );
           p.addProfileObjects( new IProfileObject[] { building } );
           break;
         }
@@ -311,10 +311,17 @@ public class PrfSource implements IProfilSource
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "", 0, "Ungültige Anzahl von Eigenschaften für die Brücke. Es werden nur die ersten Vier ausgewertet.", null ) );
     }
-    writeBuildingProperty( bridge, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) );
-    writeBuildingProperty( bridge, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-    writeBuildingProperty( bridge, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
-    writeBuildingProperty( bridge, sT, ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+
+    final IComponent cUnterwasser = ProfilObsHelper.getPropertyFromId( bridge, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
+    final IComponent cBreite = ProfilObsHelper.getPropertyFromId( bridge, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+    final IComponent cRauheit = ProfilObsHelper.getPropertyFromId( bridge, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
+    final IComponent cFormbeiwert = ProfilObsHelper.getPropertyFromId( bridge, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+
+    writeBuildingProperty( bridge, sT, cUnterwasser );
+    writeBuildingProperty( bridge, sT, cBreite );
+    writeBuildingProperty( bridge, sT, cRauheit );
+    writeBuildingProperty( bridge, sT, cFormbeiwert );
+
     final IComponent pp = ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
     final double delta = pp == null ? 0.0001 : ProfilObsHelper.getPrecision( pp );
     p.addProfileObjects( new IProfileObject[] { bridge } );
@@ -532,7 +539,10 @@ public class PrfSource implements IProfilSource
       {
         if( (values != null) && (values.length > i + 1) )
         {
-          final ProfilDevider devider = new ProfilDevider( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.MARKER_TYP_WEHR ), point );
+          final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+          final IComponent cWehr = ProfilObsHelper.getPropertyFromId( providers, IWspmTuhhConstants.MARKER_TYP_WEHR );
+
+          final ProfilDevider devider = new ProfilDevider( cWehr, point );
           devider.setValue( values[i + 1] );
         }
       }
@@ -550,8 +560,13 @@ public class PrfSource implements IProfilSource
     final String wehrart = getWehrart( secLine );
     final double[] wt = getWehrParameter( secLine );
     if( wehrart != null )
-      wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), wehrart );
-    wehr.setValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), wt == null ? 0.0 : wt[0] );
+    {
+      final IComponent cWehrart = ProfilObsHelper.getPropertyFromId( wehr, IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
+      wehr.setValue( cWehrart, wehrart );
+    }
+    final IComponent cFormbeiwert = ProfilObsHelper.getPropertyFromId( wehr, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+
+    wehr.setValue( cFormbeiwert, wt == null ? 0.0 : wt[0] );
     p.addProfileObjects( new IProfileObject[] { wehr } );
     readWehrtrenner( wt, p, pr );
     final IComponent pp = ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );

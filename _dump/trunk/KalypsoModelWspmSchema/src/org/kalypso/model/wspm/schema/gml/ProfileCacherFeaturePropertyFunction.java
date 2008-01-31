@@ -116,8 +116,16 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
 
         if( profil.hasPointProperty( pRechtswert ) && profil.hasPointProperty( pHochwert ) )
         {
-          rw = (Double) point.getValue( pRechtswert );
-          hw = (Double) point.getValue( pHochwert );
+          try
+          {
+            rw = (Double) point.getValue( pRechtswert );
+            hw = (Double) point.getValue( pHochwert );
+          }
+          catch( final NullPointerException e )
+          {
+            // happens during WSPWIN Project import
+            return null;
+          }
         }
         else
         {

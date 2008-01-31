@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.profil.impl.marker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
@@ -61,6 +62,11 @@ public class PointMarker implements IProfilPointMarker
 
     m_type = typ;
     m_point = point;
+
+    /* type exists in result?!? */
+    final TupleResult result = point.getOwner();
+    if( !result.hasComponent( typ ) )
+      result.addComponent( typ );
   }
 
   /**
