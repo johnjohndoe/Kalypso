@@ -138,5 +138,11 @@
             name="org.kalypsodeegree_impl.filterencoding.ListSizeExpression">
       </function>
    </extension>
+   <extension
+         point="org.kalypso.gmlschema.typeHandlers">
+      <typeHandler
+            factory="org.kalypso.ogc.sensor.deegree.ObservationTypeHandlerFactory">
+      </typeHandler>
+   </extension>
 
 </plugin>

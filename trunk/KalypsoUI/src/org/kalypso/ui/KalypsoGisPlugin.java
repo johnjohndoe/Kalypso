@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
@@ -56,11 +56,9 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
@@ -68,25 +66,17 @@ import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
-import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.dict.DictionaryCatalog;
-import org.kalypso.ogc.gml.gui.GuiTypeHandlerUtilities;
-import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
-import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
-import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
-import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
-import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
@@ -132,8 +122,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private ILoaderFactory m_loaderFactory;
 
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
-
-  private static DefaultStyleFactory m_defaultStyleFactory;
 
   private DictionaryCatalog m_dictionaryCatalog;
 
@@ -185,7 +173,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       final String location = locs[i].trim();
       if( location.length() == 0 )
+      {
         continue;
+      }
 
       try
       {
@@ -208,9 +198,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           // place where we know the URL of the conf-file.
           final String value;
           if( (key != null) && key.endsWith( "URL" ) )
+          {
             value = new URL( url, conf.getProperty( key ) ).toString();
+          }
           else
+          {
             value = conf.getProperty( key );
+          }
 
           if( m_mainConf.containsKey( key ) )
           {
@@ -220,7 +214,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
             m_mainConf.put( key, prop );
           }
           else
+          {
             m_mainConf.put( key, value );
+          }
         }
       }
       catch( final Exception e ) // gen ex for simplicity
@@ -231,9 +227,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         String msg = "Konnte Konfigurationsdatei nicht laden: " + location + "\n";
 
         if( i == locs.length - 1 )
+        {
           msg += "Serverkonfiguration konnte nicht gefunden werden! Stelle Sie sicher dass mindestens ein Server zur Verfügung steht.\nAlterntiv, prüfen Sie die Liste der Server in den Applikationseinstellungen (Kalypso Seite).";
+        }
         else
+        {
           msg += "Es wird versucht, eine alternative Konfigurationsdatei zu laden.\nNächster Versuch:" + locs[i + 1];
+        }
 
         KalypsoGisPlugin.LOGGER.warning( msg );
       }
@@ -272,7 +272,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     final Handler[] handlers = logger.getHandlers();
     for( final Handler handler : handlers )
+    {
       handler.setLevel( Level.FINER );
+    }
   }
 
   /**
@@ -292,7 +294,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       final String pDirs = props.getProperty( "DELETE_STARTUP", "" );
       final String[] dirNames = pDirs.split( "," );
       for( final String element : dirNames )
+      {
         TempFileUtilities.deleteTempDir( this, element );
+      }
     }
     catch( final IOException e )
     {
@@ -307,20 +311,28 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public ILoaderFactory getLoaderFactory( )
   {
     if( m_loaderFactory == null )
+    {
       m_loaderFactory = new DefaultLoaderFactory( m_poolproperties, getClass().getClassLoader() );
+    }
 
     return m_loaderFactory;
   }
 
+  /**
+   * use {@link KalypsoDeegreePlugin#getDefaultStyleFactory()} instead
+   */
+  @Deprecated
   public static DefaultStyleFactory getDefaultStyleFactory( )
   {
-    return KalypsoGisPlugin.m_defaultStyleFactory;
+    return KalypsoDeegreePlugin.getDefaultStyleFactory();
   }
 
   public ResourcePool getPool( )
   {
     if( m_pool == null )
+    {
       m_pool = new ResourcePool( getLoaderFactory() );
+    }
 
     return m_pool;
   }
@@ -335,9 +347,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     m_imgProvider = new PluginImageProvider( this );
     m_imgProvider.resetTmpFiles();
-
-    m_dictionaryCatalog = new DictionaryCatalog();
-
     configureLogger();
 
     try
@@ -350,8 +359,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
       ex.printStackTrace();
     }
-
-    registerGuiTypeHandler();
 
     try
     {
@@ -377,27 +384,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     configureServiceProxyFactory( m_mainConf );
 
     // muss NACH dem streamHandler konfiguriert werden!
-    configureDefaultStyleFactory();
+    // configureDefaultStyleFactory();
 
     deleteTempDirs();
-  }
-
-  private void configureDefaultStyleFactory( )
-  {
-    final IPath stateLocation = getStateLocation();
-    final File defaultStyleDir = new File( stateLocation.toFile(), "defaultStyles" );
-    if( !defaultStyleDir.exists() )
-      defaultStyleDir.mkdir();
-    try
-    {
-      KalypsoGisPlugin.m_defaultStyleFactory = DefaultStyleFactory.getFactory( defaultStyleDir.getAbsolutePath() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      KalypsoGisPlugin.LOGGER.warning( "Default style location was not created, DefaultStyleFactory is not available." );
-    }
-
   }
 
   public IUrlCatalog loadRemoteSchemaCatalog( )
@@ -452,10 +441,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     ObservationCache.clearCache();
 
     // clear the default styles
-    KalypsoGisPlugin.m_defaultStyleFactory.clear();
+    // KalypsoGisPlugin.m_defaultStyleFactory.clear();
 
     if( m_tsRepositoryContainer != null )
+    {
       m_tsRepositoryContainer.dispose();
+    }
 
     m_resourceBundle = null;
 
@@ -479,7 +470,9 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     // m_plugin should be set in the constructor
     if( KalypsoGisPlugin.THE_PLUGIN == null )
+    {
       throw new NullPointerException( "Plugin Kalypso noch nicht instanziert!" );
+    }
 
     return KalypsoGisPlugin.THE_PLUGIN;
   }
@@ -543,44 +536,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public IRepositoryContainer getRepositoryContainer( )
   {
     if( m_tsRepositoryContainer == null )
+    {
       m_tsRepositoryContainer = new DefaultRepositoryContainer();
+    }
 
     return m_tsRepositoryContainer;
-  }
-
-  public void registerGuiTypeHandler( )
-  {
-    try
-    {
-      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, IObservation.class );
-      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class );
-      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class );
-      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class );
-
-      final ITypeRegistry<IGuiTypeHandler> guiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-
-      if( guiRegistry != null )
-      {
-        GuiTypeHandlerUtilities.registerXSDSimpleTypeHandler( guiRegistry );
-        guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
-        guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
-        guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
-        guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( tnInline ) );
-        guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
-        guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
-
-        // TODO find out how to register the observation gui type handler
-        // this, as it is here, does not work
-        // guiRegistry.registerTypeHandler( new ObservationGuiTypeHandler() );
-      }
-    }
-    catch( final Exception e ) // generic exception caught for simplicity
-    {
-      e.printStackTrace();
-      // this method is also used in headless mode
-      if( PlatformUI.isWorkbenchRunning() )
-        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
-    }
   }
 
   public int getDefaultMapSelectionID( )
@@ -594,6 +554,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public void propertyChange( final PropertyChangeEvent event )
   {
     if( event.getProperty().equals( IKalypsoPreferences.CLIENT_CONF_URLS ) )
+    {
       try
       {
         reconfigure();
@@ -602,12 +563,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       {
         e.printStackTrace();
       }
+    }
   }
 
   public IFeatureModifierFactory createFeatureTypeCellEditorFactory( )
   {
     if( m_defaultFeatureControlFactory == null )
+    {
       m_defaultFeatureControlFactory = new DefaultFeatureModifierFactory();
+    }
     return m_defaultFeatureControlFactory;
   }
 
@@ -661,6 +625,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   public static DictionaryCatalog getDictionaryCatalog( )
   {
-    return KalypsoGisPlugin.getDefault().m_dictionaryCatalog;
+    final KalypsoGisPlugin defaultPlugin = KalypsoGisPlugin.getDefault();
+    if( defaultPlugin.m_dictionaryCatalog == null )
+    {
+      defaultPlugin.m_dictionaryCatalog = new DictionaryCatalog();
+    }
+    return defaultPlugin.m_dictionaryCatalog;
   }
 }

@@ -87,7 +87,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
    */
   public Class getValueClass( )
   {
-    return ObservationLinkHandler.CLASS_NAME;
+    return TimeseriesLinkType.class;
   }
 
   /**

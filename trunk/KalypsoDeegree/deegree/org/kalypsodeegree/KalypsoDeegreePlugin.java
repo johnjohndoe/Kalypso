@@ -1,19 +1,21 @@
 package org.kalypsodeegree;
 
+import java.io.File;
+import java.util.logging.Logger;
+
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree.model.TypeHandlerUtilities;
+import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.osgi.framework.BundleContext;
 
 public class KalypsoDeegreePlugin extends Plugin
 {
+  private static final Logger LOGGER = Logger.getLogger( KalypsoDeegreePlugin.class.getName() );
+
   // The shared instance.
   private static KalypsoDeegreePlugin m_plugin;
+
+  private DefaultStyleFactory m_defaultStyleFactory;
 
   public KalypsoDeegreePlugin( )
   {
@@ -28,8 +30,6 @@ public class KalypsoDeegreePlugin extends Plugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
-    
-    registerTypeHandler();
   }
 
   /**
@@ -40,6 +40,7 @@ public class KalypsoDeegreePlugin extends Plugin
   {
     super.stop( context );
     m_plugin = null;
+    m_defaultStyleFactory = null;
   }
 
   /**
@@ -50,28 +51,32 @@ public class KalypsoDeegreePlugin extends Plugin
     return m_plugin;
   }
 
-  /**
-   * TODO: move this to the gml-schema plugin TODO: make extension point for registering type handlers!
-   */
-  private void registerTypeHandler( )
+  private void configureDefaultStyleFactory( )
   {
-    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-
+    final IPath stateLocation = getStateLocation();
+    final File defaultStyleDir = new File( stateLocation.toFile(), "defaultStyles" );
+    if( !defaultStyleDir.exists() )
+    {
+      defaultStyleDir.mkdir();
+    }
     try
     {
-      if( marshallingRegistry != null )
-      {
-        TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingRegistry );
-        TypeHandlerUtilities.registerTypeHandlers( marshallingRegistry );
-      }
+      m_defaultStyleFactory = DefaultStyleFactory.getFactory( defaultStyleDir.getAbsolutePath() );
     }
-    catch( final Throwable e ) // generic exception caught for simplicity
+    catch( final Exception e )
     {
-      getLog().log( StatusUtilities.statusFromThrowable( e, "Failed to register type handlers" ) );
-      // this method is also used in headless mode
-      if( PlatformUI.isWorkbenchRunning() )
-        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
+      e.printStackTrace();
+      KalypsoDeegreePlugin.LOGGER.warning( "Default style location was not created, DefaultStyleFactory is not available." );
     }
   }
 
+  public static DefaultStyleFactory getDefaultStyleFactory( )
+  {
+    final KalypsoDeegreePlugin plugin = KalypsoDeegreePlugin.getDefault();
+    if( plugin.m_defaultStyleFactory == null )
+    {
+      plugin.configureDefaultStyleFactory();
+    }
+    return plugin.m_defaultStyleFactory;
+  }
 }

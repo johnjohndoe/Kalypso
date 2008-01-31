@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
@@ -73,22 +73,22 @@ public class GuiTypeHandlerUtilities
     {
       if( handler instanceof XsdBaseTypeHandler )
       {
-        final IGuiTypeHandler wrappedHandler = new XsdBaseGuiTypeHandler( (XsdBaseTypeHandler) handler );
+        final IGuiTypeHandler wrappedHandler = new XsdBaseGuiTypeHandler( (XsdBaseTypeHandler<?>) handler );
         guiRegistry.registerTypeHandler( wrappedHandler );
       }
     }
 
-    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) ), XsdDateGuiTypeHandler.DF_Date, true ) );
-    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "dateTime" ) ), XsdDateGuiTypeHandler.DF_DateTime, true ) );
-    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "time" ) ), XsdDateGuiTypeHandler.DF_Time, false ) );
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) ), XsdDateGuiTypeHandler.DF_Date, true ) );
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "dateTime" ) ), XsdDateGuiTypeHandler.DF_DateTime, true ) );
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "time" ) ), XsdDateGuiTypeHandler.DF_Time, false ) );
 
-    guiRegistry.registerTypeHandler( new XsdDecimalGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "decimal" ) ) ) );
+    guiRegistry.registerTypeHandler( new XsdDecimalGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "decimal" ) ) ) );
 
     guiRegistry.registerTypeHandler( new Gml3EnvelopeGuiTypeHandler() );
     guiRegistry.registerTypeHandler( new Gml3PointGuiTypeHandler() );
 
-    guiRegistry.registerTypeHandler( new ColorGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "color" ) ) ) );
-    guiRegistry.registerTypeHandler( new DirectoryGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "directory" ) ) ) );
-    guiRegistry.registerTypeHandler( new FileGuiTypeHandler( (XsdBaseTypeHandler) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "file" ) ) ) );
+    guiRegistry.registerTypeHandler( new ColorGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "color" ) ) ) );
+    guiRegistry.registerTypeHandler( new DirectoryGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "directory" ) ) ) );
+    guiRegistry.registerTypeHandler( new FileGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "file" ) ) ) );
   }
 }

@@ -45,20 +45,13 @@ import java.io.File;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypsodeegree_impl.model.cs.Adapters;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -106,38 +99,6 @@ public class KalypsoCorePlugin extends Plugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
-
-    registerTypeHandler();
-  }
-
-  /** TODO: still not at the right position: use extension point instead */
-  public void registerTypeHandler( )
-  {
-    final ITypeRegistry<IMarshallingTypeHandler> marshallingRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-
-    try
-    {
-      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, IObservation.class );
-      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class );
-      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class );
-      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class );
-
-      if( marshallingRegistry != null )
-      {
-        RefactorThis.registerSpecialTypeHandler( marshallingRegistry );
-        marshallingRegistry.registerTypeHandler( wvqInline );
-        marshallingRegistry.registerTypeHandler( taInline );
-        marshallingRegistry.registerTypeHandler( wtKcLaiInline );
-        marshallingRegistry.registerTypeHandler( tnInline );
-      }
-    }
-    catch( final Exception e ) // generic exception caught for simplicity
-    {
-      e.printStackTrace();
-      // this method is also used in headless mode
-      if( PlatformUI.isWorkbenchRunning() )
-        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
-    }
   }
 
   /**

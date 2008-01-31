@@ -38,25 +38,25 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core;
+package org.kalypso.ogc.sensor.deegree;
 
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
+import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
-import org.kalypso.ogc.sensor.deegree.ObservationLinkHandler;
+import org.kalypsodeegree.model.TypeHandlerUtilities;
 
 /**
  * TODO things in this class need to be refactored
  * 
  * @author doemming
  */
-public class RefactorThis
+public class ObservationTypeHandlerFactory implements ITypeHandlerFactory<IMarshallingTypeHandler>
 {
-  public static void registerSpecialTypeHandler( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
+  public void registerTypeHandlers( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
   {
-    // TODO move these to extentionpoints...
-    registry.registerTypeHandler( new ResourceFileTypeHandler() );
+    TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
+    TypeHandlerUtilities.registerTypeHandlers( registry );
     registry.registerTypeHandler( new ObservationLinkHandler() );
   }
 }
