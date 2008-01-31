@@ -7,6 +7,7 @@
     <extension-point id="componentUiHandlerProvider" name="componentUiHandlerProvider" schema="schema/componentUiHandlerProvider.exsd"/>
     <extension-point id="kalypsoThemeFactory" name="kalypsoThemeFactory" schema="schema/kalypsoThemeFactory.exsd"/>
     <extension-point id="modelAdapter" name="modelAdapter" schema="schema/modelAdapter.exsd"/>
+    <extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd"/>
 
 	<extension id="preferences" name="preferences"
 		point="org.eclipse.core.runtime.preferences">
@@ -2232,5 +2233,11 @@
           commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand"
           icon="icons/util/down.gif">
     </image>
+ </extension>
+ <extension
+       point="org.kalypso.ui.typeHandlers">
+    <typeHandler
+          factory="org.kalypso.ui.KalypsoGuiTypeHandlerFactory">
+    </typeHandler>
  </extension>
 </plugin>

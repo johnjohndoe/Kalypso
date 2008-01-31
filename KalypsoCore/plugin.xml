@@ -174,5 +174,11 @@
           id="org.kalypso.ogc.gml.FeatureThemeInfo">
     </themeInfo>
  </extension>
+ <extension
+       point="org.kalypso.gmlschema.typeHandlers">
+    <typeHandler
+          factory="org.kalypso.core.KalypsoCoreTypeHandlerFactory">
+    </typeHandler>
+ </extension>
 
 </plugin>
