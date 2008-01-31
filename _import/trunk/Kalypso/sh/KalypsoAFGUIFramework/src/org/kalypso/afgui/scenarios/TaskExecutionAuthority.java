@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.scenarios;
 
@@ -72,11 +72,11 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
   {
     final ICaseDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     // check if any model is dirty
-    if( !dataProvider.isDirty() )
+    if( dataProvider == null || !dataProvider.isDirty() )
       return true;
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final MessageDialog confirmDialog = new MessageDialog( activeShell, Messages.getString( "TaskExecutionAuthority.0" ), null, Messages.getString( "TaskExecutionAuthority.1" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
-    Messages.getString( "TaskExecutionAuthority.2" ), Messages.getString( "TaskExecutionAuthority.3" ), Messages.getString( "TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      Messages.getString( "TaskExecutionAuthority.2" ), Messages.getString( "TaskExecutionAuthority.3" ), Messages.getString( "TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final boolean result;
     final int decision = confirmDialog.open();
     if( decision == 0 )
