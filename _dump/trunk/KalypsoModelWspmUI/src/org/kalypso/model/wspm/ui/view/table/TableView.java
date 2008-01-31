@@ -141,7 +141,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     public void componentsChanged( final IComponent[] components, final TYPE type )
     {
       // FIXME
-      /** not fired, because of eventloop with pem */
+      /** not fired, because of eventloops with pem */
 // final ProfilChangeHint hint = new ProfilChangeHint();
 // hint.setProfilPropertyChanged( true );
 //
@@ -151,7 +151,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     public void recordsChanged( final IRecord[] records, final TYPE type )
     {
       // FIXME
-// /** not fired, because of eventloop with pem */
+      /** not fired, because of eventloops with pem */
 // final ProfilChangeHint hint = new ProfilChangeHint();
 // hint.setPointsChanged();
 //

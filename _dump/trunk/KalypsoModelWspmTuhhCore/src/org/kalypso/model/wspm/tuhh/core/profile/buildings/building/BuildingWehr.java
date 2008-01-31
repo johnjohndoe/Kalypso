@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
@@ -155,15 +155,37 @@ public class BuildingWehr extends AbstractObservationBuilding
    *      org.kalypso.observation.IObservation)
    */
   @Override
-  protected void init( IProfil profil, IObservation<TupleResult> observation )
+  protected void init( final IProfil profil, final IObservation<TupleResult> observation )
   {
-     super.init( profil, observation );
-     final IComponent cmpHoehe = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-     final IComponent cmpWehr = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-     if (cmpHoehe==null || cmpWehr==null)return;
-     for(final IRecord record :profil.getResult())
-     {
-       record.setValue( cmpWehr, record.getValue( cmpHoehe ) );
-     }
+    super.init( profil, observation );
+
+    final IComponent cmpHoehe = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final IComponent cmpWehr = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+
+    if( cmpHoehe == null || cmpWehr == null )
+      return;
+
+    boolean update = true;
+
+    for( final IRecord record : profil.getResult() )
+    {
+      final IProfilPointMarker[] markers = profil.getPointMarkerFor( record );
+
+      boolean cont = false;
+      for( final IProfilPointMarker marker : markers )
+      {
+        if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( marker.getId().getId() ) )
+        {
+          update = !update;
+          cont = true;
+        }
+      }
+
+      if( cont == true )
+        continue;
+
+      if( update == true )
+        record.setValue( cmpWehr, record.getValue( cmpHoehe ) );
+    }
   }
 }
