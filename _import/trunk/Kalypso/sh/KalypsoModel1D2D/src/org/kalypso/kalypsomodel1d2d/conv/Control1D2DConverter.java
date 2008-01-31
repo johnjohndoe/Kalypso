@@ -522,7 +522,10 @@ public class Control1D2DConverter
         final IObservation<TupleResult> obs = boundaryCondition.getObservation();
         final TupleResult obsResult = obs.getResult();
         final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-        m_BCTupleResultIndexCache.put( boundaryCondition.getGmlID(), new TupleResultIndex( obsResult, timeComponent ) );
+
+        // timeComponent is null for W/Q BCs
+        if( timeComponent != null )
+          m_BCTupleResultIndexCache.put( boundaryCondition.getGmlID(), new TupleResultIndex( obsResult, timeComponent ) );
       }
     }
     m_isBCTupleResultIndexCached = true;
