@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -119,7 +118,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         // TODO remove mappings to IModel from the factories
         final IModel model = (IModel) workspace.getRootFeature().getAdapter( m_modelClass );
         if( model != null )
+        {
           fireModelLoaded( model, status );
+        }
 
         // notify user once about messages during loading
         final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -153,13 +154,21 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
-  private final Map<Class< ? extends IModel>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IModel>, KeyPoolListener>();
+  protected final Map<Class< ? extends IModel>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IModel>, KeyPoolListener>();
 
   private final List<IScenarioDataListener> m_controller = new ArrayList<IScenarioDataListener>();
 
   private IContainer m_scenarioFolder = null;
 
   private String m_dataSetScope;
+
+  /**
+   * Returns the current data set scope
+   */
+  public String getDataSetScope( )
+  {
+    return m_dataSetScope;
+  }
 
   public void addScenarioDataListener( final IScenarioDataListener listener )
   {
@@ -195,7 +204,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       return;
 
     final String dataSetScope = m_dataSetScope;
-    final Job job = new Job( "Initalizing data scope for current scenario" )
+    final Job job = new Job( "Initalisiere Daten für das aktuelle Szenario." )
     {
       /**
        * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -206,31 +215,36 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         try
         {
           // TODO: do not do this! If something is out of sync, thats a bug!
-          scenarioFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
+          scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
         }
         catch( final Throwable th )
         {
           th.printStackTrace();
         }
 
-        // FIXME: Throws an exception on startup as this code is called within plug-in initialization, but accesses
-        // plug-in classes....
-        final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( dataSetScope );
+        final List<IStatus> statusList = new ArrayList<IStatus>();
+        final Map<String, IScenarioDatum> locationMap = ScenarioDataExtension.getScenarioDataMap( dataSetScope );
         if( locationMap != null )
         {
           synchronized( m_keyMap )
           {
-            // TODO: this causes an exception on startup!
-            for( final Map.Entry<Class< ? extends IModel>, String> entry : locationMap.entrySet() )
+            for( final IScenarioDatum entry : locationMap.values() )
             {
-              final Class< ? extends IModel> wrapperClass = entry.getKey();
-              final String gmlLocation = entry.getValue();
-
-              resetKeyForProject( (IFolder) scenarioFolder, wrapperClass, gmlLocation );
+              Class< ? extends IModel> wrapperClass;
+              try
+              {
+                wrapperClass = entry.getModelClass();
+                final String gmlLocation = entry.getModelPath();
+                resetKeyForProject( (IFolder) scenarioFolder, wrapperClass, gmlLocation );
+              }
+              catch( final CoreException e )
+              {
+                statusList.add( e.getStatus() );
+              }
             }
           }
         }
-        return Status.OK_STATUS;
+        return StatusUtilities.createStatus( statusList, "Beim Initialisieren der Szenariodaten sind Probleme aufgetreten." );
       }
     };
 
@@ -258,14 +272,18 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     for( final KeyPoolListener key : keys )
     {
       if( key != null )
+      {
         pool.removePoolListener( key );
+      }
     }
   }
 
   private void fireScenarioDataFolderChanged( final IContainer szenarioFolder )
   {
     for( final IScenarioDataListener listener : m_controller )
+    {
       listener.scenarioChanged( (IFolder) szenarioFolder );
+    }
   }
 
   // TODO: please comment!<br>
@@ -327,10 +345,14 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
     if( oldKey != null )
+    {
       pool.removePoolListener( oldListener );
+    }
 
     if( newKey == null )
+    {
       m_keyMap.put( wrapperClass, null );
+    }
     else
     {
       final KeyPoolListener newListener = new KeyPoolListener( newKey, m_controller, wrapperClass );
@@ -414,18 +436,14 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
     final IPoolableObjectType key = keyPoolListener.getKey();
     if( key == null )
-    {
       // TODO throw (core/other) exception?
       return false;
-    }
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     final KeyInfo infoForKey = pool.getInfoForKey( key );
     if( infoForKey == null )
-    {
       // TODO throw (core/other) exception?
       return false;
-    }
 
     return infoForKey.isDirty();
   }
@@ -456,7 +474,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         final KeyInfo infoForKey = pool.getInfoForKey( key );
         progress.worked( 10 );
         if( infoForKey.isDirty() )
+        {
           infoForKey.saveObject( progress.newChild( 100 ) );
+        }
       }
     }
     catch( final LoaderException e )
@@ -475,7 +495,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     try
     {
       for( final Class< ? extends IModel> modelClass : m_keyMap.keySet() )
+      {
         saveModel( modelClass, progress.newChild( 100 ) );
+      }
     }
     finally
     {
@@ -488,8 +510,10 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    */
   public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
   {
-    final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( m_dataSetScope );
-    if( locationMap == null || !locationMap.containsKey( wrapperClass ) )
+    final Map<String, IScenarioDatum> locationMap = ScenarioDataExtension.getScenarioDataMap( m_dataSetScope );
+    final String classKey = wrapperClass.getName();
+
+    if( locationMap == null || !locationMap.containsKey( classKey ) )
       throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + wrapperClass ); //$NON-NLS-1$
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();

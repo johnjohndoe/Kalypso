@@ -22,7 +22,9 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
   {
     final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
     if( !log )
+    {
       LOGGER.setUseParentHandlers( false );
+    }
   }
 
   private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_CASE_FOLDER_NAME, ACTIVE_CASE_DATA_PROVIDER_NAME, ACTIVE_CASE_URI_NAME };
@@ -47,9 +49,6 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
   {
     m_activeWorkContext = context;
     m_dataProvider = dataProvider;
-
-    m_dataProvider.setCurrent( getSzenarioFolder() );
-
     m_activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
   }
 
@@ -88,9 +87,7 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
     if( currentCase == null )
       return null;
     else
-    {
       return currentCase.getURI();
-    }
   }
 
   private IContainer getSzenarioFolder( )
@@ -105,9 +102,7 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
       // TODO: comment why we need that
       final IPath projectPath = currentProject.getRelativeProjectPath( currentCase );
       if( projectPath.isEmpty() )
-      {
         return currentProject.getProject();
-      }
       return currentProject.getProject().getFolder( projectPath );
     }
   }

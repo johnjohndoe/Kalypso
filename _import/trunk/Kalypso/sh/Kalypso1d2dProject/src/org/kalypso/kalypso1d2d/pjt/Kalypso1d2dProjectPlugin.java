@@ -7,14 +7,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioController;
 import org.osgi.framework.BundleContext;
 
-import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -82,21 +79,6 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     }
     plugin = null;
     super.stop( context );
-  }
-
-  public ITaskExecutor getTaskExecutor( )
-  {
-    return KalypsoAFGUIFrameworkPlugin.getDefault().getTaskExecutor();
-  }
-
-  public TaskExecutionAuthority getTaskExecutionAuthority( )
-  {
-    return KalypsoAFGUIFrameworkPlugin.getDefault().getTaskExecutionAuthority();
-  }
-
-  public SzenarioDataProvider getDataProvider( )
-  {
-    return KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
   }
 
   /**

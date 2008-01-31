@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wizards.export2d;
 
@@ -56,10 +56,10 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -78,7 +78,9 @@ public class ExportWizard extends Wizard implements INewWizard
 
     IDialogSettings section = settings.getSection( "ExportAsFileWizard" ); //$NON-NLS-1$
     if( section == null )
+    {
       section = settings.addNewSection( "ExportAsFileWizard" ); //$NON-NLS-1$
+    }
     setDialogSettings( section );
   }
 
@@ -119,7 +121,7 @@ public class ExportWizard extends Wizard implements INewWizard
       {
         monitor.beginTask( "FE Netz exportieren", IProgressMonitor.UNKNOWN );
 
-        final SzenarioDataProvider dataProvider = Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
+        final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
         final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
         final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
         final IRoughnessClsCollection roughnessModel = exportRoughness ? dataProvider.getModel( IRoughnessClsCollection.class ) : null;

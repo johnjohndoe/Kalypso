@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -60,7 +61,6 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
@@ -106,7 +106,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
 
   private final JobExclusiveCommandTarget m_commandTarget;
 
-  public ScenarioFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModell, final String legendIcon )
+  public ScenarioFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModell, final String legendIcon ) throws CoreException
   {
     super( "<no name>", layerType.getLinktype(), mapModell, legendIcon, context );
 
@@ -131,7 +131,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
     setStatus( StatusUtilities.createInfoStatus( "lade Daten..." ) );
 
     final String classKey = layerType.getHref();
-    final IModel model = Util.getModel( ScenarioDataExtension.loadClass( classKey ) );
+    final IModel model = getModel( classKey );
 
     // clear the theme
     if( m_theme != null )
@@ -155,10 +155,14 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
 
     /* Put current property set into m_theme */
     for( final String propName : propertyNames )
+    {
       m_theme.setProperty( propName, properties.get( propName ) );
+    }
 
     for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
+    {
       addStyle( style );
+    }
 
     if( m_gisTemplateUserStyles.isEmpty() )
     {
@@ -206,6 +210,17 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
     }
   }
 
+  private IModel getModel( final String classKey ) throws CoreException
+  {
+    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final String dataSetScope = dataProvider.getDataSetScope();
+    final Map<String, IScenarioDatum> scenarioDataMap = ScenarioDataExtension.getScenarioDataMap( dataSetScope );
+    final IScenarioDatum scenarioDatum = scenarioDataMap.get( classKey );
+    final Class< ? extends IModel> clazz = scenarioDatum.getModelClass();
+    final IModel model = dataProvider.getModel( clazz );
+    return model;
+  }
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
    */
@@ -213,7 +228,9 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
   public void dispose( )
   {
     if( m_commandTarget != null )
+    {
       m_commandTarget.dispose();
+    }
     if( m_theme != null )
     {
       m_theme.dispose();
@@ -222,7 +239,9 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
     // remove styles
     final GisTemplateUserStyle[] templateStyles = m_gisTemplateUserStyles.toArray( new GisTemplateUserStyle[m_gisTemplateUserStyles.size()] );
     for( final GisTemplateUserStyle style : templateStyles )
+    {
       removeStyle( style );
+    }
 
     super.dispose();
   }
@@ -245,13 +264,17 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
   public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_theme != null )
+    {
       m_theme.paint( g, p, scale, bbox, selected, monitor );
+    }
   }
 
   public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
   {
     if( m_theme != null )
+    {
       m_theme.paintInternal( delegate );
+    }
   }
 
   /**
@@ -282,7 +305,9 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
     style.addStyleListener( this );
 
     if( m_theme != null )
+    {
       m_theme.addStyle( style );
+    }
   }
 
   /**
@@ -291,7 +316,9 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
   public void removeStyle( final KalypsoUserStyle style )
   {
     if( m_theme != null )
+    {
       m_theme.removeStyle( style );
+    }
     style.dispose();
   }
 
@@ -418,7 +445,9 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
   public void setName( final String name )
   {
     if( m_theme != null )
+    {
       m_theme.setName( name );
+    }
 
     super.setName( name );
   }
@@ -442,7 +471,9 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
   public void setType( final String type )
   {
     if( m_theme != null )
+    {
       m_theme.setType( type );
+    }
 
     super.setType( type );
   }
@@ -466,7 +497,9 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
   public void setStatus( final IStatus status )
   {
     if( m_theme != null )
+    {
       ((AbstractKalypsoTheme) m_theme).setStatus( status );
+    }
 
     super.setStatus( status );
   }

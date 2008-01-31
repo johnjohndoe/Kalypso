@@ -44,10 +44,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.eclipse.core.runtime.dynamichelpers.ExtensionTracker;
+import org.eclipse.core.runtime.dynamichelpers.IExtensionChangeHandler;
+import org.eclipse.core.runtime.dynamichelpers.IExtensionTracker;
+import org.eclipse.core.runtime.dynamichelpers.IFilter;
 
 /**
  * Helper class to read and cache
@@ -58,70 +62,101 @@ public class ScenarioDataExtension
 {
   private final static String SCENARIO_DATA_EXTENSION_POINT = "org.kalypso.afgui.scenarioData"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_MODEL_PATH = "modelPath"; //$NON-NLS-1$
-
-  private static final String ATTRIBUTE_CLASS_KEY = "classKey"; //$NON-NLS-1$
-
   private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
-  private static Map<String, String> CLASS_LOADER_MAP;
+  private static final Map<String, Map<String, IScenarioDatum>> m_dataSetCache = new HashMap<String, Map<String, IScenarioDatum>>();
 
-  public static String getScenarioDataPath( final String id, final Class< ? extends IModel> classKey )
+  private static ExtensionTracker extensionTracker;
+
+  public static String getScenarioDataPath( final String id, final String classKey )
   {
-    final Map<Class< ? extends IModel>, String> map = getLocationMap( id );
-
-    return map.get( classKey );
+    final Map<String, IScenarioDatum> map = getScenarioDataMap( id );
+    return map.get( classKey ).getModelPath();
   }
 
-  @SuppressWarnings("unchecked")
-  public static Map<Class< ? extends IModel>, String> getLocationMap( final String id )
+  public static Map<String, IScenarioDatum> getScenarioDataMap( final String id )
   {
-    if( CLASS_LOADER_MAP == null )
-    {
-      CLASS_LOADER_MAP = new HashMap<String, String>();
-    }
-    CLASS_LOADER_MAP.clear();
-
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( SCENARIO_DATA_EXTENSION_POINT );
-    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
-    final Map<Class< ? extends IModel>, String> dataSetMap = new HashMap<Class< ? extends IModel>, String>();
-    for( final IConfigurationElement dataSet : configurationElements )
+    registerExtensionTracker( extensionPoint );
+
+    Map<String, IScenarioDatum> scenarioDataMap = null;
+    synchronized( m_dataSetCache )
     {
-      final String dataSetId = dataSet.getAttribute( ATTRIBUTE_ID );
-      if( dataSetId.equals( id ) )
-      {
-        final IConfigurationElement[] elements = dataSet.getChildren();
-        for( final IConfigurationElement element : elements )
-        {
-          final String classKeyName = element.getAttribute( ATTRIBUTE_CLASS_KEY );
-          final String bundleId = element.getContributor().getName();
-          CLASS_LOADER_MAP.put( classKeyName, bundleId );
+      scenarioDataMap = m_dataSetCache.get( id );
+    }
 
-          final String modelPath = element.getAttribute( ATTRIBUTE_MODEL_PATH );
-          final Class< ? extends IModel> classKey = loadClass( classKeyName );
-          dataSetMap.put( classKey, modelPath );
+    if( scenarioDataMap == null )
+    {
+      // create new map
+      scenarioDataMap = new HashMap<String, IScenarioDatum>();
+
+      // read from extension point registry
+      final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+
+      for( final IConfigurationElement dataSet : configurationElements )
+      {
+        final String dataSetId = dataSet.getAttribute( ATTRIBUTE_ID );
+        if( dataSetId.equals( id ) )
+        {
+          final IConfigurationElement[] elements = dataSet.getChildren();
+          for( final IConfigurationElement element : elements )
+          {
+            final String classKey = element.getAttribute( ScenarioDatumProxy.ATTRIBUTE_CLASS_KEY );
+            final ScenarioDatumProxy scenarioDatum = new ScenarioDatumProxy( element );
+            scenarioDataMap.put( classKey, scenarioDatum );
+          }
         }
       }
+      m_dataSetCache.put( id, scenarioDataMap );
     }
 
-    return dataSetMap;
+    return scenarioDataMap;
   }
 
-  public static Class<IModel> loadClass( final String classKey )
+  private static void registerExtensionTracker( final IExtensionPoint extensionPoint )
   {
-    try
+    if( extensionTracker == null )
     {
-      // TODO: don't! This violates the eclipse's lazy plug-in loading contract, as this
-      // causes plug-ins to load that are not needed at the moment (only 'id' is called for)
-      return Platform.getBundle( CLASS_LOADER_MAP.get( classKey ) ).loadClass( classKey );
+      extensionTracker = new ExtensionTracker();
+      extensionTracker.registerHandler( new ExtensionChangeHandler(), new IFilter()
+      {
+        public boolean matches( final IExtensionPoint target )
+        {
+          return extensionPoint.equals( target );
+        }
+      } );
     }
-    catch( final ClassNotFoundException e )
-    {
-      e.printStackTrace();
-    }
-    return null;
   }
 
+  /* protected */static void extensionsInvalid( )
+  {
+    synchronized( m_dataSetCache )
+    {
+      m_dataSetCache.clear();
+    }
+  }
+
+  /* protected */static class ExtensionChangeHandler implements IExtensionChangeHandler
+  {
+
+    /**
+     * @see org.eclipse.core.runtime.dynamichelpers.IExtensionChangeHandler#addExtension(org.eclipse.core.runtime.dynamichelpers.IExtensionTracker,
+     *      org.eclipse.core.runtime.IExtension)
+     */
+    public void addExtension( final IExtensionTracker tracker, final IExtension extension )
+    {
+      extensionsInvalid();
+    }
+
+    /**
+     * @see org.eclipse.core.runtime.dynamichelpers.IExtensionChangeHandler#removeExtension(org.eclipse.core.runtime.IExtension,
+     *      java.lang.Object[])
+     */
+    public void removeExtension( final IExtension extension, final Object[] objects )
+    {
+      extensionsInvalid();
+    }
+  }
 }

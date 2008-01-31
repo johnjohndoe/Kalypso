@@ -68,11 +68,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
    * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
-
-    startSzenarioSourceProvider();
 
     final WorkflowContextHandlerFactory workflowContextHandlerFactory = new WorkflowContextHandlerFactory();
     final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -105,18 +103,40 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
           return true;
         }
         else
-        {
           return false;
-        }
       }
     } );
+  }
+
+  private void startActiveWorkContext( )
+  {
+    if( m_activeWorkContext == null )
+    {
+      final Properties properties = new Properties();
+      final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
+      final File file = new File( fileName );
+      if( file.exists() )
+      {
+        try
+        {
+          properties.loadFromXML( new FileInputStream( file ) );
+        }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+        }
+      }
+      m_activeWorkContext = new ActiveWorkContext<Scenario>( properties, ScenarioHandlingProjectNature.ID );
+      m_perspectiveWatcher = new PerspectiveWatcher<Scenario>( m_activeWorkContext.getCurrentCase() );
+      m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
+    }
   }
 
   /**
    * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     if( !workbench.isClosing() )
@@ -139,6 +159,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   public ActiveWorkContext<Scenario> getActiveWorkContext( )
   {
+    startActiveWorkContext();
+    startSzenarioSourceProvider();
     return m_activeWorkContext;
   }
 
@@ -174,7 +196,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
    *            the path
    * @return the image descriptor
    */
-  public static ImageDescriptor getImageDescriptor( String path )
+  public static ImageDescriptor getImageDescriptor( final String path )
   {
     return imageDescriptorFromPlugin( PLUGIN_ID, path );
   }
@@ -183,29 +205,12 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   {
     if( m_szenarioSourceProvider == null )
     {
-      final Properties properties = new Properties();
-      final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
-      final File file = new File( fileName );
-      if( file.exists() )
-      {
-        try
-        {
-          properties.loadFromXML( new FileInputStream( file ) );
-        }
-        catch( final Throwable e )
-        {
-          e.printStackTrace();
-        }
-      }
       // This can only be called if the platform has already been started
-      m_activeWorkContext = new ActiveWorkContext<Scenario>( properties, ScenarioHandlingProjectNature.ID );
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       m_szenarioDataProvider = new SzenarioDataProvider();
       m_szenarioSourceProvider = new CaseHandlingSourceProvider<Scenario, IModel>( m_activeWorkContext, m_szenarioDataProvider );
       handlerService.addSourceProvider( m_szenarioSourceProvider );
-      m_perspectiveWatcher = new PerspectiveWatcher<Scenario>( m_activeWorkContext.getCurrentCase() );
-      m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
     }
   }
 
@@ -222,11 +227,11 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     {
       properties.storeToXML( new FileOutputStream( file ), "" );
     }
-    catch( FileNotFoundException e1 )
+    catch( final FileNotFoundException e1 )
     {
       e1.printStackTrace();
     }
-    catch( IOException e1 )
+    catch( final IOException e1 )
     {
       e1.printStackTrace();
     }
