@@ -307,8 +307,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     final Set<String> timeZones = new TreeSet<String>();
     final String[] tz = TimeZone.getAvailableIDs();
     for( final String z : tz )
-      // if( z.contains( "Europe/" ) )
-      if( z.contains( "GMT" ) )
+       if( z.contains( "Europe/" ) )
+//      if( z.contains( "GMT" ) )
         timeZones.add( z );
 
     final FacadeComboViewer ComboTimeZones = new FacadeComboViewer( new FCVArrayDelegate( timeZones.toArray( new String[] {} ) ) );
