@@ -14,7 +14,7 @@
             <templ:property name="deleteable">false</templ:property>
             <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:no_direction</templ:legendicon>
         </mapv:layer>
-        <mapv:layer visible="true" name="Kontinuitätslinien" id="ID_5" featurePath="#fid#root/continuityLine" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="Ränder/ Übergänge" id="ID_5" featurePath="#fid#root/continuityLine" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
         <mapv:layer visible="false" name="Kanten" id="ID_6" featurePath="#fid#root/edge[Edge]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
