@@ -178,8 +178,8 @@ public class PolyElement extends Element2D implements IPolyElement
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
     final GM_Surface surface = ModelGeometryBuilder.createSurfaceFromNode( getNodes() );
-    if(surface==null)
-      System.out.println("Geometry cannot be calculated for "+getGmlID());
+//    if(surface==null)
+//      System.out.println("Geometry cannot be calculated for "+getGmlID());
     return surface;
     
 //    
