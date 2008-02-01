@@ -1,7 +1,7 @@
 package org.kalypso.ui.wizards.imports.elevationmodel;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -33,24 +33,17 @@ import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
  */
 public class ElevationMainPage extends WizardPage
 {
-  private Text sourceFileField;
+  private Text m_filename;
 
-  private IPath initialSourcePath;
+  private IPath m_initialSourcePath;
 
-  List<String> fileExtensions = new LinkedList<String>();
+  private final List<String> m_fileExtensions = new ArrayList<String>();
 
-  private Combo coordinateSystem_Combo;
+  private Combo m_coordinateSystems;
 
-  public Text nameForFileText;
+  public Text m_tileTitle;
 
-  public Text descriptionForFileArea;
-
-  private Label statusText;
-
-  // static private IPreferenceStore preferenceStore =
-  // KalypsoModelSimulationBase.getDefault().getPreferenceStore();
-
-  // private IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
+  public Text m_tileDescription;
 
   public ElevationMainPage( )
   {
@@ -66,35 +59,27 @@ public class ElevationMainPage extends WizardPage
    * @param parent
    *            the parent composite
    */
-  @SuppressWarnings("synthetic-access")
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-    Composite container = new Composite( parent, SWT.NULL );
+    final Composite container = new Composite( parent, SWT.NULL );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     container.setLayout( gridLayout );
     setControl( container );
 
-    // final Label label = new Label( container, SWT.NONE );
-    // final GridData gridData = new GridData();
-    // gridData.horizontalSpan = 3;
-    // label.setLayoutData( gridData );
-    // label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
-
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
     label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.2" ) );
-
-    sourceFileField = new Text( container, SWT.BORDER );
-    sourceFileField.addModifyListener( new ModifyListener()
+    m_filename = new Text( container, SWT.BORDER );
+    m_filename.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
         updatePageComplete();
       }
     } );
-    sourceFileField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_filename.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     final Button button = new Button( container, SWT.NONE );
     button.addSelectionListener( new SelectionAdapter()
@@ -107,40 +92,43 @@ public class ElevationMainPage extends WizardPage
     } );
     button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.Browse" ) );
 
-    // Coordinate system combo box
-    Label coordinateLabel = new Label( container, SWT.NONE );
-    coordinateLabel.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.12" ) ); //$NON-NLS-1$
-    coordinateLabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
+    final Label label_2 = new Label( container, SWT.NONE );
+    label_2.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.12" ) ); //$NON-NLS-1$
+    label_2.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
+    m_coordinateSystems = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
+    m_coordinateSystems.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
+    final int indexOfDefaultCRS = m_coordinateSystems.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
+    m_coordinateSystems.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
+    final GridData gridData_2 = new GridData( GridData.FILL_HORIZONTAL );
+    gridData_2.horizontalSpan = 2;
+    m_coordinateSystems.setEnabled( true );
+    m_coordinateSystems.setLayoutData( gridData_2 );
 
-    coordinateSystem_Combo = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    coordinateSystem_Combo.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
-    final int indexOfDefaultCRS = coordinateSystem_Combo.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
-    coordinateSystem_Combo.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
+    final Label label_3 = new Label( container, SWT.NONE );
+    label_3.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
+    label_3.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.7" ) );
+    m_tileTitle = new Text( container, SWT.BORDER );
+    m_tileTitle.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( ModifyEvent e )
+      {
+        updatePageComplete();
+      }
+    } );
+    final GridData gridData_3 = new GridData( GridData.FILL_HORIZONTAL );
+    gridData_3.horizontalSpan = 2;
+    m_tileTitle.setLayoutData( gridData_3 );
 
-    GridData gd = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
-    gd.horizontalSpan = 2;
-    coordinateSystem_Combo.setEnabled( true );
-    coordinateSystem_Combo.setLayoutData( gd );
+    final Label label_4 = new Label( container, SWT.NONE );
+    label_4.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING ) );
+    label_4.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.8" ) ); //$NON-NLS-1$
+    m_tileDescription = new Text( container, SWT.BORDER | SWT.MULTI );
+    final GridData gridData_4 = new GridData( GridData.FILL_HORIZONTAL );
+    gridData_4.horizontalSpan = 2;
+    gridData_4.heightHint = 100;
+    m_tileDescription.setLayoutData( gridData_4 );
+    m_tileDescription.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" ) );
 
-    final Label nameForFile = new Label( container, SWT.NONE );
-    nameForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    nameForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.7" ) );
-    nameForFileText = new Text( container, SWT.BORDER );
-
-    GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
-    gridData.horizontalSpan = 2;
-    nameForFileText.setLayoutData( gridData );
-
-    final Label descriptionForFile = new Label( container, SWT.NONE );
-    descriptionForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING ) );
-    descriptionForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.8" ) ); //$NON-NLS-1$
-
-    descriptionForFileArea = new Text( container, SWT.BORDER | SWT.MULTI );
-    GridData gridData2 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
-    gridData2.horizontalSpan = 2;
-    gridData2.heightHint = 100;
-    descriptionForFileArea.setLayoutData( gridData2 );
-    descriptionForFileArea.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" ) );
     initContents();
   }
 
@@ -150,31 +138,31 @@ public class ElevationMainPage extends WizardPage
    * @param selection
    *            the selection or <code>null</code> if none
    */
-  @SuppressWarnings( { "unchecked", "cast" })
-  public void init( ISelection selection )
+  public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( "hmo" );
-    fileExtensions.add( "asc" );
-    fileExtensions.add( "asg" );
+    m_fileExtensions.add( "hmo" );
+    m_fileExtensions.add( "asc" );
+    m_fileExtensions.add( "asg" );
     // Find the first plugin.xml file.
-    Iterator iter = ((IStructuredSelection) selection).iterator();
+    final Iterator iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
-      Object item = (Object) iter.next();
+      Object item = iter.next();
       if( item instanceof IFile )
       {
-        IFile file = (IFile) item;
-        if( fileExtensions.contains( file.getFileExtension() ) )
+        final IFile file = (IFile) item;
+        if( m_fileExtensions.contains( file.getFileExtension() ) )
         {
-          initialSourcePath = file.getLocation();
+          m_initialSourcePath = file.getLocation();
           break;
         }
         item = file.getProject();
       }
     }
+    setPageComplete( false );
   }
 
   /**
@@ -183,13 +171,13 @@ public class ElevationMainPage extends WizardPage
    */
   private void initContents( )
   {
-    if( initialSourcePath == null )
+    if( m_initialSourcePath == null )
       return;
-    IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-    IPath path = initialSourcePath;
+    final IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+    IPath path = m_initialSourcePath;
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
-    sourceFileField.setText( path.toString() );
+    m_filename.setText( path.toString() );
     updatePageComplete();
     setMessage( null );
     setErrorMessage( null );
@@ -201,9 +189,18 @@ public class ElevationMainPage extends WizardPage
   private void updatePageComplete( )
   {
     setPageComplete( false );
+    
+    // source file not empty
+    // tile title not empty
 
-    IPath sourceLoc = getSourceLocation();
-    if( sourceLoc == null || !(fileExtensions.contains( sourceLoc.getFileExtension() )) )
+    final IPath sourceLoc = getSourceLocation();
+    if( sourceLoc == null || !(m_fileExtensions.contains( sourceLoc.getFileExtension() )) )
+    {
+      setMessage( null );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.3" ) );
+      return;
+    }
+    if(m_tileTitle.getText().trim().length()==0)
     {
       setMessage( null );
       setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.3" ) );
@@ -219,13 +216,13 @@ public class ElevationMainPage extends WizardPage
    */
   protected void browseForSourceFile( )
   {
-    IPath path = browse( getSourceLocation(), false );
+    IPath path = browse( getSourceLocation() );
     if( path == null )
       return;
-    IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+    final IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
-    sourceFileField.setText( path.toString() );
+    m_filename.setText( path.toString() );
 
     // Multiple Elevation Model Select.. Still under development
     /*
@@ -275,9 +272,10 @@ public class ElevationMainPage extends WizardPage
   // }
   //
   // }
-  private IPath browse( IPath path, boolean mustExist )
+  private IPath browse( final IPath path )
   {
-    FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
+    final FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
+    // TODO: what about m_fileExtensions ???
     dialog.setFilterExtensions( new String[] { "*.hmo; *.asc; *.asg" } );
     if( path != null )
     {
@@ -286,7 +284,7 @@ public class ElevationMainPage extends WizardPage
       if( path.segmentCount() > 0 )
         dialog.setFileName( path.lastSegment() );
     }
-    String result = dialog.open();
+    final String result = dialog.open();
     if( result == null )
       return null;
     return new Path( result );
@@ -297,27 +295,28 @@ public class ElevationMainPage extends WizardPage
    */
   public IPath getSourceLocation( )
   {
-    String text = sourceFileField.getText().trim();
+    final String text = m_filename.getText().trim();
     if( text.length() == 0 )
       return null;
-    IPath path = new Path( text );
+    final IPath path = new Path( text );
     if( !path.isAbsolute() )
-      path = ResourcesPlugin.getWorkspace().getRoot().getLocation().append( path );
-    return path;
+      return ResourcesPlugin.getWorkspace().getRoot().getLocation().append( path );
+    else
+      return path;
   }
 
   public String getDescriptionForFileArea( )
   {
-    return descriptionForFileArea.getText();
+    return m_tileDescription.getText();
   }
 
   public String getNameForFile( )
   {
-    return nameForFileText.getText();
+    return m_tileTitle.getText();
   }
 
   public String getCoordinateSystem( )
   {
-    return coordinateSystem_Combo.getSelection().toString();
+    return m_coordinateSystems.getSelection().toString();
   }
 }
