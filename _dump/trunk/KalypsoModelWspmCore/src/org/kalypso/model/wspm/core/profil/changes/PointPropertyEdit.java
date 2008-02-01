@@ -74,13 +74,13 @@ public final class PointPropertyEdit implements IProfilChange
   {
     if( hint != null )
       hint.setPointValuesChanged();
-    final Double[] oldValues = new Double[m_points.length];
+    final Object[] oldValues = new Object[m_points.length];
     int i = 0;
     for( final IRecord point : m_points )
     {
       if( i < oldValues.length )
       {
-        oldValues[i] = (Double) point.getValue( m_property );
+        oldValues[i] = point.getValue( m_property );
 
         point.setValue( m_property, i < m_newValues.length ? m_newValues[i] : Double.NaN );
       }
