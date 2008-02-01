@@ -193,7 +193,7 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
   public IAxis[] createAxis( )
   {
     final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
-    TimeserieUtils.getUnit( m_axisTypeValue );
+//    TimeserieUtils.getUnit( m_axisTypeValue );
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;
