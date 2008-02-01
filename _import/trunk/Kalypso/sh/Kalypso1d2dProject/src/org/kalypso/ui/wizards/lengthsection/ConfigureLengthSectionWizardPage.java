@@ -228,6 +228,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     m_comboRiverLineNameField.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -393,7 +394,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     if( m_riverNameField == null )
     {
-      MessageDialog.openInformation( getShell(), "Linienthema auswählen", "Kein geeignetes Linienthema ausgewählt.");
+      MessageDialog.openInformation( getShell(), "Linienthema auswählen", "Kein geeignetes Linienthema ausgewählt." );
       return;
     }
 
@@ -457,12 +458,25 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     m_riverNameSet.clear();
 
     m_riverFeatures = m_riverLineTheme.getFeatureList();
-    IPropertyType propertyType;
+    IPropertyType propertyType = null;
     for( final Object o : m_riverFeatures )
     {
       final Feature riverFeature = (Feature) o;
-      propertyType = riverFeature.getFeatureType().getProperty( new QName( "namespace", m_riverNameField ) );
 
+      IPropertyType[] properties = riverFeature.getFeatureType().getProperties();
+
+      for( IPropertyType pt : properties )
+      {
+
+        if( pt.getQName().getLocalPart().equals( m_riverNameField ) )
+        {
+          propertyType = pt;
+          break;
+        }
+      }
+
+      if( propertyType == null )
+        return;
       if( propertyType instanceof IValuePropertyType )
       {
         final IValuePropertyType vpt = (IValuePropertyType) propertyType;
@@ -474,11 +488,12 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     }
     m_comboRiverLineName.setInput( m_riverNameSet );
     final Object element = m_comboRiverLineName.getElementAt( 0 );
-    if( element == null )
-    {
-      MessageDialog.openInformation( getShell(), "Gewässerfeld auswählen", "Ausgewähltes Feld enthält keine geeigneten Informationen." );
-      return;
-    }
+    // if( element == null )
+    // {
+    // MessageDialog.openInformation( getShell(), "Gewässerfeld auswählen", "Ausgewähltes Feld enthält keine geeigneten
+    // Informationen." );
+    // return;
+    // }
     m_comboRiverLineName.setSelection( new StructuredSelection( element ) );
   }
 
