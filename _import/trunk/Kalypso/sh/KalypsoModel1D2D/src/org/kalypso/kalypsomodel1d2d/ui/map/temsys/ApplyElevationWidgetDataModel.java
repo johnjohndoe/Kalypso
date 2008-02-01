@@ -87,7 +87,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   private static final String[] KEYS = { ITerrainModel.class.toString(), ITerrainElevationModelSystem.class.toString(), ITerrainElevationModel.class.toString(), IMapModell.class.toString(),
       SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), MapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
 
-  private boolean ignoreMapSelection = false;
+  private boolean m_ignoreMapSelection = false;
 
   private final ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
@@ -207,26 +207,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setData( GM_Polygon.class.toString(), selectionArea );
   }
 
-  public ITerrainModel getTerrainModel( )
-  {
-    // return terrainModel;
-    return (ITerrainModel) getData( ITerrainModel.class.toString() );
-  }
-
-  public void setTerrainModel( final ITerrainModel terrainModel )
-  {
-    // this.terrainModel = terrainModel;
-    // if(terrainModel!=null)
-    // {
-    // this.elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
-    // }
-    // else
-    // {
-    // this.elevationModelSystem = null;
-    // }
-    setData( ITerrainModel.class.toString(), terrainModel );
-  }
-
   public IKalypsoFeatureTheme getElevationTheme( )
   {
     // return elevationTheme;
@@ -257,7 +237,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public void selectionChanged( final IFeatureSelection selection )
   {
     // TODO pat maybe get th list from dataModel
-    if( ignoreMapSelection )
+    if( m_ignoreMapSelection )
     {
       return;
     }
@@ -276,32 +256,21 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   public void setIgnoreMapSelection( final boolean ignoreMapSelection )
   {
-    this.ignoreMapSelection = ignoreMapSelection;
+    m_ignoreMapSelection = ignoreMapSelection;
   }
 
   public boolean getIgnoreMapSelection( )
   {
-    return ignoreMapSelection;
+    return m_ignoreMapSelection;
   }
 
   public final IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
-    final ITerrainModel terrainModel = getTerrainModel();
-    if( terrainModel == null )
-    {
-      return null;
-    }
-
-    final ITerrainElevationModelSystem elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
+    final ITerrainElevationModelSystem elevationModelSystem = getElevationModelSystem();
     if( elevationModelSystem == null )
-    {
       return null;
-    }
     else
-    {
-      final IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
-      return terrainElevationModels;
-    }
+      return elevationModelSystem.getTerrainElevationModels();
   }
 
 }
