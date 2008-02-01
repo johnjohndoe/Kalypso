@@ -64,6 +64,7 @@ import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -173,6 +174,11 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
 
           if( intersection instanceof GM_Point )
             performFinish( branch, crossSection, (GM_Point) intersection );
+          else if( intersection instanceof GM_MultiPoint )
+          {
+            final GM_MultiPoint mp = (GM_MultiPoint) intersection;
+            performFinish( branch, crossSection, mp.getPointAt( 0 ) );
+          }
           else
             throw (new NotImplementedException());
         }
