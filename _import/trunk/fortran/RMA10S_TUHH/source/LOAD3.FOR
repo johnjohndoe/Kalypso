@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP   10 Jan 2008    5:16 pm
+C     Last change:  WP    2 Feb 2008   11:55 am
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -63,18 +63,18 @@ C...... Set direction for 1D - 2D junction node plus other initialise.
 C-
       IF(IENT .EQ. 0) THEN
         CALL GETCON
-        !NiS,may06: copy of element and point number
+        !nis,com: copy of element and point number
         NPSAV=NP
         NESAV=NE
 
-        !NiS,may06: do for every element
+        !nis,com: do for every element
         DO 140 N=1,NE
           NN=NFIXH(N)
 cipk oct96 save original order
 C          nelord(n)=nfixh(n)
 CZZZ
             if (nn .eq. 0)  goto 140
-          !NiS,may06: other way round, to every equation processing number an element number is stored
+          !nis,com: other way round, to every equation processing number an element number is stored
           NREORD(NN)=N
   140   CONTINUE
         IENT=IENT+1

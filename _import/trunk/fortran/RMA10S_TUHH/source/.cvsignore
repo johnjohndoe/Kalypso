@@ -12,6 +12,12 @@
 *.M
 *.K
 *.k
+*.txt
+*.2d
+fort.*
+*.dat
+*.R10
+*.rm1
 *.mod
 *.bak
 *.jaj
@@ -29,7 +35,9 @@
 *.zip
 *.map
 *.MAP
+*.OUT
 deaktivierteSubroutinen
 Sicherungen
 Neuer Ordner
 oldSubroutines
+result
