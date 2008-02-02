@@ -73,7 +73,7 @@ public interface IRMA10SModelElementHandler
   public void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel );
 
   /**
-   * Handle a line that the reader cannot interprete
+   * Handle a line that the reader cannot interpret
    * 
    * @param lineString
    *            the line that cannot be interpreted by the ready
@@ -96,4 +96,6 @@ public interface IRMA10SModelElementHandler
   public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda );
 
   public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 );
+
+  public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList );
 }

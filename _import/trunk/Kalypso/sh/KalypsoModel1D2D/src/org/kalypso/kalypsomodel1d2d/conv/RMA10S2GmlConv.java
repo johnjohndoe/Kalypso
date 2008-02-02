@@ -46,7 +46,9 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -119,6 +121,7 @@ public class RMA10S2GmlConv
     final Pattern lineDA = Pattern.compile( "DA.*" ); //$NON-NLS-1$
     final Pattern lineTL = Pattern.compile( "TL.*" ); //$NON-NLS-1$
     final Pattern lineZU = Pattern.compile( "ZU.*" ); //$NON-NLS-1$
+    final Pattern lineJE = Pattern.compile( "JE.*" ); //$NON-NLS-1$
 
     m_monitor.beginTask( Messages.getString( "RMA10S2GmlConv.0" ), 100 );
     m_handler.start();
@@ -155,6 +158,8 @@ public class RMA10S2GmlConv
         interprete1d2dJunctionElement( line );
       else if( lineZU.matcher( line ).matches() )
         interpreteNodeInformationLine( line );
+      else if( lineJE.matcher( line ).matches() )
+        interpreteJunctionInformationLine( line );
       else if( VERBOSE_MODE )
         System.out.println( Messages.getString( "RMA10S2GmlConv.1" ) + line ); //$NON-NLS-1$
     }
@@ -345,6 +350,98 @@ public class RMA10S2GmlConv
     }
   }
 
+  private void interpreteJunctionInformationLine( final String line )
+  {
+    // JE 9*I10
+    // JE 1 2 333 444 555 666 777 4 3 2
+    // JE
+    // -number of junction element
+    // - nodeID1
+    // - nodeID2
+    // - nodeID3
+    // - nodeID4 (opt.)
+    // - nodeID5 (opt.)
+    // - nodeID6 (opt.)
+    // - nodeID7 (opt.)
+    // - nodeID8 (opt.)
+
+    // TODO: implementation not very nice. right now it only works with junctions up to 5 nodes!
+
+    final Pattern junctionLinePattern3 = Pattern.compile( "JE\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*" ); //$NON-NLS-1$
+    final Pattern junctionLinePattern4 = Pattern.compile( "JE\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*" ); //$NON-NLS-1$
+    final Pattern junctionLinePattern5 = Pattern.compile( "JE\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*" ); //$NON-NLS-1$
+
+    try
+    {
+      Matcher matcher = junctionLinePattern3.matcher( line );
+      if( matcher.matches() )
+      {
+        final int junctionId = Integer.parseInt( matcher.group( 1 ) );
+        final List<Integer> junctionNodeIDList = new ArrayList<Integer>();
+
+        final Integer nodeID1 = Integer.parseInt( matcher.group( 2 ) );
+        final Integer nodeID2 = Integer.parseInt( matcher.group( 3 ) );
+        final Integer nodeID3 = Integer.parseInt( matcher.group( 4 ) );
+
+        junctionNodeIDList.add( nodeID1 );
+        junctionNodeIDList.add( nodeID2 );
+        junctionNodeIDList.add( nodeID3 );
+
+        m_handler.handle1dJunctionInformation( line, junctionId, junctionNodeIDList );
+      }
+      else
+      {
+        matcher = junctionLinePattern4.matcher( line );
+
+        if( matcher.matches() )
+        {
+          final int junctionId = Integer.parseInt( matcher.group( 1 ) );
+          final List<Integer> junctionNodeIDList = new ArrayList<Integer>();
+
+          final Integer nodeID1 = Integer.parseInt( matcher.group( 2 ) );
+          final Integer nodeID2 = Integer.parseInt( matcher.group( 3 ) );
+          final Integer nodeID3 = Integer.parseInt( matcher.group( 4 ) );
+          final Integer nodeID4 = Integer.parseInt( matcher.group( 5 ) );
+
+          junctionNodeIDList.add( nodeID1 );
+          junctionNodeIDList.add( nodeID2 );
+          junctionNodeIDList.add( nodeID3 );
+          junctionNodeIDList.add( nodeID4 );
+
+          m_handler.handle1dJunctionInformation( line, junctionId, junctionNodeIDList );
+        }
+        else
+        {
+          matcher = junctionLinePattern5.matcher( line );
+          if( matcher.matches() )
+          {
+            final int junctionId = Integer.parseInt( matcher.group( 1 ) );
+            final List<Integer> junctionNodeIDList = new ArrayList<Integer>();
+
+            final Integer nodeID1 = Integer.parseInt( matcher.group( 2 ) );
+            final Integer nodeID2 = Integer.parseInt( matcher.group( 3 ) );
+            final Integer nodeID3 = Integer.parseInt( matcher.group( 4 ) );
+            final Integer nodeID4 = Integer.parseInt( matcher.group( 5 ) );
+            final Integer nodeID5 = Integer.parseInt( matcher.group( 6 ) );
+
+            junctionNodeIDList.add( nodeID1 );
+            junctionNodeIDList.add( nodeID2 );
+            junctionNodeIDList.add( nodeID3 );
+            junctionNodeIDList.add( nodeID4 );
+            junctionNodeIDList.add( nodeID5 );
+
+            m_handler.handle1dJunctionInformation( line, junctionId, junctionNodeIDList );
+          }
+        }
+      }
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+    }
+    catch( final NumberFormatException e )
+    {
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+    }
+  }
+
   // private void interpreteFlowResistanceLine( final String line )
   // {
   // Matcher matcher = null;
@@ -383,6 +480,9 @@ public class RMA10S2GmlConv
         final int currentRougthnessClassID = Integer.parseInt( matcher.group( 2 ) );
         final int previousRoughnessClassID = Integer.parseInt( matcher.group( 3 ) );
         final int eleminationNumber = Integer.parseInt( matcher.group( 4 ) );
+        final int weirUpStreamNode = Integer.parseInt( matcher.group( 5 ) ); // opt.
+        final int calcId = Integer.parseInt( matcher.group( 6 ) );
+
         m_handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, eleminationNumber );
       }
       else

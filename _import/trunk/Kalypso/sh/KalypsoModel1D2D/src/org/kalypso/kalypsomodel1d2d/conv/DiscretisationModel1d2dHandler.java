@@ -82,7 +82,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final HashMap<Integer, String> m_elementsNameConversionMap = new HashMap<Integer, String>( 5000 );
 
-  private HashMap<GM_Point, IFE1D2DNode> m_pointCashe = new HashMap<GM_Point, IFE1D2DNode>( 10000 );
+  private final HashMap<GM_Point, IFE1D2DNode> m_pointCashe = new HashMap<GM_Point, IFE1D2DNode>( 10000 );
 
   public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IPositionProvider positionProvider )
   {
@@ -337,6 +337,16 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      double, double, double, double)
    */
   public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dJunctionInformation(java.lang.String,
+   *      int, java.util.List)
+   */
+  public void handle1dJunctionInformation( String line, int junctionId, List<Integer> junctionNodeIDList )
   {
     // TODO Auto-generated method stub
 

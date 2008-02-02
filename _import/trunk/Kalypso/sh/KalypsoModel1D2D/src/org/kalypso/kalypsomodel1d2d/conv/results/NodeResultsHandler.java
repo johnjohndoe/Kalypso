@@ -318,7 +318,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       GMLNodeResult nodeUp = m_nodeIndex.get( currentArc.node2ID );
 
       // is it a 1d- or 2d-element
-      if( currentRougthnessClassID == 89 ) // 1d
+      if( currentRougthnessClassID == 89 || currentRougthnessClassID == -89 ) // 1d
       {
         /* 1d elements */
         try
@@ -721,6 +721,81 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
+  @SuppressWarnings("unchecked")
+  private void create1dJunctionTriangles( final List<INodeResult> nodeList, final List<GM_Curve> curveList ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
+  {
+    BufferedReader nodeReader = null;
+    BufferedReader eleReader = null;
+    PrintWriter pwSimuLog;
+
+    final GM_Curve[] curves = curveList.toArray( new GM_Curve[curveList.size()] );
+    final INodeResult[] nodeResults = nodeList.toArray( new INodeResult[nodeList.size()] );
+
+    final CS_CoordinateSystem crs = curveList.get( 0 ).getCoordinateSystem();
+
+    pwSimuLog = new PrintWriter( System.out );
+
+    final File tempDir = FileUtilities.createNewTempDir( "Triangle" );
+    final File polyfile = new File( tempDir, "input.poly" );
+
+    BufferedOutputStream strmPolyInput = null;
+
+    try
+    {
+      strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
+      ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, curveList, pwSimuLog );
+      strmPolyInput.close();
+
+      // create command
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "create command" );
+      final StringBuffer cmd = ConstraintDelaunayHelper.createTriangleCommand( polyfile );
+
+      // start Triangle
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "start Triangle" );
+      ConstraintDelaunayHelper.execTriangle( pwSimuLog, tempDir, cmd );
+
+      // get the triangulation
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "get the triangulation" );
+      final File nodeFile = new File( tempDir, "input.1.node" );
+      final File eleFile = new File( tempDir, "input.1.ele" );
+
+      if( !nodeFile.exists() || !eleFile.exists() )
+      {
+        pwSimuLog.append( "Fehler beim Ausführen von triangle.exe" );
+        pwSimuLog.append( "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
+        pwSimuLog.append( "Fehler: triangle.exe konnte nicht ausgeführt werden." );
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "error while executing triangle.exe" );
+        return;
+      }
+
+      nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
+      eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
+
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "parse triangle nodes" );
+      final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
+
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "parse triangle elements" );
+      final List<GM_Surface> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
+
+      for( final GM_Surface<GM_SurfacePatch> element : elements )
+      {
+        for( final GM_SurfacePatch surfacePatch : element )
+        {
+          final GM_Position[] ring = surfacePatch.getExteriorRing();
+          feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, ring );
+        }
+      }
+    }
+    finally
+    {
+      IOUtils.closeQuietly( nodeReader );
+      IOUtils.closeQuietly( eleReader );
+      IOUtils.closeQuietly( pwSimuLog );
+      IOUtils.closeQuietly( strmPolyInput );
+      FileUtilities.deleteRecursive( tempDir );
+    }
+  }
+
   private void feedTriangleEaterWithJunctionResults( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance, final CS_CoordinateSystem crs, final GM_Position[] ring )
   {
     final List<INodeResult> nodes = new LinkedList<INodeResult>();
@@ -793,12 +868,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   }
 
-  private void feedTriangleEaterWith1dResults( final GMLNodeResult[] nodeResults, final GM_Curve[] curves, final double curveDistance, final CS_CoordinateSystem crs, final GM_Position[] ring )
+  private void feedTriangleEaterWith1dResults( final INodeResult[] nodeResults, final GM_Curve[] curves, final double curveDistance, final CS_CoordinateSystem crs, final GM_Position[] ring )
   {
     final List<INodeResult> nodes = new LinkedList<INodeResult>();
 
-    for( final GM_Position position : ring )
+    for( int i = 0; i < ring.length - 1; i++ )
     {
+      final GM_Position position = ring[i];
+
       final double x = position.getX();
       final double y = position.getY();
       double z = position.getZ(); // here: water level
@@ -808,27 +885,23 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       double vy = 0;
 
       final GM_Point point = GeometryFactory.createGM_Point( position, crs );
-
       final GM_Object buffer = point.getBuffer( curveDistance / 2 );
 
-      if( buffer.intersects( curves[0] ) == true )
+      boolean intersectFound = false;
+
+      for( int j = 0; j < curves.length; j++ )
       {
-        wsp = nodeResults[0].getWaterlevel();
-        vx = nodeResults[0].getVelocity().get( 0 );
-        vy = nodeResults[0].getVelocity().get( 1 );
-        z = nodeResults[0].getPoint().getZ();
+        if( buffer.intersects( curves[j] ) == true )
+        {
+          wsp = nodeResults[j].getWaterlevel();
+          vx = nodeResults[j].getVelocity().get( 0 );
+          vy = nodeResults[j].getVelocity().get( 1 );
+          z = nodeResults[j].getPoint().getZ();
+          intersectFound = true;
+        }
       }
-      else if( buffer.intersects( curves[1] ) == true )
-      {
-        wsp = nodeResults[1].getWaterlevel();
-        vx = nodeResults[1].getVelocity().get( 0 );
-        vy = nodeResults[1].getVelocity().get( 1 );
-        z = nodeResults[1].getPoint().getZ();
-      }
-      else
-      {
+      if( intersectFound == false )
         KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "no profile points found." );
-      }
 
       final INodeResult node = new SimpleNodeResult();
       node.setLocation( x, y, z, crs );
@@ -845,7 +918,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       nodes.add( node );
     }
 
-    m_triangleEater.add( nodes, true );
+    if( nodes.size() == 3 )
+      m_triangleEater.add( nodes, true );
   }
 
   /**
@@ -1754,5 +1828,53 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // result.setDepth( 0.0 );
     // }
     // }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dJunctionInformation(java.lang.String,
+   *      int, java.util.List)
+   */
+  public void handle1dJunctionInformation( String line, int junctionId, List<Integer> junctionNodeIDList )
+  {
+
+    try
+    {
+      // get all junction profile curves
+      final List<GM_Curve> profileCurveList = new ArrayList<GM_Curve>();
+      final List<INodeResult> nodeList = new ArrayList<INodeResult>();
+
+      for( Integer nodeID : junctionNodeIDList )
+      {
+        if( nodeID == null )
+          continue;
+
+        GMLNodeResult nodeResult = m_nodeIndex.get( nodeID );
+
+        final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodeResult );
+
+        if( teschkeRelation == null )
+          break;
+
+        final WspmProfile profile = teschkeRelation.getProfile();
+
+        // get the profile Curves of the two nodes defining the current element
+        final GM_Curve curve = NodeResultHelper.getProfileCurveFor1dNode( profile );
+        // TODO: maybe cut all curves at possible intersection points(?)
+
+        profileCurveList.add( curve );
+        nodeList.add( nodeResult );
+      }
+
+      /* now we have all curves and use Triangle in order to get the triangles */
+
+      if( nodeList.size() > 1 )
+        create1dJunctionTriangles( nodeList, profileCurveList );
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
   }
 }
