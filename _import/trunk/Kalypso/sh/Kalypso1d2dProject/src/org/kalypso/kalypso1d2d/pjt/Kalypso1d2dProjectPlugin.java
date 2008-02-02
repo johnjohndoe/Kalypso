@@ -1,12 +1,14 @@
 package org.kalypso.kalypso1d2d.pjt;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioController;
@@ -50,13 +52,12 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     m_imageProvider = new PluginImageProvider( this );
     m_imageProvider.resetTmpFiles();
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext currentState = service.getCurrentState();
-    final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    // this way we make sure the plug-in is activated
+    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     m_szenarioController = new SzenarioController();
-    caseDataProvider.addScenarioDataListener( m_szenarioController );
-    m_szenarioController.scenarioChanged( (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME ) );
+    dataProvider.addScenarioDataListener( m_szenarioController );
+    final IContainer scenarioFolder = dataProvider.getScenarioFolder();
+    m_szenarioController.scenarioChanged( scenarioFolder );
   }
 
   /**

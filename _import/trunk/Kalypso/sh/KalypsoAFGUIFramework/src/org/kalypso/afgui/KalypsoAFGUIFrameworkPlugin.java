@@ -99,7 +99,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
         {
           m_taskExecutor.stopActiveTask();
-          stopSzenarioSourceProvider();
           return true;
         }
         else
@@ -130,6 +129,16 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       m_perspectiveWatcher = new PerspectiveWatcher<Scenario>( m_activeWorkContext.getCurrentCase() );
       m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
     }
+
+    if( m_szenarioSourceProvider == null )
+    {
+      // This can only be called if the platform has already been started
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+      m_szenarioDataProvider = new SzenarioDataProvider();
+      m_szenarioSourceProvider = new CaseHandlingSourceProvider<Scenario, IModel>( m_activeWorkContext, m_szenarioDataProvider );
+      handlerService.addSourceProvider( m_szenarioSourceProvider );
+    }
   }
 
   /**
@@ -151,6 +160,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       {
         commandService.removeExecutionListener( m_taskExecutionListener );
       }
+      stopSzenarioSourceProvider();
     }
 
     plugin = null;
@@ -160,7 +170,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   public ActiveWorkContext<Scenario> getActiveWorkContext( )
   {
     startActiveWorkContext();
-    startSzenarioSourceProvider();
     return m_activeWorkContext;
   }
 
@@ -201,43 +210,30 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     return imageDescriptorFromPlugin( PLUGIN_ID, path );
   }
 
-  private void startSzenarioSourceProvider( )
-  {
-    if( m_szenarioSourceProvider == null )
-    {
-      // This can only be called if the platform has already been started
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      m_szenarioDataProvider = new SzenarioDataProvider();
-      m_szenarioSourceProvider = new CaseHandlingSourceProvider<Scenario, IModel>( m_activeWorkContext, m_szenarioDataProvider );
-      handlerService.addSourceProvider( m_szenarioSourceProvider );
-    }
-  }
-
   private void stopSzenarioSourceProvider( )
   {
-    final Properties properties = createProperties();
-    final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
-    final File file = new File( fileName );
-    if( file.exists() )
+    if( PlatformUI.isWorkbenchRunning() && m_activeWorkContext != null )
     {
-      file.delete();
-    }
-    try
-    {
-      properties.storeToXML( new FileOutputStream( file ), "" );
-    }
-    catch( final FileNotFoundException e1 )
-    {
-      e1.printStackTrace();
-    }
-    catch( final IOException e1 )
-    {
-      e1.printStackTrace();
-    }
+      final Properties properties = createProperties();
+      final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
+      final File file = new File( fileName );
+      if( file.exists() )
+      {
+        file.delete();
+      }
+      try
+      {
+        properties.storeToXML( new FileOutputStream( file ), "" );
+      }
+      catch( final FileNotFoundException e1 )
+      {
+        e1.printStackTrace();
+      }
+      catch( final IOException e1 )
+      {
+        e1.printStackTrace();
+      }
 
-    if( PlatformUI.isWorkbenchRunning() )
-    {
       try
       {
         m_activeWorkContext.setCurrentCase( null );
@@ -248,10 +244,12 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       }
       m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
     }
+    m_activeWorkContext = null;
   }
 
   /**
    * Creates properties that contain current project and case information for restoring state later
+   * {@link ActiveWorkContext} must not be null when this is called
    */
   private Properties createProperties( )
   {
