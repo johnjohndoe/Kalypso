@@ -1,4 +1,4 @@
-C     Last change:  WP   10 Jan 2008    4:05 pm
+C     Last change:  WP    2 Feb 2008    1:05 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -89,7 +89,8 @@ CIPK MAR06 ADD IOUTRWD
 !     +         ,ITEQS(90),IURVL(90),NCNV(7)
      +          NCNV(7)
 !Nis,sep06: adding lineimat(50,350) for storage of material of line segments
-     +         ,lineimat(50,350)
+     +         ,lineimat(50,350), lineelement (50, 350)
+
 !-
       !EFa jun07, changed dimension for autoconverge
       !+         ,ITEQS(65),IURVL(65),ITLVL(65),ITEQV(65)

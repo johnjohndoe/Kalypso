@@ -1,4 +1,4 @@
-!     Last change:  NIS  13 Jan 2008   11:47 pm
+!     Last change:  WP    2 Feb 2008    2:52 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -398,7 +398,13 @@ write_elements: DO i = 1, ne
   !for 1D or 2D elements; interpolated elements are excluded; no necessary informations
   ELSE
     if (imat (i) /= 89) then
-      WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
+
+      if (CalcUnitID (i) > 0) then
+        WRITE (IKalypsoFM, 7048) i, CalcUnitID (i), trim (CalcUnitName (i))
+      endif
+
+        WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
+
       !write material types and reordering number
       if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
         BACKSPACE(IKALYPSOFM)
@@ -410,7 +416,12 @@ write_elements: DO i = 1, ne
       end if
     !write number of profiles to interpolate in between
     elseif (imat (i) == 89 .and. (.NOT.(IntPolProf (nop (i, 1))))) then
-      WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i)
+
+      if (CalcUnitID (i) > 0) then
+        write (IKALYPSOFM, 7048) i, CalcUnitID (i), TRIM (CalcUnitName (i))
+      end if
+      WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i)
+
       write (IKALYPSOFM, 7046) i, IntPolNo (i)
     end if
 
@@ -528,6 +539,9 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7045 FORMAT ('IR', i10,4f20.7)
  !nis,jan08: no. of interpolated profiles
  7046 FORMAT ('IP', 2i10)
+ !nis,jan08: for Calculation units
+ 7048 format ('CU', 2i10, '(a128)')
+
 
 
 

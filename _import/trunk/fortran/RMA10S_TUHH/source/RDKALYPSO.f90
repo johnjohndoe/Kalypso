@@ -1,4 +1,4 @@
-!     Last change:  WP   21 Jan 2008    8:13 pm
+!     Last change:  WP    2 Feb 2008    2:54 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1398,6 +1398,12 @@ reading: do
       endif
     end if
 
+    !get CalculationUnit affiliation
+    if (linie (1:2) == 'CU') then
+      if (KSWIT /= 1) then
+        read (linie, '(a2, 2i10, a)') id_local, i, CalcUnitID (i), CalcUnitName (i)
+      endif
+    end if
     !ELEMENT DEFINITIONS ---
     IF (linie (1:2) .eq.'FE') then
       !NiS,mar06: Find out maximum ELEMENT number
@@ -1495,8 +1501,7 @@ reading: do
       ELSE
         WRITE(*,*) MaxLT
         READ (linie, '(a2,4i10)') id_local, i, (TransLines(i,k),k=1,3)
-        WRITE(*,*) id_local, i, Translines(i,1), TransLines(i,3)
-        WRITE(*,*) linie
+        TransitionElement (TransLines(i, 1)) = .true.
 !        MaxLT = MaxLT + 1
       END IF
     end if
@@ -2147,7 +2152,7 @@ ENDDO
 
 
 call InterpolateProfs (statElSz, statNoSz, MaxP, MaxE, maxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
-                    & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat)
+                    & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat, TransitionElement, MaxLT, TransLines)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,mar06: COMMENTS
@@ -2213,7 +2218,7 @@ call InterpolateProfs (statElSz, statNoSz, MaxP, MaxE, maxIntPolElts, IntPolNo, 
 !nis,jan07: Work on Line transitions
 !---------------------------------------------------------------------------------------------------------------------------------------------
 !nis,jan07: Turning the transitioning elements, if necessary; while doing this: Testing, whether transition is properly defined
-if (maxlt.ne.0) then
+if (maxlt /= 0) then
   !run through all possible transitionings
   elementturning: do i = 1, maxlt
 
@@ -2221,11 +2226,14 @@ if (maxlt.ne.0) then
     if (TransLines (i, 1) == 0) CYCLE elementturning
 
     !test for correct order of nodes in transitioning element
-    if (nop(TransLines(i,1),3) .ne. TransLines(i,3)) then
+    if (nop (TransLines (i, 1), 3) .ne. TransLines (i, 3)) then
 
       !nis,jan07: Checking, whether node is defined in element on the other slot (slot 1)
-      if (nop (TransLines (i, 1), 1) /= TransLines (i, 3)) &
-     &  call ErrorMessageAndStop (1403, i, cord (nop (TransLines (i, 1), 3), 1), cord (nop (TransLines (i, 1), 3), 1))
+      if (nop (TransLines (i, 1), 1) /= TransLines (i, 3)) then!&
+
+     !&  call ErrorMessageAndStop (1403, i, cord (nop (TransLines (i, 1), 3), 1), cord (nop (TransLines (i, 1), 3), 1))
+      call ErrorMessageAndStop (1403, i, cord (nop (TransLines (i, 1), 3), 1), cord (nop (TransLines (i, 1), 3), 1))
+      endif
 
     end if
   end do elementturning
@@ -2738,9 +2746,10 @@ END SUBROUTINE start_node
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 subroutine InterpolateProfs (statElSz, statNoSz, MaxP, MaxE, MaxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
-                          & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat)
+                          & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat, TransitionElement, MaxLT, &
+                          & TransLines )
 implicit none
-INTEGER, intent (IN) :: statElSz, statNoSz, MaxP, MaxE, MaxIntPolElts
+INTEGER, intent (IN) :: statElSz, statNoSz, MaxP, MaxE, MaxLT, MaxIntPolElts
 integer, intent (in) :: IntPolNo (1: MaxE)
 INTEGER, intent (INOUT) :: IntPolElts (1: MaxE, 1: MaxIntPolElts)
 integer, intent (inout) :: NeighProf (1: MaxP, 1: 2)
@@ -2749,11 +2758,12 @@ integer, intent (inout) :: nop (1: MaxE, 1: 8), imat (1: MaxE)
 real, intent (inout) :: cord (1: MaxP, 1: 2)
 REAL, intent (inout) :: ao (1: MaxP), kmx (1: MaxP), kmWeight (1: MaxP)
 REAL, INTENT (INOUT) :: qgef (1: MaxP)
-LOGICAL, INTENT (INOUT) :: IntPolProf (1: MaxP)
+LOGICAL, INTENT (INOUT) :: IntPolProf (1: MaxP), TransitionElement (1: MaxE)
+INTEGER, INTENT (INOUT) :: TransLines (1: MaxLT, 1: 3)
 !
 !*********local ones***********
 INTEGER :: i, j
-integer :: NewNode, NewElt
+integer :: NewNode, NewElt, TransLine
 real (kind = 8) :: DX, DY, DH, DIST, origx, origy
 
 
@@ -2842,6 +2852,18 @@ do i = 1, statElSz
       !Generate the last element
       if (j == IntPolNo (i) ) then
         NewElt = NewElt + 1
+
+        if (TransitionElement(i)) then
+          findtransition: do TransLine = 1, MaxLT
+            if (TransLines (TransLine, 3) == nop (i, 4)) then
+              TransitionElement(i) = .false.
+              TransitionElement(NewElt) = .true.
+              TransLines (TransLine, 1) = NewElt
+              EXIT findtransition
+            end if
+          end do findtransition
+        end if
+
         IntPolElts (i, j) = NewElt
         imat (NewElt) = imat (i)
         if (j == 1) then

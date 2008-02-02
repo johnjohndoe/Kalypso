@@ -1,4 +1,4 @@
-C     Last change:  WP   17 Dec 2007    4:51 pm
+C     Last change:  WP    2 Feb 2008   12:47 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -345,7 +345,7 @@ cipk aug00 experimental
       IF(ITRANSIT .EQ. 1  .and. maxn .lt. 4) CALL TWODSW
 
       WRITE (*,*) 'ENTERING LOAD.subroutine'
-      CALL LOAD
+      CALL LOAD (dset)
 
 C-
 C......  Compute areas of continuity lines for stage flow input

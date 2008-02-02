@@ -1,4 +1,4 @@
-C     Last change:  WP    4 Jan 2008   12:41 pm
+C     Last change:  WP    2 Feb 2008    1:03 pm
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -139,6 +139,7 @@ CIPK OCT98 CONVERT TO F90
 
               !nis,sep06: Note the roughness class of the of the adjacent element, if it is a boundary node
               lineimat(j,l+1) = ABS(imat(jj))
+              lineelement (j, l+1) = jj
               LineCorrectionKS(j, l+1)   = CorrectionKS(jj)
               LineCorrectionAxAy(j, l+1) = CorrectionAxAy(jj)
               LineCorrectionDp(j, l+1)   = CorrectionDp(jj)

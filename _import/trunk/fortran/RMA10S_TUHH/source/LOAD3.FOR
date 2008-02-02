@@ -7,14 +7,14 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP    2 Feb 2008   11:55 am
+C     Last change:  WP    2 Feb 2008    1:22 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
 cipk  last update April 28 1997 add equation dropout
 cipk  last update Oct 31 1996 save nfixh when using optim
 cipk  last update Sep 4 1996  change logic for type 2 spec's of constits
-      SUBROUTINE LOAD
+      SUBROUTINE LOAD (dset)
       USE BLK10MOD
       USE BLK11MOD
       USE BLK10
@@ -27,6 +27,9 @@ CIPK DEC06
       SAVE
 !NiS,may06:testing for non defined variables
 !      implicit none
+
+!nis,feb08: for line transitions
+      REAL (KIND = 8) :: dset
 !-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -895,8 +898,10 @@ cipk oct98 update to f90
   255   CONTINUE
       ENDIF
 
+
       !nis,jan07: Add control for 1D-2D-line-transitions
       if (maxLT.ne.0) then
+
         !test for all possible transitions
         EquationAdjustment: do i=1,MaxLT
 
@@ -925,16 +930,26 @@ cipk oct98 update to f90
             !get copy of node number
             nd = line(LiNo,k)
             !deactivating nodes that are dry
-            if (vel(3,nd) <= 0.0) then
+            if (vel(3,nd) <= DSET) then
               do eqdof = 1, 6
                 nbc(nd,eqdof) = 0
               end do
             !deactivating nodes that are in deactivated element
-            ELSEIF (MOD(k,2) == 0 .AND.
-     +              imat(IsNodeOfElement(nd,1))<0) then
+            ELSEIF (MOD(k,2) == 0 .AND. imat(lineelement(i, k)) <0) then
               do eqdof = 1, 6
                 nbc(nd,eqdof) = 0
               end do
+            ELSEIF (MOD(k,2) /= 0) then
+              if ((k == 1    .and. imat (lineelement (i, k+1)) < 0)
+     +            .Or.
+     +            (k == LiLe .and. imat (lineelement (i, k-1)) < 0)
+     +            .or.
+     +  (imat (lineelement(i,k-1))<0 .AND. imat(lineelement(i,k+1)) < 0)
+     +        )then
+                do eqdof = 1, 6
+                  nbc(nd,eqdof) = 0
+                end do
+              endif
             else
               !Initialize the momentum equations. The velocities are a result of the distribution calculation. This is done for every node
 

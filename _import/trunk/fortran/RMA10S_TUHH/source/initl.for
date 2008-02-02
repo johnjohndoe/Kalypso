@@ -1,4 +1,4 @@
-C     Last change:  WP   28 Jan 2008    4:30 pm
+C     Last change:  WP    2 Feb 2008    2:38 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -205,7 +205,8 @@ CIPK APR06
 
 !NiS,apr06: increase the number of element characteristics array ORT(:,:)
 !      ALLOCATE   (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,14),NFIXH(MAXE)
-      ALLOCATE    (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,17),NFIXH(MAXE)
+!      ALLOCATE    (NOP(MAXE,20),IMAT(MAXE),ORT(MAXE,17),NFIXH(MAXE)
+      ALLOCATE    (NOP (MAXE, 20), IMAT (MAXE), NFIXH (MAXE)
 !-
      3             ,TH(MAXE),AREA(MAXE),NCORN(MAXE),IMATL(MAXE)
      7             ,NOPS(MAXE,8),NCRN(MAXE),LNO(MAXE),SIDF(MAXE)
@@ -216,13 +217,20 @@ CIPK APR06
      +             ,ELAREA(MAXE),neref(MAXE),nedep(MAXE),TVOLC(MAXE)
      +             ,TVOL(MAXE),ICOLLAPE(MAXE),NRELSF(MAXE),SIDFF(MAXE)
      +             ,NOPSS(MAXE,20),NFIXHS(MAXE),EINX(MAXE),EINY(MAXE)
-     +             ,IEDSW1(MAXE),TBFACT1(MAXE),TBMIN1(MAXE)
-     +             ,INOFLOW(MAXE),NCTREF(MAXE),NTMREF(MAXE)
+!     +             ,IEDSW1(MAXE),TBFACT1(MAXE),TBMIN1(MAXE)
+!     +             ,INOFLOW(MAXE),NCTREF(MAXE),NTMREF(MAXE)
+     +             ,INOFLOW(MAXE)
      +             ,NREORD(MAXE),EEXXYY(6,MAXE)
      +             ,IGTP(MAXE),igtcl(MAXE)
      +             ,ELMMIN(MAXE),MANMIN(MAXE),ELMMAX(MAXE),MANMAX(MAXE) 
      +             ,DRAGX(MAXE),DRAGY(MAXE),IMAN(MAXE),HMAN(MAXE,4)
      +             ,MANTAB(MAXE,4,2))
+
+      !nis,jan08: All the following variables are referring to the number of material types (NMAT), which is not known here
+      ALLOCATE (NCTREF (1: 1000), IEDSW1 (1: 1000), ort (1: 1000, 17))
+      ALLOCATE (TBFACT1 (1: 1000), TBMIN1 (1: 1000), NTMREF (1: 1000))
+
+
 
 C     LAYER VARIABLE
       ALLOCATE  (THL(MNPP),THLAY(MNPP,NLAYMX))
@@ -578,19 +586,21 @@ CIPK NOV97
         HDET(J)=0.
         HDOT(J)=0.
       ENDDO
+
       DO J=1,MAXE
         DO K=1,20
           NOP(J,K)=0
           NOPSS(J,K)=0
         ENDDO
         IMAT(J)=0
-!NiS,apr06: increased number of variables:
-!        DO K=1,14
-        DO K=1,17
-!-
-          ORT(J,K)=0.
-        ENDDO
-        LISTEL(J)=0
+!nis,jan08: ort variable is connected to number of material types
+!!NiS,apr06: increased number of variables:
+!!        DO K=1,14
+!        DO K=1,17
+!!-
+!          ORT(J,K)=0.
+!        ENDDO
+!        LISTEL(J)=0
         NFIXH(J)=0
         TH(J)=0.
         AREA(J)=0.
@@ -623,12 +633,12 @@ CIPK NOV97
         NFIXHS(J)=0
         EINX(J)=0.
         EINY(J)=0.
-        IEDSW1(J)=0
-        TBFACT1(J)=0.
-        TBMIN1(J)=0.
+!        IEDSW1(J)=0
+!        TBFACT1(J)=0.
+!        TBMIN1(J)=0.
         INOFLOW(J)=0
-        NCTREF(J)=0
-        NTMREF(J)=0
+!        NCTREF(J)=0
+!        NTMREF(J)=0
         NREORD(J)=0
         ISUBMEL(J)=0
         NFCTP(J)=0
@@ -674,6 +684,20 @@ cipk jan02
         SIDFF(J)=0.0
 
       ENDDO
+
+      !nis,jan08: nctref is for the material types, especially for the weir structures
+      !nis,jan08: ort-variable is according to the material types
+      do j = 1, 1000
+        NCTREF (J) = 0
+        NTMREF (J) = 0
+        IEDSW1 (J) = 0
+        TBFACT1 (J) = 0.
+        TBMIN1 (J) = 0.
+        DO K=1,17
+          ORT(J,K)=0.
+        ENDDO
+      end do
+
       DO I=1,MAXP
         ISTLIN(I)=0.
       ENDDO
@@ -742,12 +766,16 @@ CIPK MAR01
 !-
 
 !nis,jun07: Add initializaton of membership of nodes in a transition
-      ALLOCATE (TransitionMember(1:MaxP))
+      ALLOCATE (TransitionMember (1: MaxP))
+      ALLOCATE (TransitionElement (1: MaxE))
       ALLOCATE (dspecdh(1:MaxP), dspecdv(1:MaxP))
       do i = 1, MaxP
         TransitionMember(i) = .false.
         dspecdh (i) = 0.0
         dspecdv (i) = 0.0
+      end do
+      do i = 1, MaxE
+        TransitionElement (i) = .false.
       end do
 !-
 
@@ -789,6 +817,7 @@ CIPK MAR01
       ALLOCATE (qpoly      (1: MaxPolyQ, 1: maxp, 0:12))
       ALLOCATE (alphapoly  (1: MaxPolyB, 1: maxp, 0:12))
       ALLOCATE (betapoly   (1: MaxPolyB, 1: maxp, 0:12))
+      WRITE(*,*) maxpolya, maxpolyq, maxpolyb
       ALLOCATE (polyrangeA (1: maxp, 1: MaxPolyA))
       ALLOCATE (polyrangeQ (1: maxp, 1: MaxPolyQ))
       ALLOCATE (polyrangeB (1: maxp, 1: MaxPolyB))
@@ -921,6 +950,7 @@ CIPK MAR01
       do i = 1, 50
         do j = 1, 350
           lineimat(i, j) = 0
+          lineelement (i, j) = 0
           LineCorrectionKS (i, j)   = 1.0
           LineCorrectionAxAy (i, j) = 1.0
           LineCorrectionDp (i, j)   = 1.0
@@ -998,6 +1028,11 @@ CIPK MAR01
         kmWeight (i) = 1.0D0
       end do
 
+      ALLOCATE (CalcUnitID (1: MaxE), CalcUnitName (1: MaxE))
+
+      do i = 1, MaxE
+        CalcUnitID (i) = -1
+      end do
 
       RETURN
       END

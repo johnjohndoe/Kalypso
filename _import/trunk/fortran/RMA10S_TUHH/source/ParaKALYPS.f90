@@ -1,4 +1,4 @@
-!     Last change:  WP    1 Feb 2008    7:05 pm
+!     Last change:  WP    2 Feb 2008    2:36 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -90,6 +90,10 @@ INTEGER              :: maxIntPolElts
 LOGICAL, ALLOCATABLE :: IntPolProf (:)
 INTEGER              :: statElSz, statNoSz, NodesToIntPol
 REAL (KIND = 8), ALLOCATABLE :: kmWeight(:)
+
+!nis,feb08: Contribution to calculation base units
+INTEGER, ALLOCATABLE :: CalcUnitID (:)
+CHARACTER (Len = 128), ALLOCATABLE :: CalcUnitName (:)
 
 
 END MODULE 

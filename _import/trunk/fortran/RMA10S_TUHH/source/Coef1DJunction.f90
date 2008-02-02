@@ -1,4 +1,4 @@
-!Last change:  WP   22 Nov 2007    8:34 pm
+!Last change:  WP    2 Feb 2008    5:35 pm
 SUBROUTINE COEF1DJunction (NN,NTX)
 
 
@@ -25,7 +25,7 @@ INTEGER :: PolyPos, findPolynom
 REAL (KIND = 8) :: SA, CX, R, XHT
 real (kind = 4) :: dum2, aml
 REAL (KIND = 8) :: WSEL1, WSELX
-REAL (KIND = 8) :: calcpolynomial
+REAL (KIND = 8) :: calcpolynomial, calcPolynomial1stDerivative
 
 REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
 
@@ -112,33 +112,67 @@ checknodes: DO KK = 1, NCN
     ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:12), vel (3, n1))
     !derivative over velocity
     ESTIFM(1, NA) = DIR(N1) * ah(n1) * xht
+
+    !derivative over depth
+    dahdh (n1) = calcPolynomial1stDerivative (apoly (PolyPos, n1, 0:12), vel(3, n1))
+    ESTIFM(1, NA+2) = DIR(N1) * dahdh (n1) * R * XHT
+
   ENDIF
   !residual error
   F(1) = F(1) - ESTIFM(1, NA) * R
 
 ENDDO checknodes
 
+
+if (imat (NN) == 901) then
+
 NRX=NCON(1)
-checkNodes2: DO KK=2,NCN
-  N1=NCON(KK)
-  IF (N1 .EQ. 0) CYCLE checkNodes2
-  NA=(KK-1)*NDF+1
-  ESTIFM(NA,3)=XHT
-  ESTIFM(NA,NA+2)=-XHT
-  !CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))
-  IF (IDNOPT .LT. 0) THEN
-    HD1 = VEL(3,N1)
-    CALL AMF(HS1,HD1,AKP(N1),ADT(N1),ADB(N1),AML,DUM2,0)
-    WSEL1 = ADO(N1)+HS1
-    HDX = VEL(3,NRX)
-    CALL AMF(HSX,HDX,AKP(NRX),ADT(NRX),ADB(NRX),AML,DUM2,0)
-    WSELX = ADO(NRX)+HSX
-  ELSE
+  checkNodes901: DO KK=2,NCN
+    N1=NCON(KK)
+    IF (N1 .EQ. 0) CYCLE checkNodes901
+    NA=(KK-1)*NDF+1
+    ESTIFM(NA,3)=XHT
+    ESTIFM(NA,NA+2)=-XHT
+    !CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))
+  !  IF (IDNOPT .LT. 0) THEN
+  !    HD1 = VEL(3,N1)
+  !    CALL AMF(HS1,HD1,AKP(N1),ADT(N1),ADB(N1),AML,DUM2,0)
+  !    WSEL1 = ADO(N1)+HS1
+  !    HDX = VEL(3,NRX)
+  !    CALL AMF(HSX,HDX,AKP(NRX),ADT(NRX),ADB(NRX),AML,DUM2,0)
+  !    WSELX = ADO(NRX)+HSX
+  !  ELSE
+  !    WSEL1=AO(N1)+VEL(3,N1)
+  !    WSELX=AO(NRX)+VEL(3,NRX)
+  !  ENDIF
+    !for polynomial approach no marsh-option for the moment!
     WSEL1=AO(N1)+VEL(3,N1)
     WSELX=AO(NRX)+VEL(3,NRX)
-  ENDIF
-  F(NA)=XHT*(WSEL1-WSELX)
-ENDDO checkNodes2
+
+
+    F(NA)=XHT*(WSEL1-WSELX)
+  ENDDO checkNodes901
+
+
+ELSEIF (imat (nn) == 902) then
+
+  NRX = nop (nn, 1)
+  rx = vel (1, nrx) * COS (ALFA(nrx)) + vel (2, nrx) * SIN (ALFA(nrx))
+  thn = vel (3, nrx) + AO(nrx) + rx**2 / (2. * grav)
+  checknodes902: do KK = 2, ncn
+    N1 = nop (nn, kk)
+    if (n1 == 0) CYCLE checknodes902
+    ry = vel (1, n1) * COS (ALFA(n)) + vel (2, n1) * SIN (ALFA (n1))
+    th1 = vel (3, n1) + AO(n1) + ry**2 / (2. * grav)
+    na = (kk - 1) * NDF + 1
+    ESTIFM (na, 1) = rx/ grav
+    ESTIFM (na, 3) = 1.0
+    ESTIFM (na, na) = -ry/ grav
+    ESTIFM (na, na + 2) = -1.0
+    f (na) = th1 - thn
+  end do checknodes902
+
+end if
 
 
 !-------

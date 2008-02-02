@@ -1,4 +1,4 @@
-!     Last change:  EF   17 Jul 2007   12:01 pm
+!     Last change:  WP    2 Feb 2008    5:30 pm
 ! __________________________________________________________________________________________________________
 
 
@@ -26,7 +26,7 @@ USE ParaKALYPS
 INTEGER,INTENT(IN) :: p,nita_auto
 INTEGER :: i
 
-if (p==1.0) then
+if (p==1 ) then
 
   ALLOCATE (iteqs(nita_auto))
   ALLOCATE (iteqv(nita_auto))
@@ -40,25 +40,25 @@ if (p==1.0) then
     itlvl(i)=0.0
   end do
 
-ELSEIF (p==2.0) THEN
+ELSEIF (p==2 ) THEN
 
   DEALLOCATE (iteqs)
   DEALLOCATE (iteqv)
   DEALLOCATE (iurvl)
   DEALLOCATE (itlvl)
 
-ELSEIF (p==3.0) then
+ELSEIF (p==3 ) then
 
   ALLOCATE (rss(nita_auto))
   do i=1,nita_auto
     rss(i)=0.0
   end do
 
-ELSEIF (p==4.0) then
+ELSEIF (p==4 ) then
 
   DEALLOCATE (rss)
 
-ELSEIF (p==5.0) then
+ELSEIF (p==5 ) then
 
   ALLOCATE (iteqs(nita_auto))
   ALLOCATE (iteqv(nita_auto))
@@ -74,7 +74,7 @@ ELSEIF (p==5.0) then
     rss(i)=0.
   end do
 
-ELSEIF (p==6.0) THEN
+ELSEIF (p==6 ) THEN
 
   DEALLOCATE (iteqs)
   DEALLOCATE (iteqv)

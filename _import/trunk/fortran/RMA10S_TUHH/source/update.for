@@ -1,4 +1,4 @@
-C     Last change:  WP   23 Jan 2008    9:53 am
+C     Last change:  WP    2 Feb 2008    5:19 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -518,6 +518,21 @@ cipk sep04
         !nis,sep07
         !ERROR MESSAGE
         !EXECUTION TERMINATED BY EXCESS CHANGES
+
+        if (IntPolProf (problematicNode)) then
+          cord (ProblematicNode, 1)
+     +    = (1.0 - kmWeight (problematicNode))
+     +    * cord (NeighProf (problematicNode, 1), 1)
+     +    + kmWeight (problematicNode)
+     +    * cord (NeighProf (problematicNode, 2), 1)
+
+          cord (ProblematicNode, 2)
+     +    = (1.0 - kmWeight (problematicNode))
+     +    * cord (NeighProf (problematicNode, 1), 2)
+     +    + kmWeight (problematicNode)
+     +    * cord (NeighProf (problematicNode, 2), 2)
+        end if
+
         call ErrorMessageAndStop (4001, problematicNode,
      +       cord(problematicNode, 1), cord(problematicNode, 2))
         !-
