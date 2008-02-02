@@ -1,10 +1,11 @@
-C     Last change:  WP   22 Nov 2007    8:33 pm
+C     Last change:  NIS  28 Jan 2008    9:32 pm
 cipk  last update nov 28 2006 allow for all 1-d control structure options
       SUBROUTINE CSTRC(NN)
       USE BLK10MOD
       USE BLKSUBMOD
       USE BLK11MOD
       USE Para1DPoly
+      USE parakalyps
 
 C
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -586,6 +587,12 @@ CIPK JAN06
               Q1T=Q1T*QFACT1
 CIPK JUN05
             ELSE
+              !calculate the energy at upper and lower part of weir
+              if (UseEnergyCstrc == 1) then
+                WS1 = WS1 + WV1**2 / (2 * grav)
+                WS2 = WS2 + WV2**2 / (2 * grav)
+              end if
+
               CALL WTFORM(Q1T,NCTREF(IMAT(NN)),WS1,WS2)
 CIPK JAN06
               Q1T=Q1T*QFACT1

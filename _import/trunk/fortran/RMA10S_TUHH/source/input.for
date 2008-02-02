@@ -1,4 +1,4 @@
-C     Last change:  WP   10 Jan 2008    6:19 pm
+C     Last change:  WP   29 Jan 2008    6:15 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -743,6 +743,13 @@ C-
       ELSE
         IVEGETATION = 0
       END IF
+      !use of energy elevation for application at weirs
+      if (ID(1:6) == 'ENERGY') then
+        UseEnergyCstrc = 1
+        call ginpt(lin,id,dlin)
+      else
+        UseEnergyCstrc = 0
+      end if
 !-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,sep06: Add switch for approach of boundary-condition-transformation

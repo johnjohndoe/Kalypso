@@ -1,9 +1,11 @@
-!     Last change:  NIS  13 Jan 2008    3:34 pm
+!     Last change:  WP    1 Feb 2008    7:05 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
 !vegetation usage switch
 INTEGER   :: IVEGETATION
+!using energy level for cstrc
+INTEGER   :: UseEnergyCSTRC
 
 !NiS,mar06:	The following arrays and variables belonged in Kalypso-2D to the common-block "raus"; now they are part of this module.
 !		At the moment they are allocated in the RDKALYPS-subroutine and deallocated in the main program RMA10, so that they ARE
@@ -41,7 +43,7 @@ real (KIND=4),allocatable :: gl_bedform(:,:)
 
 !nis,jun07: Adding specific discharge and difference quotients of that over h and v for alle transition nodes
 !           Add pointer for all nodes to be part of a transition or not
-logical, allocatable :: TransitionMember(:)
+logical, allocatable :: TransitionMember(:), TransitionElement(:)
 REAL   , allocatable :: dspecdh (:), dspecdv (:)
 REAL                 :: q2d(1:50)
 !-
