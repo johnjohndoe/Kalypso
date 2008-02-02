@@ -1,12 +1,12 @@
 package org.kalypso.risk.plugin;
 
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.risk.project.SzenarioController;
@@ -56,12 +56,11 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     m_imageProvider = new PluginImageProvider( this );
     m_imageProvider.resetTmpFiles();
 
-    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext currentState = service.getCurrentState();
-    final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    // force plug-in to start
+    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     m_szenarioController = new SzenarioController();
-    caseDataProvider.addScenarioDataListener( m_szenarioController );
-    m_szenarioController.scenarioChanged( (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME ) );
+    dataProvider.addScenarioDataListener( m_szenarioController );
+    m_szenarioController.scenarioChanged( dataProvider.getScenarioFolder() );
   }
 
   /**

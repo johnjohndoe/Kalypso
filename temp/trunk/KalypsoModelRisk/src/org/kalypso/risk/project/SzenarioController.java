@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.project;
 
-import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -61,7 +63,7 @@ public class SzenarioController implements IScenarioDataListener
 {
   private LanduseStyleUpdateListener m_landuseStyleUpdateListener = new LanduseStyleUpdateListener();
 
-  private IFolder m_scenarioDataPath = null;
+  private IContainer m_scenarioDataPath = null;
 
   public SzenarioController( )
   {
@@ -72,12 +74,16 @@ public class SzenarioController implements IScenarioDataListener
     if( m_scenarioDataPath == null )
       return;
     if( model instanceof IRasterizationControlModel )
-      m_landuseStyleUpdateListener.startStyleUpdateJob( m_scenarioDataPath.getFile( "/models/RasterizationControlModel.gml" ) );
+    {
+      final Path path = new Path( "/models/RasterizationControlModel.gml" );
+      final IFile file = m_scenarioDataPath.getFile( path );
+      m_landuseStyleUpdateListener.startStyleUpdateJob( file );
+    }
 
     // maybe get status info from status-model
   }
 
-  public synchronized void scenarioChanged( final IFolder scenarioDataPath )
+  public synchronized void scenarioChanged( final IContainer scenarioDataPath )
   {
     // unregister any listeners
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( m_landuseStyleUpdateListener );
