@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.views;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
@@ -71,7 +71,7 @@ public class SzenarioController implements IScenarioDataListener
 
   private RoughnessStyleUpdateListener m_roughnessStyleUpdateListener = new RoughnessStyleUpdateListener();
 
-  private IFolder m_scenarioDataPath;
+  private IContainer m_scenarioDataPath;
 
   public SzenarioController( )
   {
@@ -104,7 +104,10 @@ public class SzenarioController implements IScenarioDataListener
     // maybe get status info from status-model
   }
 
-  public synchronized void scenarioChanged( final IFolder scenarioDataPath )
+  /**
+   * @see org.kalypso.afgui.scenarios.IScenarioDataListener#scenarioChanged(org.eclipse.core.resources.IFolder)
+   */
+  public synchronized void scenarioChanged( final IContainer scenarioDataPath )
   {
     m_scenarioDataPath = scenarioDataPath;
 

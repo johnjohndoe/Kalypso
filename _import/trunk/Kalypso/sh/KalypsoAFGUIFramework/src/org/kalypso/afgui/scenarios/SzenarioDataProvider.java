@@ -180,6 +180,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     m_controller.remove( listener );
   }
 
+  /**
+   * @see de.renew.workflow.connector.cases.ICaseDataProvider#setCurrent(org.eclipse.core.resources.IContainer)
+   */
   public void setCurrent( final IContainer scenarioFolder )
   {
     /* Nothing to do if scenario folder stays the same */
@@ -282,12 +285,15 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   {
     for( final IScenarioDataListener listener : m_controller )
     {
-      listener.scenarioChanged( (IFolder) szenarioFolder );
+      listener.scenarioChanged( szenarioFolder );
     }
   }
 
-  // TODO: please comment!<br>
-  // TODO: probably that does not belong here, move to ScenarioHelper instead?
+  /**
+   * TODO: probably that does not belong here, move to ScenarioHelper instead?
+   * 
+   * This method will try to find a model file in this scenario and its parent scenarios. Needs refactoring!
+   */
   public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
   {
     if( szenarioFolder == null )
@@ -381,10 +387,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   }
 
   /**
+   * @see de.renew.workflow.connector.cases.ICaseDataProvider#getModel(java.lang.Class)
+   * 
    * Returns the feature wrapper corresponding to the given key. The class must be one of the known classes by this data
    * provider.
    * <p>
-   * This method block until the gml is loaded, which may take some time
+   * This method blocks until the gml is loaded, which may take some time!
    * </p>.
    */
   @SuppressWarnings("unchecked")
@@ -407,6 +415,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
   }
 
+  /**
+   * @see de.renew.workflow.connector.cases.ICaseDataProvider#isDirty()
+   */
   public boolean isDirty( )
   {
     synchronized( m_keyMap )
@@ -421,7 +432,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   }
 
   /**
-   * @see de.renew.workflow.cases.ICaseDataProvider#isDirty(java.lang.Class)
+   * @see de.renew.workflow.connector.cases.ICaseDataProvider#isDirty(java.lang.Class)
    */
   public boolean isDirty( final Class< ? extends IModel> modelClass )
   {
@@ -449,7 +460,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   }
 
   /**
-   * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(java.lang.Class,
+   * @see de.renew.workflow.connector.cases.ICaseDataProvider#saveModel(java.lang.Class,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   public void saveModel( final Class< ? extends IModel> modelClass, final IProgressMonitor monitor ) throws CoreException
@@ -489,6 +500,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
   }
 
+  /**
+   * @see de.renew.workflow.connector.cases.ICaseDataProvider#saveModel(org.eclipse.core.runtime.IProgressMonitor)
+   */
   public void saveModel( final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "SzenarioDataProvider.16" ), m_keyMap.size() * 100 ); //$NON-NLS-1$
@@ -534,6 +548,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     return (CommandableWorkspace) pool.getObject( key );
   }
 
+  /**
+   * Returns the current scenario's base folder
+   */
   public IContainer getScenarioFolder( )
   {
     return m_scenarioFolder;
