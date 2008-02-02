@@ -782,7 +782,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         for( final GM_SurfacePatch surfacePatch : element )
         {
           final GM_Position[] ring = surfacePatch.getExteriorRing();
-          feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, ring );
+
+          final GM_Position[] poses = new GM_Position[3];
+          /* remove last position */
+          for( int i = 0; i < ring.length - 1; i++ )
+          {
+            poses[i] = ring[i];
+          }
+
+          feedTriangleEaterWith1dResults( nodeResults, curves, 1.0, crs, poses );
         }
       }
     }
@@ -872,7 +880,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     final List<INodeResult> nodes = new LinkedList<INodeResult>();
 
-    for( int i = 0; i < ring.length - 1; i++ )
+    for( int i = 0; i < ring.length; i++ )
     {
       final GM_Position position = ring[i];
 
