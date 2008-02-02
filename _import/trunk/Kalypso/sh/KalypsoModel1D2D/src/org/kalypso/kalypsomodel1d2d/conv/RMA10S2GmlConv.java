@@ -480,8 +480,8 @@ public class RMA10S2GmlConv
         final int currentRougthnessClassID = Integer.parseInt( matcher.group( 2 ) );
         final int previousRoughnessClassID = Integer.parseInt( matcher.group( 3 ) );
         final int eleminationNumber = Integer.parseInt( matcher.group( 4 ) );
-        final int weirUpStreamNode = Integer.parseInt( matcher.group( 5 ) ); // opt.
-        final int calcId = Integer.parseInt( matcher.group( 6 ) );
+        // final int weirUpStreamNode = Integer.parseInt( matcher.group( 5 ) ); // opt.
+        // final int calcId = Integer.parseInt( matcher.group( 6 ) );
 
         m_handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, eleminationNumber );
       }
