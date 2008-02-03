@@ -109,6 +109,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
         final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
         final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell );
         parentKalypsoTheme.setVisible( true );
+        model.getSpecificDamageCoverageCollection().clear();
         new ProgressMonitorDialog( shell ).run( true, false, new IRunnableWithProgress()
         {
           public void run( final IProgressMonitor monitor ) throws InterruptedException
@@ -124,12 +125,13 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 // TODO: check if still ok: propbably delete all underlying grids
 
                 // remove existing (invalid) coverages from the model
-                final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<IAnnualCoverageCollection>();
-                for( final IAnnualCoverageCollection existingAnnualCoverage : specificDamageCoverageCollection )
-                  if( existingAnnualCoverage.getReturnPeriod() == srcAnnualCoverages.getReturnPeriod() )
-                    coveragesToRemove.add( existingAnnualCoverage );
-                for( final IAnnualCoverageCollection coverageToRemove : coveragesToRemove )
-                  specificDamageCoverageCollection.remove( coverageToRemove );
+//                specificDamageCoverageCollection.clear();
+//                final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<IAnnualCoverageCollection>();
+//                for( final IAnnualCoverageCollection existingAnnualCoverage : specificDamageCoverageCollection )
+//                  if( existingAnnualCoverage.getReturnPeriod() == srcAnnualCoverages.getReturnPeriod() )
+//                    coveragesToRemove.add( existingAnnualCoverage );
+//                for( final IAnnualCoverageCollection coverageToRemove : coveragesToRemove )
+//                  specificDamageCoverageCollection.remove( coverageToRemove );
 
                 final IAnnualCoverageCollection dstAnnualCoverages = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
 

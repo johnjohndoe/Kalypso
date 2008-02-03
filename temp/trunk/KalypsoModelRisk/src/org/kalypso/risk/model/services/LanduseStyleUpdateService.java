@@ -133,7 +133,7 @@ public class LanduseStyleUpdateService extends Job
       final List<IRiskZoneDefinition> riskZonesList = model.getRiskZoneDefinitionsList();
       if( riskZonesList != null && riskZonesList.size() > 0 )
       {
-        SLDHelper.exportRasterSymbolyzerSLD( m_riskZonesSymbolyzerSldFile, model.getRiskZoneDefinitionsList(), null, null, monitor );
+        SLDHelper.exportRasterSymbolyzerSLD( m_riskZonesSymbolyzerSldFile, riskZonesList, null, null, monitor );
         final HashMap<Double, String> values = new HashMap<Double, String>();
         for( final IRiskZoneDefinition riskZoneDefinition : riskZonesList )
           values.put( new Double( riskZoneDefinition.getOrdinalNumber() ), riskZoneDefinition.getName() );
