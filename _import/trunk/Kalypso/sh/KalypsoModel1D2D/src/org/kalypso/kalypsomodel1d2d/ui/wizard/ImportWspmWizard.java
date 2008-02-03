@@ -122,6 +122,7 @@ import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -352,14 +353,31 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
     final IRelationType flowRelObsRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POINTSOBSERVATION );
     final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
-
-    /* create new flow relation at node position */
-    final ITeschkeFlowRelation flowRel = flowRelModel.addNew( ITeschkeFlowRelation.QNAME, ITeschkeFlowRelation.class );
-
     final BigDecimal station = qresult.getStation();
 
-    flowRel.setPosition( node.getPoint() );
-    flowRel.setStation( station );
+    // check if there is already teschkeRel on that position; if it is, just replace it with the new one (and inform user
+    // about it)
+    final FeatureList featureList = flowRelModel.getWrappedList();
+    ITeschkeFlowRelation flowRel = null;
+    for( final Object object2 : featureList )
+    {
+      if( object2 instanceof ITeschkeFlowRelation )
+      {
+        final ITeschkeFlowRelation teschkeFlowRelation = (ITeschkeFlowRelation) object2;
+        if( teschkeFlowRelation.getPosition().equals( node.getPoint().getPosition() ) )
+        {
+          flowRel = teschkeFlowRelation;
+          break;
+        }
+      }
+    }
+    if( flowRel == null )
+    {
+      /* create new flow relation at node position */
+      flowRel = flowRelModel.addNew( ITeschkeFlowRelation.QNAME, ITeschkeFlowRelation.class );
+      flowRel.setPosition( node.getPoint() );
+      flowRel.setStation( station );
+    }
     flowRel.setSlope( qresult.getSlope().setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() ); // Round to 5 fraction
     // digits
 
@@ -540,52 +558,93 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final IRecord sohlPoint = ProfilUtil.getMinPoint( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint );
 
-      /* add node */
-      final IFE1D2DNode node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-      addedFeatures.add( node.getWrappedFeature() );
+      // if there is already a node, do not create it again
+      final List<IFE1D2DNode> existingNodeList = discretisationModel.getNodes().query( point.getPosition() );
+      IFE1D2DNode node = null;
+      if( existingNodeList == null || existingNodeList.size() == 0 )
+      {
+        /* add node */
+        node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+        addedFeatures.add( node.getWrappedFeature() );
 
-      node.setName( "" ); //$NON-NLS-1$
-      final String desc = String.format( Messages.getString( "ImportWspmWizard.18" ) + profileMember.getDescription() ); //$NON-NLS-1$
-      node.setDescription( desc );
+        node.setName( "" ); //$NON-NLS-1$
+        final String desc = String.format( Messages.getString( "ImportWspmWizard.18" ) + profileMember.getDescription() ); //$NON-NLS-1$
+        node.setDescription( desc );
 
-      if( point == null )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ImportWspmWizard.19" ) + station ) ); //$NON-NLS-1$
+        if( point == null )
+          throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ImportWspmWizard.19" ) + station ) ); //$NON-NLS-1$
 
-      node.setPoint( point );
+        node.setPoint( point );
+
+        if( lastNode != null )
+        {
+          /* Create edge between lastNode and node */
+          final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
+          addedFeatures.add( edge.getWrappedFeature() );
+
+          edge.addNode( lastNode.getGmlID() );
+          edge.addNode( node.getGmlID() );
+
+          lastNode.addContainer( edge.getGmlID() );
+          node.addContainer( edge.getGmlID() );
+
+          edge.getWrappedFeature().invalidEnvelope();
+
+          edgeList.add( edge );
+
+          /* Create corresponding element */
+          final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
+
+          addedFeatures.add( element1d.getWrappedFeature() );
+
+          element1d.setEdge( edge );
+
+          /* Add complex element to list of containers of this element */
+          // element1d.getContainers().addRef( calculationUnit1D );
+          /* Add this element to the complex element aka calculation unit */
+          // calculationUnit1D.addElementAsRef( element1d );
+          lastNode = node;
+        }
+      }
+      else
+      {
+        node = existingNodeList.get( 0 );
+        if(node.getElements().length == 0)
+        {
+          final IFeatureWrapperCollection containers = node.getContainers();
+          if(containers.size()==0)
+            throw new CoreException(StatusUtilities.createErrorStatus( "Existing node with no edges found."));
+          for( final Object object : containers )
+          {
+            if( object instanceof IFE1D2DEdge )
+            {
+              final IFE1D2DEdge edge = (IFE1D2DEdge) object;
+              final IFeatureWrapperCollection containers2 = edge.getContainers();
+              boolean hasElementAsParent = false;
+              for( final Object object2 : containers2 )
+              {
+                if(object2 instanceof IElement1D)
+                {
+                  hasElementAsParent=true;
+                  break;
+                }
+              }
+              if(!hasElementAsParent)
+              {
+                /* Create corresponding element */
+                final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
+                addedFeatures.add( element1d.getWrappedFeature() );
+                element1d.setEdge( edge );
+              }
+            }
+          }
+        }
+        lastNode =node;
+      }
 
       final BigDecimal stationDecimal = WspmProfile.stationToBigDecimal( station );
       nodesByStation.put( stationDecimal, node );
 
-      if( lastNode != null )
-      {
-        /* Create edge between lastNode and node */
-        final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
-        addedFeatures.add( edge.getWrappedFeature() );
-
-        edge.addNode( lastNode.getGmlID() );
-        edge.addNode( node.getGmlID() );
-
-        lastNode.addContainer( edge.getGmlID() );
-        node.addContainer( edge.getGmlID() );
-
-        edge.getWrappedFeature().invalidEnvelope();
-
-        edgeList.add( edge );
-
-        /* Create corresponding element */
-        final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
-
-        addedFeatures.add( element1d.getWrappedFeature() );
-
-        element1d.setEdge( edge );
-
-        /* Add complex element to list of containers of this element */
-        // element1d.getContainers().addRef( calculationUnit1D );
-        /* Add this element to the complex element aka calculation unit */
-        // calculationUnit1D.addElementAsRef( element1d );
-      }
-
-      lastNode = node;
     }
 
     final Feature[] addedFeatureArray = addedFeatures.toArray( new Feature[addedFeatures.size()] );
