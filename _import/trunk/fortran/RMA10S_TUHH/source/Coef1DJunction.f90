@@ -1,4 +1,4 @@
-!Last change:  WP    2 Feb 2008    5:35 pm
+!Last change:  NIS   3 Feb 2008    0:09 am
 SUBROUTINE COEF1DJunction (NN,NTX)
 
 
@@ -171,6 +171,35 @@ ELSEIF (imat (nn) == 902) then
     ESTIFM (na, na + 2) = -1.0
     f (na) = th1 - thn
   end do checknodes902
+
+ELSEIF (imat (nn) == 903) then
+  nrx = nop (nn, 1)
+  nry = nop (nn, 2)
+
+  PolyPos = findPolynom (PolyRangeA (nrx, :), vel(3, nrx), PolySplitsA (nrx))
+  acx = calcPolynomial (apoly (PolyPos, nrx, 0:12), vel (3, nrx))
+  wsx = calcPolynomial1stDerivative (apoly (PolyPos, nrx, 0:12), vel(3, nrx))
+
+  PolyPos = findPolynom (PolyRangeA (nry, :), vel(3, nry), PolySplitsA (nry))
+  acy = calcPolynomial (apoly (PolyPos, nry, 0:12), vel (3, nry))
+  wsy = calcPolynomial1stDerivative (apoly (PolyPos, nry, 0:12), vel(3, nry))
+
+  rx = vel (1, nrx) * COS (ALFA (nrx)) + vel (2, nrx) * SIN (ALFA (nrx))
+  ry = vel (1, nry) * COS (ALFA (nry)) + vel (2, nry) * SIN (ALFA (nry))
+  f(4) = - acx * rx**2 + acy * ry**2 - grav * acx * vel (3, nrx) + grav * acy * vel (3, nry)
+  ESTIFM (4, 1) = acx * rx * 2.
+  ESTIFM (4, 4) = - acy * ry * 2.
+  ESTIFM (4, 3) = wsx * rx**2 + grav * (acx + vel (3, nrx) * wsx)
+  ESTIFM (4, 6) = - wsy * ry**2 - grav * (acy + vel (3, nry) * wsy)
+  checknodes903: do kk = 3, ncn
+    n1 = nop (nn, kk)
+    if (n1 == 0) CYCLE checknodes903
+    na = (kk - 1) * NDF + 1
+    ESTIFM (na, 3) = 0.5
+    ESTIFM (na, 6) = 0.5
+    ESTIFM (na, na + 2) = -1.0
+    f (na) = vel (3, n1) - (vel (3, nrx) + vel (3, nry))/ 2. + AO(n1) - (AO(nrx) + ao (nry))/2.
+  end do checknodes903
 
 end if
 
