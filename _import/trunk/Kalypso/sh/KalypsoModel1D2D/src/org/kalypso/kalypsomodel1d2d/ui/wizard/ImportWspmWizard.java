@@ -122,7 +122,6 @@ import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -355,7 +354,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
     final BigDecimal station = qresult.getStation();
 
-    // check if there is already teschkeRel on that position; if it is, just replace it with the new one (and inform user
+    // check if there is already teschkeRel on that position; if it is, just replace it with the new one (and inform
+    // user
     // about it)
     final FeatureList featureList = flowRelModel.getWrappedList();
     ITeschkeFlowRelation flowRel = null;
@@ -603,17 +603,16 @@ public class ImportWspmWizard extends Wizard implements IWizard
           // element1d.getContainers().addRef( calculationUnit1D );
           /* Add this element to the complex element aka calculation unit */
           // calculationUnit1D.addElementAsRef( element1d );
-          lastNode = node;
         }
       }
       else
       {
         node = existingNodeList.get( 0 );
-        if(node.getElements().length == 0)
+        if( node.getElements().length == 0 )
         {
           final IFeatureWrapperCollection containers = node.getContainers();
-          if(containers.size()==0)
-            throw new CoreException(StatusUtilities.createErrorStatus( "Existing node with no edges found."));
+          if( containers.size() == 0 && lastNode != null )
+            throw new CoreException( StatusUtilities.createErrorStatus( "Existing node with no edges found." ) );
           for( final Object object : containers )
           {
             if( object instanceof IFE1D2DEdge )
@@ -623,13 +622,13 @@ public class ImportWspmWizard extends Wizard implements IWizard
               boolean hasElementAsParent = false;
               for( final Object object2 : containers2 )
               {
-                if(object2 instanceof IElement1D)
+                if( object2 instanceof IElement1D )
                 {
-                  hasElementAsParent=true;
+                  hasElementAsParent = true;
                   break;
                 }
               }
-              if(!hasElementAsParent)
+              if( !hasElementAsParent )
               {
                 /* Create corresponding element */
                 final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
@@ -639,9 +638,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
             }
           }
         }
-        lastNode =node;
       }
 
+      lastNode = node;
       final BigDecimal stationDecimal = WspmProfile.stationToBigDecimal( station );
       nodesByStation.put( stationDecimal, node );
 
