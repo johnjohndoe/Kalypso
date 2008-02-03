@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP    2 Feb 2008    1:22 pm
+C     Last change:  NIS   2 Feb 2008    8:59 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -30,6 +30,7 @@ CIPK DEC06
 
 !nis,feb08: for line transitions
       REAL (KIND = 8) :: dset
+      LOGICAL, ALLOCATABLE :: NodeIsDry (:)
 !-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -913,12 +914,36 @@ cipk oct98 update to f90
           LiLe   = LMT(LiNo)
           CoNode = TransLines(i,3)
 
-          !initializing NLN; connectivity starts with first node of transitioning line
-          NLN = Line(LiNo,1)
+          ALLOCATE (NodeIsDry(LiLe))
+          do k = 1, LiLe
+            nd = line (LiNo, k)
 
+            !first assumption: Node is not dry
+            NodeIsDry (nd) = .false.
+
+            if (vel (3, nd) <= dset) then
+              NodeIsDry(nd) = .true.
+            ELSEIF (MOD (k, 2) == 0 .AND. imat (lineelement (i, k)) < 0)
+     +                                                              then
+              NodeIsDry (nd) = .true.
+            elseif (mod (k, 2) /= 0) then
+              if ((k == 1    .and. imat (lineelement (i, k+1)) < 0)
+     +            .Or.
+     +            (k == LiLe .and. imat (lineelement (i, k-1)) < 0)
+     +            .or.
+     +  (imat (lineelement(i,k-1))<0 .AND. imat(lineelement(i,k+1)) < 0)
+     +                                                            ) then
+                NodeIsDry (nd) = .true.
+              endif
+            end if
+          end do
+
+          !initializing NLN; connectivity starts with first node of transitioning line
+          NLN = 9999999999
           !Get the smallest node number to reference equations to; 1st was already processed in lines before
-          DO K=2,LiLe
-            IF(NLN > Line(LiNo,K)) NLN = Line(LiNo,K)
+          DO K = 1, LiLe
+            IF (NLN > Line(LiNo,K) .and. (.NOT.NodeIsDry(Line(LiNo,k))))
+     +        NLN = Line(LiNo,K)
           ENDDO
 
           !check for 1d-node
@@ -929,27 +954,12 @@ cipk oct98 update to f90
 
             !get copy of node number
             nd = line(LiNo,k)
+
             !deactivating nodes that are dry
-            if (vel(3,nd) <= DSET) then
+            if (NodeIsDry (nd)) then
               do eqdof = 1, 6
                 nbc(nd,eqdof) = 0
               end do
-            !deactivating nodes that are in deactivated element
-            ELSEIF (MOD(k,2) == 0 .AND. imat(lineelement(i, k)) <0) then
-              do eqdof = 1, 6
-                nbc(nd,eqdof) = 0
-              end do
-            ELSEIF (MOD(k,2) /= 0) then
-              if ((k == 1    .and. imat (lineelement (i, k+1)) < 0)
-     +            .Or.
-     +            (k == LiLe .and. imat (lineelement (i, k-1)) < 0)
-     +            .or.
-     +  (imat (lineelement(i,k-1))<0 .AND. imat(lineelement(i,k+1)) < 0)
-     +        )then
-                do eqdof = 1, 6
-                  nbc(nd,eqdof) = 0
-                end do
-              endif
             else
               !Initialize the momentum equations. The velocities are a result of the distribution calculation. This is done for every node
 
@@ -958,7 +968,14 @@ cipk oct98 update to f90
               NBC(ND,2) = 0
 
               !the same node must not be processed on
-              IF(NLN == nd) CYCLE equationassigning
+              IF(NLN == nd) then
+                nbc (nd, 3) = 1
+                nbc (nd, 4) = 0
+                nbc (nd, 5) = 0
+                nbc (nd, 6) = 0
+                !WRITE(*,*) nd, nbc(nd, 3)
+                CYCLE equationassigning
+              endif
 
               !Stop, if there is a gap in CCline
               if (nd == 0) then
@@ -976,6 +993,7 @@ cipk oct98 update to f90
               ENDDO
             endif
 
+
           ENDDO equationassigning
 
           !Process 1D-node, because this can't be member of the line
@@ -986,6 +1004,7 @@ cipk oct98 update to f90
           ENDDO
 
           !if element was found, jump out of Loop; Reason: This loop was only done for the 1D-transitioning element nn.
+          deallocate (NodeIsDry)
           EXIT EquationAdjustment
         ENDDO EquationAdjustment
       end if
@@ -1458,9 +1477,16 @@ CIPK MAY02 SWITCH NDF TO 7
         DO 305 M=1,7
           IF(NBC(N,M) .LT. 0) THEN
             NRF=-NBC(N,M)
-              itmp = nbc(nrf,m)
-              if (nrf .gt. n  .and. itmp .lt. 0)  goto 305
+            itmp = nbc(nrf,m)
+            if (nrf .gt. n  .and. itmp .lt. 0)  goto 305
+
             NBC(N,M)=NBC(NRF,M)
+            !testing
+            !if (TransitionMember (n) .and. m == 3) then
+            !  WRITE(*,*) n, m, nrf, nbc(n, m), nbc(nrf, m)
+            !  WRITE(*,*) n, nbc(n, m)
+            !end if
+            !testing-
           ENDIF
   305   CONTINUE
   310 CONTINUE

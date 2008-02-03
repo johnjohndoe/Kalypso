@@ -1,4 +1,4 @@
-!     Last change:  WP   27 Jul 2007    5:48 pm
+!     Last change:  NIS   2 Feb 2008    8:58 pm
 !nis,nov06: This subroutine checks all the 1D-2D-line-Transitions on consistency
 !           That is:
 !           - well definition
@@ -58,7 +58,7 @@ deltal_min = 0.
 DO J = 1, MaxLT
 
   !Check, whether Transition exists
-  if (TransLines(J,1).ne.0) then
+  if (TransLines (J, 1) /= 0) then
 
     !local copy of connecting node, Line Number and it's length
     CoNode = TransLines(J,3)
@@ -69,7 +69,7 @@ DO J = 1, MaxLT
 
   !nis,jul07: Adding logical variable of nodes being part of a 2D-line in 1D-2D-transitions
   !Connected 1D-node becomes Member of a transition line
-  Transitionmember(TransLines(J, 3)) = .true.
+  Transitionmember (TransLines (J, 3)) = .true.
 
   !Connected 2D-nodes become Member of a transition line
   do k = 1, lmt (LiNo)

@@ -1,4 +1,4 @@
-C     Last change:  WP   21 Jan 2008    8:14 pm
+C     Last change:  NIS   3 Feb 2008   11:17 am
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -347,6 +347,7 @@ cipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
      +      0.5 *(hhmin (NeighProf (na, 2)) + hhmax (NeighProf (na, 2)))
             !fill vel(3,*) midsides for polynomial approach
           end if
+          !get the midside value
           if (m == 3) then
             vel(3, NOP(n, 2)) =
      +      (vel (3, nop(n, 1)) + VEL (3, nop(n, 3))) / 2.0d0

@@ -1,4 +1,4 @@
-!     Last change:  WP   22 Nov 2007    8:32 pm
+!     Last change:  NIS   2 Feb 2008   10:30 pm
 subroutine TransVelDistribution
 
 !description
@@ -69,24 +69,24 @@ dv = 0.001
 transitionloop: do i = 1, MaxLT
 
   !if transition is empty, cycle loop.
-  if (TransLines(i,1) == 0) CYCLE transitionloop
+  if (TransLines (i, 1) == 0) CYCLE transitionloop
 
   !get the line number and the 1D-transitioning node number
-  TransLi = TransLines(i,2)
-  TransNo = nop(TransLines(i,1),3)
+  TransLi = TransLines (i, 2)
+  TransNo = TransLines (i, 3)
 
   !allocating the temporary velocity and specific discharge placeholder
-  ALLOCATE (TransSpec (1:lmt (TransLi)))
+  ALLOCATE (TransSpec (1 : lmt (TransLi)))
 
   !initializing the temporary velocity and specific discharge placeholder
   do l = 1, lmt(TransLi)
-    TransSpec(l) = 0.0
+    TransSpec (l) = 0.0
   end do
 
   !test transition: every segment has to be passed in the same direction (test with sign of cross product)
   !get total chord length of line DYtot und DXges
-  DYtot = cord (line (TransLi, lmt(TransLi)), 2) - cord (line (TransLi, 1), 2)
-  DXtot = cord (line (TransLi, lmt(TransLi)), 1) - cord (line (TransLi, 1), 1)
+  DYtot = cord (line (TransLi, lmt (TransLi)), 2) - cord (line (TransLi, 1), 2)
+  DXtot = cord (line (TransLi, lmt (TransLi)), 1) - cord (line (TransLi, 1), 1)
   !hole lagewinkel der kopplung (arctan gk/AK = delta)
   Delta = ATAN (DYtot / DXtot)
   !hole richtungswinkel der strömungsrichtung
@@ -190,7 +190,7 @@ transitionloop: do i = 1, MaxLT
 
           !calculate derivative
           !WRITE(*,*) dspecdh(na), spec(na,1), dh
-          dspecdh (na) = (spec(na, 1) - dspecdh(na)) / Dh
+          dspecdh (na) = (spec(na, 1) - dspecdh(na)) / (-Dh)
         end do
 !switched off for the moment
 !      ELSEIF (j == 3) then
