@@ -259,6 +259,7 @@ public class SLDHelper
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     final FeatureTypeStyle style = new FeatureTypeStyle_Impl();
 
+    colorMap.put( new Double( -9999.0 ), new ColorMapEntry_Impl( Color.WHITE, DEFAULT_FILLOPACITY, -9999.0, "" ) ); //$NON-NLS-1$
     for( final Object styledFeatureObject : collection )
     {
       final IColorStyledFeatureWrapper styledFeature;
