@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -120,22 +120,22 @@ public class SegmentData
     private final double maxSegmentDistance( )
     {
       double maxDistance = Double.NEGATIVE_INFINITY;
-      if( (endInd - startInd) >= 2 )
-        for( int i = 1; i < (endInd - startInd) - 1; i++ )
+      if( endInd - startInd >= 2 )
+        for( int i = 1; i < endInd - startInd - 1; i++ )
         {
           final double currentDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + i] );
           if( currentDistance > maxDistance )
           {
             maxDistance = currentDistance;
-            distInd = (startInd + i);
+            distInd = startInd + i;
           }
         }
-      else if( (endInd - startInd) == 2 )
+      else if( endInd - startInd == 2 )
       {
         maxDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + 1] );
-        distInd = (startInd + 1);
+        distInd = startInd + 1;
       }
-      else if( (endInd - startInd) == 1 )
+      else if( endInd - startInd == 1 )
       {
         maxDistance = 0;
         distInd = startInd;
@@ -385,7 +385,8 @@ public class SegmentData
   {
     final IProfilPointPropertyProvider[] pointProviders = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
 
-    final int numProfPoints = profile.getPoints().size();
+    IRecord[] points = profile.getPoints();
+    final int numProfPoints = points.length;
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
     IProfil tmpProfile2 = null;
@@ -403,7 +404,7 @@ public class SegmentData
     else
       tmpProfile2 = m_downCroppedProfile;
 
-    final LinkedList<IRecord> profilPointList = profile.getPoints();
+    final IRecord[] profilPointList = points;
 
     /* get / create components */
     final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_BREITE );
@@ -425,27 +426,25 @@ public class SegmentData
 
     // calculate the width of the the first and last segment and devide it by two (because of the triangle area of these
     // parts)
-    final double startSegmentWidth = (Double) profile.getPoints().get( 1 ).getValue( breiteComponent ) - (Double) profile.getPoints().get( 0 ).getValue( breiteComponent );
-    final double endSegmentWidth = (Double) profile.getPoints().get( numProfPoints - 1 ).getValue( breiteComponent ) - (Double) profile.getPoints().get( numProfPoints - 2 ).getValue( breiteComponent );
+    final double startSegmentWidth = (Double) points[1].getValue( breiteComponent ) - (Double) points[0].getValue( breiteComponent );
+    final double endSegmentWidth = (Double) points[numProfPoints - 1].getValue( breiteComponent ) - (Double) points[numProfPoints - 2].getValue( breiteComponent );
 
     wi = 0.5 * (startSegmentWidth + endSegmentWidth);
     // add the width of the segments inbetween
     for( int i = 1; i < numProfPoints - 2; i++ )
-    {
-      wi = wi + (Double) profile.getPoints().get( i + 1 ).getValue( breiteComponent ) - (Double) profile.getPoints().get( i ).getValue( breiteComponent );
-    }
+      wi = wi + (Double) points[i + 1].getValue( breiteComponent ) - (Double) points[i].getValue( breiteComponent );
     dZ = dArea / wi;
 
-    // String t = String.format( "Schlauchgenerator: Anpassung der Profilhöhen um: %f ", dZ, " m." );
+    // String t = String.format( "Schlauchgenerator: Anpassung der Profilhï¿½hen um: %f ", dZ, " m." );
     // System.out.println( t );
 
     // start point will not be changed
     IRecord profilStartPoint = tmpProfil.createProfilPoint();
 
-    double startBreite = (Double) profilPointList.get( 0 ).getValue( breiteComponent );
-    double startHoehe = (Double) profilPointList.get( 0 ).getValue( hoeheComponent );
-    double startRw = (Double) profilPointList.get( 0 ).getValue( rwComponent );
-    double startHw = (Double) profilPointList.get( 0 ).getValue( hwComponent );
+    double startBreite = (Double) profilPointList[0].getValue( breiteComponent );
+    double startHoehe = (Double) profilPointList[0].getValue( hoeheComponent );
+    double startRw = (Double) profilPointList[0].getValue( rwComponent );
+    double startHw = (Double) profilPointList[0].getValue( hwComponent );
 
     profilStartPoint.setValue( breiteComponent, startBreite );
     profilStartPoint.setValue( hoeheComponent, startHoehe );
@@ -459,7 +458,7 @@ public class SegmentData
     {
       final IRecord point = tmpProfil.createProfilPoint();
 
-      final double width = (Double) profile.getPoints().get( i ).getValue( breiteComponent );
+      final double width = (Double) points[i].getValue( breiteComponent );
       double heigth = 0;
       try
       {
@@ -469,8 +468,8 @@ public class SegmentData
       {
         e.printStackTrace();
       }
-      final double x = (Double) profile.getPoints().get( i ).getValue( rwComponent );
-      final double y = (Double) profile.getPoints().get( i ).getValue( hwComponent );
+      final double x = (Double) points[i].getValue( rwComponent );
+      final double y = (Double) points[i].getValue( hwComponent );
 
       point.setValue( breiteComponent, width );
       point.setValue( hoeheComponent, heigth );
@@ -483,10 +482,10 @@ public class SegmentData
     IRecord profilEndPoint = tmpProfil.createProfilPoint();
 
     // end point will be the same
-    final double endBreite = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( breiteComponent );
-    final double endHoehe = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( hoeheComponent );
-    final double endRw = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( rwComponent );
-    final double endHw = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( hwComponent );
+    final double endBreite = (Double) profilPointList[profilPointList.length - 1].getValue( breiteComponent );
+    final double endHoehe = (Double) profilPointList[profilPointList.length - 1].getValue( hoeheComponent );
+    final double endRw = (Double) profilPointList[profilPointList.length - 1].getValue( rwComponent );
+    final double endHw = (Double) profilPointList[profilPointList.length - 1].getValue( hwComponent );
 
     profilEndPoint.setValue( breiteComponent, endBreite );
     profilEndPoint.setValue( hoeheComponent, endHoehe );
@@ -500,7 +499,7 @@ public class SegmentData
     final double diffArea = targetArea - areaNew;
     if( diffArea > 0.10 )
     {
-      // String s = String.format( "Schlauchgenerator: Flächenausgleich nicht hinreichend genau: %f - %f", targetArea,
+      // String s = String.format( "Schlauchgenerator: Flï¿½chenausgleich nicht hinreichend genau: %f - %f", targetArea,
       // areaNew
       // );
 
@@ -523,8 +522,8 @@ public class SegmentData
     final IProfilPointPropertyProvider[] pointProviders = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
 
     final int numProfInters = m_channelData.getNumProfileIntersections();
-    final LinkedList<IRecord> profilPointList = profile.getPoints();
-    final int numProfPoints = profilPointList.size();
+    final IRecord[] profilPointList = profile.getPoints();
+    final int numProfPoints = profilPointList.length;
 
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
@@ -547,7 +546,7 @@ public class SegmentData
       // start point
       IRecord pointRecord = tmpProfil.createProfilPoint();
 
-      final IRecord pFirst = profilPointList.getFirst();
+      final IRecord pFirst = profilPointList[0];
 
       double width = (Double) pFirst.getValue( breiteComponent );
       double heigth = (Double) pFirst.getValue( hoeheComponent );
@@ -563,8 +562,8 @@ public class SegmentData
 
       /* do it by equidistant points */
       // keep in mind, that equidistants width doesn't get equidistant georeferenced lengths!
-      final double startWidth = (Double) profilPointList.get( 0 ).getValue( breiteComponent );
-      final double endWidth = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( breiteComponent );
+      final double startWidth = (Double) profilPointList[0].getValue( breiteComponent );
+      final double endWidth = (Double) profilPointList[profilPointList.length - 1].getValue( breiteComponent );
       final double totalWidth = endWidth - startWidth;
       final double dWidth = totalWidth / (m_channelData.getNumProfileIntersections() - 1); // equidistant widths
 
@@ -587,10 +586,10 @@ public class SegmentData
       // end point
       pointRecord = tmpProfil.createProfilPoint();
 
-      width = (Double) profilPointList.getLast().getValue( breiteComponent );
-      heigth = (Double) profilPointList.getLast().getValue( hoeheComponent );
-      x = (Double) profilPointList.getLast().getValue( rwComponent );
-      y = (Double) profilPointList.getLast().getValue( hwComponent );
+      width = (Double) profilPointList[profilPointList.length - 1].getValue( breiteComponent );
+      heigth = (Double) profilPointList[profilPointList.length - 1].getValue( hoeheComponent );
+      x = (Double) profilPointList[profilPointList.length - 1].getValue( rwComponent );
+      y = (Double) profilPointList[profilPointList.length - 1].getValue( hwComponent );
 
       pointRecord.setValue( breiteComponent, width );
       pointRecord.setValue( hoeheComponent, heigth );
@@ -602,7 +601,7 @@ public class SegmentData
     else
     {
       // get the most important points (some kind of Douglas-Peucker)
-      final IRecord[] profPoints = profilPointList.toArray( new IRecord[profilPointList.size()] );
+      final IRecord[] profPoints = profilPointList;
       // do it by Douglas-Peucker
       final IRecord[] DPpoints = findIProfileVIPPoints( profPoints, numProfInters );
 
@@ -667,7 +666,6 @@ public class SegmentData
     final GeometryFactory factory = new GeometryFactory();
     final Coordinate[] coordinates = new Coordinate[points.length];
     for( int i = 0; i < gmpoints.length; i++ )
-    {
       try
       {
         gmpoints[i] = (GM_Point) JTSAdapter.wrap( points[i] );
@@ -675,19 +673,14 @@ public class SegmentData
         final double z = points[i].getCoordinate().z;
 
         if( !Double.isNaN( z ) )
-        {
           coordinates[i] = new Coordinate( gmpoints[i].getX(), gmpoints[i].getY(), gmpoints[i].getZ() );
-        }
         else
-        {
           coordinates[i] = new Coordinate( gmpoints[i].getX(), gmpoints[i].getY() );
-        }
       }
       catch( final GM_Exception e )
       {
         e.printStackTrace();
       }
-    }
     return factory.createLineString( coordinates );
   }
 
@@ -740,7 +733,7 @@ public class SegmentData
     final double heigth1 = WspmProfileHelper.getHeigthPositionByWidth( startWidth, orgIProfil );
     final double heigth2 = WspmProfileHelper.getHeigthPositionByWidth( endWidth, orgIProfil );
 
-    final LinkedList<IRecord> profilPointList = wspmprofile.getProfil().getPoints();
+    final IRecord[] profilPointList = wspmprofile.getProfil().getPoints();
 
     final GM_Curve line = wspmprofile.getLine();
 
@@ -776,9 +769,9 @@ public class SegmentData
     tmpProfil.addPoint( point1 );
     final GM_LineString lineString = line.getAsLineString(); // in the linestring the coordinates are already projected
 
-    for( int i = 0; i < profilPointList.size(); i++ )
+    for( int i = 0; i < profilPointList.length; i++ )
     {
-      final IRecord point = profilPointList.get( i );
+      final IRecord point = profilPointList[i];
 
       final double currentWidth = (Double) point.getValue( breiteComponent );
 
@@ -1146,9 +1139,7 @@ public class SegmentData
     check = false;
 
     if( m_downIntersLinestring != null & m_upIntersLinestring != null & m_bankLeftInters != null & m_bankRightInters != null )
-    {
       check = true;
-    }
     return check;
   }
 
@@ -1158,9 +1149,7 @@ public class SegmentData
     check = false;
 
     if( m_bankLeftInters != null & m_bankRightInters != null )
-    {
       check = true;
-    }
     return check;
   }
 
@@ -1345,7 +1334,7 @@ public class SegmentData
         final IProfil tmpupIntersProfile = adaptProfileElevations( m_upIntersProfile, m_upCroppedProfile );
         final double areaUpIntersProfile = ProfilUtil.calcArea( tmpupIntersProfile );
 
-        // Flächenausgleich!!
+        // Flï¿½chenausgleich!!
         m_upIntersProfile = adjustProfileArea( m_upIntersProfile, areaUpCroppedProfile, areaUpIntersProfile );
 
         // m_upIntersProfile = createIntersectedIProfile( m_upCroppedProfile );
@@ -1377,7 +1366,7 @@ public class SegmentData
         final IProfil tmpdownIntersProfile = adaptProfileElevations( m_downIntersProfile, m_downCroppedProfile );
         final double areaDownIntersProfile = ProfilUtil.calcArea( tmpdownIntersProfile );
 
-        // Flächenausgleich!!
+        // Flï¿½chenausgleich!!
         m_downIntersProfile = adjustProfileArea( m_downIntersProfile, areaDownCroppedProfile, areaDownIntersProfile );
 
         final GeometryFactory factory = new GeometryFactory();
@@ -1399,7 +1388,7 @@ public class SegmentData
   {
     final IProfilPointPropertyProvider[] pointProviders = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( intersProfile.getType() );
 
-    final LinkedList<IRecord> profilPointList = intersProfile.getPoints();
+    final IRecord[] profilPointList = intersProfile.getPoints();
 
     final IProfil tmpProfil = ProfilFactory.createProfil( intersProfile.getType() );
 
@@ -1518,7 +1507,6 @@ public class SegmentData
   {
     // paint the line
     if( side == 1 )
-    {
       try
       {
         paintLineString( getBankLeftInters(), g, panel, color );
@@ -1527,9 +1515,7 @@ public class SegmentData
       {
         e.printStackTrace();
       }
-    }
     else if( side == 2 )
-    {
       try
       {
         paintLineString( getBankRightInters(), g, panel, color );
@@ -1538,17 +1524,12 @@ public class SegmentData
       {
         e.printStackTrace();
       }
-    }
 
     // paint the nodes
     if( side == 1 )
-    {
       paintLineStringPoints( getBankLeftInters(), g, panel, color );
-    }
     else if( side == 2 )
-    {
       paintLineStringPoints( getBankRightInters(), g, panel, color );
-    }
 
   }
 
@@ -1625,25 +1606,23 @@ public class SegmentData
   public void paintIntersectionPoints( final MapPanel panel, final Graphics g, final Color color, final PROF prof )
   {
     for( int i = 0; i < m_intersPoints.size(); i++ )
-    {
       if( m_intersPoints.get( i ).getProf() == prof )
       {
         final Point point = m_intersPoints.get( i ).getPoint();
         paintPoint( point, g, panel, color );
       }
-    }
 
   }
 
   private Coordinate[] convertProfileToCoordinates( final IProfil profile )
   {
-    final Coordinate[] coords = new Coordinate[profile.getPoints().size()];
+    final Coordinate[] coords = new Coordinate[profile.getPoints().length];
 
     for( int i = 0; i < coords.length; i++ )
     {
-      final double x = (Double) profile.getPoints().get( i ).getValue( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-      final double y = (Double) profile.getPoints().get( i ).getValue( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
-      final double z = (Double) profile.getPoints().get( i ).getValue( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      final double x = (Double) profile.getPoints()[i].getValue( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+      final double y = (Double) profile.getPoints()[i].getValue( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+      final double z = (Double) profile.getPoints()[i].getValue( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE ) );
       coords[i] = new Coordinate( x, y, z );
     }
     return coords;
@@ -1655,13 +1634,9 @@ public class SegmentData
   public void setNewIntersectedProfile( final IProfil profile, final PROF prof )
   {
     if( prof == PROF.UP )
-    {
       m_upIntersProfile = profile;
-    }
     else if( prof == PROF.DOWN )
-    {
       m_downIntersProfile = profile;
-    }
 
     updateProfileIntersection();
   }

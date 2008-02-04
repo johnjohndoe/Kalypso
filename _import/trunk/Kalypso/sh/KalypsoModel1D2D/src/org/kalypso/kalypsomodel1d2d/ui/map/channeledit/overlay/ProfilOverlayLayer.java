@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.resource.ColorRegistry;
@@ -93,7 +92,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    */
   public ProfilOverlayLayer( final ProfilChartView chartView )
   {
-    super( IWspmOverlayConstants.LAYER_OVERLAY, chartView, chartView.getDomainRange(), chartView.getValueRangeLeft(), "Zeichenfläche" );
+    super( IWspmOverlayConstants.LAYER_OVERLAY, chartView, chartView.getDomainRange(), chartView.getValueRangeLeft(), "Zeichenflï¿½che" );
 
     final ColorRegistry cr = chartView.getColorRegistry();
     if( !cr.getKeySet().contains( IWspmOverlayConstants.LAYER_OVERLAY ) )
@@ -137,7 +136,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   protected void editProfil( final Point currentScreenPoint, final Object data ) // release
   {
     final EditData editData = (EditData) data;
-    final IRecord profilePoint = m_profile.getPoints().get( editData.getIndex() );
+    IRecord[] points = m_profile.getPoints();
+    final IRecord profilePoint = points[editData.getIndex()];
     final Point2D logPoint = screen2logical( currentScreenPoint );
     double width;
 
@@ -218,8 +218,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     }
 
     /* save the first and last widths of the intersected profile for comparing them later with the new widths */
-    final double oldStartWdith = (Double) m_profile.getPoints().getFirst().getValue( breiteComponent );
-    final double oldEndWdith = (Double) m_profile.getPoints().getLast().getValue( breiteComponent );
+    final double oldStartWdith = (Double) points[0].getValue( breiteComponent );
+    final double oldEndWdith = (Double) points[points.length - 1].getValue( breiteComponent );
 
     /* set the new profile */
     m_profile = createNewProfile( profilePoint, width, heigth, geoPoint );
@@ -274,7 +274,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     profilePoint.setValue( hwComponent, geoPoint.getY() );
 
     /* sort profile points by width */
-    final LinkedList<IRecord> points = m_profile.getPoints();
+    final IRecord[] points = m_profile.getPoints();
 
     // TODO: save the sorted points as new m_profile
     final IProfil tmpProfil = ProfilFactory.createProfil( m_profile.getType() );
@@ -284,14 +284,14 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     tmpProfil.addPointProperty( rwComponent );
     tmpProfil.addPointProperty( hwComponent );
 
-    for( int i = 0; i < points.size(); i++ )
+    for( int i = 0; i < points.length; i++ )
     {
       final IRecord profilPoint = tmpProfil.createProfilPoint();
 
-      final double breite = (Double) points.get( i ).getValue( breiteComponent );
-      final double hoehe = (Double) points.get( i ).getValue( hoeheComponent );
-      final double rw = (Double) points.get( i ).getValue( rwComponent );
-      final double hw = (Double) points.get( i ).getValue( hwComponent );
+      final double breite = (Double) points[i].getValue( breiteComponent );
+      final double hoehe = (Double) points[i].getValue( hoeheComponent );
+      final double rw = (Double) points[i].getValue( rwComponent );
+      final double hw = (Double) points[i].getValue( hwComponent );
 
       profilPoint.setValue( breiteComponent, breite );
       profilPoint.setValue( hoeheComponent, hoehe );
@@ -321,8 +321,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    */
   private static double checkInsideProfile( final double width, final IProfil profil )
   {
-    final double firstProfileWidth = (Double) profil.getPoints().getFirst().getValue( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ) );
-    final double lastProfileWidth = (Double) profil.getPoints().getLast().getValue( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double firstProfileWidth = (Double) profil.getPoints()[0].getValue( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double lastProfileWidth = (Double) profil.getPoints()[profil.getPoints().length - 1].getValue( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     /* if not force it to do so */
     if( width < firstProfileWidth )
@@ -348,8 +348,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE );
 
-    final IRecord firstPoint = m_profile.getPoints().getFirst();
-    final IRecord lastPoint = m_profile.getPoints().getLast();
+    final IRecord firstPoint = m_profile.getPoints()[0];
+    final IRecord lastPoint = m_profile.getPoints()[m_profile.getPoints().length - 1];
 
     final double newStartWidth = (Double) firstPoint.getValue( breiteComponent );
     final double newEndWidth = (Double) lastPoint.getValue( breiteComponent );
@@ -473,14 +473,11 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       profNeighbour = CreateChannelData.PROF.DOWN;
 
     for( final SegmentData segment : neighbourSegments )
-    {
       // check if the changed profile is in the neighbour segment, if not, do nothing.
       if( segment != currentSegment )
-      {
         if( segment.getProfilDownOrg().getStation() == m_profile.getStation() || segment.getProfilUpOrg().getStation() == m_profile.getStation() )
         {
           if( widthorder1 != null && widthorder2 != null )
-          {
             try
             {
               segment.setIntersPoint( point1, profNeighbour, widthorder1, width1 );
@@ -491,12 +488,9 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
               // TODO Auto-generated catch block
               e.printStackTrace();
             }
-          }
           segment.setNewIntersectedProfile( m_profile, profNeighbour );
           segment.updateProfileIntersection();
         }
-      }
-    }
   }
 
   /**
@@ -525,10 +519,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       profNeighbour = CreateChannelData.PROF.DOWN;
 
     for( final SegmentData segment : neighbourSegments )
-    {
       // check if the changed profile is in the neighbour segment, if not, do nothing.
       if( segment != currentSegment )
-      {
         if( segment.getProfilDownOrg().getStation() == m_profile.getStation() || segment.getProfilUpOrg().getStation() == m_profile.getStation() )
         {
           if( widthorder != null )
@@ -544,8 +536,6 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
           segment.setNewIntersectedProfile( m_profile, profNeighbour );
           // segment.updateProfileIntersection();
         }
-      }
-    }
   }
 
   /**
@@ -571,17 +561,11 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       profNeighbour = CreateChannelData.PROF.DOWN;
 
     for( final SegmentData segment : neighbourSegments )
-    {
       // check if the changed profile is in the neighbour segment, if not, do nothing.
       if( segment != currentSegment )
-      {
         if( segment.getProfilDownOrg().getStation() == m_profile.getStation() || segment.getProfilUpOrg().getStation() == m_profile.getStation() )
-        {
           segment.setNewIntersectedProfile( m_profile, profNeighbour );
-          // segment.updateProfileIntersection();
-        }
-      }
-    }
+    // segment.updateProfileIntersection();
   }
 
   /**
@@ -592,19 +576,15 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     if( m_profile == null )
       return null;
 
-    final LinkedList<IRecord> points = m_profile.getPoints();
+    final IRecord[] points = m_profile.getPoints();
     Rectangle2D bounds = null;
     for( final IRecord point : points )
     {
       final Point2D p = ProfilUtil.getPoint2D( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
       if( bounds == null )
-      {
         bounds = new Rectangle2D.Double( p.getX(), p.getY(), 0, 0 );
-      }
       else
-      {
         bounds.add( p );
-      }
     }
     return bounds;
   }
@@ -619,14 +599,14 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       return null;
 
     int index = 0;
-    final LinkedList<IRecord> points = m_profile.getPoints();
+    final IRecord[] points = m_profile.getPoints();
     for( final IRecord pp : points )
     {
       final Point p = logical2screen( ProfilUtil.getPoint2D( pp, ProfilObsHelper.getPropertyFromId( pp, IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
       final Rectangle hover = RectangleUtils.buffer( p );
       if( hover.contains( point ) )
       {
-        final String string = String.format( "Breite: %.4f  \nRW: %.4f \nHW: %.4f", points.get( index ).getValue( ProfilObsHelper.getPropertyFromId( points.get( index ), IWspmConstants.POINT_PROPERTY_BREITE ) ), points.get( index ).getValue( ProfilObsHelper.getPropertyFromId( points.get( index ), IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ), points.get( index ).getValue( ProfilObsHelper.getPropertyFromId( points.get( index ), IWspmConstants.POINT_PROPERTY_HOCHWERT ) ) );
+        final String string = String.format( "Breite: %.4f  \nRW: %.4f \nHW: %.4f", points[index].getValue( ProfilObsHelper.getPropertyFromId( points[index], IWspmConstants.POINT_PROPERTY_BREITE ) ), points[index].getValue( ProfilObsHelper.getPropertyFromId( points[index], IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ), points[index].getValue( ProfilObsHelper.getPropertyFromId( points[index], IWspmConstants.POINT_PROPERTY_HOCHWERT ) ) );
 
         return new EditInfo( this, hover, new EditData( index, null ), string );
       }
@@ -657,8 +637,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     if( m_profile == null )
       return;
 
-    final LinkedList<IRecord> points = m_profile.getPoints();
-    if( points.size() < 2 )
+    final IRecord[] points = m_profile.getPoints();
+    if( points.length < 2 )
       return;
     Point leftP = null;
     final int lineWidthBuffer = gc.getLineWidth();
@@ -668,11 +648,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     gc.setLineStyle( SWT.LINE_SOLID );
     gc.setForeground( m_color );
     for( final IRecord point : points )
-    {
       if( leftP == null )
-      {
         leftP = logical2screen( ProfilUtil.getPoint2D( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
-      }
       else
       {
         final Point rightP = logical2screen( ProfilUtil.getPoint2D( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
@@ -680,7 +657,6 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
         gc.drawLine( leftP.x, leftP.y, rightP.x, rightP.y );
         leftP = rightP;
       }
-    }
     gc.drawOval( leftP.x - 2, leftP.y - 2, 4, 4 );
     gc.setLineWidth( lineWidthBuffer );
     gc.setLineStyle( lineStyleBuffer );
@@ -751,12 +727,10 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
         final double widthDifferenceInters = Math.abs( profScreenPointInters.x - currentScreenPoint.x );
         if( widthDifferenceInters < 5 )
         {
-          {
-            final Color color = new Color( null, 255, 70, 70 );
-            final int lineStyle = SWT.LINE_SOLID;
-            final int lineWidth = 2;
-            drawVerticalLine( gc, profScreenPointInters, color, lineStyle, lineWidth );
-          }
+          final Color color = new Color( null, 255, 70, 70 );
+          final int lineStyle = SWT.LINE_SOLID;
+          final int lineWidth = 2;
+          drawVerticalLine( gc, profScreenPointInters, color, lineStyle, lineWidth );
         }
       }
     }
