@@ -228,7 +228,7 @@ public class Control1D2DConverter
     if( m_controlModel.getVegeta() )
       formatter.format( "VEGETA%n" ); //$NON-NLS-1$
 
-    formatter.format( "ENERGY%n" ); //$NON-NLS-1$
+    //formatter.format( "ENERGY%n" ); //$NON-NLS-1$
     formatter.format( "KAL_BC%n" ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
