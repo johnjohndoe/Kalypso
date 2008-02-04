@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.schema.gml;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -101,8 +100,8 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
       if( profil == null )
         return null;
 
-      final LinkedList<IRecord> points = profil.getPoints();
-      final List<GM_Position> positions = new ArrayList<GM_Position>( points.size() );
+      final IRecord[] points = profil.getPoints();
+      final List<GM_Position> positions = new ArrayList<GM_Position>( points.length );
 
       String srsName = wspmProfile.getSrsName();
       for( final IRecord point : points )
@@ -115,7 +114,6 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
         final IComponent pHochwert = ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
         if( profil.hasPointProperty( pRechtswert ) && profil.hasPointProperty( pHochwert ) )
-        {
           try
           {
             rw = (Double) point.getValue( pRechtswert );
@@ -126,7 +124,6 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
             // happens during WSPWIN Project import
             return null;
           }
-        }
         else
         {
           rw = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );

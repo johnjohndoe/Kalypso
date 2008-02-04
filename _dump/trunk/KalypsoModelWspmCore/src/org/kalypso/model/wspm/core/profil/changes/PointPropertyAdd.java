@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import java.util.LinkedList;
-
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.observation.result.IComponent;
@@ -66,31 +64,24 @@ public final class PointPropertyAdd implements IProfilChange
   {
     m_profil = profil;
     m_property = property;
-    m_values = new Object[profil.getPoints().size()];
+    m_values = new Object[profil.getPoints().length];
     for( int i = 0; i < m_values.length; i++ )
-    {
       m_values[i] = defaultValue;
-    }
   }
 
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
-    {
       hint.setPointPropertiesChanged();
-    }
 
     m_profil.addPointProperty( m_property );
 
-    final LinkedList<IRecord> points = m_profil.getPoints();
-    if( (m_values != null) && (points.size() == m_values.length) )
+    final IRecord[] points = m_profil.getPoints();
+    if( m_values != null && points.length == m_values.length )
     {
       int i = 0;
       for( final IRecord point : points )
-      {
         point.setValue( m_property, m_values[i++] );
-
-      }
     }
     return new PointPropertyRemove( m_profil, m_property );
   }

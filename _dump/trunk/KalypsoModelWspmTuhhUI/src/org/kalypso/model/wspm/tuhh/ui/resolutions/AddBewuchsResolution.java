@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -67,8 +68,8 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
   @Override
   protected IProfilChange[] resolve( final IProfil profil )
   {
-    final LinkedList<IRecord> points = profil.getPoints();
-    if( points.isEmpty() )
+    final IRecord[] points = profil.getPoints();
+    if( points.length == 0 )
       return null;
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( deviders.length < 2 )
@@ -86,28 +87,23 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     }
     if( m_deviderIndex == 0 )
     {
-      final int i = points.indexOf( devider.getPoint() );
-      final List<IRecord> leftPts = points.subList( 0, i );
+      final int i = ArrayUtils.indexOf( points, devider.getPoint() );
+
+      final List<IRecord> leftPts = profil.getResult().subList( 0, i );
       for( final IRecord pt : leftPts )
       {
         point = pt;
         try
         {
-          final Double ax = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-          final Double ay = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-          final Double dp = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+          final Double ax = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+          final Double ay = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+          final Double dp = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
           if( ax != 0.0 )
-          {
             params[0] = ax;
-          }
           if( ay != 0.0 )
-          {
             params[1] = ay;
-          }
           if( dp != 0.0 )
-          {
             params[2] = dp;
-          }
         }
         catch( final Exception e )
         {
@@ -118,28 +114,22 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     if( m_deviderIndex > 0 )
     {
       point = devider.getPoint();
-      final int i = points.indexOf( point );
-      final ListIterator<IRecord> rightPts = points.listIterator( i );
+      final int i = ArrayUtils.indexOf( points, point );
+      final ListIterator<IRecord> rightPts = profil.getResult().listIterator( i );
       for( IRecord pt; rightPts.hasNext(); )
       {
         pt = rightPts.next();
         try
         {
-          final double ax = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-          final double ay = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-          final double dp = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+          final double ax = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+          final double ay = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+          final double dp = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
           if( params[0] == 0.0 )
-          {
             params[0] = ax;
-          }
           if( params[1] == 0.0 )
-          {
             params[1] = ay;
-          }
           if( params[2] == 0.0 )
-          {
             params[2] = dp;
-          }
         }
         catch( final Exception e )
         {
@@ -152,15 +142,15 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     if( params[0] * params[1] * params[2] == 0.0 )
       return null;
     final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ), params[0] );
-    changes[1] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ), params[1] );
-    changes[2] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ), params[2] );
+    changes[0] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ), params[0] );
+    changes[1] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), params[1] );
+    changes[2] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ), params[2] );
     return changes;
   }
 
   public AddBewuchsResolution( final Integer deviderIndex )
   {
-    super( "Bewuchsparameter an der Trennfläche erzeugen", null, null );
+    super( "Bewuchsparameter an der Trennflï¿½che erzeugen", null, null );
     m_deviderIndex = deviderIndex;
   }
 

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,14 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import java.util.List;
-
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
@@ -72,16 +71,14 @@ public class GelaendeLayer extends AbstractPolyLineLayer
 {
   public GelaendeLayer( final ProfilChartView pcv )
   {
-    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelände", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_HOEHE } ), true, true, true );
+    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelï¿½nde", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] { IWspmConstants.POINT_PROPERTY_HOEHE } ), true, true, true );
     setColors( setColor( pcv.getColorRegistry() ) );
   }
 
   private final Color[] setColor( final ColorRegistry cr )
   {
     if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_GELAENDE ) )
-    {
       cr.put( IWspmTuhhConstants.LAYER_GELAENDE, new RGB( 255, 150, 0 ) );
-    }
     return new Color[] { cr.get( IWspmTuhhConstants.LAYER_GELAENDE ) };
   }
 
@@ -92,7 +89,7 @@ public class GelaendeLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public List<IRecord> getPoints( )
+  public IRecord[] getPoints( )
   {
     return getProfil().getPoints();
   }
@@ -116,17 +113,14 @@ public class GelaendeLayer extends AbstractPolyLineLayer
     final double top = valueRange.getLogicalTo();
     final double bottom = valueRange.getLogicalFrom();
     for( final IProfilChange change : changes )
-    {
-      if( (change instanceof PointPropertyEdit) || (change instanceof PointAdd) )
-      {
+      if( change instanceof PointPropertyEdit || change instanceof PointAdd )
         for( final IRecord point : (IRecord[]) change.getObjects() )
-        {
           try
           {
-            final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-            final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+            final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
+            final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
-            if( (breite > right) || (breite < left) || (hoehe > top) || (hoehe < bottom) )
+            if( breite > right || breite < left || hoehe > top || hoehe < bottom )
             {
               valueRange.setLogicalRange( new LogicalRange( Math.min( hoehe, bottom ), Math.max( hoehe, top ) ) );
               domainRange.setLogicalRange( new LogicalRange( Math.min( breite, left ), Math.max( breite, right ) ) );
@@ -136,9 +130,6 @@ public class GelaendeLayer extends AbstractPolyLineLayer
           {
             return;
           }
-        }
-      }
-    }
   }
 
   @Override
@@ -173,6 +164,6 @@ public class GelaendeLayer extends AbstractPolyLineLayer
   @Override
   public String toString( )
   {
-    return "Geländehöhe";
+    return "Gelï¿½ndehï¿½he";
   }
 }

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
@@ -95,11 +93,11 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   public Rectangle2D getBounds( )
   {
 
-    final List<IRecord> points = m_pem.getProfil().getPoints();
+    final IRecord[] points = m_pem.getProfil().getPoints();
     Rectangle2D bounds = null;
     for( final IRecord p : points )
     {
-      final Object x = p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final Object x = p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
       final Object rauheit = p.getValue( ProfilObsHelper.getPropertyFromId( p, m_rauheit ) );
       if( x == null || rauheit == null )
         continue;
@@ -125,18 +123,18 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
     final IProfil profil = getProfil();
     if( profil == null )
       return;
-    final LinkedList<IRecord> points = profil.getPoints();
+    final IRecord[] points = profil.getPoints();
     IRecord lastP = null;
     for( final IRecord point : points )
     {
       if( lastP != null )
       {
-        final Object x1 = lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-        final Object x2 =  point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-        final Object y2 =  lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, m_rauheit ) );
+        final Object x1 = lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, IWspmConstants.POINT_PROPERTY_BREITE ) );
+        final Object x2 = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
+        final Object y2 = lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, m_rauheit ) );
         if( x1 != null && x2 != null && y2 != null )
         {
-          final Rectangle box = logical2screen( new Rectangle2D.Double( (Double)x1, 0.0, (Double)x2 - (Double)x1, (Double)y2 ) );
+          final Rectangle box = logical2screen( new Rectangle2D.Double( (Double) x1, 0.0, (Double) x2 - (Double) x1, (Double) y2 ) );
           box.width += 1;
           fillRectangle( gc, box );
         }
@@ -155,7 +153,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
     if( data instanceof EditData )
     {
       final EditData editData = (EditData) data;
-      final IRecord activePoint = getProfil().getPoints().get( editData.getIndex() );
+      final IRecord activePoint = getProfil().getPoints()[editData.getIndex()];
       NullProgressProfilOperation.execute( m_pem, new ActiveObjectEdit( getProfil(), activePoint, null ) );
     }
   }
@@ -177,9 +175,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
         valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
     }
     if( hint.isMarkerMoved() && getViewData().isVisible( m_rauheit ) )
-    {
       updateRauheit();
-    }
   }
 
   @Override
@@ -190,7 +186,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
 
   private final void updateRauheit( )
   {
-// TODO:Kim überschreiben der Rauheitsspalte
+// TODO:Kim ï¿½berschreiben der Rauheitsspalte
   }
 
   /**

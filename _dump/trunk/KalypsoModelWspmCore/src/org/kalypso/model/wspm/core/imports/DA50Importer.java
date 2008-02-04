@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -155,12 +154,12 @@ public class DA50Importer
     vy /= vl;
 
     /* Only do reference the first and last point */
-    final LinkedList<IRecord> points = profil.getPoints();
-    if( points.size() < 2 )
+    final IRecord[] points = profil.getPoints();
+    if( points.length < 2 )
       return;
 
-    final IRecord firstPP = points.getFirst();
-    final IRecord lastPP = points.getLast();
+    final IRecord firstPP = points[0];
+    final IRecord lastPP = points[points.length - 1];
     final double firstBreite = (Double) firstPP.getValue( ProfilObsHelper.getPropertyFromId( firstPP, IWspmConstants.POINT_PROPERTY_BREITE ) );
     final double lastBreite = (Double) lastPP.getValue( ProfilObsHelper.getPropertyFromId( lastPP, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
@@ -203,7 +202,7 @@ public class DA50Importer
         if( line.length() < 60 || !line.startsWith( "50" ) )
           continue;
 
-        // Station auslesen und mit 0en auff³llen, sonst klappt das umrechnen in m nicht immer
+        // Station auslesen und mit 0en auffï¿½llen, sonst klappt das umrechnen in m nicht immer
         // CString help_str = str.Mid( 9,9 );
         // help_str.TrimRight();
         // help_str = help_str + CString( '0', 9 - help_str.GetLength() );
@@ -217,7 +216,7 @@ public class DA50Importer
         // double station = (double)temp / 1000000;
         final double station = Double.parseDouble( stationBuf.toString() ) / 1000000;
 
-        // logstream << "Geokoordinaten gefunden f³r Station: " << station << std::endl;
+        // logstream << "Geokoordinaten gefunden fï¿½r Station: " << station << std::endl;
 
         // logstream << "Querprofil mit gleicher Station gefunden" << std::endl;
 

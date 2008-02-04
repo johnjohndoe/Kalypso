@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -68,7 +68,7 @@ public class InsertPointsWizard extends Wizard
     final IDialogSettings wizardSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), "InsertPointsWizardSettings" ); //$NON-NLS-1$
     setDialogSettings( wizardSettings );
 
-    setWindowTitle( "Profilpunkte einfügen" );
+    setWindowTitle( "Profilpunkte einfï¿½gen" );
     setNeedsProgressMonitor( true );
   }
 

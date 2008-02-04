@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -60,7 +61,7 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
 
   public DelBewuchsResolution( )
   {
-    super( "Bewuchsparameter im Flußschlauch entfernen", null, null );
+    super( "Bewuchsparameter im Fluï¿½schlauch entfernen", null, null );
   }
 
   /**
@@ -70,13 +71,13 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
   @Override
   protected IProfilChange[] resolve( final IProfil profil )
   {
-    final LinkedList<IRecord> points = profil.getPoints();
+    final IRecord[] points = profil.getPoints();
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( deviders.length < 1 )
       return null;
-    final int l = points.indexOf( deviders[0].getPoint() );
-    final int r = points.indexOf( deviders[deviders.length - 1].getPoint() );
-    final List<IRecord> fluss = points.subList( l, r );
+    final int l = ArrayUtils.indexOf( points, deviders[0].getPoint() );
+    final int r = ArrayUtils.indexOf( points, deviders[deviders.length - 1].getPoint() );
+    final List<IRecord> fluss = profil.getResult().subList( l, r );
     if( fluss.isEmpty() )
       return null;
     int index = 0;
@@ -84,9 +85,9 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
     for( final IRecord point : fluss )
     {
       final int i = index * 3;
-      changes[i] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ), 0.0 );
-      changes[i + 1] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ), 0.0 );
-      changes[i + 2] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ), 0.0 );
+      changes[i] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ), 0.0 );
+      changes[i + 1] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), 0.0 );
+      changes[i + 2] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ), 0.0 );
       index++;
     }
     return changes;

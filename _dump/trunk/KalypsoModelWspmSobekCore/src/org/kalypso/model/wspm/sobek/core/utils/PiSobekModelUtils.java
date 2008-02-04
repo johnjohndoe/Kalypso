@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -46,7 +46,6 @@ import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -194,7 +193,7 @@ public class PiSobekModelUtils
     piCrossSection.setRoughnessType( "Sobek.RoughnessType.StricklerKs" ); // nofdp default kSt
 
     final IProfil profil = csNode.getProfile();
-    final LinkedList<IRecord> points = profil.getPoints();
+    final IRecord[] points = profil.getPoints();
 
     for( final IRecord point : points )
     {

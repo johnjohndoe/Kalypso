@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -53,7 +53,6 @@ import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialo
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.IPointsProvider;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SimplePointsProvider;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Belger
@@ -86,17 +85,17 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
     // get profilpoints from selection and view
     // TODO: this does not work any more
     // final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
-    final IProfilEventManager pem = (m_view instanceof TableView) ? ((TableView) m_view).getProfilEventManager() : null;
+    final IProfilEventManager pem = m_view instanceof TableView ? ((TableView) m_view).getProfilEventManager() : null;
 
     if( pem == null )
     {
       // should never happen
-      MessageDialog.openError( viewShell, "Profil ausdünnnen", "Die aktive Ansicht unterstütz diese Aktion nicht." );
+      MessageDialog.openError( viewShell, "Profil ausdï¿½nnnen", "Die aktive Ansicht unterstï¿½tz diese Aktion nicht." );
       return;
     }
 
     final IProfil profil = pem.getProfil();
-    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( "aus allen Punkten des Profils", profil.getPoints().toArray( new IRecord[0] ) );
+    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( "aus allen Punkten des Profils", profil.getPoints() );
     final IPointsProvider selectionPointProvider = new SelectionPointsProvider( profil, m_selection );
 
     final DouglasPeuckerDialog dialog = new DouglasPeuckerDialog( viewShell, pem, new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );

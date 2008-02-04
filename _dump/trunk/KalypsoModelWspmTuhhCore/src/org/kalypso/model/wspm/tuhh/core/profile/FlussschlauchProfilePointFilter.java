@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import java.util.LinkedList;
-
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
@@ -68,13 +67,13 @@ public class FlussschlauchProfilePointFilter extends AbstractProfilePointFilter 
     final IRecord leftPoint = devider[0].getPoint();
     final IRecord rightPoint = devider[1].getPoint();
 
-    final LinkedList<IRecord> points = profil.getPoints();
+    final IRecord[] points = profil.getPoints();
 
-    final int left = points.indexOf( leftPoint );
-    final int right = points.indexOf( rightPoint );
-    final int index = points.indexOf( point );
+    final int left = ArrayUtils.indexOf( points, leftPoint );
+    final int right = ArrayUtils.indexOf( points, rightPoint );
+    final int index = ArrayUtils.indexOf( points, point );
 
-    return (index >= left && index < right);
+    return index >= left && index < right;
   }
 
 }

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,18 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import java.util.List;
-
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -65,25 +64,22 @@ public class DoppelterPunktRule extends AbstractValidatorRule
 
     try
     {
-      final List<IRecord> points = profil.getPoints();
+      final IRecord[] points = profil.getPoints();
       IRecord prevPoint = null;
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
       for( final IRecord point : points )
       {
         if( prevPoint != null )
-        {
-          if( ProfilUtil.comparePoints( new IComponent[] { ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_BREITE ),
-              ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) }, prevPoint, point ) )
+          if( ProfilUtil.comparePoints( new IComponent[] { ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ),
+              ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) }, prevPoint, point ) )
           {
-            final String msg = "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) );
+            final String msg = "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) ) );
             final String location = "";
-            final int pointPos = profil.getPoints().indexOf( point );
-            final IComponent pointProperty = ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+            final int pointPos = ArrayUtils.indexOf( profil.getPoints(), point );
+            final IComponent pointProperty = ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE );
 
             collector.createProfilMarker( false, msg, location, pointPos, pointProperty.getId(), pluginId, null );
           }
-
-        }
         prevPoint = point;
       }
     }

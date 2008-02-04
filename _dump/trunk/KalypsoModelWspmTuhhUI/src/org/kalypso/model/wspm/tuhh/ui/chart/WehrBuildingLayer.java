@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -41,9 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.awt.geom.Point2D;
-import java.util.LinkedList;
-import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -51,6 +50,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -115,10 +115,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   public final void editProfil( final Point moveTo, final Object data )
   {
     if( data instanceof IProfilPointMarker )
-    {
       editDevider( moveTo, (IProfilPointMarker) data );
-
-    }
     else
       super.editProfil( moveTo, data );
   }
@@ -141,8 +138,8 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     {
 
       final IRecord deviderPos = devider.getPoint();
-      final double breite = (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-      final Point point = logical2screen( new Point2D.Double( breite, (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) ) );
+      final double breite = (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final Point point = logical2screen( new Point2D.Double( breite, (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmConstants.POINT_PROPERTY_HOEHE ) ) ) );
       final Rectangle devRect = new Rectangle( point.x - 5, top - 5, 10, bottom - top + 10 );
       final Double rightValue = (Double) devider.getValue();
       if( devRect.contains( mousePoint.x, mousePoint.y ) )
@@ -169,9 +166,9 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public List<IRecord> getPoints( )
+  public IRecord[] getPoints( )
   {
-    return ProfilUtil.getInnerPoints( getProfil(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    return ProfilUtil.getInnerPoints( getProfil(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ).toArray( new IRecord[] {} );
   }
 
   /**
@@ -181,12 +178,12 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   protected boolean isPointVisible( final IRecord point )
   {
     final IProfil profil = getProfil();
-    final LinkedList<IRecord> points = profil.getPoints();
-    final int i = points.indexOf( point );
+    final IRecord[] points = profil.getPoints();
+    final int i = ArrayUtils.indexOf( points, point );
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-    if( i < points.indexOf( deviders[0].getPoint() ) )
+    if( i < ArrayUtils.indexOf( points, deviders[0].getPoint() ) )
       return false;
-    if( i > points.indexOf( deviders[deviders.length - 1].getPoint() ) )
+    if( i > ArrayUtils.indexOf( points, deviders[deviders.length - 1].getPoint() ) )
       return false;
     return true;
   }
@@ -224,7 +221,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     for( final IProfilPointMarker devider : deviders )
     {
       final IRecord point = devider.getPoint();
-      final double leftvalue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final double leftvalue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
       final int left = (int) getDomainRange().logical2screen( leftvalue );
       gc.drawLine( left, top, left, bottom );
     }
@@ -239,9 +236,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   public void paintDrag( final GCWrapper gc, final Point editing, final Object data )
   {
     if( data instanceof IProfilPointMarker )
-    {
       paintDragDevider( gc, editing );
-    }
     else
       super.paintDrag( gc, editing, data );
 
@@ -259,7 +254,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     try
     {
       final IRecord destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( editing ).getX() );
-      final Point destP = logical2screen( new Point2D.Double( (Double) destinationPoint.getValue( ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ), (Double) destinationPoint.getValue( ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) ) ) );
+      final Point destP = logical2screen( new Point2D.Double( (Double) destinationPoint.getValue( ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmConstants.POINT_PROPERTY_BREITE ) ), (Double) destinationPoint.getValue( ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) ) ) );
       gc.drawRectangle( destP.x - 5, top - 5, 10, bottom - top + 10 );
     }
     catch( final Exception e )
@@ -299,9 +294,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     changes[0] = new ProfileObjectSet( profile, new IProfileObject[] {} );
     changes[1] = new PointPropertyRemove( profile, ProfilObsHelper.getPropertyFromId( profile, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
     for( int i = 0; i < deviders.length; i++ )
-    {
       changes[i + 2] = new PointMarkerEdit( deviders[i], null );
-    }
     final ProfilOperation operation = new ProfilOperation( "Wehr entfernen", pem, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }
@@ -309,9 +302,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   private final Color[] setColor( final ColorRegistry cr )
   {
     if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_WEHR ) )
-    {
       cr.put( IWspmTuhhConstants.LAYER_WEHR, new RGB( 0, 128, 0 ) );
-    }
     return new Color[] { cr.get( IWspmTuhhConstants.LAYER_WEHR ), cr.get( IWspmTuhhConstants.LAYER_WEHR ) };
   }
 

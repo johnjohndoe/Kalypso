@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -111,7 +110,7 @@ public class RoughnessIntersector
       final String label = FeatureHelper.getAnnotationValue( profileFeature, IAnnotation.ANNO_LABEL );
       monitor.subTask( label );
 
-      final LinkedList<IRecord> points = profil.getPoints();
+      final IRecord[] points = profil.getPoints();
       for( final IRecord point : points )
       {
         if( !acceptPoint( profil, point ) )
@@ -160,7 +159,6 @@ public class RoughnessIntersector
             final Double newValue = entry.getValue();
 
             if( newValue != null )
-            {
               if( componentId != null )
               {
                 final IComponent property = ProfilObsHelper.getPropertyFromId( profil, componentId );
@@ -168,7 +166,6 @@ public class RoughnessIntersector
 
                 point.setValue( property, newValue );
               }
-            }
           }
         }
         // DONT break, because we may have several polygone covering the point, but only one has an assigned value
@@ -181,10 +178,8 @@ public class RoughnessIntersector
   private boolean acceptPoint( final IProfil profil, final IRecord point )
   {
     for( final IProfilePointFilter pointFilter : m_pointFilters )
-    {
       if( !pointFilter.accept( profil, point ) )
         return false;
-    }
 
     return true;
   }

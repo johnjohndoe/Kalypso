@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -88,6 +88,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.kalypso.contribs.eclipse.ui.JavaFileEditorInput;
 import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
+import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -135,7 +136,6 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       {
         final boolean opentable = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().getBoolean( PreferenceConstants.P_ALLWAYSOPENTABLE );
         if( opentable )
-        {
           // the newly opening table needs that this editor is already set as active editor, which
           // is not guaranteed by the framework.
           // so give the framework a bit time to to it (as this is most probalbly the swt-thread
@@ -148,7 +148,6 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
               openTableview();
             }
           } );
-        }
       }
     }
   };
@@ -289,7 +288,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
   @Override
   public void doSaveAs( )
   {
-    // hängt davon ab, ob wir stand-alone oder in der workbench laufen
+    // hï¿½ngt davon ab, ob wir stand-alone oder in der workbench laufen
     // je nachdem save in den workspace oder ins file-system
 
     // erstmal nur ins file-system
@@ -325,7 +324,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         }
         catch( final Exception e )
         {
-          return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, "Fehler beim Speichern des Profils", e );
+          return new Status( IStatus.ERROR, AbstractUIPluginExt.ID, 0, "Fehler beim Speichern des Profils", e );
         }
         finally
         {
@@ -357,7 +356,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
   }
 
   /**
-   * public, damit bei Navigation im Strang der Input geändert werden kann.
+   * public, damit bei Navigation im Strang der Input geï¿½ndert werden kann.
    * 
    * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
    */
@@ -428,7 +427,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         catch( final Exception e )
         {
           setProfil( null, null );
-          return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, "Fehler beim Laden eines Profils:\n" + e.getLocalizedMessage(), e );
+          return new Status( IStatus.ERROR, AbstractUIPluginExt.ID, 0, "Fehler beim Laden eines Profils:\n" + e.getLocalizedMessage(), e );
         }
         finally
         {
@@ -448,14 +447,12 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     final IProfilEventManager oldPem = m_profilPart.getProfilEventManager();
     final ProfilViewData oldViewData = m_profilPart.getViewData();
 
-    if( (oldPem == null) && (oldViewData != null) && (pem != null) )
+    if( oldPem == null && oldViewData != null && pem != null )
     {
       final IProfil profile = pem.getProfil();
       if( profile != null )
-      {
         for( final IComponent markerId : profile.getPointMarkerTypes() )
           oldViewData.setMarkerVisibility( markerId, true );
-      }
     }
 
     m_profilPart.setProfil( pem, file, getEditorSite().getId() );
@@ -644,7 +641,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       if( profil == null )
         return;
 
-      final IRecord point = profil.getPoints().get( pointPos );
+      final IRecord point = profil.getPoints()[pointPos];
       final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( profil, point, null ), true );
       final IStatus status = operation.execute( new NullProgressMonitor(), null );
       operation.dispose();
@@ -696,11 +693,11 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         break;
 
       case IResourceDelta.REMOVED:
-        MessageDialog.openWarning( getEditorSite().getShell(), "Datei " + file.getLocation().toFile().getAbsoluteFile(), "Die Profildatei wurde gelöscht.\nSpeichern Sie das Profil, um die Datei wiederherzustellen." );
+        MessageDialog.openWarning( getEditorSite().getShell(), "Datei " + file.getLocation().toFile().getAbsoluteFile(), "Die Profildatei wurde gelï¿½scht.\nSpeichern Sie das Profil, um die Datei wiederherzustellen." );
         // todo: was tun? am besten vorschlagen:
         // - profileditor schliessen
         // - profil neu speichern
-        // denn ohne resource gibts ständig woanders fehlermeldungen
+        // denn ohne resource gibts stï¿½ndig woanders fehlermeldungen
         break;
 
       case IResourceDelta.CHANGED:
@@ -711,10 +708,10 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         if( (delta.getFlags() & IResourceDelta.CONTENT) != 0 )
         {
           final StringBuffer message = new StringBuffer();
-          message.append( "Die Profildatei wurde geändert.\n" );
+          message.append( "Die Profildatei wurde geï¿½ndert.\n" );
           message.append( "Soll die Datei neu geladen werden?\n" );
           if( isDirty() )
-            message.append( "ACHTUNG: Die Änderungen im Profileditor gehen verloren!" );
+            message.append( "ACHTUNG: Die ï¿½nderungen im Profileditor gehen verloren!" );
 
           if( MessageDialog.openQuestion( getEditorSite().getShell(), "Datei " + file.getLocation().toFile().getAbsoluteFile(), message.toString() ) )
             setInput( getEditorInput() );
@@ -727,7 +724,6 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
   {
     final IProfilchartEditorListener[] listeners = m_listener.toArray( new IProfilchartEditorListener[m_listener.size()] );
     for( final IProfilchartEditorListener l : listeners )
-    {
       SafeRunnable.run( new SafeRunnable()
       {
         public void run( ) throws Exception
@@ -735,7 +731,6 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
           l.onProfilChanged( ProfilchartEditor.this, newprofil );
         }
       } );
-    }
   }
 
   /**

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.core.profil.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -125,9 +124,7 @@ public abstract class AbstractProfil implements IProfil
     final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
 
     for( final IProfileObject profileObject : profileObjects )
-    {
       profileObjectList.add( profileObject );
-    }
 
     return profileObjectList.toArray( new IProfileObject[] {} );
   }
@@ -190,10 +187,8 @@ public abstract class AbstractProfil implements IProfil
     final ArrayList<IRecord> records = new ArrayList<IRecord>();
 
     for( final IRecord record : getResult() )
-    {
       if( getPointMarkerFor( record ).length > 0 )
         records.add( record );
-    }
     return records.toArray( new IRecord[] {} );
   }
 
@@ -230,9 +225,7 @@ public abstract class AbstractProfil implements IProfil
     {
       final Object value = record.getValue( markerColumn );
       if( value != null )
-      {
         markers.add( new PointMarker( markerColumn, record ) );
-      }
     }
 
     return markers.toArray( new IProfilPointMarker[] {} );
@@ -246,10 +239,8 @@ public abstract class AbstractProfil implements IProfil
     final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
     final IComponent[] markers = getPointMarkerTypes();
     for( final IComponent marker : markers )
-    {
       if( record.getValue( marker ) != null )
         pointMarkers.add( new PointMarker( marker, record ) );
-    }
     return pointMarkers.toArray( new PointMarker[] {} );
   }
 
@@ -258,7 +249,7 @@ public abstract class AbstractProfil implements IProfil
    */
   public IComponent[] getPointMarkerTypes( )
   {
-    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( this.getType() );
+    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( getType() );
     if( providers.length == 0 )
       return new IComponent[] {};
 
@@ -269,10 +260,8 @@ public abstract class AbstractProfil implements IProfil
     {
       final String[] markerTypes = provider.getMarkerTypes();
       for( final IComponent component : properties )
-      {
         if( ArrayUtils.contains( markerTypes, component.getId() ) && !marker.contains( component ) )
           marker.add( component );
-      }
     }
     return marker.toArray( new IComponent[] {} );
   }
@@ -284,24 +273,9 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
-   * @deprecated don't use this function list is copied and not part of the result tupleresult
-   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#getPoints()
-   */
-  @Deprecated
-  public LinkedList<IRecord> getPoints( )
-  {
-    final LinkedList<IRecord> points = new LinkedList<IRecord>();
-    for( final IRecord record : getResult() )
-    {
-      points.add( record );
-    }
-    return points;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getRecordPoints()
    */
-  public IRecord[] getRecordPoints( )
+  public IRecord[] getPoints( )
   {
     return getResult().toArray( new IRecord[] {} );
   }
@@ -365,10 +339,8 @@ public abstract class AbstractProfil implements IProfil
   public IComponent hasPointProperty( final String propertyId )
   {
     for( final IComponent component : getResult().getComponents() )
-    {
       if( component.getId().equals( propertyId ) )
         return component;
-    }
     return null;
   }
 

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -104,19 +104,15 @@ public class WspmProfileHelper
     /* List for storing points of the profile, which have a geo reference. */
     final LinkedList<IRecord> geoReferencedPoints = new LinkedList<IRecord>();
 
-    final LinkedList<IRecord> points = profile.getPoints();
+    final IRecord[] points = profile.getPoints();
     for( final IRecord point : points )
     {
       final double rechtsWert = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
       final double hochWert = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
       if( rechtsWert > 0.0 || hochWert > 0.0 )
-      {
         /* Memorize the point, because it has a geo reference. */
         geoReferencedPoints.add( point );
-      }
-      // else
-      // System.out.print( "The point " + point.toString() + " has no RECHTSWERT or HOCHWERT or is missing both.\n" );
     }
 
     /* If no or only one geo referenced points are found, return. */
@@ -189,7 +185,7 @@ public class WspmProfileHelper
     final double breiteTwo = (Double) pointTwo.getValue( ProfilObsHelper.getPropertyFromId( pointTwo, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
     /* Important: The interpolation is done here :). */
-    final double toProfilePointLength = (toGeoPointLength / geoSegmentLength) * (breiteTwo - breiteOne);
+    final double toProfilePointLength = toGeoPointLength / geoSegmentLength * (breiteTwo - breiteOne);
 
     return breiteOne + toProfilePointLength;
   }
@@ -237,9 +233,9 @@ public class WspmProfileHelper
         /* calculate the georeference */
         final double deltaOne = width - widthValueOne;
         final double delta = widthValueTwo - widthValueOne;
-        final double x = (deltaOne * (rechtsWertTwo - rechtsWertOne) / delta) + rechtsWertOne;
-        final double y = (deltaOne * (hochWertTwo - hochWertOne) / delta) + hochWertOne;
-        final double z = (deltaOne * (heigthValueTwo - heigthValueOne) / delta) + heigthValueOne;
+        final double x = deltaOne * (rechtsWertTwo - rechtsWertOne) / delta + rechtsWertOne;
+        final double y = deltaOne * (hochWertTwo - hochWertOne) / delta + hochWertOne;
+        final double z = deltaOne * (heigthValueTwo - heigthValueOne) / delta + heigthValueOne;
 
         return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( x, y, z, crs );
       }
@@ -264,31 +260,31 @@ public class WspmProfileHelper
    */
   public static Double getHeigthPositionByWidth( final double width, final IProfil profile ) throws Exception
   {
-    final LinkedList<IRecord> points = profile.getPoints();
-    if( points.size() < 1 )
+    final IRecord[] points = profile.getPoints();
+    if( points.length < 1 )
       return null;
 
-    for( int i = 0; i < points.size() - 1; i++ )
+    for( int i = 0; i < points.length - 1; i++ )
     {
       /* We need a line string of the to neighbour points. */
-      final IRecord tempPointOne = points.get( i );
+      final IRecord tempPointOne = points[i];
       final double widthValueOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_BREITE ) );
       final double heigthValueOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
-      final IRecord tempPointTwo = points.get( i + 1 );
+      final IRecord tempPointTwo = points[i + 1];
       final double widthValueTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_BREITE ) );
       final double heigthValueTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
       /* searching for the right segment */
       if( widthValueOne <= width & widthValueTwo >= width )
         /* calculate the heigth */
-        return ((width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne)) + heigthValueOne;
+        return (width - widthValueOne) * (heigthValueTwo - heigthValueOne) / (widthValueTwo - widthValueOne) + heigthValueOne;
 
     }
-    if( width < (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_BREITE ) ) )
-      return (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_HOEHE ) );
-    else if( width > (Double) points.get( points.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( points.size() - 1 ), IWspmConstants.POINT_PROPERTY_BREITE ) ) )
-      return (Double) points.get( points.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( points.size() - 1 ), IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    if( width < (Double) points[0].getValue( ProfilObsHelper.getPropertyFromId( points[0], IWspmConstants.POINT_PROPERTY_BREITE ) ) )
+      return (Double) points[0].getValue( ProfilObsHelper.getPropertyFromId( points[0], IWspmConstants.POINT_PROPERTY_HOEHE ) );
+    else if( width > (Double) points[points.length - 1].getValue( ProfilObsHelper.getPropertyFromId( points[points.length - 1], IWspmConstants.POINT_PROPERTY_BREITE ) ) )
+      return (Double) points[points.length - 1].getValue( ProfilObsHelper.getPropertyFromId( points[points.length - 1], IWspmConstants.POINT_PROPERTY_HOEHE ) );
     return null;
   }
 
@@ -314,9 +310,9 @@ public class WspmProfileHelper
       // geo-coordinates
       return new GM_Point[] {};
 
-    final LinkedList<IRecord> points = profil.getPoints();
-    final IRecord firstPoint = points.getFirst();
-    final IRecord lastPoint = points.getLast();
+    final IRecord[] points = profil.getPoints();
+    final IRecord firstPoint = points[0];
+    final IRecord lastPoint = points[points.length - 1];
 
     final double firstX = (Double) firstPoint.getValue( ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
     final double firstY = (Double) firstPoint.getValue( ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
@@ -361,10 +357,10 @@ public class WspmProfileHelper
 
   private static PolyLine createPolyline( final IProfil profil, final IComponent xProperty, final IComponent yProperty )
   {
-    final LinkedList<IRecord> points = profil.getPoints();
+    final IRecord[] points = profil.getPoints();
 
-    final double[] xValues = new double[points.size()];
-    final double[] yValues = new double[points.size()];
+    final double[] xValues = new double[points.length];
+    final double[] yValues = new double[points.length];
     final double dy = yProperty == null ? 0.001 : ProfilObsHelper.getPrecision( yProperty );
     int count = 0;
     for( final IRecord point : points )
@@ -430,7 +426,7 @@ public class WspmProfileHelper
     final double heigth1 = WspmProfileHelper.getHeigthPositionByWidth( startWidth, orgIProfil );
     final double heigth2 = WspmProfileHelper.getHeigthPositionByWidth( endWidth, orgIProfil );
 
-    final LinkedList<IRecord> profilPointList = profile.getPoints();
+    final IRecord[] profilPointList = profile.getPoints();
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
     /* set the coordinate system */
@@ -492,7 +488,7 @@ public class WspmProfileHelper
     if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
       return new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe" ) );
+      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Hï¿½he", "Hï¿½he", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, "Hï¿½he", "Hï¿½he" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
       return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )

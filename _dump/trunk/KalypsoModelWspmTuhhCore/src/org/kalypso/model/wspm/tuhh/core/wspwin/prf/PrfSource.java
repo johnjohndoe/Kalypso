@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IStatus;
@@ -51,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.math.Range;
 import org.kalypso.commons.math.geom.PolyLine;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -140,9 +140,9 @@ public class PrfSource implements IProfilSource
       return;
 
     final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
-    final IComponent prAx = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
-    final IComponent prAy = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
-    final IComponent prDp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
+    final IComponent prAx = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    final IComponent prAy = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    final IComponent prDp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
 
     writePointProperty( p, prAx, dbx );
     writePointProperty( p, prAy, dby );
@@ -170,8 +170,8 @@ public class PrfSource implements IProfilSource
       return;
 
     final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
-    final IComponent hochwert = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT );
-    final IComponent rechtswert = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hochwert = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent rechtswert = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
 
     writePointProperty( p, hochwert, dbh );
     writePointProperty( p, rechtswert, dbr );
@@ -279,8 +279,7 @@ public class PrfSource implements IProfilSource
 
   private final boolean writeBuildingProperty( final IProfileObject building, final StringTokenizer sT, final IComponent property )
   {
-    if( sT.hasMoreTokens() && (building != null) )
-    {
+    if( sT.hasMoreTokens() && building != null )
       try
       {
         building.setValue( property, Double.parseDouble( sT.nextToken() ) );
@@ -291,8 +290,6 @@ public class PrfSource implements IProfilSource
         KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, e.getMessage(), e ) );
         return false;
       }
-
-    }
     else
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Fehler beim Lesen der Bauwerkseigenschaft: " + property.toString(), null ) );
     return false;
@@ -308,9 +305,7 @@ public class PrfSource implements IProfilSource
     final IProfileObject bridge = new BuildingBruecke( p );
     final StringTokenizer sT = new StringTokenizer( dbu.getSecondLine(), " " );
     if( sT.countTokens() > 4 )
-    {
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "", 0, "Ungültige Anzahl von Eigenschaften für die Brücke. Es werden nur die ersten Vier ausgewertet.", null ) );
-    }
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "", 0, "Ungï¿½ltige Anzahl von Eigenschaften fï¿½r die Brï¿½cke. Es werden nur die ersten Vier ausgewertet.", null ) );
 
     final IComponent cUnterwasser = ProfilObsHelper.getPropertyFromId( bridge, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
     final IComponent cBreite = ProfilObsHelper.getPropertyFromId( bridge, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
@@ -332,8 +327,8 @@ public class PrfSource implements IProfilSource
 
     for( final IRecord point : p.getPoints() )
     {
-      final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-      final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+      final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
       if( rangeO.contains( breite ) )
         point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), polyLineO.getYFor( breite ) );
@@ -355,13 +350,13 @@ public class PrfSource implements IProfilSource
       return 0;
     final double[] xs = db.getX();
     final double[] ys = db.getY();
-    p.addPointProperty( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-    p.addPointProperty( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    p.addPointProperty( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    p.addPointProperty( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_HOEHE ) );
     for( int i = 0; i < xs.length; i++ )
     {
       final IRecord point = p.createProfilPoint();
-      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ), xs[i] );
-      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ), ys[i] );
+      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ), xs[i] );
+      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ), ys[i] );
       p.addPoint( point );
     }
     return xs.length;
@@ -376,20 +371,14 @@ public class PrfSource implements IProfilSource
     final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
 
     final String rks = db.getSecondLine().toUpperCase();
-    IComponent rTyp = ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
+    IComponent rTyp = ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
 
     if( rks.startsWith( "KST" ) )
-    {
-      rTyp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
-    }
+      rTyp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     else if( rks.startsWith( "KS" ) || rks.startsWith( "K-S " ) )
-    {
-      rTyp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
-    }
+      rTyp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     else
-    {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "Unbekannter Rauheits-typ[" + rks + "], wird 'ks' interpretiert.", null ) );
-    }
 
     p.addPointProperty( rTyp );
     for( int i = 0; i < db.getCoordCount(); i++ )
@@ -402,8 +391,8 @@ public class PrfSource implements IProfilSource
 
   private void readTrennFl( final IProfil p, final PrfReader pr )
   {
-    final LinkedList<IRecord> points = p.getPoints();
-    if( points.isEmpty() )
+    final IRecord[] points = p.getPoints();
+    if( points.length == 0 )
       return;
     final IDataBlock db = pr.getDataBlock( "TRENNFLAECHEN" );
     if( db == null )
@@ -426,7 +415,7 @@ public class PrfSource implements IProfilSource
       pos2 = (int) db.getY()[1];
     }
     if( pCount > 2 )
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensätze für Trennflächen können an Station(" + p.getStation() + ") nicht ausgewertet werden", null ) );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensï¿½tze fï¿½r Trennflï¿½chen kï¿½nnen an Station(" + p.getStation() + ") nicht ausgewertet werden", null ) );
 
     // TODO: KIM in den Reparator verschieben
     // --------------------
@@ -434,14 +423,14 @@ public class PrfSource implements IProfilSource
 // {
 // p1 = points.getFirst();
 // pos1 = 0;
-// m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ") an Position [" + Double.toString(
+// m_logger.log( Level.INFO, "Erzeuge Trennflï¿½che fï¿½r Station(" + p.getStation() + ") an Position [" + Double.toString(
 // p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
 // }
 // if( p2 == null )
 // {
 // p2 = points.getLast();
 // pos2 = 0;
-// m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ") an Position [" + Double.toString(
+// m_logger.log( Level.INFO, "Erzeuge Trennflï¿½che fï¿½r Station(" + p.getStation() + ") an Position [" + Double.toString(
 // p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
 // }
     // --------------------
@@ -467,8 +456,8 @@ public class PrfSource implements IProfilSource
 
   private void readDurchStr( final IProfil p, final PrfReader pr )
   {
-    final LinkedList<IRecord> points = p.getPoints();
-    if( points.isEmpty() )
+    final IRecord[] points = p.getPoints();
+    if( points.length == 0 )
       return;
     final IDataBlock db = pr.getDataBlock( "DURCHSTROEMTE" );
     if( db == null )
@@ -479,30 +468,26 @@ public class PrfSource implements IProfilSource
     IRecord p2 = null;
 
     if( pCount > 0 )
-    {
       p1 = ProfilUtil.findPoint( p, db.getX()[0], 0 );
-    }
     if( pCount > 1 )
-    {
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
-    }
     if( pCount > 2 )
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensätze an Station(" + p.getStation()
-          + ")  für Durchströmte Bereiche können nicht ausgewertet werden", null ) );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensï¿½tze an Station(" + p.getStation()
+          + ")  fï¿½r Durchstrï¿½mte Bereiche kï¿½nnen nicht ausgewertet werden", null ) );
 
     // TODO: KIM in den Reparator verschieben
     // -------------
 // if( p1 == null )
 // {
 // p1 = points.getFirst();
-// m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ") an Position [" +
+// m_logger.log( Level.INFO, "Erzeuge Durchstrï¿½mten Bereich fï¿½r Station(" + p.getStation() + ") an Position [" +
 // Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
 // + "]" );
 // }
 // if( p2 == null )
 // {
 // p2 = points.getLast();
-// m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ") an Position [" +
+// m_logger.log( Level.INFO, "Erzeuge Durchstrï¿½mten Bereich fï¿½r Station(" + p.getStation() + ") an Position [" +
 // Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
 // + "]" );
 // }
@@ -536,8 +521,7 @@ public class PrfSource implements IProfilSource
     {
       final IRecord point = ProfilUtil.findPoint( p, pos[i], 0 );
       if( point != null )
-      {
-        if( (values != null) && (values.length > i + 1) )
+        if( values != null && values.length > i + 1 )
         {
           final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
           final IComponent cWehr = ProfilObsHelper.getPropertyFromId( providers, IWspmTuhhConstants.MARKER_TYP_WEHR );
@@ -545,7 +529,6 @@ public class PrfSource implements IProfilSource
           final ProfilDevider devider = new ProfilDevider( cWehr, point );
           devider.setValue( values[i + 1] );
         }
-      }
     }
   }
 
@@ -575,8 +558,8 @@ public class PrfSource implements IProfilSource
     final Range rangeO = new Range( polyLineO.getFirstX(), polyLineO.getLastX(), delta );
     for( final IRecord point : p.getPoints() )
     {
-      final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-      final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+      final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
       if( rangeO.contains( breite ) )
         point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), polyLineO.getYFor( breite ) );
@@ -598,9 +581,7 @@ public class PrfSource implements IProfilSource
 
     final double[] wp = new double[paramCount];
     for( int i = 0; i < paramCount; i++ )
-    {
       wp[i] = Double.parseDouble( sT.nextToken() );
-    }
     return wp;
   }
 
@@ -626,8 +607,8 @@ public class PrfSource implements IProfilSource
 
   private void readBordVoll( final IProfil p, final PrfReader pr )
   {
-    final LinkedList<IRecord> points = p.getPoints();
-    if( points.isEmpty() )
+    final IRecord[] points = p.getPoints();
+    if( points.length == 0 )
       return;
     final IDataBlock db = pr.getDataBlock( "BORDVOLL" );
     if( db == null )
@@ -637,28 +618,24 @@ public class PrfSource implements IProfilSource
     IRecord p2 = null;
 
     if( pCount > 0 )
-    {
       p1 = ProfilUtil.findPoint( p, db.getX()[0], 0 );
-    }
     if( pCount > 1 )
-    {
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
-    }
     if( pCount > 2 )
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensätze für Bordvollpunkte können an Station(" + p.getStation() + ") nicht ausgewertet werden", null ) );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensï¿½tze fï¿½r Bordvollpunkte kï¿½nnen an Station(" + p.getStation() + ") nicht ausgewertet werden", null ) );
 
     // TODO: KIM in den Reparator verschieben
     // ---------------
 // if( p1 == null )
 // {
 // p1 = points.getFirst();
-// m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" +
+// m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt fï¿½r Station(" + p.getStation() + ") an Position [" +
 // Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
 // }
 // if( p2 == null )
 // {
 // p2 = points.getLast();
-// m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" +
+// m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt fï¿½r Station(" + p.getStation() + ") an Position [" +
 // Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
 // }
     // ----------------------------

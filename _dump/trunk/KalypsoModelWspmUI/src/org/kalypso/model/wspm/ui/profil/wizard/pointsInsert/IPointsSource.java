@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -51,7 +51,7 @@ import org.kalypso.observation.result.IRecord;
 
 public interface IPointsSource extends IExecutableExtension
 {
-  public LinkedList<IRecord> getPoints( ) throws InvocationTargetException;
+  public List<IRecord> getPoints( ) throws InvocationTargetException;
 
   public void createControl( final Composite parent );
 

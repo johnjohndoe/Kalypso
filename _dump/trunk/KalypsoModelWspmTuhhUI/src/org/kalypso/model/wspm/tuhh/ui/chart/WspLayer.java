@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -50,6 +50,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -141,17 +142,17 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
 
   private int[] getPoints( )
   {
-    // ermittelt das Polygon oberhalb der geländelinie
-    final List<IRecord> ppoints = m_profil.getPoints();
-    final List<Point> points = new ArrayList<Point>( (ppoints.size() + 2) * 2 );
-    for( int i = 0; i < ppoints.size(); i++ )
+    // ermittelt das Polygon oberhalb der gelï¿½ndelinie
+    final IRecord[] ppoints = m_profil.getPoints();
+    final List<Point> points = new ArrayList<Point>( (ppoints.length + 2) * 2 );
+    for( int i = 0; i < ppoints.length; i++ )
     {
-      final IRecord p = ppoints.get( i );
+      final IRecord p = ppoints[i];
 
       try
       {
-        final double x = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-        final double y = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+        final double x = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
+        final double y = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
         final Point point = logical2screen( new Point2D.Double( x, y ) );
 
@@ -160,7 +161,7 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
 
         points.add( point );
 
-        if( i == ppoints.size() - 1 )
+        if( i == ppoints.length - 1 )
           points.add( new Point( point.x, -1000 ) );
       }
       catch( final Exception e )

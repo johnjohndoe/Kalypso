@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,13 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilBuilder;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -60,7 +61,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * Trennflächen und Bordvollpunkte dürfen nur innerhalb der durchströmten Bereiche liegen
+ * Trennflï¿½chen und Bordvollpunkte dï¿½rfen nur innerhalb der durchstrï¿½mten Bereiche liegen
  * 
  * @author kimwerner
  */
@@ -78,16 +79,16 @@ public class TrennerRule extends AbstractValidatorRule
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
     if( db.length == 0 )
-      collector.createProfilMarker( true, "keine durchströmten Bereiche vorhanden", "", 0, null, pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) } );
+      collector.createProfilMarker( true, "keine durchstrï¿½mten Bereiche vorhanden", "", 0, null, pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) } );
 
     final IProfileObject[] profileObjects = profil.getProfileObjects();
     IProfileObject building = null;
     if( profileObjects.length > 0 )
       building = profileObjects[0];
-    // Regel für fehlende Trennflächen bei Durchlässen erlauben
+    // Regel fï¿½r fehlende Trennflï¿½chen bei Durchlï¿½ssen erlauben
     // TUHH-Hack
     if( tf.length == 0 && !isDurchlass( building ) )
-      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, null, pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) } );
+      collector.createProfilMarker( true, "keine Trennflï¿½chen vorhanden", "", 0, null, pluginId, new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) } );
 
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
@@ -95,7 +96,7 @@ public class TrennerRule extends AbstractValidatorRule
 
   private boolean isDurchlass( final IProfileObject building )
   {
-    return !((building == null) || building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) || building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_WEHR ));
+    return !(building == null || building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) || building.getId().equals( IWspmTuhhConstants.BUILDING_TYP_WEHR ));
   }
 
   private void validatePosition( final IProfilPointMarker[] db, final IProfilPointMarker[] toValidate, final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
@@ -105,24 +106,18 @@ public class TrennerRule extends AbstractValidatorRule
     try
     {
       final IRecord leftP = db[0].getPoint();
-      final double left = (Double) leftP.getValue( ProfilObsHelper.getPropertyFromId( leftP, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final double left = (Double) leftP.getValue( ProfilObsHelper.getPropertyFromId( leftP, IWspmConstants.POINT_PROPERTY_BREITE ) );
       final IRecord rightP = db[db.length - 1].getPoint();
-      final double right = (Double) rightP.getValue( ProfilObsHelper.getPropertyFromId( rightP, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-      final double xleft = (Double) toValidate[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( toValidate[0].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-      final double xright = (Double) toValidate[toValidate.length - 1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( toValidate[toValidate.length - 1].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final double right = (Double) rightP.getValue( ProfilObsHelper.getPropertyFromId( rightP, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double xleft = (Double) toValidate[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( toValidate[0].getPoint(), IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double xright = (Double) toValidate[toValidate.length - 1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( toValidate[toValidate.length - 1].getPoint(), IWspmConstants.POINT_PROPERTY_BREITE ) );
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
       final IComponent deviderTyp = toValidate[0].getId();
 
-      if( (xleft < left) || (xleft > right) )
-      {
-        collector.createProfilMarker( true, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[0].getPoint() ), null, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp, profil.getPoints().indexOf( leftP ) ) } );
-
-      }
-      if( (xright < left) || (xright > right) )
-      {
-        collector.createProfilMarker( true, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "", profil.getPoints().indexOf( toValidate[toValidate.length - 1].getPoint() ), null, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp, profil.getPoints().indexOf( rightP ) ) } );
-
-      }
+      if( xleft < left || xleft > right )
+        collector.createProfilMarker( true, toValidate[0].getId().getName() + ": auï¿½erhalb des durchstrï¿½mten Bereichs", "", ArrayUtils.indexOf( profil.getPoints(), toValidate[0].getPoint() ), null, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp, ArrayUtils.indexOf( profil.getPoints(), leftP ) ) } );
+      if( xright < left || xright > right )
+        collector.createProfilMarker( true, toValidate[0].getId().getName() + ": auï¿½erhalb des durchstrï¿½mten Bereichs", "", ArrayUtils.indexOf( profil.getPoints(), toValidate[toValidate.length - 1].getPoint() ), null, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) } );
     }
     catch( final Exception e )
     {

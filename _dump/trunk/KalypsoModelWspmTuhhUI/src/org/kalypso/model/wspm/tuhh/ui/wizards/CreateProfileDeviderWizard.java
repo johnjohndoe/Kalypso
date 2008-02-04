@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -44,7 +44,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -110,7 +109,7 @@ public class CreateProfileDeviderWizard extends Wizard
   {
     m_foundProfiles = foundProfiles;
 
-    setWindowTitle( "Fließzonen erzeugen" );
+    setWindowTitle( "Flieï¿½zonen erzeugen" );
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
@@ -121,9 +120,9 @@ public class CreateProfileDeviderWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 1, "profileFeaturesChooserPage", "Profile auswählen", null );
+    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 1, "profileFeaturesChooserPage", "Profile auswï¿½hlen", null );
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( "Bitte wählen Sie aus, in welchen Profilen Fließzonen erzeugt werden sollen." );
+    m_profileChooserPage.setMessage( "Bitte wï¿½hlen Sie aus, in welchen Profilen Flieï¿½zonen erzeugt werden sollen." );
 
     m_deviderPage = new CreateProfileDeviderPage( m_foundProfiles.theme );
 
@@ -164,7 +163,7 @@ public class CreateProfileDeviderWizard extends Wizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Fließzonen erzeugen", 1 + choosen.length );
+        monitor.beginTask( "Flieï¿½zonen erzeugen", 1 + choosen.length );
 
         try
         {
@@ -190,7 +189,7 @@ public class CreateProfileDeviderWizard extends Wizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, runnable );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Erzeugen der Fließzonen", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Erzeugen der Flieï¿½zonen", status );
 
     return status.isOK();
   }
@@ -203,7 +202,6 @@ public class CreateProfileDeviderWizard extends Wizard
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
     for( final Object object : profileFeatures )
-    {
       try
       {
         final Feature profileFeature = (Feature) object;
@@ -253,7 +251,6 @@ public class CreateProfileDeviderWizard extends Wizard
       {
         monitor.worked( 1 );
       }
-    }
 
     return changes.toArray( new FeatureChange[changes.size()] );
   }
@@ -285,9 +282,8 @@ public class CreateProfileDeviderWizard extends Wizard
 
     final Map<Point, IRecord> pointMap = new HashMap<Point, IRecord>( intersectionPoints.length );
 
-    final LinkedList<IRecord> points = profil.getPoints();
+    final IRecord[] points = profil.getPoints();
     for( final IRecord profilPoint : points )
-    {
       try
       {
         final GM_Point pointGeom = ProfileCacherFeaturePropertyFunction.convertPoint( profil, profilPoint );
@@ -316,7 +312,6 @@ public class CreateProfileDeviderWizard extends Wizard
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
-    }
 
     final IProfilPointMarker[] existingMarkers = profil.getPointMarkerFor( markerType );
     for( final IProfilPointMarker marker : existingMarkers )

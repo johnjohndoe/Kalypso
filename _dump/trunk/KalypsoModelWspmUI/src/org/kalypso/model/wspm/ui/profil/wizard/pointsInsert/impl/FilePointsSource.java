@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -75,7 +75,7 @@ public class FilePointsSource extends AbstractPointsSource
   /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource#getPoints()
    */
-  public LinkedList<IRecord> getPoints( )
+  public List<IRecord> getPoints( )
   {
     final File f = new File( m_fileName.getText() );
     final FileReader fr;
@@ -97,7 +97,7 @@ public class FilePointsSource extends AbstractPointsSource
 
       final IProfil profil = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" );
       if( prfS.read( profil, fr ) )
-        return profil.getPoints();
+        return profil.getResult();
     }
     catch( final CoreException e )
     {
@@ -131,9 +131,7 @@ public class FilePointsSource extends AbstractPointsSource
         final FileDialog dlg = new FileDialog( parent.getShell() );
         final String fileName = dlg.open();
         if( fileName != null )
-        {
           m_fileName.setText( fileName );
-        }
       }
     } );
 

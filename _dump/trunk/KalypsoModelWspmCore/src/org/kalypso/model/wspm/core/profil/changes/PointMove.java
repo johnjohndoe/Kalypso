@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.profil.changes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.observation.result.IRecord;
@@ -78,18 +79,19 @@ public class PointMove implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
-    {
       hint.setPointsChanged();
-    }
     if( m_direction == 0 )
       return new PointMove( m_profil, m_points, 0 );
-    final List<IRecord> points = m_profil.getPoints();
-    final int index = points.indexOf( m_points.get( 0 ) );
+    final IRecord[] points = m_profil.getPoints();
+
+    final int index = ArrayUtils.indexOf( points, m_points.get( 0 ) );
+
     final int newPosition = index + m_direction;
-    if( newPosition < 0 || newPosition >= points.size() )
+    if( newPosition < 0 || newPosition >= points.length )
       return new PointMove( m_profil, m_points, 0 );
-    points.removeAll( m_points );
-    points.addAll( newPosition, m_points );
+
+    m_profil.getResult().removeAll( m_points );
+    m_profil.getResult().addAll( newPosition, m_points );
     return new PointMove( m_profil, m_points, -m_direction );
   }
 

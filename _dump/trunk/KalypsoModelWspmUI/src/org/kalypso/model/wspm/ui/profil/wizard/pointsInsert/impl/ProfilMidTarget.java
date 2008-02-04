@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -66,24 +66,25 @@ public class ProfilMidTarget extends AbstractPointsTarget
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget#insertPoints(org.kalypso.model.wspm.core.profil.impl.ProfilEventManager,
    *      IProfilPoints)
    */
-  public void insertPoints( final IProfilEventManager pem, final LinkedList<IRecord> points )
+  public void insertPoints( final IProfilEventManager pem, final List<IRecord> points )
   {
-   if (points!=null)
-     insertPointsInternal(pem,points);
-   else
-     addPointInternal(pem.getProfil());
+    if( points != null )
+      insertPointsInternal( pem, points );
+    else
+      addPointInternal( pem.getProfil() );
   }
-  private final void addPointInternal(final IProfil profile)
+
+  private final void addPointInternal( final IProfil profile )
   {
     final IRecord activePoint = profile.getActivePoint();
     final IRecord endPoint = ProfilUtil.getPointAfter( profile, activePoint );
     final IRecord point = ProfilUtil.splitSegment( profile, activePoint, endPoint );
-    final TupleResult result =  profile.getResult();
-    result.add(result.indexOf( endPoint ), point );
-    
-    
+    final TupleResult result = profile.getResult();
+    result.add( result.indexOf( endPoint ), point );
+
   }
-  private final void insertPointsInternal( final IProfilEventManager pem, final LinkedList<IRecord> points )
+
+  private final void insertPointsInternal( final IProfilEventManager pem, final List<IRecord> points )
   {
     final int pointsCount = points.size();
     final IComponent[] existingProps = pem.getProfil().getPointProperties();
@@ -92,18 +93,18 @@ public class ProfilMidTarget extends AbstractPointsTarget
     try
     {
       final IRecord activePkt = pem.getProfil().getActivePoint();
-      final IRecord targetPkt = (activePkt != null) ? activePkt : pem.getProfil().createProfilPoint();
-      final double deltaX = (Double) points.getFirst().getValue( ProfilObsHelper.getPropertyFromId( points.getFirst(), IWspmConstants.POINT_PROPERTY_BREITE ) )
+      final IRecord targetPkt = activePkt != null ? activePkt : pem.getProfil().createProfilPoint();
+      final double deltaX = (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_BREITE ) )
           - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double deltaY = (Double) points.getFirst().getValue( ProfilObsHelper.getPropertyFromId( points.getFirst(), IWspmConstants.POINT_PROPERTY_HOEHE ) )
+      final double deltaY = (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_HOEHE ) )
           - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_HOEHE ) );
       int i = changes.length - 1;
       for( final IRecord point : points )
       {
         final IRecord newPoint = targetPkt.cloneRecord();
-        newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_BREITE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( points.getFirst(), IWspmConstants.POINT_PROPERTY_BREITE ) )
+        newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_BREITE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_BREITE ) )
             - deltaX );
-        newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( points.getFirst(), IWspmConstants.POINT_PROPERTY_HOEHE ) )
+        newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_HOEHE ) )
             - deltaY );
         for( final IComponent prop : existingProps )
         {
@@ -124,7 +125,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
       // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
       changes[0] = null;
     }
-    final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes, false );
+    final ProfilOperation operation = new ProfilOperation( "Punkte einfï¿½gen", pem, changes, false );
     new ProfilOperationJob( operation ).schedule();
   }
 }

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
-import java.util.List;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
@@ -50,6 +49,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -73,7 +73,7 @@ import org.kalypso.observation.result.IRecord;
 public class BrueckeBuildingLayer extends AbstractPolyLineLayer
 {
   @Override
-  public List<IRecord> getPoints( )
+  public IRecord[] getPoints( )
   {
     return getProfil().getPoints();
   }
@@ -81,7 +81,7 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   public BrueckeBuildingLayer( final ProfilChartView pcv )
 
   {
-    super( IWspmTuhhConstants.LAYER_BRUECKE, "Brücke", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] {
+    super( IWspmTuhhConstants.LAYER_BRUECKE, "Brï¿½cke", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] {
         IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE } ), false, false, false );
     setColors( setColor( pcv.getColorRegistry() ) );
 
@@ -90,20 +90,16 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   @Override
   public String toString( )
   {
-    return "Brücke";
+    return "Brï¿½cke";
   }
 
   private final Color[] setColor( final ColorRegistry cr )
   {
 
     if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_TOP" ) )
-    {
       cr.put( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_TOP", new RGB( 0, 128, 0 ) );
-    }
     if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_BOTTOM" ) )
-    {
       cr.put( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_BOTTOM", new RGB( 0, 128, 179 ) );
-    }
     return new Color[] { cr.get( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_TOP" ), cr.get( IWspmTuhhConstants.LAYER_BRUECKE + "_COLOR_BOTTOM" ) };
   }
 
@@ -132,7 +128,7 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   protected Double convertPoint( final IRecord p, final int lineNr )
   {
     {
-      final double x = (java.lang.Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
+      final double x = (java.lang.Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
       double y = 0.0;
       switch( lineNr )
       {

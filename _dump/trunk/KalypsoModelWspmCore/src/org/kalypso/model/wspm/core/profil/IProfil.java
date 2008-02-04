@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -39,8 +39,6 @@
  *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
-
-import java.util.LinkedList;
 
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -122,16 +120,9 @@ public interface IProfil extends IObservation<TupleResult>
   public IComponent[] getPointProperties( );
 
   /**
-   * @return a new LinkedList of the obervations TupleResultSet nested in this profile.
-   *         <p>
-   *         Pointmodifications will be reflected in the profile. listoperations not.
-   * @see #getresult()
-   * @deprecated a new LinkedList<> will be created - this list doesn't representing the TupleResult of Profile
+   * @return Points of profile
    */
-  @Deprecated
-  public LinkedList<IRecord> getPoints( );
-
-  public IRecord[] getRecordPoints( );
+  public IRecord[] getPoints( );
 
   /**
    * @return the current building(Tuhh) or other kind of ProfileObject, maybe null

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
@@ -52,6 +50,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
@@ -99,9 +98,9 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-    changes[1] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-    changes[2] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+    changes[0] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+    changes[1] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+    changes[2] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
     final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", m_pem, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }
@@ -129,17 +128,17 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   {
     try
     {
-      final List<IRecord> ppoints = m_pem.getProfil().getPoints();
-      final Point2D[] points = new Point2D[ppoints.size()];
+      final IRecord[] ppoints = m_pem.getProfil().getPoints();
+      final Point2D[] points = new Point2D[ppoints.length];
       int i = 0;
       for( final IRecord p : ppoints )
       {
-        final Object x =  p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_BREITE ) );
-        final Object y =  p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
-        if (x==null||y==null)
-          points[i++] = new Point2D.Double( 0,0);
+        final Object x = p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
+        final Object y = p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+        if( x == null || y == null )
+          points[i++] = new Point2D.Double( 0, 0 );
         else
-        points[i++] = new Point2D.Double( (Double)x, (Double)y );
+          points[i++] = new Point2D.Double( (Double) x, (Double) y );
       }
       return points;
     }
@@ -163,12 +162,12 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     final Point2D[] points = getPoints();
     for( int i = 0; i < points.length - 1; i++ )
     {
-      final IRecord pp = m_pem.getProfil().getPoints().get( i );
+      final IRecord pp = m_pem.getProfil().getPoints()[i];
       try
       {
-        final double ax = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-        final double ay = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-        final double dp = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+        final double ax = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+        final double ay = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+        final double dp = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
         if( ax * ay * dp != 0 )
         {
 
@@ -180,7 +179,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
           final Point2D pm = new Point2D.Double( xl + (xr - xl) / 2, yl + (yr - yl) / 2 );
           final Point p = logical2screen( pm );
           final Rectangle hover = new Rectangle( p.x - 10, p.y - 20, 20, 20 );// RectangleUtils.buffer( p );
-          if( hover.contains( mousePos ) & ((p.x - pl.x) > 12) )
+          if( hover.contains( mousePos ) & p.x - pl.x > 12 )
             return new EditInfo( this, hover, i, String.format( TOOLTIP_FORMAT, new Object[] { ax, ay, dp } ) );
         }
       }
@@ -209,28 +208,28 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
 
   public void paint( final GCWrapper gc )
   {
-    final LinkedList<IRecord> points = m_pem.getProfil().getPoints();
-    if( points.isEmpty() )
+    final IRecord[] points = m_pem.getProfil().getPoints();
+    if( points.length == 0 )
       return;
     Point2D p2dL = null;
     boolean hasValue = false;
     for( final IRecord point : points )
     {
 
-      final Point2D p2dR = ProfilUtil.getPoint2D( point, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
-      if( (p2dL != null) && hasValue )
+      final Point2D p2dR = ProfilUtil.getPoint2D( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      if( p2dL != null && hasValue )
       {
         final double xl = p2dL.getX();
         final double yl = p2dL.getY();
         final double xr = p2dR.getX();
         final double yr = p2dR.getY();
         final Point p = logical2screen( new Point2D.Double( xl + (xr - xl) / 2, yl + (yr - yl) / 2 ) );
-        if( (p.x - logical2screen( p2dL ).x) > 12 )
+        if( p.x - logical2screen( p2dL ).x > 12 )
           drawIcon( gc, new Rectangle( p.x - 10, p.y - 20, 20, 20 ) );
       }
-      hasValue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-          * (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) )
-          * (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) ) != 0.0;
+      hasValue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
+          * (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
+          * (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) ) != 0.0;
       p2dL = p2dR;
     }
   }

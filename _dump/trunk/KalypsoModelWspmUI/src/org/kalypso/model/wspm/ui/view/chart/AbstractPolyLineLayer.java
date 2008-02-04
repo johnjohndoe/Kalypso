@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -136,7 +136,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
       final Point oldp = logical2screen( oldpoint );
 
-      final int newx = (m_mayEditVert && getViewData().isEdithorz()) ? editing.x : oldp.x;
+      final int newx = m_mayEditVert && getViewData().isEdithorz() ? editing.x : oldp.x;
 
       final int newy = getViewData().isEditvert() ? editing.y : oldp.y;
 
@@ -150,15 +150,11 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   {
     gc.setLineWidth( 3 );
     gc.setLineStyle( SWT.LINE_SOLID );
-    gc.setForeground( (activeSegment && m_markActivePoint) ? m_selectedcolor : color );
+    gc.setForeground( activeSegment && m_markActivePoint ? m_selectedcolor : color );
     if( leftPoint != null )
-    {
       gc.drawLine( leftPoint.x, leftPoint.y, rightPoint.x, rightPoint.y );
-    }
     if( activeSegment && m_markActivePoint )
-    {
       gc.drawOval( leftPoint.x - 2, leftPoint.y - 2, 4, 4 );
-    }
     gc.setForeground( color );
     gc.drawOval( rightPoint.x - 2, rightPoint.y - 2, 4, 4 );
 
@@ -179,11 +175,11 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   {
     final EditData editData = (EditData) data;
 
-    final IRecord point = getProfil().getPoints().get( editData.getIndex() );
+    final IRecord point = getProfil().getPoints()[editData.getIndex()];
 
     final Point2D logPoint = screen2logical( moveTo );
 
-    final ProfilOperation profilOperation = new ProfilOperation( "Geländehöhe ändern", getProfilEventManager(), true );
+    final ProfilOperation profilOperation = new ProfilOperation( "Gelï¿½ndehï¿½he ï¿½ndern", getProfilEventManager(), true );
 
     final IComponent property = editData.getProperty();
     if( getViewData().isEditvert() )
@@ -259,11 +255,10 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
         {
           final double delta = 0.0001;
           // TODO:KIM This is potentially wrong. We have to check for both x and y!
-          final IRecord point = ProfilUtil.findPoint( getProfil(), element.getX(), /*
-           * should also use y:
-           * points[i].getY(),
-           */delta );
-          final int index = getProfil().getPoints().indexOf( point );
+          final IRecord point = ProfilUtil.findPoint( getProfil(), element.getX(), delta );
+          /* should also use y: points[i].getY(), */
+
+          final int index = ArrayUtils.indexOf( points, point );
 
           return isPointVisible( point ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { "Breite", element.getX(), property.getName(),
               element.getY() } ) ) : null;
@@ -274,7 +269,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     return null;
   }
 
-  public abstract List<IRecord> getPoints( );
+  public abstract IRecord[] getPoints( );
 
   protected boolean isPointVisible( @SuppressWarnings("unused")
   final IRecord point )
@@ -289,7 +284,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   {
     try
     {
-      final List<IRecord> ppoints = getPoints();
+      final IRecord[] ppoints = getPoints();
 
       if( ppoints == null )
         return;
@@ -308,7 +303,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
           drawSegment( gc, lastP[i], pt, lastPP != null && lastPP == activePoint, pcol );
 
-          if( m_markActivePoint && (activePoint != null) )
+          if( m_markActivePoint && activePoint != null )
           {
             gc.setLineStyle( SWT.LINE_SOLID );
             gc.setLineWidth( 2 );
@@ -380,7 +375,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     if( data instanceof EditData )
     {
       final EditData editData = (EditData) data;
-      final IRecord activePoint = getProfil().getPoints().get( editData.getIndex() );
+      final IRecord activePoint = getProfil().getPoints()[editData.getIndex()];
       final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), activePoint, null ), true );
       final IStatus status = operation.execute( new NullProgressMonitor(), null );
       operation.dispose();

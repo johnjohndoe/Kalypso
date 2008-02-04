@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -57,11 +57,11 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
   final private String m_deviderType;
 
   /**
-   * erzeugt fehlende Trennfläche
+   * erzeugt fehlende Trennflï¿½che
    */
   public AddDeviderResolution( final String deviderType )
   {
-    super( "fehlende Trennflächen erzeugen", null, null );
+    super( "fehlende Trennflï¿½chen erzeugen", null, null );
     m_deviderType = deviderType;
   }
 
@@ -75,8 +75,8 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
     if( m_deviderType == null )
       return null;
     final IProfilChange[] changes = new IProfilChange[2];
-    final IRecord firstP = profil.getPoints().getFirst();
-    final IRecord lastP = profil.getPoints().getLast();
+    final IRecord firstP = profil.getPoints()[0];
+    final IRecord lastP = profil.getPoints()[profil.getPoints().length - 1];
 
     final IComponent component = ProfilObsHelper.getPropertyFromId( profil, m_deviderType );
 

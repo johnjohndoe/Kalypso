@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -69,9 +69,7 @@ public class PointAdd implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
-    {
       hint.setPointsChanged();
-    }
     IRecord pointToAdd = null;
     if( m_point != null )
       pointToAdd = m_point;
@@ -80,13 +78,10 @@ public class PointAdd implements IProfilChange
     if( pointToAdd == null )
       return new IllegalChange( "Profilpunkt existiert nicht.", this );
 
-    final IRecord[] points = m_profil.getRecordPoints();
+    final IRecord[] points = m_profil.getPoints();
 
     if( m_pointBefore == null )
-    {
       m_profil.getResult().add( 0, m_point );
-
-    }
     else
     {
       final int index = ArrayUtils.indexOf( points, m_pointBefore );
