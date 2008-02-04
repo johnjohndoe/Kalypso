@@ -68,7 +68,8 @@ import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
-import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 
 /**
  * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a seperate class as each
@@ -78,11 +79,13 @@ import org.kalypso.chart.ui.editor.mousehandler.ChartDragHandlerDelegate;
  */
 public class ChartTabItem extends Composite implements IChartPart
 {
-  private final ChartDragHandlerDelegate m_chartDragHandlerDelegate;
+  private final PlotDragHandlerDelegate m_plotDragHandlerDelegate;
 
   private final ChartComposite m_chartComposite;
 
   private final IExecutionListener m_executionListener;
+
+  private final AxisDragHandlerDelegate m_axisDragHandlerDelegate;
 
   public ChartTabItem( final Composite parent, final int style, final Map<String, Integer> commands )
   {
@@ -117,7 +120,8 @@ public class ChartTabItem extends Composite implements IChartPart
 
     m_chartComposite.setLayoutData( gridData );
 
-    m_chartDragHandlerDelegate = new ChartDragHandlerDelegate( m_chartComposite );
+    m_plotDragHandlerDelegate = new PlotDragHandlerDelegate( m_chartComposite );
+    m_axisDragHandlerDelegate = new AxisDragHandlerDelegate( m_chartComposite );
 
     final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
     final IHandlerService handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
@@ -184,9 +188,9 @@ public class ChartTabItem extends Composite implements IChartPart
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartDragHandler()
    */
-  public ChartDragHandlerDelegate getChartDragHandler( )
+  public PlotDragHandlerDelegate getPlotDragHandler( )
   {
-    return m_chartDragHandlerDelegate;
+    return m_plotDragHandlerDelegate;
   }
 
   @Override
@@ -195,6 +199,24 @@ public class ChartTabItem extends Composite implements IChartPart
     final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
     cmdService.removeExecutionListener( m_executionListener );
 
+    if( m_plotDragHandlerDelegate != null )
+    {
+      m_plotDragHandlerDelegate.dispose();
+    }
+    if( m_axisDragHandlerDelegate != null )
+    {
+      m_axisDragHandlerDelegate.dispose();
+    }
+
     m_chartComposite.dispose();
+
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
+   */
+  public AxisDragHandlerDelegate getAxisDragHandler( )
+  {
+    return m_axisDragHandlerDelegate;
   }
 }

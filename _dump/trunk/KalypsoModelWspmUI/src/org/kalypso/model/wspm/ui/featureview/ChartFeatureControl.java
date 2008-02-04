@@ -58,7 +58,6 @@ import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
@@ -205,9 +204,6 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       ChartFactory.doConfiguration( chart.getModel(), m_ccl, m_chartTypes[i], m_context );
 
       ChartUtilities.maximize( chart.getModel() );
-
-      // AxisZoomHandler setzen - meldet sich selbst an
-      AxisDragHandlerDelegate m_axisDragZoomInHandler = new AxisDragHandlerDelegate( chart );
 
     }
   }
