@@ -473,7 +473,8 @@ public class Control1D2DConverter
     // order is important, first QC than HC, SQC and EFE
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    // formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL,
+    // Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D );
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D );
 
