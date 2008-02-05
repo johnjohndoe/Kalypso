@@ -124,6 +124,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -582,26 +583,41 @@ public class ImportWspmWizard extends Wizard implements IWizard
         node = existingNode;
       if( lastNode != null )
       {
-        /* Create edge between lastNode and node */
-        final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
-        addedFeatures.add( edge.getWrappedFeature() );
+        // if there is already an element between those two nodes, do not create it again
+        // for example, it is possible that both last nodes are existing nodes so element was there
+        boolean found = false;
+        final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, SEARCH_DISTANCE );
+        final List<IFE1D2DElement> list = discretisationModel.getElements().query( reqEnvelope );
+        for( final IFE1D2DElement element : list )
+          if( element instanceof IElement1D )
+            if( ((IElement1D) element).getNodes().contains( node ) )
+            {
+              found = true;
+              break;
+            }
+        if( !found )
+        {
+          /* Create edge between lastNode and node */
+          final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
+          addedFeatures.add( edge.getWrappedFeature() );
 
-        edge.addNode( lastNode.getGmlID() );
-        edge.addNode( node.getGmlID() );
+          edge.addNode( lastNode.getGmlID() );
+          edge.addNode( node.getGmlID() );
 
-        lastNode.addContainer( edge.getGmlID() );
-        node.addContainer( edge.getGmlID() );
+          lastNode.addContainer( edge.getGmlID() );
+          node.addContainer( edge.getGmlID() );
 
-        edge.getWrappedFeature().invalidEnvelope();
+          edge.getWrappedFeature().invalidEnvelope();
 
-        edgeList.add( edge );
+          edgeList.add( edge );
 
-        /* Create corresponding element */
-        final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
+          /* Create corresponding element */
+          final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
 
-        addedFeatures.add( element1d.getWrappedFeature() );
+          addedFeatures.add( element1d.getWrappedFeature() );
 
-        element1d.setEdge( edge );
+          element1d.setEdge( edge );
+        }
 
         /* Add complex element to list of containers of this element */
         // element1d.getContainers().addRef( calculationUnit1D );
