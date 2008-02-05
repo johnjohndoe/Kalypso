@@ -473,10 +473,7 @@ public class Control1D2DConverter
     // order is important, first QC than HC, SQC and EFE
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-    // formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL,
-    // Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D );
-    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D );
+     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
 
     FormatterUtils.checkIoException( formatter );
 
@@ -502,6 +499,9 @@ public class Control1D2DConverter
 
       FormatterUtils.checkIoException( formatter );
     }
+
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D );
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D );
 
     // add other conti lines types as well (buildings)?
     formatter.format( "ENDSTEP %s%n", message ); //$NON-NLS-1$
@@ -558,7 +558,12 @@ public class Control1D2DConverter
 
         if( abscissaComponent != null && ordinateComponent != null )
         {
-          if( stepCal != null )
+          if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
+          {
+            // Its a w/Q Boundary Condition, we do not need a step value...
+            stepValue = Double.NaN;
+          }
+          else if( stepCal != null )
           {
             final TupleResultIndex tupleResultIndex = m_BCTupleResultIndexCache.get( boundaryCondition.getGmlID() );
             final Number result = (Number) tupleResultIndex.getValue( ordinateComponent, stepCal.getTime() );
