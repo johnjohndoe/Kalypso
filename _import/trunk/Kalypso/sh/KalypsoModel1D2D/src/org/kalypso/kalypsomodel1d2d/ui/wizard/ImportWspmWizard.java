@@ -590,11 +590,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final List<IFE1D2DElement> list = discretisationModel.getElements().query( reqEnvelope );
         for( final IFE1D2DElement element : list )
           if( element instanceof IElement1D )
-            if( ((IElement1D) element).getNodes().contains( node ) )
+          {
+            final List<IFE1D2DNode> nodes = ((IElement1D) element).getNodes();
+            if( nodes.contains( node ) && nodes.contains( lastNode ) )
             {
               found = true;
               break;
             }
+          }
         if( !found )
         {
           /* Create edge between lastNode and node */
