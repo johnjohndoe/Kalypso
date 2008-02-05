@@ -561,11 +561,12 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint );
 
       // if there is already a node, do not create it again
+      IFE1D2DNode node = null;
       final IFE1D2DNode existingNode = discretisationModel.findNode( point, SEARCH_DISTANCE );
       if( existingNode == null )
       {
         /* add node */
-        final IFE1D2DNode node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+        node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
         addedFeatures.add( node.getWrappedFeature() );
 
         node.setName( "" ); //$NON-NLS-1$
@@ -576,71 +577,73 @@ public class ImportWspmWizard extends Wizard implements IWizard
           throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ImportWspmWizard.19" ) + station ) ); //$NON-NLS-1$
 
         node.setPoint( point );
-
-        if( lastNode != null )
-        {
-          /* Create edge between lastNode and node */
-          final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
-          addedFeatures.add( edge.getWrappedFeature() );
-
-          edge.addNode( lastNode.getGmlID() );
-          edge.addNode( node.getGmlID() );
-
-          lastNode.addContainer( edge.getGmlID() );
-          node.addContainer( edge.getGmlID() );
-
-          edge.getWrappedFeature().invalidEnvelope();
-
-          edgeList.add( edge );
-
-          /* Create corresponding element */
-          final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
-
-          addedFeatures.add( element1d.getWrappedFeature() );
-
-          element1d.setEdge( edge );
-
-          /* Add complex element to list of containers of this element */
-          // element1d.getContainers().addRef( calculationUnit1D );
-          /* Add this element to the complex element aka calculation unit */
-          // calculationUnit1D.addElementAsRef( element1d );
-        }
-        lastNode = node;
       }
       else
+        node = existingNode;
+      if( lastNode != null )
       {
-        if( existingNode.getElements().length == 0 )
-        {
-          final IFeatureWrapperCollection containers = existingNode.getContainers();
-          if( containers.size() == 0 && lastNode != null )
-            throw new CoreException( StatusUtilities.createErrorStatus( "Existing node with no edges found." ) );
-          for( final Object object : containers )
-          {
-            if( object instanceof IFE1D2DEdge )
-            {
-              final IFE1D2DEdge edge = (IFE1D2DEdge) object;
-              final IFeatureWrapperCollection containers2 = edge.getContainers();
-              boolean hasElementAsParent = false;
-              for( final Object object2 : containers2 )
-              {
-                if( object2 instanceof IElement1D )
-                {
-                  hasElementAsParent = true;
-                  break;
-                }
-              }
-              if( !hasElementAsParent )
-              {
-                /* Create corresponding element */
-                final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
-                addedFeatures.add( element1d.getWrappedFeature() );
-                element1d.setEdge( edge );
-              }
-            }
-          }
-        }
-        lastNode = existingNode;
+        /* Create edge between lastNode and node */
+        final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
+        addedFeatures.add( edge.getWrappedFeature() );
+
+        edge.addNode( lastNode.getGmlID() );
+        edge.addNode( node.getGmlID() );
+
+        lastNode.addContainer( edge.getGmlID() );
+        node.addContainer( edge.getGmlID() );
+
+        edge.getWrappedFeature().invalidEnvelope();
+
+        edgeList.add( edge );
+
+        /* Create corresponding element */
+        final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
+
+        addedFeatures.add( element1d.getWrappedFeature() );
+
+        element1d.setEdge( edge );
+
+        /* Add complex element to list of containers of this element */
+        // element1d.getContainers().addRef( calculationUnit1D );
+        /* Add this element to the complex element aka calculation unit */
+        // calculationUnit1D.addElementAsRef( element1d );
       }
+      lastNode = node;
+      // }
+      // else
+      // {
+      // if( existingNode.getElements().length == 0 )
+      // {
+      // final IFeatureWrapperCollection containers = existingNode.getContainers();
+      // if( containers.size() == 0 && lastNode != null )
+      // throw new CoreException( StatusUtilities.createErrorStatus( "Existing node with no edges found." ) );
+      // for( final Object object : containers )
+      // {
+      // if( object instanceof IFE1D2DEdge )
+      // {
+      // final IFE1D2DEdge edge = (IFE1D2DEdge) object;
+      // final IFeatureWrapperCollection containers2 = edge.getContainers();
+      // boolean hasElementAsParent = false;
+      // for( final Object object2 : containers2 )
+      // {
+      // if( object2 instanceof IElement1D )
+      // {
+      // hasElementAsParent = true;
+      // break;
+      // }
+      // }
+      // if( !hasElementAsParent )
+      // {
+      // /* Create corresponding element */
+      // final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
+      // addedFeatures.add( element1d.getWrappedFeature() );
+      // element1d.setEdge( edge );
+      // }
+      // }
+      // }
+      // }
+      // lastNode = existingNode;
+      // }
 
       final BigDecimal stationDecimal = WspmProfile.stationToBigDecimal( station );
       nodesByStation.put( stationDecimal, lastNode );
