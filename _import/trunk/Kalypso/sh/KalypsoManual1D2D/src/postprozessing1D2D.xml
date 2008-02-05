@@ -50,12 +50,13 @@
         <primary>Ergebniskarte konfigurieren in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>Öffnen Sie in der Ansicht "Aktivitäten" den Baum
-      <guimenuitem>Postprocessing &gt; Kartenansicht. </guimenuitem>Durch
-      einen Doppelklick auf <guilabel>Ergebniskarte konfigurieren,
-      </guilabel>öffnen Sie den Assistenten, mit dem Sie Ergebnisse in die
-      Kartenansicht hinzufügen können. Im Allgemeinen stehen folgende
-      Ergebnisse zu Verfügung</para>
+      <para>In der Ansicht "Aktivitäten" muss der Baum
+      <guimenuitem>Postprocessing &gt; Kartenansicht </guimenuitem>geöffnet
+      werden und <guilabel>Ergebniskarte konfigurieren </guilabel>mit einem
+      Doppelklick aktiviert werden, um den zugehörigen Assistenten zu öffnen.
+      Der Assistent ermöglicht es Ergebnisse in die Kartenansicht
+      hinzuzufügen. Im Allgemeinen stehen folgende Ergebnisse zu
+      Verfügung</para>
 
       <itemizedlist>
         <listitem>
@@ -66,7 +67,7 @@
               </listitem>
 
               <listitem>
-                <para>Geschwindigkeitsverktoren</para>
+                <para>Geschwindigkeitsvektoren</para>
               </listitem>
 
               <listitem>
@@ -84,7 +85,7 @@
         </listitem>
       </itemizedlist>
 
-      <para>Der Assistent ist in zwei Bereiche unterteilt: </para>
+      <para>Der Assistent ist in zwei Bereiche unterteilt:</para>
 
       <itemizedlist>
         <listitem>
@@ -110,15 +111,15 @@
           Zeitschritt- oder Ergebnis-Ebene) werden unterschiedliche
           Informationen angezeigt.</para>
 
-          <para>Haben Sie ein Ergebnis selektiert, kann in der Info-Ansicht
+          <para>Wurde ein Ergebnis selektiert, kann in der Info-Ansicht
           spezifiziert werden, ob das Ergebnis anhand von Isoflächen oder
-          Isolinien angezeigt werden soll. Wenn Sie ein Ergebnis in der Karte
-          darstellen wollen, achten Sie darauf, dass das Ergebnis auch im Baum
-          angehakt ist.</para>
+          Isolinien angezeigt werden soll. Wenn ein Ergebnis in der Karte
+          dargestellt werden soll, muss das Ergebnis also im Baum angehakt
+          sein.</para>
 
           <para>Jedem Ergebnis wird automatisch eine Standard-Darstellung
           (Style) zugewiesen, der mittles des Style-Managers individuell
-          verändert werden kann. </para>
+          verändert werden kann.</para>
         </listitem>
       </itemizedlist>
 
@@ -131,8 +132,6 @@
           </imageobject>
         </mediaobject>
       </figure>
-
-      <para></para>
 
       <figure>
         <title>Anzeigen von Informationen im Assistenten</title>
@@ -169,7 +168,7 @@
                     </imageobject>
                   </mediaobject></entry>
 
-                <entry>ausgewählten Style bearbeiten oder neuen Style
+                <entry>Ausgewählten Style bearbeiten oder neuen Style
                 erzeugen</entry>
               </row>
 
@@ -180,23 +179,23 @@
                     </imageobject>
                   </mediaobject></entry>
 
-                <entry>ausgewählten Style löschen</entry>
+                <entry>Ausgewählten Style löschen</entry>
               </row>
             </tbody>
           </tgroup>
         </table></para>
 
-      <para>Sollten Sie einen bereits verwendeten Style verändern, so wirkt
-      sich dies auch auf schon in der Karte vorhandene Ergebnisdarstellungen
-      aus. Wünschen Sie einen neuen Style anzulegen, so selektieren Sie einen
-      bereits vorhandenen Style und bearbeiten diesen im Style-Manager. Dort
-      geben sie im Feld "Style-Name" einen neuen Namen ein unter dem der Style
-      abgespeichert werden soll. </para>
+      <para>Wenn ein bereits verwendeter Style verändert wird, wirkt sich das
+      auch schon auf vorhandene Ergebnisdarstellungen in der Karte aus. Soll
+      ein neuer Style angelegt werden, kann ein bereits vorhandener Style
+      selektiert und im Style-Manager bearbeitet werden. Dort muss nun im Feld
+      "Style-Name" ein neuer Name eingegeben werden, unter dem der Style
+      abgespeichert werden soll.</para>
 
       <para>Je nach Darstellungsform (Isolinien, Isoflächen) erscheint ein
-      unterschiedliches Fenster. Generell haben Sie die Möglichkeit den
+      unterschiedliches Fenster. Generell hat der Benutzer die Möglichkeit den
       darzustellenden Wertebereich im oberen Bereich des Style-Managers
-      anzupassen. </para>
+      anzupassen.</para>
 
       <figure>
         <title>Style bearbeiten oder neu erstellen</title>
@@ -208,8 +207,8 @@
         </mediaobject>
       </figure>
 
-      <para>Im unteren Bereich können Sie die einzelnen Attribute für die
-      Linien bzw. Farbflächen ändern. Für die Farbflächendarstellung erfolgt
+      <para>Im unteren Bereich können die einzelnen Attribute für die Linien
+      bzw. Farbflächen geändert werden. Für die Farbflächendarstellung erfolgt
       eine Interpolation dieser Attribute.</para>
 
       <para>Der Style Manager wird mit <guilabel>OK </guilabel>beendet.</para>
@@ -225,12 +224,13 @@
         <primary>Ergebniskarte anzeigen in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>Um die Ergebnisse in einer Karte zu visualisieren, öffnen Sie in
-      der Ansicht " Aktivitäten" den Baum <guimenuitem>Postprocessing &gt;
-      Kartenansicht</guimenuitem>. Mit einem Doppelklick auf
-      <guimenuitem>Ergebniskarte anzeigen</guimenuitem> wird eine Karte
-      geöffnet. In der Ansicht "Gliederung" kann man auswählen welche Werte
-      beziehungsweise Objekte man sich anzeigen lassen will.</para>
+      <para>Um die Ergebnisse in einer Karte zu visualisieren, muss in der
+      Ansicht " Aktivitäten" der Baum <guimenuitem>Postprocessing &gt;
+      Kartenansicht</guimenuitem> geöffnet werden. Die Karte wird geöffnet,
+      wenn <guimenuitem>Ergebniskarte anzeigen</guimenuitem> mit einem
+      Doppelklick aktiviert wird. In der Ansicht "Gliederung" kann ausgewählt
+      werden, welche Werte beziehungsweise Objekte angezeigt werden
+      sollen.</para>
 
       <figure>
         <title>Ergebniskarte anzeigen</title>
@@ -280,8 +280,8 @@
         </tgroup>
       </table>
 
-      <para>Sie werden nun aufgefordert das TIN-Thema in der Gliederung
-      auszuwählen, dessen Werte Sie sich anzeigen lassen wollen.</para>
+      <para>Der Benutzer wird nun aufgefordert das TIN-Thema in der Gliederung
+      auszuwählen, dessen Werte angezeigt werden sollen.</para>
 
       <figure>
         <title>Aufforderung ein TIN- Thema zu aktivieren</title>
@@ -307,8 +307,9 @@
         </mediaobject>
       </figure>
 
-      <para>Fahren sie mit dem Mauscursor über die Karte! An den Stellen, an
-      denen Ergebnisse vorhanden sind, werden diese nun angezeigt.</para>
+      <para>Wenn der Mauscursor nun über die Karte gefahren wird, wird an den
+      Stellen, an denen Ergebnisse vorhanden sind, die entsprechenden Werte
+      angezeigt.</para>
 
       <figure>
         <title>Anzeigen von Werten</title>
@@ -332,7 +333,7 @@
     <para>Sowohl für eindimensionale als auch für zweidimensionale Modelle
     können Längsschnitte erstellt und angezeigt werden. Für zweidimensionale
     Modellabschnitte muss zuvor eine Linien-shape-Datei importiert worden
-    sein. Die shape Datei muss die Kilometreirung und den Verlauf der
+    sein. Die shape Datei muss die Kilometrierung und den Verlauf der
     Gewässerachse enthalten.</para>
 
     <para>Die Konfiguration des Längsschnittes ist nur für zweidimensionale
@@ -345,30 +346,28 @@
         <primary>Längsschnitt konfigurieren in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>Um einen Längsschnitt für Ihr zweidimensionales Modell zu
-      konfigurieren, öffnen Sie in der Ansicht " Aktivitäten" den Baum
-      <guimenuitem>Postprocessing &gt; Längsschnittansicht</guimenuitem>.
-      Doppelklicken Sie auf <guilabel> Längsschnitt
-      konfigurieren</guilabel>.</para>
+      <para>Um einen Längsschnitt für ein zweidimensionales Modell zu
+      konfigurieren, muss in der Ansicht " Aktivitäten" der Baum
+      <guimenuitem>Postprocessing &gt; Längsschnittansicht</guimenuitem>
+      geöffnet werden und<guilabel> Längsschnitt konfigurieren</guilabel> mit
+      einem Doppelklick aktiviert werden.</para>
 
       <para>Im anschließenden Assistenten ist unter "Gewässerachse" zunächst
       die entsprechende Shape-Datei auszuwählen, welche die zu verwendende
       Gewässerachse enthält. Unter "Parameter" werden dann die entprechenden
       Spalten der Shape-Datei ausgewählt. Generell sollte das Thema ein
       Linienthema sein, welches aus mehreren Liniensegmenten bestehen kann.
-      Selektieren Sie zunächst anhand welcher Tabellenspalte die vorhandnen
-      Gewässer enthält (Gewässer-ID). Im Anschluss daran wird die
-      darunterliegende Auswahlliste mit den vohandenen Gewässern gefüllt.
-      </para>
+      Zunächst muss die Tabellenspalte selektiert werden, die die vorhandenen
+      Gewässer enthält (Gewässer-ID). Daraufhin wird die darunterliegende
+      Auswahlliste mit den vohandenen Gewässern gefüllt.</para>
 
       <para>Für jedes Liniensegment muss ein Eintrag der Anfangsstation und
-      Endstation vorhanden sein. Selektieren sie die Tabellenspalten, welche
-      diese Informationen enthalten.</para>
+      Endstation vorhanden sein. Durch Selektion der Tabellenspalten, welche
+      diese Informationen enthalten, werden die Werte ausgelesen.</para>
 
-      <para>Abschließend geben Sie Stützpunktweite des Längsschnitts
-      an.</para>
-
-      <para>Klicken Sie auf <guilabel>Next</guilabel>.</para>
+      <para>Abschließend muss die Stützpunktweite des Längsschnitts angegeben
+      werden. Über den Knopf <guibutton>Next</guibutton> gelangt man zur
+      Fortsetzung des Assistenten. </para>
 
       <figure>
         <title>Längsschnitteinstellungen</title>
@@ -380,9 +379,8 @@
         </mediaobject>
       </figure>
 
-      <para>Im nächsten Assistenten werden Sie aufgefordert auszuwählen, für
-      welches Ergebnis Sie sich den Längsschnitt anzeigen lassen
-      wollen.</para>
+      <para>Im nächsten Assistenten muss der Benutzer auswählen, welches
+      Ergebnis im Längsschnitt angezeigt werden soll.</para>
 
       <figure>
         <title>Ergebnis für Längsschnitt auswählen</title>
@@ -396,9 +394,9 @@
 
       <para>Der Assistent wird mit <guilabel>Finish</guilabel> beendet.</para>
 
-      <para>In der Ergebnisansicht ändert sich zunächst nichts. Um den
-      Längsschnitt zu visualisieren gehen Sie wie im folgenden Kapitel
-      vor.</para>
+      <para>In der Ergebnisansicht ändert sich zunächst nichts. Wie der
+      Längsschnitt visualisiert wird, wird im folgenden Abschnitt
+      erläutert.</para>
     </section>
 
     <section>
@@ -408,14 +406,14 @@
         <primary>Längsschnitt anzeigen in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>Um sich einen Längsschnitt anzeigen zu lassen, öffnen Sie in der
-      Ansicht "Aktivitäten" den Baum <guimenuitem>Postprocessing &gt;
-      Längsschnittansicht</guimenuitem>. Doppelklicken Sie auf
-      <guilabel>Längsschnitt anzeigen</guilabel>.</para>
+      <para>Damit ein Längsschnitt angezeigt wird muss in der Ansicht
+      "Aktivitäten" der Baum <guimenuitem>Postprocessing &gt;
+      Längsschnittansicht</guimenuitem> geöffnet und<guilabel> Längsschnitt
+      anzeigen</guilabel> mit einem Doppelklick aktiviert werden.</para>
 
-      <para>Handelt es sich um ein zweidimensionales Modell und haben Sie im
-      vorherigen Schritt alles richtig gemacht, steht der zuvor konfigurierte
-      Längsschnitt hier zur Auswahl.</para>
+      <para>Wenn es sich um ein zweidimensionales Modell handelt und im
+      vorherigen Schritt alles richtig gemacht wurde, steht der zuvor
+      konfigurierte Längsschnitt hier zur Auswahl.</para>
 
       <para>Bei einer eindimensionalen Rechnung wird der Längsschintt
       automatisch erzeugt.</para>
@@ -430,8 +428,8 @@
         </mediaobject>
       </figure>
 
-      <para>Beenden Sie den Assistenten mit <guilabel>Finish. </guilabel>Der
-      Längsschnitt wird nun automatisch in der Ansicht "Chart View"
+      <para>Der Assistent kann nun mit <guilabel>Finish</guilabel> beendet
+      werden. Der Längsschnitt wird automatisch in der Ansicht "Chart View"
       angezeigt.</para>
 
       <figure>
@@ -453,7 +451,7 @@
       <primary>Differenzenbildung in Kalypso 1D2D</primary>
     </indexterm>
 
-    <para>Kalypso 1D2D stellt die Funktion Differenzen zu bilden zur
+    <para>Kalypso1D2D stellt die Funktion Differenzen zu bilden zur
     Verfügung.</para>
 
     <section>
@@ -463,12 +461,13 @@
         <primary>Diffenrenzen erzeugen in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>Um eine Differenz zu bilden, öffnen Sie in der Ansicht "
-      Aktivitäten" den Baum <guimenuitem>Postprocessing &gt;Differenzenbildung
-      </guimenuitem>. Doppelklicken Sie auf <guilabel>Differenzen
-      erzeugen</guilabel>. Ein Assistent führt durch die Differenzenbildung.
-      Als erstes wird der Minuend ausgewählt. Klicken Sie auf
-      <guilabel>Next</guilabel><guilabel>.</guilabel></para>
+      <para>Um eine Differenz bilden zu können, muss in der Ansicht "
+      Aktivitäten" der Baum <guimenuitem>Postprocessing &gt;Differenzenbildung
+      </guimenuitem>geöffnet werden. Wenn <guilabel>Differenzen
+      erzeugen</guilabel> mit einem Doppelklick aktiviert wird, öffnet sich
+      der zugehörige Assistent für die Differenzenbildung. Als erstes wird der
+      Minuend ausgewählt. Anschließend wird der Assistent mit
+      <guibutton>Next</guibutton> fortgesetzt.</para>
 
       <figure>
         <title>Assistent zur Auswahl des Minuenden</title>
@@ -480,7 +479,7 @@
         </mediaobject>
       </figure>
 
-      <para>Dann wird der Subtrahend ausgewählt.</para>
+      <para>Nun muss der Subtrahend ausgewählt werden.</para>
 
       <figure>
         <title>Assistent zur Auswahl des Subtrahenden</title>
@@ -492,8 +491,8 @@
         </mediaobject>
       </figure>
 
-      <para>Nun ist noch der Ort auszuwählen, an dem die Differenz abgelegt
-      werden soll.</para>
+      <para>Anschließend ist noch der Ort auszuwählen, an dem die Differenz
+      abgelegt werden soll.</para>
 
       <figure>
         <title>Ziel auswählen</title>
@@ -506,13 +505,12 @@
       </figure>
 
       <para>Die Differenz wird als zusätzliches Ergebnis abgelegt und kann
-      anschleißend über die Funktion <guilabel>Ergebniskarte
-      konfigurieren</guilabel> in die Karte geladen werden. Öffnen Sie in der
-      Ansicht "Aktivitäten" den Baum <guimenuitem>Postprocessing &gt;
-      Kartenansicht. </guimenuitem>Mit einem Doppelklick auf
-      <guilabel>Ergebniskarte konfigurieren,</guilabel> öffnen Sie den
-      Assistenten. Neu hinzugekommen ist nun die Differenz, die Sie zuvor
-      erzeugt haben.</para>
+      über die Funktion <guilabel>Ergebniskarte konfigurieren</guilabel> in
+      die Karte geladen werden. Wenn nun in der Ansicht "Aktivitäten" der Baum
+      <guimenuitem>Postprocessing &gt; Kartenansicht </guimenuitem>geöffnet
+      wird und <guimenuitem>Ergebniskarte konfigurieren</guimenuitem> mit
+      einem Doppelklick aktiviert wird, ist in dem Assistenten die neu
+      erzeugte Differenz zu sehen. </para>
 
       <figure>
         <title>Differnz in Ergebniskarte laden</title>
@@ -524,10 +522,10 @@
         </mediaobject>
       </figure>
 
-      <para>Nun kann die Differenz in der Karte angezeigt werden (Siehe <link
-      linkend="???">1.2 Ergebniskarte anzeigen)</link> Die Differenz kann in
-      der Ansicht "Gliederung" mittels Checkbox aktiviert beziehungsweise
-      deaktiviert werden.</para>
+      <para>Jetzt kann die Differenz in der Karte angezeigt werden (Siehe
+      <link linkend="???">1.2 Ergebniskarte anzeigen)</link> Die Differenz
+      kann in der Ansicht "Gliederung" mittels Checkbox aktiviert
+      beziehungsweise deaktiviert werden.</para>
 
       <figure>
         <title>Anzeigen einer selbst erstellten Differenz in der Karte</title>

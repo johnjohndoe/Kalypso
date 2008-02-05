@@ -38,36 +38,34 @@
     Auflistung aller verfügbarer Modelle. Hier ist das Kalypso1D2D Modell zu
     wählen.</para>
 
-    <para>Auf der Welcome Seite von Kalypso1D2D können Sie zwischen den
-    folgenden Aktionen wählen:<itemizedlist>
+    <para>Auf der Welcome Seite von Kalypso1D2D kann zwischen den folgenden
+    Aktionen gewählt werden:<itemizedlist>
         <listitem>
-          <para>Neues Projekt erstellen: Über diese Option kann ein neues
-          Projekt erstellt werden. Wählen Sie hierfür den Knopf
-          <inlinemediaobject>
+          <para>Neues Projekt erstellen: Über den Knopf <inlinemediaobject>
               <imageobject>
                 <imagedata fileref="img/1D2D/Icon_NeuesProjekt.png" />
               </imageobject>
-            </inlinemediaobject></para>
+            </inlinemediaobject> kann ein neues Projekt erstellt
+          werden.</para>
         </listitem>
 
         <listitem>
           <para>Vorhandene Projekte öffnen: Bereits vorhandene Projekte können
-          hier bearbeitet werden. Wählen Sie hierfür den Knopf
-          <inlinemediaobject>
+          hier bearbeitet werden. Hierfür muss der Knopf <inlinemediaobject>
               <imageobject>
                 <imagedata fileref="img/1D2D/Icon_VorhandenesProjekt.png" />
               </imageobject>
-            </inlinemediaobject> des Projektes, das Sie öffnen möchten.</para>
+            </inlinemediaobject> des Projektes gewählt werden, das geöffnet
+          werden soll.</para>
         </listitem>
 
         <listitem>
-          <para>Vorhandene Projekte löschen: Über diese Option ist es möglich
-          bereits vorhandene Projekte aus dem Workspace zu löschen. Wählen Sie
-          hierfür den Knopf <inlinemediaobject>
+          <para>Vorhandene Projekte löschen: Über den Knopf <inlinemediaobject>
               <imageobject>
                 <imagedata fileref="img/1D2D/Icon_ProjektLoeschen.png" />
               </imageobject>
-            </inlinemediaobject></para>
+            </inlinemediaobject> können bereits vorhandene Projekte aus dem
+          Workspace gelöscht werden.</para>
         </listitem>
       </itemizedlist></para>
 
@@ -164,10 +162,10 @@
         </orderedlist>
 
         <para>Innerhalb dieser drei Hauptschritte werden dann alle
-        erforderlichen Unterschritte der Reihe nach durchgeführt. Wenn Sie das
-        Programm einmal verlassen haben und später an Ihrem Projekt
-        weiterarbeiten möchten, so ist der Arbeitsschritt an dem Sie zuletzt
-        gearbeitet haben fett markiert.</para>
+        erforderlichen Unterschritte der Reihe nach durchgeführt. Wenn das
+        Programm beendet wird, so ist beim nächsten Aufruf des Programms und
+        dem entsprechenden Projekt, der Arbeitsschritt, an dem zuletzt
+        gearbeitet wurde, fett markiert.</para>
       </section>
 
       <section id="Kalypso1D2DSzenarienansicht">
@@ -179,14 +177,15 @@
 
         <para>Die Ansicht "Szenarien" ermöglicht den Wechsel der zu
         bearbeitenden Szenarien sowie das Ableiten und Löschen erweiterter
-        Szenarien eines Modelles.</para>
+        Szenarien eines Modells.</para>
 
         <para>Das aktivierte Basisszenario (blaue Kugel) wird in
         Fettbuchstaben dargestellt. Dieses ist das ausgewählte Projekt, das
         nun im Navigator geöffnet ist. Um die Funktionen der Ansicht
-        "Szenarien" sichtbar zu machen, müssen Sie ein Basisszenario markieren
-        indem Sie es mit dem linken Mauszeiger anklicken. Es erscheinen
-        Symbole, die in der folgenden Tabelle vorgestellt werden.</para>
+        "Szenarien" sichtbar zu machen, muss ein Basisszenario markiert
+        werden, indem es mit dem linken Mauszeiger angeklickt wird. Es
+        erscheinen Symbole, die in der folgenden Tabelle vorgestellt
+        werden.</para>
 
         <figure>
           <title>Szenarienansicht</title>
@@ -221,8 +220,8 @@
                 <entry align="left" valign="middle">Neues Projekt
                 erstellen</entry>
 
-                <entry align="left" valign="middle">Wenn Sie diesen Knopf
-                betätigen, öffnet sich der Assistent um ein neues Projekt zu
+                <entry align="left" valign="middle">Bei der Benutzung dieses
+                Knopfes öffnet sich der Assistent um ein neues Projekt zu
                 erstellen. (Siehe <xref
                 linkend="Kalypso1D2DNeuesProjekt" />)</entry>
               </row>
@@ -236,8 +235,8 @@
 
                 <entry align="left" valign="middle">Szenario löschen</entry>
 
-                <entry align="left" valign="middle">Wenn Sie diesen Knopf
-                betätigen wird das markierte Szenario gelöscht. Es können nur
+                <entry align="left" valign="middle">Bei der Benutzung dieses
+                Knopfes wird das markierte Szenario gelöscht. Es können nur
                 nicht aktivierte Szenarien gelöscht werden.</entry>
               </row>
 
@@ -250,7 +249,7 @@
 
                 <entry align="left">Szenario aktivieren</entry>
 
-                <entry valign="middle">Wenn Sie diesen Knopf betätigen wird
+                <entry valign="middle">Bei der Benutzung dieses Knopfes wird
                 das markierte Szenario aktiviert. Das aktivierte Szenario wird
                 in Fettbuchstaben dargestellt.</entry>
               </row>
@@ -269,10 +268,11 @@
                 <entry align="left" charoff="" valign="middle">Von
                 Basisszenarien können weitere Szenarien abgeleitet werden. Das
                 Basisszenario, von dem ein Szenario abgeleitet werden soll,
-                sollte nicht aktiviert sein. Markieren Sie das nicht
-                aktivierte Basiszszenario und klicken Sie anschließend auf den
-                Knopf. Es öffnet sich ein Assistent, in dem Sie einen Namen
-                eingeben müssen und gegebenenfalls eine Beschreibung.</entry>
+                sollte nicht aktiviert sein. Zunächst muss das nicht
+                aktivierte Basiszszenario markiert werden. Wenn nun
+                anschließend der Knopf betätigt wird öffnet sich ein
+                Assistent, in dem ein Name und gegebenenfalls eine
+                Beschreibung eingegeben werden muss.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -298,14 +298,14 @@
         <primary>Neues Projekt erstellen</primary>
       </indexterm>
 
-      <para>Ein Assistent führt Sie durch die Projekterstellung. Hierbei
-      müssen Sie den Projektnamen und den Speicherort des anzulegenden
-      Projektes definieren. Voreingestellt wird als Speicherort immer das
-      festgelegte Arbeitsverzeichnis gewählt. Um einen anderen Speicherort
-      festzulegen, müssen Sie das Häkchen vor <guilabel>Use default
-      location</guilabel> entfernen und dann über den Knopf
+      <para>Ein Assistent führt den Benutzer durch die Projekterstellung.
+      Hierbei muss der Projektname und der Speicherort des anzulegenden
+      Projektes definiert werden. Voreingestellt wird als Speicherort immer
+      das festgelegte Arbeitsverzeichnis gewählt. Um einen anderen Speicherort
+      festzulegen, muss das Häkchen vor <guilabel>Use default
+      location</guilabel> entfernt werden und dann über den Knopf
       <guibutton>Durchsuchen...</guibutton> das gewünschte Verzeichnis
-      auswählen. Der Assistent wird durch den Knopf <guibutton>Fertig
+      ausgewählt werden. Der Assistent wird durch den Knopf <guibutton>Fertig
       stellen</guibutton> abgeschlossen. Zugleich wird das neue Projekt
       angelegt und die 1D2D Perspektive (siehe <xref
       linkend="Kalypso1D2DPerspektive" />) geöffnet.</para>
@@ -360,13 +360,12 @@
         </mediaobject>
       </figure>
 
-      <para>Um die Daten komplett von der Festplatte zu löschen wählen Sie
-      <guilabel>Also delete contents under ...</guilabel> . Um das Projekt aus
-      der Kalypso Ansicht zu entfernen wählen Sie <guilabel>Do not delete
-      contents</guilabel>. Um den Löschvorgang abzuschließen klicken Sie auf
-      den Knopf <guibutton>Yes</guibutton>. Wenn Sie den Löschvorgang
-      abbrechen wollen, klicken Sie auf den Knopf
-      <guibutton>No</guibutton>.</para>
+      <para>Um die Daten komplett von der Festplatte zu löschen muss
+      <guilabel>Also delete contents under ...</guilabel> gewählt werden.
+      <guilabel>Do not delete contents</guilabel> entfernt das Projekt
+      lediglich aus der Kalypso Ansicht. Mit <guibutton>Yes</guibutton> wird
+      der Löschvorgang abgeschlossen, <guibutton>No</guibutton> bricht den
+      Löschvorgang ab.</para>
     </section>
 
     <section id="Kalypso1D2DKarte">
@@ -451,9 +450,9 @@
               <entry align="left" valign="middle">Verkleinert den
               Kartenausschnitt, herauszoomen</entry>
 
-              <entry align="left" valign="middle">Wenn Sie diesen Knopf
-              betätigen wird aus der Mitte des Kartenausschnitts herausgezoomt
-              in vordefinierten Schritten.</entry>
+              <entry align="left" valign="middle">Aus der Mitte des
+              Kartenausschnitts in vordefinierten Schritten
+              herauszoomen.</entry>
             </row>
 
             <row>
@@ -469,9 +468,9 @@
               Kartenausschnitt, hereinzoomen in die Mitte des
               Kartenausschnitts</entry>
 
-              <entry align="left" valign="middle">Wenn Sie diesen Knopf
-              betätigen wird in die Mitte des Kartenausschnitts hereingezoomt
-              in vordefinierten Schritten.</entry>
+              <entry align="left" valign="middle">In die Mitte des
+              Kartenausschnitts in vordefinierten Schritten
+              hereinzoomen.</entry>
             </row>
 
             <row>
@@ -486,9 +485,8 @@
               <entry align="left" valign="middle">Verschieben der
               Kartenansicht nach links, unten, oben oder rechts</entry>
 
-              <entry align="left" valign="middle">Durch betätigen der Knöpfe
-              verschiebt sich der Kartenausschnitt in voreingestellten
-              Schritten</entry>
+              <entry align="left" valign="middle">Kartenausschnitt in
+              voreingestellten Schritten verschieben.</entry>
             </row>
 
             <row>
@@ -543,13 +541,16 @@
               <entry align="left" valign="middle">Gliederung der Karte
               anzeigen/ ausblenden</entry>
 
-              <entry align="left" valign="middle">Wenn Sie diesen Knopf
-              drücken, wird entweder die Gliederung der Karte angezeigt oder
-              ausgeblendet.</entry>
+              <entry align="left" valign="middle">Die Gliederung der Karte
+              wird entweder angezeigt oder ausgeblendet.</entry>
             </row>
           </tbody>
         </tgroup>
       </table>
+
+      <para>Damit die Menüleiste übersichtlich bleibt, sind zwei Pulldownmenüs
+      enthalten, in denen der Benutzer die gewünschten Funktionen auswählen
+      kann.</para>
 
       <section id="Kalypso1D2DKartenselektion">
         <title>Selektion von Elementen in der Karte</title>
@@ -563,40 +564,40 @@
 
         <itemizedlist>
           <listitem>
-            <para>ein einzelnes Element selektieren: Klicken Sie mit der
-            linken Maustaste in das Element.</para>
+            <para>ein einzelnes Element selektieren: Mit der linken Maustaste
+            in das Element klicken.</para>
           </listitem>
 
           <listitem>
-            <para>mehrere Elemente selektieren mit einem Rechteck: Halten Sie
-            die linke Maustaste gedrückt und ziehen Sie ein Rechteck auf.
-            Umschließen Sie dabei alle Elemente, die gelöscht werden sollen,
+            <para>mehrere Elemente selektieren mit einem Rechteck: Linke
+            Maustaste gedrückt halten und ein Rechteck aufziehen. Danach
+            müssen alle Elemente umschlossen sein, die markiert werden sollen,
             denn es werden nur die Elemente selektiert, die komplett im
             Rechteck liegen!</para>
           </listitem>
 
           <listitem>
-            <para>mehrere Elemente selektieren mit einem Polygon: Drücken Sie
-            die Shift-Taste und halten Sie diese während des gesamten Vorgangs
-            gedrückt. Klicken Sie nun mit der linken Maustaste auf die
-            Eckpunkte des Polygons und umschließen Sie alle Elemente, die
-            gelöscht werden sollen, denn es werden wiederum nur die Elemente
-            gelöscht, die komplett innerhalb des Polygons liegen! Sie beenden
-            ein Polygon mit einem Doppelklick.</para>
+            <para>mehrere Elemente selektieren mit einem Polygon: Shift-Taste
+            drücken und während des gesamten Vorgangs gedrückt halten. Mit der
+            linken Maustaste auf die Eckpunkte des Polygons klicken und alle
+            Elemente umschließen, die markiert werden sollen, denn es werden
+            wiederum nur die Elemente selektiert, die komplett innerhalb des
+            Polygons liegen! Das Polygon wird mit einem Doppelklick
+            beendet.</para>
           </listitem>
         </itemizedlist>
 
-        <para>Wenn Sie im ersten Schritt nicht alle gewünschten Elemente
-        selektiert haben, halten Sie die Strg-Taste gedrückt und setzen den
-        Selektiervorgang fort. Die alte Selektion wird dadurch nicht
-        aufgehoben.</para>
+        <para>Wenn im ersten Schritt nicht alle gewünschten Elemente
+        selektiert wurden, kann der Selektionsvorgang fortgesetzt werden,
+        indem die Strg-Taste gedrückt gehalten wird. Die alte Selektion wird
+        dadurch nicht aufgehoben.</para>
 
         <para>Ein selektiertes Element lässt sich wieder deselektieren, indem
-        man es erneut markiert (hier muss wiederum die Strg-Taste während des
+        es erneut markiert wird (hier muss wiederum die Strg-Taste während des
         gesamten Vorgangs gedrückt gehalten werden, damit die Selektion nicht
-        komplett aufgehoben wird). Wenn Sie alle selektierten Elemente wieder
-        deselektieren möchten, drücken Sie einfach mit der linken Maustaste
-        auf einen beliebigen Punkt in der Karte.</para>
+        komplett aufgehoben wird). Wenn alle selektierten Elemente wieder
+        deselektieren werden sollen, muss mit linken Maustaste auf die Karte
+        geklickt werden.</para>
       </section>
     </section>
   </section>
@@ -657,9 +658,13 @@
       <listitem>
         <para>1D Modell in KalypsoWSPM</para>
       </listitem>
+
+      <listitem>
+        <para>Uferlinienshape</para>
+      </listitem>
     </itemizedlist>
 
     <para>Sind alle notwendigen Daten vorhanden, kann mit der Aufstellung des
-    Modelles in der Oberfläche begonnen werden.</para>
+    Modells in der Oberfläche begonnen werden.</para>
   </section>
 </chapter>

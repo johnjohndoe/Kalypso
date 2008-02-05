@@ -13,11 +13,12 @@
       <primary>Berechnungseinstellungen Kalypso1D2D</primary>
     </indexterm>
 
-    <para>Um Berechnungseinstellungen vorzunehmen, öffnen Sie den Baum
-    <guimenuitem>Processing</guimenuitem>. Aktivieren Sie
+    <para>Um Berechnungseinstellungen vorzunehmen, muss der Baum
+    <guimenuitem>Processing</guimenuitem> geöffnet und
     <guimenuitem>Berechnungseinstellungen</guimenuitem> mit einem Doppelklick
-    und die zugehörige Feature View wird geöffnet. Im Folgenden werden die
-    verschiedenen Einstellungsmöglichkeiten erläutert. Dazu gehören:</para>
+    aktiviert werden, damit sich die zugehörige Feature View öffnet. Im
+    Folgenden werden die verschiedenen Einstellungsmöglichkeiten erläutert.
+    Dazu gehören:</para>
 
     <itemizedlist>
       <listitem>
@@ -56,12 +57,12 @@
         <primary>Control model general data</primary>
       </indexterm>
 
-      <para>Im Preprocessing haben Sie verschiedene Berechnungseinheiten
-      festgelegt. Wählen Sie im Pull Down Menü von <guilabel>Select
-      model</guilabel> die Berechnungseinheit aus, deren Parameter Sie
-      bearbeiten möchten. Geben Sie anschließend unter <guilabel>Model
-      name</guilabel> einen Namen ein und ggf. eine Beschreibung unter
-      <guilabel>Model description</guilabel>.</para>
+      <para>Im Preprocessing hat der Benutzer verschiedene
+      Berechnungseinheiten festgelegt. Im Pull Down Menü von <guilabel>Select
+      model</guilabel> muss nun die Berechnungseinheit ausgewählt werden,
+      deren Parameter bearbeitet werden sollen. Unter <guilabel>Model
+      name</guilabel> muss ein Name eingetragen werden und ggf. eine
+      Beschreibung unter <guilabel>Model description</guilabel>.</para>
 
       <figure>
         <title>Einstellungsblock "Control model general data"</title>
@@ -81,13 +82,11 @@
         <primary>Allgemeine Berechnungseinstellungen</primary>
       </indexterm>
 
-      <para>Bei den allgemeinen Einstellungen müssen Sie zunächst eine
-      Rechenkernversion auswählen. Hier muss immer "Neueste" eingestellt
-      werden (RMS10S-Version).</para>
+      <para>Bei den allgemeinen Einstellungen muss immer die "Neueste"
+      (RMS10S-Version) Rechenkernversion ausgewählt werden.</para>
 
-      <para>Wenn Sie möchten, dass der Bewuchs bei der Berechnung mit
-      berücksichtigt wird, dann setzen Sie ein Häkchen in das leere
-      Kästchen.</para>
+      <para>Damit der Bewuchs bei der Berechnung mit berücksichtigt wird, muss
+      das leere Kästchen mit einem Häkchen markiert werden.</para>
 
       <para>Die Angabe des Breitengrades wird zur Berechnung der Corioliskraft
       benötigt.</para>
@@ -111,24 +110,24 @@
       </indexterm>
 
       <para>Die Berechnungssteuerung dient zur Angabe der Randbedingungen und
-      Rechenschritte. Sie können sowohl stationär als auch instationär
-      rechnen, oder auch beide Rechenarten miteinander verbinden (die
+      Rechenschritte. Es kann sowohl stationär als auch instationär gerechnet
+      werden oder auch beide Rechenarten miteinander verbunden werden (die
       stationäre Rechnung ist die Generierung einer Anfangslösung für die
-      instationäre Rechnung), indem Sie in den entsprechenden Kästchen Häkchen
-      setzen.</para>
+      instationäre Rechnung), indem in das entsprechende Kästchen ein Häkchen
+      gesetzt wird.</para>
 
-      <para>Geben Sie die Anzahl der maximal durchzuführenden Iterationen pro
-      Rechenschritt an und für die stationäre Berechnung zusätzlich den
+      <para>Es ist die Anzahl der maximal durchzuführenden Iterationen pro
+      Rechenschritt anzugeben und für die stationäre Berechnung zusätzlich der
       Relaxationsfaktor für den Rechenschritt zur Dämpfung der
-      Startwertempfindlichkeit. Für die instationäre Rechnung müssen Sie
-      zunächst die Zeitschritte definieren. Betätigen Sie hierfür den Knopf
-      unterhalb der Tabelle der Zeitschrittvorgabe. Es öffnet sich ein
-      Assistent, der in der unteren Abbildung dargestellt ist. Hier wird auch
-      der Relaxationsfaktor für die instationäre Berechnung festgelegt.</para>
+      Startwertempfindlichkeit. Für die instationäre Rechnung müssen zunächst
+      die Zeitschritte definiert werden. Durch Betätigen des Knopfes unterhalb
+      der Tabelle der Zeitschrittvorgabe öffnet sich ein Assistent, der in der
+      unteren Abbildung dargestellt ist. Hier wird auch der Relaxationsfaktor
+      für die instationäre Berechnung festgelegt.</para>
 
-      <para>Bei der Auswahl der Zeitschritte legen Sie die wirklich zu
-      rechnenden Zeitschritte fest. Die Werte, die als Randbedingungen
-      angewendet werden, werden dann aus den entsprechenden Zeitreihen (siehe
+      <para>Bei der Auswahl der Zeitschritte werden die wirklich zu rechnenden
+      Zeitschritte festgelegt. Die Werte, die als Randbedingungen angewendet
+      werden, werden dann aus den entsprechenden Zeitreihen (siehe
       Preprocessing) interpoliert.</para>
 
       <figure>
@@ -159,8 +158,8 @@
         <primary>Berechnungseinstellungen zur Konvergenz</primary>
       </indexterm>
 
-      <para>In diesem Block können Sie die Konvergenzkriterien auswählen. Im
-      iterativen Rechenprozess werden die Änderungen der Freiheitsgrade
+      <para>In diesem Block können die Konvergenzkriterien ausgewählt werden.
+      Im iterativen Rechenprozess werden die Änderungen der Freiheitsgrade
       betrachtet. Sobald die maximale Änderung den entsprechenden Grenzwert
       unterschreitet wird die Rechnung als erfolgreich angesehen und
       beendet.</para>
@@ -197,10 +196,10 @@
       Anfangs-Randwertproblem. Das heißt neben den Randbedingungen sind bei
       instationären Rechnungen auch Anfangswerte anzugeben. Diese sollten im
       Sinne des Strömungsgebietes eine sinnvolle Lösung sein. Um dies zu
-      erreichen können Sie entweder einen Restart machen und eine
-      Zusammenstellung vorangegangener Lösungen auswählen, aus denen vx, vy
-      und h an jeden Knoten geschrieben werden oder Sie können die Startlösung
-      spezifizieren:</para>
+      erreichen kann entweder ein Restart gemacht werden und eine
+      Zusammenstellung vorangegangener Lösungen ausgewählt werden, aus denen
+      vx, vy und h an jeden Knoten geschrieben werden oder der Anwender kann
+      die Startlösung spezifizieren:</para>
 
       <itemizedlist>
         <listitem>
@@ -216,7 +215,7 @@
 
         <listitem>
           <para>Start h ist Starthöhe (Angabewert) - Sohlhöhe; Es kann sein,
-          dass Ihre Angabewerte manche Bereiche nur geringfügig mit Wasser
+          dass die Angabewerte manche Bereiche nur geringfügig mit Wasser
           bedecken. Um dies zu verhindern wird die minimale Tiefe festgesetzt,
           die den berechneten Wert überschreibt.</para>
         </listitem>
@@ -232,17 +231,18 @@
         </mediaobject>
       </figure>
 
-      <para>Haben Sie ein Häkchen in dem Kästchen für einen
-      <guilabel>Restart</guilabel> gesetzt, müssen Sie den Knopf in der selben
-      Zeile betätigen um eine Zusammenstellung vorangegangener Lösungen
+      <para>Wurde ein Häkchen in dem Kästchen für einen
+      <guilabel>Restart</guilabel> gesetzt, muss der Anwender den Knopf in der
+      selben Zeile betätigen um eine Zusammenstellung vorangegangener Lösungen
       auswählen zu können. Es öffnet sich ein Assistent, der in der folgenden
       Abbildung dargestellt ist. Er enthält alle Ergebnisse aus
-      vorangegangenen Berechnungen. Setzen Sie ein Häkchen neben die
-      Berechnung, dessen Ergebnis Sie als Anfangswert verwenden möchten.
-      Betätigen Sie anschließend den Knopf <guibutton>Next</guibutton>, wenn
-      Sie zunächst eine Hierarchie festlegen müssen (siehe Beschreibung im
-      Assistenten) oder benutzen Sie direkt den Knopf
-      <guibutton>Finish</guibutton> um die Auswahl abzuschließen.</para>
+      vorangegangenen Berechnungen. Es muss ein Häkchen neben die Berechnung
+      gesetzt werden, dessen Ergebnis als Anfangswert verwendet werden soll.
+      Durch Betätigung des Knopfes <guibutton>Next</guibutton>, kann im
+      nächsten Schritt eine Hierarchie festgelegt werden (siehe Beschreibung
+      im Assistenten). Wenn dieser Schritt nicht mehr benötigt wird, kann die
+      Auswahl auch direkt mit dem Knopf <guibutton>Finish</guibutton>
+      abgeschlossen werden.</para>
 
       <figure>
         <title>Assistent zur Auswahl eines Anfangswertes aus vorherigen
@@ -294,7 +294,8 @@
         </listitem>
       </itemizedlist>
 
-      <para>Drei Einstellungsmöglichkeiten für den Marsh Algorithmus:</para>
+      <para>Für den Marsh Algorithmus gibt es drei
+      Einstellungsmöglichkeiten:</para>
 
       <itemizedlist>
         <listitem>
@@ -330,7 +331,7 @@
         <primary>Berechnungseinstellungen zum Turbulenzmodell</primary>
       </indexterm>
 
-      <para>Sie können zwischen folgenden Wirbelviskositätsansätzen
+      <para>Der Anwender kann zwischen folgenden Wirbelviskositätsansätzen
       wählen:</para>
 
       <itemizedlist>
@@ -440,10 +441,11 @@
             <entry align="left" valign="middle">Berechnungseinheit
             maximieren</entry>
 
-            <entry align="left" valign="middle">Markieren Sie zunächst eine
-            Berechnungseinheit in der Tabelle. Wenn Sie nun auf den Knopf
-            drücken, wird die ausgewählte Berechnungseinheit komplett in der
-            Karte dargestellt (Zoomfunktion).</entry>
+            <entry align="left" valign="middle">Zunächst muss die gewünschte
+            Berechnungseinheit in der Tabelle markiert werden. Durch
+            Betätigung des Knopfes wird die ausgewählte Berechnungseinheit
+            anschließend komplett in der Karte dargestellt
+            (Zoomfunktion).</entry>
           </row>
 
           <row>
@@ -459,9 +461,9 @@
 
             <entry align="left" valign="middle">Berechnung durchführen</entry>
 
-            <entry align="left" valign="middle">Bevor Sie diesen Knopf
-            drücken, müssen Sie zunächst eine Berechnungseinheit aus der
-            Tabelle selektieren. Die Berechnung wird dann mit den
+            <entry align="left" valign="middle">Bevor dieser Knopf betätigt
+            werden darf, muss der Anwender zunächst eine Berechnungseinheit
+            aus der Tabelle selektieren. Die Berechnung wird dann mit den
             Einstellungen aus dem vorherigen Bearbeitungsschritt für die
             ausgewählte Berechnungseinheit durchgeführt.</entry>
           </row>
