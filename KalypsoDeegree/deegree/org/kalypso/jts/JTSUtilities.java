@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.jts;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
@@ -95,6 +97,47 @@ public class JTSUtilities
     }
 
     return null;
+  }
+
+  /**
+   * @param lineString
+   * @param point
+   *            of lineString
+   * @param buffer
+   *            point buffer - point almost doesn't intersects lineString
+   * @return distance of point on lineString
+   */
+  public static Double pointDistanceOnLine( final LineString lineString, final Point point, final double buffer )
+  {
+    final Polygon geo = (Polygon) point.buffer( buffer );
+    if( !lineString.intersects( geo ) )
+      throw new IllegalStateException();
+
+    final GeometryFactory GF = new GeometryFactory();
+
+    final Coordinate[] coordinates = lineString.getCoordinates();
+    for( int i = 1; i < coordinates.length; i++ )
+    {
+      final Coordinate[] c = (Coordinate[]) ArrayUtils.subarray( coordinates, 0, i + 1 );
+
+      final LineString ls = GF.createLineString( c );
+      if( !ls.intersects( geo ) )
+        continue;
+
+      final List<Coordinate> list = new ArrayList<Coordinate>();
+      for( int j = 0; j < c.length - 1; j++ )
+      {
+        list.add( c[j] );
+      }
+
+      list.add( point.getCoordinate() );
+
+      final LineString myLineString = GF.createLineString( list.toArray( new Coordinate[] {} ) );
+
+      return myLineString.getLength();
+    }
+
+    throw new IllegalStateException();
   }
 
   /**
@@ -527,10 +570,8 @@ public class JTSUtilities
     final double y3 = coords[2].y;
     final double z3 = coords[2].z;
     if( z1 == z2 && z2 == z3 )
-    {
       // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
       return new double[] { 0, 0, z1 };
-    }
     else
     {
       // build the equation Ax + By + Cz - D = 0
