@@ -16,83 +16,112 @@
     <para>Um Berechnungseinstellungen vorzunehmen, muss der Baum
     <guimenuitem>Processing</guimenuitem> geöffnet und
     <guimenuitem>Berechnungseinstellungen</guimenuitem> mit einem Doppelklick
-    aktiviert werden, damit sich die zugehörige Feature View öffnet. Im
-    Folgenden werden die verschiedenen Einstellungsmöglichkeiten erläutert.
-    Dazu gehören:</para>
+    aktiviert werden, damit sich die zugehörige Feature View öffnet.</para>
+
+    <figure>
+      <title>Feature View der Berechnungseinstellungen</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/1D2D/Berechnungseinst_Ansicht.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Im Folgenden werden die verschiedenen Einstellungsmöglichkeiten
+    erläutert. Dazu gehören:</para>
 
     <itemizedlist>
       <listitem>
-        <para>Control model general data,</para>
+        <para>Allgemeines:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Modellinformationen</para>
+          </listitem>
+
+          <listitem>
+            <para>Rechenkernversion</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
 
       <listitem>
-        <para>Allgemeines,</para>
+        <para>Berechnungssteuerung:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Stationäre Berechnung</para>
+          </listitem>
+
+          <listitem>
+            <para>Instationäre Berechnung</para>
+          </listitem>
+
+          <listitem>
+            <para>Anfangswerte</para>
+          </listitem>
+
+          <listitem>
+            <para>Zeitschrittdefinition</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
 
       <listitem>
-        <para>Berechnungssteuerung,</para>
-      </listitem>
+        <para>Rechenkernparameter:</para>
 
-      <listitem>
-        <para>Konvergenz,</para>
-      </listitem>
+        <itemizedlist>
+          <listitem>
+            <para>Konvergenz</para>
+          </listitem>
 
-      <listitem>
-        <para>Anfangswerte,</para>
-      </listitem>
+          <listitem>
+            <para>Turbulenzmodell</para>
+          </listitem>
 
-      <listitem>
-        <para>Marsh Parameter und</para>
-      </listitem>
+          <listitem>
+            <para>Marshparameter</para>
+          </listitem>
 
-      <listitem>
-        <para>Turbulenzmodell</para>
+          <listitem>
+            <para>Rechenkernparameter</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
     </itemizedlist>
 
-    <section id="Kalypso1D2DControlmodel">
-      <title>Control model general data</title>
+    <para>Im Pull Down Menü von <guilabel>Modell auswählen</guilabel> muss
+    zuerst die Berechnungseinheit ausgewählt werden, deren Parameter
+    bearbeitet werden sollen.</para>
 
-      <indexterm>
-        <primary>Control model general data</primary>
-      </indexterm>
+    <figure>
+      <title>Modellauswahl</title>
 
-      <para>Im Preprocessing hat der Benutzer verschiedene
-      Berechnungseinheiten festgelegt. Im Pull Down Menü von <guilabel>Select
-      model</guilabel> muss nun die Berechnungseinheit ausgewählt werden,
-      deren Parameter bearbeitet werden sollen. Unter <guilabel>Model
-      name</guilabel> muss ein Name eingetragen werden und ggf. eine
-      Beschreibung unter <guilabel>Model description</guilabel>.</para>
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="img/1D2D/Berechnungseinst_Modellausw.png"
+                     scale="90" />
+        </imageobject>
+      </mediaobject>
+    </figure>
 
-      <figure>
-        <title>Einstellungsblock "Control model general data"</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/1D2D/Berechnungseinst_controlmodel.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-    </section>
-
-    <section id="Kalypso1D2DAllgemeine_Einstellungen">
+    <section id="Kalypso1D2DAllgemeine_Berechnungseinstellungen">
       <title>Allgemeines</title>
 
       <indexterm>
         <primary>Allgemeine Berechnungseinstellungen</primary>
       </indexterm>
 
-      <para>Bei den allgemeinen Einstellungen muss immer die "Neueste"
-      (RMS10S-Version) Rechenkernversion ausgewählt werden.</para>
-
-      <para>Damit der Bewuchs bei der Berechnung mit berücksichtigt wird, muss
-      das leere Kästchen mit einem Häkchen markiert werden.</para>
-
-      <para>Die Angabe des Breitengrades wird zur Berechnung der Corioliskraft
-      benötigt.</para>
+      <para>Im Preprocessing hat der Benutzer verschiedene
+      Berechnungseinheiten festgelegt. Unter <guilabel>Modellname</guilabel>
+      muss ein Name eingetragen werden und ggf. eine Beschreibung unter
+      <guilabel>Beschreibung</guilabel>. Zuletzt muss nur noch eine
+      Rechenkernversion ausgewählt werden.</para>
 
       <figure>
-        <title>Einstellungsblock "Allgemeines"</title>
+        <title>Allgemeine Berechnungseinstellungen</title>
 
         <mediaobject>
           <imageobject>
@@ -114,16 +143,18 @@
       werden oder auch beide Rechenarten miteinander verbunden werden (die
       stationäre Rechnung ist die Generierung einer Anfangslösung für die
       instationäre Rechnung), indem in das entsprechende Kästchen ein Häkchen
-      gesetzt wird.</para>
+      gesetzt wird. Der Einstellungsblock "Anfangswerte" wird im Unterkapitel
+      genauer erläutert.</para>
 
       <para>Es ist die Anzahl der maximal durchzuführenden Iterationen pro
       Rechenschritt anzugeben und für die stationäre Berechnung zusätzlich der
       Relaxationsfaktor für den Rechenschritt zur Dämpfung der
       Startwertempfindlichkeit. Für die instationäre Rechnung müssen zunächst
-      die Zeitschritte definiert werden. Durch Betätigen des Knopfes unterhalb
-      der Tabelle der Zeitschrittvorgabe öffnet sich ein Assistent, der in der
-      unteren Abbildung dargestellt ist. Hier wird auch der Relaxationsfaktor
-      für die instationäre Berechnung festgelegt.</para>
+      die Zeitschritte definiert werden. Durch Betätigen des Knopfes
+      <guibutton>Zeitschritte definieren</guibutton> oberhalb der Tabelle der
+      Zeitschrittvorgabe öffnet sich ein Assistent, der in der unteren
+      Abbildung dargestellt ist. Hier wird auch der Relaxationsfaktor für die
+      instationäre Berechnung festgelegt.</para>
 
       <para>Bei der Auswahl der Zeitschritte werden die wirklich zu rechnenden
       Zeitschritte festgelegt. Die Werte, die als Randbedingungen angewendet
@@ -131,7 +162,7 @@
       Preprocessing) interpoliert.</para>
 
       <figure>
-        <title>Einstellungsblock "Berechnungssteuerung"</title>
+        <title>Berechnungssteuerung</title>
 
         <mediaobject>
           <imageobject>
@@ -149,246 +180,293 @@
           </imageobject>
         </mediaobject>
       </figure>
+
+      <section id="Kalypso1D2DAnfangswerte">
+        <title>Anfangswerte</title>
+
+        <indexterm>
+          <primary>Berechnungseinstellungen zu den Anfangswerten</primary>
+        </indexterm>
+
+        <para>Bei der Aufgabenstellung handelt es sich um ein
+        Anfangs-Randwertproblem. Das heißt neben den Randbedingungen sind bei
+        instationären Rechnungen auch Anfangswerte anzugeben. Diese sollten im
+        Sinne des Strömungsgebietes eine sinnvolle Lösung sein. Um dies zu
+        erreichen kann entweder ein Restart gemacht werden und eine
+        Zusammenstellung vorangegangener Lösungen ausgewählt werden, aus denen
+        vx, vy und h an jeden Knoten geschrieben werden oder der Anwender kann
+        die Startlösung spezifizieren:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Start vx und vy für 2D: 0 m/s</para>
+          </listitem>
+
+          <listitem>
+            <para>Startwert für 1D: wie Angabewert. Der Angabewert bezieht
+            sich auf die globale x-Achse (nach rechts positiv). Wenn ein
+            Anfangswinkel angegeben wird, wird die Geschwindigkeit auf die
+            Richtung projeziert.</para>
+          </listitem>
+
+          <listitem>
+            <para>Start h ist Starthöhe (Angabewert) - Sohlhöhe; Es kann sein,
+            dass die Angabewerte manche Bereiche nur geringfügig mit Wasser
+            bedecken. Um dies zu verhindern wird die minimale Tiefe
+            festgesetzt, die den berechneten Wert überschreibt.</para>
+          </listitem>
+        </itemizedlist>
+
+        <figure>
+          <title>Einstellungsblock "Anfangswerte"</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Berechnungseinst_Anfangswerte.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Wurde ein Häkchen in dem Kästchen
+        <guilabel>aktivieren</guilabel> gesetzt, muss der Anwender den Knopf
+        in der selben Zeile betätigen um eine Zusammenstellung vorangegangener
+        Lösungen auswählen zu können. Es öffnet sich ein Assistent, der in der
+        folgenden Abbildung dargestellt ist. Er enthält alle Ergebnisse aus
+        vorangegangenen Berechnungen. Es muss ein Häkchen neben die Berechnung
+        gesetzt werden, dessen Ergebnis als Anfangswert verwendet werden soll.
+        Durch Betätigung des Knopfes <guibutton>Next</guibutton>, kann im
+        nächsten Schritt eine Hierarchie festgelegt werden (siehe Beschreibung
+        im Assistenten). Wenn dieser Schritt nicht mehr benötigt wird, kann
+        die Auswahl auch direkt mit dem Knopf <guibutton>Finish</guibutton>
+        abgeschlossen werden.</para>
+
+        <figure>
+          <title>Assistent zur Auswahl eines Anfangswertes aus vorherigen
+          Ergebnissen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Berechnungseinst_Anfangswerte_2.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <figure>
+          <title>Assistent zum Festlegen einer Hierarchie der
+          Ergebnisse</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Berechnungseinst_Anfangswerte_3.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
     </section>
 
-    <section id="Kalypso1D2DKonvergenz">
-      <title>Konvergenz</title>
+    <section id="Kalypso1D2DRechenkernparameter">
+      <title>Rechenkernparameter</title>
 
       <indexterm>
-        <primary>Berechnungseinstellungen zur Konvergenz</primary>
+        <primary>Rechenkernparameter</primary>
       </indexterm>
 
-      <para>In diesem Block können die Konvergenzkriterien ausgewählt werden.
-      Im iterativen Rechenprozess werden die Änderungen der Freiheitsgrade
-      betrachtet. Sobald die maximale Änderung den entsprechenden Grenzwert
-      unterschreitet wird die Rechnung als erfolgreich angesehen und
-      beendet.</para>
-
-      <para>Die Gleichungsdeaktivierung bewirkt, dass Gleichungen trotz noch
-      nicht eingetretener Konvergenz aus dem Gleichungssystem eliminiert
-      werden, wenn lokal keine Änderungen mehr zu sehen sind. Das
-      Deaktivierungskriterium ist ein relativer Wert und berechnet sich nach
-      der Formel: <inlinemediaobject>
-          <imageobject>
-            <imagedata fileref="img/1D2D/Berechnungseinst_Deaktivierungskriterium.png" />
-          </imageobject>
-        </inlinemediaobject></para>
+      <para>Die vier Einstellungsblöcke der Rechenkernparameter werden im
+      Folgenden einzeln erläutert. </para>
 
       <figure>
-        <title>Einstellungsblock "Konvergenz"</title>
+        <title>Rechenkernparameter</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/1D2D/Berechnungseinst_Konvergenz.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-    </section>
-
-    <section id="Kalypso1D2DAnfangswerte">
-      <title>Anfangswerte</title>
-
-      <indexterm>
-        <primary>Berechnungseinstellungen zu den Anfangswerten</primary>
-      </indexterm>
-
-      <para>Bei der Aufgabenstellung handelt es sich um ein
-      Anfangs-Randwertproblem. Das heißt neben den Randbedingungen sind bei
-      instationären Rechnungen auch Anfangswerte anzugeben. Diese sollten im
-      Sinne des Strömungsgebietes eine sinnvolle Lösung sein. Um dies zu
-      erreichen kann entweder ein Restart gemacht werden und eine
-      Zusammenstellung vorangegangener Lösungen ausgewählt werden, aus denen
-      vx, vy und h an jeden Knoten geschrieben werden oder der Anwender kann
-      die Startlösung spezifizieren:</para>
-
-      <itemizedlist>
-        <listitem>
-          <para>Start vx und vy für 2D: 0 m/s</para>
-        </listitem>
-
-        <listitem>
-          <para>Startwert für 1D: wie Angabewert. Der Angabewert bezieht sich
-          auf die globale x-Achse (nach rechts positiv). Wenn ein
-          Anfangswinkel angegeben wird, wird die Geschwindigkeit auf die
-          Richtung projeziert.</para>
-        </listitem>
-
-        <listitem>
-          <para>Start h ist Starthöhe (Angabewert) - Sohlhöhe; Es kann sein,
-          dass die Angabewerte manche Bereiche nur geringfügig mit Wasser
-          bedecken. Um dies zu verhindern wird die minimale Tiefe festgesetzt,
-          die den berechneten Wert überschreibt.</para>
-        </listitem>
-      </itemizedlist>
-
-      <figure>
-        <title>Einstellungsblock "Anfangswerte"</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/1D2D/Berechnungseinst_Anfangswerte.png" />
+            <imagedata fileref="img/1D2D/Berechnungseinst_Rechenkernparameter.png" />
           </imageobject>
         </mediaobject>
       </figure>
 
-      <para>Wurde ein Häkchen in dem Kästchen für einen
-      <guilabel>Restart</guilabel> gesetzt, muss der Anwender den Knopf in der
-      selben Zeile betätigen um eine Zusammenstellung vorangegangener Lösungen
-      auswählen zu können. Es öffnet sich ein Assistent, der in der folgenden
-      Abbildung dargestellt ist. Er enthält alle Ergebnisse aus
-      vorangegangenen Berechnungen. Es muss ein Häkchen neben die Berechnung
-      gesetzt werden, dessen Ergebnis als Anfangswert verwendet werden soll.
-      Durch Betätigung des Knopfes <guibutton>Next</guibutton>, kann im
-      nächsten Schritt eine Hierarchie festgelegt werden (siehe Beschreibung
-      im Assistenten). Wenn dieser Schritt nicht mehr benötigt wird, kann die
-      Auswahl auch direkt mit dem Knopf <guibutton>Finish</guibutton>
-      abgeschlossen werden.</para>
+      <section id="Kalypso1D2DKonvergenz">
+        <title>Konvergenz</title>
 
-      <figure>
-        <title>Assistent zur Auswahl eines Anfangswertes aus vorherigen
-        Ergebnissen</title>
+        <indexterm>
+          <primary>Berechnungseinstellungen zur Konvergenz</primary>
+        </indexterm>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/1D2D/Berechnungseinst_Anfangswerte_2.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
+        <para>In diesem Block können die Konvergenzkriterien ausgewählt
+        werden. Im iterativen Rechenprozess werden die Änderungen der
+        Freiheitsgrade betrachtet. Sobald die maximale Änderung den
+        entsprechenden Grenzwert unterschreitet wird die Rechnung als
+        erfolgreich angesehen und beendet.</para>
 
-      <figure>
-        <title>Assistent zum Festlegen einer Hierarchie der Ergebnisse</title>
+        <para>Die Gleichungsdeaktivierung bewirkt, dass Gleichungen trotz noch
+        nicht eingetretener Konvergenz aus dem Gleichungssystem eliminiert
+        werden, wenn lokal keine Änderungen mehr zu sehen sind. Das
+        Deaktivierungskriterium ist ein relativer Wert und berechnet sich nach
+        der Formel: <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Berechnungseinst_Deaktivierungskriterium.png" />
+            </imageobject>
+          </inlinemediaobject></para>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/1D2D/Berechnungseinst_Anfangswerte_3.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-    </section>
+        <figure>
+          <title>Einstellungsblock "Konvergenz"</title>
 
-    <section id="Kalypso1D2DMarshparameter">
-      <title>Marsh Parameter</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Berechnungseinst_Konvergenz.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
 
-      <indexterm>
-        <primary>Berechnungseinstellungen zu den Marshparametern</primary>
-      </indexterm>
+      <section id="Kalypso1D2DTurbulenzmodell">
+        <title>Turbulenzmodell</title>
 
-      <para>Angaben zum Trockenfallalgorithmus:</para>
+        <indexterm>
+          <primary>Berechnungseinstellungen zum Turbulenzmodell</primary>
+        </indexterm>
 
-      <itemizedlist>
-        <listitem>
-          <para>Sollte die (virtuelle) Wassertiefe an einem Knoten unter die
-          Trockenfalltiefe fallen, dann wird dieser als trocken angesehen, die
-          Elemente an dem Knoten werden eliminiert und gegebenenfalls auch
-          andere dadurch betroffene Knoten.</para>
-        </listitem>
+        <para>Der Anwender kann zwischen folgenden Wirbelviskositätsansätzen
+        wählen:</para>
 
-        <listitem>
-          <para>Sollte der Benutzer den Marsh-Algorithmus verwenden, wird mit
-          virtuellen Tiefen gerechnet (daher die Klammer oben). Dieser
-          Algorithmus bewirkt, dass Wasser auch unterirdisch begrenzt fließen
-          kann. Die Parameter und die Funktionsweise für den Marsh-Algorithmus
-          werden im Theorieteil erklärt. Wenn der Marsh-Algorithmus
-          ausgeschaltet ist, werden nur die Fließtiefen über der Oberfläche
-          betrachtet.</para>
-        </listitem>
-      </itemizedlist>
+        <itemizedlist>
+          <listitem>
+            <para>00 Konstante Wirbelviskosität (RMA)</para>
+          </listitem>
 
-      <para>Für den Marsh Algorithmus gibt es drei
-      Einstellungsmöglichkeiten:</para>
+          <listitem>
+            <para>02 Smagorinsky Ansatz (RMA)</para>
+          </listitem>
 
-      <itemizedlist>
-        <listitem>
-          <para>Default Werte nutzen: Deaktivierungstiefe, Übergangstiefe und
-          Porosität sind voreingestellt</para>
-        </listitem>
+          <listitem>
+            <para>10 Konstante Wirbelviskosität</para>
+          </listitem>
 
-        <listitem>
-          <para>Ohne Marsh</para>
-        </listitem>
+          <listitem>
+            <para>11 Sohlinduzierte Turbulenz</para>
+          </listitem>
 
-        <listitem>
-          <para>Eingabewerte nutzen: Deaktivierungstiefe, Übergangstiefe und
-          Porosität können manuell eingegeben werden</para>
-        </listitem>
-      </itemizedlist>
+          <listitem>
+            <para>12 Prandtl'scher Mischungswegansatz (konst.)</para>
+          </listitem>
 
-      <figure>
-        <title>Einstellungsblock "Marsh Parameter"</title>
+          <listitem>
+            <para>13 Smagorinsky Ansatz</para>
+          </listitem>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/1D2D/Berechnungseinst_Marshparameter.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-    </section>
+          <listitem>
+            <para>14 Konstante Wirbelviskosität mit sohlinduzierter
+            Turbulenz</para>
+          </listitem>
 
-    <section id="Kalypso1D2DTurbulenzmodell">
-      <title>Turbulenzmodell</title>
+          <listitem>
+            <para>15 Prandtl'scher Mischungsweg mit sohlinduzierter
+            Turbulenz</para>
+          </listitem>
 
-      <indexterm>
-        <primary>Berechnungseinstellungen zum Turbulenzmodell</primary>
-      </indexterm>
+          <listitem>
+            <para>16 Smagorinsky mit sohlinduzierter Turbulenz</para>
+          </listitem>
+        </itemizedlist>
 
-      <para>Der Anwender kann zwischen folgenden Wirbelviskositätsansätzen
-      wählen:</para>
+        <para>Die weiteren Einstellungsmöglichkeiten richten sich nach dem
+        ausgewählten Wirbelviskositätsansatz. Wird z.B. ein Ansatz nach
+        Smagorinsky gewählt, muss der sogenannte Smagorinsky-Faktor angegeben
+        werden. Bei anderen Ansätzen, wie z.B. der Abbildung zu entnehmen,
+        erscheint das Kästchen grau und es ist keine Eingabe möglich.</para>
 
-      <itemizedlist>
-        <listitem>
-          <para>10 Konstante Wirbelviskosität</para>
-        </listitem>
+        <figure>
+          <title>Einstellungsblock "Turbulenzmodell"</title>
 
-        <listitem>
-          <para>16 Smagorinsky mit sohlinduzierter Turbulenz</para>
-        </listitem>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Berechnungseinst_Turbulenzmodell.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
 
-        <listitem>
-          <para>13 Smagorinsky Ansatz</para>
-        </listitem>
+      <section>
+        <title>Rechenkernparameter</title>
 
-        <listitem>
-          <para>02 Smagorinsky Ansatz (RMA)</para>
-        </listitem>
+        <indexterm>
+          <primary>Einstellung der Rechenkernparameter</primary>
+        </indexterm>
 
-        <listitem>
-          <para>00 Konstante Wirbelviskosität (RMA)</para>
-        </listitem>
+        <para>Damit Bewuchsparameter bzw. der Boussinesq-Beiwert bei der
+        Berechnung verwendet werden, muss das leere Kästchen mit einem Häkchen
+        markiert werden.</para>
 
-        <listitem>
-          <para>15 Prandtl'scher Mischungsweg mit sohlinduzierter
-          Turbulenz</para>
-        </listitem>
+        <para>Die Angabe des Breitengrades wird zur Berechnung der
+        Corioliskraft benötigt.</para>
 
-        <listitem>
-          <para>11 Sohlinduzierte Turbulenz</para>
-        </listitem>
+        <figure>
+          <title>Einstellungsblock "Rechenkernparameter"</title>
 
-        <listitem>
-          <para>14 Konstante Wirbelviskosität mit sohlinduzierter
-          Turbulenz</para>
-        </listitem>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Berechnungseinst_Rechenkernparameter2.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
 
-        <listitem>
-          <para>Prandtl'scher Mischungswegansatz (konst.)</para>
-        </listitem>
-      </itemizedlist>
+      <section id="Kalypso1D2DMarshparameter">
+        <title>Marsh Parameter</title>
 
-      <para>Die weiteren Einstellungsmöglichkeiten richten sich nach dem
-      ausgewählten Wirbelviskositätsansatz. Wird z.B. ein Ansatz nach
-      Smagorinsky gewählt, muss der sogenannte Smagorinsky-Faktor angegeben
-      werden. Bei anderen Ansätzen, wie z.B. der Abbildung zu entnehmen,
-      erscheint das Kästchen grau und es ist keine Eingabe möglich.</para>
+        <indexterm>
+          <primary>Berechnungseinstellungen zu den Marshparametern</primary>
+        </indexterm>
 
-      <figure>
-        <title>Einstellungsblock "Turbulenzmodell"</title>
+        <para>Angaben zum Trockenfallalgorithmus:</para>
 
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="img/1D2D/Berechnungseinst_Turbulenzmodell.png" />
-          </imageobject>
-        </mediaobject>
-      </figure>
+        <itemizedlist>
+          <listitem>
+            <para>Sollte die (virtuelle) Wassertiefe an einem Knoten unter die
+            Trockenfalltiefe fallen, dann wird dieser als trocken angesehen,
+            die Elemente an dem Knoten werden eliminiert und gegebenenfalls
+            auch andere dadurch betroffene Knoten.</para>
+          </listitem>
+
+          <listitem>
+            <para>Sollte der Benutzer den Marsh-Algorithmus verwenden, wird
+            mit virtuellen Tiefen gerechnet (daher die Klammer oben). Dieser
+            Algorithmus bewirkt, dass Wasser auch unterirdisch begrenzt
+            fließen kann. Die Parameter und die Funktionsweise für den
+            Marsh-Algorithmus werden im Theorieteil erklärt. Wenn der
+            Marsh-Algorithmus ausgeschaltet ist, werden nur die Fließtiefen
+            über der Oberfläche betrachtet.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Für den Marsh Algorithmus gibt es drei
+        Einstellungsmöglichkeiten:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Default Werte nutzen: Deaktivierungstiefe, Übergangstiefe
+            und Porosität sind voreingestellt</para>
+          </listitem>
+
+          <listitem>
+            <para>Ohne Marsh</para>
+          </listitem>
+
+          <listitem>
+            <para>Eingabewerte nutzen: Deaktivierungstiefe, Übergangstiefe und
+            Porosität können manuell eingegeben werden</para>
+          </listitem>
+        </itemizedlist>
+
+        <figure>
+          <title>Einstellungsblock "Marsh Parameter"</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Berechnungseinst_Marshparameter.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
     </section>
   </section>
 
