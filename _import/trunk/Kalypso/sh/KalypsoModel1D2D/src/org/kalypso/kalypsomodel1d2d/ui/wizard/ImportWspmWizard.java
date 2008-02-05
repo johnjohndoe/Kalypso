@@ -137,6 +137,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class ImportWspmWizard extends Wizard implements IWizard
 {
+  private static final double SEARCH_DISTANCE = 0.01;
+
   private static final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
 
   private final List<Feature> m_discModelAdds = new ArrayList<Feature>();
@@ -529,7 +531,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /*
      * NO, this is not the right way to do it!
      * 
-     * During creation of calculation unit, control model for that unit should be created as well.
+     * During the creation of calculation unit, control model for that unit should be created as well.
      * 
      * Use CreateCalculationUnitCmd
      */
@@ -559,12 +561,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint );
 
       // if there is already a node, do not create it again
-      final List<IFE1D2DNode> existingNodeList = discretisationModel.getNodes().query( point.getPosition() );
-      IFE1D2DNode node = null;
-      if( existingNodeList == null || existingNodeList.size() == 0 )
+      final IFE1D2DNode existingNode = discretisationModel.findNode( point, SEARCH_DISTANCE );
+      if( existingNode == null )
       {
         /* add node */
-        node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+        final IFE1D2DNode node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
         addedFeatures.add( node.getWrappedFeature() );
 
         node.setName( "" ); //$NON-NLS-1$
@@ -604,13 +605,13 @@ public class ImportWspmWizard extends Wizard implements IWizard
           /* Add this element to the complex element aka calculation unit */
           // calculationUnit1D.addElementAsRef( element1d );
         }
+        lastNode = node;
       }
       else
       {
-        node = existingNodeList.get( 0 );
-        if( node.getElements().length == 0 )
+        if( existingNode.getElements().length == 0 )
         {
-          final IFeatureWrapperCollection containers = node.getContainers();
+          final IFeatureWrapperCollection containers = existingNode.getContainers();
           if( containers.size() == 0 && lastNode != null )
             throw new CoreException( StatusUtilities.createErrorStatus( "Existing node with no edges found." ) );
           for( final Object object : containers )
@@ -638,11 +639,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
             }
           }
         }
+        lastNode = existingNode;
       }
 
-      lastNode = node;
       final BigDecimal stationDecimal = WspmProfile.stationToBigDecimal( station );
-      nodesByStation.put( stationDecimal, node );
+      nodesByStation.put( stationDecimal, lastNode );
 
     }
 
