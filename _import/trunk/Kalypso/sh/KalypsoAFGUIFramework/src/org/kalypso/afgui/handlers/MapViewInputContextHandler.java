@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -20,12 +21,13 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.kalypso.ui.views.map.MapView;
 
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
@@ -50,52 +52,68 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object execute( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IFolder folder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    if( folder == null )
+    {
+      throw new ExecutionException( "Kein Szenario aktiv oder Szenarioordner nicht gefunden." );
+    }
+    else if( m_mapViewInput == null )
+    {
+      throw new ExecutionException( "Keine Kartenvorlage angegeben." );
+    }
 
-    final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_mapViewInput );
-    IFile file = null;
-    if( folder != null && m_mapViewInput != null )
-      file = folder.getFile( m_mapViewInput );
+    // find file in active scenario folder
+    final IFile file = folder.getFile( m_mapViewInput );
 
+    // find map view
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window == null ? null : window.getActivePage();
     final IViewPart view = activePage == null ? null : activePage.findView( MapView.ID );
 
-    if( file != null && file.exists() && view != null && view instanceof MapView )
+    if( view == null || !(view instanceof MapView) )
     {
+      throw new ExecutionException( "Es wurde keine geöffnete Karte gefunden." );
+    }
+    else
+    {
+      // there is a map view and a file
+
       final MapView mapView = (MapView) view;
       final MapPanel mapPanel = (MapPanel) mapView.getAdapter( MapPanel.class );
 
+      // only load if the file is not currently shown
       final IFile currentFile = mapView.getFile();
       if( !file.equals( currentFile ) )
       {
         mapView.startLoadJob( file );
       }
+
+      // make sure that no theme is active when initializing this context
       final Job unsetActiveThemeJob = new Job( "" ) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           final IMapModell mapModell = mapPanel.getMapModell();
-          if( mapModell != null )
-            mapModell.activateTheme( null );
+          if( mapModell == null )
+            return StatusUtilities.createErrorStatus( "Die Karte enthält keine Daten." );
+
+          mapModell.activateTheme( null );
           return Status.OK_STATUS;
         }
       };
       unsetActiveThemeJob.setRule( mapView.getSchedulingRule().getActivateLayerSchedulingRule() );
       unsetActiveThemeJob.schedule();
-      mapPanel.getWidgetManager().setActualWidget( null );
+
+      // make sure that no widget is active
+      final WidgetManager widgetManager = mapPanel.getWidgetManager();
+      widgetManager.setActualWidget( null );
 
       return Status.OK_STATUS;
-    }
-    else
-    {
-      return Status.CANCEL_STATUS;
     }
   }
 
@@ -103,6 +121,7 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     if( data instanceof Map )

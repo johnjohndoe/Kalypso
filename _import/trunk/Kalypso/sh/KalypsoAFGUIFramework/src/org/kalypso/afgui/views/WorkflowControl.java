@@ -3,12 +3,12 @@
  */
 package org.kalypso.afgui.views;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -23,14 +23,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.connector.IWorklistChangeListener;
-import de.renew.workflow.connector.cases.TaskExecutionException;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 
 /**
@@ -144,7 +143,7 @@ public class WorkflowControl implements IWorklistChangeListener
             }
             if( !longerPath.startsWith( shorterPath, null ) )
             {
-              m_treeViewer.collapseToLevel( segment, TreeViewer.ALL_LEVELS );
+              m_treeViewer.collapseToLevel( segment, AbstractTreeViewer.ALL_LEVELS );
             }
             m_lastSelectedElement = first;
           }
@@ -163,22 +162,17 @@ public class WorkflowControl implements IWorklistChangeListener
 
   final void doTask( final Task task )
   {
-    try
+    final IStatus result = m_taskExecutor.execute( task );
+    final Shell shell = m_treeViewer.getControl().getShell();
+    final String title = org.kalypso.afgui.views.Messages.getString( "WorkflowControl.2" );//$NON-NLS-1$
+    final String message = org.kalypso.afgui.views.Messages.getString( "WorkflowControl.3" ); //$NON-NLS-1$
+    ErrorDialog.openError( shell, title, message + task.getName(), result, IStatus.WARNING | IStatus.ERROR );
+    if( !result.isOK() )
     {
-      m_taskExecutor.execute( task );
+      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( result );
     }
-    catch( final TaskExecutionException e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( m_treeViewer.getControl().getShell(), org.kalypso.afgui.views.Messages.getString( "WorkflowControl.2" ), org.kalypso.afgui.views.Messages.getString( "WorkflowControl.3" ) //$NON-NLS-1$ //$NON-NLS-2$
-          + task.getURI(), status, IStatus.WARNING | IStatus.ERROR );
-      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
-      logger.log( Level.SEVERE, org.kalypso.afgui.views.Messages.getString( "WorkflowControl.4" ) + task.getURI(), e ); //$NON-NLS-1$
-    }
-    finally
-    {
-      m_treeViewer.refresh();
-    }
+
+    m_treeViewer.refresh();
   }
 
   public void restoreState( final IMemento memento )

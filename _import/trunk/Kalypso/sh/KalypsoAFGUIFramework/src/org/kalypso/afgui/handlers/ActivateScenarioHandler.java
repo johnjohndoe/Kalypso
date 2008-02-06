@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
@@ -36,11 +35,13 @@ public class ActivateScenarioHandler extends AbstractHandler
         try
         {
           final ITaskExecutor taskExecutor = plugin.getTaskExecutor();
-          final TaskExecutionAuthority taskExecutionAuthority = plugin.getTaskExecutionAuthority();
-          if( activeWorkContext.getCurrentCase() != scenario && taskExecutionAuthority.canStopTask( taskExecutor.getActiveTask() ) )
+          if( activeWorkContext.getCurrentCase() != scenario )
           {
-            taskExecutor.stopActiveTask();
-            activeWorkContext.setCurrentCase( scenario );
+            final boolean stopped = taskExecutor.stopActiveTask();
+            if( stopped )
+            {
+              activeWorkContext.setCurrentCase( scenario );
+            }
           }
         }
         catch( final CoreException e )

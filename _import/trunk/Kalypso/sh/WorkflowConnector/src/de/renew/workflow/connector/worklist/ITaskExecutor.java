@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.worklist;
 
+import org.eclipse.core.runtime.IStatus;
+
 import de.renew.workflow.base.Task;
-import de.renew.workflow.connector.cases.TaskExecutionException;
 
 /**
  * @author Stefan Kurzbach
@@ -52,10 +53,16 @@ public interface ITaskExecutor
   /**
    * Called when a task needs to be executed
    */
-  public void execute( final Task task ) throws TaskExecutionException;
+  public IStatus execute( final Task task );
 
+  /**
+   * Returns the active task or <code>null</code> if there is no active task.
+   */
   public Task getActiveTask( );
 
-  public void stopActiveTask( );
+  /**
+   * Stops the active task if any. Returns true if the task could be stopped or there was no active task.
+   */
+  public boolean stopActiveTask( );
 
 }

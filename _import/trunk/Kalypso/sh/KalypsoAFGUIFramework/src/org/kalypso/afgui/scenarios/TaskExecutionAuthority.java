@@ -72,7 +72,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
   {
     final ICaseDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     // check if any model is dirty
-    if( dataProvider == null || !dataProvider.isDirty() )
+    if( !dataProvider.isDirty() )
       return true;
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final MessageDialog confirmDialog = new MessageDialog( activeShell, Messages.getString( "TaskExecutionAuthority.0" ), null, Messages.getString( "TaskExecutionAuthority.1" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$

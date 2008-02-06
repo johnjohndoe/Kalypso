@@ -86,8 +86,10 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       /**
        * @see org.eclipse.ui.IWorkbenchListener#postShutdown(org.eclipse.ui.IWorkbench)
        */
+      @SuppressWarnings("synthetic-access")
       public void postShutdown( final IWorkbench workbench2 )
       {
+        stopSzenarioSourceProvider();
       }
 
       /**
@@ -95,7 +97,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
        */
       @SuppressWarnings("synthetic-access")
       public boolean preShutdown( final IWorkbench workbench2, final boolean forced )
-      {
+      {        
         if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
         {
           m_taskExecutor.stopActiveTask();

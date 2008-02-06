@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -57,7 +58,7 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
    */
   @SuppressWarnings("unchecked")
   @Override
-  public Object execute( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -72,12 +73,14 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
     if( m_featureType != null && view != null && view instanceof MapView )
     {
       final MapView mapView = (MapView) view;
-      // see above: apadting here makes no sense as we already know that it is a Map-View
-      final MapPanel mapPanel = (MapPanel) mapView.getAdapter( MapPanel.class );
+      final MapPanel mapPanel = mapView.getMapPanel();
 
       MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Thema aktivieren", "Warten auf Karte gescheitert" );
 
       final IMapModell mapModell = mapPanel.getMapModell();
+
+      if( mapModell == null )
+        throw new ExecutionException( "Keine Kartenvorlage geladen." );
 
       final String featureType = m_featureType;
       m_activateThemeJob = new ActivateThemeJob( mapModell, Messages.getString( "ThemeContextHandler.3" ), featureType );
