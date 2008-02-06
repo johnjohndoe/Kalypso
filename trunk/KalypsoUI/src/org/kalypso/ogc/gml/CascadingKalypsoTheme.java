@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -50,6 +52,8 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -194,28 +198,60 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
           ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
   }
 
-  protected void startLoadJob( ) throws Exception
+  protected void startLoadJob( )
   {
-    try
+    final UIJob job = new UIJob( "Kaskadierendes Thema laden: " + m_file.getName() )
     {
-      final InputSource inputSource = new InputSource( m_file.getContents() );
-      final Gismapview innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
-      final String innerName = innerGisView.getName();
-      if( innerName != null )
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        ((IMapModell) this).setName( innerName );
-        ((IKalypsoTheme) this).setName( innerName );
+        InputStream contents = null;
+        try
+        {
+          contents = m_file.getContents();
+          final InputSource inputSource = new InputSource( contents );
+          final Gismapview innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
+          final String innerName = innerGisView.getName();
+          if( innerName != null )
+          {
+            CascadingKalypsoTheme.this.setName( innerName );
+          }
+          getInnerMapModel().createFromTemplate( innerGisView );
+          fireContextChanged();
+        }
+        catch( final Throwable e )
+        {
+          final IStatus status = StatusUtilities.statusFromThrowable( e, "Konnte " + m_file.getName() + " nicht laden." );
+          setStatus( status );
+          return status;
+        }
+        finally
+        {
+          IOUtils.closeQuietly( contents );
+        }
+        return Status.OK_STATUS;
       }
-      getInnerMapModel().createFromTemplate( innerGisView );
-      fireContextChanged();
-      fireStatusChanged();
-    }
-    catch( final Throwable e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "Konnte " + m_file.getName() + " nicht laden." );
-      setStatus( status );
-      throw new CoreException( status );
-    }
+    };
+    job.setRule( m_file );
+    job.schedule();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#fireContextChanged()
+   */
+  @Override
+  protected void fireContextChanged( )
+  {
+    super.fireContextChanged();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#fireStatusChanged()
+   */
+  @Override
+  protected void fireStatusChanged( )
+  {
+    super.fireStatusChanged();
   }
 
   protected void handleResourceChanged( final IResourceChangeEvent event )
@@ -227,17 +263,14 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     final IResourceDelta fileDelta = rootDelta.findMember( m_file.getFullPath() );
     if( fileDelta == null )
       return;
-    if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
+    final int kind = fileDelta.getKind();
+    switch( kind )
     {
-      try
-      {
+      case IResourceDelta.CHANGED:
+      case IResourceDelta.REMOVED:
+      case IResourceDelta.ADDED:
         startLoadJob();
-      }
-      catch( final Exception e )
-      {
-        // TODO something useful; set status to theme
-        e.printStackTrace();
-      }
+        break;
     }
   }
 }

@@ -612,6 +612,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public void setName( final String name )
   {
     m_name = name;
+    setStatus( Status.OK_STATUS );
 
     fireStatusChanged();
   }

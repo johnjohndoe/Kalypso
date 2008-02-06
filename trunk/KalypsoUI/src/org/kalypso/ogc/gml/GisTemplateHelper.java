@@ -159,7 +159,7 @@ public class GisTemplateHelper
     {
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Lesen der Vorlage", e ) );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Lesen der Vorlage", e ) );
     }
@@ -196,7 +196,7 @@ public class GisTemplateHelper
     return (Featuretemplate) unmarshaller.unmarshal( is );
   }
 
-  public static final Gismapview loadGisMapView( final IFile file, final Properties replaceProps ) throws CoreException, IOException, JAXBException
+  public static final Gismapview loadGisMapView( final IFile file, final Properties replaceProps ) throws CoreException, IOException, JAXBException, SAXException, ParserConfigurationException
   {
     // TODO: replace with 'ReplaceToken'
     final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
@@ -204,7 +204,7 @@ public class GisTemplateHelper
     return GisTemplateHelper.loadGisMapView( new InputSource( new StringReader( contents ) ) );
   }
 
-  public static final Gismapview loadGisMapView( final IStorage file ) throws JAXBException, CoreException
+  public static final Gismapview loadGisMapView( final IStorage file ) throws JAXBException, CoreException, SAXException, ParserConfigurationException, IOException
   {
     final InputSource is = new InputSource( file.getContents() );
     if( file instanceof IEncodedStorage )
@@ -212,7 +212,7 @@ public class GisTemplateHelper
     return GisTemplateHelper.loadGisMapView( is );
   }
 
-  public static final Gismapview loadGisMapView( final File file ) throws IOException, JAXBException
+  public static final Gismapview loadGisMapView( final File file ) throws IOException, JAXBException, SAXException, ParserConfigurationException
   {
     BufferedInputStream inputStream = null;
     try
@@ -226,40 +226,21 @@ public class GisTemplateHelper
     {
       IOUtils.closeQuietly( inputStream );
     }
-
   }
 
   // TODO: for all calling methods: close streams!
-  public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException
+  public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException, SAXException, ParserConfigurationException, IOException
   {
     final Unmarshaller unmarshaller = TemplateUtilitites.createGismapviewUnmarshaller();
 
-    try
-    {
-      // XInclude awareness
-      final SAXParserFactory spf = SAXParserFactory.newInstance();
-      spf.setNamespaceAware( true );
-      spf.setXIncludeAware( true );
-      final XMLReader xr = spf.newSAXParser().getXMLReader();
-      xr.setContentHandler( unmarshaller.getUnmarshallerHandler() );
-      xr.parse( is );
-      return (Gismapview) unmarshaller.getUnmarshallerHandler().getResult();
-    }
-    // TODO: throw all these exceptions!
-    catch( final SAXException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final ParserConfigurationException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
+    // XInclude awareness
+    final SAXParserFactory spf = SAXParserFactory.newInstance();
+    spf.setNamespaceAware( true );
+    spf.setXIncludeAware( true );
+    final XMLReader xr = spf.newSAXParser().getXMLReader();
+    xr.setContentHandler( unmarshaller.getUnmarshallerHandler() );
+    xr.parse( is );
+    return (Gismapview) unmarshaller.getUnmarshallerHandler().getResult();
   }
 
   /**
@@ -316,7 +297,7 @@ public class GisTemplateHelper
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
       try
-      {
+    {
         final CS_CoordinateSystem targetSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
         if( (orgSRSName != null) && !orgSRSName.equals( targetSRS.getName() ) )
         {
@@ -324,12 +305,12 @@ public class GisTemplateHelper
           final GeoTransformer transformer = new GeoTransformer( targetSRS );
           return transformer.transformEnvelope( env, orgSRSName );
         }
-      }
-      catch( final Exception e )
-      {
-        // we just print the error, but asume that we can return an envelope that is not converted
-        e.printStackTrace();
-      }
+    }
+    catch( final Exception e )
+    {
+      // we just print the error, but asume that we can return an envelope that is not converted
+      e.printStackTrace();
+    }
     return env;
   }
 
