@@ -33,7 +33,7 @@
     </mediaobject>
   </figure>
 
-  <section id="Kalypso1D2DModellkalibrierung">
+  <section id="Kalypso1D2DKartenansicht">
     <title>Kartenansicht</title>
 
     <indexterm>
@@ -43,7 +43,7 @@
     <para>Bevor eine Karte mit Ergebnissen angezeigt wird, konfiguriert der
     Benutzer die Ergebniskarte.</para>
 
-    <section>
+    <section id="Kalypso1D2DErgebniskarte_konfigurieren">
       <title>Ergebniskarte konfigurieren</title>
 
       <indexterm>
@@ -217,7 +217,7 @@
       beendet.</para>
     </section>
 
-    <section>
+    <section id="Kalypso1D2DErgebniskarte_anzeigen">
       <title>Ergebniskarte anzeigen</title>
 
       <indexterm>
@@ -321,9 +321,19 @@
         </mediaobject>
       </figure>
     </section>
+
+    <section id="Kalypso1D2DGanglinien">
+      <title>Ganglinien erstellen</title>
+
+      <indexterm>
+        <primary>Ganglinien erstellen in Kalypso 1D2D</primary>
+      </indexterm>
+
+      <para></para>
+    </section>
   </section>
 
-  <section>
+  <section id="Kalypso1D2DLaengsschnittansicht">
     <title>Längsschnittansicht</title>
 
     <indexterm>
@@ -339,7 +349,7 @@
     <para>Die Konfiguration des Längsschnittes ist nur für zweidimensionale
     Modellbereiche erforderlich.</para>
 
-    <section>
+    <section id="Kalypso1D2DLaengsschnitt_konfigurieren">
       <title>Längsschnitt konfigurieren</title>
 
       <indexterm>
@@ -367,7 +377,7 @@
 
       <para>Abschließend muss die Stützpunktweite des Längsschnitts angegeben
       werden. Über den Knopf <guibutton>Next</guibutton> gelangt man zur
-      Fortsetzung des Assistenten. </para>
+      Fortsetzung des Assistenten.</para>
 
       <figure>
         <title>Längsschnitteinstellungen</title>
@@ -399,7 +409,7 @@
       erläutert.</para>
     </section>
 
-    <section>
+    <section id="Kalypso1D2DLaengsschnitt_anzeigen">
       <title>Längsschnitt anzeigen</title>
 
       <indexterm>
@@ -415,7 +425,7 @@
       vorherigen Schritt alles richtig gemacht wurde, steht der zuvor
       konfigurierte Längsschnitt hier zur Auswahl.</para>
 
-      <para>Bei einer eindimensionalen Rechnung wird der Längsschintt
+      <para>Bei einer eindimensionalen Rechnung wird der Längsschnitt
       automatisch erzeugt.</para>
 
       <figure>
@@ -429,22 +439,122 @@
       </figure>
 
       <para>Der Assistent kann nun mit <guilabel>Finish</guilabel> beendet
-      werden. Der Längsschnitt wird automatisch in der Ansicht "Chart View"
-      angezeigt.</para>
+      werden. Der Längsschnitt wird automatisch in der Feature View angezeigt.
+      Die Ergebnisse werden grafisch als auch in einer Tabelle dargestellt.
+      Über die Reiter kann zwischen den verschiedenen Ansichten gewechselt
+      werden.</para>
 
       <figure>
         <title>Längsschnittansicht in Kalypso 1D2D</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/1D2D/postp_14_laengsanz.png" />
+            <imagedata fileref="img/1D2D/Laengsschn_anzeigen.png" />
           </imageobject>
         </mediaobject>
       </figure>
+
+      <para><emphasis role="bold">Funktionen des Diagramms</emphasis></para>
+
+      <para>Neben den Standardfunktionen der Karte, die in der Einführung
+      erläutert werden, gibt es für den Zoom noch zusätzliche Funktionalitäten
+      um bestimmte Abschnitte des Diagramms zu betrachten. Wenn der Knopf
+      <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Icon_Karte_zoomen.png" />
+          </imageobject>
+        </inlinemediaobject> aktiviert wird, dann erscheint der Mauszeiger als
+      Kreuz. Nun gibt es folgende Möglichkeiten:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Standardzoom: Mit der gedrückten linken Maustaste ein Rechteck
+          aufziehen. Nur der ausgewählte Abschnitt wird im gesamten Diagramm
+          dargestellt.</para>
+        </listitem>
+
+        <listitem>
+          <para>Vertikaler Zoom aller Achsen: Neben einer beliebigen Achse,
+          außerhalb der Diagrammfläche, (Wasserspiegel, Geschwindigkeit oder
+          Abfluss) mit der linken Maustaste klicken, gedrückt halten und dann
+          senkrecht nach oben ziehen. Die Ansicht aller Achsen wird auf diesen
+          ausgewählten Ausschnitt reduziert.</para>
+        </listitem>
+
+        <listitem>
+          <para>Horizontaler Zoom: Unterhalb der Achse der Stationen mit der
+          linken Maustaste klicken, gedrückt halten und waagerecht zur Seite
+          ziehen. Die Ansicht wird vertikal nicht verändert, aber es werden
+          nur die Stationen angezeigt, die innerhalb der Auswahl lagen.
+          </para>
+        </listitem>
+
+        <listitem>
+          <para>Nur eine Achse wird gezoomt (vertikal): Der Vorgang entspricht
+          dem vertikalen Zoom aller Achsen, nur dass zusätzlich während des
+          gesamten Vorgangs die <guibutton>Strg</guibutton>-Taste gedrückt
+          gehalten werden muss. Dementsprechend wird nur die Achsendarstellung
+          verändert/ gezoomt, neben der auch mit dem Mauszeiger geklickt
+          wurde. </para>
+        </listitem>
+      </itemizedlist>
+
+      <table align="center" id="symbolleiste im Profileditor wspm">
+        <title>Funktionen der Tabelle des Längsschnittes</title>
+
+        <tgroup align="center" cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="5*" />
+
+          <tbody>
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_kopieren.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry align="left" valign="middle">Tabelle kopieren</entry>
+
+              <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+              wird und kein Eintrag markiert ist, dann wird die gesamte
+              Tabelle in den Zwischenspeicher abgelegt und kann z. B. in Word
+              kopiert werden. Wenn vorher ein Eintrag markiert wurde, dann
+              wird nur dieser eine Eintrag in den Zwischenspeicher
+              abgelegt.</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_loeschen.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry align="left" valign="middle">Eintrag löschen</entry>
+
+              <entry align="left" valign="middle">Um einen Eintrag in der
+              Tabelle zu löschen, muss dieser zunächst markiert werden. Durch
+              Betätigung des Knopfes wird dieser dann gelöscht.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
     </section>
   </section>
 
-  <section>
+  <section id="Kalypso1D2DDifferenzenbildung">
     <title>Differenzenbildung</title>
 
     <indexterm>
@@ -454,7 +564,7 @@
     <para>Kalypso1D2D stellt die Funktion Differenzen zu bilden zur
     Verfügung.</para>
 
-    <section>
+    <section id="Kalypso1D2DDifferenzen_erzeugen">
       <title>Differenzen erzeugen</title>
 
       <indexterm>
@@ -510,7 +620,7 @@
       <guimenuitem>Postprocessing &gt; Kartenansicht </guimenuitem>geöffnet
       wird und <guimenuitem>Ergebniskarte konfigurieren</guimenuitem> mit
       einem Doppelklick aktiviert wird, ist in dem Assistenten die neu
-      erzeugte Differenz zu sehen. </para>
+      erzeugte Differenz zu sehen.</para>
 
       <figure>
         <title>Differnz in Ergebniskarte laden</title>

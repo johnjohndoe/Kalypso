@@ -171,6 +171,59 @@
         </mediaobject>
       </figure>
 
+      <table align="center" id="symbolleiste im Profileditor wspm">
+        <title>Funktionen der Tabelle bei der Zeitschrittdefinition</title>
+
+        <tgroup align="center" cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="5*" />
+
+          <tbody>
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_kopieren.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry align="left" valign="middle">Tabelle kopieren</entry>
+
+              <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+              wird und kein Eintrag markiert ist, dann wird die gesamte
+              Tabelle in den Zwischenspeicher abgelegt und kann z. B. in Word
+              kopiert werden. Wenn vorher ein Eintrag markiert wurde, dann
+              wird nur dieser eine Eintrag in den Zwischenspeicher
+              abgelegt.</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_loeschen.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry align="left" valign="middle">Eintrag löschen</entry>
+
+              <entry align="left" valign="middle">Um einen Eintrag in der
+              Tabelle zu löschen, muss dieser zunächst markiert werden. Durch
+              Betätigung des Knopfes wird dieser dann gelöscht.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
       <figure>
         <title>Assistent zur Zeitschrittdefinition</title>
 
@@ -272,7 +325,7 @@
       </indexterm>
 
       <para>Die vier Einstellungsblöcke der Rechenkernparameter werden im
-      Folgenden einzeln erläutert. </para>
+      Folgenden einzeln erläutert.</para>
 
       <figure>
         <title>Rechenkernparameter</title>

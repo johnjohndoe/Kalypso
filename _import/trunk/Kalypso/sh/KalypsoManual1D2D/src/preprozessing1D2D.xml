@@ -356,17 +356,27 @@
       angegeben werden. Entsprechend dieser Metadaten wird dann eine Zeitreihe
       erstellt.</para>
 
-      <para>Um Zeitreihen zu importieren muss zunächst in der Ansicht
-      "Aktivitäten" der Baum <guimenuitem>Preprocessing &gt; Daten
-      laden</guimenuitem> geöffnet werden. Wenn <guimenuitem>Import von
-      Zeitreihen</guimenuitem> mit einem Doppelklick aktiviert wird, öffnet
-      sich der zugehörige Assistent. Zuerst müssen die Zeitreihendaten
-      ausgewählt werden. Über den Knopf <guibutton>Durchsuchen...</guibutton>
-      kann die entsprechende <filename>*.zrx</filename>,
-      <filename>*.csv</filename>, <filename>*.grap</filename> oder
-      <filename>*.dat</filename> Datei ausgewählt werden. In dem Pulldown-Menü
-      muss das zugehörige Format ausgewählt werden in dem die Datei
-      vorliegt.</para>
+      <para>Bevor eine Zeitreihe importiert wird, muss die richtige Zeitzone
+      eingestellt werden. Diese Grundeinstellung wird in der Hauptmenüleiste
+      unter <guimenuitem>Window &gt; Preferences</guimenuitem> vorgenommen.
+      Mit einem Mausklick auf <guimenuitem>Kalypso</guimenuitem> in der
+      Auswahl auf der linken Seite, öffnen sich die dazugehörigen Optionen. In
+      dem Pull Down Menü von <guilabel>Zeitzone für die Darstellung</guilabel>
+      ist <guimenuitem>Europe/ Berlin</guimenuitem> auszuwählen. Durch
+      Betätigung des Knopfes <guibutton>OK</guibutton> wird die Einstellung
+      gespeichert. Anschließend muss das Programm einmal neu gestartet werden,
+      damit der Import fehlerfrei durchgeführt werden kann.</para>
+
+      <para>Um Zeitreihen zu importieren muss in der Ansicht "Aktivitäten" der
+      Baum <guimenuitem>Preprocessing &gt; Daten laden</guimenuitem> geöffnet
+      werden. Wenn <guimenuitem>Import von Zeitreihen</guimenuitem> mit einem
+      Doppelklick aktiviert wird, öffnet sich der zugehörige Assistent. Zuerst
+      müssen die Zeitreihendaten ausgewählt werden. Über den Knopf
+      <guibutton>Durchsuchen...</guibutton> kann die entsprechende
+      <filename>*.zrx</filename>, <filename>*.csv</filename>,
+      <filename>*.grap</filename> oder <filename>*.dat</filename> Datei
+      ausgewählt werden. In dem Pulldown-Menü muss das zugehörige Format
+      ausgewählt werden in dem die Datei vorliegt.</para>
 
       <para>Die angegebenen <guilabel>Optionen</guilabel> müssen lediglich
       berücksichtigt werden, wenn man eine Zeitreihe zum zweiten mal
@@ -1970,6 +1980,60 @@
         zunächst dem eingegebenen Standardwert. Die Zeitreihe muss nun manuell
         editiert werden. Die stationäre Randbedingung ist wiederum nur für
         eine stationäre Rechnung von Bedeutung.</para>
+
+        <table align="center" id="symbolleiste im Profileditor wspm">
+          <title>Funktionen der Tabelle in der Feature View</title>
+
+          <tgroup align="center" cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <tbody>
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Tabelle_kopieren.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry align="left" valign="middle">Tabelle kopieren</entry>
+
+                <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+                wird und kein Eintrag markiert ist, dann wird die gesamte
+                Tabelle in den Zwischenspeicher abgelegt und kann z. B. in
+                Word kopiert werden. Wenn vorher ein Eintrag markiert wurde,
+                dann wird nur dieser eine Eintrag in den Zwischenspeicher
+                abgelegt.</entry>
+              </row>
+
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Tabelle_loeschen.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry align="left" valign="middle">Eintrag löschen</entry>
+
+                <entry align="left" valign="middle">Um einen Eintrag in der
+                Tabelle zu löschen, muss dieser zunächst markiert werden.
+                Durch Betätigung des Knopfes wird dieser dann
+                gelöscht.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
       </section>
 
       <section id="Kalypso1D2DNetzaufbau_BerechnungseundRB_1DEinmuendung">
