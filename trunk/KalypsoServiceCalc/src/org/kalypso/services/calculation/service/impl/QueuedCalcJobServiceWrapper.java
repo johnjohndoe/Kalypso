@@ -61,7 +61,6 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.contribs.java.net.ClassUrlCatalog;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.core.RefactorThis;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -108,8 +107,6 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
 
       TypeHandlerUtilities.registerTypeHandlers( registry );
       TypeHandlerUtilities.registerXSDSimpleTypeHandler( registry );
-
-      RefactorThis.registerSpecialTypeHandler( registry );
 
       // TODO refactor this
       final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, ZmlInlineTypeHandler.WVQ.class );
@@ -174,7 +171,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
       final AbstractUrlCatalog emptyCatalog = new AbstractUrlCatalog()
       {
         @Override
-        protected void fillCatalog( final Class<?> myClass, final Map<String, URL> katalog, Map<String, String> prefixes )
+        protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> katalog, Map<String, String> prefixes )
         {
           // nix, ist leer
         }
@@ -271,7 +268,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getCurrentResults(java.lang.String)
    */
-  public String[] getCurrentResults( String jobID ) throws CalcJobServiceException
+  public String[] getCurrentResults( final String jobID ) throws CalcJobServiceException
   {
     return m_service.getCurrentResults( jobID );
   }
@@ -323,7 +320,7 @@ public class QueuedCalcJobServiceWrapper implements ICalculationService
   /**
    * @see org.kalypso.services.calculation.service.ICalculationService#getJob(java.lang.String)
    */
-  public CalcJobInfoBean getJob( String jobID ) throws CalcJobServiceException
+  public CalcJobInfoBean getJob( final String jobID ) throws CalcJobServiceException
   {
     return m_service.getJob( jobID );
   }
