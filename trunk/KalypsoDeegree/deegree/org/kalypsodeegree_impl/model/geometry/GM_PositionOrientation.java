@@ -40,14 +40,12 @@ public class GM_PositionOrientation
   public static GM_Position[] orient( final GM_Position[] pos, final TYPE type ) throws GM_PositionOrientationException
   {
     if( getPolygonOrientation( pos ) != type )
-    {
       return reverse( pos );
-    }
     else
       return pos;
   }
 
-  private static GM_Position[] reverse( GM_Position[] pos )
+  private static GM_Position[] reverse( final GM_Position[] pos )
   {
     final List<GM_Position> posList = new LinkedList<GM_Position>();
 
@@ -69,7 +67,7 @@ public class GM_PositionOrientation
    */
   public static TYPE getPolygonOrientation( final GM_Position[] pos ) throws GM_PositionOrientationException
   {
-    if( pos == null || pos.length < 3 || pos[0] != pos[pos.length - 1] )
+    if( (pos == null) || (pos.length < 3) || !pos[0].equals( pos[pos.length - 1] ) )
       LOG.warning( "unable to filter positions: position do not form a ring" );
 
     // first find rightmost lowest vertex of the polygon
@@ -113,7 +111,7 @@ public class GM_PositionOrientation
     return m_positions;
   }
 
-  public void setPositions( GM_Position[] positions )
+  public void setPositions( final GM_Position[] positions )
   {
     m_positions = positions;
   }
