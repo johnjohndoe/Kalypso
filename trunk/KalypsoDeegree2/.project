@@ -25,4 +25,16 @@
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>deegree</name>
+			<type>2</type>
+			<location>workspace/deegree2/src</location>
+		</link>
+		<link>
+			<name>lib</name>
+			<type>2</type>
+			<locationURI>workspace/deegree2/lib</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
