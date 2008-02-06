@@ -64,10 +64,10 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.j3d.geom.TriangulationUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.deegree2.KalypsoDeegree2Plugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
@@ -461,12 +461,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  private void handle1dStructure( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp )
-  {
-    // not implemented yet
-
-  }
-
   private ITeschkeFlowRelation getFlowRelation( final INodeResult nodeResult )
   {
     final GM_Position nodePos = nodeResult.getPoint().getPosition();
@@ -520,7 +514,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( area == null )
       return StatusUtilities.createErrorStatus( "Es konnten keine Profilflächendaten gelesen werden (Knoten: " + nodeResult.getGmlID() + ", Station: " + station.doubleValue() );
 
-    BigDecimal discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
     nodeResult.setDischarge( discharge.doubleValue() );
 
     // markers for Trennflächen / Bordvollpunkte u.ä.
@@ -570,7 +564,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* check, if node was already handled for lengthsection */
       if( !m_lengthsection1dNodes.contains( nodes[i].getGmlID() ) )
       {
-        IStatus status = handleLengthSectionData( nodes[i], teschkeRelation );
+        final IStatus status = handleLengthSectionData( nodes[i], teschkeRelation );
         // TODO: right now, no consequences of the returned status
         m_lengthsection1dNodes.add( nodes[i].getGmlID() );
       }
@@ -610,7 +604,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       floatPosArray[i] = posArray[i].floatValue();
     }
-    final Map<Integer, int[]> triangles = KalypsoDeegree2Plugin.doTriangle( floatPosArray );
+
+    // removed the dependency on KalypsoDeegree2
+    final TriangulationUtils triangulator = new TriangulationUtils();
+    final float[] normal = { 0, 0, 1 };
+    final int[] output = new int[floatPosArray.length];
+    final int numVertices = floatPosArray.length / 3;
+    final int num = triangulator.triangulateConcavePolygon( floatPosArray, 0, numVertices, output, normal );
+    final Map<Integer, int[]> triangles = new HashMap<Integer, int[]>();
+    triangles.put( num, output );
 
     final Set<Entry<Integer, int[]>> entrySet = triangles.entrySet();
     for( final Entry<Integer, int[]> entry : entrySet )
