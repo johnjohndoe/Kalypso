@@ -116,10 +116,13 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
           removeTheme( theme );
       final Layers layerListType = gisview.getLayers();
 
-      final Object activeLayer = layerListType.getActive();
-      final List<JAXBElement< ? extends StyledLayerType>> layerList = layerListType.getLayer();
+      if( layerListType != null )
+      {
+        final Object activeLayer = layerListType.getActive();
+        final List<JAXBElement< ? extends StyledLayerType>> layerList = layerListType.getLayer();
 
-      createFromTemplate( layerList, activeLayer );
+        createFromTemplate( layerList, activeLayer );
+      }
     }
     finally
     {
@@ -173,7 +176,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   {
     final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" };
 
-    JAXBElement<String> lg = layerType.getLegendicon();
+    final JAXBElement<String> lg = layerType.getLegendicon();
     String legendIcon = null;
     if( lg != null )
       legendIcon = lg.getValue();
@@ -274,8 +277,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
           if( theme instanceof AbstractKalypsoTheme )
           {
-            AbstractKalypsoTheme kalypsoTheme = (AbstractKalypsoTheme) theme;
-            String legendIcon = kalypsoTheme.getLegendIcon();
+            final AbstractKalypsoTheme kalypsoTheme = (AbstractKalypsoTheme) theme;
+            final String legendIcon = kalypsoTheme.getLegendIcon();
             if( legendIcon != null )
               layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
           }
