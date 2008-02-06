@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
@@ -76,9 +76,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorControl;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -143,35 +145,39 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     m_minElevationBorder = ElevationColorControl.getMinElevation();
 
     /* if not, take the min max values from the elevation model */
-    if( m_maxElevationBorder == 0 && m_minElevationBorder == 0 )
+    final ITerrainElevationModelSystem elevationModelSystem = dataModel.getElevationModelSystem();
+    if( elevationModelSystem != null )
     {
-      m_maxElevationBorder = dataModel.getElevationModelSystem().getMaxElevation();
-      m_minElevationBorder = dataModel.getElevationModelSystem().getMinElevation();
-    }
 
-    /* do some checks */
-    if( m_maxElevationBorder > dataModel.getElevationModelSystem().getMaxElevation() )
-    {
-      m_maxElevationBorder = dataModel.getElevationModelSystem().getMaxElevation();
-      ElevationColorControl.setMaxElevation( m_maxElevationBorder );
-    }
-    else if( m_maxElevationBorder < dataModel.getElevationModelSystem().getMinElevation() )
-    {
-      m_maxElevationBorder = dataModel.getElevationModelSystem().getMaxElevation();
-      ElevationColorControl.setMaxElevation( m_maxElevationBorder );
-    }
+      if( m_maxElevationBorder == 0 && m_minElevationBorder == 0 )
+      {
+        m_maxElevationBorder = elevationModelSystem.getMaxElevation();
+        m_minElevationBorder = elevationModelSystem.getMinElevation();
+      }
 
-    if( m_minElevationBorder < dataModel.getElevationModelSystem().getMinElevation() )
-    {
-      m_minElevationBorder = dataModel.getElevationModelSystem().getMinElevation();
-      ElevationColorControl.setMinElevation( m_minElevationBorder );
-    }
-    else if( m_minElevationBorder > dataModel.getElevationModelSystem().getMaxElevation() )
-    {
-      m_minElevationBorder = dataModel.getElevationModelSystem().getMinElevation();
-      ElevationColorControl.setMinElevation( m_minElevationBorder );
-    }
+      /* do some checks */
+      if( m_maxElevationBorder > elevationModelSystem.getMaxElevation() )
+      {
+        m_maxElevationBorder = elevationModelSystem.getMaxElevation();
+        ElevationColorControl.setMaxElevation( m_maxElevationBorder );
+      }
+      else if( m_maxElevationBorder < elevationModelSystem.getMinElevation() )
+      {
+        m_maxElevationBorder = elevationModelSystem.getMaxElevation();
+        ElevationColorControl.setMaxElevation( m_maxElevationBorder );
+      }
 
+      if( m_minElevationBorder < elevationModelSystem.getMinElevation() )
+      {
+        m_minElevationBorder = elevationModelSystem.getMinElevation();
+        ElevationColorControl.setMinElevation( m_minElevationBorder );
+      }
+      else if( m_minElevationBorder > elevationModelSystem.getMaxElevation() )
+      {
+        m_minElevationBorder = elevationModelSystem.getMinElevation();
+        ElevationColorControl.setMinElevation( m_minElevationBorder );
+      }
+    }
     m_colorModel = ElevationColorControl.getColorModel();
     m_colorModel.setElevationMinMax( m_minElevationBorder, m_maxElevationBorder );
 
@@ -277,7 +283,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
   {
     return new IPropertyChangeListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       public void propertyChange( final PropertyChangeEvent event )
       {
         try
@@ -292,7 +298,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
           else if( source instanceof ColorSelector )
           {
             // ColorFieldEditor edi=null;
-            //            
+            //
             // ((ColorSelector)source).
           }
           else if( LINE_MAX_COLOR.equals( property ) )
@@ -339,7 +345,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final Group minMaxGroup = new Group( clientComposite, SWT.NONE );
     final GridData gridDataminMaxGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
     minMaxGroup.setLayoutData( gridDataminMaxGroup );
-    minMaxGroup.setText( Messages.getString("ColorModelChangeComponent.4") ); //$NON-NLS-1$
+    minMaxGroup.setText( Messages.getString( "ColorModelChangeComponent.4" ) ); //$NON-NLS-1$
 
     final Group optionsColorGroup = new Group( clientComposite, SWT.NONE );
     final GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
@@ -425,15 +431,15 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     compositeSwitchSchema.setLayoutData( gridDataCompositeSwitchSchema );
 
     final Button checkBtnOptionMinMax1 = new Button( compositeSwitchSchema, SWT.CHECK );
-    checkBtnOptionMinMax1.setText( Messages.getString("ColorModelChangeComponent.9") ); //$NON-NLS-1$
+    checkBtnOptionMinMax1.setText( Messages.getString( "ColorModelChangeComponent.9" ) ); //$NON-NLS-1$
     checkBtnOptionMinMax1.setSelection( false );
     checkBtnOptionMinMax1.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        System.out.println( Messages.getString("ColorModelChangeComponent.11") + checkBtnOptionMinMax1.getSelection() ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "ColorModelChangeComponent.11" ) + checkBtnOptionMinMax1.getSelection() ); //$NON-NLS-1$
         ElevationColorControl.setMinMaxStatus( checkBtnOptionMinMax1.getSelection() );
         preferenceStore_.setValue( LINE_MIN_MAX, checkBtnOptionMinMax1.getSelection() );
         windowCanvas.redraw();
@@ -522,7 +528,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
    */
   private void secondGroup( final Group optionsColorGroup )
   {
-    optionsColorGroup.setText( Messages.getString("ColorModelChangeComponent.12") ); //$NON-NLS-1$
+    optionsColorGroup.setText( Messages.getString( "ColorModelChangeComponent.12" ) ); //$NON-NLS-1$
     optionsColorGroup.setLayout( new GridLayout( 2, false ) );
 
     final GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
@@ -530,10 +536,10 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
     final Composite elevationChooseComposite = m_toolkit.createComposite( optionsColorGroup, SWT.NONE );
     elevationChooseComposite.setLayout( new GridLayout( 2, false ) );
-    @SuppressWarnings("unused") //$NON-NLS-1$
-    final Label maxElevationLabel = m_toolkit.createLabel( elevationChooseComposite, Messages.getString("ColorModelChangeComponent.14"), SWT.FILL ); //$NON-NLS-1$
-    @SuppressWarnings("unused") //$NON-NLS-1$
-    final Label minElevationLabel = m_toolkit.createLabel( elevationChooseComposite, Messages.getString("ColorModelChangeComponent.16"), SWT.FILL ); //$NON-NLS-1$
+    @SuppressWarnings("unused")
+    final Label maxElevationLabel = m_toolkit.createLabel( elevationChooseComposite, Messages.getString( "ColorModelChangeComponent.14" ), SWT.FILL ); //$NON-NLS-1$
+    @SuppressWarnings("unused")
+    final Label minElevationLabel = m_toolkit.createLabel( elevationChooseComposite, Messages.getString( "ColorModelChangeComponent.16" ), SWT.FILL ); //$NON-NLS-1$
 
     final Text maxText = new Text( elevationChooseComposite, SWT.BORDER );
     final double maxElevation = ElevationColorControl.getMaxElevation();
@@ -543,7 +549,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
     maxText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -565,7 +571,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
       }
 
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
         checkMaxTextValue( elevationChooseComposite, maxText );
@@ -600,7 +606,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
     minText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -620,7 +626,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
       }
 
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
         checkMinTextValue( elevationChooseComposite, minText );
@@ -655,7 +661,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     gridDataColorChooseComposite.horizontalSpan = 2;
     colorChooseComposite.setLayoutData( gridDataColorChooseComposite );
 
-    final ColorFieldEditor maxColorSelector = new ColorFieldEditor( LINE_MAX_COLOR, Messages.getString("ColorModelChangeComponent.28"), colorChooseComposite ); //$NON-NLS-1$
+    final ColorFieldEditor maxColorSelector = new ColorFieldEditor( LINE_MAX_COLOR, Messages.getString( "ColorModelChangeComponent.28" ), colorChooseComposite ); //$NON-NLS-1$
     maxColorSelector.setPreferenceStore( preferenceStore_ );
     maxColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     maxColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
@@ -663,7 +669,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final Button buttonMax = maxColorSelector.getColorSelector().getButton();
     buttonMax.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
 
-    final ColorFieldEditor minColorSelector = new ColorFieldEditor( LINE_MIN_COLOR, Messages.getString("ColorModelChangeComponent.29"), colorChooseComposite ); //$NON-NLS-1$
+    final ColorFieldEditor minColorSelector = new ColorFieldEditor( LINE_MIN_COLOR, Messages.getString( "ColorModelChangeComponent.29" ), colorChooseComposite ); //$NON-NLS-1$
     minColorSelector.setPreferenceStore( preferenceStore_ );
     minColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     minColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
@@ -671,7 +677,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final Button buttonMin = minColorSelector.getColorSelector().getButton();
     buttonMin.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
 
-    noColorSelector = new ColorFieldEditor( LINE_NO_COLOR, Messages.getString("ColorModelChangeComponent.30"), colorChooseComposite ); //$NON-NLS-1$
+    noColorSelector = new ColorFieldEditor( LINE_NO_COLOR, Messages.getString( "ColorModelChangeComponent.30" ), colorChooseComposite ); //$NON-NLS-1$
     noColorSelector.setPreferenceStore( preferenceStore_ );
     noColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     noColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
@@ -687,7 +693,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     spinnerComposite.setLayoutData( gridDataSpinnerComposite );
 
     final Label colorNumberCells = new Label( spinnerComposite, SWT.NONE );
-    colorNumberCells.setText( Messages.getString("ColorModelChangeComponent.31") ); //$NON-NLS-1$
+    colorNumberCells.setText( Messages.getString( "ColorModelChangeComponent.31" ) ); //$NON-NLS-1$
 
     final Spinner spinNumColorClasses = new Spinner( spinnerComposite, SWT.NONE );
     m_toolkit.adapt( spinNumColorClasses );
@@ -697,7 +703,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     spinNumColorClasses.setSelection( ElevationColorControl.getColorIndex() );
     spinNumColorClasses.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -712,7 +718,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     } );
 
     final Label transparencyLabel = new Label( spinnerComposite, SWT.NONE );
-    transparencyLabel.setText( Messages.getString("ColorModelChangeComponent.33") ); //$NON-NLS-1$
+    transparencyLabel.setText( Messages.getString( "ColorModelChangeComponent.33" ) ); //$NON-NLS-1$
 
     final Spinner spinTransparency = new Spinner( spinnerComposite, SWT.NONE );
     m_toolkit.adapt( spinTransparency );
@@ -722,7 +728,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     spinTransparency.setSelection( ElevationColorControl.getTransparencyIndex() );
     spinTransparency.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -735,7 +741,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     m_applyColors = m_toolkit.createButton( spinnerComposite, "", SWT.NONE ); //$NON-NLS-1$
     m_applyColors.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -743,8 +749,8 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
         windowCanvas.redraw();
       }
     } );
-    m_applyColors.setToolTipText( Messages.getString("ColorModelChangeComponent.37") ); //$NON-NLS-1$
-    image_Apply = new Image( optionsColorGroup.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/ok.gif" ).getImageData() ); //$NON-NLS-1$
+    m_applyColors.setToolTipText( Messages.getString( "ColorModelChangeComponent.37" ) ); //$NON-NLS-1$
+    image_Apply = new Image( optionsColorGroup.getDisplay(), AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/ok.gif" ).getImageData() ); //$NON-NLS-1$
     m_applyColors.setImage( image_Apply );
     windowCanvas.redraw();
   }
@@ -764,7 +770,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final IKalypsoFeatureTheme elevationTheme = m_dataModel.getElevationTheme();
     if( elevationTheme == null )
     {
-      System.out.println( Messages.getString("ColorModelChangeComponent.39") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "ColorModelChangeComponent.39" ) ); //$NON-NLS-1$
       return;
     }
     else

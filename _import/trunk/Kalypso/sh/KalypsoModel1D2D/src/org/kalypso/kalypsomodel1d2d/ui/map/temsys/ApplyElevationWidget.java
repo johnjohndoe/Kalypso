@@ -107,21 +107,29 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
+    m_dataModel.setMapPanel( mapPanel );
 
     final IMapModell mapModell = mapPanel.getMapModell();
-    m_dataModel.setMapModell( mapModell );
-    m_dataModel.setMapPanel( mapPanel );
+    if( mapModell != null )
+    {
+      m_dataModel.setMapModell( mapModell );
+    }
 
     // find and set Elevation model system
     final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapModell, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
-    final Feature eleSystemFeature = terrainElevationTheme.getFeatureList().getParentFeature();
-    final ITerrainElevationModelSystem system = (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( ITerrainElevationModelSystem.class );
+    if( terrainElevationTheme != null )
+    {
+      final Feature eleSystemFeature = terrainElevationTheme.getFeatureList().getParentFeature();
+      final ITerrainElevationModelSystem system = (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( ITerrainElevationModelSystem.class );
 
+      m_dataModel.setElevationModelSystem( system );
+      m_dataModel.setElevationTheme( terrainElevationTheme );
+    }
     final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( mapModell, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
-    m_dataModel.setElevationModelSystem( system );
-    m_dataModel.setData( ApplyElevationWidgetDataModel.NODE_THEME, nodeTheme );
-
-    m_dataModel.setElevationTheme( terrainElevationTheme );
+    if( nodeTheme != null )
+    {
+      m_dataModel.setData( ApplyElevationWidgetDataModel.NODE_THEME, nodeTheme );
+    }
     m_dataModel.setMapPanel( mapPanel );
   }
 
@@ -253,7 +261,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
       final double DELTA = MapUtilities.calculateWorldDistance( mapPanel, point, 10 );
       final IFE1D2DNode node = m_dataModel.getDiscretisationModel().findNode( point, DELTA );
       GM_Point nodePoint = null;
-      
+
       final StringBuffer tooltipText = new StringBuffer();
       if( node != null )
       {
