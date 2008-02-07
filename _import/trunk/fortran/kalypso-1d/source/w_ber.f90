@@ -1,4 +1,4 @@
-!     Last change:  MD    9 Jan 2008    4:25 pm
+!     Last change:  MD    1 Feb 2008    3:01 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -300,15 +300,15 @@ IF (BERECHNUNGSMODUS=='REIB_KONST' .and. Q_Abfrage=='NO_SCHLEIFE') then
   !MD Kontrolle der Grenztiefe im Unterwasser
   ! -----------------------------------------------------
   IF ((h_uw - sohlp(np-1)) .lt. (2./3.* (hen1 - sohlp(np-1))) ) THEN
-    write (UNIT_OUT_TAB,' ('' KEINE Wehrberechnung an Station km = '',f7.3)') stat(np)
-    WRITE (UNIT_OUT_TAB, '(''   fuer Innerer Abfluss qw  ='',f8.4)') qw
-    WRITE (UNIT_OUT_TAB, '(''   da Grenztiefe im UW erreicht!! '')')
+    write (UNIT_OUT_LOG,' ('' KEINE Wehrberechnung an Station km = '',f7.3)') stat(np)
+    WRITE (UNIT_OUT_LOG, '(''   fuer Innerer Abfluss qw  ='',f8.4)') qw
+    WRITE (UNIT_OUT_LOG, '(''   da Grenztiefe im UW erreicht!! '')')
     Q_Abfrage = 'GR_SCHLEIFE'
     RETURN
-  ELSEIF (v_uw .lt. ( SQRT(0.0001 *2.*g)) ) THEN
-    write (UNIT_OUT_TAB,' ('' KEINE Wehrberechnung an Station km = '',f7.3)') stat(np)
-    WRITE (UNIT_OUT_TAB, '(''   fuer Innerer Abfluss qw  ='',f8.4)') qw
-    WRITE (UNIT_OUT_TAB, '(''   da Fliessgeschwindigkeit im UW kleiner 0,044!! '')')
+  ELSEIF (v_uw .lt. ( SQRT(0.0002 *2.*g)) ) THEN
+    write (UNIT_OUT_LOG,' ('' KEINE Wehrberechnung an Station km = '',f7.3)') stat(np)
+    WRITE (UNIT_OUT_LOG, '(''   fuer Innerer Abfluss qw  ='',f8.4)') qw
+    WRITE (UNIT_OUT_LOG, '(''   da Fliessgeschwindigkeit im UW kleiner 0,063!! '')')
     Q_Abfrage = 'GR_SCHLEIFE'
     RETURN
   END IF
@@ -362,8 +362,13 @@ DO 1000 WHILE(dif_e.gt.0.0001)
   IF (it1000.gt.it1000max) then
     !JK   SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, '('' Konvergenz in der Schleife 1000 nicht gefunden !'')')
-    WRITE (*, '('' Keine Konvergenz in der Wehrberechnung: '')')
-    WRITE (*, '(''   Abbruch in Schleife 1000 bei Energiehoehen-Iteration!'')')
+    WRITE (UNIT_OUT_LOG, '('' Keine Konvergenz in Wehrberechnung bei Energiehoehen-Iteration!'')')
+    WRITE (UNIT_OUT_LOG, '('' Energiedifferenz zwischen UW und OW minimal:'')')
+    WRITE (UNIT_OUT_LOG, '('' --> Energiehoehe UW = Energiehoehe OW!'')')
+
+    WRITE (*, '('' Keine Konvergenz am Wehr bei Energiehoehen-Iteration!'')')
+    WRITE (*, '('' Energiedifferenz zwischen UW und OW minimal:'')')
+    WRITE (*, '('' --> Energiehoehe UW = Energiehoehe OW!'')')
 
     !JK   WAR SCHON DEAKTIVIERT, 02.05.00, JK
     !**   print*,'keine Konvergenz in der Wehrberechnung!'
@@ -398,6 +403,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
     he = (he +hea_q+he_q)/ 3.
     !MD neu he = (he+he_q) / 2.
     IF (he.lt.hen1) he = hen1
+
   ELSE !MD  nach der letzte Iteration
     if (he_opt == 0.0) then
       he = he_q
@@ -521,6 +527,29 @@ DO 1000 WHILE(dif_e.gt.0.0001)
     endif
 
     it2000 = it2000 + 1
+
+    IF (BERECHNUNGSMODUS=='REIB_KONST' .and. Q_Abfrage=='NO_SCHLEIFE') then
+      IF (it2000.GT.itmax) THEN
+        write (UNIT_OUT_LOG,' ('' WARNUNG: !!!!!!!!!!!!!!!!!!!!!'')')
+        WRITE (UNIT_OUT_LOG, '('' -------------------------------------'')')
+        write (UNIT_OUT_LOG,' ('' KEINE Konvergenz in Wehrberechnung: an Station km = '',f7.3)') stat(np)
+        WRITE (UNIT_OUT_LOG, '(''   fuer Innerer Abfluss qw  ='',f8.4)') qw
+        WRITE (UNIT_OUT_LOG, '(''   Abbruch in Schleife 2000 bei Abfluss-Iteration!! '')')
+        WRITE (UNIT_OUT_LOG, '('' --------------------------------------'')')
+        WRITE (UNIT_OUT_LOG, '('' Weiter mit naechstem Inneren Abfluss qw !! '')')
+
+        write (*,' ('' WARNUNG: !!!!!!!!!!!!!!!!!!!!!'')')
+        WRITE (*, '('' -------------------------------------'')')
+        write (*,' ('' KEINE Konvergenz am Wehr = '',f7.3)') stat(np)
+        WRITE (*, '(''   fuer Innerer Abfluss qw ='',f8.4)') qw
+        WRITE (*, '(''   Abbruch bei Abfluss-Iteration!! '')')
+        WRITE (*, '('' -------------------------------------'')')
+        WRITE (*, '('' Weiter mit naechstem Inneren Abfluss qw+1 !! '')')
+
+        Q_Abfrage = 'GR_SCHLEIFE'
+        RETURN
+      Endif
+    END IF
 
     IF (it2000.gt.itmax) then   ! itmax = 99 in DIM_VARIABLES
       WRITE (*, '('' Keine Konvergenz in der Wehrberechnung: '')')

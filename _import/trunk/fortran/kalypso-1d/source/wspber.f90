@@ -1,4 +1,4 @@
-!     Last change:  MD    9 Jan 2008    4:55 pm
+!     Last change:  MD    1 Feb 2008    3:13 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1028,10 +1028,10 @@ Hauptschleife: DO i = 1, maxger
           !MD Kontrolle der Grenztiefe im Unterwasser
           ! -----------------------------------------------------
           IF ( (wsp(nprof-1)- sohlp(nprof-1)) .lt. (2./3.* (hen (nprof-1)- sohlp(nprof-1))) ) THEN
-            write (UNIT_OUT_TAB,' (''  KEINE Brueckenberechnung an Station km = '',f7.3)') statgem
-            WRITE (UNIT_OUT_TAB, '(''    fuer Auesseren Abfluss q_out ='',f8.4)') q_out
-            WRITE (UNIT_OUT_TAB, '(''    mit Innerer Abfluss qvar_in  ='',f8.4)') qvar_in
-            WRITE (UNIT_OUT_TAB, '(''    da Grenztiefe im UW erreicht!! '')')
+            write (UNIT_OUT_LOG,' (''  KEINE Brueckenberechnung an Station km = '',f7.3)') statgem
+            WRITE (UNIT_OUT_LOG, '(''    fuer Auesseren Abfluss q_out ='',f8.4)') q_out
+            WRITE (UNIT_OUT_LOG, '(''    mit Innerer Abfluss qvar_in  ='',f8.4)') qvar_in
+            WRITE (UNIT_OUT_LOG, '(''    da Grenztiefe im UW erreicht!! '')')
             qvar_in = qvar_in + DELTA_Q
             CYCLE
           END IF
