@@ -187,6 +187,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   public SzenarioDataProvider getDataProvider( )
   {
+    startActiveWorkContext();
     return m_szenarioDataProvider;
   }
 
