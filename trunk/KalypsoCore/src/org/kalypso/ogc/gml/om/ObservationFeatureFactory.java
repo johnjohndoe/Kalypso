@@ -190,7 +190,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
       }
 
       final String token = tk.nextToken();
-      final IComponent component = components[nb];
       final XsdBaseTypeHandler< ? > handler = typeHandlers[nb];
       try
       {
@@ -211,18 +210,18 @@ public class ObservationFeatureFactory implements IAdapterFactory
         else
           value = handler.convertToJavaValue( token );
 
-        record.setValue( component, value );
+        record.setValue( nb, value );
       }
       catch( final NumberFormatException e )
       {
         e.printStackTrace();
         // TODO: set null here: Problem: the other components can't handle null now, they should
-        record.setValue( component, null );
+        record.setValue( nb, null );
       }
       catch( final UnsupportedEncodingException e )
       {
         e.printStackTrace();
-        record.setValue( component, null );
+        record.setValue( nb, null );
       }
       nb++;
       nb = nb % components.length;
