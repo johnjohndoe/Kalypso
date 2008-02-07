@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -168,6 +169,8 @@ public class LengthSectionProcessor
   /** Create stuff which depends on the observation. */
   private IStatus postProcess( final File gmlFile, final BigDecimal runoff, final Map<String, String> replaceTokens ) throws Exception
   {
+//    final TimeLogger timeLogger = new TimeLogger( "Post Processing Length-Section" );
+
     if( !gmlFile.exists() )
       return StatusUtilities.createWarningStatus( "Längsschnitt GML wurde nicht erzeugt." );
 
@@ -186,6 +189,9 @@ public class LengthSectionProcessor
     final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhSchemaPlugin.getDefault() ), -1, "", null );
 
     // Read Length-Section GML
+//    timeLogger.takeInterimTime();
+//    timeLogger.printCurrentInterim( "Start-Read LS: " );
+
     final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( gmlFile.toURL(), null );
     final Feature rootFeature = obsWks.getRootFeature();
 
@@ -197,6 +203,9 @@ public class LengthSectionProcessor
     final TuhhReachProfileSegment[] reachProfileSegments = m_reach.getReachProfileSegments();
 
     /* sort the segments */
+//    timeLogger.takeInterimTime();
+//    timeLogger.printCurrentInterim( "Sort Segments: " );
+
     final boolean isDirectionUpstreams = m_reach.getWaterBody().isDirectionUpstreams();
     Arrays.sort( reachProfileSegments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
@@ -205,6 +214,9 @@ public class LengthSectionProcessor
     //
     try
     {
+//      timeLogger.takeInterimTime();
+//      timeLogger.printCurrentInterim( "Start-Create Diagram " );
+
       final WspmWaterBody waterBody = m_reach.getWaterBody();
       createDiagram( m_diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
       final String diagramTemplate = FileUtils.readFileToString( m_diagFile, "UTF8" );
@@ -221,6 +233,9 @@ public class LengthSectionProcessor
     //
     try
     {
+//      timeLogger.takeInterimTime();
+//      timeLogger.printCurrentInterim( "Start-Create Table " );
+
       final URL tableUrl = getClass().getResource( "resources/table.gft" );
       final String tableTemplate = FileUtilities.toString( tableUrl, "UTF8" );
       final String table = replaceTokens( tableTemplate, replaceTokens );
@@ -236,6 +251,9 @@ public class LengthSectionProcessor
     //
     try
     {
+//      timeLogger.takeInterimTime();
+//      timeLogger.printCurrentInterim( "Start-Create Breaklines " );
+
       BreakLinesHelper.createBreaklines( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( m_epsThinning ), m_breaklineFile );
     }
     catch( final Exception e )
@@ -248,6 +266,9 @@ public class LengthSectionProcessor
     //
     try
     {
+//      timeLogger.takeInterimTime();
+//      timeLogger.printCurrentInterim( "Start-Create Modelboundary " );
+
       BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, m_boundaryFile, false );
     }
     catch( final Exception e )
@@ -260,12 +281,18 @@ public class LengthSectionProcessor
     //
     try
     {
+//      timeLogger.takeInterimTime();
+//      timeLogger.printCurrentInterim( "Start-Waterlevel " );
+
       BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, m_waterlevelFile, true );
     }
     catch( final Exception e )
     {
       multiStatus.add( StatusUtilities.statusFromThrowable( e, "Überschwemmungslinie konnte nicht erzeugt werden" ) );
     }
+
+//    timeLogger.takeInterimTime();
+//    timeLogger.printCurrentTotal( "Fertisch " );
 
     return multiStatus;
   }

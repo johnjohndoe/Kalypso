@@ -298,11 +298,6 @@ public class WspmProfileHelper
    */
   public static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe )
   {
-    // final IProfilPointProperty[] pointProperties = profil.getPointProperties( );
-    // final POINT_PROPERTY ppRW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ?
-    // IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT : null;
-    // final POINT_PROPERTY ppHW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ?
-    // IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT : null;
     if( !profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
         || !profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) ) // ignore
       // profile
