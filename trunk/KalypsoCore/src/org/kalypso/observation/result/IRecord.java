@@ -56,8 +56,14 @@ public interface IRecord
    * @return the value for the given component (can be null)
    * @throws IllegalArgumentException
    *             if the component is unknown to this record
+   * @deprecated Use {@link #setValue(int, Object)} instead.
    */
   public Object getValue( IComponent comp ) throws IllegalArgumentException;
+
+  /**
+   * Retrieves the value for the given index. Ask the owner (TupleResult) for the index of a certain component.
+   */
+  public Object getValue( int index ) throws IndexOutOfBoundsException;
 
   /**
    * Sets the value for the given component<br>
@@ -67,8 +73,14 @@ public interface IRecord
    * 
    * @throws IllegalArgumentException
    *             if the component is unknown to this record
+   * @deprecated Use {@link #setValue(int, Object)} instead.
    */
   public void setValue( IComponent comp, Object value );
+
+  /**
+   * Sets the value for the given index. Ask the owner (TupleResult) for the index of a certain component.
+   */
+  public void setValue( int index, Object value ) throws IndexOutOfBoundsException;
 
   public IRecord cloneRecord( );
 }

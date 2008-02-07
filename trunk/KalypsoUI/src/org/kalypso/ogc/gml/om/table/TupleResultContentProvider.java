@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -50,6 +55,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
@@ -59,21 +65,26 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiFirstColumnHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 /**
  * @author Marc Schlienger
  */
 public class TupleResultContentProvider implements IStructuredContentProvider, ITupleResultChangedListener
 {
+  private static final String DUMMY = "dummy";
+
   protected DefaultTableViewer m_tableViewer;
 
   private TupleResult m_result;
 
-  private final IComponentUiHandler[] m_componentHandlers;
+  private final IComponentUiHandlerProvider m_factory;
 
-  public TupleResultContentProvider( final IComponentUiHandler[] componentHandlers )
+  private final Map<String, IComponentUiHandler> m_componentHandlers = new HashMap<String, IComponentUiHandler>();
+
+  public TupleResultContentProvider( final IComponentUiHandlerProvider factory )
   {
-    m_componentHandlers = addFakeHandler( componentHandlers );
+    m_factory = factory;
   }
 
   /* default */
@@ -120,29 +131,49 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   {
     m_tableViewer.removeAllColumns();
 
-    final CellEditor[] cellEditors = new CellEditor[m_componentHandlers.length];
-    for( int i = 0; i < m_componentHandlers.length; i++ )
+    final Map<Integer, IComponentUiHandler> componentHandlers = m_factory.createComponentHandler( m_result );
+    m_componentHandlers.clear();
+
+    final List<CellEditor> cellEditors = new ArrayList<CellEditor>( m_componentHandlers.size() + 1 );
+
+    // HACK: add a 'dummy' column (size 0) ,in order to avoid the windows feature, that the first column is always
+    // left-aligned
+    final ComponentUiFirstColumnHandler dummyHandler = new ComponentUiFirstColumnHandler();
+    addColumn( DUMMY, dummyHandler );
+    cellEditors.add( dummyHandler.createCellEditor( m_tableViewer.getTable() ) );
+    m_componentHandlers.put( DUMMY, dummyHandler );
+
+    for( final Entry<Integer, IComponentUiHandler> entry : componentHandlers.entrySet() )
     {
-      final IComponentUiHandler handler = m_componentHandlers[i];
+      final Integer componentIndex = entry.getKey();
+      final IComponentUiHandler handler = entry.getValue();
 
-      // TODO: we should handle the case, where the table does not contain the desired component
+      final String property = "" + componentIndex;
 
-      final int columnWidth = handler.getColumnWidth();
-      final int columnWidthPercent = handler.getColumnWidthPercent();
-      final int columnStyle = handler.getColumnStyle();
-      final boolean editable = handler.isEditable();
-      final boolean resizeable = handler.isResizeable();
-      final boolean moveable = handler.isMoveable();
+      addColumn( property, handler );
 
-      final String label = handler.getColumnLabel();
+      cellEditors.add( handler.createCellEditor( m_tableViewer.getTable() ) );
 
-      final String tooltip = null;
-      m_tableViewer.addColumn( "" + i, label, tooltip, columnWidth, columnWidthPercent, editable, columnStyle, resizeable, moveable );
-
-      cellEditors[i] = handler.createCellEditor( m_tableViewer.getTable() );
+      m_componentHandlers.put( property, handler );
     }
 
-    m_tableViewer.setCellEditors( cellEditors );
+    m_tableViewer.setCellEditors( cellEditors.toArray( new CellEditor[cellEditors.size()] ) );
+  }
+
+  private void addColumn( final String property, final IComponentUiHandler handler )
+  {
+    final int columnWidth = handler.getColumnWidth();
+    final int columnWidthPercent = handler.getColumnWidthPercent();
+    final int columnStyle = handler.getColumnStyle();
+    final boolean editable = handler.isEditable();
+    final boolean resizeable = handler.isResizeable();
+    final boolean moveable = handler.isMoveable();
+
+    final String label = handler.getColumnLabel();
+
+    final String tooltip = null;
+    final TableColumn tc = m_tableViewer.addColumn( property, label, tooltip, columnWidth, columnWidthPercent, editable, columnStyle, resizeable, moveable );
+    tc.setData( handler );
   }
 
   /**
@@ -150,7 +181,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    */
   public Object[] getElements( final Object inputElement )
   {
-    if( (inputElement != null) && (inputElement instanceof TupleResult) )
+    if( inputElement != null && inputElement instanceof TupleResult )
     {
       final TupleResult result = (TupleResult) inputElement;
 
@@ -170,14 +201,11 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    */
   public void valuesChanged( final ValueChange[] changes )
   {
-    final IRecord[] records = new IRecord[changes.length];
     if( m_result == null )
       return;
 
-    final IComponent[] components = m_result.getComponents();
-
+    final IRecord[] records = new IRecord[changes.length];
     final Set<String> properties = new HashSet<String>();
-    final Set<IRecord> emptyRecords = new HashSet<IRecord>();
     for( int i = 0; i < changes.length; i++ )
     {
       final ValueChange change = changes[i];
@@ -186,35 +214,12 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 
       records[i] = record;
 
-      final String id = change.getComponent().getName();
-      properties.add( id );
-
-      /* set changed value */
-      record.setValue( change.getComponent(), change.getNewValue() );
-
-      /* check if we have an empty record */
-      boolean isEmpty = true;
-      for( final IComponent component : components )
-      {
-        final Object value = record.getValue( component );
-        if( value != null )
-        {
-          isEmpty = false;
-          break;
-        }
-      }
-
-      if( isEmpty )
-        emptyRecords.add( record );
+      final int compIndex = change.getComponent();
+      properties.add( "" + compIndex );
     }
 
-    if( emptyRecords.size() > 0 )
-      m_result.removeAll( emptyRecords );
-    else
-    {
-      final String[] props = properties.toArray( new String[properties.size()] );
-      ViewerUtilities.update( m_tableViewer, records, props, true );
-    }
+    final String[] props = properties.toArray( new String[properties.size()] );
+    ViewerUtilities.update( m_tableViewer, records, props, true );
   }
 
   /**
@@ -279,7 +284,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   {
     new UIJob( "updating table... " )
     {
-
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
@@ -289,18 +293,32 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
         return Status.OK_STATUS;
       }
     }.schedule();
-
   }
 
-  public IComponentUiHandler[] getHandlers( )
+  /**
+   * Returns the handler for a given column property.
+   */
+  public IComponentUiHandler getHandler( final String property )
   {
-    return m_componentHandlers;
+    return m_componentHandlers.get( property );
   }
 
-  public IComponentUiHandler getHandler( final String id )
+  /**
+   * Returns the handler for a given column index.
+   */
+  public IComponentUiHandler getHandler( final int columnIndex )
   {
-    final int index = Integer.parseInt( id );
-    return m_componentHandlers[index];
+    final String property = m_tableViewer.getProperty( columnIndex );
+    return getHandler( property );
   }
 
+  // HACK: determine if the whole table is editable. This is the case, if one column is editable. Later, this
+  // information should be set independently.
+  public boolean isEditable( )
+  {
+    boolean editable = true;
+    for( final IComponentUiHandler handler : m_componentHandlers.values() )
+      editable |= handler.isEditable();
+    return editable;
+  }
 }

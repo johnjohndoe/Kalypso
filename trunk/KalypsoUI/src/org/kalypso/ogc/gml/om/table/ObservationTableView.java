@@ -48,7 +48,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
+import org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
@@ -77,10 +78,10 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
     m_viewer.getTable().setHeaderVisible( true );
     m_viewer.getTable().setLinesVisible( true );
 
-    final IComponentUiHandler[] handler = new IComponentUiHandler[] {};
+    final IComponentUiHandlerProvider handler = new DefaultComponentUiHandlerProvider();
     m_tupleResultContentProvider = new TupleResultContentProvider( handler );
     m_viewer.setContentProvider( m_tupleResultContentProvider );
-    m_tupleResultLabelProvider = new TupleResultLabelProvider( handler );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
     m_viewer.setLabelProvider( m_tupleResultLabelProvider );
     m_viewer.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
 

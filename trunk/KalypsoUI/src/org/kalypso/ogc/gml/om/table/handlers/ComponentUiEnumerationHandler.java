@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,10 +50,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.gmlschema.annotation.AnnotationAdapterFactory;
 import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
-import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
-import org.kalypso.gmlschema.property.restriction.IRestriction;
-import org.kalypso.observation.result.ComponentUtilities;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
@@ -68,11 +63,11 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
 {
   protected final Map<Object, ILanguageAnnontationProvider> m_items;
 
-  public ComponentUiEnumerationHandler( final IComponent component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public ComponentUiEnumerationHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final Map<Object, ILanguageAnnontationProvider> items )
   {
-    super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+    super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, null );
 
-    m_items = getEnumerationItems( component.getRestrictions() );
+    m_items = items;
   }
 
   /**
@@ -123,35 +118,16 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
       record.setValue( getComponent(), value );
   }
 
-  private Map<Object, ILanguageAnnontationProvider> getEnumerationItems( final IRestriction[] restrictions )
-  {
-    final Map<Object, ILanguageAnnontationProvider> items = new LinkedHashMap<Object, ILanguageAnnontationProvider>();
-
-    for( final IRestriction restriction : restrictions )
-    {
-      if( restriction instanceof EnumerationRestriction )
-      {
-        final EnumerationRestriction r = (EnumerationRestriction) restriction;
-
-        items.putAll( r.getMapping() );
-      }
-    }
-
-    return items;
-  }
-
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
    */
   @Override
   public String getStringRepresentation( final IRecord record )
   {
-    if( getComponent() == null )
-      throw new UnsupportedOperationException( "No compoentn specified, overwrite this method." );
+    final int componentIndex = getComponent();
+    final Object value = record.getValue( componentIndex );
 
-    final Object value = record.getValue( getComponent() );
-
-    final ILanguageAnnontationProvider provider = ComponentUtilities.getLanguageProvider( getComponent().getRestrictions(), value );
+    final ILanguageAnnontationProvider provider = m_items.get( value );
     if( provider == null )
       return value.toString();
 

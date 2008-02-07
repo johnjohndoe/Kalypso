@@ -42,7 +42,6 @@ package org.kalypso.observation.result;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 
@@ -66,9 +65,7 @@ public final class ComponentUtilities
     for( final IComponent element : comps )
     {
       if( element.getValueTypeName().equals( typeName ) )
-      {
         return element;
-      }
     }
 
     return null;
@@ -82,9 +79,7 @@ public final class ComponentUtilities
     for( int i = 0; i < comps.length; i++ )
     {
       if( !comps[i].getValueTypeName().equals( typeName ) )
-      {
         return comps[i];
-      }
     }
 
     return null;
@@ -98,15 +93,15 @@ public final class ComponentUtilities
     for( final IComponent element : comps )
     {
       if( element.equals( comp ) )
-      {
         return element;
-      }
     }
 
     return null;
   }
 
   /**
+   * TODO: move into helper class of restrictions!
+   * 
    * @author kuch
    */
   static public boolean restrictionContainsEnumeration( final IRestriction[] restrictions )
@@ -114,32 +109,10 @@ public final class ComponentUtilities
     for( final IRestriction restriction : restrictions )
     {
       if( restriction instanceof EnumerationRestriction )
-      {
-
         return true;
-      }
     }
 
     return false;
-  }
-
-  public static ILanguageAnnontationProvider getLanguageProvider( final IRestriction[] restrictions, final Object value )
-  {
-    for( final IRestriction restriction : restrictions )
-    {
-      if( restriction instanceof EnumerationRestriction )
-      {
-        final EnumerationRestriction r = (EnumerationRestriction) restriction;
-        final ILanguageAnnontationProvider provider = r.getMapping().get( value );
-
-        if( provider != null )
-        {
-          return provider;
-        }
-      }
-    }
-
-    return null;
   }
 
   /**

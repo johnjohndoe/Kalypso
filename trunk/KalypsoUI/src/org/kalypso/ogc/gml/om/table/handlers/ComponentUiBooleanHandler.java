@@ -48,11 +48,8 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Handles enumerated values, i.e. values which have enumeration-restrictions.
@@ -62,8 +59,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
 {
-
-  public ComponentUiBooleanHandler( final IComponent component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public ComponentUiBooleanHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
   }
@@ -120,29 +116,5 @@ public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
       record.setValue( getComponent(), false );
     else
       record.setValue( getComponent(), value );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
-   */
-  @Override
-  public String getStringRepresentation( final IRecord record )
-  {
-    if( getComponent() == null )
-      throw new UnsupportedOperationException( "No compoentn specified, overwrite this method." );
-
-    final Object value = record.getValue( getComponent() );
-
-    if( value instanceof Boolean )
-    {
-      final Boolean b = (Boolean) value;
-
-      if( b == true )
-        return "true";
-      else if( b == false )
-        return "false";
-    }
-
-    throw new NotImplementedException();
   }
 }

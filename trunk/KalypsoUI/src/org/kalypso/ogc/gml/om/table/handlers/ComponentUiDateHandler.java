@@ -48,7 +48,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.DateTimeCellEditor;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -60,7 +59,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ComponentUiDateHandler extends AbstractComponentUiHandler
 {
-  public ComponentUiDateHandler( final IComponent component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public ComponentUiDateHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
   }
@@ -96,9 +95,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
   @Override
   public String getStringRepresentation( final IRecord record )
   {
-    final IComponent component = getComponent();
-    if( component == null )
-      throw new UnsupportedOperationException( "No compoentn specified, overwrite this method." );
+    final int component = getComponent();
 
     final Object value = record.getValue( component );
 

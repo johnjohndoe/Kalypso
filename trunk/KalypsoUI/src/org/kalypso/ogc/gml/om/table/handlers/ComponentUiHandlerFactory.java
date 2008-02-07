@@ -40,10 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
@@ -67,24 +72,29 @@ public class ComponentUiHandlerFactory
 
   public static final QName Q_BOOLEAN = new QName( NS.XSD_SCHEMA, "boolean" );
 
-  public static IComponentUiHandler getHandler( final IComponent component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public static IComponentUiHandler getHandler( final int index, final IComponent component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     final QName valueTypeName = component.getValueTypeName();
 
-    if( ComponentUtilities.restrictionContainsEnumeration( component.getRestrictions() ) )
-      return new ComponentUiEnumerationHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+    final IRestriction[] restrictions = component.getRestrictions();
+    if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
+    {
+      final Map<Object, ILanguageAnnontationProvider> items = RestrictionUtilities.getEnumerationItems( restrictions );
+      return new ComponentUiEnumerationHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, items );
+    }
+
     if( Q_DATE_TIME.equals( valueTypeName ) )
-      return new ComponentUiDateHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiDateHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( Q_DOUBLE.equals( valueTypeName ) )
-      return new ComponentUiDoubleHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiDoubleHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( Q_DECIMAL.equals( valueTypeName ) )
-      return new ComponentUiDecimalHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiDecimalHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( Q_INTEGER.equals( valueTypeName ) )
-      return new ComponentUiIntegerHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiIntegerHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( Q_STRING.equals( valueTypeName ) )
-      return new ComponentUiStringHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiStringHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
     else if( Q_BOOLEAN.equals( valueTypeName ) )
-      return new ComponentUiBooleanHandler( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
+      return new ComponentUiBooleanHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
 
     throw new NotImplementedException( "No UI-Handler for component type: " + valueTypeName );
   }

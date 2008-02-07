@@ -40,15 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.eclipse.swt.SWT;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * Default implementation of {@link IComponentUiHandlerProvider}.<br/> Creates columns for all components of the given
@@ -58,23 +62,28 @@ import org.kalypso.observation.result.IComponent;
  */
 public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerProvider
 {
-  public IComponentUiHandler[] createComponentHandler( final IComponent[] components )
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider#createComponentHandler(org.kalypso.observation.result.TupleResult)
+   */
+  public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
   {
-    final List<IComponentUiHandler> result = new ArrayList<IComponentUiHandler>();
+    final Map<Integer, IComponentUiHandler> result = new LinkedHashMap<Integer, IComponentUiHandler>();
 
+    final IComponent[] components = tupleResult.getComponents();
     final int widthPercent = components.length == 0 ? 100 : (int) (100.0 / components.length);
 
-    for( final IComponent component : components )
+    for( int i = 0; i < components.length; i++ )
     {
-      final IComponentUiHandler handlerForComponent = handlerForComponent( component, widthPercent );
+      final IComponent component = components[i];
+      final IComponentUiHandler handlerForComponent = handlerForComponent( i, component, widthPercent );
       if( handlerForComponent != null )
-        result.add( handlerForComponent );
+        result.put( i, handlerForComponent );
     }
 
-    return result.toArray( new IComponentUiHandler[result.size()] );
+    return result;
   }
 
-  private IComponentUiHandler handlerForComponent( final IComponent component, final int columnWidthPercent )
+  private IComponentUiHandler handlerForComponent( final int index, final IComponent component, final int columnWidthPercent )
   {
     // Some default value
     final boolean editable = true;
@@ -83,25 +92,29 @@ public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerPro
     final String columnLabel = component.getName();
     final int columnWidth = 100;
 
-    if( ComponentUtilities.restrictionContainsEnumeration( component.getRestrictions() ) )
-      return new ComponentUiEnumerationHandler( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "", "", null );
+    final IRestriction[] restrictions = component.getRestrictions();
+    if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
+    {
+      final Map<Object, ILanguageAnnontationProvider> items = RestrictionUtilities.getEnumerationItems( restrictions );
+      return new ComponentUiEnumerationHandler( index, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "", "", items );
+    }
 
     final QName valueTypeName = component.getValueTypeName();
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "dateTime" ) ) )
-      return new ComponentUiDateHandler( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%1$tm %1$te,%1$tY", "", null );
+      return new ComponentUiDateHandler( index, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%1$tm %1$te,%1$tY", "", null );
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "double" ) ) )
-      return new ComponentUiDoubleHandler( component, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
+      return new ComponentUiDoubleHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "decimal" ) ) )
-      return new ComponentUiDecimalHandler( component, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
+      return new ComponentUiDecimalHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "integer" ) ) )
-      return new ComponentUiIntegerHandler( component, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%d", "", null );
+      return new ComponentUiIntegerHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%d", "", null );
 
     if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "string" ) ) )
-      return new ComponentUiStringHandler( component, editable, resizeable, moveable, columnLabel, SWT.LEFT, columnWidth, columnWidthPercent, "%s", "", null );
+      return new ComponentUiStringHandler( index, editable, resizeable, moveable, columnLabel, SWT.LEFT, columnWidth, columnWidthPercent, "%s", "", null );
 
     return null;
   }

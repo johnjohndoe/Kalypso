@@ -176,12 +176,12 @@ public class TupleResultIndex
     return m_index.values().iterator();
   }
 
-  protected void handleComponentsChanged( IComponent[] components )
+  protected void handleComponentsChanged( final IComponent[] components )
   {
     if( m_index == null )
       return;
 
-    for( IComponent component : components )
+    for( final IComponent component : components )
     {
       if( component.equals( m_component ) )
         m_index = null;
@@ -227,7 +227,7 @@ public class TupleResultIndex
     }
   }
 
-  protected void handleValuesChanged( ITupleResultChangedListener.ValueChange[] changes )
+  protected void handleValuesChanged( final ITupleResultChangedListener.ValueChange[] changes )
   {
     if( m_index == null )
       return;
@@ -235,7 +235,10 @@ public class TupleResultIndex
     for( int i = 0; i < changes.length; i++ )
     {
       final ValueChange change = changes[i];
-      if( change.getComponent().equals( m_component ) )
+
+      final int index = change.getComponent();
+      final IComponent component = m_result.getComponent( index );
+      if( component.equals( m_component ) )
       {
         m_index.remove( change.getOldValue() );
         m_index.put( change.getNewValue(), change.getRecord() );
