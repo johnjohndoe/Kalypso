@@ -104,7 +104,7 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
     final IBranch[] inflowing = getInflowingBranches();
     final IBranch[] outflowing = getOutflowingBranches();
 
-    if( inflowing.length == 0 && outflowing.length == 0 )
+    if( (inflowing.length == 0) && (outflowing.length == 0) )
       return true;
 
     return false;

@@ -85,7 +85,7 @@ public class PageEditLastfall extends WizardPage
 
   protected void checkPageCompleted( )
   {
-    if( m_name.getText() == null || "".equals( m_name.getText().trim() ) )
+    if( (m_name.getText() == null) || "".equals( m_name.getText().trim() ) )
     {
       setMessage( null );
       setErrorMessage( "Name not defined" );
@@ -121,7 +121,7 @@ public class PageEditLastfall extends WizardPage
       return;
     }
 
-    if( m_pre.getText() == null || "".equals( m_pre.getText().trim() ) )
+    if( (m_pre.getText() == null) || "".equals( m_pre.getText().trim() ) )
     {
       setMessage( null );
       setErrorMessage( "Pre simulation time not defined" );
@@ -130,7 +130,7 @@ public class PageEditLastfall extends WizardPage
       return;
     }
 
-    if( m_timeStep.getText() == null || "".equals( m_timeStep.getText().trim() ) )
+    if( (m_timeStep.getText() == null) || "".equals( m_timeStep.getText().trim() ) )
     {
       setMessage( null );
       setErrorMessage( "Timestep not defined" );
@@ -139,7 +139,7 @@ public class PageEditLastfall extends WizardPage
       return;
     }
 
-    if( m_multiplier.getText() == null || "".equals( m_multiplier.getText().trim() ) )
+    if( (m_multiplier.getText() == null) || "".equals( m_multiplier.getText().trim() ) )
     {
       setMessage( null );
       setErrorMessage( "Timestep multiplier not defined" );

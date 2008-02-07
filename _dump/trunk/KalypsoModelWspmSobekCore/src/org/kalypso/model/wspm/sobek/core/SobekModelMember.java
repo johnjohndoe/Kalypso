@@ -121,10 +121,10 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public static ISobekModelMember getModel( final IWorkspaceInterface workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
   {
-    if( SobekModelMember.m_model == null && modelMember != null )
+    if( (SobekModelMember.m_model == null) && (modelMember != null) )
       SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
 
-    if( m_model.getMappedProject() == null || workspace != null && !(m_model.getMappedProject().equals( workspace.getMappedProject() )) )
+    if( (SobekModelMember.m_model.getMappedProject() == null) || ((workspace != null) && !(SobekModelMember.m_model.getMappedProject().equals( workspace.getMappedProject() ))) )
       SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
 
     return SobekModelMember.m_model;

@@ -53,18 +53,26 @@ public class KalypsoModelWspmSobekSchemaPlugin extends Plugin
   private static KalypsoModelWspmSobekSchemaPlugin plugin;
 
   /**
+   * Returns the shared instance.
+   */
+  public static KalypsoModelWspmSobekSchemaPlugin getDefault( )
+  {
+    return KalypsoModelWspmSobekSchemaPlugin.plugin;
+  }
+
+  /**
    * The constructor.
    */
   public KalypsoModelWspmSobekSchemaPlugin( )
   {
-    plugin = this;
+    KalypsoModelWspmSobekSchemaPlugin.plugin = this;
   }
 
   /**
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -73,17 +81,9 @@ public class KalypsoModelWspmSobekSchemaPlugin extends Plugin
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
-    plugin = null;
-  }
-
-  /**
-   * Returns the shared instance.
-   */
-  public static KalypsoModelWspmSobekSchemaPlugin getDefault( )
-  {
-    return plugin;
+    KalypsoModelWspmSobekSchemaPlugin.plugin = null;
   }
 }

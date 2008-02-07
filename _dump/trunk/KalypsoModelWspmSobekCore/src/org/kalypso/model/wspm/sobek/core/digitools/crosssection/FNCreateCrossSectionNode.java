@@ -105,7 +105,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
   {
     super.activate( commandPoster, mapPanel );
 
-    getMapPanel().setCursor( CURSOR_CROSSHAIR );
+    getMapPanel().setCursor( FNCreateCrossSectionNode.CURSOR_CROSSHAIR );
     getMapPanel().setMessage( "select profile by drawing a rectangle with help of left mouse button..." );
   }
 
@@ -144,6 +144,15 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
       if( Window.OK == dialog.open() )
         return dialog.getSelectedCrossSection();
     }
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#getTooltip()
+   */
+  public String[] getTooltip( )
+  {
+    // TODO Auto-generated method stub
     return null;
   }
 
@@ -209,7 +218,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
   @Override
   public void paint( final Graphics g )
   {
-    if( m_snapPainter != null && m_currentPoint != null )
+    if( (m_snapPainter != null) && (m_currentPoint != null) )
     {
       final Point point = m_snapPainter.paint( g, getMapPanel(), m_currentPoint );
       if( point != null )
@@ -230,15 +239,6 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
     }
 
     super.finish();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#getTooltip()
-   */
-  public String[] getTooltip( )
-  {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   /**

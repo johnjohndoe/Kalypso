@@ -180,7 +180,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     }
     else if( BOUNDARY_CONDITION_TYPE.eConstant.equals( m_type ) )
     {
-      if( m_tConstant.getText() == null || "".equals( m_tConstant.getText().trim() ) )
+      if( (m_tConstant.getText() == null) || "".equals( m_tConstant.getText().trim() ) )
       {
         setMessage( null );
         setErrorMessage( "No constant value defined." );
@@ -204,7 +204,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       try
       {
         final String text = m_tConstantIntervall.getText();
-        if( text != null || !"".equals( text.trim() ) )
+        if( (text != null) || !"".equals( text.trim() ) )
         {
           final Integer value = Integer.valueOf( m_tConstantIntervall.getText() );
 

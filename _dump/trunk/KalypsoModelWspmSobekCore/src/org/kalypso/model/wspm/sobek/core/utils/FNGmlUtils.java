@@ -224,7 +224,7 @@ public class FNGmlUtils
 
   public static void createProfileNode( final ISobekModelMember model, final IBranch branch, final GM_Point pointOnBranch, final Feature profile ) throws Exception
   {
-    if( branch == null || pointOnBranch == null || profile == null )
+    if( (branch == null) || (pointOnBranch == null) || (profile == null) )
       return;
 
     /* create new profile node */

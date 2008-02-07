@@ -73,7 +73,7 @@ public class PageEditBranch extends WizardPage
   {
     setPageComplete( false );
 
-    if( m_name != null && "".equals( m_name.getText() ) )
+    if( (m_name != null) && "".equals( m_name.getText() ) )
     {
       setMessage( null );
       setErrorMessage( "Name is missing" );

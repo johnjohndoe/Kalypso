@@ -155,6 +155,32 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
   }
 
   /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderTooltipProvider#getTooltip()
+   */
+  public String[] getTooltip( )
+  {
+    return new String[] { "Left mouse button - create a new branch or point of branch.", "Double-click left mouse button - finish drawing branch.",
+        "Right mouse button - remove last drawed point of branch." };
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyReleased( final KeyEvent e )
+  {
+    final int keyCode = e.getKeyCode();
+    if( KeyEvent.VK_ESCAPE == keyCode )
+    {
+      super.finish();
+
+      reset();
+    }
+
+    super.keyPressed( e );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
   @Override
@@ -189,6 +215,18 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
   }
 
   /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#middleClicked(java.awt.Point)
+   */
+  @Override
+  public void middleClicked( final Point p )
+  {
+    super.finish();
+    reset();
+
+    super.middleClicked( p );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
   @Override
@@ -212,7 +250,7 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
     if( mapPanel == null )
       return;
 
-    if( m_snapPainter != null && m_currentPoint != null )
+    if( (m_snapPainter != null) && (m_currentPoint != null) )
     {
       final Point point = m_snapPainter.paint( g, mapPanel, m_currentPoint );
       if( point != null )
@@ -258,43 +296,5 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
   public void setCursor( final Cursor cursor )
   {
     getMapPanel().setCursor( cursor );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderTooltipProvider#getTooltip()
-   */
-  public String[] getTooltip( )
-  {
-    return new String[] { "Left mouse button - create a new branch or point of branch.", "Double-click left mouse button - finish drawing branch.",
-        "Right mouse button - remove last drawed point of branch." };
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyReleased( final KeyEvent e )
-  {
-    final int keyCode = e.getKeyCode();
-    if( KeyEvent.VK_ESCAPE == keyCode )
-    {
-      super.finish();
-
-      reset();
-    }
-
-    super.keyPressed( e );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#middleClicked(java.awt.Point)
-   */
-  @Override
-  public void middleClicked( final Point p )
-  {
-    super.finish();
-    reset();
-
-    super.middleClicked( p );
   }
 }

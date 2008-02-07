@@ -108,7 +108,7 @@ public class FNSnapPainterExtendBranches
   {
     try
     {
-      if( g == null || panel == null || currentPoint == null || panel.getMapModell() == null )
+      if( (g == null) || (panel == null) || (currentPoint == null) || (panel.getMapModell() == null) )
         return null;
 
       for( final GM_Curve curve : m_curves )

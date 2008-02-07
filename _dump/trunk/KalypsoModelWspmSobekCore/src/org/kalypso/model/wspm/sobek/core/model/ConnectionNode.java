@@ -81,7 +81,7 @@ public class ConnectionNode extends AbstractConnectionNode implements IConnectio
     final IBranch[] inflowingBranches = getInflowingBranches();
     final IBranch[] outflowingBranches = getOutflowingBranches();
 
-    if( inflowingBranches.length == 0 && outflowingBranches.length == 0 )
+    if( (inflowingBranches.length == 0) && (outflowingBranches.length == 0) )
       return true;
 
     return false;

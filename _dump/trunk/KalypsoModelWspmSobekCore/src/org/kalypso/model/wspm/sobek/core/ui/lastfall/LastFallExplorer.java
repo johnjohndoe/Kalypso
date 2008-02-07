@@ -95,7 +95,7 @@ public class LastFallExplorer
     @Override
     public int compare( final Viewer viewer, final Object e1, final Object e2 )
     {
-      if( e1 instanceof Feature && e2 instanceof Feature )
+      if( (e1 instanceof Feature) && (e2 instanceof Feature) )
       {
         final Feature f1 = (Feature) e1;
         final Feature f2 = (Feature) e2;
@@ -135,7 +135,7 @@ public class LastFallExplorer
     final LastfallTreeLabelProvider prLabel = new LastfallTreeLabelProvider( viewer );
     viewer.setLabelProvider( prLabel );
     viewer.setContentProvider( new LastfallTreeContentProvider() );
-    viewer.setSorter( m_sorter );
+    viewer.setSorter( LastFallExplorer.m_sorter );
 
     /* toolbar */
     getToolbar( toolkit, header, viewer, prLabel );
@@ -247,7 +247,7 @@ public class LastFallExplorer
         final TreeSelection selection = (TreeSelection) viewer.getSelection();
         final TreePath[] path = selection.getPathsFor( selection.getFirstElement() );
 
-        if( path.length != 1 || path[0].getSegmentCount() != 2 || !(path[0].getSegment( 0 ) instanceof ILastfall) || !(path[0].getSegment( 1 ) instanceof IBoundaryNode) )
+        if( (path.length != 1) || (path[0].getSegmentCount() != 2) || !(path[0].getSegment( 0 ) instanceof ILastfall) || !(path[0].getSegment( 1 ) instanceof IBoundaryNode) )
           return;
 
         final ILastfall lastfall = (ILastfall) path[0].getSegment( 0 );
@@ -317,7 +317,7 @@ public class LastFallExplorer
        */
       private boolean hasTimeSeriesObservation( final TreePath[] path )
       {
-        if( path.length != 1 || path[0].getSegmentCount() != 2 || !(path[0].getSegment( 0 ) instanceof ILastfall) || !(path[0].getSegment( 1 ) instanceof IBoundaryNode) )
+        if( (path.length != 1) || (path[0].getSegmentCount() != 2) || !(path[0].getSegment( 0 ) instanceof ILastfall) || !(path[0].getSegment( 1 ) instanceof IBoundaryNode) )
           return false;
 
         final ILastfall lastfall = (ILastfall) path[0].getSegment( 0 );

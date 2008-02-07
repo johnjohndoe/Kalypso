@@ -41,9 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import java.awt.Insets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -84,6 +82,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControl;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
+import org.kalypso.ogc.gml.om.table.handlers.FixedComponentUIHandlerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
 /**
@@ -131,23 +130,25 @@ public class PageEditTimeSeriesObservation extends WizardPage
     final IObservation<TupleResult> myObs = m_condition.getTimeSeriesObservation();
     final TupleResult tupleResult = myObs.getResult();
 
-    final List<IComponentUiHandler> myHandlers = new ArrayList<IComponentUiHandler>();
+    final FixedComponentUIHandlerProvider provider = new FixedComponentUIHandlerProvider();
 
     final IComponent[] components = tupleResult.getComponents();
-    for( final IComponent component : components )
+    for( int i = 0; i < components.length; i++ )
     {
+      final IComponent component = components[i];
+
       final QName qname = component.getValueTypeName();
 
       IComponentUiHandler handler;
       if( DATE_AXIS.equals( qname ) )
-        handler = new ComponentUiDateHandler( component, true, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
+        handler = new ComponentUiDateHandler( i, true, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
       else
-        handler = new ComponentUiStringHandler( component, true, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
+        handler = new ComponentUiStringHandler( i, true, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
 
-      myHandlers.add( handler );
+      provider.add( i, handler );
     }
     // obsTable
-    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, myHandlers.toArray( new IComponentUiHandler[] {} ), true );
+    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, provider, true );
 
     final Control tblControl = control.createControl( container, SWT.BORDER );
     tblControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
@@ -174,7 +175,7 @@ public class PageEditTimeSeriesObservation extends WizardPage
       if( DATE_AXIS.equals( qname ) )
       {
         if( calendar != null )
-          throw (new IllegalStateException( "two date axes defined!" ));
+          throw new IllegalStateException( "two date axes defined!" );
 
         calendar = new CalendarAxis( qname.getLocalPart(), "Date", PROPERTY.CONTINUOUS, POSITION.BOTTOM, DIRECTION.POSITIVE, "yy-MM-dd\nhh:mm" );
         calendarComp = component;

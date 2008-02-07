@@ -214,7 +214,7 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
     for( final IAxis axis : axisList )
     {
       final String type = axis.getType();
-      if( type == null || "".equals( type.trim() ) )
+      if( (type == null) || "".equals( type.trim() ) )
         continue;
 
       if( ArrayUtils.contains( compare, type ) )

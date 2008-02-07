@@ -107,14 +107,6 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
-   */
-  public boolean isEmpty( )
-  {
-    return true;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode#getWspmProfile()
    */
   public WspmProfile getWspmProfile( )
@@ -130,5 +122,13 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
       f = feature.getWorkspace().getFeature( (String) objCsData );
 
     return new WspmProfile( f );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
+   */
+  public boolean isEmpty( )
+  {
+    return true;
   }
 }
