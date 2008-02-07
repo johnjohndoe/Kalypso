@@ -55,10 +55,13 @@ public interface ITupleResultChangedListener
 
     private final Object m_newValue;
 
-    public ValueChange( final IRecord record, final IComponent component, final Object newValue )
+    private final Object m_oldValue;
+
+    public ValueChange( final IRecord record, final IComponent component, final Object oldValue, final Object newValue )
     {
       m_record = record;
       m_component = component;
+      m_oldValue = oldValue;
       m_newValue = newValue;
     }
 
@@ -70,6 +73,11 @@ public interface ITupleResultChangedListener
     public Object getNewValue( )
     {
       return m_newValue;
+    }
+
+    public Object getOldValue( )
+    {
+      return m_oldValue;
     }
 
     public IRecord getRecord( )

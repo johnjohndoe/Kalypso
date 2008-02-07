@@ -115,6 +115,7 @@ public class TupleResult implements List<IRecord>
 
     m_isSorted = false;
 
+    // TODO: check: should be rather fireSortComponentChanged(TYPE.SORT) ???
     fireRecordsChanged( null, TYPE.CHANGED );
   }
 
@@ -488,35 +489,6 @@ public class TupleResult implements List<IRecord>
 
     return b;
   }
-
-// public Object getValue( final IRecord record, final IComponent comp )
-// {
-// return record.getValue( comp );
-// }
-
-// /**
-// * Sets the value of a record and informs the listeners if the value has really changed.
-// * <p>
-// * In order to change several records you should call {@link IRecord#setValue(IComponent, Object)} directly and then
-// * call {@link #fireValuesChanged(ValueChange[])
-// * </p>
-// */
-// public void setValue( final IRecord record, final IComponent comp, final Object value )
-// {
-// record.setValue( comp, value );
-//    
-// final Object oldValue = record.getValue( comp );
-// if( ObjectUtils.equals( value, oldValue ) )
-// return;
-//
-// record.setValue( comp, value );
-//
-// if( m_sortComponents.contains( comp ) )
-// m_isSorted = false;
-//
-// final ValueChange[] changes = new ValueChange[] { new ValueChange( record, comp, value ) };
-// fireValuesChanged( changes );
-// }
 
   /** This method creates, but DOES NOT adds a record. */
   // TODO its very confusing - create should add

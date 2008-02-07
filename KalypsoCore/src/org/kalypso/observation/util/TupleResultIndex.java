@@ -49,61 +49,88 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
-import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
 /**
  * @author Gernot Belger
  */
 public class TupleResultIndex
 {
-  private final SortedMap<Object, IRecord> m_index;
+  private final ITupleResultChangedListener m_changeListener = new ITupleResultChangedListener()
+  {
+    public void componentsChanged( IComponent[] components, TYPE type )
+    {
+      handleComponentsChanged( components );
+    }
+
+    public void recordsChanged( final IRecord[] records, final TYPE type )
+    {
+      handleRecordsChanged( records, type );
+    }
+
+    public void valuesChanged( ITupleResultChangedListener.ValueChange[] changes )
+    {
+      handleValuesChanged( changes );
+    }
+  };
+
+  private final IComponent m_component;
+
+  private final TupleResult m_result;
+
+  private SortedMap<Object, IRecord> m_index = null;
 
   public TupleResultIndex( final TupleResult result, final IComponent component )
   {
-    m_index = createIndex( result, component );
+    m_result = result;
+    m_component = component;
+
+    result.addChangeListener( m_changeListener );
   }
 
-  private SortedMap<Object, IRecord> createIndex( final TupleResult result, final IComponent component )
+  public void dispose( )
   {
-    final SortedMap<Object, IRecord> map = new TreeMap<Object, IRecord>();
+    m_result.removeChangeListener( m_changeListener );
+    m_index = null;
+  }
 
-    for( final IRecord record : result )
+  private void checkIndex( )
+  {
+    if( m_index != null )
+      return;
+
+    m_index = new TreeMap<Object, IRecord>( m_component );
+
+    for( final IRecord record : m_result )
     {
-      final Object value = record.getValue( component );
-
-      // HACK: convert xml-gregorian calendars to dates
-      if( value instanceof XMLGregorianCalendar )
-        map.put( DateUtilities.toDate( (XMLGregorianCalendar) value ), record );
-      else
-        map.put( value, record );
+      final Object value = record.getValue( m_component );
+      m_index.put( value, record );
     }
-
-    return map;
   }
 
   /**
    * returns the record defined by the domain, if none is found null is returned.
    */
-  public IRecord getRecord( final Object domain )
+  public synchronized IRecord getRecord( final Object domain )
   {
+    checkIndex();
+
     if( m_index.containsKey( domain ) )
       return m_index.get( domain );
     else
       return null;
   }
 
-  public void addRecord( final Object domain, final IRecord record )
-  {
-    m_index.put( domain, record );
-  }
-
   /**
-   * returns an interpolated object based in the neighboring objects before and after the given domain
+   * TODO: move into helper class<br>
+   * 
+   * @return an interpolated object based in the neighboring objects before and after the given domain
    */
-  public Object getValue( final IComponent component, final Object domain )
+  public synchronized Object getValue( final IComponent component, final Date domain )
   {
     if( m_index.containsKey( domain ) )
       return m_index.get( domain ).getValue( component );
@@ -123,12 +150,10 @@ public class TupleResultIndex
     final Object valueAfter = tail.get( domainAfter ).getValue( component );
 
     /* Linear interpolation */
-    // TODO: should be independent of involved types...
-    // now we know, that we have times and doubles
-    final long before = ((Date) domainBefore).getTime();
-    final long after = ((Date) domainAfter).getTime();
+    final long before = ((XMLGregorianCalendar) domainBefore).toGregorianCalendar().getTimeInMillis();
+    final long after = ((XMLGregorianCalendar) domainAfter).toGregorianCalendar().getTimeInMillis();
 
-    final long dom = ((Date) domain).getTime();
+    final long dom = domain.getTime();
 
     final double valBefore = ((Number) valueBefore).doubleValue();
     final double valAfter = ((Number) valueAfter).doubleValue();
@@ -140,7 +165,6 @@ public class TupleResultIndex
     }
     catch( final SameXValuesException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
 
       return null;
@@ -152,4 +176,70 @@ public class TupleResultIndex
     return m_index.values().iterator();
   }
 
+  protected void handleComponentsChanged( IComponent[] components )
+  {
+    if( m_index == null )
+      return;
+
+    for( IComponent component : components )
+    {
+      if( component.equals( m_component ) )
+        m_index = null;
+    }
+  }
+
+  protected void handleRecordsChanged( final IRecord[] records, final ITupleResultChangedListener.TYPE type )
+  {
+    if( m_index == null )
+      return;
+
+    if( records == null )
+    {
+      m_index = null;
+      return;
+    }
+
+    switch( type )
+    {
+      case ADDED:
+      {
+        for( final IRecord record : records )
+          m_index.put( record.getValue( m_component ), record );
+        return;
+      }
+
+      case CHANGED:
+        // TODO: check: we need the old record value, but we do not have it...
+
+        for( final IRecord record : records )
+          m_index.put( record.getValue( m_component ), record );
+        break;
+
+      case REMOVED:
+      {
+        for( final IRecord record : records )
+          m_index.remove( record.getValue( m_component ) );
+        return;
+      }
+
+      default:
+        break;
+    }
+  }
+
+  protected void handleValuesChanged( ITupleResultChangedListener.ValueChange[] changes )
+  {
+    if( m_index == null )
+      return;
+
+    for( int i = 0; i < changes.length; i++ )
+    {
+      final ValueChange change = changes[i];
+      if( change.getComponent().equals( m_component ) )
+      {
+        m_index.remove( change.getOldValue() );
+        m_index.put( change.getNewValue(), change.getRecord() );
+      }
+    }
+  }
 }
