@@ -98,6 +98,15 @@
             Ein Thema, welches andere Themen als Unterthemen enthält, hinzufügen.
          </description>
       </wizard>
+      <wizard
+            class="org.kalypso.ui.wizard.others.ScaleThemeWizard"
+            icon="icon/scaleTheme.gif"
+            id="org.kalypso.ui.wizard.others.ScaleThemeWizard"
+            name="Maßstab-Thema">
+         <description>
+            Dieses Theme fügt einen Maßstabsbalken der Karte hinzu.
+         </description>
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">

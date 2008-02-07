@@ -459,7 +459,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       if( current == null )
         System.out.println( "Autsch" );
 
-      final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/standardTheme.gif" ) );
+      final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( AbstractKalypsoTheme.class.getResource( "resources/standardTheme.gif" ) );
       m_standardThemeIcon = imgDesc.createImage();
     }
 
