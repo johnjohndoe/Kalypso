@@ -76,7 +76,6 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoUIExtensions;
@@ -312,9 +311,9 @@ public class IterationComposite extends Composite
       return;
 
     final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( null );
-    final IComponentUiHandler[] componentHandlers = provider.createComponentHandler( tr.getComponents() );
-    m_tableViewer.setContentProvider( new TupleResultContentProvider( componentHandlers ) );
-    m_tableViewer.setLabelProvider( new TupleResultLabelProvider( componentHandlers ) );
+    final TupleResultContentProvider cp = new TupleResultContentProvider( provider );
+    m_tableViewer.setContentProvider( cp );
+    m_tableViewer.setLabelProvider( new TupleResultLabelProvider( cp ) );
 
     m_tableViewer.setInput( tr );
 
