@@ -99,7 +99,7 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
 
       try
       {
-        final List<String> enryURNS = baseCatalog.getEnryURNS( baseURN + "*:" + lang );
+        final List<String> enryURNS = baseCatalog.getEntryURNS( baseURN + "*:" + lang );
         if( enryURNS.size() == 0 )
         {
           /* Allways add cache value, so this lookup takes only place once (not finding anything is very expensive) */
