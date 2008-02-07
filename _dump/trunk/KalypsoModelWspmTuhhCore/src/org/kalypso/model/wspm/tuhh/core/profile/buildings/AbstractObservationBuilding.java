@@ -41,9 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -51,7 +49,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.Record;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -126,13 +123,6 @@ public abstract class AbstractObservationBuilding implements IProfileObject
    */
   public void setValue( final IComponent component, final Object value )
   {
-
-    final String[] profileProperties = getProfileProperties();
-    for( final String string : profileProperties )
-    {
-
-    }
-
     try
     {
       final TupleResult result = m_observation.getResult();
@@ -142,16 +132,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
       if( result.size() > 1 )
         throw new IllegalStateException( "wspm building always consists of one IRecord-Set row" );
       else if( result.size() == 0 )
-      {
-        final Set<IComponent> set = new HashSet<IComponent>();
-        for( final IComponent c : result.getComponents() )
-        {
-          set.add( c );
-        }
-
-        record = new Record( result, set );
-      }
-
+        record = result.createRecord();
       else
         record = result.get( 0 );
 

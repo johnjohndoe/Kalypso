@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -56,7 +54,6 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.Record;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -81,48 +78,33 @@ public class ProfilStartTarget extends AbstractPointsTarget
   {
     final TupleResult result = profile.getResult();
     IRecord record = null;
-    try
-    {
+    if( result.size() > 0 )
       record = result.get( 0 );
-    }
-    catch( final IndexOutOfBoundsException e )
+    else if( record == null )
     {
-    }
-
-    if( record == null )
-    {
-      // no records in tuple result defined
-      final IComponent[] components = result.getComponents();
-      final Set<IComponent> set = new LinkedHashSet<IComponent>();
-      for( final IComponent component : components )
-        set.add( component );
-
-      record = new Record( result, set );
+      record = result.createRecord();
       result.add( 0, record );
-    }
-    else
-    {
-      final IRecord myPoint = record.cloneRecord();
 
-      /* shift new point to an position located before old first point position */
-      final IComponent cBreite = ProfilObsHelper.getPropertyFromId( myPoint, IWspmConstants.POINT_PROPERTY_BREITE );
-      if( cBreite != null )
-        myPoint.setValue( cBreite, (Double) myPoint.getValue( cBreite ) - 10 );
-
-      // remove all markers from new point
-      final IComponent[] pointMarkerTypes = profile.getPointMarkerTypes();
-      for( final IComponent pmt : pointMarkerTypes )
-        myPoint.setValue( pmt, null );
-
-      result.add( 0, myPoint );
+      return;
     }
 
+    final IRecord myPoint = record.cloneRecord();
+
+    /* shift new point to an position located before old first point position */
+    final IComponent cBreite = ProfilObsHelper.getPropertyFromId( myPoint, IWspmConstants.POINT_PROPERTY_BREITE );
+    if( cBreite != null )
+      myPoint.setValue( cBreite, (Double) myPoint.getValue( cBreite ) - 10 );
+
+    // remove all markers from new point
+    final IComponent[] pointMarkerTypes = profile.getPointMarkerTypes();
+    for( final IComponent pmt : pointMarkerTypes )
+      myPoint.setValue( pmt, null );
+
+    result.add( 0, myPoint );
   }
 
   public void insertPointsInternal( final IProfilEventManager pem, final List<IRecord> points )
   {
-
-    final TupleResult result = pem.getProfil().getResult();
     if( points == null )
     {
 

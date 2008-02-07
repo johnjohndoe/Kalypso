@@ -40,17 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
+import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiBooleanHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDecimalHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDoubleHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiEnumerationHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiIntegerHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 /**
  * TODO: refaktor in order to create the component handler depending on the profile type (extension-point).
@@ -58,47 +72,78 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
  * @author Gernot Belger
  * @author Kim Werner
  */
-public class ComponentHandlerFactory
+public class ComponentHandlerFactory implements IComponentUiHandlerProvider
 {
-  private ComponentHandlerFactory( )
+  private final IProfil m_profil;
+
+  public ComponentHandlerFactory( final IProfil profil )
   {
-    throw new UnsupportedOperationException( "Do not instantiate this helper class" );
+    m_profil = profil;
   }
 
-  public static IComponentUiHandler[] createComponentHandler( final IProfil profil )
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider#createComponentHandler(org.kalypso.observation.result.TupleResult)
+   */
+  public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
   {
-    final IComponent[] pointMarkerTypes = profil.getPointMarkerTypes();
-    final IComponent[] components = profil.getPointProperties();
+    Assert.isTrue( tupleResult == m_profil.getResult() );
 
-    final List<IComponentUiHandler> handler = new ArrayList<IComponentUiHandler>();
+    final IComponent[] pointMarkerTypes = m_profil.getPointMarkerTypes();
+    final IComponent[] components = m_profil.getPointProperties();
+
+    final Map<Integer, IComponentUiHandler> handler = new LinkedHashMap<Integer, IComponentUiHandler>();
 
     // TODO: get display from outside
-    handler.add( new ComponentUiProblemHandler( profil, null ) );
+    handler.put( -1, new ComponentUiProblemHandler( m_profil, null ) );
 
-    for( final IComponent component : components )
+    for( int i = 0; i < components.length; i++ )
     {
+      final IComponent component = components[i];
+
       /* marker?!? yes -> continue */
       if( ArrayUtils.contains( pointMarkerTypes, component ) )
         continue;
 
       final int spacing = 100 / components.length;
 
-      final QName valueTypeName = component.getValueTypeName();
-
-      if( ComponentUiHandlerFactory.Q_DATE_TIME.equals( valueTypeName ) )
-        handler.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-      else if( ComponentUiHandlerFactory.Q_STRING.equals( valueTypeName ) )
-        handler.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-      else if( ComponentUiHandlerFactory.Q_INTEGER.equals( valueTypeName ) )
-        handler.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
-      else if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
-        handler.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
-      else if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
-        handler.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.RIGHT, 100, spacing, "%.03f", "null", "" ) );
-      else
-        handler.add( ComponentUiHandlerFactory.getHandler( component, true, true, true, component.getName(), SWT.NONE, 100, spacing, "%s", "%s", "" ) );
+      final IComponentUiHandler h = createHandler( i, component, spacing );
+      handler.put( i, h );
     }
 
-    return handler.toArray( new IComponentUiHandler[] {} );
+    return handler;
   }
+
+  private IComponentUiHandler createHandler( final int index, final IComponent component, final int spacing )
+  {
+    final QName valueTypeName = component.getValueTypeName();
+
+    final String label = component.getName();
+    final IRestriction[] restrictions = component.getRestrictions();
+    if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
+    {
+      final Map<Object, ILanguageAnnontationProvider> items = RestrictionUtilities.getEnumerationItems( restrictions );
+      return new ComponentUiEnumerationHandler( index, true, true, true, label, SWT.LEFT, 100, spacing, "%s", "<not set>", items );
+    }
+
+    if( ComponentUiHandlerFactory.Q_DATE_TIME.equals( valueTypeName ) )
+      return new ComponentUiDateHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" );
+
+    if( ComponentUiHandlerFactory.Q_STRING.equals( valueTypeName ) )
+      return new ComponentUiStringHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" );
+
+    if( ComponentUiHandlerFactory.Q_INTEGER.equals( valueTypeName ) )
+      return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" );
+
+    if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
+      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "null", "" );
+
+    if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
+      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "null", "" );
+
+    if( ComponentUiHandlerFactory.Q_BOOLEAN.equals( valueTypeName ) )
+      return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "null", "" );
+
+    throw new UnsupportedOperationException();
+  }
+
 }

@@ -92,7 +92,6 @@ import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -165,7 +164,9 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
       for( ValueChange change : changes )
       {
         IRecord record = change.getRecord();
-        IComponent component = change.getComponent();
+        int compIndex = change.getComponent();
+        final IComponent component = record.getOwner().getComponent( compIndex );
+
         Object value = change.getNewValue();
 
         profileChanges.add( new PointPropertyEdit( record, component, value ) );
@@ -277,7 +278,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     if( m_view != null )
     {
       final Control control = m_view.getControl();
-      if( (control != null) && !control.isDisposed() )
+      if( control != null && !control.isDisposed() )
         control.setFocus();
     }
   }
@@ -308,13 +309,14 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     m_view.getTable().setVisible( true );
 
     final IProfil profil = getProfilEventManager().getProfil();
-    final IComponentUiHandler[] componentHandler = ComponentHandlerFactory.createComponentHandler( profil );
+
+    final ComponentHandlerFactory componentHandlerFactory = new ComponentHandlerFactory( profil );
 
     if( m_view.getContentProvider() != null )
       m_view.setInput( null ); // Reset input in order to avoid double refresh
 
-    m_tupleResultContentProvider = new TupleResultContentProvider( componentHandler );
-    m_tupleResultLabelProvider = new TupleResultLabelProvider( componentHandler );
+    m_tupleResultContentProvider = new TupleResultContentProvider( componentHandlerFactory );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
 
     m_view.setContentProvider( m_tupleResultContentProvider );
     m_view.setLabelProvider( m_tupleResultLabelProvider );
@@ -391,7 +393,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   {
     final IProfilProvider2 provider = (IProfilProvider2) adapter;
 
-    if( (m_provider == provider) && (provider != null) )
+    if( m_provider == provider && provider != null )
       return;
 
     unhookProvider();
@@ -444,7 +446,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     if( m_pem != null )
       m_pem.addProfilListener( m_profileListener );
 
-    if( (m_control != null) && !m_control.isDisposed() )
+    if( m_control != null && !m_control.isDisposed() )
       m_control.getDisplay().asyncExec( new Runnable()
       {
         public void run( )
