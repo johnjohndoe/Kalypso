@@ -79,6 +79,9 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
   {
     return new WorkbenchWizardNode( this, element )
     {
+      /**
+       * @see org.eclipse.ui.internal.dialogs.WorkbenchWizardNode#createWizard()
+       */
       @Override
       public IWorkbenchWizard createWizard( ) throws CoreException
       {
@@ -111,5 +114,4 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
       }
     };
   }
-
 }

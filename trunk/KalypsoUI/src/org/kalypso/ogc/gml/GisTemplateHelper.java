@@ -79,6 +79,7 @@ import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.wms.provider.WMSImageProvider;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -297,7 +298,7 @@ public class GisTemplateHelper
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
       try
-    {
+      {
         final CS_CoordinateSystem targetSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
         if( (orgSRSName != null) && !orgSRSName.equals( targetSRS.getName() ) )
         {
@@ -305,12 +306,12 @@ public class GisTemplateHelper
           final GeoTransformer transformer = new GeoTransformer( targetSRS );
           return transformer.transformEnvelope( env, orgSRSName );
         }
-    }
-    catch( final Exception e )
-    {
-      // we just print the error, but asume that we can return an envelope that is not converted
-      e.printStackTrace();
-    }
+      }
+      catch( final Exception e )
+      {
+        // we just print the error, but asume that we can return an envelope that is not converted
+        e.printStackTrace();
+      }
     return env;
   }
 
@@ -551,6 +552,22 @@ public class GisTemplateHelper
 
       layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
 
+      monitor.worked( 1000 );
+
+      return layer;
+    }
+    else if( theme instanceof KalypsoScaleTheme )
+    {
+      final String name = theme.getName();
+
+      layer.setName( name );
+      layer.setVisible( theme.isVisible() );
+      layer.setId( "ID_" + count );
+      layer.setLinktype( "scale" );
+
+      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+
+      layerList.add( layerElement );
       monitor.worked( 1000 );
 
       return layer;

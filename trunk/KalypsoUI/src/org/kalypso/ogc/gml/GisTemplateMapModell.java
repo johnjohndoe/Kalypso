@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -218,6 +219,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       return new KalypsoLegendTheme( layerName, this, legendIcon, context );
     else if( "scrab".equals( linktype ) )
       return new ScrabLayerFeatureTheme( layerName, m_selectionManager, this, legendIcon, context );
+    else if( "scale".equals( linktype ) )
+      return new KalypsoScaleTheme( layerName, linktype, this, legendIcon, context );
     else
       // TODO: returns handling of gml files - part of else?!? dont assume it, proof it!
       return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this, legendIcon );

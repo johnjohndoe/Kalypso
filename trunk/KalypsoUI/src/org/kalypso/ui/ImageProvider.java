@@ -67,6 +67,7 @@ public class ImageProvider
     IMAGE_THEME_FEATURE("icons/full/obj16/featureTheme.gif"),
     IMAGE_THEME_WMS("icons/full/obj16/wmsTheme.gif"),
     IMAGE_THEME_CASCADING("icons/full/obj16/cascadingTheme.gif"),
+    IMAGE_THEME_SCALE("icons/full/obj16/scaleTheme.gif"),
 
     STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif"),
 

@@ -82,7 +82,6 @@ public abstract class AbstractWidget implements IWidget
   {
     m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
-    m_mapPanel.requestFocus();
   }
 
   /**
