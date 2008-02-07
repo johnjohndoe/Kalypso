@@ -40,19 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * A factory for creating {@link IComponentUiHandler}'s.
- * 
+ * @author Dirk Kuch
  * @author Gernot Belger
  */
-public interface IComponentUiHandlerProvider
+public class FixedComponentUIHandlerProvider implements IComponentUiHandlerProvider
 {
+  private final Map<Integer, IComponentUiHandler> m_handler = new LinkedHashMap<Integer, IComponentUiHandler>();
+
+  private final Map<Integer, IComponentUiHandler> m_unmodHandler = Collections.unmodifiableMap( m_handler );
+
+  public void add( final int index, final IComponentUiHandler handler )
+  {
+    m_handler.put( index, handler );
+  }
+
   /**
-   * @return A map that maps tuple result indices to component handlers.
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider#createComponentHandler(org.kalypso.observation.result.TupleResult)
    */
-  public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult );
+  public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
+  {
+    return m_unmodHandler;
+  }
+
 }

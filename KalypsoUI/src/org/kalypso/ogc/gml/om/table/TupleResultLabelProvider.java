@@ -52,11 +52,11 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
  */
 public class TupleResultLabelProvider extends EventManager implements ITableLabelProvider
 {
-  private final IComponentUiHandler[] m_handlers;
+  private final TupleResultContentProvider m_contentProvider;
 
-  public TupleResultLabelProvider( final IComponentUiHandler[] handlers )
+  public TupleResultLabelProvider( final TupleResultContentProvider contentProvider )
   {
-    m_handlers = TupleResultContentProvider.addFakeHandler( handlers );
+    m_contentProvider = contentProvider;
   }
 
   /**
@@ -97,7 +97,8 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
    */
   public Image getColumnImage( final Object element, final int columnIndex )
   {
-    if( columnIndex >= m_handlers.length )
+    final IComponentUiHandler handler = m_contentProvider.getHandler( columnIndex );
+    if( handler == null )
       return null;
 
     if( element instanceof IRecord )
@@ -105,7 +106,6 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
       try
       {
         final IRecord record = (IRecord) element;
-        final IComponentUiHandler handler = m_handlers[columnIndex];
         return handler.getImage( record );
       }
       catch( final IllegalArgumentException e )
@@ -122,15 +122,15 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
    */
   public String getColumnText( final Object element, final int columnIndex )
   {
-    if( columnIndex >= m_handlers.length )
-      return "";
+    final IComponentUiHandler handler = m_contentProvider.getHandler( columnIndex );
+    if( handler == null )
+      return null;
 
     if( element instanceof IRecord )
     {
       try
       {
         final IRecord record = (IRecord) element;
-        final IComponentUiHandler handler = m_handlers[columnIndex];
         return handler.getStringRepresentation( record );
       }
       catch( final IllegalArgumentException e )

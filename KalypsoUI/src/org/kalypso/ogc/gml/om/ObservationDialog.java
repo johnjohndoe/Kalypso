@@ -52,7 +52,8 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
+import org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -83,9 +84,10 @@ public class ObservationDialog extends ResizableDialog
     viewer.getTable().setHeaderVisible( true );
     viewer.getTable().setLinesVisible( true );
 
-    final IComponentUiHandler[] handler = new IComponentUiHandler[] {};
-    viewer.setContentProvider( new TupleResultContentProvider( handler ) );
-    viewer.setLabelProvider( new TupleResultLabelProvider( handler ) );
+    final IComponentUiHandlerProvider handler = new DefaultComponentUiHandlerProvider();
+    final TupleResultContentProvider cp = new TupleResultContentProvider( handler );
+    viewer.setContentProvider( cp );
+    viewer.setLabelProvider( new TupleResultLabelProvider( cp ) );
 
     viewer.setInput( m_obs.getResult() );
 

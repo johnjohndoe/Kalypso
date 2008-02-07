@@ -44,10 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -74,7 +71,6 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.services.IServiceLocator;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -85,7 +81,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
-import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.LastLineCellModifier;
 import org.kalypso.ogc.gml.om.table.LastLineContentProvider;
@@ -94,15 +89,12 @@ import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.command.TupleResultCommandUtils;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
-import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.template.featureview.ColumnDescriptor;
 import org.kalypso.template.featureview.TupleResult.Toolbar;
 import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -116,7 +108,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private final Set<String> m_commands = new HashSet<String>();
 
-  private final IComponentUiHandler[] m_handlers;
+  private final IComponentUiHandlerProvider m_handlerProvider;
 
   private DefaultTableViewer m_viewer;
 
@@ -139,64 +131,16 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private IExecutionListener m_executionListener;
 
-  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandler[] handlers, final boolean showToolbar )
+  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandlerProvider handlerProvider, final boolean showToolbar )
   {
     super( feature, ftp );
 
-    m_handlers = handlers;
+    m_handlerProvider = handlerProvider;
 
     if( showToolbar )
       m_toolbar = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
     else
       m_toolbar = null;
-  }
-
-  /**
-   * Creates the component UI handlers for given descriptors.
-   */
-  public static IComponentUiHandler[] toHandlers( final Feature obsFeature, final ColumnDescriptor[] descriptors )
-  {
-    final List<IComponentUiHandler> handlers = new ArrayList<IComponentUiHandler>( descriptors.length );
-
-    if( obsFeature == null )
-      return new IComponentUiHandler[0];
-
-    /* result definition */
-    final Feature resultDefinition = (Feature) obsFeature.getProperty( new QName( NS.OM, "resultDefinition" ) );
-    final GMLWorkspace workspace = resultDefinition.getWorkspace();
-
-    /* Directly read components from feature, without converting the whole stuff into an observation */
-    final List< ? > components = (List< ? >) resultDefinition.getProperty( new QName( NS.SWE, "component" ) );
-    final Map<String, IComponent> componentMap = new HashMap<String, IComponent>();
-    for( final Object object : components )
-    {
-      final Feature componentFeature = FeatureHelper.getFeature( workspace, object );
-      final IComponent component = new FeatureComponent( componentFeature );
-      componentMap.put( component.getId(), component );
-    }
-
-    for( final ColumnDescriptor cd : descriptors )
-    {
-      final String componentId = cd.getComponent();
-      final IComponent component = componentMap.get( componentId );
-      final int alignment = SWTUtilities.createStyleFromString( cd.getAlignment() );
-
-      if( component != null )
-      {
-        final IComponentUiHandler handler = ComponentUiHandlerFactory.getHandler( component, cd.isEditable(), cd.isResizeable(), cd.isMoveable(), cd.getLabel(), alignment, cd.getWidth(), cd.getWidthPercent(), cd.getDisplayFormat(), cd.getNullFormat(), cd.getParseFormat() );
-        handlers.add( handler );
-      }
-
-      final boolean optional = cd.isOptional();
-      if( component == null && !optional )
-      {
-        /* Non-optional columns must exists: throw error message */
-        final String msg = String.format( "Non-Optional component does not exist: %s. Remove from template or make optional.", componentId );
-        throw new IllegalArgumentException( msg );
-      }
-    }
-
-    return handlers.toArray( new IComponentUiHandler[handlers.size()] );
   }
 
   public void addToolbarItem( final String commandId, final int style )
@@ -237,8 +181,8 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     // If any of the columns is not editable, do not show the 'last-line'
     final boolean editable = isEditable();
 
-    m_tupleResultContentProvider = new TupleResultContentProvider( m_handlers );
-    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_handlers );
+    m_tupleResultContentProvider = new TupleResultContentProvider( m_handlerProvider );
+    m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
 
     if( m_viewerFilter != null )
       m_viewer.addFilter( m_viewerFilter );
@@ -297,10 +241,10 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
    */
   private final boolean isEditable( )
   {
-    boolean editable = true;
-    for( final IComponentUiHandler handler : m_handlers )
-      editable |= handler.isEditable();
-    return editable;
+    if( m_tupleResultContentProvider == null )
+      return false;
+
+    return m_tupleResultContentProvider.isEditable();
   }
 
   private void hookExecutionListener( final Set<String> commands, final TableViewer tableViewer, final ToolBarManager toolBar )
@@ -534,35 +478,24 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     m_viewerFilter = filter;
   }
 
-  private static IComponentUiHandler[] createHandler( final Feature feature, final IPropertyType ftp, final org.kalypso.template.featureview.TupleResult editorType )
+  private static IComponentUiHandlerProvider createHandler( final org.kalypso.template.featureview.TupleResult editorType )
   {
     final String columnProviderId = editorType.getColumnProviderId();
-
-    final Feature obsFeature = TupleResultFeatureControl.getObservationFeature( feature, ftp );
 
     final ColumnDescriptor[] descriptors = editorType.getColumnDescriptor().toArray( new ColumnDescriptor[] {} );
 
     if( descriptors.length == 0 )
-    {
-      // If also the provider is null, a default provider is used.
-      final IComponentUiHandlerProvider provider = KalypsoUIExtensions.createComponentUiHandlerProvider( columnProviderId );
+      return KalypsoUIExtensions.createComponentUiHandlerProvider( columnProviderId );
 
-      if( obsFeature == null )
-        return new IComponentUiHandler[] {};
-
-      final IComponent[] components = ObservationFeatureFactory.componentsFromFeature( obsFeature );
-      return provider.createComponentHandler( components );
-    }
-    else
-      return TupleResultFeatureControl.toHandlers( obsFeature, descriptors );
+    return new TupleResultFeatureControlHandlerProvider( descriptors );
   }
 
   public static TupleResultFeatureControl create( final org.kalypso.template.featureview.TupleResult editorType, final Feature feature, final IPropertyType ftp )
   {
-    final IComponentUiHandler[] handler = createHandler( feature, ftp, editorType );
+    final IComponentUiHandlerProvider provider = createHandler( editorType );
 
     final Toolbar toolbar = editorType.getToolbar();
-    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, handler, toolbar != null );
+    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, provider, toolbar != null );
 
     if( toolbar == null )
       return tfc;

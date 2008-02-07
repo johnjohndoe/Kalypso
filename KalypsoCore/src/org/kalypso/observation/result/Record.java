@@ -40,30 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
 /**
+ * Default visibility: do NOT use outside of TupleResult.
+ * 
  * @author schlienger Default visibility, use IRecord and TupleResult.createRecord.
  */
-public class Record implements IRecord
+/* default */class Record implements IRecord
 {
-  private final Map<IComponent, Object> m_values = new HashMap<IComponent, Object>();
+  private final List<Object> m_values = new ArrayList<Object>();
 
   private final TupleResult m_owner;
 
-  public Record( final TupleResult result, final Set<IComponent> components )
+  Record( final TupleResult result, final IComponent[] components )
   {
     m_owner = result;
 
     for( final IComponent component : components )
-      m_values.put( component, component.getDefaultValue() );
+      m_values.add( component.getDefaultValue() );
   }
 
   /**
@@ -72,72 +73,72 @@ public class Record implements IRecord
   @Override
   public String toString( )
   {
-    return m_values.values().toString();
+    return ArrayUtils.toString( m_values );
   }
 
   /**
    * @see org.kalypso.om.tuple.IRecord#getValue(org.kalypso.om.tuple.IComponent)
    */
+  @Deprecated
   public Object getValue( final IComponent comp )
   {
-    checkComponent( comp );
-
-    return m_values.get( comp );
+    final int index = checkComponent( comp );
+    return getValue( index );
   }
 
-  private void checkComponent( final IComponent comp )
+  /**
+   * @see org.kalypso.observation.result.IRecord#getValue(int)
+   */
+  public Object getValue( final int index ) throws IndexOutOfBoundsException
   {
-    if( !m_owner.hasComponent( comp ) )
+    return m_values.get( index );
+  }
+
+  private int checkComponent( final IComponent comp )
+  {
+    final int index = m_owner.indexOfComponent( comp );
+    if( index == -1 )
       throw new IllegalArgumentException( "Unknown component: " + comp );
+
+    return index;
   }
 
   /**
    * @see org.kalypso.om.tuple.IRecord#setValue(org.kalypso.om.tuple.IComponent, java.lang.Object)
    */
+  @Deprecated
   public void setValue( final IComponent comp, final Object value )
   {
-    checkComponent( comp );
+    final int index = checkComponent( comp );
+    setValue( index, value );
+  }
 
-    final Object oldValue = m_values.get( comp );
+  /**
+   * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object)
+   */
+  public void setValue( final int index, final Object value ) throws IndexOutOfBoundsException
+  {
+    final Object oldValue = m_values.get( index );
     if( ObjectUtils.equals( value, oldValue ) )
       return;
 
-    m_values.put( comp, value );
+    m_values.set( index, value );
 
     if( m_owner != null )
     {
-      if( m_owner.invalidateSort( comp ) )
+      if( m_owner.invalidateSort( index ) )
         m_owner.fireRecordsChanged( null, TYPE.CHANGED );
       else
       {
-        final ValueChange[] changes = new ValueChange[] { new ValueChange( this, comp, oldValue, value ) };
+        final ValueChange[] changes = new ValueChange[] { new ValueChange( this, index, oldValue, value ) };
         m_owner.fireValuesChanged( changes );
       }
     }
-
   }
 
-  /* default */void remove( final IComponent comp )
+  /* default */void remove( final int index )
   {
-    m_values.remove( comp );
-  }
-
-  public void checkComponents( final Set<IComponent> components )
-  {
-    // check, if i have too much components
-    final Set<IComponent> keySet = m_values.keySet();
-    for( final IComponent component : keySet )
-    {
-      if( !components.contains( component ) )
-        throw new IllegalArgumentException( "Illegal record: Unknown component: " + component );
-    }
-
-    // check if i need a new component (i.e. set default value)
-    for( final IComponent component : components )
-    {
-      if( !keySet.contains( component ) )
-        m_values.put( component, component.getDefaultValue() );
-    }
+    m_values.remove( index );
   }
 
   /**
@@ -153,21 +154,29 @@ public class Record implements IRecord
    */
   public IRecord cloneRecord( )
   {
-    final TupleResult result = this.getOwner();
+    final TupleResult result = getOwner();
     final IComponent[] components = result.getComponents();
-    final Set<IComponent> sComp = new LinkedHashSet<IComponent>();
 
+    final Record record = new Record( result, components );
     for( final IComponent component : components )
-    {
-      sComp.add( component );
-    }
-
-    final Record record = new Record( result, sComp );
-    for( final IComponent component : components )
-    {
-      record.setValue( component, this.getValue( component ) );
-    }
+      record.setValue( component, getValue( component ) );
 
     return record;
+  }
+
+  /**
+   * sets a value of an given index - index doesn't exists (new value end of list) -> index will be created
+   */
+  /* default */void set( final int index, final Object value )
+  {
+    if( m_values.size() == index )
+    {
+      m_values.add( value );
+    }
+    else
+    {
+      // Might throw IndexOutOfBoundsException..
+      m_values.set( index, value );
+    }
   }
 }

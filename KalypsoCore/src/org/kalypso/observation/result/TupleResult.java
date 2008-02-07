@@ -45,12 +45,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -64,9 +68,10 @@ public class TupleResult implements List<IRecord>
 {
   private final List<IRecord> m_records = new ArrayList<IRecord>();
 
-  private final Set<IComponent> m_components = new LinkedHashSet<IComponent>();
+  private final List<IComponent> m_components = new ArrayList<IComponent>();
 
   /** This tuple result gets sorted by these components. */
+  // TODO: this is wrong: instead we need a list of the indices. BUT: the schema does not support that...
   private final Set<IComponent> m_sortComponents = new LinkedHashSet<IComponent>();
 
   private final Set<ITupleResultChangedListener> m_listeners = new HashSet<ITupleResultChangedListener>();
@@ -79,10 +84,14 @@ public class TupleResult implements List<IRecord>
     public int compare( final IRecord o1, final IRecord o2 )
     {
       IComponent[] sortComponents = getSortComponents();
-      for( IComponent component : sortComponents )
+      for( final IComponent component : sortComponents )
       {
-        final Object v1 = o1.getValue( component );
-        final Object v2 = o2.getValue( component );
+        final int index = indexOfComponent( component );
+        if( index == -1 )
+          continue;
+
+        final Object v1 = o1.getValue( index );
+        final Object v2 = o2.getValue( index );
 
         final int result = component.compare( v1, v2 );
 
@@ -129,9 +138,10 @@ public class TupleResult implements List<IRecord>
    * The next access to any data results in sorting.<br>
    * Not intended to be called by client other than {@link Record}.
    */
-  boolean invalidateSort( final IComponent comp )
+  /* default */boolean invalidateSort( final int index )
   {
-    if( m_sortComponents.contains( comp ) )
+    final IComponent component = m_components.get( index );
+    if( m_sortComponents.contains( component ) )
     {
       m_isSorted = false;
       return true;
@@ -437,10 +447,9 @@ public class TupleResult implements List<IRecord>
   private void checkRecord( final IRecord record )
   {
     final Record r = (Record) record;
-    if( r.getOwner() != this )
-      throw new IllegalArgumentException( "Illegal record. Record was not created on this tuple result: " + record );
 
-    r.checkComponents( m_components );
+// Assert.isTrue( r.getCount() == m_components.size(), "Number of records values not equal to number of components" );
+    Assert.isTrue( r.getOwner() == this, "Illegal record. Record was not created on this tuple result: " + record );
   }
 
   private void checkRecords( final Collection< ? extends IRecord> c )
@@ -449,12 +458,14 @@ public class TupleResult implements List<IRecord>
       checkRecord( record );
   }
 
+  //
+  // COMPONENTS
+  //
+
   public IComponent[] getComponents( )
   {
-    return m_components.toArray( new IComponent[m_components.size()] );
+    return m_components.toArray( new IComponent[] {} );
   }
-
-  // TODO: check if adding/removing components has impact on sorting
 
   /**
    * Adds a component to this tuple result. Does nothing if an equal component was already added.
@@ -462,6 +473,12 @@ public class TupleResult implements List<IRecord>
   public final boolean addComponent( final IComponent comp )
   {
     final boolean added = m_components.add( comp );
+
+    for( final IRecord record : this )
+    {
+      final Record r = (Record) record;
+      r.set( m_components.size() - 1, comp.getDefaultValue() );
+    }
 
     if( m_sortComponents.contains( comp ) )
       m_isSorted = false;
@@ -473,28 +490,45 @@ public class TupleResult implements List<IRecord>
   public boolean removeComponent( final IComponent comp )
   {
     final boolean b = m_components.remove( comp );
-    if( b )
-    {
-      if( m_sortComponents.contains( comp ) )
-        m_isSorted = false;
 
-      for( final IRecord record : m_records )
+    final Map<IComponent, Integer> remove = new IdentityHashMap<IComponent, Integer>();
+    for( int i = 0; i < m_components.size(); i++ )
+    {
+      final IComponent component = m_components.get( i );
+      if( component.equals( comp ) )
+        remove.put( component, i );
+    }
+
+    final Set<Entry<IComponent, Integer>> entrySet = remove.entrySet();
+    for( final Entry<IComponent, Integer> entry : entrySet )
+    {
+      m_components.remove( entry.getValue() );
+
+      for( final IRecord record : this )
       {
         final Record r = (Record) record;
-        r.remove( comp );
+        r.remove( entry.getValue() );
       }
     }
+
+    if( m_sortComponents.contains( comp ) )
+      m_isSorted = false;
 
     fireComponentsChanged( new IComponent[] { comp }, TYPE.REMOVED );
 
     return b;
   }
 
+  // TODO: add other component methods:
+  // - addComponent( index, comp )
+  // - removeComponent( index )
+  // - setComponent( index, comp )
+
   /** This method creates, but DOES NOT adds a record. */
   // TODO its very confusing - create should add
   public IRecord createRecord( )
   {
-    return new Record( this, m_components );
+    return new Record( this, getComponents() );
   }
 
   public boolean hasComponent( final IComponent comp )
@@ -565,5 +599,15 @@ public class TupleResult implements List<IRecord>
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
+  }
+
+  public int indexOfComponent( final IComponent comp )
+  {
+    return m_components.indexOf( comp );
+  }
+
+  public IComponent getComponent( final int index ) throws IndexOutOfBoundsException
+  {
+    return m_components.get( index );
   }
 }

@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.om.table.handlers;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -53,7 +52,7 @@ import org.kalypso.observation.result.IRecord;
  */
 public abstract class AbstractComponentUiHandler implements IComponentUiHandler
 {
-  private final IComponent m_component;
+  private final int m_component;
 
   private final boolean m_editable;
 
@@ -75,7 +74,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
 
   private final boolean m_moveable;
 
-  public AbstractComponentUiHandler( final IComponent component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
+  public AbstractComponentUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     m_component = component;
     m_editable = editable;
@@ -98,7 +97,7 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
     return ObjectUtils.identityToString( this );
   }
 
-  protected IComponent getComponent( )
+  protected int getComponent( )
   {
     return m_component;
   }
@@ -108,9 +107,6 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
    */
   public String getStringRepresentation( final IRecord record )
   {
-    if( m_component == null )
-      throw new UnsupportedOperationException( "No component specified, overwrite this method." );
-
     final Object value = record.getValue( m_component );
 
     if( value == null )
@@ -189,8 +185,6 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
    */
   public String getColumnLabel( )
   {
-    if( m_columnLabel == null )
-      return m_component.getName();
     return m_columnLabel;
   }
 
