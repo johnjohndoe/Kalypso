@@ -64,19 +64,23 @@ import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
  */
 public class TaskExecutionAuthority implements ITaskExecutionAuthority
 {
-
   /**
    * @see de.renew.workflow.connector.ITaskExecutionAuthority#canStopTask(de.renew.workflow.base.Task)
    */
   public boolean canStopTask( final Task task )
   {
-    final ICaseDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final ICaseDataProvider< ? > dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    // TODO: Is this okay? Could there be situations, where the data provider is missing?
+    if( dataProvider == null )
+      return true;
+
     // check if any model is dirty
     if( !dataProvider.isDirty() )
       return true;
+
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final MessageDialog confirmDialog = new MessageDialog( activeShell, Messages.getString( "TaskExecutionAuthority.0" ), null, Messages.getString( "TaskExecutionAuthority.1" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
-      Messages.getString( "TaskExecutionAuthority.2" ), Messages.getString( "TaskExecutionAuthority.3" ), Messages.getString( "TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    Messages.getString( "TaskExecutionAuthority.2" ), Messages.getString( "TaskExecutionAuthority.3" ), Messages.getString( "TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final boolean result;
     final int decision = confirmDialog.open();
     if( decision == 0 )
