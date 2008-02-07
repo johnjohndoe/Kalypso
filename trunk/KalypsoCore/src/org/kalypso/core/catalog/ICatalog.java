@@ -87,7 +87,7 @@ public interface ICatalog
    *          pattern to match
    * @return URNs for pattern
    */
-  public List<String> getEnryURNS( String urnPattern ) throws MalformedURLException, JAXBException;
+  public List<String> getEntryURNS( String urnPattern ) throws MalformedURLException, JAXBException;
 
   /**
    * adds an entry to the catalog

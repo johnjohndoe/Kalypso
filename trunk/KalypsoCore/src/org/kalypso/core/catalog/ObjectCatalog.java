@@ -160,7 +160,7 @@ public abstract class ObjectCatalog<O> extends Storage
   {
     final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
     final String patternURN = generator.generateURNPatternForRelated( parent );
-    return m_manager.getBaseCatalog().getEnryURNS( patternURN );
+    return m_manager.getBaseCatalog().getEntryURNS( patternURN );
   }
 
   public O getDefault( final IUrlResolver2 resolver, final Object parent )
