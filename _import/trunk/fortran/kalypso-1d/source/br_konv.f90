@@ -1,4 +1,4 @@
-!     Last change:  MD    7 Aug 2007    6:15 pm
+!     Last change:  MD    7 Feb 2008    2:01 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -720,7 +720,14 @@ ENDIF
 ! qges aus summe(qd,qw):
 isch = isch + 1
 
-CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, he3, qd,  &
+
+!MD  Hier ist die Uebergabe des Wasserspiegels hr3 an die Abflussberechnung
+!MD    nicht Uebergabe der Energiehoehe he3 erforderlich!!!!!!!!!!!
+!MD  -------------------------------------------------------------------
+!MD  CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, he3, qd,  &
+!MD            & qw, qgesb, aue3, wl3, iartb)
+
+CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, hr3, qd,  &
             & qw, qgesb, aue3, wl3, iartb)
 
 !JK      SCHREIBEN IN KONTROLLFILE

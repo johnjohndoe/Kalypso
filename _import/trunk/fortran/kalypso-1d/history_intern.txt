@@ -1402,10 +1402,38 @@ Kalypso 2.0.6.4     22. Januar 2008
      Reibungsgefälles, der um so extremer ausfällt, wenn zusätzlich auf dem Vorland eine Senke zu füllen ist.
  
      Die Probleme bei der Berechnung eines Wasserspiegels wurden weiterstgehend behoben durch:
-     - Optimierung der Schätzwertbildung während der Iteration
+     - eine Optimierung der Schätzwertbildung während der Iteration
      - Erhöhung der maximale Anzahl der Konvergenzschritte (Kennzahl 50)
      - Behalten bester Werte unter allen Kennzahlen
      (Betroffene Routine: station)   
 							
 							 Edgar Nehlsen & Monika Donner, 21.01.2008 
+
+
+Kalypso 2.0.6.6     07. Februar 2008
+-------------------------------------                                                           
+
+1.)  Einbau des "Debug-Modus" fuer Wehre in der inneren Abfluss-Schleife NUR fuer die 
+     Berechnungsvariante "konstantes Reibungsgefaelle". Durch diese neue Option werden nicht
+     konvergierende inneren Abfluesse (Schleife 2000) ausgelassen und der naechste Abflusswert
+     (qw+1) nach der Ausgabe einer Warnung berechnet.
+     (Betroffene Routine: w_ber) 
+  
+2.)  BUGFIX in der Brückenberechnung: Betrifft alle Berechnungsvarianten!!!
+     Fehlerhafte Uebergabe von der Brueckenberechnung (br-konv) in die Abflussberechnung (abfluss). 
+     Statt der Differenz h0 zwischen Energiehoehe (he1) in Profil 1 (OW-Bruecke) und WSP (hr3) 
+     in Profil 3 (UW-Brücke) wurde die Differenz zwischen zwei Energiehoehen gebildet. Dadurch wurde 
+     in ungünstigen Fällen (Druckabfluss) zunächst vd zu Null und später "negativ" bzw. Wurzel aus 
+     einem negativen Wert gezogen. 
+     --> Korrektur der uebergebenen Parameter aus br-konv nach abfluss
+
+     Folgen fuer die Ergebnisse an Bruecken:
+     ---------------------------------------
+     Diese Aenderung fuehrte zu KEINEN Aenderungen in den Ergebnissen, verhindert jedoch den Programm-
+     abbruch fuer den Abflusszustand: Druckabzufluss in der Bruecke ohne Wehrabfluss!
+	  
+     (Betroffene Routine: br-konv, abfluss)   
+							
+							          Monika Donner, 07.02.2008
+
 

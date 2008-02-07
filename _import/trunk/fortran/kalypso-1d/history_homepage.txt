@@ -487,13 +487,29 @@ Kalypso 2.0.6.4     22. Januar 2008
      Ursache der Problematik ist der unstetige Funktionsverlauf zwischen Reibungsgefälle und dem Wasserspiegel.
      So kommt es bei der Benetzung des Vorlandes ganz grundsätzlich zu einem sprunghaftem Anstieg des 
      Reibungsgefälles, der um so extremer ausfällt, wenn zusätzlich auf dem Vorland eine Senke zu füllen ist.
+ 
      Die Probleme bei der Berechnung eines Wasserspiegels wurden weiterstgehend behoben durch:
-     - Optimierung der Schätzwertbildung während der Iteration
+     - eine Optimierung der Schätzwertbildung während der Iteration
      - Erhöhung der maximale Anzahl der Konvergenzschritte (Kennzahl 50)
      - Behalten bester Werte unter allen Kennzahlen
-   
+     (Betroffene Routine: station)   
 							
 							 Edgar Nehlsen & Monika Donner, 21.01.2008 
 
                                                       
-                                                           
+Kalypso 2.0.6.6     07. Februar 2008
+-------------------------------------                                                           
+
+1.)  Einbau des "Debug-Modus" fuer Wehre in der inneren Abfluss-Schleife NUR fuer die 
+     Berechnungsvariante "konstantes Reibungsgefaelle". Durch diese neue Option werden nicht
+     konvergierende inneren Abfluesse (Schleife 2000) ausgelassen und der naechste Abflusswert
+     (qw+1) nach der Ausgabe einer Warnung berechnet.
+  
+2.)  BUGFIX in der Brückenberechnung: Betrifft alle Berechnungsvarianten!!!
+     Fehlerhafte Uebergabe von der Brueckenberechnung (br-konv) in die Abflussberechnung (abfluss). 
+     Statt der Differenz zwischen Energiehoehe in Profil 1 (OW-Bruecke) und WSP in Profil 3 
+     (UW-Brücke) wurde die Differenz zwischen zwei Energiehoehen gebildet.
+     --> Korrektur der uebergebenen Parameter aus br-konv nach abfluss
+							
+							          Monika Donner, 07.02.2008
+                                                          

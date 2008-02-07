@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Jun 2006   10:00 am
+!     Last change:  MD    7 Feb 2008    2:42 pm
 !--------------------------------------------------------------------------
 ! This code, Abfluss.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -184,10 +184,28 @@ if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
 
     !WP 02.05.2005, Relaxierung mit dem vorherigen Wert, fuehrt zu besserer Konvergenz!
     lam = (lam_neu + lam) / 2
-
     rr = breite * lam_neu / 4. / rhy
-
     beiw = re + rpf + rr
+
+    !MD NEU: CHECK
+    !MD -----------------------------------------------
+    IF(h0.lt.0) THEN   ! Geschwindigkeitsanteil
+      WRITE (UNIT_OUT_LOG, '(''Differenz h0 zwischen Energiehoehe in Profil 1 (OW-Bruecke)'')')
+      WRITE (UNIT_OUT_LOG, '(''und WSP in Profil 3 (UW-Brücke) ist NEGATIV'')')
+      WRITE (UNIT_OUT_LOG, '(''--> Programmabbruch in ABFLUSS bei Brueckenberechnung'')')
+      WRITE (*, '(''Differenz h0 zwischen Energiehoehe in Profil 1 (OW-Bruecke)'')')
+      WRITE (*, '(''und WSP in Profil 3 (UW-Brücke) ist NEGATIV'')')
+      WRITE (*, '(''--> Programmabbruch in ABFLUSS bei Brueckenberechnung'')')
+      STOP
+    ENDIF
+    IF(beiw.le.0) THEN   ! Verlustbeiwert
+      WRITE (UNIT_OUT_LOG, '(''Verlustbeiwert beiw an der Bruecke ist kleiner gleich Null'')')
+      WRITE (UNIT_OUT_LOG, '(''--> Programmabbruch in ABFLUSS bei Brueckenberechnung'')')
+      WRITE (*, '(''Verlustbeiwert beiw an der Bruecke ist kleiner gleich Null'')')
+      WRITE (*, '(''--> Programmabbruch in ABFLUSS bei Brueckenberechnung'')')
+      STOP
+    ENDIF
+
     vd = sqrt (2. * g * h0 / beiw)
     rey = vd * rhy * 4 / nue
 
@@ -234,11 +252,27 @@ ELSE
   beiw = re+rpf + rr
   ! /* 1. --> rueckstaueffekt
 
+  !MD NEU: CHECK
+  !MD -----------------------------------------------
+  IF(h0.lt.0) THEN   ! Geschwindigkeitsanteil
+    WRITE (UNIT_OUT_LOG, '(''Differenz h0 zwischen Energiehoehe in Profil 1 (OW-Bruecke)'')')
+    WRITE (UNIT_OUT_LOG, '(''und WSP in Profil 3 (UW-Brücke) ist NEGATIV'')')
+    WRITE (UNIT_OUT_LOG, '(''--> Programmabbruch in ABFLUSS bei Brueckenberechnung'')')
+    WRITE (*, '(''Differenz h0 zwischen Energiehoehe in Profil 1 (OW-Bruecke)'')')
+    WRITE (*, '(''und WSP in Profil 3 (UW-Brücke) ist NEGATIV'')')
+    WRITE (*, '(''--> Programmabbruch in ABFLUSS bei Brueckenberechnung'')')
+    STOP
+  ENDIF
+  IF(beiw.le.0) THEN   ! Verlustbeiwert
+    WRITE (UNIT_OUT_LOG, '(''Verlustbeiwert beiw an der Bruecke ist kleiner gleich Null'')')
+    WRITE (UNIT_OUT_LOG, '(''--> Programmabbruch in ABFLUSS bei Brueckenberechnung'')')
+    WRITE (*, '(''Verlustbeiwert beiw an der Bruecke ist kleiner gleich Null'')')
+    WRITE (*, '(''--> Programmabbruch in ABFLUSS bei Brueckenberechnung'')')
+    STOP
+  ENDIF
   qd = ad * sqrt (2. * g * h0 / beiw)
 
 ENDIF
-
-
 
 
 
