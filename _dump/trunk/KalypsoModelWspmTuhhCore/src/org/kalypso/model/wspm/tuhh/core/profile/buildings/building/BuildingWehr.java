@@ -88,14 +88,14 @@ public class BuildingWehr extends AbstractObservationBuilding
   {
     /* building observation properties */
     if( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, IWspmTuhhConstants.WEHR_TYP_BEIWERT, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart" ) );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmConstants.Q_STRING, IWspmTuhhConstants.WEHR_TYP_BEIWERT, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart" ) );
 
     else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert" ) );
+      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert" ) );
 
     /* profile observation properties */
     else if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( type ) )
-      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr" ) );
+      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr" ) );
 
     throw new NotImplementedException();
 

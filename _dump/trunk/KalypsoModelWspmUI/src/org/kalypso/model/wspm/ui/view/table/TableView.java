@@ -69,7 +69,6 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -325,10 +324,9 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType( KalypsoCorePlugin.getDefault().getSelectionManager(), ObservationFeatureFactory.OM_OBSERVATION );
     if( obsFeatures.length > 0 )
     {
-      final IProfil profile = ProfileFeatureFactory.toProfile( obsFeatures[0] );
-      m_view.setInput( profile.getResult() );
+      m_view.setInput( profil.getResult() );
 
-      final TupleResult result = profile.getResult();
+      final TupleResult result = profil.getResult();
       result.remove( m_changedListener );
       result.addChangeListener( m_changedListener );
     }
