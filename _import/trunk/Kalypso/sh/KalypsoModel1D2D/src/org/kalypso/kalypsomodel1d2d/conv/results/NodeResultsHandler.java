@@ -74,7 +74,14 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
+import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler1d;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -86,13 +93,7 @@ import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.ComponentUtilities;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -115,9 +116,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class NodeResultsHandler implements IRMA10SModelElementHandler
 {
+  private static final double NODE_SEARCH_DIST = 0.2;
+
   private static final int WSP_EXTRAPOLATION_RANGE = 1;
 
-  private final Map<Integer, GMLNodeResult> m_nodeIndex = new HashMap<Integer, GMLNodeResult>();
+  private final Map<Integer, INodeResult> m_nodeIndex = new HashMap<Integer, INodeResult>();
 
   private final HashMap<Integer, ArcResult> m_arcIndex = new HashMap<Integer, ArcResult>();
 
@@ -137,20 +140,23 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private Date m_time;
 
-  private final IObservation<TupleResult> m_lengthSectionObs;
-
   private final IFlowRelationshipModel m_flowModel;
 
   private final IControlModel1D2D m_controlModel;
 
-  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final NodeResultMinMaxCatcher resultMinMaxCatcher, final IObservation<TupleResult> lengthSectionObs )
+  private final LengthSectionHandler1d m_lsHandler;
+
+  private final IFEDiscretisationModel1d2d m_discModel;
+
+  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final NodeResultMinMaxCatcher resultMinMaxCatcher, final LengthSectionHandler1d lsHandler )
   {
     m_resultWorkspace = resultWorkspace;
     m_triangleEater = triangleEater;
     m_flowModel = flowModel;
     m_controlModel = controlModel;
+    m_discModel = discModel;
     m_resultMinMaxCatcher = resultMinMaxCatcher;
-    m_lengthSectionObs = lengthSectionObs;
+    m_lsHandler = lsHandler;
     m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( INodeResultCollection.QNAME_PROP_NODERESULT_MEMBER );
 
     m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
@@ -314,16 +320,19 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       /* get the first arc */
       ArcResult currentArc = elementResult.getArc( 0 );
-      GMLNodeResult nodeDown = m_nodeIndex.get( currentArc.node1ID );
-      GMLNodeResult nodeUp = m_nodeIndex.get( currentArc.node2ID );
+      INodeResult nodeDown = m_nodeIndex.get( currentArc.node1ID );
+      INodeResult nodeUp = m_nodeIndex.get( currentArc.node2ID );
 
       // is it a 1d- or 2d-element
       if( currentRougthnessClassID == 89 || currentRougthnessClassID == -89 ) // 1d
       {
         /* 1d elements */
+
+        final ICalculationUnit1D calcUnit = getCalcUnit( elementResult );
+
         try
         {
-          final IStatus status = handle1dElement( nodeDown, nodeUp );
+          final IStatus status = handle1dElement( nodeDown, nodeUp, calcUnit );
           if( status != Status.OK_STATUS )
             KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "error while handling 1d element:" + status.getMessage() );
 
@@ -340,8 +349,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         /* weirs & bridges */
         try
         {
+          final ICalculationUnit1D calcUnit = getCalcUnit( elementResult );
           // TODO: right now, we handle them as normal 2d - element. Do we need more?
-          handle1dElement( nodeDown, nodeUp );
+          handle1dElement( nodeDown, nodeUp, calcUnit );
           // handle1dStructure( nodeDown, nodeUp );
         }
         catch( final Exception e )
@@ -370,7 +380,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         /* handle result information */
 
         /* midside node of the current arc */
-        GMLNodeResult midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
+        INodeResult midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
         if( midsideNode == null )
           return;
         midsideNode.setArc( currentArc );
@@ -465,7 +475,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     final GM_Position nodePos = nodeResult.getPoint().getPosition();
 
-    final IFlowRelationship[] flowRelationships = m_flowModel.findFlowrelationships( nodePos, 0.2 );
+    final IFlowRelationship[] flowRelationships = m_flowModel.findFlowrelationships( nodePos, NODE_SEARCH_DIST );
 
     if( flowRelationships == null )
       return null;
@@ -485,10 +495,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * collects the necessary data for the length section and stores it in an observation.
    */
-  private IStatus handleLengthSectionData( final GMLNodeResult nodeResult, final ITeschkeFlowRelation teschkeRelation )
+  private IStatus handleLengthSectionData( final INodeResult nodeResult, final ITeschkeFlowRelation teschkeRelation, ICalculationUnit1D calcUnit )
   {
     final WspmProfile profile = teschkeRelation.getProfile();
-    final IProfil profil = profile.getProfil();
     final double profileStation = profile.getStation();
     // station
     final BigDecimal station = WspmProfile.stationToBigDecimal( profileStation );
@@ -518,38 +527,31 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     nodeResult.setDischarge( discharge.doubleValue() );
 
     // markers for Trennflächen / Bordvollpunkte u.ä.
-
-    final TupleResult tuples = m_lengthSectionObs.getResult();
-    final IComponent[] components = tuples.getComponents();
-
-    final IComponent stationComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_STATION );
-    final IComponent thalComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_GROUND );
-    final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL );
-    final IComponent velocityComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
-    final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
-    // final IComponent depthComp = ComponentUtilities.findComponentByID( components,
-    // IWspmDictionaryConstants.LS_COMPONENT_DEPTH );
-    // final IComponent slopeComp = ComponentUtilities.findComponentByID( components,
-    // IWspmDictionaryConstants.LS_COMPONENT_SLOPE );
-
-    final IRecord newRecord = tuples.createRecord();
-
-    newRecord.setValue( stationComp, station );
-    newRecord.setValue( thalComp, thalweg );
-    newRecord.setValue( waterlevelComp, waterlevel );
-    newRecord.setValue( velocityComp, velocity );
-    // newRecord.setValue( depthComp, depth );
-    // newRecord.setValue( slopeComp, slope );
-    newRecord.setValue( dischargeComp, discharge );
-
-    tuples.add( newRecord );
+    try
+    {
+      if( calcUnit != null )
+      {
+        // maybe produce warning if node without calcunit is found?
+        m_lsHandler.addValue( calcUnit, station, thalweg, IWspmDictionaryConstants.LS_COMPONENT_GROUND );
+        m_lsHandler.addValue( calcUnit, station, waterlevel, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL );
+        m_lsHandler.addValue( calcUnit, station, velocity, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
+        m_lsHandler.addValue( calcUnit, station, discharge, IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
+        // m_lsHandler.addValues( calcUnitName, station, depth, IWspmDictionaryConstants.LS_COMPONENT_DEPTH );
+        // m_lsHandler.addValues( calcUnitName, station, slope, IWspmDictionaryConstants.LS_COMPONENT_SLOPE );
+      }
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     return Status.OK_STATUS;
   }
 
-  private IStatus handle1dElement( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp ) throws GM_Exception
+  private IStatus handle1dElement( final INodeResult nodeDown, final INodeResult nodeUp, ICalculationUnit1D calcUnit ) throws GM_Exception
   {
-    final GMLNodeResult[] nodes = new GMLNodeResult[2];
+    final INodeResult[] nodes = new INodeResult[2];
     nodes[0] = nodeDown;
     nodes[1] = nodeUp;
     final GM_Curve[] curves = new GM_Curve[2];
@@ -564,7 +566,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* check, if node was already handled for lengthsection */
       if( !m_lengthsection1dNodes.contains( nodes[i].getGmlID() ) )
       {
-        final IStatus status = handleLengthSectionData( nodes[i], teschkeRelation );
+        IStatus status = handleLengthSectionData( nodes[i], teschkeRelation, calcUnit );
         // TODO: right now, no consequences of the returned status
         m_lengthsection1dNodes.add( nodes[i].getGmlID() );
       }
@@ -585,11 +587,49 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return Status.OK_STATUS;
   }
 
+  private ICalculationUnit1D getCalcUnit( ElementResult elementResult )
+  {
+    if( m_discModel == null )
+      return null;
+
+    /* get the first arc */
+    ArcResult currentArc = elementResult.getArc( 0 );
+    INodeResult downNodeResult = m_nodeIndex.get( currentArc.node1ID );
+    INodeResult upNodeResult = m_nodeIndex.get( currentArc.node2ID );
+
+    IFE1D2DNode upNode = m_discModel.findNode( upNodeResult.getPoint(), NODE_SEARCH_DIST );
+    IFE1D2DNode downNode = m_discModel.findNode( downNodeResult.getPoint(), NODE_SEARCH_DIST );
+    if( upNode == null || downNode == null )
+      return null;
+
+    IFE1D2DElement element = null;
+    IFE1D2DElement[] elements = upNode.getElements();
+    for( IFE1D2DElement anElement : elements )
+    {
+      if( anElement.getNodes().contains( downNode ) )
+      {
+        element = anElement;
+        break;
+      }
+    }
+
+    if( element == null )
+      return null;
+
+    ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
+    ICalculationUnit subUnit = CalcUnitOps.findSubUnit( calculationUnit, element );
+
+    if( subUnit instanceof ICalculationUnit1D )
+      return (ICalculationUnit1D) subUnit;
+
+    return null;
+  }
+
   /**
    * Triangulates the area between two profile curves. All created triangles will feed the triangle eaters.
    */
   @SuppressWarnings("unchecked")
-  private void create1dTriangles( final GMLNodeResult[] nodes, final GM_Curve[] curves, final double curveDistance ) throws GM_Exception
+  private void create1dTriangles( final INodeResult[] nodes, final GM_Curve[] curves, final double curveDistance ) throws GM_Exception
   {
     final CS_CoordinateSystem crs = curves[0].getCoordinateSystem();
 
@@ -605,14 +645,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       floatPosArray[i] = posArray[i].floatValue();
     }
 
-    // removed the dependency on KalypsoDeegree2
-    final TriangulationUtils triangulator = new TriangulationUtils();
-    final float[] normal = { 0, 0, 1 };
-    final int[] output = new int[floatPosArray.length];
-    final int numVertices = floatPosArray.length / 3;
-    final int num = triangulator.triangulateConcavePolygon( floatPosArray, 0, numVertices, output, normal );
-    final Map<Integer, int[]> triangles = new HashMap<Integer, int[]>();
-    triangles.put( num, output );
+    final Map<Integer, int[]> triangles = doTriangle( floatPosArray );
 
     final Set<Entry<Integer, int[]>> entrySet = triangles.entrySet();
     for( final Entry<Integer, int[]> entry : entrySet )
@@ -645,6 +678,18 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         feedTriangleEaterWith1dResults( nodes, curves, curveDistance, crs, poses );
       }
     }
+  }
+
+  private static Map<Integer, int[]> doTriangle( final float[] floatPosArray )
+  {
+    final TriangulationUtils triangulator = new TriangulationUtils();
+    final float[] normal = { 0, 0, 1 };
+    final int[] output = new int[floatPosArray.length];
+    final int numVertices = floatPosArray.length / 3;
+    final int num = triangulator.triangulateConcavePolygon( floatPosArray, 0, numVertices, output, normal );
+    final Map<Integer, int[]> triangles = new HashMap<Integer, int[]>();
+    triangles.put( num, output );
+    return triangles;
   }
 
   @SuppressWarnings("unchecked")
@@ -1858,7 +1903,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         if( nodeID == null )
           continue;
 
-        GMLNodeResult nodeResult = m_nodeIndex.get( nodeID );
+        INodeResult nodeResult = m_nodeIndex.get( nodeID );
 
         final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodeResult );
 
