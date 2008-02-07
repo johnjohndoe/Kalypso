@@ -70,11 +70,20 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 {
+  public static enum ExeVersion
+  {
+    _2_0_6_6
+  }
+
   public static final QName QNAME_TUHH_CALC = new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" );
 
   public static final QName QNAME_TUHH_CALC_REIB_CONST = new QName( NS_WSPM_TUHH, "CalculationReibConstWspmTuhhSteadyState" );
 
   private static final QName QNAME_PROP_POLYNOME_MEMBER = new QName( NS_WSPM_TUHH, "calcPolynomesMember" );
+
+  private static final QName QNAME_PROP_WATERLEVEL_PARAMS = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
+
+  private static final QName QNAME_PROP_EXE_VERSION = new QName( NS_WSPM_TUHH, "exeVersion" );
 
   public static enum MODE
   {
@@ -289,8 +298,7 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
   public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, final boolean doCalcBarrages )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
-    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, QNAME_PROP_WATERLEVEL_PARAMS );
 
     parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "wspIteration" ), iterationType.name() );
     parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ), verzType.name() );
@@ -304,8 +312,7 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
   public WSP_ITERATION_TYPE getIterationType( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
-    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, QNAME_PROP_WATERLEVEL_PARAMS );
 
     return WSP_ITERATION_TYPE.valueOf( (String) parameterFeature.getProperty( new QName( NS_WSPM_TUHH, "wspIteration" ) ) );
   }
@@ -318,8 +325,7 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
         return VERZOEGERUNSVERLUST_TYPE.NON;
 
       default:
-        final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
-        final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+        final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, QNAME_PROP_WATERLEVEL_PARAMS );
 
         return VERZOEGERUNSVERLUST_TYPE.valueOf( (String) parameterFeature.getProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ) ) );
     }
@@ -327,16 +333,14 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
   public REIBUNGSVERLUST_TYPE getReibungsverlust( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
-    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, QNAME_PROP_WATERLEVEL_PARAMS );
 
     return REIBUNGSVERLUST_TYPE.valueOf( (String) parameterFeature.getProperty( new QName( NS_WSPM_TUHH, "reibungsverlust" ) ) );
   }
 
   public Boolean isCalcBridges( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
-    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, QNAME_PROP_WATERLEVEL_PARAMS );
 
     final QName specialQname = new QName( NS_WSPM_TUHH, "specialOptionsMember" );
     final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, specialQname );
@@ -345,8 +349,7 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
   public Boolean isCalcBarrages( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
-    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, QNAME_PROP_WATERLEVEL_PARAMS );
 
     final QName specialQname = new QName( NS_WSPM_TUHH, "specialOptionsMember" );
     final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, specialQname );
@@ -429,5 +432,15 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
       return null;
 
     return new PolynomeProperties( polyFeature );
+  }
+
+  public ExeVersion getVersion( )
+  {
+    final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, QNAME_PROP_WATERLEVEL_PARAMS );
+    final String version = (String) parameterFeature.getProperty( QNAME_PROP_EXE_VERSION );
+    if( version == null )
+      return null;
+
+    return ExeVersion.valueOf( version );
   }
 }

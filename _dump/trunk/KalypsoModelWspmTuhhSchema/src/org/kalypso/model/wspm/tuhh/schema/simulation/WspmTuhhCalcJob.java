@@ -61,6 +61,7 @@ import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.ExeVersion;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -184,8 +185,12 @@ public class WspmTuhhCalcJob implements ISimulation
       if( log.checkCanceled() )
         return;
 
+      final ExeVersion version = calculation.getVersion();
+      if( version == null )
+        throw new SimulationException( "Version des Rechenkerns nicht angegeben. Die Version muss in den Steuerparametern gesetzt werden.", null );
+
       // start calculation; the out-stream gets copied into the simulation.log and the system.out
-      final File exeFile = new File( tmpDir, "Kalypso-1D.exe" );
+      final File exeFile = new File( tmpDir, "Kalypso-1D" + version.name() + ".exe" );
       final String sCmd = "\"" + exeFile.getAbsolutePath() + "\" n \"" + iniFile.getAbsolutePath() + "\"";
       ProcessHelper.startProcess( sCmd, null, tmpDir, monitor, 0, osSimuLog, strmKernelErr, null );
 

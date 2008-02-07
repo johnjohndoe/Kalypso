@@ -1045,6 +1045,32 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
+					<element name="exeVersion" default="latest">
+						<annotation>
+							<documentation xml:lang="de">
+								<label><![CDATA[Version Rechenkern]]></label>
+								<tooltip><![CDATA[Version des Rechenkerns]]></tooltip>
+							</documentation>
+							<documentation xml:lang="en">
+								<label><![CDATA[Calc-Core Version]]></label>
+								<tooltip><![CDATA[Version of the Calculation Core]]></tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="_2_0_6_6">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[2.0.6.6 (7.02.2008)]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[2.0.6.6 (7.02.2008)]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+							</restriction>
+						</simpleType>
+					</element>
 					<element name="wspIteration" default="SIMPLE">
 						<annotation>
 							<documentation xml:lang="de">
