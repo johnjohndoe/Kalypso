@@ -82,7 +82,7 @@ public class GridPointCollector /* implements IGeometryBuilder */
 
   private final LinePointCollectorConfig lpcConfigs[] = new LinePointCollectorConfig[SIDE_MAX_NUM];
 
-  private final TempGrid tempGrid = new TempGrid( true );
+  private final TempGrid tempGrid = new TempGrid();
 
   private final List<IGridPointCollectorStateListener> stateListeners = new ArrayList<IGridPointCollectorStateListener>();
 

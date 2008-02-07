@@ -97,7 +97,7 @@ public class LengthSectionHandler2d
       // get "from" and "to" values for each segment
       final BigDecimal from;
       final BigDecimal to;
-      final String customNamespace = feature.getFeatureType().getGMLSchema().getTargetNamespace(); //TODO: shape api?
+      final String customNamespace = feature.getFeatureType().getGMLSchema().getTargetNamespace(); // TODO: shape api?
       Object propertyFrom = feature.getProperty( new QName( customNamespace, "RIVER_A" ) );
       if( propertyFrom instanceof Long )
       {
@@ -202,10 +202,8 @@ public class LengthSectionHandler2d
         record.setValue( stationComp, station );
         // add it to the Indexer
 
-        m_tupleIndex.addRecord( station, record );
         switch( documenttype )
         {
-
           case tinTerrain:
             record.setValue( thalComp, value );
 

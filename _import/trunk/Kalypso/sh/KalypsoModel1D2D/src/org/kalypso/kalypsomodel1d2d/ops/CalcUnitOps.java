@@ -365,4 +365,26 @@ public class CalcUnitOps
     return count;
   }
 
+  public static ICalculationUnit findSubUnit( final ICalculationUnit calcUnit, IFE1D2DElement element )
+  {
+    if( calcUnit instanceof ICalculationUnit1D2D )
+    {
+      final ICalculationUnit1D2D calcUnit1d2d = (ICalculationUnit1D2D) calcUnit;
+      IFeatureWrapperCollection<ICalculationUnit> subUnits = calcUnit1d2d.getChangedSubUnits();
+      for( final ICalculationUnit subUnit : subUnits )
+      {
+        ICalculationUnit unit = findSubUnit( subUnit, element );
+        if( unit != null )
+          return unit;
+      }
+
+      return null;
+    }
+
+    if( calcUnit.contains( element ) )
+      return calcUnit;
+
+    return null;
+  }
+
 }

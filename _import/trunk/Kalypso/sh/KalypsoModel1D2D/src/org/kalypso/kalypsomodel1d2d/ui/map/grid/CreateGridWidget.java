@@ -58,7 +58,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   private IFEDiscretisationModel1d2d m_discModel;
 
-  private boolean m_snappingActive;
+  private boolean m_snappingActive = true;
 
   @SuppressWarnings("unchecked")
   private IFE1D2DNode m_snapNode;
@@ -327,16 +327,27 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void keyPressed( final KeyEvent e )
   {
-
     final MapPanel mapPanel = getMapPanel();
 
     if( e.getKeyCode() == KeyEvent.VK_SHIFT )
-      m_snappingActive = true;
+      m_snappingActive = false;
 
     if( m_delegateWidget != null )
       m_delegateWidget.keyPressed( e );
 
     mapPanel.repaint();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyReleased( KeyEvent e )
+  {
+    super.keyReleased( e );
+
+    if( e.getKeyCode() == KeyEvent.VK_SHIFT )
+      m_snappingActive = true;
   }
 
   /**
@@ -348,10 +359,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     final char typed = e.getKeyChar();
     final MapPanel mapPanel = getMapPanel();
 
-    if( e.isActionKey() )
-    {
-      System.out.println( "e:" + e ); //$NON-NLS-1$
-    }
     if( typed == ESC )
     {
       if( e.isShiftDown() )
@@ -364,11 +371,9 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
         gridPointCollector.clearCurrent();
         mapPanel.repaint();
       }
-
     }
     else if( typed == '\b' )
     {
-
       if( e.isShiftDown() )// e.getModifiers()==InputEvent.SHIFT_MASK)
       {
         gridPointCollector.gotoPreviousSide();
@@ -380,14 +385,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
         mapPanel.repaint();
       }
     }
-    else if( typed == '\t' )
-    {
-      System.out.println( "Selected" ); //$NON-NLS-1$
-    }
     else if( typed == 't' )
-    {
       convertToModell();
-    }
   }
 
   /**

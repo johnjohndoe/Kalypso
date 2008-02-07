@@ -62,7 +62,7 @@ public class NodeResultsHandlerTest extends TestCase
     final File result2dFile = new File( "D:/Projekte/kalypso_dev/visu/A0009.2d" );
     final File outputDir = FileUtilities.createNewTempDir( "bloed" );
 
-    final ProcessResultsJob job = new ProcessResultsJob( result2dFile, outputDir, null, null, new ArrayList<ResultType.TYPE>(), ResultManager.STEADY_DATE, null );
+    final ProcessResultsJob job = new ProcessResultsJob( result2dFile, outputDir, null, null, null, new ArrayList<ResultType.TYPE>(), ResultManager.STEADY_DATE, null );
     job.run( new NullProgressMonitor() );
   }
 }

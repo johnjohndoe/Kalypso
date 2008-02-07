@@ -44,6 +44,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.conv.results.ArcResult;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -98,5 +99,15 @@ public interface INodeResult extends IFeatureWrapper2
   public abstract Double getDischarge( );
 
   public abstract void setDischarge( final double discharge );
+
+  List<ArcResult> getArcs( );
+
+  void setArc( ArcResult arc );
+
+  int getNodeID( );
+
+  boolean isAssigned( );
+
+  void setAssigned( boolean assign );
 
 }

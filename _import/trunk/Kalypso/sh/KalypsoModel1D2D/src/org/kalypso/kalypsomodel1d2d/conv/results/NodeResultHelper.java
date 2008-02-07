@@ -90,7 +90,7 @@ public class NodeResultHelper
    * @param midsideNode
    *            the mid-side node
    */
-  public static void checkMidsideNodeData( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GMLNodeResult midsideNode )
+  public static void checkMidsideNodeData( final INodeResult nodeDown, final INodeResult nodeUp, final INodeResult midsideNode )
   {
     // TODO check what to do if some of the nodes is null
     // (in the moment exception is thrown...)
@@ -131,7 +131,7 @@ public class NodeResultHelper
    * @param midsideNode
    *            the midside node
    */
-  private static void interpolateMidsideNodeData( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GMLNodeResult midsideNode )
+  private static void interpolateMidsideNodeData( final INodeResult nodeDown, final INodeResult nodeUp, final INodeResult midsideNode )
   {
     final List<Double> waterlevels = new LinkedList<Double>();
 
@@ -145,7 +145,7 @@ public class NodeResultHelper
     if( depth < 0 )
     {
       midsideNode.setDepth( 0.0 );
-      midsideNode.setVelocity( 0.0 );
+      setVelocity( midsideNode, 0.0 );
     }
     else
     {
@@ -176,7 +176,7 @@ public class NodeResultHelper
     return (sum / values.size());
   }
 
-  private static void assignMidsideNodeData( final GMLNodeResult node, final GMLNodeResult midsideNode )
+  private static void assignMidsideNodeData( final INodeResult node, final INodeResult midsideNode )
   {
     final double waterlevel = node.getWaterlevel();
     midsideNode.setWaterlevel( waterlevel );
@@ -185,7 +185,7 @@ public class NodeResultHelper
     if( depth < 0 )
     {
       midsideNode.setDepth( 0.0 );
-      midsideNode.setVelocity( 0.0 );
+      setVelocity( midsideNode, 0.0 );
     }
     else
     {
@@ -194,8 +194,16 @@ public class NodeResultHelper
       final List<Double> velocities = new LinkedList<Double>();
       velocities.add( node.getAbsoluteVelocity() );
       velocities.add( 0.0 );
-      midsideNode.setVelocity( getMeanValue( velocities ) );
+      setVelocity( midsideNode, getMeanValue( velocities ) );
     }
+  }
+
+  private static void setVelocity( final INodeResult nodeResult, final double velo )
+  {
+    final List<Double> velocity = new LinkedList<Double>();
+    velocity.add( velo );
+    velocity.add( velo );
+    nodeResult.setVelocity( velocity );
   }
 
   /**

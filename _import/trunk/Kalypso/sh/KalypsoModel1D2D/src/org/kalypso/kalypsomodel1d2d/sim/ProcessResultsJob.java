@@ -70,8 +70,11 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
+import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler1d;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
@@ -79,6 +82,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
@@ -114,13 +118,15 @@ public class ProcessResultsJob extends Job
 
   private final IControlModel1D2D m_controlModel;
 
+  private final IFEDiscretisationModel1d2d m_discModel;
+
   private final Date m_stepDate;
 
   /**
    * @param stepDate
    *            The date which is determined by the result file name (i.e. step-number) and the control timeseries.
    */
-  public ProcessResultsJob( final File inputFile, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
+  public ProcessResultsJob( final File inputFile, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
   {
     super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
 
@@ -128,9 +134,19 @@ public class ProcessResultsJob extends Job
     m_outputDir = outputDir;
     m_flowModel = flowModel;
     m_controlModel = controlModel;
+    m_discModel = discModel;
     m_parameters = parameter;
     m_stepDate = stepDate;
     m_stepResultMeta = unitResultMeta.addStepResult();
+
+    if( m_parameters == null )
+    {
+      m_parameters = new LinkedList<ResultType.TYPE>();
+      m_parameters.add( ResultType.TYPE.DEPTH );
+      m_parameters.add( ResultType.TYPE.TERRAIN );
+      m_parameters.add( ResultType.TYPE.VELOCITY );
+      m_parameters.add( ResultType.TYPE.WATERLEVEL );
+    }
   }
 
   /**
@@ -176,7 +192,6 @@ public class ProcessResultsJob extends Job
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
     final File gmlResultFile = new File( m_outputDir, "results.gml" );
-    final File lsObsFile = new File( m_outputDir, "lengthSection.gml" );
 
     InputStream is = null;
     try
@@ -186,8 +201,9 @@ public class ProcessResultsJob extends Job
       /* GMLWorkspace für Ergebnisse anlegen */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlResultFile.toURL(), null );
       final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" );
-      final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
-      final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
+
+      final String componentID = IWspmDictionaryConstants.LS_COMPONENT_STATION;
+      final LengthSectionHandler1d lsHandler = new LengthSectionHandler1d( componentID, lsObsUrl );
 
       /* .2d Datei lesen und GML füllen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
@@ -195,19 +211,6 @@ public class ProcessResultsJob extends Job
       final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final MultiTriangleEater multiEater = new MultiTriangleEater();
 
-      /*
-       * TESTING / can be removed later Jung
-       */
-      if( m_parameters == null )
-      {
-        m_parameters = new LinkedList<ResultType.TYPE>();
-        m_parameters.add( ResultType.TYPE.DEPTH );
-        m_parameters.add( ResultType.TYPE.TERRAIN );
-        m_parameters.add( ResultType.TYPE.VELOCITY );
-        m_parameters.add( ResultType.TYPE.WATERLEVEL );
-      }
-
-      /* -------- */
       for( final ResultType.TYPE parameter : m_parameters )
       {
         /* GML(s) */
@@ -283,7 +286,7 @@ public class ProcessResultsJob extends Job
         }
       }
 
-      final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_flowModel, m_controlModel, m_resultMinMaxCatcher, lsObs );
+      final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_flowModel, m_controlModel, m_discModel, m_resultMinMaxCatcher, lsHandler );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
@@ -304,10 +307,24 @@ public class ProcessResultsJob extends Job
 
       /* LengthSection in Datei schreiben */
 
-      if( lsObs.getResult().size() > 0 )
+      ICalculationUnit1D[] calcUnits = lsHandler.getCalcUnits();
+
+      for( ICalculationUnit1D calcUnit : calcUnits )
       {
-        ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
-        GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+        final File lsObsFile = new File( m_outputDir, "lengthSection_" + calcUnit.getGmlID() + ".gml" );
+
+        final IObservation<TupleResult> lsObs = lsHandler.getObservation( calcUnit );
+        GMLWorkspace lsObsWorkspace = lsHandler.getWorkspace( calcUnit );
+        if( lsObs.getResult().size() > 0 )
+        {
+          ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
+          GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+
+          /* length section entry in result db */
+          // TODO: use station range for min max...
+          ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Längsschnitt " + calcUnit.getName(), "1d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( lsObsFile.getName() ), Status.OK_STATUS, new BigDecimal( 0 ), new BigDecimal( 0 ) );
+        }
+
       }
 
       logger.takeInterimTime();
@@ -392,14 +409,6 @@ public class ProcessResultsJob extends Job
       min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, min, max );
-
-      /* length section entry in result db */
-      if( lsObs.getResult().size() > 0 )
-      {
-        min = new BigDecimal( 0 );
-        max = new BigDecimal( 0 );
-        ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Längsschnitt", "1d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
-      }
 
       /* HMO(s) */
       /*

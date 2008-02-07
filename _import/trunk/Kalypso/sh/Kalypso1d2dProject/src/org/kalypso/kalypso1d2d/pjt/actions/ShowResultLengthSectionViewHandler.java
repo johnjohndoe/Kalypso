@@ -45,7 +45,6 @@ import java.net.URL;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -94,28 +93,17 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
       final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
 
       // open wizard
-      final SelectLengthSectionWizard selectLengthSectionWizard = new SelectLengthSectionWizard( scenarioFolder, resultModel );
+      final SelectLengthSectionWizard selectLengthSectionWizard = new SelectLengthSectionWizard( resultModel );
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, selectLengthSectionWizard );
       if( wizardDialog2.open() == Window.OK )
       {
-        // get file from wizard
-        final IFile file = selectLengthSectionWizard.getSelection();
-        //
-        // // set file to chart view
-        // final ChartView chartView = (ChartView) window.getActivePage().showView( ChartView.ID );
-        // final Image lsImage = Kalypso1d2dProjectPlugin.getImageProvider().getImage(
-        // Kalypso1d2dProjectImages.DESCRIPTORS.RESULT_META_DOCUMENT_LENGTH_SECTION );
-        // chartView.setTitleImage( lsImage );
-        // chartView.setInput( file );
-
-        // set file to chart view
         final FeatureTemplateView featureView = (FeatureTemplateView) window.getActivePage().showView( FeatureTemplateView.ID );
 
         final String gmlResultPath = selectLengthSectionWizard.getSelectedLGmlResultPath();
         if( gmlResultPath == null )
           return StatusUtilities.createErrorStatus( "Längsschnitt-Ergebnisdatei konnte nicht geladen werden." );
 
-        final UIJob job = new UIJob( "Loading " + file.getName() )
+        final UIJob job = new UIJob( "Lade Längsschnitt " )
         {
           @Override
           public IStatus runInUIThread( IProgressMonitor monitor )
@@ -150,10 +138,6 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
           }
         };
         job.schedule();
-
-        // final Image lsImage = Kalypso1d2dProjectPlugin.getImageProvider().getImage(
-        // Kalypso1d2dProjectImages.DESCRIPTORS.RESULT_META_DOCUMENT_LENGTH_SECTION );
-        // chartView.setTitleImage( lsImage );
 
         return Status.OK_STATUS;
       }

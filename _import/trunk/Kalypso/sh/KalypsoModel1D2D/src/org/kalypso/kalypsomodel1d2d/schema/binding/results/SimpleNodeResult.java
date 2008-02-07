@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.conv.results.ArcResult;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -69,6 +70,20 @@ public class SimpleNodeResult implements INodeResult
   private List<Double> m_velocity;
 
   public final List<Double> m_lambdas = new LinkedList<Double>();
+
+  public final List<ArcResult> m_arcs = new LinkedList<ArcResult>();
+
+  private boolean m_nodeAssigned;
+
+  public List<ArcResult> getArcs( )
+  {
+    return m_arcs;
+  }
+
+  public void setArc( final ArcResult arc )
+  {
+    m_arcs.add( arc );
+  }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getPoint()
@@ -325,4 +340,26 @@ public class SimpleNodeResult implements INodeResult
   {
     throw new UnsupportedOperationException();
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getNodeID()
+   */
+  public int getNodeID( )
+  {
+    return -1;
+  }
+
+  public boolean isAssigned( )
+  {
+    if( m_nodeAssigned == true )
+      return true;
+    else
+      return false;
+  }
+
+  public void setAssigned( final boolean assign )
+  {
+    m_nodeAssigned = assign;
+  }
+
 }

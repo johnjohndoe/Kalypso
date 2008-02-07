@@ -117,36 +117,9 @@ public class TempGrid
    */
   private GM_Point[][] m_gridPoints;
 
-  private final boolean m_ignoreZCoordinate;
-
   private double m_searchRectWidth;
 
   private IKalypsoFeatureTheme m_nodeTheme;
-
-  /**
-   * Create a temp grid, with a transformation into a model accepting the all coordinate of the grid points.
-   * 
-   */
-  public TempGrid( )
-  {
-    this( false );
-  }
-
-  /**
-   * Create a temp grid with flag to control the usage of the the z-coordinate of the grid point when transforming it
-   * into a model
-   * 
-   * @param ignoreZCoordinate
-   *            <ul>
-   *            <li/>true to get the transformation into a 2d model ignores the z-coordinate of the models (2D point
-   *            will be created for 3D). <li/>false to have the transformation accept the point without change
-   *            </ul>
-   * @see AddNodeCommand
-   */
-  public TempGrid( final boolean ignoreZCoordinate )
-  {
-    m_ignoreZCoordinate = ignoreZCoordinate;
-  }
 
   /**
    * Set the target {@link CS_CoordinateSystem}. All points this grid is coping with are required to reside in that

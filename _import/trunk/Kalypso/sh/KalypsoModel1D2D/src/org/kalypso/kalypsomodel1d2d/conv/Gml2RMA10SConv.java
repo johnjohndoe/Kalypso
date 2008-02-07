@@ -111,6 +111,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final IdMap m_linesIDProvider = new IdMap();
 
+  // TODO probably identical to m_nodesProvider (its key set))
   private final Set<String> m_writtenNodesIDs = new HashSet<String>();
 
   private final BuildingIDProvider m_buildingIDProvider = new BuildingIDProvider();
@@ -279,7 +280,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       FormatterUtils.checkIoException( formatter );
     }
 
-    formatter.format( "%nFE%10d%10d%n", junctionElementID, 901 );
+    formatter.format( "%nFE%10d%10d%n", junctionElementID, 902 );// 901: water level, 902 energy head
     FormatterUtils.checkIoException( formatter );
   }
 

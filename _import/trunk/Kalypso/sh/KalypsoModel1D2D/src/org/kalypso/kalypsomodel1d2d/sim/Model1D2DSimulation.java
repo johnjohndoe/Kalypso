@@ -225,7 +225,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     logMeta.setPath( new Path( SIMULATION_LOG_GML ) );
 
     final RMA10Calculation calculation = new RMA10Calculation( tmpDir, geoLog, discModel, flowModel, controlModel, roughnessModel, m_scenarioFolder );
-    final ResultManager resultManager = new ResultManager( tmpDir, outputDir, "A", controlModel, flowModel, scenarioResultMeta, geoLog );
+    final ResultManager resultManager = new ResultManager( tmpDir, outputDir, "A", controlModel, flowModel, discModel, scenarioResultMeta, geoLog );
 
     final RMA10CalculationWizard calcWizard = new RMA10CalculationWizard( calculation, resultManager, m_unitFolder, m_caseDataProvider, geoLog );
     calcWizard.setWindowTitle( STRING_DLG_TITLE_RMA10S );

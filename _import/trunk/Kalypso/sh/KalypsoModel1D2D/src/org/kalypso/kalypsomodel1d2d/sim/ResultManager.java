@@ -67,6 +67,7 @@ import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -107,10 +108,13 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private final IScenarioResultMeta m_scenarioMeta;
 
-  public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IScenarioResultMeta scenarioResultMeta, final IGeoLog geoLog )
+  private final IFEDiscretisationModel1d2d m_discModel;
+
+  public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final IScenarioResultMeta scenarioResultMeta, final IGeoLog geoLog )
   {
     m_controlModel = controlModel;
     m_flowModel = flowModel;
+    m_discModel = discModel;
     m_scenarioMeta = scenarioResultMeta;
     m_inputDir = inputDir;
     m_outputDir = outputDir;
@@ -140,7 +144,7 @@ public class ResultManager implements ISimulation1D2DConstants
       for( int i = 0; i < fileStati.length; i++ )
       {
         final File file = existing2dFiles[i];
-        fileStati[i] = processResultFile( file, m_controlModel, m_flowModel, calcUnitMeta, progress.newChild( 1 ) );
+        fileStati[i] = processResultFile( file, m_controlModel, m_flowModel, m_discModel, calcUnitMeta, progress.newChild( 1 ) );
       }
 
       final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "", null );
@@ -172,7 +176,7 @@ public class ResultManager implements ISimulation1D2DConstants
     }
   }
 
-  private IStatus processResultFile( final File file, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final ICalcUnitResultMeta calcUnitResultMeta, final IProgressMonitor monitor ) throws CoreException
+  private IStatus processResultFile( final File file, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final ICalcUnitResultMeta calcUnitResultMeta, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -201,7 +205,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
       final File resultOutputDir = new File( m_outputDir, outDirName );
       resultOutputDir.mkdirs();
-      final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, flowModel, controlModel, m_parameters, stepDate, calcUnitResultMeta );
+      final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, flowModel, controlModel, discModel, m_parameters, stepDate, calcUnitResultMeta );
       final IStatus result = processResultsJob.run( monitor );
 
       m_minMaxCatcher.addNodeResultMinMaxCatcher( processResultsJob.getMinMaxData() );

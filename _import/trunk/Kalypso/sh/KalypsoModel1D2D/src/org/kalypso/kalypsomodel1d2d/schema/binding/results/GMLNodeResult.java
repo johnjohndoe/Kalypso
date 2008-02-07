@@ -283,22 +283,6 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDepth ) );
   }
 
-  public void setVelocity( double velo )
-  {
-    final List<Double> velocity = new LinkedList<Double>();
-    velocity.add( velo );
-    velocity.add( velo );
-    setVelocity( velocity );
-  }
-
-  public void setVelocity( final double vx, final double vy )
-  {
-    final List<Double> velocity = new LinkedList<Double>();
-    velocity.add( vx );
-    velocity.add( vy );
-    setVelocity( velocity );
-  }
-
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDischarge()
    */

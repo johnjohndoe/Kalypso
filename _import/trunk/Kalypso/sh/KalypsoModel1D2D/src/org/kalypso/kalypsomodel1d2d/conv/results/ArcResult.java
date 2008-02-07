@@ -40,40 +40,46 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
-
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class ArcResult
 {
   public int arcID;
+
   public int node1ID;
+
   public int node2ID;
-  public int elementLeftID; 
-  public int elementRightID; 
+
+  public int elementLeftID;
+
+  public int elementRightID;
+
   public int middleNodeID;
-  public GMLNodeResult m_nodeUp;
-  public GMLNodeResult m_nodeDown;
-  
-  public GMLNodeResult getNodeUp( )
+
+  public INodeResult m_nodeUp;
+
+  public INodeResult m_nodeDown;
+
+  public INodeResult getNodeUp( )
   {
     return m_nodeUp;
   }
 
-  public void setNodeUp( GMLNodeResult nodeUp )
+  public void setNodeUp( INodeResult nodeUp )
   {
     m_nodeUp = nodeUp;
   }
 
-  public GMLNodeResult getNodeDown( )
+  public INodeResult getNodeDown( )
   {
     return m_nodeDown;
   }
 
-  public void setNodeDown( GMLNodeResult nodeDown )
+  public void setNodeDown( INodeResult nodeDown )
   {
     m_nodeDown = nodeDown;
   }
@@ -83,8 +89,8 @@ public class ArcResult
     arcID = id;
     node1ID = node1;
     node2ID = node2;
-    elementLeftID = elementLeft; 
-    elementRightID = elementRight; 
+    elementLeftID = elementLeft;
+    elementRightID = elementRight;
     middleNodeID = middleNode;
-  } 
+  }
 }

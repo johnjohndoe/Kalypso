@@ -433,7 +433,7 @@ public class CreateChannelData
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final CommandableWorkspace workspace = theme.getWorkspace();
 
-    final TempGrid tempGrid = new TempGrid( false );
+    final TempGrid tempGrid = new TempGrid();
     tempGrid.importMesh( importingGridPoints );
     final double searchDistance = 0.1;
     final IStatus status = tempGrid.getAddToModelCommand( mapModel, model1d2d, workspace, searchDistance );
