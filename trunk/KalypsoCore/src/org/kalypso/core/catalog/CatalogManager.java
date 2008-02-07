@@ -87,9 +87,11 @@ public class CatalogManager
 
   public final Hashtable<Class, IURNGenerator> m_urnGenerators = new Hashtable<Class, IURNGenerator>();
 
+  private final Hashtable<URI, ICatalog> m_openCatalogs = new Hashtable<URI, ICatalog>();
+
   private final File m_baseDir;
 
-  private final Hashtable<URI, DynamicCatalog> m_openCatalogs = new Hashtable<URI, DynamicCatalog>();
+  private ICatalog m_baseCatalog;
 
   /**
    * Normally you should not instantiate this manager yourself but get it via
@@ -108,8 +110,11 @@ public class CatalogManager
     m_urnGenerators.put( key, urnGenerator );
   }
 
-  public ICatalog getBaseCatalog( )
+  public synchronized ICatalog getBaseCatalog( )
   {
+    if( m_baseCatalog != null )
+      return m_baseCatalog;
+
     final String baseURN = new String( "urn:" );
     final String path = CatalogUtilities.getPathForCatalog( baseURN );
 
@@ -118,9 +123,14 @@ public class CatalogManager
     try
     {
       ensureExisting( baseURN );
-      return getCatalog( new URI( URLEncoder.encode( catalogFile.toURL().toString(), "UTF-8" ) ) );
+
+// final ICatalog catalog = getCatalog( new URI( URLEncoder.encode( catalogFile.toURL().toString(), "UTF-8" ) ) );
+// m_baseCatalog = new CachingCatalog( catalog );
+      m_baseCatalog = getCatalog( new URI( URLEncoder.encode( catalogFile.toURL().toString(), "UTF-8" ) ) );
+
+      return m_baseCatalog;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       return null;
@@ -147,12 +157,12 @@ public class CatalogManager
 
         final Catalog catalog = object.getValue();
 
-        final DynamicCatalog newOpenCatalog = new DynamicCatalog( this, catalogURL, catalog );
+        final ICatalog newOpenCatalog = createCatalog( catalogURL, catalog );
         m_openCatalogs.put( catalogURI, newOpenCatalog );
       }
       return m_openCatalogs.get( catalogURI );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       // TODO generate new type of exception CatalogException
@@ -182,7 +192,7 @@ public class CatalogManager
           catalogsToClose.add( new URI( URLEncoder.encode( location.toString(), "UTF-8" ) ) );
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -205,7 +215,7 @@ public class CatalogManager
     {
       catalogURI = new URI( URLEncoder.encode( catalogURL.toString(), "UTF-8" ) );
     }
-    catch( UnsupportedEncodingException e )
+    catch( final UnsupportedEncodingException e )
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       return;
@@ -221,7 +231,7 @@ public class CatalogManager
     {
       stream = catalogURL.openStream();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       exists = false;
     }
@@ -236,16 +246,17 @@ public class CatalogManager
     final ObjectFactory catalogFac = new ObjectFactory();
     final Catalog catalog = catalogFac.createCatalog();
     final Map<QName, String> attributes = catalog.getOtherAttributes();
-    // convert URN to path
-    // final String path = CatalogUtilities.getPathForCatalog( baseURN );
 
     attributes.put( CatalogUtilities.BASE, baseURN );
     catalog.setId( baseURN );
 
-    // final File catalogFile = new File( m_baseDir, path );
-    // final URL catalogURL = catalogFile.toURL();
-    final DynamicCatalog newOpenCatalog = new DynamicCatalog( this, catalogURL, catalog );
+    final ICatalog newOpenCatalog = createCatalog( catalogURL, catalog );
     m_openCatalogs.put( catalogURI, newOpenCatalog );
+  }
+
+  private ICatalog createCatalog( final URL catalogURL, final Catalog catalog )
+  {
+    return new DynamicCatalog( this, catalogURL, catalog );
   }
 
   /**

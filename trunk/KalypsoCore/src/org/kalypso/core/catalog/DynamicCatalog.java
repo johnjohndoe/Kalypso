@@ -70,7 +70,6 @@ import org.kalypso.jwsdp.JaxbUtilities;
  */
 public class DynamicCatalog implements ICatalog
 {
-
   /**
    * system entry matches the specified system identifier, it is used
    */
@@ -105,22 +104,11 @@ public class DynamicCatalog implements ICatalog
 
   private final CatalogManager m_manager;
 
-  protected DynamicCatalog( CatalogManager manager, final URL context, final Catalog catalog )
+  protected DynamicCatalog( final CatalogManager manager, final URL context, final Catalog catalog )
   {
     m_manager = manager;
     m_catalog = catalog;
-    // final String base = getBase();
-    // final String relativaPathForCatalog = CatalogUtilities.getPathForCatalog( base );
     m_context = context;
-    // try
-    // {
-    // m_context = UrlResolverSingleton.resolveUrl( baseDir.toURL(), relativaPathForCatalog );
-    // }
-    // catch( MalformedURLException e )
-    // {
-    // // do not throw exception, because context may never be used .e.g. read-only catalog
-    // e.printStackTrace();
-    // }
   }
 
   public String getCatalogID( )
@@ -134,9 +122,9 @@ public class DynamicCatalog implements ICatalog
     return otherAttributes.get( CatalogUtilities.BASE );
   }
 
-  private void internalAddEntry( String uri, final String systemID, final String publicID, boolean relative )
+  private void internalAddEntry( String uri, final String systemID, final String publicID, final boolean relative )
   {
-    // TODO check if entry allready exists
+    // TODO check if entry already exists
     if( uri == null || uri.length() < 1 )
       throw new UnsupportedOperationException();
     if( relative )
@@ -148,7 +136,7 @@ public class DynamicCatalog implements ICatalog
         final String relativePath = FileUtilities.getRelativePathTo( m_context.toExternalForm(), absolute );
         uri = relativePath;
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         // no
       }
@@ -201,7 +189,7 @@ public class DynamicCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#addEntryRelative(java.lang.String, java.lang.String, java.lang.String)
    */
-  public void addEntryRelative( String uri, String systemID, String publicID )
+  public void addEntryRelative( final String uri, final String systemID, final String publicID )
   {
     if( systemID != null && !"".equals( systemID ) )
       addEntry( uri, systemID, SYSTEM_ID, true );
@@ -210,7 +198,7 @@ public class DynamicCatalog implements ICatalog
   }
 
   @SuppressWarnings("unchecked")
-  private void addEntry( final String uri, final String entryID, int entryType, boolean relative )
+  private void addEntry( final String uri, final String entryID, final int entryType, final boolean relative )
   {
     if( entryID == null || "".equals( entryID ) )
       return;
@@ -229,7 +217,7 @@ public class DynamicCatalog implements ICatalog
       }
       return;
     }
-    int max = CatalogUtilities.getMaxLevel( entryID );
+    final int max = CatalogUtilities.getMaxLevel( entryID );
     final String baseURN = CatalogUtilities.getUrnSection( entryID, 1, max - 1 ) + ":";
     // check the internal policy for our dynamic catalogs
 
@@ -293,7 +281,7 @@ public class DynamicCatalog implements ICatalog
             }
             return;
           }
-          catch( URISyntaxException e )
+          catch( final URISyntaxException e )
           {
             e.printStackTrace();
             throw new UnsupportedOperationException( e );
@@ -303,7 +291,7 @@ public class DynamicCatalog implements ICatalog
     }
 
     // catalog seems to be non existing
-    int maxLevel = CatalogUtilities.getMaxLevel( myBaseURN );
+    final int maxLevel = CatalogUtilities.getMaxLevel( myBaseURN );
     final String urnSection = CatalogUtilities.getUrnSection( baseURN, maxLevel + 1 );
     final String newCatalogURIBase = CatalogUtilities.addURNSection( myBaseURN, urnSection ) + ":";
     final String newCatalogURN = CatalogUtilities.createCatalogURN( newCatalogURIBase );
@@ -311,7 +299,7 @@ public class DynamicCatalog implements ICatalog
     {
       m_manager.ensureExisting( newCatalogURIBase );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new UnsupportedOperationException( e );
@@ -361,7 +349,7 @@ public class DynamicCatalog implements ICatalog
   /**
    * @see org.kalypso.core.catalog.ICatalog#getEnryURNS(java.lang.String)
    */
-  public List<String> getEnryURNS( final String urnPattern )
+  public List<String> getEntryURNS( final String urnPattern )
   {
     return internResolve( urnPattern, urnPattern, null, true, true, false, true );
   }
@@ -369,7 +357,7 @@ public class DynamicCatalog implements ICatalog
   /**
    * @return true results of resolve
    */
-  private List<String> internResolveDelegate( final String hrefCatalog, final String systemID, final String publicID, List<String> collector, boolean doCollectURN, boolean supportPattern, final boolean resolveContext )
+  private List<String> internResolveDelegate( final String hrefCatalog, final String systemID, final String publicID, List<String> collector, final boolean doCollectURN, final boolean supportPattern, final boolean resolveContext )
   {
     final String uriToCatalog = resolveLocal( hrefCatalog, hrefCatalog, true, true );
     final URI catalogURI;
@@ -402,12 +390,12 @@ public class DynamicCatalog implements ICatalog
       }
 
     }
-    catch( URISyntaxException e )
+    catch( final URISyntaxException e )
     {
       // invalid catalog entry
       e.printStackTrace();
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -417,7 +405,7 @@ public class DynamicCatalog implements ICatalog
 
   /**
    * @param resolveContext
-   *          If true, the found entry is resolved against the catalogs location, if false it is directly returned.
+   *            If true, the found entry is resolved against the catalogs location, if false it is directly returned.
    */
   @SuppressWarnings("unchecked")
   private List<String> internResolve( final String systemID, final String publicID, List<String> collector, final boolean doCollectURN, final boolean supportPattern, final boolean local, final boolean resolveContext )
@@ -431,7 +419,7 @@ public class DynamicCatalog implements ICatalog
     // TODO add entries from imported catalogs or extension-point catalogs
     for( int step = SYSTEM_RESOLVE_1; step <= DELEGATE_SEARCH_5; step++ )
     {
-      for( Object entry : entries )
+      for( final Object entry : entries )
       {
         final Object item = ((JAXBElement<Object>) entry).getValue();
         switch( step )
@@ -459,7 +447,7 @@ public class DynamicCatalog implements ICatalog
                     return collector;
                   }
                 }
-                catch( Exception e )
+                catch( final Exception e )
                 {
                   e.printStackTrace();
                 }
@@ -504,7 +492,7 @@ public class DynamicCatalog implements ICatalog
                     return collector;
                   }
                 }
-                catch( MalformedURLException e )
+                catch( final MalformedURLException e )
                 {
                   e.printStackTrace();
                 }
@@ -579,7 +567,7 @@ public class DynamicCatalog implements ICatalog
       final JAXBElement<Catalog> root = CatalogManager.OBJECT_FACTORY_CATALOG.createCatalog( m_catalog );
       marshaller.marshal( root, writer );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw e;
