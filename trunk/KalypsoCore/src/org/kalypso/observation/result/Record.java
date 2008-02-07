@@ -87,8 +87,6 @@ public class Record implements IRecord
 
   private void checkComponent( final IComponent comp )
   {
-    final IComponent[] components = m_owner.getComponents();
-
     if( !m_owner.hasComponent( comp ) )
       throw new IllegalArgumentException( "Unknown component: " + comp );
   }
@@ -112,7 +110,7 @@ public class Record implements IRecord
         m_owner.fireRecordsChanged( null, TYPE.CHANGED );
       else
       {
-        final ValueChange[] changes = new ValueChange[] { new ValueChange( this, comp, value ) };
+        final ValueChange[] changes = new ValueChange[] { new ValueChange( this, comp, oldValue, value ) };
         m_owner.fireValuesChanged( changes );
       }
     }
