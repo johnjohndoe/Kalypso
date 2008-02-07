@@ -46,6 +46,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
@@ -90,34 +91,14 @@ public class AddProfileToMapHandler extends AbstractHandler
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
-    /*
-     * Show profiles view: TODO: as the workflow works at the moment, this normally should go into the workflow.xml as
-     * context, but this is not possible.
-     */
-    // final IWorkbenchSite site = (IWorkbenchSite) context.getVariable( ISources.ACTIVE_SITE_NAME );
-    // final IWorkbenchPage page = site == null ? null : site.getPage();
-    // if( page != null )
-    // {
-    // try
-    // {
-    // page.showView( ChartView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
-    // }
-    // catch( final PartInitException e )
-    // {
-    // // The next line throws another exception, thats why i dont use it now
-    // /* final String title = event.getCommand().getDescription(); */
-    // final String title = "Profile in Karte anzeigen";
-    // ErrorDialog.openError( shell, title, "Profilansicht konnte nicht geöffnet werden.", e.getStatus() );
-    // }
-    // }
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( Messages.getString("AddProfileToMapHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "AddProfileToMapHandler.0" ) ); //$NON-NLS-1$
 
     final IMapModell orgMapModell = mapView.getMapPanel().getMapModell();
     if( !(orgMapModell instanceof GisTemplateMapModell) )
-      throw new ExecutionException( Messages.getString("AddProfileToMapHandler.1") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "AddProfileToMapHandler.1" ) ); //$NON-NLS-1$
 
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) orgMapModell;
 
@@ -129,7 +110,7 @@ public class AddProfileToMapHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( Messages.getString("AddProfileToMapHandler.2"), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "AddProfileToMapHandler.2" ), e ); //$NON-NLS-1$
     }
 
     final IRiverProfileNetworkCollection riverProfileNetworkCollection = terrainModel.getRiverProfileNetworkCollection();
@@ -155,11 +136,11 @@ public class AddProfileToMapHandler extends AbstractHandler
       final IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
       final ICommand command;
       if( foundThemes.length == 0 )
-        command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath, source );  //$NON-NLS-1$
+        command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath, source ); //$NON-NLS-1$
       else
       {
         final IKalypsoTheme themeToActivate = foundThemes[0];
-        final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("AddProfileToMapHandler.9") );  //$NON-NLS-1$
+        final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "AddProfileToMapHandler.9" ) ); //$NON-NLS-1$
         compositeCommand.addCommand( new EnableThemeCommand( themeToActivate, true ) );
         compositeCommand.addCommand( new ActivateThemeCommand( mapModell, themeToActivate ) );
         command = compositeCommand;
@@ -172,9 +153,15 @@ public class AddProfileToMapHandler extends AbstractHandler
 
   private Object[] showNetworksDialog( final Shell shell, final IRiverProfileNetworkCollection riverProfileNetworkCollection )
   {
+    if( riverProfileNetworkCollection.size() == 0 )
+    {
+      MessageDialog.openInformation( shell, Messages.getString( "AddProfileToMapHandler.5" ), "Keine Profildaten vorhanden." ); //$NON-NLS-1$
+      return null;
+    }
+
     final ListDialog dialog = new ListDialog( shell );
-    dialog.setTitle( Messages.getString("AddProfileToMapHandler.5") ); //$NON-NLS-1$
-    dialog.setMessage( Messages.getString("AddProfileToMapHandler.6") ); //$NON-NLS-1$
+    dialog.setTitle( Messages.getString( "AddProfileToMapHandler.5" ) ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString( "AddProfileToMapHandler.6" ) ); //$NON-NLS-1$
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setLabelProvider( new LabelProvider()
     {
@@ -185,7 +172,7 @@ public class AddProfileToMapHandler extends AbstractHandler
       public String getText( final Object element )
       {
         final IRiverProfileNetwork network = (IRiverProfileNetwork) element;
-        return "'" + network.getName() + "' - " + network.getDescription();   //$NON-NLS-1$ //$NON-NLS-2$
+        return "'" + network.getName() + "' - " + network.getDescription(); //$NON-NLS-1$ //$NON-NLS-2$
       }
     } );
 

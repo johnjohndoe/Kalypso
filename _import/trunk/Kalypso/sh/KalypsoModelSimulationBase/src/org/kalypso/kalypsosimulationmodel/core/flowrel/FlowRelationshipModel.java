@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
@@ -47,6 +48,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -76,7 +79,7 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
       final IFlowRelationship curNode = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
 
       final double curDist = position.getDistance( curNode.getPosition().getPosition() );
-      if( min > curDist )
+      if( curDist < searchRectWidth && min > curDist )
       {
         nearest = curNode;
         min = curDist;
@@ -89,27 +92,36 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationships(org.kalypsodeegree.model.geometry.GM_Position,
    *      double)
    */
-  public IFlowRelationship[] findFlowrelationships( GM_Position position, double searchRectWidth )
+  public IFlowRelationship[] findFlowrelationships( final GM_Position position, final double searchRectWidth )
   {
     final List<Feature> foundFeatures = findFeatures( position, searchRectWidth );
-    if( foundFeatures.isEmpty() )
-      return null;
 
-    IFlowRelationship[] flowRelations = new IFlowRelationship[foundFeatures.size()];
+    final List<IFlowRelationship> result = new ArrayList<IFlowRelationship>();
     for( int i = 0; i < foundFeatures.size(); i++ )
     {
-      final IFlowRelationship curNode = (IFlowRelationship) foundFeatures.get( i ).getAdapter( IFlowRelationship.class );
+      final Feature feature = foundFeatures.get( i );
+      final GM_Object geom = feature.getDefaultGeometryProperty();
+      if( geom != null )
+      {
+        final GM_Point point = GeometryFactory.createGM_Point( position, geom.getCoordinateSystem() );
+        if( geom.distance( point ) < searchRectWidth )
+        {
+          final IFlowRelationship flowRel = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
+          if( flowRel != null )
+            result.add( flowRel );
+        }
+      }
 
-      flowRelations[i] = curNode;
     }
-    return flowRelations;
+
+    return result.toArray( new IFlowRelationship[result.size()] );
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationship(org.kalypsodeegree.model.geometry.GM_Position,
    *      double, javax.xml.namespace.QName[])
    */
-  public IFlowRelationship findFlowrelationship( GM_Position position, final double searchDistance, final Class< ? extends IFlowRelationshipModel>[] flowRelationTypes )
+  public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchDistance, final Class< ? extends IFlowRelationshipModel>[] flowRelationTypes )
   {
     final List<Feature> foundFeatures = findFeatures( position, searchDistance );
     if( foundFeatures.isEmpty() )
@@ -125,32 +137,29 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
         continue;
 
       final double curDist = position.getDistance( curNode.getPosition().getPosition() );
-      if( min > curDist )
+      if( curDist < searchDistance && min > curDist )
       {
         nearest = curNode;
         min = curDist;
       }
     }
+
     return nearest;
   }
 
-  private boolean checkRealtionType( Class< ? extends IFlowRelationshipModel>[] flowRelationTypes, Class< ? > clas )
+  private boolean checkRealtionType( final Class< ? extends IFlowRelationshipModel>[] flowRelationTypes, final Class< ? > clas )
   {
-    for( int i = 0; i < flowRelationTypes.length; i++ )
+    for( final Class< ? extends IFlowRelationshipModel> element : flowRelationTypes )
     {
-      if( flowRelationTypes[i].isAssignableFrom( clas ) )
+      if( element.isAssignableFrom( clas ) )
         return true;
     }
     return false;
   }
 
-  // ATTENTION: this method returns possibly more features than expected
-  private List<Feature> findFeatures( GM_Position position, double searchRectWidth )
+  // ATTENTION: this method returns possibly MUCH more features than expected
+  private List<Feature> findFeatures( final GM_Position position, final double searchRectWidth )
   {
-    // TODO: the problem is, that the flow relations get found via the specification of a search radius, because they
-    // are connected to the node by location.
-    // better: connect the flow relations via id to the nodes.
-
     final FeatureList nodeList = getWrappedList();
     final double posX = position.getX();
     final double posY = position.getY();
@@ -160,11 +169,7 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
     final GM_Position maxPos = GeometryFactory.createGM_Position( posX + searchWidthHalf, posY + searchWidthHalf );
     final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
 
-    final List<Feature> foundFeatures = nodeList.query( reqEnvelope, null );
-
-    // TODO: check, which of these feature are really within searchRectwidth
-
-    return foundFeatures;
+    return nodeList.query( reqEnvelope, null );
   }
 
   /**

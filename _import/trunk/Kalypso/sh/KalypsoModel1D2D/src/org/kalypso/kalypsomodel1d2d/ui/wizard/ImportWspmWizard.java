@@ -57,11 +57,14 @@ import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
@@ -144,8 +147,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   private final List<Feature> m_discModelAdds = new ArrayList<Feature>();
 
-  private final List<Feature> m_terrainModelAdds = new ArrayList<Feature>();
-
   private GmlFileImportPage m_wspmGmlPage;
 
   private final IRiverProfileNetworkCollection m_networkModel;
@@ -197,7 +198,35 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IFlowRelationshipModel flowRelModel = m_flowRelationCollection;
 
     final List<Feature> discModelAdds = m_discModelAdds;
-    final List<Feature> terrainModelAdds = m_terrainModelAdds;
+
+    /* Prepare input data */
+    final TuhhCalculation calculation = new TuhhCalculation( (Feature) wspmSelection.getFirstElement() );
+    final TuhhReach reach = calculation.getReach();
+
+    // TODO: do not every time create a new network: if an re-import happens
+    // - find out if same network already exists... (how?)
+    // - ask user to overwrite or not
+
+    /* Set user friendly name and description */
+    final IRiverProfileNetwork foundNetwork = findExistingNetwork( profNetworkColl, reach );
+    final IRiverProfileNetwork existingNetwork;
+    if( foundNetwork == null )
+      existingNetwork = null;
+    else
+    {
+      final String msg = String.format( "Es besteht bereits ein Profildatensatz mit gleichem Namen (%s). Wollen Sie den bestehenden Datensatz überschreiben (Ja), oder einen neuen anlegen (Nein)? Achtung: dies kann ggfls. zu Datenverlust führen, falls bestehende Profilparameter den überschriebenden Datensatz referenzieren.", foundNetwork.getName() );
+      final MessageDialog messageDialog = new MessageDialog( getShell(), getWindowTitle(), null, msg, MessageDialog.QUESTION, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
+          IDialogConstants.CANCEL_LABEL }, 1 );
+      final int open = messageDialog.open();
+      System.out.println( "open: " + open );
+      if( open == 2 || open == -1 )
+        return false;
+
+      if( open == 0 )
+        existingNetwork = foundNetwork;
+      else
+        existingNetwork = null; // do create a new network
+    }
 
     /* Do import */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
@@ -208,22 +237,16 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
         try
         {
-          /* Activate network map */
-
-          /* Prepare input data */
-          final TuhhCalculation calculation = new TuhhCalculation( (Feature) wspmSelection.getFirstElement() );
-
           /* Check if its the right calculation and if results are present */
           if( calculation.getCalcMode() != TuhhCalculation.MODE.REIB_KONST )
             return StatusUtilities.createWarningStatus( Messages.getString( "ImportWspmWizard.5" ) ); //$NON-NLS-1$
-
-          final TuhhReach reach = calculation.getReach();
 
           try
           {
             /* Import reach into profile collection */
             monitor.subTask( Messages.getString( "ImportWspmWizard.6" ) ); //$NON-NLS-1$
-            final SortedMap<BigDecimal, WspmProfile> profilesByStation = doImportNetwork( reach, profNetworkColl, terrainModelAdds );
+
+            final SortedMap<BigDecimal, WspmProfile> profilesByStation = doImportNetwork( reach, profNetworkColl, existingNetwork );
             monitor.worked( 1 );
 
             /* Create 1D-Network */
@@ -264,6 +287,25 @@ public class ImportWspmWizard extends Wizard implements IWizard
     ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "ImportWspmWizard.10" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
+  }
+
+  /**
+   * Searches an already imported profile-network for the given reach.<br>
+   * REMARK: at the moment, we just search for a network with the same name as the reach... is there another criterion?
+   * 
+   * @return <code>null</code>, if none was found.
+   */
+  private IRiverProfileNetwork findExistingNetwork( final IRiverProfileNetworkCollection profNetworkColl, final TuhhReach reach )
+  {
+    final String reachName = reach.getName();
+    for( final IRiverProfileNetwork riverProfileNetwork : profNetworkColl )
+    {
+      final String networkName = riverProfileNetwork.getName();
+      if( ObjectUtils.equals( reachName, networkName ) )
+        return riverProfileNetwork;
+    }
+
+    return null;
   }
 
   /**
@@ -357,23 +399,25 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
     final BigDecimal station = qresult.getStation();
 
-    // check if there is already teschkeRel on that position; if it is, just replace it with the new one (and inform
-    // user
-    // about it)
-    final FeatureList featureList = flowRelModel.getWrappedList();
+    // check if there is already teschkeRel on that position; if it is, just replace it with the new one
+    // TODO: inform user about it
+    final IFlowRelationship[] existingFlowRels = flowRelModel.findFlowrelationships( node.getPoint().getPosition(), SEARCH_DISTANCE );
+
     ITeschkeFlowRelation flowRel = null;
-    for( final Object object2 : featureList )
+    for( final IFlowRelationship existingFlowrel : existingFlowRels )
     {
-      if( object2 instanceof ITeschkeFlowRelation )
+      if( existingFlowrel instanceof ITeschkeFlowRelation )
       {
-        final ITeschkeFlowRelation teschkeFlowRelation = (ITeschkeFlowRelation) object2;
-        if( teschkeFlowRelation.getPosition().equals( node.getPoint().getPosition() ) )
+        final ITeschkeFlowRelation teschke = (ITeschkeFlowRelation) existingFlowrel;
+        final BigDecimal teschkeStation = teschke.getStation();
+        if( station.equals( teschkeStation ) )
         {
-          flowRel = teschkeFlowRelation;
+          flowRel = teschke;
           break;
         }
       }
     }
+
     if( flowRel == null )
     {
       /* create new flow relation at node position */
@@ -381,8 +425,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
       flowRel.setPosition( node.getPoint() );
       flowRel.setStation( station );
     }
-    flowRel.setSlope( qresult.getSlope().setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() ); // Round to 5 fraction
-    // digits
+
+    // Round to 5 fraction digits TODO: why? This should already be done in WSPM?
+    flowRel.setSlope( qresult.getSlope().setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() );
 
     /* copy results into new flow relation */
 
@@ -424,7 +469,24 @@ public class ImportWspmWizard extends Wizard implements IWizard
     else
       throw new IllegalStateException();
 
-    final IBuildingFlowRelation buildingRelation = flowRelModel.addNew( buildingQName, IBuildingFlowRelation.class );
+    // check if there is already a relation on that position; if it is, just replace it with the new one
+    // TODO: inform user about it
+    final IFlowRelationship[] existingFlowRels = flowRelModel.findFlowrelationships( node.getPoint().getPosition(), SEARCH_DISTANCE );
+    IBuildingFlowRelation buildingRelation = null;
+    for( final IFlowRelationship existingFlowrel : existingFlowRels )
+    {
+      if( existingFlowrel instanceof IBuildingFlowRelation )
+      {
+        final IBuildingFlowRelation teschke = (IBuildingFlowRelation) existingFlowrel;
+
+        buildingRelation = teschke;
+        break;
+      }
+    }
+
+    if( buildingRelation == null )
+      buildingRelation = flowRelModel.addNew( buildingQName, IBuildingFlowRelation.class );
+
     final IObservation<TupleResult> weirFlowObservation = buildingRelation.getBuildingObservation();
 
     final GM_Point weirPos = replaceNodeWithElement( node );
@@ -562,11 +624,12 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint );
 
       // if there is already a node, do not create it again
-      IFE1D2DNode node = null;
       final IFE1D2DNode existingNode = discretisationModel.findNode( point, SEARCH_DISTANCE );
+
+      final IFE1D2DNode node;
       if( existingNode == null )
       {
-        /* add node */
+        /* add new node */
         node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
         addedFeatures.add( node.getWrappedFeature() );
 
@@ -580,7 +643,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
         node.setPoint( point );
       }
       else
+      {
         node = existingNode;
+      }
+
       if( lastNode != null )
       {
         // if there is already an element between those two nodes, do not create it again
@@ -589,6 +655,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, SEARCH_DISTANCE );
         final List<IFE1D2DElement> list = discretisationModel.getElements().query( reqEnvelope );
         for( final IFE1D2DElement element : list )
+        {
           if( element instanceof IElement1D )
           {
             final List<IFE1D2DNode> nodes = ((IElement1D) element).getNodes();
@@ -598,9 +665,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
               break;
             }
           }
+        }
+
         if( !found )
         {
-          /* Create edge between lastNode and node */
+          /* Create an edge between lastNode and node */
           final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
           addedFeatures.add( edge.getWrappedFeature() );
 
@@ -621,52 +690,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
           element1d.setEdge( edge );
         }
-
-        /* Add complex element to list of containers of this element */
-        // element1d.getContainers().addRef( calculationUnit1D );
-        /* Add this element to the complex element aka calculation unit */
-        // calculationUnit1D.addElementAsRef( element1d );
       }
       lastNode = node;
-      // }
-      // else
-      // {
-      // if( existingNode.getElements().length == 0 )
-      // {
-      // final IFeatureWrapperCollection containers = existingNode.getContainers();
-      // if( containers.size() == 0 && lastNode != null )
-      // throw new CoreException( StatusUtilities.createErrorStatus( "Existing node with no edges found." ) );
-      // for( final Object object : containers )
-      // {
-      // if( object instanceof IFE1D2DEdge )
-      // {
-      // final IFE1D2DEdge edge = (IFE1D2DEdge) object;
-      // final IFeatureWrapperCollection containers2 = edge.getContainers();
-      // boolean hasElementAsParent = false;
-      // for( final Object object2 : containers2 )
-      // {
-      // if( object2 instanceof IElement1D )
-      // {
-      // hasElementAsParent = true;
-      // break;
-      // }
-      // }
-      // if( !hasElementAsParent )
-      // {
-      // /* Create corresponding element */
-      // final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
-      // addedFeatures.add( element1d.getWrappedFeature() );
-      // element1d.setEdge( edge );
-      // }
-      // }
-      // }
-      // }
-      // lastNode = existingNode;
-      // }
 
       final BigDecimal stationDecimal = WspmProfile.stationToBigDecimal( station );
       nodesByStation.put( stationDecimal, lastNode );
-
     }
 
     final Feature[] addedFeatureArray = addedFeatures.toArray( new Feature[addedFeatures.size()] );
@@ -678,15 +706,27 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return nodesByStation;
   }
 
-  protected static SortedMap<BigDecimal, WspmProfile> doImportNetwork( final TuhhReach reach, final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures ) throws Exception
+  /**
+   * @param existingNetwork
+   *            If non-<code>null</code>, this network will be filled (and cleared before) instead of creating a new
+   *            one.
+   */
+  protected static SortedMap<BigDecimal, WspmProfile> doImportNetwork( final TuhhReach reach, final IRiverProfileNetworkCollection networkCollection, final IRiverProfileNetwork existingNetwork ) throws Exception
   {
     final SortedMap<BigDecimal, WspmProfile> result = new TreeMap<BigDecimal, WspmProfile>();
 
-    final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
-    final Feature networkFeature = network.getWrappedFeature();
-    addedFeatures.add( networkFeature );
+    final IRiverProfileNetwork network;
+    if( existingNetwork == null )
+      network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
+    else
+    {
+      network = existingNetwork;
+      network.clear();
+    }
 
-    /* Set user friendly name and descrption */
+    final Feature networkFeature = network.getWrappedFeature();
+
+    /* Set user friendly name and description */
     final URL reachContext = reach.getFeature().getWorkspace().getContext();
     final String reachPath = reachContext == null ? "-" : reachContext.toExternalForm(); //$NON-NLS-1$
     final String desc = String.format( Messages.getString( "ImportWspmWizard.21" ), reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath ); //$NON-NLS-1$
@@ -702,20 +742,16 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
       final IRelationType wspmRelation = (IRelationType) networkFeature.getFeatureType().getProperty( IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
       final Feature clonedProfileFeature = FeatureHelper.cloneFeature( networkFeature, wspmRelation, profileMember.getFeature() );
-      addedFeatures.add( clonedProfileFeature );
 
       result.put( station, new WspmProfile( clonedProfileFeature ) );
     }
 
+    // We fire the add event, even if the network was not added, this should be enough to refresh anything with is
+    // related to it...
     final GMLWorkspace workspace = network.getWrappedFeature().getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, network.getWrappedFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     return result;
-  }
-
-  public Feature[] getTerrainModelAdds( )
-  {
-    return m_terrainModelAdds.toArray( new Feature[m_terrainModelAdds.size()] );
   }
 
   public Feature[] getDiscretisationModelAdds( )

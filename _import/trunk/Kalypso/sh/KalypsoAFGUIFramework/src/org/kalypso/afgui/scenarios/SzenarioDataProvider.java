@@ -142,10 +142,10 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
     private void fireModelLoaded( final IModel model, final IStatus status )
     {
-      for( final IScenarioDataListener listener : m_controller )
-      {
+      // REMARK: copy current listeners into array to avoid ConcurrentModificationException
+      final IScenarioDataListener[] listeners = m_controller.toArray( new IScenarioDataListener[m_controller.size()] );
+      for( final IScenarioDataListener listener : listeners )
         listener.modelLoaded( model, status );
-      }
     }
   }
 
