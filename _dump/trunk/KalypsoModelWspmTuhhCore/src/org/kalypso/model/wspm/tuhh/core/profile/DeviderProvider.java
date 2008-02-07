@@ -51,8 +51,6 @@ import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * TODO - IPointPropertyProvider and IMarkerProvider should be the same Provider Class - in TupleResult view, their is
  * no difference between them - only column name (type) defines markers
@@ -107,7 +105,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
       PointPropertyProviderTUHH.createPointProperty( marker.getId() );
       return true;
     }
-    catch( IllegalStateException e )
+    catch( final IllegalStateException e )
     {
       return false;
     }

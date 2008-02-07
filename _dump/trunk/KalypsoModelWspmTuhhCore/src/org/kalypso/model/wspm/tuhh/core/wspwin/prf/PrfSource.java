@@ -415,7 +415,8 @@ public class PrfSource implements IProfilSource
       pos2 = (int) db.getY()[1];
     }
     if( pCount > 2 )
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datens�tze f�r Trennfl�chen k�nnen an Station(" + p.getStation() + ") nicht ausgewertet werden", null ) );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datens�tze f�r Trennfl�chen k�nnen an Station(" + p.getStation()
+          + ") nicht ausgewertet werden", null ) );
 
     // TODO: KIM in den Reparator verschieben
     // --------------------
@@ -423,14 +424,16 @@ public class PrfSource implements IProfilSource
 // {
 // p1 = points.getFirst();
 // pos1 = 0;
-// m_logger.log( Level.INFO, "Erzeuge Trennfl�che f�r Station(" + p.getStation() + ") an Position [" + Double.toString(
+// m_logger.log( Level.INFO, "Erzeuge Trennfl�che f�r Station(" + p.getStation() + ") an Position [" +
+// Double.toString(
 // p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
 // }
 // if( p2 == null )
 // {
 // p2 = points.getLast();
 // pos2 = 0;
-// m_logger.log( Level.INFO, "Erzeuge Trennfl�che f�r Station(" + p.getStation() + ") an Position [" + Double.toString(
+// m_logger.log( Level.INFO, "Erzeuge Trennfl�che f�r Station(" + p.getStation() + ") an Position [" +
+// Double.toString(
 // p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
 // }
     // --------------------
@@ -622,7 +625,8 @@ public class PrfSource implements IProfilSource
     if( pCount > 1 )
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     if( pCount > 2 )
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datens�tze f�r Bordvollpunkte k�nnen an Station(" + p.getStation() + ") nicht ausgewertet werden", null ) );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datens�tze f�r Bordvollpunkte k�nnen an Station(" + p.getStation()
+          + ") nicht ausgewertet werden", null ) );
 
     // TODO: KIM in den Reparator verschieben
     // ---------------
