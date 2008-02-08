@@ -148,7 +148,7 @@ public class PageEditTimeSeriesObservation extends WizardPage
       provider.add( i, handler );
     }
     // obsTable
-    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, provider, true );
+    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, provider, true, false );
 
     final Control tblControl = control.createControl( container, SWT.BORDER );
     tblControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
