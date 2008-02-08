@@ -21,7 +21,6 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
@@ -99,9 +98,6 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
         protected IStatus run( final IProgressMonitor monitor )
         {
           final IMapModell mapModell = mapPanel.getMapModell();
-          if( mapModell == null )
-            return StatusUtilities.createErrorStatus( "Die Karte enthält keine Daten." );
-
           mapModell.activateTheme( null );
           return Status.OK_STATUS;
         }
