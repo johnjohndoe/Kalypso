@@ -487,6 +487,35 @@ public class TupleResult implements List<IRecord>
     return added;
   }
 
+  /**
+   * Adds a component to this tuple result. Does nothing if an equal component was already added.
+   * <p>
+   * Copies the values from the given component if this tupleResult contains the component and the QName Types are equal
+   */
+  public final boolean addComponent( final IComponent comp, final IComponent cloneFrom )
+  {
+    final boolean added = m_components.add( comp );
+    int index = -1;
+    if( this.hasComponent( cloneFrom ) && cloneFrom.getValueTypeName().equals( comp.getValueTypeName() ) )
+      index = this.indexOfComponent( cloneFrom );
+
+    for( final IRecord record : this )
+    {
+      final Record r = (Record) record;
+      if(index > -1)
+        r.set( m_components.size() - 1, record.getValue(index) );
+      else
+        r.set( m_components.size() - 1, comp.getDefaultValue() );
+
+    }
+
+    if( m_sortComponents.contains( comp ) )
+      m_isSorted = false;
+
+    fireComponentsChanged( new IComponent[] { comp }, TYPE.ADDED );
+    return added;
+  }
+
   public boolean removeComponent( final IComponent comp )
   {
     final boolean b = m_components.remove( comp );
