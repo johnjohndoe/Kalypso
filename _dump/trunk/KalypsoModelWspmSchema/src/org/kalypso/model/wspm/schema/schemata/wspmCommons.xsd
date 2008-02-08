@@ -19,11 +19,32 @@
 		</complexContent>
 	</complexType>
 	
-	<!-- Station 
-	-->
+	<!-- Station -->
 	<simpleType name="stationDouble">
 		<restriction base="decimal">
 			<fractionDigits value="4"/>
 		</restriction>
 	</simpleType>
+	
+	<element name="TriangulatedSurfaceFeature" type="wspmcommon:TriangulatedSurfaceFeatureType" substitutionGroup="gml:_Feature">
+	</element>
+	
+	<complexType name="TriangulatedSurfaceFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="triangulatedSurfaceMember" type="wspmcommon:TriangulatedSurfacePropertyType" />
+					<element name="unit" type="string"/>
+					<element name="parameter" type="string"/>
+					<element name="date" type="dateTime"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="TriangulatedSurfacePropertyType">
+		<sequence>
+			<element ref="gml:TriangulatedSurface" />
+		</sequence>
+	</complexType>
 </schema>

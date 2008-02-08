@@ -74,7 +74,6 @@ public class KalypsoModelWspmUIImages
   public static final ImageDescriptor ID_CHART_FIX_RATIO = id( "icons/elcl16/chart_fix_ratio.gif" );
 
   public static final ImageDescriptor ID_ENABLED_OPEN_TABLE = id( "icons/eview16/profil_table.gif" );
- 
 
   public static final ImageDescriptor id( final String location )
   {

@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -97,6 +96,8 @@ public class LengthSectionProcessor
   private File m_tableFile;
 
   private File m_breaklineFile;
+
+  private File m_tinFile;
 
   private File m_boundaryFile;
 
@@ -169,7 +170,7 @@ public class LengthSectionProcessor
   /** Create stuff which depends on the observation. */
   private IStatus postProcess( final File gmlFile, final BigDecimal runoff, final Map<String, String> replaceTokens ) throws Exception
   {
-//    final TimeLogger timeLogger = new TimeLogger( "Post Processing Length-Section" );
+// final TimeLogger timeLogger = new TimeLogger( "Post Processing Length-Section" );
 
     if( !gmlFile.exists() )
       return StatusUtilities.createWarningStatus( "Längsschnitt GML wurde nicht erzeugt." );
@@ -177,20 +178,22 @@ public class LengthSectionProcessor
     final String diagFilename = String.format( "Längsschnitt" + m_runoffPattern + ".kod", runoff );
     final String tableFilename = String.format( "Tabelle" + m_runoffPattern + ".gft", runoff );
     final String breaklineFilename = String.format( "Bruchkanten" + m_runoffPattern + ".gml", runoff );
+    final String tinFilename = String.format( "wspTin" + m_runoffPattern + ".gml", runoff );
     final String boundaryFilename = String.format( "Modellgrenzen" + m_runoffPattern + ".gml", runoff );
     final String waterlevelFilename = String.format( "Überschwemmungslinie" + m_runoffPattern + ".gml", runoff );
 
     m_diagFile = new File( m_outDir, diagFilename );
     m_tableFile = new File( m_outDir, tableFilename );
     m_breaklineFile = new File( m_dataDir, breaklineFilename );
+    m_tinFile = new File( m_dataDir, tinFilename );
     m_boundaryFile = new File( m_dataDir, boundaryFilename );
     m_waterlevelFile = new File( m_dataDir, waterlevelFilename );
 
     final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhSchemaPlugin.getDefault() ), -1, "", null );
 
     // Read Length-Section GML
-//    timeLogger.takeInterimTime();
-//    timeLogger.printCurrentInterim( "Start-Read LS: " );
+// timeLogger.takeInterimTime();
+// timeLogger.printCurrentInterim( "Start-Read LS: " );
 
     final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( gmlFile.toURL(), null );
     final Feature rootFeature = obsWks.getRootFeature();
@@ -203,9 +206,8 @@ public class LengthSectionProcessor
     final TuhhReachProfileSegment[] reachProfileSegments = m_reach.getReachProfileSegments();
 
     /* sort the segments */
-//    timeLogger.takeInterimTime();
-//    timeLogger.printCurrentInterim( "Sort Segments: " );
-
+// timeLogger.takeInterimTime();
+// timeLogger.printCurrentInterim( "Sort Segments: " );
     final boolean isDirectionUpstreams = m_reach.getWaterBody().isDirectionUpstreams();
     Arrays.sort( reachProfileSegments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
@@ -214,8 +216,8 @@ public class LengthSectionProcessor
     //
     try
     {
-//      timeLogger.takeInterimTime();
-//      timeLogger.printCurrentInterim( "Start-Create Diagram " );
+// timeLogger.takeInterimTime();
+// timeLogger.printCurrentInterim( "Start-Create Diagram " );
 
       final WspmWaterBody waterBody = m_reach.getWaterBody();
       createDiagram( m_diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
@@ -233,8 +235,8 @@ public class LengthSectionProcessor
     //
     try
     {
-//      timeLogger.takeInterimTime();
-//      timeLogger.printCurrentInterim( "Start-Create Table " );
+// timeLogger.takeInterimTime();
+// timeLogger.printCurrentInterim( "Start-Create Table " );
 
       final URL tableUrl = getClass().getResource( "resources/table.gft" );
       final String tableTemplate = FileUtilities.toString( tableUrl, "UTF8" );
@@ -251,10 +253,10 @@ public class LengthSectionProcessor
     //
     try
     {
-//      timeLogger.takeInterimTime();
-//      timeLogger.printCurrentInterim( "Start-Create Breaklines " );
+// timeLogger.takeInterimTime();
+// timeLogger.printCurrentInterim( "Start-Create Breaklines " );
 
-      BreakLinesHelper.createBreaklines( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( m_epsThinning ), m_breaklineFile );
+      BreakLinesHelper.createBreaklines( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( m_epsThinning ), m_breaklineFile, m_tinFile );
     }
     catch( final Exception e )
     {
@@ -266,8 +268,8 @@ public class LengthSectionProcessor
     //
     try
     {
-//      timeLogger.takeInterimTime();
-//      timeLogger.printCurrentInterim( "Start-Create Modelboundary " );
+// timeLogger.takeInterimTime();
+// timeLogger.printCurrentInterim( "Start-Create Modelboundary " );
 
       BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, m_boundaryFile, false );
     }
@@ -281,8 +283,8 @@ public class LengthSectionProcessor
     //
     try
     {
-//      timeLogger.takeInterimTime();
-//      timeLogger.printCurrentInterim( "Start-Waterlevel " );
+// timeLogger.takeInterimTime();
+// timeLogger.printCurrentInterim( "Start-Waterlevel " );
 
       BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, m_waterlevelFile, true );
     }
@@ -291,8 +293,8 @@ public class LengthSectionProcessor
       multiStatus.add( StatusUtilities.statusFromThrowable( e, "Überschwemmungslinie konnte nicht erzeugt werden" ) );
     }
 
-//    timeLogger.takeInterimTime();
-//    timeLogger.printCurrentTotal( "Fertisch " );
+// timeLogger.takeInterimTime();
+// timeLogger.printCurrentTotal( "Fertisch " );
 
     return multiStatus;
   }
@@ -324,6 +326,11 @@ public class LengthSectionProcessor
   public File getBreaklineFile( )
   {
     return m_breaklineFile;
+  }
+
+  public File getTinFile( )
+  {
+    return m_tinFile;
   }
 
   public File getBoundaryFile( )

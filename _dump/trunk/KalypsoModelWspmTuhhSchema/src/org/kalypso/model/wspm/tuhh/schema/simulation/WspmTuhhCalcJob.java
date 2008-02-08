@@ -294,6 +294,13 @@ public class WspmTuhhCalcJob implements ISimulation
             log.log( false, " - Bruchkanten erzeugt." );
           }
 
+          final File tinFile = processedLS.getTinFile();
+          if( tinFile.exists() )
+          {
+            resultEater.addResult( "WspTin", tinFile );
+            log.log( false, " - Wasserspiegel-Tin erzeugt." );
+          }
+
           final File boundaryFile = processedLS.getBoundaryFile();
           if( boundaryFile.exists() )
           {

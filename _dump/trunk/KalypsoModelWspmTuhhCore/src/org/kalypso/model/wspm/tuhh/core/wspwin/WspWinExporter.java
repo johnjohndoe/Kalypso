@@ -193,7 +193,11 @@ public class WspWinExporter
     final File qwtFile = new File( profDir, "qwert.001" );
     final File psiFile = new File( profDir, "zustand.psi" );
 
-    final boolean isDirectionUpstreams = calculation.getReach().getWaterBody().isDirectionUpstreams();
+    final TuhhReach reach = calculation.getReach();
+    if( reach == null )
+      throw new IllegalArgumentException( "Gewässerstrang nicht festgelegt." );
+
+    final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
 
     write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile );
     write1DTuhhZustand( calculation, isDirectionUpstreams, zustFile, psiFile );

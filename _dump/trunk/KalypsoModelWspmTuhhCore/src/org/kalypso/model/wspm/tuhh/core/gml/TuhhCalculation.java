@@ -397,6 +397,9 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
   public TuhhReach getReach( )
   {
     final Feature reachFeature = FeatureHelper.resolveLink( m_calcFeature, new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ) );
+    if( reachFeature == null )
+      return null;
+
     return new TuhhReach( reachFeature );
   }
 

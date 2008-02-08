@@ -31,6 +31,7 @@
 	<output id="LengthSection" optional="true" description="Length section output of the tuhh model (laengsschnitt.txt)" />
 	<output id="LengthSectionGml" optional="true" description="Length section output of the tuhh model (laengsschnitt.txt) as observation (*.gml)" />
 	<output id="Bruchkanten" optional="true" description="Bruchkanten.gml" />
+	<output id="WspTin" optional="true" description="WspTin.gml" />
 	<output id="Modellgrenzen" optional="true" description="Modellgrenzen.gml" />
 	<output id="Ueberschwemmungslinie" optional="true" description="Überschwemmungslinie.gml" />
 	<!-- 

@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -53,6 +54,8 @@ import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -77,8 +80,11 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -93,17 +99,30 @@ public class BreakLinesHelper implements IWspmConstants
     // don't instantiate
   }
 
-  public static void createBreaklines( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final Double epsThinning, final File breaklineFile ) throws GM_Exception, InvocationTargetException, GMLSchemaException, GmlSerializeException, IOException
+  public static void createBreaklines( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final Double epsThinning, final File breaklineFile, final File tinFile ) throws GM_Exception, InvocationTargetException, GMLSchemaException, GmlSerializeException, IOException
   {
     final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
 
     if( reachProfileSegments.length > 0 )
     {
+      final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), tinFile.toURL(), null );
+      final CS_CoordinateSystem defaultCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
+      final Feature triangleFeature = triangleWorkspace.getRootFeature();
+      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "triangulatedSurfaceMember" ), surface );
+      // TODO: set tin name
+      NamedFeatureHelper.setDescription( triangleFeature, "Wasserspiegel-Tin: " );
+      NamedFeatureHelper.setName( triangleFeature, "Triangulierter Wasserpiegel der Berechnung ''" );
+      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "unit" ), "NN+m" );
+      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "parameter" ), "h" );
+      triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "date" ), DateUtilities.toXMLGregorianCalendar( new Date() ) );
+
       final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), breaklineFile.toURL(), null );
       final Feature rootFeature = workspace.getRootFeature();
 
       final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
 
+      GM_Curve lastProfile = null;
       for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
         final GM_Curve geometry = reach.getGeometry();
@@ -111,21 +130,53 @@ public class BreakLinesHelper implements IWspmConstants
           continue;
 
         final BigDecimal station = reach.getStation();
+
         final Double wsp = wspMap.get( station.doubleValue() );
 
         final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
-        if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
-        // simulation does not concern the whole reach.
+        if( wsp != null )
         {
+          // ignore profiles without result (no value in length section). This can occur if the
+          // simulation does not cover the whole reach.
           final GM_Curve newProfile = GeometryUtilities.setValueZ( thinProfile.getAsLineString(), wsp );
 
-          final Feature breakLineFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
-          breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), newProfile );
-          breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
-          breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
+// /* Write the profile as breakline */
+// final Feature breakLineFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE,
+// "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
+// breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), newProfile );
+// breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
+// breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
+
+          /* Triangulate two adjacent profiles */
+          if( lastProfile != null )
+          {
+            final GM_Position[] polygonPoses = GeometryUtilities.getPolygonfromCurves( lastProfile, newProfile );
+
+            // //
+            final GM_Curve polygoneRing = GeometryFactory.createGM_Curve( polygonPoses, defaultCrs );
+            final Feature ringFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
+            ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), polygoneRing );
+            ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
+            ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
+            // //
+
+            final GM_Position[][] triangles = GeometryUtilities.triangulateRing( polygonPoses );
+
+// if( station.equals( new BigDecimal( "11.7350" ) )/* || station.equals( new BigDecimal( "11.8380" ) */)
+            {
+              for( final GM_Position[] triangle : triangles )
+              {
+                final GM_Triangle_Impl gmTriangle = GeometryFactory.createGM_Triangle( triangle, defaultCrs );
+                surface.add( gmTriangle );
+              }
+            }
+          }
+
+          lastProfile = newProfile;
         }
       }
 
+      GmlSerializer.serializeWorkspace( tinFile, triangleWorkspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
       GmlSerializer.serializeWorkspace( breaklineFile, workspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
     }
   }

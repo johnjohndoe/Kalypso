@@ -202,4 +202,16 @@
             class="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"
             id="org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentsFeatureviewControlFactory"/>
    </extension>
+      <extension
+            point="org.kalypso.core.gmlSourceProvider">
+         <provider
+               class="org.kalypso.model.wspm.tuhh.ui.wizards.WspTinProvider"
+               description="Wasserspiegel-Tins aus Wspm"
+               id="org.kalypso.ui.wizards.results.gmlsource.WspTinProvider"
+               label="Wasserspiegel-Tins">
+            <category
+                  id="org.kalypso.core.tin.waterlevel">
+            </category>
+         </provider>
+      </extension>
 </plugin>
