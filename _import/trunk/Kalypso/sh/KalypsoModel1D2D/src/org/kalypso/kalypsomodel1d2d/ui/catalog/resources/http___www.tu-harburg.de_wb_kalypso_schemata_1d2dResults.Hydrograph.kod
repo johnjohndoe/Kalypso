@@ -101,6 +101,7 @@
 		<Position>LEFT</Position>
 		<MinVal>5.0</MinVal>
 		<MaxVal>10.0</MaxVal>
+		<PreferredAdjustment before="1" range="20" after="1"/>			
 		<RendererRef ref="NumberWspAxisRenderer" />
 	</Axis>
 	<Axis id="m3sAxis">
@@ -110,6 +111,7 @@
 		<Position>RIGHT</Position>
 		<MinVal>5.0</MinVal>
 		<MaxVal>10.0</MaxVal>
+		<PreferredAdjustment before="1" range="20" after="1"/>			
 		<RendererRef ref="NumberDisAxisRenderer" />
 	</Axis>
 	<Axis id="msAxis">
@@ -119,6 +121,7 @@
 		<Position>RIGHT</Position>
 		<MinVal>0.0</MinVal>
 		<MaxVal>5.0</MaxVal>
+		<PreferredAdjustment before="1" range="20" after="1"/>			
 		<RendererRef ref="NumberVelAxisRenderer" />
 	</Axis>
 	<Axis id="timeAxis">

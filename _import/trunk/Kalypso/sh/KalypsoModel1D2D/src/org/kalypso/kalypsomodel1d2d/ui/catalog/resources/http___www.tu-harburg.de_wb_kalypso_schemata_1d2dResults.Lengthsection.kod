@@ -120,8 +120,8 @@
 		<Label>Station [km]</Label>
 		<Direction>NEGATIVE</Direction>
 		<Position>BOTTOM</Position>
-		<MinVal>6.666666666666665</MinVal>
-		<MaxVal>19.090909090909093</MaxVal>
+		<MinVal></MinVal>
+		<MaxVal></MaxVal>
 		<RendererRef ref="NumberAxisRenderer" />
 	</Axis>
 	<Axis id="nnAxis">
@@ -129,8 +129,9 @@
 		<Label>Wasserspiegel [NN+m]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
-		<MinVal>5.0</MinVal>
-		<MaxVal>10.0</MaxVal>
+		<MinVal></MinVal>
+		<MaxVal></MaxVal>
+		<PreferredAdjustment before="1" range="20" after="1"/>		
 		<RendererRef ref="NumberWspAxisRenderer" />
 	</Axis>
 	<Axis id="m3sAxis">
@@ -138,8 +139,9 @@
 		<Label>Abfluss [m³/s]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>RIGHT</Position>
-		<MinVal>5.0</MinVal>
-		<MaxVal>10.0</MaxVal>
+		<MinVal></MinVal>
+		<MaxVal></MaxVal>
+		<PreferredAdjustment before="2" range="10" after="2"/>
 		<RendererRef ref="NumberDisAxisRenderer" />
 	</Axis>
 	<Axis id="msAxis">
@@ -147,8 +149,9 @@
 		<Label>Geschwindigkeit [m/s]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>RIGHT</Position>
-		<MinVal>0.0</MinVal>
-		<MaxVal>5.0</MaxVal>
+		<MinVal></MinVal>
+		<MaxVal></MaxVal>
+		<PreferredAdjustment before="10" range="10" after="10"/>
 		<RendererRef ref="NumberVelAxisRenderer" />
 	</Axis>
 
