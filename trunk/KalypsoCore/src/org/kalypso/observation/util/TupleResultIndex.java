@@ -49,6 +49,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -130,8 +131,12 @@ public class TupleResultIndex
    * 
    * @return an interpolated object based in the neighboring objects before and after the given domain
    */
-  public synchronized Object getValue( final IComponent component, final Date domain )
+  public synchronized Object getValue( final IComponent component, final Date date )
   {
+    checkIndex();
+
+    XMLGregorianCalendar domain = DateUtilities.toXMLGregorianCalendar( date );
+
     if( m_index.containsKey( domain ) )
       return m_index.get( domain ).getValue( component );
 
@@ -153,7 +158,7 @@ public class TupleResultIndex
     final long before = ((XMLGregorianCalendar) domainBefore).toGregorianCalendar().getTimeInMillis();
     final long after = ((XMLGregorianCalendar) domainAfter).toGregorianCalendar().getTimeInMillis();
 
-    final long dom = domain.getTime();
+    final long dom = date.getTime();
 
     final double valBefore = ((Number) valueBefore).doubleValue();
     final double valAfter = ((Number) valueAfter).doubleValue();
