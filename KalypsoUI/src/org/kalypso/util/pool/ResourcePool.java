@@ -256,7 +256,7 @@ public class ResourcePool
         info.join();
 
         final IStatus result = info.getResult();
-        if( (result.getSeverity() & Status.ERROR) == 1 )
+        if( !result.isOK() )
           throw new CoreException( result );
 
         return info.getObject();
