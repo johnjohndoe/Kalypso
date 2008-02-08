@@ -50,8 +50,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -64,9 +66,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IPageChangeProvider;
+import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -145,13 +151,23 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   private final List<Feature> m_discModelAdds = new ArrayList<Feature>();
 
-  private GmlFileImportPage m_wspmGmlPage;
+  private final GmlFileImportPage m_wspmGmlPage;
+
+  private final ImportWspmWizardPage m_importPage;
 
   private final IRiverProfileNetworkCollection m_networkModel;
 
   private final IFEDiscretisationModel1d2d m_discretisationModel;
 
   private final IFlowRelationshipModel m_flowRelationCollection;
+
+  private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
+  {
+    public void pageChanged( PageChangedEvent event )
+    {
+      handlePageChanged( event );
+    }
+  };
 
   public ImportWspmWizard( final IFEDiscretisationModel1d2d discretisationModel, final IRiverProfileNetworkCollection networkModel, final IFlowRelationshipModel flowRelationCollection )
   {
@@ -162,6 +178,17 @@ public class ImportWspmWizard extends Wizard implements IWizard
     setWindowTitle( Messages.getString( "ImportWspmWizard.0" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
+
+    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString( "ImportWspmWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    /* Choose wspm-reach */
+    m_wspmGmlPage.setDescription( Messages.getString( "ImportWspmWizard.3" ) ); //$NON-NLS-1$
+    m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST } );
+    m_wspmGmlPage.setValidKind( true, false );
+
+    /* Choose network collection */
+    m_wspmGmlPage.setValidKind( true, false );
+
+    m_importPage = new ImportWspmWizardPage( "importPage" );
   }
 
   /**
@@ -170,16 +197,24 @@ public class ImportWspmWizard extends Wizard implements IWizard
   @Override
   public void addPages( )
   {
-    /* Choose wspm-reach */
-    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString( "ImportWspmWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_wspmGmlPage.setDescription( Messages.getString( "ImportWspmWizard.3" ) ); //$NON-NLS-1$
-    m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST } );
-    m_wspmGmlPage.setValidKind( true, false );
-
-    /* Choose network collection */
-    m_wspmGmlPage.setValidKind( true, false );
-
     addPage( m_wspmGmlPage );
+    addPage( m_importPage );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
+   */
+  @Override
+  public void setContainer( final IWizardContainer wizardContainer )
+  {
+    final IWizardContainer currentContainer = getContainer();
+    if( currentContainer instanceof IPageChangeProvider )
+      ((IPageChangeProvider) currentContainer).removePageChangedListener( m_pageChangeListener );
+
+    super.setContainer( wizardContainer );
+
+    if( wizardContainer instanceof IPageChangeProvider )
+      ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageChangeListener );
   }
 
   /**
@@ -188,18 +223,15 @@ public class ImportWspmWizard extends Wizard implements IWizard
   @Override
   public boolean performFinish( )
   {
-    /* Collect page data */
-    final IStructuredSelection wspmSelection = m_wspmGmlPage.getSelection();
+    final TuhhCalculation calculation = m_importPage.getCalculation();
+    final TuhhReach reach = calculation.getReach();
+    final TuhhReachProfileSegment[] segments = m_importPage.getReachProfileSegments();
 
     final IRiverProfileNetworkCollection profNetworkColl = m_networkModel;
     final IFEDiscretisationModel1d2d discModel = m_discretisationModel;
     final IFlowRelationshipModel flowRelModel = m_flowRelationCollection;
 
     final List<Feature> discModelAdds = m_discModelAdds;
-
-    /* Prepare input data */
-    final TuhhCalculation calculation = new TuhhCalculation( (Feature) wspmSelection.getFirstElement() );
-    final TuhhReach reach = calculation.getReach();
 
     // TODO: do not every time create a new network: if an re-import happens
     // - find out if same network already exists... (how?)
@@ -244,17 +276,17 @@ public class ImportWspmWizard extends Wizard implements IWizard
             /* Import reach into profile collection */
             monitor.subTask( Messages.getString( "ImportWspmWizard.6" ) ); //$NON-NLS-1$
 
-            final SortedMap<BigDecimal, WspmProfile> profilesByStation = doImportNetwork( reach, profNetworkColl, existingNetwork );
+            final SortedMap<BigDecimal, WspmProfile> profilesByStation = doImportNetwork( reach, segments, profNetworkColl, existingNetwork );
             monitor.worked( 1 );
 
             /* Create 1D-Network */
             monitor.subTask( Messages.getString( "ImportWspmWizard.7" ) ); //$NON-NLS-1$
-            final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation = doCreate1DNet( reach, discModel, discModelAdds );
+            final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation = doCreate1DNet( reach, segments, discModel, discModelAdds );
             monitor.worked( 1 );
 
             /* Create 1D-Network parameters (flow relations) */
             monitor.subTask( Messages.getString( "ImportWspmWizard.8" ) ); //$NON-NLS-1$
-            final IStatus status = doReadResults( calculation, elementsByStation, flowRelModel, profilesByStation );
+            final IStatus status = doReadResults( calculation, segments, elementsByStation, flowRelModel, profilesByStation );
             monitor.worked( 1 );
 
             return status;
@@ -312,10 +344,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
    * @param elements
    *            by station Must be sorted in the order of the flow direction
    */
-  protected static IStatus doReadResults( final TuhhCalculation calculation, final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation, final IFlowRelationshipModel flowRelModel, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws MalformedURLException, Exception
+  protected static IStatus doReadResults( final TuhhCalculation calculation, final TuhhReachProfileSegment[] segments, final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation, final IFlowRelationshipModel flowRelModel, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws MalformedURLException, Exception
   {
     try
     {
+      final Set<BigDecimal> allowedStations = new HashSet<BigDecimal>();
+      for( final TuhhReachProfileSegment segment : segments )
+        allowedStations.add( segment.getStation() );
+
       final GMLWorkspace calcWorkspace = calculation.getFeature().getWorkspace();
       final URL calcContext = calcWorkspace.getContext();
       final URL qresultsUrl = new URL( calcContext, "Ergebnisse/" + calculation.getName() + "/_aktuell/Daten/qIntervallResults.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -333,6 +369,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final QIntervallResult qresult = new QIntervallResult( FeatureHelper.getFeature( qresultsWorkspace, o ) );
 
         final BigDecimal station = qresult.getStation();
+
+        // Only handle results of choosen segments
+        if( !allowedStations.contains( station ) )
+          continue;
 
         // get corresponding 1d-element
         final IFE1D2DNode node = (IFE1D2DNode) PolynomeHelper.forStation( elementsByStation, station );
@@ -353,8 +393,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           final IFE1D2DNode upStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, true );
           if( downStreamNode == null || upStreamNode == null )
           {
-            KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( "Buildings has no adjacent nodes. Import impossible for station: " + station ) );
-            flowRel = null;
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Kann Bauwerke nicht ohne die anliegenden Profile importieren.", null ) );
           }
           else
             flowRel = addBuilding( flowRelModel, node, buildingObs, downStreamNode, upStreamNode );
@@ -569,12 +608,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   }
 
-  protected static SortedMap<BigDecimal, IFE1D2DNode> doCreate1DNet( final TuhhReach reach, final IFEDiscretisationModel1d2d discretisationModel, final List<Feature> addedFeatures ) throws Exception
+  protected static SortedMap<BigDecimal, IFE1D2DNode> doCreate1DNet( final TuhhReach reach, final TuhhReachProfileSegment[] segments, final IFEDiscretisationModel1d2d discretisationModel, final List<Feature> addedFeatures ) throws Exception
   {
     /* sort reach by station and direction */
     final WspmWaterBody waterBody = reach.getWaterBody();
     final boolean isDirectionUpstreams = waterBody.isDirectionUpstreams();
-    final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
     Arrays.sort( segments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
     /* Get some common variables */
@@ -705,7 +743,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
    *            If non-<code>null</code>, this network will be filled (and cleared before) instead of creating a new
    *            one.
    */
-  protected static SortedMap<BigDecimal, WspmProfile> doImportNetwork( final TuhhReach reach, final IRiverProfileNetworkCollection networkCollection, final IRiverProfileNetwork existingNetwork ) throws Exception
+  protected static SortedMap<BigDecimal, WspmProfile> doImportNetwork( final TuhhReach reach, final TuhhReachProfileSegment[] segments, final IRiverProfileNetworkCollection networkCollection, final IRiverProfileNetwork existingNetwork ) throws Exception
   {
     final SortedMap<BigDecimal, WspmProfile> result = new TreeMap<BigDecimal, WspmProfile>();
 
@@ -728,8 +766,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     network.setDescription( desc );
 
     /* Clone all profiles into network */
-    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-    for( final TuhhReachProfileSegment segment : reachProfileSegments )
+    for( final TuhhReachProfileSegment segment : segments )
     {
       final WspmProfile profileMember = segment.getProfileMember();
       final BigDecimal station = segment.getStation();
@@ -752,4 +789,15 @@ public class ImportWspmWizard extends Wizard implements IWizard
   {
     return m_discModelAdds.toArray( new Feature[m_discModelAdds.size()] );
   }
+
+  protected void handlePageChanged( final PageChangedEvent event )
+  {
+    if( event.getSelectedPage() == m_importPage )
+    {
+      final IStructuredSelection wspmSelection = m_wspmGmlPage.getSelection();
+      final TuhhCalculation calculation = new TuhhCalculation( (Feature) wspmSelection.getFirstElement() );
+      m_importPage.setCalculation( calculation );
+    }
+  }
+
 }

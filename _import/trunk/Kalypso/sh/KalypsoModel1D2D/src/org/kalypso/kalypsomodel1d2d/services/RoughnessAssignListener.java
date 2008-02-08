@@ -64,13 +64,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class RoughnessAssignListener implements ModellEventListener
 {
+  private static ISchedulingRule m_mutexRule = new MutexRule();
+
   private final ITerrainModel m_terrainModel;
 
   private final IFEDiscretisationModel1d2d m_discModel;
 
   private RoughnessAssignService m_job;
-
-  private ISchedulingRule m_mutexRule = new MutexRule();
 
   public RoughnessAssignListener( final IFEDiscretisationModel1d2d discModel, final ITerrainModel terrainModel )
   {
@@ -141,11 +141,11 @@ public class RoughnessAssignListener implements ModellEventListener
   {
     if( features == null || features.length == 0 )
       return false;
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature element : features )
     {
-      if( features[i] == null )
+      if( element == null )
         continue;
-      final QName qname = features[i].getFeatureType().getQName();
+      final QName qname = element.getFeatureType().getQName();
       if( qname.equals( IPolyElement.QNAME ) || qname.equals( IRoughnessPolygon.QNAME ) || qname.equals( IRoughnessLayer.QNAME ) )
         return true;
     }
