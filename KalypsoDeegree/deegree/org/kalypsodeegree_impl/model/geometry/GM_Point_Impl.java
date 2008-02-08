@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -154,6 +155,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   public GM_Point_Impl( final GM_Position gmo, final CS_CoordinateSystem crs )
   {
     super( crs );
+
+    Assert.isNotNull( gmo );
+
     m_position = gmo;
     setEmpty( false );
     setCentroid( this );
@@ -330,8 +334,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   public boolean contains( final GM_Object gmo )
   {
     return equals( gmo );
-    //TODO: check if this is correct in all cases
-    //throw new UnsupportedOperationException( "the contains operation for points " + "isn't supported at the moment." );
+    // TODO: check if this is correct in all cases
+    // throw new UnsupportedOperationException( "the contains operation for points " + "isn't supported at the moment."
+    // );
   }
 
   /**
