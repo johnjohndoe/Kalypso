@@ -57,6 +57,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.internal.WorkbenchMessages;
@@ -99,6 +100,9 @@ public class ImportWspmWizardPage extends WizardPage
     composite.setLayout( new GridLayout() );
 
     m_calcLabel = new StatusComposite( composite, SWT.NONE );
+    m_calcLabel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
+
+    new Label( composite, SWT.NONE );
 
     final Table table = new Table( composite, SWT.BORDER | SWT.CHECK );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
