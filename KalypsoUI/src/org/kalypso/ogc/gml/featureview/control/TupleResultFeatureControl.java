@@ -131,11 +131,14 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private IExecutionListener m_executionListener;
 
-  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandlerProvider handlerProvider, final boolean showToolbar )
+  private final boolean m_recordsFixed;
+
+  public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandlerProvider handlerProvider, final boolean showToolbar, final boolean recordsFixed )
   {
     super( feature, ftp );
 
     m_handlerProvider = handlerProvider;
+    m_recordsFixed = recordsFixed;
 
     if( showToolbar )
       m_toolbar = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
@@ -178,9 +181,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     m_lastLineBackground = new Color( parent.getDisplay(), 170, 230, 255 );
 
-    // If any of the columns is not editable, do not show the 'last-line'
-    final boolean editable = isEditable();
-
     m_tupleResultContentProvider = new TupleResultContentProvider( m_handlerProvider );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
 
@@ -212,7 +212,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       }
     };
 
-    if( !editable )
+    if( m_recordsFixed )
     {
       m_viewer.setContentProvider( m_tupleResultContentProvider );
       m_viewer.setLabelProvider( m_tupleResultLabelProvider );
@@ -234,17 +234,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       hookExecutionListener( m_commands, m_viewer, m_toolbar );
 
     return composite;
-  }
-
-  /**
-   * Final, as it is called from the constructor.
-   */
-  private final boolean isEditable( )
-  {
-    if( m_tupleResultContentProvider == null )
-      return false;
-
-    return m_tupleResultContentProvider.isEditable();
   }
 
   private void hookExecutionListener( final Set<String> commands, final TableViewer tableViewer, final ToolBarManager toolBar )
@@ -495,17 +484,16 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     final IComponentUiHandlerProvider provider = createHandler( editorType );
 
     final Toolbar toolbar = editorType.getToolbar();
-    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, provider, toolbar != null );
+    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, provider, toolbar != null, editorType.isRecordsFixed() );
 
     if( toolbar == null )
       return tfc;
 
     if( toolbar.isAddStandardItems() )
     {
-      final boolean editable = tfc.isEditable();
-
       tfc.addToolbarItem( "org.kalypso.ui.tupleResult.copyToClipboardCommand", SWT.PUSH );
-      if( editable )
+
+      if( !tfc.m_recordsFixed )
         tfc.addToolbarItem( "org.kalypso.ui.tupleResult.deleteSelectedRowsCommand", SWT.PUSH );
     }
 

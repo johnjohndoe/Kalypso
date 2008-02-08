@@ -311,14 +311,4 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     final String property = m_tableViewer.getProperty( columnIndex );
     return getHandler( property );
   }
-
-  // HACK: determine if the whole table is editable. This is the case, if one column is editable. Later, this
-  // information should be set independently.
-  public boolean isEditable( )
-  {
-    boolean editable = true;
-    for( final IComponentUiHandler handler : m_componentHandlers.values() )
-      editable |= handler.isEditable();
-    return editable;
-  }
 }
