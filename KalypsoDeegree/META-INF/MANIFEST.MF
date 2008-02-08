@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.kalypso.deegree
 Bundle-SymbolicName: org.kalypso.deegree; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: lib/geotiff-jai/geotiff-jai.jar,
+Bundle-ClassPath: lib/jai/jai_core.jar,
+ lib/geotiff-jai/geotiff-jai.jar,
  lib/jts/jtsio-1.8.jar,
  lib/shiftone/shiftone-cache.jar,
  lib/xalan-j/xalan.jar,
@@ -19,7 +20,21 @@ Require-Bundle: org.junit,
  org.eclipse.core.resources
 Eclipse-LazyStart: true
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
-Export-Package: javax.units,
+Export-Package: com.sun.media.jai.iterator;version="1.1.0",
+ com.sun.media.jai.mlib;version="1.1.0",
+ com.sun.media.jai.opimage;version="1.1.0",
+ com.sun.media.jai.rmi;version="1.1.0",
+ com.sun.media.jai.tilecodec;version="1.1.0",
+ com.sun.media.jai.util;version="1.1.0",
+ javax.media.jai;version="1.1.0",
+ javax.media.jai.iterator;version="1.1.0",
+ javax.media.jai.operator;version="1.1.0",
+ javax.media.jai.registry;version="1.1.0",
+ javax.media.jai.remote;version="1.1.0",
+ javax.media.jai.tilecodec;version="1.1.0",
+ javax.media.jai.util;version="1.1.0",
+ javax.media.jai.widget;version="1.1.0",
+ javax.units,
  javax.units.resources,
  kalypso.wb.tuhh.de.simpletypebase,
  org.apache.xpath,
