@@ -484,7 +484,9 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     final IComponentUiHandlerProvider provider = createHandler( editorType );
 
     final Toolbar toolbar = editorType.getToolbar();
-    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, provider, toolbar != null, editorType.isRecordsFixed() );
+    final Boolean recordsFixed = editorType.isRecordsFixed();
+    final boolean areRecordsFixed = recordsFixed == null ? false : recordsFixed.booleanValue();
+    final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp, provider, toolbar != null, areRecordsFixed );
 
     if( toolbar == null )
       return tfc;
