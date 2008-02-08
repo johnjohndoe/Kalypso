@@ -98,6 +98,9 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
         protected IStatus run( final IProgressMonitor monitor )
         {
           final IMapModell mapModell = mapPanel.getMapModell();
+          if( mapModell == null )
+            return Status.CANCEL_STATUS;
+
           mapModell.activateTheme( null );
           return Status.OK_STATUS;
         }
