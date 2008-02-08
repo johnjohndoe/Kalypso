@@ -477,9 +477,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     final IFlowRelationship[] flowRelationships = m_flowModel.findFlowrelationships( nodePos, NODE_SEARCH_DIST );
 
-    if( flowRelationships == null )
-      return null;
-
     // TODO: for some reason there are flow relations that are from type BoundaryCondition
     // go through the found array and get the first found teschke flow relation
     for( final IFlowRelationship element : flowRelationships )
@@ -495,7 +492,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * collects the necessary data for the length section and stores it in an observation.
    */
-  private IStatus handleLengthSectionData( final INodeResult nodeResult, final ITeschkeFlowRelation teschkeRelation, ICalculationUnit1D calcUnit )
+  private IStatus handleLengthSectionData( final INodeResult nodeResult, final ITeschkeFlowRelation teschkeRelation, final ICalculationUnit1D calcUnit )
   {
     final WspmProfile profile = teschkeRelation.getProfile();
     final double profileStation = profile.getStation();
@@ -540,7 +537,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         // m_lsHandler.addValues( calcUnitName, station, slope, IWspmDictionaryConstants.LS_COMPONENT_SLOPE );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -549,7 +546,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return Status.OK_STATUS;
   }
 
-  private IStatus handle1dElement( final INodeResult nodeDown, final INodeResult nodeUp, ICalculationUnit1D calcUnit ) throws GM_Exception
+  private IStatus handle1dElement( final INodeResult nodeDown, final INodeResult nodeUp, final ICalculationUnit1D calcUnit ) throws GM_Exception
   {
     final INodeResult[] nodes = new INodeResult[2];
     nodes[0] = nodeDown;
@@ -566,7 +563,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* check, if node was already handled for lengthsection */
       if( !m_lengthsection1dNodes.contains( nodes[i].getGmlID() ) )
       {
-        IStatus status = handleLengthSectionData( nodes[i], teschkeRelation, calcUnit );
+        final IStatus status = handleLengthSectionData( nodes[i], teschkeRelation, calcUnit );
         // TODO: right now, no consequences of the returned status
         m_lengthsection1dNodes.add( nodes[i].getGmlID() );
       }
@@ -587,24 +584,24 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return Status.OK_STATUS;
   }
 
-  private ICalculationUnit1D getCalcUnit( ElementResult elementResult )
+  private ICalculationUnit1D getCalcUnit( final ElementResult elementResult )
   {
     if( m_discModel == null )
       return null;
 
     /* get the first arc */
-    ArcResult currentArc = elementResult.getArc( 0 );
-    INodeResult downNodeResult = m_nodeIndex.get( currentArc.node1ID );
-    INodeResult upNodeResult = m_nodeIndex.get( currentArc.node2ID );
+    final ArcResult currentArc = elementResult.getArc( 0 );
+    final INodeResult downNodeResult = m_nodeIndex.get( currentArc.node1ID );
+    final INodeResult upNodeResult = m_nodeIndex.get( currentArc.node2ID );
 
-    IFE1D2DNode upNode = m_discModel.findNode( upNodeResult.getPoint(), NODE_SEARCH_DIST );
-    IFE1D2DNode downNode = m_discModel.findNode( downNodeResult.getPoint(), NODE_SEARCH_DIST );
+    final IFE1D2DNode upNode = m_discModel.findNode( upNodeResult.getPoint(), NODE_SEARCH_DIST );
+    final IFE1D2DNode downNode = m_discModel.findNode( downNodeResult.getPoint(), NODE_SEARCH_DIST );
     if( upNode == null || downNode == null )
       return null;
 
     IFE1D2DElement element = null;
-    IFE1D2DElement[] elements = upNode.getElements();
-    for( IFE1D2DElement anElement : elements )
+    final IFE1D2DElement[] elements = upNode.getElements();
+    for( final IFE1D2DElement anElement : elements )
     {
       if( anElement.getNodes().contains( downNode ) )
       {
@@ -616,8 +613,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( element == null )
       return null;
 
-    ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
-    ICalculationUnit subUnit = CalcUnitOps.findSubUnit( calculationUnit, element );
+    final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
+    final ICalculationUnit subUnit = CalcUnitOps.findSubUnit( calculationUnit, element );
 
     if( subUnit instanceof ICalculationUnit1D )
       return (ICalculationUnit1D) subUnit;
@@ -927,10 +924,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     final List<INodeResult> nodes = new LinkedList<INodeResult>();
 
-    for( int i = 0; i < ring.length; i++ )
+    for( final GM_Position position : ring )
     {
-      final GM_Position position = ring[i];
-
       final double x = position.getX();
       final double y = position.getY();
       double z = position.getZ(); // here: water level
@@ -1889,7 +1884,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dJunctionInformation(java.lang.String,
    *      int, java.util.List)
    */
-  public void handle1dJunctionInformation( String line, int junctionId, List<Integer> junctionNodeIDList )
+  public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList )
   {
 
     try
@@ -1898,12 +1893,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final List<GM_Curve> profileCurveList = new ArrayList<GM_Curve>();
       final List<INodeResult> nodeList = new ArrayList<INodeResult>();
 
-      for( Integer nodeID : junctionNodeIDList )
+      for( final Integer nodeID : junctionNodeIDList )
       {
         if( nodeID == null )
           continue;
 
-        INodeResult nodeResult = m_nodeIndex.get( nodeID );
+        final INodeResult nodeResult = m_nodeIndex.get( nodeID );
 
         final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodeResult );
 
@@ -1925,7 +1920,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       if( nodeList.size() > 1 )
         create1dJunctionTriangles( nodeList, profileCurveList );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
