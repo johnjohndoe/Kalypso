@@ -173,6 +173,8 @@ public class TupleResultIndex
 
   public Iterator<IRecord> getIterator( )
   {
+    checkIndex();
+
     return m_index.values().iterator();
   }
 
