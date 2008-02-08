@@ -123,7 +123,8 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
    */
   public ILabelProvider createLabelProvider( )
   {
-    return new WorkbenchLabelProvider();
+    return WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider();
+
   }
 
   /**

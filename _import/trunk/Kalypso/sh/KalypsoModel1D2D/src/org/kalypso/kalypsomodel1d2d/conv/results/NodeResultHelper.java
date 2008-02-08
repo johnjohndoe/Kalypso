@@ -67,7 +67,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -261,19 +260,6 @@ public class NodeResultHelper
     final double computeResult = poly.computeResult( depth.doubleValue() );
 
     return new BigDecimal( computeResult ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-  }
-
-  public static Double[] getPosTriangleArray( final GM_Position[] positions )
-  {
-    final Double[] posArray = new Double[positions.length * 3];
-
-    for( int i = 0; i < positions.length; i++ )
-    {
-      posArray[i * 3] = positions[i].getX();
-      posArray[i * 3 + 1] = positions[i].getY();
-      posArray[i * 3 + 2] = positions[i].getZ();
-    }
-    return posArray;
   }
 
   public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final CS_CoordinateSystem crs ) throws Exception, GM_Exception

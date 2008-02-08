@@ -58,13 +58,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.j3d.geom.TriangulationUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -633,60 +631,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // make a polygon from the curves (polygon must be oriented ccw)
 
     final GM_Position[] polygonPoses = GeometryUtilities.getPolygonfromCurves( curves );
-    final Double[] posArray = NodeResultHelper.getPosTriangleArray( polygonPoses );
 
-    // convert into float values
-    final float[] floatPosArray = new float[posArray.length];
-    for( int i = 0; i < posArray.length; i++ )
-    {
-      floatPosArray[i] = posArray[i].floatValue();
-    }
+    final GM_Position[][] triangles = GeometryUtilities.triangulateRing( polygonPoses );
 
-    final Map<Integer, int[]> triangles = doTriangle( floatPosArray );
-
-    final Set<Entry<Integer, int[]>> entrySet = triangles.entrySet();
-    for( final Entry<Integer, int[]> entry : entrySet )
-    {
-      final int numOfTriangles = entry.getKey();
-      final int[] nodeOrderArray = entry.getValue();
-
-      for( int i = 0; i < numOfTriangles; i++ )
-      {
-        final double x1 = posArray[nodeOrderArray[i * 3]];
-        final double y1 = posArray[nodeOrderArray[i * 3] + 1];
-        final double z1 = posArray[nodeOrderArray[i * 3] + 2];
-        final GM_Position pos1 = GeometryFactory.createGM_Position( x1, y1, z1 );
-
-        final double x2 = posArray[nodeOrderArray[i * 3 + 1]];
-        final double y2 = posArray[nodeOrderArray[i * 3 + 1] + 1];
-        final double z2 = posArray[nodeOrderArray[i * 3 + 1] + 2];
-        final GM_Position pos2 = GeometryFactory.createGM_Position( x2, y2, z2 );
-
-        final double x3 = posArray[nodeOrderArray[i * 3 + 2]];
-        final double y3 = posArray[nodeOrderArray[i * 3 + 2] + 1];
-        final double z3 = posArray[nodeOrderArray[i * 3 + 2] + 2];
-        final GM_Position pos3 = GeometryFactory.createGM_Position( x3, y3, z3 );
-
-        final GM_Position[] poses = new GM_Position[3];
-        poses[0] = pos1;
-        poses[1] = pos2;
-        poses[2] = pos3;
-
-        feedTriangleEaterWith1dResults( nodes, curves, curveDistance, crs, poses );
-      }
-    }
-  }
-
-  private static Map<Integer, int[]> doTriangle( final float[] floatPosArray )
-  {
-    final TriangulationUtils triangulator = new TriangulationUtils();
-    final float[] normal = { 0, 0, 1 };
-    final int[] output = new int[floatPosArray.length];
-    final int numVertices = floatPosArray.length / 3;
-    final int num = triangulator.triangulateConcavePolygon( floatPosArray, 0, numVertices, output, normal );
-    final Map<Integer, int[]> triangles = new HashMap<Integer, int[]>();
-    triangles.put( num, output );
-    return triangles;
+    for( final GM_Position[] element : triangles )
+      feedTriangleEaterWith1dResults( nodes, curves, curveDistance, crs, element );
   }
 
   @SuppressWarnings("unchecked")
