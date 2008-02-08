@@ -247,8 +247,8 @@ public class NodeResultHelper
 
   public static BigDecimal getCrossSectionArea( final ITeschkeFlowRelation teschkeRelation, final BigDecimal depth )
   {
-    final IPolynomial1D[] polynomials = teschkeRelation.getPolynomials();
-    final TeschkeRelationConverter teschkeConv = new TeschkeRelationConverter( polynomials );
+    final List<IPolynomial1D> polynomials = teschkeRelation.getPolynomials();
+    final TeschkeRelationConverter teschkeConv = new TeschkeRelationConverter( polynomials.toArray( new IPolynomial1D[] {} ) );
 
     final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
     if( polyArea == null )

@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -70,7 +71,7 @@ public interface ITeschkeFlowRelation extends IFlowRelationship
 
   public void setStation( final BigDecimal station );
 
-  public IPolynomial1D[] getPolynomials( );
+  public List<IPolynomial1D> getPolynomials( );
 
   public double getSlope( );
 

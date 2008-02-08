@@ -76,7 +76,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -92,7 +91,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnitCmd;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
@@ -442,24 +440,22 @@ public class ImportWspmWizard extends Wizard implements IWizard
       flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getFeature().getId() );
 
     /* clone polynomes */
+    flowRel.getPolynomials().clear(); // clear polynomials in case, the relation already existed
     final List polynomeFeatures = qresult.getPolynomialFeatures();
-    if( polynomeFeatures != null )
+    for( final Object object : polynomeFeatures )
     {
-      for( final Object object : polynomeFeatures )
-      {
-        final GMLWorkspace qresultsWorkspace = qresult.getFeature().getWorkspace();
-        final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
-        if( polynomeFeature != null )
-          FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelPolynomeRelation, polynomeFeature );
-      }
+      final GMLWorkspace qresultsWorkspace = qresult.getFeature().getWorkspace();
+      final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
+      if( polynomeFeature != null )
+        FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelPolynomeRelation, polynomeFeature );
     }
 
     return flowRel;
   }
 
-  private static IBuildingFlowRelation addBuilding( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final IObservation<TupleResult> buildingObs, final IFE1D2DNode downStreamNode, final IFE1D2DNode upStreamNode ) throws CoreException
+  private static IBuildingFlowRelation addBuilding( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final IObservation<TupleResult> qresultBuildingObs, final IFE1D2DNode downStreamNode, final IFE1D2DNode upStreamNode ) throws CoreException
   {
-    final IPhenomenon buildingPhenomenon = buildingObs.getPhenomenon();
+    final IPhenomenon buildingPhenomenon = qresultBuildingObs.getPhenomenon();
     final String buildingId = buildingPhenomenon.getID();
     final QName buildingQName;
     if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( buildingId ) )
@@ -469,46 +465,53 @@ public class ImportWspmWizard extends Wizard implements IWizard
     else
       throw new IllegalStateException();
 
+    /* Derive direction from flow-direction of adjacent results */
+    final GM_Position downStreamPosition = downStreamNode.getPoint().getPosition();
+    final GM_Position upStreamPosition = upStreamNode.getPoint().getPosition();
+    final GM_Position oldBuildingPos = GeometryUtilities.createGM_PositionAtCenter( downStreamPosition, upStreamPosition );
+
     // check if there is already a relation on that position; if it is, just replace it with the new one
-    // TODO: inform user about it
-    final IFlowRelationship[] existingFlowRels = flowRelModel.findFlowrelationships( node.getPoint().getPosition(), SEARCH_DISTANCE );
-    IBuildingFlowRelation buildingRelation = null;
+    final IFlowRelationship[] existingFlowRels = flowRelModel.findFlowrelationships( oldBuildingPos, SEARCH_DISTANCE );
+    IBuildingFlowRelation existingRelation = null;
     for( final IFlowRelationship existingFlowrel : existingFlowRels )
     {
       if( existingFlowrel instanceof IBuildingFlowRelation )
       {
-        final IBuildingFlowRelation teschke = (IBuildingFlowRelation) existingFlowrel;
-
-        buildingRelation = teschke;
+        existingRelation = ((IBuildingFlowRelation) existingFlowrel);
         break;
       }
     }
 
-    if( buildingRelation == null )
+    final IBuildingFlowRelation buildingRelation;
+    if( existingRelation == null )
       buildingRelation = flowRelModel.addNew( buildingQName, IBuildingFlowRelation.class );
+    else
+      buildingRelation = existingRelation;
 
-    final IObservation<TupleResult> weirFlowObservation = buildingRelation.getBuildingObservation();
+    final IObservation<TupleResult> buildingObservation = buildingRelation.getBuildingObservation();
 
-    final GM_Point weirPos = replaceNodeWithElement( node );
-    buildingRelation.setPosition( weirPos );
-
-    /* Derive direction from flow-direction of adjacent results */
-    final GM_Position downStreamPosition = downStreamNode.getPoint().getPosition();
-    final GM_Position upStreamPosition = upStreamNode.getPoint().getPosition();
+    final GM_Point buildingPos = replaceNodeWithElement( node );
+    if( buildingPos != null )
+    {
+      if( existingRelation == null )
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Should not happen: could not create element for non-existing bulding", null ) );
+      buildingRelation.setPosition( buildingPos );
+    }
 
     /* Direction goes from upstream to downstream */
     final double degrees = GeometryUtilities.directionFromPositions( upStreamPosition, downStreamPosition );
     buildingRelation.setDirection( (int) degrees );
 
     /* copy building parameter from one observation to the other */
-    final TupleResult weirResult = buildingObs.getResult();
-    final TupleResult result = weirFlowObservation.getResult();
+    final TupleResult qresultResult = qresultBuildingObs.getResult();
+    final TupleResult buildingResult = buildingObservation.getResult();
+    buildingResult.clear(); // Clear in case if relation already existed
     final Map<String, String> componentMap = new HashMap<String, String>();
     componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
     componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
-    TupleResultUtilities.copyValues( weirResult, result, componentMap );
-    buildingRelation.setBuildingObservation( weirFlowObservation );
+    TupleResultUtilities.copyValues( qresultResult, buildingResult, componentMap );
+    buildingRelation.setBuildingObservation( buildingObservation );
 
     return buildingRelation;
   }
@@ -538,12 +541,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       DeleteCmdFactory.createDeleteCmd( model1d2d, toDelete, elementDeleteCmd );
       elementDeleteCmd.process();
 
-      // REMARK: get calculation unit of element to delete
-      // We know that we have exactly one 1D-Calculation unit
-      final IFeatureWrapperCollection<ICalculationUnit1D> containersOfElement0 = elements[0].getContainers();
-      final ICalculationUnit1D calcUnit = containersOfElement0.size() > 0 ? containersOfElement0.get( 0 ) : null;
-
-      /* create new edge beetween neighbour nodes */
+      /* create new edge between neighbor nodes */
       final ChangeDiscretiationModelCommand elementAddCmd = new ChangeDiscretiationModelCommand( workspace, model1d2d );
       final AddNodeCommand addNode0 = new AddNodeCommand( model1d2d, neighbour0.getPoint(), 0.0 );
       final AddNodeCommand addNode1 = new AddNodeCommand( model1d2d, neighbour1.getPoint(), 0.0 );
@@ -554,18 +552,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
       elementAddCmd.process();
 
-      // REMARK: also copy the containers of the old elements to the new element
-      if( calcUnit != null )
-      {
-        final AddElementToCalculationUnitCmd calcUnitCmd = new AddElementToCalculationUnitCmd( calcUnit, new IFE1D2DElement[] { eleCmd.getAddedElement() }, model1d2d );
-        calcUnitCmd.process();
-      }
-      else
-        // TODO: this should not happen, fix this...
-        System.out.println( "No calcunit for element: " + elements[0].getGmlID() );
+      // REMARK: the element might be null, if the building already exist (...), in that case we just return null
+      final IElement1D addedElement = eleCmd.getAddedElement();
+      if( addedElement == null )
+        return null;
 
-      /* Return position of weir */
-      final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( eleCmd.getAddedElement() );
+      /* Return position of building */
+      final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( addedElement );
+
       return GeometryFactory.createGM_Point( position, node.getPoint().getCoordinateSystem() );
     }
     catch( final Exception e )

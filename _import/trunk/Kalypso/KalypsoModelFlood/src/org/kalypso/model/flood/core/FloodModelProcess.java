@@ -112,7 +112,6 @@ public class FloodModelProcess
 
   private void processEvent( final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
-
     final ICoverageCollection terrainModel = m_model.getTerrainModel();
     final SubMonitor progress = SubMonitor.convert( monitor, terrainModel.size() * 100 );
     final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
@@ -153,7 +152,7 @@ public class FloodModelProcess
       final File file = destFile.getLocation().toFile();
 
       final String fileName = "../events/" + event.getDataPath() + "/results/" + file.getName();
-      ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", progress.newChild( 95 ) );
+      final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, file, fileName, "image/bin", progress.newChild( 95 ) );
       coverage.setName( "Flieﬂtiefen - " + terrainCoverage.getName() );
 
       final String desc = String.format( "erzeugt am: %1$te.%1$tm.%1$tY - %s", new Date(), terrainCoverage.getName() );

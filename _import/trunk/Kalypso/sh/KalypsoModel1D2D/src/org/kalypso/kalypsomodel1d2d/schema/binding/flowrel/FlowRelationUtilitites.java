@@ -99,25 +99,11 @@ public class FlowRelationUtilitites
   {
     try
     {
-      /* Node: return its position */
-      final GM_Object geom;
-      if( modelElement instanceof IFELine )
-      {
-        final IFELine element = (IFELine) modelElement;
-        geom = element.getGeometry();
-      }
-      else if( modelElement instanceof IFE1D2DNode )
-        geom = ((IFE1D2DNode) modelElement).getPoint();
-      else if( modelElement instanceof IFE1D2DElement )
-      {
-        final IFE1D2DElement element = (IFE1D2DElement) modelElement;
-        geom = element.recalculateElementGeometry();
-      }
-      else
-        geom = null;
+      final GM_Point point = getFlowPointFromElement( modelElement );
+      if( point == null )
+        return null;
 
-      if( geom != null )
-        return geom.getCentroid().getPosition();
+      return point.getPosition();
     }
     catch( final GM_Exception e )
     {
@@ -131,7 +117,30 @@ public class FlowRelationUtilitites
     return null;
   }
 
-  public static GM_Position getFlowPositionFromElement( final IFeatureWrapper2 modelElement, int numberOfPositions, int currentPosition )
+  private static GM_Point getFlowPointFromElement( final IFeatureWrapper2 modelElement ) throws GM_Exception
+  {
+    /* Node: return its position */
+    if( modelElement instanceof IFELine )
+    {
+      final IFELine element = (IFELine) modelElement;
+      final GM_Curve geom = element.getGeometry();
+      return geom == null ? null : geom.getCentroid();
+    }
+
+    if( modelElement instanceof IFE1D2DNode )
+      return ((IFE1D2DNode) modelElement).getPoint();
+
+    if( modelElement instanceof IFE1D2DElement )
+    {
+      final IFE1D2DElement element = (IFE1D2DElement) modelElement;
+      final GM_Object geom = element.recalculateElementGeometry();
+      return geom == null ? null : geom.getCentroid();
+    }
+
+    return null;
+  }
+
+  public static GM_Position getFlowPositionFromElement( final IFeatureWrapper2 modelElement, final int numberOfPositions, final int currentPosition )
   {
     final List<GM_Point> pointList = new ArrayList<GM_Point>();
     if( numberOfPositions < 2 )
@@ -143,10 +152,10 @@ public class FlowRelationUtilitites
         final GM_Curve geometry = ((IFELine) modelElement).getGeometry();
         final CS_CoordinateSystem coordinateSystem = geometry.getCoordinateSystem();
         final GM_Position[] positions = geometry.getAsLineString().getPositions();
-        for( int i = 0; i < positions.length; i++ )
-          pointList.add( GeometryFactory.createGM_Point( positions[i], coordinateSystem ) );
+        for( final GM_Position element : positions )
+          pointList.add( GeometryFactory.createGM_Point( element, coordinateSystem ) );
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -199,7 +208,7 @@ public class FlowRelationUtilitites
     return null;
   }
 
-  private static double getAbsoluteDistance( GM_Point point1, GM_Point point2 )
+  private static double getAbsoluteDistance( final GM_Point point1, final GM_Point point2 )
   {
     return Math.sqrt( Math.pow( (point1.getX() - point2.getX()), 2 ) + Math.pow( (point1.getY() - point2.getY()), 2 ) );
   }

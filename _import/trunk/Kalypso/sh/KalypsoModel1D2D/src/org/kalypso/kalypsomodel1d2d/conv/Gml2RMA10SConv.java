@@ -522,8 +522,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
           station = teschkeRelation.getStation();
           if( station == null )
             continue; // TODO: only for debug purpose, throw exception instead
-          final IPolynomial1D[] polynomials = teschkeRelation.getPolynomials();
-          final TeschkeRelationConverter teschkeConv = new TeschkeRelationConverter( polynomials );
+          final List<IPolynomial1D> polynomials = teschkeRelation.getPolynomials();
+          final TeschkeRelationConverter teschkeConv = new TeschkeRelationConverter( polynomials.toArray( new IPolynomial1D[] {} ) );
           final double slope = teschkeRelation.getSlope();
           final Double min = teschkeConv.getMin();
           final Double max = teschkeConv.getMax();

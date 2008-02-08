@@ -39,6 +39,10 @@
 			alignment="SWT.RIGHT" displayFormat="%.3f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
 		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D"
 			alignment="SWT.RIGHT" displayFormat="%.3f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelDownstream"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
+		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelUpstream"
+			alignment="SWT.RIGHT" displayFormat="%.2f" nullFormat="&lt;nicht gesetzt&gt;" optional="true" />
 	</gft:tupleResult>
 </gft:featureview>
 

@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -49,8 +48,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -60,6 +59,8 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlowRelation
 {
+  private final IFeatureWrapperCollection<IPolynomial1D> m_polynomes = new FeatureWrapperCollection<IPolynomial1D>( getFeature(), IPolynomial1D.class, QNAME_PROP_POLYNOMES );
+
   public TeschkeFlowRelation( final Feature featureToBind )
   {
     super( featureToBind, ITeschkeFlowRelation.QNAME );
@@ -84,21 +85,22 @@ public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlo
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getPolynomials()
    */
-  public IPolynomial1D[] getPolynomials( )
+  public List<IPolynomial1D> getPolynomials( )
   {
-    final Feature feature = getFeature();
-    final GMLWorkspace workspace = feature.getWorkspace();
-    final FeatureList polynomeFeatures = (FeatureList) feature.getProperty( QNAME_PROP_POLYNOMES );
-
-    final List<IPolynomial1D> resultList = new ArrayList<IPolynomial1D>( polynomeFeatures.size() );
-
-    for( final Object object : polynomeFeatures )
-    {
-      final Feature polyFeature = FeatureHelper.getFeature( workspace, object );
-      resultList.add( (IPolynomial1D) polyFeature.getAdapter( IPolynomial1D.class ) );
-    }
-
-    return resultList.toArray( new IPolynomial1D[resultList.size()] );
+    return m_polynomes;
+    // final Feature feature = getFeature();
+    // final GMLWorkspace workspace = feature.getWorkspace();
+    // final FeatureList polynomeFeatures = (FeatureList) feature.getProperty( QNAME_PROP_POLYNOMES );
+    //
+    // final List<IPolynomial1D> resultList = new ArrayList<IPolynomial1D>( polynomeFeatures.size() );
+    //
+    // for( final Object object : polynomeFeatures )
+    // {
+    // final Feature polyFeature = FeatureHelper.getFeature( workspace, object );
+    // resultList.add( (IPolynomial1D) polyFeature.getAdapter( IPolynomial1D.class ) );
+    // }
+    //
+    // return resultList.toArray( new IPolynomial1D[resultList.size()] );
   }
 
   /**
