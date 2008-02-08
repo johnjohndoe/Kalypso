@@ -71,5 +71,4 @@ public class DeleteSelectedRowsHandler extends AbstractHandler
 
     return null;
   }
-
 }

@@ -86,7 +86,19 @@ public class TupleResultFeatureControlHandlerProvider implements IComponentUiHan
       final int componentIndex = tupleResult.indexOfComponent( component );
       if( component != null )
       {
-        final IComponentUiHandler handler = ComponentUiHandlerFactory.getHandler( componentIndex, component, cd.isEditable(), cd.isResizeable(), cd.isMoveable(), cd.getLabel(), alignment, cd.getWidth(), cd.getWidthPercent(), cd.getDisplayFormat(), cd.getNullFormat(), cd.getParseFormat() );
+        final boolean editable = cd.isEditable();
+        final boolean resizeable = cd.isResizeable();
+        final boolean moveable = cd.isMoveable();
+        final String label = cd.getLabel();
+        final int width = cd.getWidth();
+        final int widthPercent = cd.getWidthPercent();
+        final String displayFormat = cd.getDisplayFormat();
+        final String nullFormat = cd.getNullFormat();
+        final String parseFormat = cd.getParseFormat();
+
+        final String columnLabel = label == null ? component.getName() : label;
+
+        final IComponentUiHandler handler = ComponentUiHandlerFactory.getHandler( componentIndex, component, editable, resizeable, moveable, columnLabel, alignment, width, widthPercent, displayFormat, nullFormat, parseFormat );
         result.put( componentIndex, handler );
       }
 
