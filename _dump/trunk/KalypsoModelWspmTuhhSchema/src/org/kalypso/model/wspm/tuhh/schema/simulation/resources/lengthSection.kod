@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.ksp.org/chart/factory"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://www.ksp.org/chart/factory ../../kalypso_workspace_dev_3.3/KalypsoChartFactory/etc/binding/schema/ChartConfiguration.xsd">
+ xsi:schemaLocation="http://www.ksp.org/chart/factory ../../../../KalypsoChartFactory/etc/binding/schema/ChartConfiguration.xsd">
     <Chart id="ls">
         <Title>%TITLE%</Title>
         <Description>Längsschnitt</Description>
@@ -82,7 +82,7 @@
         </Style>
     </Layer>
     
-    <Layer id="hen" visible="true">
+    <Layer id="hen" visible="false">
         <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
             <Parameters>
                 <Parameter value="Daten/%GMLFILENAME%" name="href"/>
@@ -106,7 +106,7 @@
     </Layer>
     
     
-    <Layer id="h_BV" visible="true">
+    <Layer id="h_BV" visible="false">
         <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
             <Parameters>
                 <Parameter value="Daten/%GMLFILENAME%" name="href"/>
@@ -128,7 +128,7 @@
         </Style>
     </Layer>
     
-    <Layer id="Boe_li" visible="true">
+    <Layer id="Boe_li" visible="false">
         <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
             <Parameters>
                 <Parameter value="Daten/%GMLFILENAME%" name="href"/>
@@ -149,7 +149,7 @@
         </Style>
     </Layer>
     
-    <Layer id="Boe_re" visible="true">
+    <Layer id="Boe_re" visible="false">
         <Provider epid="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider">
             <Parameters>
                 <Parameter value="Daten/%GMLFILENAME%" name="href"/>
@@ -176,8 +176,8 @@
         <Label>Station [km]</Label>
         <Direction>NEGATIVE</Direction>
         <Position>BOTTOM</Position>
-        <MinVal>0.0</MinVal>
-        <MaxVal>100.0</MaxVal>
+        <MinVal></MinVal>
+        <MaxVal></MaxVal>
         <RendererRef ref="NumberAxisRenderer"/>
     </Axis>
     
@@ -187,8 +187,9 @@
         <Label>Höhe [NN+m]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <MinVal>5.0</MinVal>
-        <MaxVal>10.0</MaxVal>
+        <MinVal></MinVal>
+        <MaxVal></MaxVal>
+        <PreferredAdjustment before="1" range="20" after="1"/>	
         <RendererRef ref="NumberAxisRenderer"/>
     </Axis>
     
@@ -198,8 +199,9 @@
         <Label>Abfluss [m³/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
-        <MinVal>-5.0</MinVal>
-        <MaxVal>10.0</MaxVal>
+        <MinVal></MinVal>
+        <MaxVal></MaxVal>
+		<PreferredAdjustment before="1" range="20" after="1"/>	
         <RendererRef ref="NumberAxisRenderer"/>
     </Axis>
 
