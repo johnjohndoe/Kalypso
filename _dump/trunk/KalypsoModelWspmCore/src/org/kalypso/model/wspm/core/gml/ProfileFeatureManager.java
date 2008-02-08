@@ -93,14 +93,11 @@ public class ProfileFeatureManager
       profil = ProfilFactory.createProfil( type, observation );
 
       /* station of profile */
-      try
+      final BigDecimal bigStation = (BigDecimal) profileFeature.getProperty( ProfileFeatureFactory.QNAME_STATION );
+      if( bigStation != null )
       {
-        final double station = ((BigDecimal) profileFeature.getProperty( ProfileFeatureFactory.QNAME_STATION )).doubleValue();
+        final double station = bigStation.doubleValue();
         profil.setStation( station );
-      }
-      catch( final NullPointerException e )
-      {
-        // nothing to do... (happens when you creating a new profile)*/
       }
 
       /* building of profile */
