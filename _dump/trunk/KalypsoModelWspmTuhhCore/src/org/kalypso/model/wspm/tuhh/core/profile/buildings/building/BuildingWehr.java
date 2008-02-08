@@ -44,8 +44,9 @@ import java.util.ArrayList;
 
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
@@ -55,8 +56,6 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author kimwerner
@@ -68,38 +67,44 @@ public class BuildingWehr extends AbstractObservationBuilding
   public BuildingWehr( final IProfil profil )
   {
     final TupleResult result = new TupleResult();
-    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
-    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    result.addComponent( new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, IWspmTuhhConstants.WEHR_TYP_BEIWERT, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart" ) ) );
+    result.addComponent( new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert" ) ) );
     final IRecord emptyRecord = result.createRecord();
     result.add( emptyRecord );
 
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
 
-    init( profil, observation );
+    m_profil = profil;
+    m_observation = observation;
+    profil.getResult().addComponent( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+
 
   }
 
   public BuildingWehr( final IProfil profil, final IObservation<TupleResult> observation )
   {
-    init( profil, observation );
-  }
-
-  private IComponent createComponent( final String type )
-  {
-    /* building observation properties */
-    if( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmConstants.Q_STRING, IWspmTuhhConstants.WEHR_TYP_BEIWERT, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart" ) );
-
-    else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert" ) );
-
-    /* profile observation properties */
-    else if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( type ) )
-      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr" ) );
-
-    throw new NotImplementedException();
+    m_profil = profil;
+    m_observation = observation;
+    profil.getResult().addComponent( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
 
   }
+
+//  private IComponent createComponent( final String type )
+//  {
+//    /* building observation properties */
+//    if( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART.equals( type ) )
+//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, IWspmTuhhConstants.WEHR_TYP_BEIWERT, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart" ) );
+//
+//    else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
+//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert" ) );
+//
+//    /* profile observation properties */
+//    else if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( type ) )
+//      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr" ) );
+//
+//    throw new NotImplementedException();
+//
+//  }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
@@ -107,7 +112,13 @@ public class BuildingWehr extends AbstractObservationBuilding
   @Override
   protected IComponent getPointProperty( final String id )
   {
-    return createComponent( id );
+    final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    for( final IProfilPointPropertyProvider provider : providers )
+    {
+      if( provider.providesPointProperty( id ) )
+        return provider.getPointProperty( id );
+    }
+    return null;
   }
 
 // public IProfilChange getWehrartProfileChange( final WEHRART type )
@@ -150,42 +161,42 @@ public class BuildingWehr extends AbstractObservationBuilding
     return ID;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#init(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.kalypso.observation.IObservation)
-   */
-  @Override
-  protected void init( final IProfil profil, final IObservation<TupleResult> observation )
-  {
-    super.init( profil, observation );
-
-    final IComponent cmpHoehe = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent cmpWehr = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-
-    if( cmpHoehe == null || cmpWehr == null )
-      return;
-
-    boolean update = true;
-
-    for( final IRecord record : profil.getResult() )
-    {
-      final IProfilPointMarker[] markers = profil.getPointMarkerFor( record );
-
-      boolean cont = false;
-      for( final IProfilPointMarker marker : markers )
-      {
-        if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( marker.getId().getId() ) )
-        {
-          update = !update;
-          cont = true;
-        }
-      }
-
-      if( cont == true )
-        continue;
-
-      if( update == true )
-        record.setValue( cmpWehr, record.getValue( cmpHoehe ) );
-    }
-  }
+//  /**
+//   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#init(org.kalypso.model.wspm.core.profil.IProfil,
+//   *      org.kalypso.observation.IObservation)
+//   */
+//  @Override
+//  protected void init( final IProfil profil, final IObservation<TupleResult> observation )
+//  {
+//    super.init( profil, observation );
+//
+//    final IComponent cmpHoehe = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+//    final IComponent cmpWehr = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+//
+//    if( cmpHoehe == null || cmpWehr == null )
+//      return;
+//
+//    boolean update = true;
+//
+//    for( final IRecord record : profil.getResult() )
+//    {
+//      final IProfilPointMarker[] markers = profil.getPointMarkerFor( record );
+//
+//      boolean cont = false;
+//      for( final IProfilPointMarker marker : markers )
+//      {
+//        if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( marker.getId().getId() ) )
+//        {
+//          update = !update;
+//          cont = true;
+//        }
+//      }
+//
+//      if( cont == true )
+//        continue;
+//
+//      if( update == true )
+//        record.setValue( cmpWehr, record.getValue( cmpHoehe ) );
+//    }
+//  }
 }

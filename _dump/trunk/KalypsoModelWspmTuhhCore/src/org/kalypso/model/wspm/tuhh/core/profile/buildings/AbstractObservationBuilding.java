@@ -41,11 +41,15 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -62,19 +66,19 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   public IComponent getObjectProperty( String componentId )
   {
     final IComponent[] components = getObjectProperties();
-    if (components.length<1)
+    if( components.length < 1 )
       return null;
-    for (final IComponent component : components )
+    for( final IComponent component : components )
     {
-      if (component.getId().equals( componentId ))
+      if( component.getId().equals( componentId ) )
         return component;
     }
     return null;
   }
 
-  private IProfil m_profil;
+  protected IProfil m_profil;
 
-  private IObservation<TupleResult> m_observation;
+  protected IObservation<TupleResult> m_observation;
 
   protected void init( final IProfil profil, final IObservation<TupleResult> observation )
   {
@@ -82,17 +86,11 @@ public abstract class AbstractObservationBuilding implements IProfileObject
     m_observation = observation;
 
     final String[] buildingProfileProperties = getProfileProperties();
-    final IComponent[] pointProperties = profil.getPointProperties();
-
-    final List<String> profileProperties = new ArrayList<String>();
-    for( final IComponent component : pointProperties )
-    {
-      profileProperties.add( component.getId() );
-    }
+    final Map<String, IComponent> props = ProfilUtil.getComponentsFromProfile( profil );
 
     for( final String id : buildingProfileProperties )
     {
-      if( !profileProperties.contains( id ) )
+      if( !props.containsKey( id ) )
       {
         profil.addPointProperty( getPointProperty( id ) );
       }
@@ -123,6 +121,13 @@ public abstract class AbstractObservationBuilding implements IProfileObject
    */
   public void setValue( final IComponent component, final Object value )
   {
+
+    final String[] profileProperties = getProfileProperties();
+    for( final String string : profileProperties )
+    {
+
+    }
+
     try
     {
       final TupleResult result = m_observation.getResult();
@@ -132,7 +137,16 @@ public abstract class AbstractObservationBuilding implements IProfileObject
       if( result.size() > 1 )
         throw new IllegalStateException( "wspm building always consists of one IRecord-Set row" );
       else if( result.size() == 0 )
+      {
+//        final Set<IComponent> set = new HashSet<IComponent>();
+//        for( final IComponent c : result.getComponents() )
+//        {
+//          set.add( c );
+//        }
+
         record = result.createRecord();
+      }
+
       else
         record = result.get( 0 );
 

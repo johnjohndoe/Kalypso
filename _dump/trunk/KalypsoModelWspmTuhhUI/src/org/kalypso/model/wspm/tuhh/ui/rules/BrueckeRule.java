@@ -62,7 +62,7 @@ import org.kalypso.observation.result.IRecord;
 /**
  * Br�ckenkanten d�rfen nicht unterhalb des Gel�ndeniveaus liegen Oberkante darf nicht unter Unterkante
  * 
- * @author belger
+ * @author kimwerner
  */
 public class BrueckeRule extends AbstractValidatorRule
 {
@@ -91,26 +91,27 @@ public class BrueckeRule extends AbstractValidatorRule
       // Br�ckengeometrie
       for( final IRecord point : points )
       {
-        final double h = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-        final double uk = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) );
-        final double ok = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
-        final Double bewuchs = point.getOwner().hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) ? (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
+        final Object h = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+        final Object uk = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) );
+        final Object ok = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
+        final Object bewuchs = point.getOwner().hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) ? (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
             : 0.0;
-
-        if( uk - ok > delta )
+        if( h == null || uk == null || ok == null || bewuchs == null )
+          return;
+        if( (Double) uk - (Double) ok > delta )
           collector.createProfilMarker( true, "Br�ckenkanten schneiden sich", "", ArrayUtils.indexOf( profil.getPoints(), point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
-        if( ok_h_l == null && ok - h > delta )
+        if( ok_h_l == null && (Double) ok - (Double) h > delta )
           ok_h_l = lastPoint;
-        if( ok_h_l != null && uk_h_l == null && uk - h > delta )
+        if( ok_h_l != null && uk_h_l == null && (Double) uk - (Double) h > delta )
           uk_h_l = lastPoint;
-        if( ok_h_l != null && uk_h_l != null && uk_h_r == null && Math.abs( uk - h ) < delta )
+        if( ok_h_l != null && uk_h_l != null && uk_h_r == null && Math.abs( (Double) uk - (Double) h ) < delta )
           uk_h_r = point;
-        if( ok_h_l != null && uk_h_l != null && uk_h_r != null && ok_h_r == null && Math.abs( ok - h ) < delta )
+        if( ok_h_l != null && uk_h_l != null && uk_h_r != null && ok_h_r == null && Math.abs( (Double) ok - (Double) h ) < delta )
           ok_h_r = point;
-        if( h - ok > delta || h - uk > delta )
+        if( (Double) h - (Double) ok > delta || (Double) h - (Double) uk > delta )
           collector.createProfilMarker( true, "Br�ckenkanten unter Gel�ndeh�he", "", ArrayUtils.indexOf( profil.getPoints(), point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
         // Bewuchs �nter der Br�cke
-        if( ok_h_l != null && ok_h_r == null && bewuchs != 0.0 )
+        if( ok_h_l != null && ok_h_r == null && (Double) bewuchs != 0.0 )
           collector.createProfilMarker( true, "Bewuchsparameter im Br�ckenbereich", "", ArrayUtils.indexOf( profil.getPoints(), point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
 
         lastPoint = point;

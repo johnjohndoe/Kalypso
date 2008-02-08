@@ -155,13 +155,12 @@ public class PrfSink implements IProfilSink
 
     final IProfileObject[] buildings = profil.getProfileObjects();
 
-    // TODO IProfileObject is now implemented as list!
     IProfileObject building = null;
     if( buildings.length > 0 )
       building = buildings[0];
 
-    final String buildingTyp = building == null ? "" : building.getId();
-    if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( buildingTyp ) )
+   // final String buildingTyp = building == null ? "" : building.getId();
+    if(building !=null&& !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() )&&!IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
       try
       {
         dbr.getY()[0] = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );

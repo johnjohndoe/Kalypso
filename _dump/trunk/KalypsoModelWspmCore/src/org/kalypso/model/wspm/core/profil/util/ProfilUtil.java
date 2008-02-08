@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.util;
 
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -276,6 +278,26 @@ public class ProfilUtil
           - breite ) )
         pkt = point;
     return pkt;
+  }
+
+  public static IRecord[] findPoints( final IProfil profile, final IComponent property, final Point2D point, final Double radius )
+  {
+
+    final IRecord[] points = profile.getPoints();
+    final IComponent cBreite = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+
+    if( property == null || cBreite == null )
+      return new IRecord[] {};
+    final ArrayList<IRecord> found = new ArrayList<IRecord>();
+    for( final IRecord p : points )
+    {
+     
+      final Point2D p2D = new Point2D.Double((Double)p.getValue( cBreite ),(Double)p.getValue( property )); 
+      if( p2D.distance( point )<= radius )
+        found.add( p);
+    }
+
+    return found.toArray( new IRecord[] {} );
   }
 
   public static IRecord findPoint( final IProfil profil, final double breite, final double delta )

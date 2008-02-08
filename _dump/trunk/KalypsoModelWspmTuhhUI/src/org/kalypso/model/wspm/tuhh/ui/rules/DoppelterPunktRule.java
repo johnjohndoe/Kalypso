@@ -54,7 +54,11 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-
+/**
+ * 
+ * @author kimwerner
+ *
+ */
 public class DoppelterPunktRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException

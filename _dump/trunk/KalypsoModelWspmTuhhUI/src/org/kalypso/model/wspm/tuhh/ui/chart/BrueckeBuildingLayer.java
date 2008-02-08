@@ -158,10 +158,11 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   {
     final IProfilEventManager pem = getProfilEventManager();
     final IProfil profile = pem.getProfil();
+    final IProfileObject building = profile.getProfileObjects()[0];
     final IProfilChange[] changes = new IProfilChange[3];
     changes[0] = new ProfileObjectSet( profile, new IProfileObject[] {} );
-    changes[1] = new PointPropertyRemove( profile, ProfilObsHelper.getPropertyFromId( profile, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
-    changes[2] = new PointPropertyRemove( profile, ProfilObsHelper.getPropertyFromId( profile, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) );
+    changes[1] = new PointPropertyRemove( profile, building.getPointProperties()[0]);
+    changes[2] = new PointPropertyRemove( profile,  building.getPointProperties()[1] );
     final ProfilOperation operation = new ProfilOperation( " entfernen", pem, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }

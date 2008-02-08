@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
@@ -409,12 +410,14 @@ public class WehrPanel extends AbstractProfilView
 
         if( (building == null) || !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
           return;
-        final IProfilPointMarker[] trennFl = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-        final IRecord point = trennFl[0].getPoint();
+        final IComponent cTrennF = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+        final IComponent cWehrT = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
+        final IProfilPointMarker[] trennFl = getProfil().getPointMarkerFor( cTrennF );
+
+        final IRecord point = trennFl.length > 0 ? trennFl[0].getPoint() : getProfil().getPoints()[0];
         final IProfilChange[] changes = new IProfilChange[3];
-        final IComponent comp = ProfilObsHelper.getPropertyFromId( m_pointPropertyProviders, IWspmTuhhConstants.MARKER_TYP_WEHR );
-        changes[0] = new PointPropertyAdd( getProfil(), comp, null );
-        changes[1] = new PointMarkerEdit( new ProfilDevider( comp, point ), 0.0 );
+        changes[0] = new PointPropertyAdd( getProfil(), cWehrT );
+        changes[1] = new PointMarkerEdit( new ProfilDevider( cWehrT, point ), 0.0 );
         changes[2] = new ActiveObjectEdit( getProfil(), point, null );
         final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", getProfilEventManager(), changes, true );
         new ProfilOperationJob( operation ).schedule();

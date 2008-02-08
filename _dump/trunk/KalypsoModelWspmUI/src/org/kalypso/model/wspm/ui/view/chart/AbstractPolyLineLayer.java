@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -68,7 +69,7 @@ import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
 
 /**
- * @author gernot
+ * @author kimwerner
  */
 public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 {
@@ -247,20 +248,23 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     for( final IComponent property : m_lineProperties )
     {
       final Point2D[] points = ProfilUtil.getPoints2D( getProfil(), property );
+
       for( final Point2D element : points )
       {
         final Point p = logical2screen( element );
         final Rectangle hover = RectangleUtils.buffer( p );
         if( hover.contains( mousePos ) )
         {
+          // TODO:KIM read delta from property
           final double delta = 0.0001;
-          // TODO:KIM This is potentially wrong. We have to check for both x and y!
-          final IRecord point = ProfilUtil.findPoint( getProfil(), element.getX(), delta );
-          /* should also use y: points[i].getY(), */
+          final double x = element.getX();
+          final double y = element.getY();
 
-          final int index = ArrayUtils.indexOf( points, point );
+          final IRecord[] found = ProfilUtil.findPoints( getProfil(), property, element, delta );
 
-          return isPointVisible( point ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { "Breite", element.getX(), property.getName(),
+          final int index = ArrayUtils.indexOf( getProfil().getPoints(), found[0] );
+
+          return isPointVisible( found[0] ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { "Breite", element.getX(), property.getName(),
               element.getY() } ) ) : null;
         }
       }

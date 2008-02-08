@@ -53,17 +53,35 @@ public final class PointPropertyAdd implements IProfilChange
 
   private final Object[] m_values;
 
+  private IComponent m_cloneFrom;
+
   public PointPropertyAdd( final IProfil profil, final IComponent property, final Object[] values )
   {
     m_profil = profil;
     m_property = property;
     m_values = values;
+    m_cloneFrom = null;
   }
 
+  public PointPropertyAdd( final IProfil profil, final IComponent property, final IComponent component )
+  {
+    m_profil = profil;
+    m_property = property;
+    m_values = null;
+    m_cloneFrom = component;
+  }
+  public PointPropertyAdd( final IProfil profil, final IComponent property)
+  {
+    m_profil = profil;
+    m_property = property;
+    m_cloneFrom = null;
+    m_values = null;
+  }
   public PointPropertyAdd( final IProfil profil, final IComponent property, final Object defaultValue )
   {
     m_profil = profil;
     m_property = property;
+    m_cloneFrom = null;
     m_values = new Object[profil.getPoints().length];
     for( int i = 0; i < m_values.length; i++ )
       m_values[i] = defaultValue;
@@ -73,15 +91,19 @@ public final class PointPropertyAdd implements IProfilChange
   {
     if( hint != null )
       hint.setPointPropertiesChanged();
-
-    m_profil.addPointProperty( m_property );
-
-    final IRecord[] points = m_profil.getPoints();
-    if( m_values != null && points.length == m_values.length )
+    if( m_cloneFrom != null )
+      m_profil.getResult().addComponent( m_property,m_cloneFrom );
+    else
     {
-      int i = 0;
-      for( final IRecord point : points )
-        point.setValue( m_property, m_values[i++] );
+       m_profil.addPointProperty( m_property );
+       final int index = m_profil.getResult().indexOfComponent( m_property );
+      final IRecord[] points = m_profil.getPoints();
+      if( m_values != null && points.length == m_values.length )
+      {
+        int i = 0;
+        for( final IRecord point : points )
+          point.setValue( index, m_values[i++] );
+      }
     }
     return new PointPropertyRemove( m_profil, m_property );
   }

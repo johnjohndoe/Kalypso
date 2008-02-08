@@ -93,12 +93,13 @@ public class ProfilMarkerResolutionGenerator implements IMarkerResolutionGenerat
     };
 
     final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
-
+    if( resolutions == null )
+      return new IMarkerResolution2[] {};
     m_xstream.setClassLoader( bundleLoader );
     final IMarkerResolution2[] mss = (IMarkerResolution2[]) m_xstream.fromXML( resolutions );
     // reset class-loader in order to free the inner class
     m_xstream.setClassLoader( this.getClass().getClassLoader() );
-    
+
     return mss;
   }
 }
