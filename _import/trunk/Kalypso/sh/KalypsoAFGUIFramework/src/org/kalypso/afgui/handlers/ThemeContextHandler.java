@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -56,9 +55,8 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -80,7 +78,7 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
       final IMapModell mapModell = mapPanel.getMapModell();
 
       if( mapModell == null )
-        throw new ExecutionException( "Keine Kartenvorlage geladen." );
+        return Status.CANCEL_STATUS;
 
       final String featureType = m_featureType;
       m_activateThemeJob = new ActivateThemeJob( mapModell, Messages.getString( "ThemeContextHandler.3" ), featureType );
@@ -96,6 +94,7 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     if( data instanceof Map )
