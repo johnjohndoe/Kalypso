@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.kalypso.observation.result.IComponent;
@@ -69,7 +70,7 @@ public class TupleResultFeatureControlHandlerProvider implements IComponentUiHan
    */
   public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
   {
-    final Map<Integer, IComponentUiHandler> result = new HashMap<Integer, IComponentUiHandler>( m_descriptors.length );
+    final Map<Integer, IComponentUiHandler> result = new LinkedHashMap<Integer, IComponentUiHandler>( m_descriptors.length );
 
     final IComponent[] components = tupleResult.getComponents();
 
