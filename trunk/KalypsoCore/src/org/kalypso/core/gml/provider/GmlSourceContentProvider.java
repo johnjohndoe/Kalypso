@@ -41,7 +41,7 @@
 package org.kalypso.core.gml.provider;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -56,9 +56,9 @@ import com.vividsolutions.jts.util.Assert;
  */
 public class GmlSourceContentProvider implements ITreeContentProvider
 {
-  private final Map<IGmlSourceProvider, ITreeContentProvider> m_contentProvider = new HashMap<IGmlSourceProvider, ITreeContentProvider>();
+  private final Map<IGmlSourceProvider, ITreeContentProvider> m_contentProvider = new LinkedHashMap<IGmlSourceProvider, ITreeContentProvider>();
 
-  private final Map<Object, IGmlSourceProvider> m_providerHash = new HashMap<Object, IGmlSourceProvider>();
+  private final Map<Object, IGmlSourceProvider> m_providerHash = new LinkedHashMap<Object, IGmlSourceProvider>();
 
   private IGmlSourceProvider[] m_provider;
 

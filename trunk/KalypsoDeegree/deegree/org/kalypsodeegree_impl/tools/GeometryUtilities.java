@@ -45,6 +45,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.j3d.geom.TriangulationUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -1023,6 +1024,32 @@ public class GeometryUtilities
   }
 
   /**
+   * converts two given curves into a position array of a ccw oriented, closed polygon.<br>
+   * The ring is simply produced by adding all positions of the first curve and the positions of the second curve in
+   * inverse order.
+   * 
+   * @param curves
+   *            the curves as {@link GM_Curve}
+   */
+  public static GM_Position[] getPolygonfromCurves( final GM_Curve firstCurve, final GM_Curve secondCurve ) throws GM_Exception
+  {
+    /* get the positions of the curves */
+
+    // as a first guess, we assume that the curves build a non-intersecting polygon
+    final GM_Position[] firstPoses = firstCurve.getAsLineString().getPositions();
+    final GM_Position[] secondPoses = secondCurve.getAsLineString().getPositions();
+    final GM_Position[] polygonPositions = new GM_Position[firstPoses.length + secondPoses.length];
+
+    for( int i = 0; i < firstPoses.length; i++ )
+      polygonPositions[i] = firstPoses[i];
+
+    for( int i = 0; i < secondPoses.length; i++ )
+      polygonPositions[i + firstPoses.length] = secondPoses[secondPoses.length - i - 1];
+
+    return orientateRing( polygonPositions );
+  }
+
+  /**
    * converts two given curves into a position array of a non-self-intersecting, ccw oriented, closed polygon
    * 
    * @param curves
@@ -1039,6 +1066,16 @@ public class GeometryUtilities
     if( isSelfIntersecting( polygonPositions ) )
       polygonPositions = getPolygonPositions( curves, true );
 
+    return orientateRing( polygonPositions );
+  }
+
+  /**
+   * Orientates a ring counter clock wise.
+   * 
+   * @return The inverted list of position, or the original list, if the ring was already oriented in the right way.
+   */
+  public static GM_Position[] orientateRing( final GM_Position[] polygonPositions )
+  {
     // check orientation
     if( calcSignedAreaOfRing( polygonPositions ) < 0 )
     {
@@ -1054,4 +1091,50 @@ public class GeometryUtilities
     else
       return polygonPositions;
   }
+
+  /**
+   * Triangulates a closed ring (must be oriented counter-clock-wise).
+   * 
+   * @return An array of triangles: GM_Position[numberOfTriangles][3]
+   */
+  public static GM_Position[][] triangulateRing( final GM_Position[] ring )
+  {
+    final float[] posArray = new float[ring.length * 3];
+
+    for( int i = 0; i < ring.length; i++ )
+    {
+      posArray[i * 3] = (float) ring[i].getX();
+      posArray[i * 3 + 1] = (float) ring[i].getY();
+      posArray[i * 3 + 2] = (float) ring[i].getZ();
+    }
+
+    final float[] normal = { 0, 0, 1 };
+    final int[] output = new int[posArray.length];
+    final int numVertices = posArray.length / 3;
+    final TriangulationUtils triangulator = new TriangulationUtils();
+    final int num = triangulator.triangulateConcavePolygon( posArray, 0, numVertices, output, normal );
+
+    final GM_Position[][] triangles = new GM_Position[num][3];
+
+    for( int i = 0; i < num; i++ )
+    {
+      triangles[i] = new GM_Position[3];
+
+      final double x1 = posArray[output[i * 3]];
+      final double y1 = posArray[output[i * 3] + 1];
+      final double z1 = posArray[output[i * 3] + 2];
+      final double x2 = posArray[output[i * 3 + 1]];
+      final double y2 = posArray[output[i * 3 + 1] + 1];
+      final double z2 = posArray[output[i * 3 + 1] + 2];
+      final double x3 = posArray[output[i * 3 + 2]];
+      final double y3 = posArray[output[i * 3 + 2] + 1];
+      final double z3 = posArray[output[i * 3 + 2] + 2];
+      triangles[i][0] = GeometryFactory.createGM_Position( x1, y1, z1 );
+      triangles[i][1] = GeometryFactory.createGM_Position( x2, y2, z2 );
+      triangles[i][2] = GeometryFactory.createGM_Position( x3, y3, z3 );
+    }
+
+    return triangles;
+  }
+
 }
