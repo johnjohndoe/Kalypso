@@ -104,7 +104,7 @@ public class GeoLog implements IGeoLog
    */
   public void close( )
   {
-    m_statusCollection.getWrappedFeature().getWorkspace().dispose();
+    m_statusCollection.getFeature().getWorkspace().dispose();
   }
 
   /**

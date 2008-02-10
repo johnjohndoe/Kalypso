@@ -130,7 +130,7 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getWrappedFeature()
    */
   @Override
-  public Feature getWrappedFeature( )
+  public Feature getFeature( )
   {
     return super.getFeature();
   }

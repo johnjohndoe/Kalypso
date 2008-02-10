@@ -91,8 +91,8 @@ public class SzenarioController implements IScenarioDataListener
       m_roughnessAssignListener = new RoughnessAssignListener( m_discModel, m_terrainModel );
 
       // register common listener to terrain/deisc modell
-      m_discModel.getWrappedFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
-      m_terrainModel.getWrappedFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
+      m_discModel.getFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
+      m_terrainModel.getFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
     }
 
     if( model instanceof IRoughnessClsCollection && m_scenarioDataPath != null )
@@ -113,9 +113,9 @@ public class SzenarioController implements IScenarioDataListener
 
     // unregister any listeners
     if( m_discModel != null )
-      m_discModel.getWrappedFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
+      m_discModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
     if( m_terrainModel != null )
-      m_terrainModel.getWrappedFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
+      m_terrainModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
     if( m_roughnessAssignListener != null )
       m_roughnessAssignListener.dispose();
 

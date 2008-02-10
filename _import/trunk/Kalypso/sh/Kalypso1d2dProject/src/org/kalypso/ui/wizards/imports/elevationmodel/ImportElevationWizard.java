@@ -163,7 +163,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               temSys = new TerrainElevationModelSystem( ImportElevationWizard.this.terrainModel );
             }
 
-            final GMLWorkspace workspace = temSys.getWrappedFeature().getWorkspace();
+            final GMLWorkspace workspace = temSys.getFeature().getWorkspace();
 
             // Decoding the White Spaces present in the File Paths.
             final File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
@@ -217,8 +217,8 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               tem.setCoordinateSystem( selectedCoordinateSystem );
             }
 
-            final Feature temFeature = tem.getWrappedFeature();
-            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys.getWrappedFeature(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            final Feature temFeature = tem.getFeature();
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys.getFeature(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getParent(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
             final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();

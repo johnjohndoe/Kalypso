@@ -105,7 +105,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
     {
       return;
     }
-    m_terrainElevationModelSystem.getTerrainElevationModels().remove( m_elevationModel.getWrappedFeature() );
+    m_terrainElevationModelSystem.getTerrainElevationModels().remove( m_elevationModel.getFeature() );
   }
 
   /**

@@ -128,7 +128,7 @@ public class DiscretisationModelUtils
    */
   public static IFEDiscretisationModel1d2d modelForItem( final IFeatureWrapper2 modelItem )
   {
-    final Feature parent = modelItem.getWrappedFeature().getParent();
+    final Feature parent = modelItem.getFeature().getParent();
     return (IFEDiscretisationModel1d2d) parent.getAdapter( IFEDiscretisationModel1d2d.class );
   }
 

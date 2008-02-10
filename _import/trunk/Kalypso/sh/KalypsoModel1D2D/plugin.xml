@@ -141,6 +141,10 @@
               class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControlFactory"
               id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControlFactory">
         </extensionControl>
+        <extensionControl
+              class="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControlFactory"
+              id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControlFactory">
+        </extensionControl>
      </extension>
      <extension
            point="org.kalypso.chart.factory.LayerProvider">
@@ -713,6 +717,18 @@
             </parameter>
          </defaultHandler>
       </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CalculateFlowRelations"
+            name="1D-Parameter berechnen">
+         <defaultHandler
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CalculateFlowrelationWidget">
+            </parameter>
+         </defaultHandler>
+      </command>
      </extension>
 	 <extension
            point="org.eclipse.ui.menus">
@@ -752,6 +768,18 @@
                  label="Profil selektieren"
                  style="radio"
                  tooltip="Profil selektieren und in Karte anzeigen">
+           </command>
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CalculateFlowRelations"
+                 icon="icons/elcl16/startCalulation.gif"
+                 label="Paremeter berechnen"
+                 style="radio"
+                 tooltip="Die Parameter neu berechnen">
+              <visibleWhen>
+                 <reference
+                       definitionId="org.kalypso.ui.views.mapView.expressions.param1d">
+                 </reference>
+              </visibleWhen>
            </command>
         </menuContribution>
         <menuContribution

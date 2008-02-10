@@ -277,10 +277,10 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
         }
       }
 
-      Feature distFeature = discretisationModel.getWrappedFeature();
+      Feature distFeature = discretisationModel.getFeature();
 
       Feature[] deletedFeatures = changedFeatureList.toArray( new Feature[changedFeatureList.size()] );
-      final GMLWorkspace discWorkspace = discretisationModel.getWrappedFeature().getWorkspace();
+      final GMLWorkspace discWorkspace = discretisationModel.getFeature().getWorkspace();
       FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( discWorkspace, distFeature, deletedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
       discWorkspace.fireModellEvent( event );
     }

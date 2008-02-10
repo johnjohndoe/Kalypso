@@ -227,7 +227,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement.getWrappedFeature(), line, symb );
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement.getFeature(), line, symb );
         de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
       }
       else if( m_modelElement instanceof IFELine )
@@ -240,7 +240,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement.getWrappedFeature(), line, symb );
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement.getFeature(), line, symb );
         de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
       }
       else if( m_modelElement instanceof IPolyElement )
@@ -254,7 +254,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
 
-        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_modelElement.getWrappedFeature(), surface, symb );
+        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_modelElement.getFeature(), surface, symb );
         de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
       }
     }
@@ -312,7 +312,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     {
       public void run( )
       {
-        final Feature parentFeature = m_flowRelCollection.getWrappedFeature();
+        final Feature parentFeature = m_flowRelCollection.getFeature();
         final IRelationType parentRelation = m_flowRelCollection.getWrappedList().getParentFeatureTypeProperty();
         final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation, m_modelElement );
 
@@ -327,7 +327,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
         /* Post it as an command */
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-        final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getWrappedFeature(), selectionManager, true, true );
+        final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getFeature(), selectionManager, true, true );
         try
         {
           workspace.postCommand( command );

@@ -149,11 +149,11 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
 
   private final void fireProcessChanges( )
   {
-    final Feature calUnitFeature = calculationUnit.getWrappedFeature();
-    final Feature model1d2dFeature = model1d2d.getWrappedFeature();
+    final Feature calUnitFeature = calculationUnit.getFeature();
+    final Feature model1d2dFeature = model1d2d.getFeature();
     List<Feature> features = new ArrayList<Feature>();
     features.add( calUnitFeature );
-    features.add( bLineToRemove.getWrappedFeature() );
+    features.add( bLineToRemove.getFeature() );
 
     GMLWorkspace workspace = calUnitFeature.getWorkspace();
     FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace

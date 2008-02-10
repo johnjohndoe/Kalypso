@@ -126,12 +126,12 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
       tinRef.setSourceType( typeForSource( source ) );
 
       tinRefs[i] = tinRef;
-      changedFeatures[i] = tinRef.getWrappedFeature();
+      changedFeatures[i] = tinRef.getFeature();
     }
     ProgressUtilities.worked( progress, 20 );
 
     /* post command for events stuff... */
-    final Feature parentFeature = m_tins.getWrappedFeature();
+    final Feature parentFeature = m_tins.getFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     final ModellEvent modelEvent = new FeatureStructureChangeModellEvent( workspace, parentFeature, changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
     workspace.fireModellEvent( modelEvent );

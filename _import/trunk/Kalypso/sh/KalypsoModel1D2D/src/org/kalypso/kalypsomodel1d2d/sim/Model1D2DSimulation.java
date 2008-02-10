@@ -51,12 +51,10 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
@@ -79,7 +77,6 @@ import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
-import org.kalypso.simulation.ui.IKalypsoSimulationUIConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -139,13 +136,8 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     }
     finally
     {
-      if( !Boolean.valueOf( Platform.getDebugOption( IKalypsoSimulationUIConstants.DEBUG_KEEP_SIM_FILES ) ) )
-      {
-        if( tmpDir != null )
-          FileUtilities.deleteRecursive( tmpDir );
-        if( outputDir != null )
-          FileUtilities.deleteRecursive( outputDir );
-      }
+      SimulationUtilitites.clearTmpDir( tmpDir );
+      SimulationUtilitites.clearTmpDir( outputDir );
     }
   }
 
@@ -259,7 +251,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
       {
         if( m_calculationUnit.equals( currentCalcUnit.getGmlID() ) )
         {
-          final Feature feature = controlModelGroup.getModel1D2DCollection().getWrappedFeature();
+          final Feature feature = controlModelGroup.getModel1D2DCollection().getFeature();
           final FeatureChange change = new FeatureChange( feature, feature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL ), controlModel.getGmlID() );
           final ChangeFeaturesCommand command = new ChangeFeaturesCommand( feature.getWorkspace(), new FeatureChange[] { change } );
           try

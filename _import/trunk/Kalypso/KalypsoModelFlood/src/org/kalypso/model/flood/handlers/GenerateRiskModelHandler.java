@@ -120,7 +120,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       {
         final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
-        createdFeatures.add( annualCoverageCollection.getWrappedFeature() );
+        createdFeatures.add( annualCoverageCollection.getFeature() );
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
         for( final ICoverage coverage : coverages )
         {
@@ -132,8 +132,8 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       /* ------ */
 
       // TODO: maybe save other models?
-      final GMLWorkspace workspace = rasterDataModel.getWrappedFeature().getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getWrappedFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      final GMLWorkspace workspace = rasterDataModel.getFeature().getWorkspace();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       riskDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
       riskDataProvider.saveModel( IRasterDataModel.class, new NullProgressMonitor() );
     }

@@ -131,7 +131,7 @@ public class GeometryRecalculator
   @SuppressWarnings("unchecked")
   private void addToNodes( final IFE1D2DNode node )
   {
-    final Feature feature = node.getWrappedFeature();
+    final Feature feature = node.getFeature();
     if( m_nodeList.contains( feature ) )
       return;
     addToDiscretisationModelChanges( node );
@@ -141,7 +141,7 @@ public class GeometryRecalculator
 
   private void addToDiscretisationModelChanges( final IFeatureWrapper2 element )
   {
-    final Feature feature = element.getWrappedFeature();
+    final Feature feature = element.getFeature();
     if( m_discretisationModelChanges.contains( feature ) )
       return;
     feature.invalidEnvelope();
@@ -162,7 +162,7 @@ public class GeometryRecalculator
 
   private void addToFlowRelationshipsModelChanges( final IBoundaryCondition boundaryCondition, final IFeatureWrapper2 element )
   {
-    final Feature feature = boundaryCondition.getWrappedFeature();
+    final Feature feature = boundaryCondition.getFeature();
     if( m_flowRelationshipsModelChanges.contains( feature ) )
       return;
     feature.invalidEnvelope();
@@ -184,14 +184,14 @@ public class GeometryRecalculator
         {
           final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( element, countBCs, ++i );
           bc.setPosition( GeometryFactory.createGM_Point( position.getX(), position.getY(), crs ) );
-          m_flowRelationshipsModelChanges.add( bc.getWrappedFeature() );
+          m_flowRelationshipsModelChanges.add( bc.getFeature() );
         }
       }
     }
     else
     {
       boundaryCondition.setPosition( GeometryFactory.createGM_Point( FlowRelationUtilitites.getFlowPositionFromElement( element ), crs ) );
-      m_flowRelationshipsModelChanges.add( boundaryCondition.getWrappedFeature() );
+      m_flowRelationshipsModelChanges.add( boundaryCondition.getFeature() );
     }
     m_flowRelationshipsModelChanges.add( feature );
   }

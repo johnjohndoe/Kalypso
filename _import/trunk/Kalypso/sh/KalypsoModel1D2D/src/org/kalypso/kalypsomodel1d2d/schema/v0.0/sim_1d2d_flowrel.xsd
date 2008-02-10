@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--  Provide schema for the concrete (1d) flow relations of the 1d2d model
+<!--  Provides schema for the 1d flow relations of the 1d2d model
 	@author Gernot Belger
 -->
 
 <xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
-	xmlns:math="org.kalypso.gml.common.math"
-	xmlns:wspmprof="org.kalypso.model.wspmprofile" 
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:xlink="http://www.w3.org/1999/xlink" 
-	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:math="org.kalypso.gml.common.math"
+	xmlns:wspmprof="org.kalypso.model.wspmprofile" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation" elementFormDefault="qualified"
 	attributeFormDefault="unqualified">
 
@@ -26,14 +23,29 @@
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
 	<xs:import namespace="org.kalypso.model.wspmprofile" />
 	<xs:import namespace="org.kalypso.gml.common.math" />
-	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation" schemaLocation="sim_1d2d_observation.xsd" />
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
+		schemaLocation="sim_1d2d_observation.xsd" />
 
+	<xs:element name="_FlowRelation1D" type="wb1d2d:AbstractFlowRelation1DType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Abstract substitution-head of all 1D-parameter relations.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="AbstractFlowRelation1DType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractFlowRelationshipType">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<!-- ================================================
 		King Flow Relation
 		================================================== -->
 
 	<xs:element name="KingFlowRelation" type="wb1d2d:KingFlowRelationType"
-		substitutionGroup="simBase:_FlowRelationship">
+		substitutionGroup="wb1d2d:_FlowRelation1D">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>Netzparameter (King)</xs:label>
@@ -48,9 +60,8 @@
 
 	<xs:complexType name="KingFlowRelationType">
 		<xs:complexContent>
-			<xs:extension base="simBase:AbstractFlowRelationshipType">
+			<xs:extension base="wb1d2d:AbstractFlowRelation1DType">
 				<xs:sequence>
-					<!--  TODO: restrict to profiles of certain type -->
 					<xs:element name="kingProfileMember" type="wb1d2d:KingProfilePropertyType" />
 					<xs:element name="width" type="xs:decimal">
 						<xs:annotation>
@@ -136,6 +147,7 @@
 
 	<xs:complexType name="KingProfilePropertyType">
 		<xs:sequence>
+			<!--  TODO: restrict to profiles of certain type -->
 			<xs:element ref="wspmprof:Profile" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
@@ -144,7 +156,7 @@
 		Polynomial Flow Relation (Teschke)
 		================================================== -->
 	<xs:element name="TeschkeFlowRelation" type="wb1d2d:TeschkeFlowRelationType"
-		substitutionGroup="simBase:_FlowRelationship">
+		substitutionGroup="wb1d2d:_FlowRelation1D">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>Netzparameter (Teschke)</xs:label>
@@ -159,7 +171,7 @@
 
 	<xs:complexType name="TeschkeFlowRelationType">
 		<xs:complexContent>
-			<xs:extension base="simBase:AbstractFlowRelationshipType">
+			<xs:extension base="wb1d2d:AbstractFlowRelation1DType">
 				<xs:sequence>
 					<xs:element name="pointsMember" type="wb1d2d:HPointsPropertyType">
 						<xs:annotation>
@@ -202,7 +214,6 @@
 					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
-								Link to any profile. Just for documentation reason.
 								<xs:label>Profil</xs:label>
 								<xs:tooltip>Referenz auf Profil</xs:tooltip>
 								<xs:description>Referenz auf Profil</xs:description>
@@ -255,7 +266,8 @@
 		Buildings
 		================================================== -->
 
-	<xs:element name="BuildingFlowRelation" type="wb1d2d:AbstractBuildingFlowRelationType" abstract="true" substitutionGroup="simBase:_FlowRelationship">
+	<xs:element name="BuildingFlowRelation" type="wb1d2d:AbstractBuildingFlowRelationType" abstract="true"
+		substitutionGroup="wb1d2d:_FlowRelation1D">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>Bauwerk (1D)</xs:label>
@@ -270,7 +282,7 @@
 
 	<xs:complexType name="AbstractBuildingFlowRelationType" abstract="true">
 		<xs:complexContent>
-			<xs:extension base="simBase:AbstractFlowRelationshipType">
+			<xs:extension base="wb1d2d:AbstractFlowRelation1DType">
 				<xs:sequence>
 					<xs:element name="kind" type="wb1d2d:buildingKind" fixed="10">
 						<xs:annotation>
@@ -308,13 +320,26 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-
+					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Profil</xs:label>
+								<xs:tooltip>Referenz auf Profil</xs:tooltip>
+								<xs:description>Referenz auf Profil</xs:description>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Profile</xs:label>
+								<xs:tooltip>Profile Reference</xs:tooltip>
+								<xs:description>Reference to profile</xs:description>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:simpleType name="buildingKind" >
+	<xs:simpleType name="buildingKind">
 		<xs:restriction base="xs:int">
 			<xs:enumeration value="1"></xs:enumeration>
 			<xs:enumeration value="2"></xs:enumeration>
@@ -338,7 +363,8 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:element name="WeirFlowRelation" type="wb1d2d:WeirFlowRelationType" substitutionGroup="wb1d2d:BuildingFlowRelation">
+	<xs:element name="WeirFlowRelation" type="wb1d2d:WeirFlowRelationType"
+		substitutionGroup="wb1d2d:BuildingFlowRelation">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>Wehr (1D)</xs:label>
@@ -353,11 +379,12 @@
 
 	<xs:complexType name="WeirFlowRelationType">
 		<xs:complexContent>
-			<xs:extension base="wb1d2d:AbstractBuildingFlowRelationType"/>
+			<xs:extension base="wb1d2d:AbstractBuildingFlowRelationType" />
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:element name="BridgeFlowRelation" type="wb1d2d:BridgeFlowRelationType" substitutionGroup="wb1d2d:BuildingFlowRelation">
+	<xs:element name="BridgeFlowRelation" type="wb1d2d:BridgeFlowRelationType"
+		substitutionGroup="wb1d2d:BuildingFlowRelation">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>Brücke (1D)</xs:label>
@@ -372,7 +399,7 @@
 
 	<xs:complexType name="BridgeFlowRelationType">
 		<xs:complexContent>
-			<xs:extension base="wb1d2d:AbstractBuildingFlowRelationType"/>
+			<xs:extension base="wb1d2d:AbstractBuildingFlowRelationType" />
 		</xs:complexContent>
 	</xs:complexType>
 

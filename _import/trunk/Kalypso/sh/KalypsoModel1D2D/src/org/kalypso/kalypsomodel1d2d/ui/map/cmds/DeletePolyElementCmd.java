@@ -105,9 +105,9 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     for( final IFE1D2DComplexElement complexElement : parentComplexElements )
     {
       complexElement.getElements().remove( elementID );
-      m_changedFeatureList.add( complexElement.getWrappedFeature() );
+      m_changedFeatureList.add( complexElement.getFeature() );
     }
-    m_changedFeatureList.add( m_element2D.getWrappedFeature() );
+    m_changedFeatureList.add( m_element2D.getFeature() );
 
     // delete link to edges and the edges itself (with the nodes)
     final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_element2D.getEdges();
@@ -117,14 +117,14 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
       if( containers.contains( elementID ) )
         containers.remove( elementID );
       remEdgeCmd.setEdgeToDel( edge );
-      m_changedFeatureList.add( edge.getWrappedFeature() );
+      m_changedFeatureList.add( edge.getFeature() );
 
       remEdgeCmd.process();
       final IFeatureWrapperCollection nodes = edge.getNodes();
       for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
       {
         IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
-        Feature wrappedFeature = featureWrapper.getWrappedFeature();
+        Feature wrappedFeature = featureWrapper.getFeature();
         m_changedFeatureList.add( wrappedFeature );
       }
     }

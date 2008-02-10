@@ -88,19 +88,6 @@ public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlo
   public List<IPolynomial1D> getPolynomials( )
   {
     return m_polynomes;
-    // final Feature feature = getFeature();
-    // final GMLWorkspace workspace = feature.getWorkspace();
-    // final FeatureList polynomeFeatures = (FeatureList) feature.getProperty( QNAME_PROP_POLYNOMES );
-    //
-    // final List<IPolynomial1D> resultList = new ArrayList<IPolynomial1D>( polynomeFeatures.size() );
-    //
-    // for( final Object object : polynomeFeatures )
-    // {
-    // final Feature polyFeature = FeatureHelper.getFeature( workspace, object );
-    // resultList.add( (IPolynomial1D) polyFeature.getAdapter( IPolynomial1D.class ) );
-    // }
-    //
-    // return resultList.toArray( new IPolynomial1D[resultList.size()] );
   }
 
   /**

@@ -97,7 +97,7 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
   {
     // TODO check if such a line already exists (with same nodes etc...)
     
-    final Feature parentFeature = m_model.getWrappedFeature();
+    final Feature parentFeature = m_model.getFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     final IFeatureWrapperCollection<IFELine> continuityLines = m_model.getContinuityLines();
 
@@ -109,8 +109,8 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
     final List<IFE1D2DNode> nodes = m_line.createFullNodesList( m_nodeList );
     for( int i = 0; i < nodes.size(); i++ )
       nodes.get( i ).addContainer( m_line.getGmlID() );
-    m_line.getWrappedFeature().invalidEnvelope();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_line.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_line.getFeature().invalidEnvelope();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_line.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     m_processed = true;
   }
 

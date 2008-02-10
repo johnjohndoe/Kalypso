@@ -92,11 +92,11 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
     ITerrainElevationModelSystem temSys = terrainModel.getTerrainElevationModelSystem();
     if( temSys != null )
     {
-      return temSys.getWrappedFeature();
+      return temSys.getFeature();
     }
     else
     {
-      Feature parentFeature = terrainModel.getWrappedFeature();
+      Feature parentFeature = terrainModel.getFeature();
       Feature newFeature = Util.createFeatureAsProperty( parentFeature, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS );
 
       return newFeature;

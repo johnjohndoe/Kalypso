@@ -318,7 +318,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
       /* Close and save the geo log */
       m_geoLog.close();
       final IStatusCollection statusCollection = m_geoLog.getStatusCollection();
-      final GMLWorkspace workspace = statusCollection.getWrappedFeature().getWorkspace();
+      final GMLWorkspace workspace = statusCollection.getFeature().getWorkspace();
       // REMARK: we directly save the log into the unit-folder, as the results already where moved from the output
       // directory
       // REMARK2: the calc unit meta may be not set, but the simulation log is written anyway... Probably we should

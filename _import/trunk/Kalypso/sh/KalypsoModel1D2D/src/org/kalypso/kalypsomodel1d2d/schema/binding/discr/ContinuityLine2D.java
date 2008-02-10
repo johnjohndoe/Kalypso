@@ -91,9 +91,9 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     final FeatureList nodeList = (FeatureList) getFeature().getProperty( IFELine.PROP_NODES );
     nodeList.clear();
     for( final IFE1D2DNode node : fullNodeList )
-      nodeList.add( node.getWrappedFeature().getId() );
+      nodeList.add( node.getFeature().getId() );
     nodeList.invalidate();
-    getWrappedFeature().invalidEnvelope();
+    getFeature().invalidEnvelope();
     return m_nodes;
   }
 
@@ -132,7 +132,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   {
     final Iterator<IFE1D2DNode> iterator = nodes.iterator();
     final IFE1D2DNode startNode = iterator.next();
-    final IFEDiscretisationModel1d2d model = new FE1D2DDiscretisationModel( startNode.getWrappedFeature().getWorkspace().getRootFeature() );
+    final IFEDiscretisationModel1d2d model = new FE1D2DDiscretisationModel( startNode.getFeature().getWorkspace().getRootFeature() );
     final List<IFE1D2DNode> curveNodes = new ArrayList<IFE1D2DNode>();
     curveNodes.add( startNode );
     IFE1D2DNode currentNode = startNode;
@@ -144,7 +144,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
         final Collection<IFE1D2DNode> neighbourNodes = currentNode.getNeighbours();
         if( neighbourNodes.size() == 0 )
         {
-          final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "ContinuityLine2D.2" ) + currentNode.getWrappedFeature().getId() ); //$NON-NLS-1$
+          final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "ContinuityLine2D.2" ) + currentNode.getFeature().getId() ); //$NON-NLS-1$
           throw new CoreException( status );
         }
         IFE1D2DNode bestCandidateNode = null;

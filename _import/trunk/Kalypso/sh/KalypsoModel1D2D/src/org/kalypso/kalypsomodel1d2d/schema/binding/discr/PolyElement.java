@@ -169,7 +169,7 @@ public class PolyElement extends Element2D implements IPolyElement
     // ModelOps.sortElementEdges( this );
 
     edgeList.invalidate();
-    getWrappedFeature().invalidEnvelope();
+    getFeature().invalidEnvelope();
   }
 
   /**
@@ -209,7 +209,7 @@ public class PolyElement extends Element2D implements IPolyElement
 
   public static IPolyElement createPolyElement( final IFEDiscretisationModel1d2d discModel )
   {
-    final Feature parentFeature = discModel.getWrappedFeature();
+    final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
     final IRelationType parentElementProperty = (IRelationType) parentFT.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
 

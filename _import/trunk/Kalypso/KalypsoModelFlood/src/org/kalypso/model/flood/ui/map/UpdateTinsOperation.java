@@ -330,7 +330,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     ProgressUtilities.worked( monitor, 33 );
 
     /* Fire modell event as feature was changed */
-    final Feature refFeature = ref.getWrappedFeature();
+    final Feature refFeature = ref.getFeature();
     final GMLWorkspace workspace = refFeature.getWorkspace();
     final ModellEvent event = new FeaturesChangedModellEvent( workspace, new Feature[] { refFeature } );
     workspace.fireModellEvent( event );

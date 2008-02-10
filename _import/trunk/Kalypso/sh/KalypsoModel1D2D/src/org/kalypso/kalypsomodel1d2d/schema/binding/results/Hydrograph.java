@@ -64,7 +64,7 @@ public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
    */
   public GM_Object getLocation( )
   {
-    final GM_Object location = (GM_Object) getWrappedFeature().getProperty( QNAME_PROP_LOCATION );
+    final GM_Object location = (GM_Object) getFeature().getProperty( QNAME_PROP_LOCATION );
     if( location == null )
       return null;
 
@@ -76,7 +76,7 @@ public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
    */
   public void setLocation( GM_Point point )
   {
-    getWrappedFeature().setProperty( QNAME_PROP_LOCATION, point );
+    getFeature().setProperty( QNAME_PROP_LOCATION, point );
   }
 
   public IObservation<TupleResult> initializeObservation( final String domainComponentUrn, final String valueComponentUrn )

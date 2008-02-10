@@ -160,16 +160,16 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
   private final void fireProcessChanges( )
   {
     List<Feature> features = new ArrayList<Feature>( elementsToRemove.length * 2 );
-    features.add( calculationUnit.getWrappedFeature() );
+    features.add( calculationUnit.getFeature() );
     for( IFE1D2DElement ele : elementsToRemove )
     {
-      features.remove( ele.getWrappedFeature() );
+      features.remove( ele.getFeature() );
     }
 
-    GMLWorkspace workspace = calculationUnit.getWrappedFeature().getWorkspace();
+    GMLWorkspace workspace = calculationUnit.getFeature().getWorkspace();
     FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
                                                                                                 // workspace,
-    model1d2d.getWrappedFeature(),// Feature parentFeature,
+    model1d2d.getFeature(),// Feature parentFeature,
     features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
     FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType
     );

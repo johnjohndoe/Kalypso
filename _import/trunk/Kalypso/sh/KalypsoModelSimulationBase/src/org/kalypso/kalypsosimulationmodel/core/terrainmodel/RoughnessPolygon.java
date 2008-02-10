@@ -252,7 +252,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    */
   public FeatureChange[] resetRoughnessClassMemberXLink( )
   {
-    final Feature feature = getWrappedFeature();
+    final Feature feature = getFeature();
 
     setRoughnessClassMember( null );
     feature.setProperty( PROP_ROUGHNESS_STYLE, null );

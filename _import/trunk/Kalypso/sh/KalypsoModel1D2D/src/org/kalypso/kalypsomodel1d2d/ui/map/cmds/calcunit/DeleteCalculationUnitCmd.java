@@ -189,7 +189,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
     final Collection<ICalculationUnit1D2D> parentUnits = CalcUnitOps.getParentUnit( m_calcUnitToDelete, m_model1d2d );
     m_undoParentUnits = parentUnits.toArray( new ICalculationUnit1D2D[0] );
-    m_undoQName = m_calcUnitToDelete.getWrappedFeature().getFeatureType().getQName();
+    m_undoQName = m_calcUnitToDelete.getFeature().getFeatureType().getQName();
     final IFeatureWrapperCollection<IFENetItem> elements = m_calcUnitToDelete.getElements();
     m_undoElements = elements.toArray( new IFENetItem[] {} );
   }
@@ -290,14 +290,14 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       // control model doesn't exists, so nothing will happen
       return;
 
-    final Feature parentFeature = controlModel1D2DCollection.getWrappedFeature();
+    final Feature parentFeature = controlModel1D2DCollection.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
 
     final IPropertyType propType = parentFT.getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
     if( !(propType instanceof IRelationType) )
       return;
-    final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( controlModel1D2D.getWrappedFeature().getWorkspace() );
-    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( controlModel1D2D.getWrappedFeature() );
+    final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( controlModel1D2D.getFeature().getWorkspace() );
+    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( controlModel1D2D.getFeature() );
     try
     {
       cmdWorkspace.postCommand( delControlCmd );
@@ -313,18 +313,18 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     final List<Feature> changedFeatures = new ArrayList<Feature>();
 
     if( m_calcUnitToDelete != null )
-      changedFeatures.add( m_calcUnitToDelete.getWrappedFeature() );
+      changedFeatures.add( m_calcUnitToDelete.getFeature() );
 
     for( final IFeatureWrapper2 element : m_undoElements )
     {
       if( element == null )
         continue;
-      changedFeatures.add( element.getWrappedFeature() );
+      changedFeatures.add( element.getFeature() );
     }
 
     // parent units
     for( final ICalculationUnit1D2D parent : m_undoParentUnits )
-      changedFeatures.add( parent.getWrappedFeature() );
+      changedFeatures.add( parent.getFeature() );
 
     // child unit not needed since there is no back reference
 
@@ -345,8 +345,8 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD;
     else
       changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
-    final GMLWorkspace workspace = m_model1d2d.getWrappedFeature().getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getWrappedFeature(), changedFeatures, changedType );
+    final GMLWorkspace workspace = m_model1d2d.getFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getFeature(), changedFeatures, changedType );
     workspace.fireModellEvent( event );
   }
 

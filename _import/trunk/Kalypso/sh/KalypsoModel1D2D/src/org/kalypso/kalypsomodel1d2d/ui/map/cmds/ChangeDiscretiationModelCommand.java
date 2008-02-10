@@ -125,7 +125,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
         {
           if( changedFeature != null )
           {
-            final Feature wrappedFeature = changedFeature.getWrappedFeature();
+            final Feature wrappedFeature = changedFeature.getFeature();
             if( wrappedFeature != null )
             {
               changedFeatures.add( wrappedFeature );
@@ -152,7 +152,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
         {
           if( changedFeature != null )
           {
-            final Feature wrappedFeature = changedFeature.getWrappedFeature();
+            final Feature wrappedFeature = changedFeature.getFeature();
             if( wrappedFeature != null )
             {
               changedFeatures.add( wrappedFeature );
@@ -171,7 +171,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
     GeometryCalcControl.setDoCalcElement( true );
     for( final IFE1D2DEdge edge : m_model1d2d.getEdges() )
     {
-      edge.getWrappedFeature().invalidEnvelope();
+      edge.getFeature().invalidEnvelope();
     }
     m_model1d2d.getEdges().getWrappedList().invalidate();
     m_model1d2d.getElements().getWrappedList().invalidate();
@@ -183,7 +183,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
   {
     final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );
-    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d.getWrappedFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d.getFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**

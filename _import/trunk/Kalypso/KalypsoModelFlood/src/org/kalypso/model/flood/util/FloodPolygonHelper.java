@@ -74,7 +74,7 @@ public class FloodPolygonHelper
     for( final IFloodPolygon floodPolygon : polygons )
     {
       // get the feature
-      final Feature polygonFeature = floodPolygon.getWrappedFeature();
+      final Feature polygonFeature = floodPolygon.getFeature();
 
       // get the event, the polygon is valid for
       final IRunoffEvent runoffEvent = (IRunoffEvent) polygonFeature.getProperty( IFloodPolygon.QNAME_PROP_EVENT );

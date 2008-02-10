@@ -49,10 +49,8 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -77,7 +75,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -92,11 +89,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
-import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
+import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
@@ -116,13 +113,11 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationComparator;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
-import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizard.gml.GmlFileImportPage;
@@ -358,7 +353,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qresultsUrl, calcWorkspace.getFeatureProviderFactory() );
       final QIntervallResultCollection qResultCollection = new QIntervallResultCollection( qresultsWorkspace.getRootFeature() );
 
-      final Feature flowRelParentFeature = flowRelModel.getWrappedFeature();
+      final Feature flowRelParentFeature = flowRelModel.getFeature();
       final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
 
       final List resultList = qResultCollection.getQResultFeatures();
@@ -388,7 +383,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         }
         else if( buildingObs != null )
         {
-          // REMARK: it is importent that elementsByStation is sorted in upstream direction
+          // REMARK: it is important that elementsByStation is sorted in upstream direction
           final IFE1D2DNode downStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, false );
           final IFE1D2DNode upStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, true );
           if( downStreamNode == null || upStreamNode == null )
@@ -396,7 +391,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
             throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Kann Bauwerke nicht ohne die anliegenden Profile importieren.", null ) );
           }
           else
-            flowRel = addBuilding( flowRelModel, node, buildingObs, downStreamNode, upStreamNode );
+            flowRel = addBuilding( flowRelModel, node, qresult, downStreamNode, upStreamNode );
         }
         else
         {
@@ -409,7 +404,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           flowRel.setName( qresult.getName() );
           flowRel.setDescription( qresult.getDescription() );
 
-          addedFeatures.add( flowRel.getWrappedFeature() );
+          addedFeatures.add( flowRel.getFeature() );
         }
       }
 
@@ -420,7 +415,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     {
       fnfe.printStackTrace();
 
-      /* Results are noit available, just inform user */
+      /* Results are not available, just inform user */
       return StatusUtilities.createWarningStatus( Messages.getString( "ImportWspmWizard.15" ) ); //$NON-NLS-1$
     }
 
@@ -429,11 +424,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   private static IFlowRelationship addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws Exception
   {
-    final Feature flowRelParentFeature = flowRelModel.getWrappedFeature();
-    final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
-    final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
-    final IRelationType flowRelObsRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POINTSOBSERVATION );
-    final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
     final BigDecimal station = qresult.getStation();
 
     // check if there is already teschkeRel on that position; if it is, just replace it with the new one
@@ -463,37 +453,24 @@ public class ImportWspmWizard extends Wizard implements IWizard
       flowRel.setStation( station );
     }
 
-    // Round to 5 fraction digits TODO: why? This should already be done in WSPM?
-    flowRel.setSlope( qresult.getSlope().setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() );
-
-    /* copy results into new flow relation */
-
-    /* clone observation */
-    final Feature pointObsFeature = (Feature) qresult.getWrappedFeature().getProperty( QIntervallResult.QNAME_P_QIntervallResult_pointsMember );
-    if( pointObsFeature != null )
-      FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelObsRelation, pointObsFeature );
-
     /* relink profile to corresponding profile in profile network */
     final WspmProfile wspmProfile = profilesByStation.get( station );
     if( wspmProfile != null )
       flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getFeature().getId() );
 
-    /* clone polynomes */
-    flowRel.getPolynomials().clear(); // clear polynomials in case, the relation already existed
-    final List polynomeFeatures = qresult.getPolynomialFeatures();
-    for( final Object object : polynomeFeatures )
-    {
-      final GMLWorkspace qresultsWorkspace = qresult.getFeature().getWorkspace();
-      final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
-      if( polynomeFeature != null )
-        FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelPolynomeRelation, polynomeFeature );
-    }
+    /* copy results into new flow relation */
+
+    // Round to 5 fraction digits TODO: why? This should already be done in WSPM?
+    flowRel.setSlope( qresult.getSlope().setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() );
+
+    FlowRelationshipCalcOperation.copyTeschkeData( flowRel, qresult );
 
     return flowRel;
   }
 
-  private static IBuildingFlowRelation addBuilding( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final IObservation<TupleResult> qresultBuildingObs, final IFE1D2DNode downStreamNode, final IFE1D2DNode upStreamNode ) throws CoreException
+  private static IBuildingFlowRelation addBuilding( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final IFE1D2DNode downStreamNode, final IFE1D2DNode upStreamNode ) throws CoreException
   {
+    final IObservation<TupleResult> qresultBuildingObs = qresult.getBuildingObservation( false );
     final IPhenomenon buildingPhenomenon = qresultBuildingObs.getPhenomenon();
     final String buildingId = buildingPhenomenon.getID();
     final QName buildingQName;
@@ -527,8 +504,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
     else
       buildingRelation = existingRelation;
 
-    final IObservation<TupleResult> buildingObservation = buildingRelation.getBuildingObservation();
-
     final GM_Point buildingPos = replaceNodeWithElement( node );
     if( buildingPos != null )
     {
@@ -541,23 +516,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final double degrees = GeometryUtilities.directionFromPositions( upStreamPosition, downStreamPosition );
     buildingRelation.setDirection( (int) degrees );
 
-    /* copy building parameter from one observation to the other */
-    final TupleResult qresultResult = qresultBuildingObs.getResult();
-    final TupleResult buildingResult = buildingObservation.getResult();
-    buildingResult.clear(); // Clear in case if relation already existed
-    final Map<String, String> componentMap = new HashMap<String, String>();
-    componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-    componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
-    componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
-    TupleResultUtilities.copyValues( qresultResult, buildingResult, componentMap );
-    buildingRelation.setBuildingObservation( buildingObservation );
+    FlowRelationshipCalcOperation.copyBuildingData( buildingRelation, qresult );
 
     return buildingRelation;
   }
 
   private static GM_Point replaceNodeWithElement( final IFE1D2DNode node ) throws CoreException
   {
-    final GMLWorkspace workspace = node.getWrappedFeature().getWorkspace();
+    final GMLWorkspace workspace = node.getFeature().getWorkspace();
     final IFEDiscretisationModel1d2d model1d2d = DiscretisationModelUtils.modelForItem( node );
 
     final IFE1D2DElement[] elements = node.getElements();
@@ -571,8 +537,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
     try
     {
       /* delete elements (and associated edges) */
-      final Feature feature0 = elements[0].getWrappedFeature();
-      final Feature feature1 = elements[1].getWrappedFeature();
+      final Feature feature0 = elements[0].getFeature();
+      final Feature feature1 = elements[1].getFeature();
       final EasyFeatureWrapper[] toDelete = new EasyFeatureWrapper[] { new EasyFeatureWrapper( null, feature0, feature0.getParent(), feature0.getParentRelation() ),
           new EasyFeatureWrapper( null, feature1, feature1.getParent(), feature1.getParentRelation() ) };
 
@@ -663,7 +629,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       {
         /* add new node */
         node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-        addedFeatures.add( node.getWrappedFeature() );
+        addedFeatures.add( node.getFeature() );
 
         node.setName( "" ); //$NON-NLS-1$
         final String desc = String.format( Messages.getString( "ImportWspmWizard.18" ) + profileMember.getDescription() ); //$NON-NLS-1$
@@ -703,7 +669,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         {
           /* Create an edge between lastNode and node */
           final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
-          addedFeatures.add( edge.getWrappedFeature() );
+          addedFeatures.add( edge.getFeature() );
 
           edge.addNode( lastNode.getGmlID() );
           edge.addNode( node.getGmlID() );
@@ -711,14 +677,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
           lastNode.addContainer( edge.getGmlID() );
           node.addContainer( edge.getGmlID() );
 
-          edge.getWrappedFeature().invalidEnvelope();
+          edge.getFeature().invalidEnvelope();
 
           edgeList.add( edge );
 
           /* Create corresponding element */
           final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
 
-          addedFeatures.add( element1d.getWrappedFeature() );
+          addedFeatures.add( element1d.getFeature() );
 
           element1d.setEdge( edge );
         }
@@ -731,7 +697,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     final Feature[] addedFeatureArray = addedFeatures.toArray( new Feature[addedFeatures.size()] );
 
-    final Feature discModelFeature = discretisationModel.getWrappedFeature();
+    final Feature discModelFeature = discretisationModel.getFeature();
     final GMLWorkspace workspace = discModelFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModelFeature, addedFeatureArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
@@ -756,7 +722,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       network.clear();
     }
 
-    final Feature networkFeature = network.getWrappedFeature();
+    final Feature networkFeature = network.getFeature();
 
     /* Set user friendly name and description */
     final URL reachContext = reach.getFeature().getWorkspace().getContext();
@@ -779,8 +745,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     // We fire the add event, even if the network was not added, this should be enough to refresh anything with is
     // related to it...
-    final GMLWorkspace workspace = network.getWrappedFeature().getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, network.getWrappedFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    final GMLWorkspace workspace = network.getFeature().getWorkspace();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, network.getFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     return result;
   }

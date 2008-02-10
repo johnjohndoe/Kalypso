@@ -40,20 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger
@@ -70,7 +74,7 @@ public abstract class BuildingFlowRelation extends FlowRelationship implements I
    */
   public KIND getKind( )
   {
-    final Integer kindInt = (Integer) getWrappedFeature().getProperty( QNAME_PROP_KIND );
+    final Integer kindInt = (Integer) getFeature().getProperty( QNAME_PROP_KIND );
     if( kindInt == null )
       return null;
 
@@ -98,7 +102,7 @@ public abstract class BuildingFlowRelation extends FlowRelationship implements I
 
   private Feature getObservationFeature( )
   {
-    return (Feature) getWrappedFeature().getProperty( QNAME_PROP_OBSERVATION );
+    return (Feature) getFeature().getProperty( QNAME_PROP_OBSERVATION );
   }
 
   /**
@@ -173,17 +177,6 @@ public abstract class BuildingFlowRelation extends FlowRelationship implements I
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getUpstreamNode()
-   */
-  @SuppressWarnings("unchecked")
-  public IFE1D2DNode getUpstreamNode( )
-  {
-
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
    * Returns the building values (hOW, hUW, discharge) as some kind of table.
    * <p>
    * The building parameters are NOT backed by the underlying featre, so changed to the feature are not refelcted in the
@@ -196,4 +189,51 @@ public abstract class BuildingFlowRelation extends FlowRelationship implements I
   {
     return new BuildingParameters( getBuildingObservation() );
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getProfile()
+   */
+  public WspmProfile getProfile( )
+  {
+    final Feature profileFeature = FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
+    return profileFeature == null ? null : new WspmProfile( profileFeature );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setProfileLink(java.lang.String)
+   */
+  public void setProfileLink( final String profileRef )
+  {
+    final Feature feature = getFeature();
+
+    final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
+    final IFeatureType profileFT = profileRelation.getTargetFeatureType();
+    final Feature profileLinkFeature = new XLinkedFeature_Impl( feature, profileRelation, profileFT, profileRef, "", "", "", "", "" );
+    feature.setProperty( profileRelation, profileLinkFeature );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#getStation()
+   */
+  public BigDecimal getStation( )
+  {
+    final WspmProfile profile = getProfile();
+    if( profile == null )
+      return null;
+
+    return profile.getBigStation();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#setStation(java.math.BigDecimal)
+   */
+  public void setStation( final BigDecimal station )
+  {
+    final WspmProfile profile = getProfile();
+    if( profile == null )
+      return;
+
+    profile.setBigStation( station );
+  }
+
 }

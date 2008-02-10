@@ -227,9 +227,9 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getWrappedFeature()
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getFeature()
    */
-  public Feature getWrappedFeature( )
+  public Feature getFeature( )
   {
     throw new UnsupportedOperationException();
   }

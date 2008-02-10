@@ -211,7 +211,7 @@ public class Util
     try
     {
       final IFeatureWrapper2 model = getModel( modelClass );
-      final URL context = model.getWrappedFeature().getWorkspace().getContext();
+      final URL context = model.getFeature().getWorkspace().getContext();
 
       // String path2 = context.getPath();
       // IResource resource = new Path(path2);

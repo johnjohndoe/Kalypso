@@ -231,12 +231,17 @@ public class FlowRelationUtilitites
 
   public static IFE1D2DNode findUpstreamNode( final IBuildingFlowRelation buildingRelation, final IFEDiscretisationModel1d2d discModel )
   {
+    return findNeighborNode( buildingRelation, discModel, true );
+  }
+
+  public static IFE1D2DNode findNeighborNode( final IBuildingFlowRelation buildingRelation, final IFEDiscretisationModel1d2d discModel, final boolean upstreams )
+  {
     /* find element */
     final GM_Point buildingLocation = buildingRelation.getPosition();
     if( buildingLocation == null )
       return null;
 
-    final IElement1D element1d = discModel.find1DElement( buildingLocation, 0.01 );
+    final IElement1D element1d = findBuildingElement1D( buildingRelation, discModel );
     if( element1d == null )
       return null;
 
@@ -258,13 +263,18 @@ public class FlowRelationUtilitites
     final int buildingDirection = buildingRelation.getDirection();
 
     /*
-     * Return the node to which the direction is WORSE than to the other, because the direction points downstreams but
-     * we are looking for the upstream node.
+     * Upstreams lies the node for which the direction is WORSE than to the other, because the direction points
+     * downstreams.
      */
     if( Math.abs( startDirection - buildingDirection ) < Math.abs( endDirection - buildingDirection ) )
-      return endNode;
+      return upstreams ? endNode : startNode;
 
-    return startNode;
+    return upstreams ? startNode : endNode;
+  }
+
+  public static IElement1D findBuildingElement1D( final IBuildingFlowRelation building, final IFEDiscretisationModel1d2d discModel )
+  {
+    return discModel.find1DElement( building.getPosition(), 0.01 );
   }
 
 }

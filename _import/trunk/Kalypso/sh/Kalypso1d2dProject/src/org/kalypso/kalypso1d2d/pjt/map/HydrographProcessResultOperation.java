@@ -121,7 +121,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
         if( location instanceof GM_Point )
         {
           final GM_Point point = (GM_Point) location;
-          Feature wrappedFeature = hydrograph.getWrappedFeature();
+          Feature wrappedFeature = hydrograph.getFeature();
           IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( wrappedFeature );
 
           /* clear existing results */
@@ -250,7 +250,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
     for( IHydrograph hydrograph : m_hydrographs )
     {
       final GM_Object location = hydrograph.getLocation();
-      final Feature feature = hydrograph.getWrappedFeature();
+      final Feature feature = hydrograph.getFeature();
       if( location instanceof GM_Point )
       {
         final GM_Point point = (GM_Point) location;

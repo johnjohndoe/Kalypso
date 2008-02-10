@@ -92,10 +92,10 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements ICommand
     // fire change
     final Feature[] changedFeatures = new Feature[m_calculationUnitsToRemove.length];
     for( int i = 0; i < changedFeatures.length; i++ )
-      changedFeatures[i] = m_calculationUnitsToRemove[i].getWrappedFeature();
+      changedFeatures[i] = m_calculationUnitsToRemove[i].getFeature();
 
-    final GMLWorkspace workspace = m_parentCalculationUnit.getWrappedFeature().getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_parentCalculationUnit.getWrappedFeature(), changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+    final GMLWorkspace workspace = m_parentCalculationUnit.getFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_parentCalculationUnit.getFeature(), changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     workspace.fireModellEvent( event );
   }
 

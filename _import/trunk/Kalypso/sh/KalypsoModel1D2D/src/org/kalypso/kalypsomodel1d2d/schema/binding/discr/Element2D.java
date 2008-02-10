@@ -199,7 +199,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
     }
     // ModelOps.sortElementEdges( this );
 
-    getWrappedFeature().invalidEnvelope();
+    getFeature().invalidEnvelope();
   }
 
   /**
@@ -256,7 +256,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
       return;
     edgeFeatureList.add( edgeID );
     edgeFeatureList.invalidate();
-    getWrappedFeature().invalidEnvelope();
+    getFeature().invalidEnvelope();
   }
 
   /**

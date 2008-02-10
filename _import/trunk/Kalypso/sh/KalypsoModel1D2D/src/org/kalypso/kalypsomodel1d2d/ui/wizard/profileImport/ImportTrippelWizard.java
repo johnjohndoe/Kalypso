@@ -186,7 +186,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
   protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures, final List<IProfil> profiles ) throws Exception
   {
     final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
-    final Feature networkFeature = network.getWrappedFeature();
+    final Feature networkFeature = network.getFeature();
     addedFeatures.add( networkFeature );
 
     /* Set user friendly name and description */
@@ -202,15 +202,15 @@ public class ImportTrippelWizard extends Wizard implements IWizard
 
     for( final IProfil profile : profiles )
     {
-      final Feature profileFeature = FeatureHelper.addFeature( network.getWrappedFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
+      final Feature profileFeature = FeatureHelper.addFeature( network.getFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
       profileFeature.invalidEnvelope();
       ProfileFeatureFactory.toFeature( profile, profileFeature );
       new WspmProfile( profileFeature ).setSrsName( crs.getName() );
       addedFeatures.add( profileFeature );
     }
 
-    final GMLWorkspace workspace2 = network.getWrappedFeature().getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace2, network.getWrappedFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    final GMLWorkspace workspace2 = network.getFeature().getWorkspace();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace2, network.getFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     m_network = network;
 

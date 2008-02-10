@@ -90,7 +90,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     curEdge.addNode( node1.getGmlID() );
     node1.addContainer( edgeGmlID );
 
-    curEdge.getWrappedFeature().invalidEnvelope();
+    curEdge.getFeature().invalidEnvelope();
 
     return curEdge;
 
@@ -187,7 +187,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
 
   public static FE1D2DEdge createEdge( final IFEDiscretisationModel1d2d discModel )
   {
-    final Feature parentFeature = discModel.getWrappedFeature();
+    final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
     final IRelationType parentEdgeProperty = (IRelationType) parentFT.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
     final IFeatureType edgeType = parentFT.getGMLSchema().getFeatureType( IFE1D2DEdge.QNAME );
@@ -202,10 +202,10 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     final FeatureList nodeList = (FeatureList) feature.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE /* QNAME_PROP_DIRECTEDNODE */
     );
     nodeList.clear();
-    nodeList.add( node0.getWrappedFeature().getId() );
-    nodeList.add( node1.getWrappedFeature().getId() );
+    nodeList.add( node0.getFeature().getId() );
+    nodeList.add( node1.getFeature().getId() );
     nodeList.invalidate();
-    getWrappedFeature().invalidEnvelope();
+    getFeature().invalidEnvelope();
   }
 
   /**
@@ -220,7 +220,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
    */
   @Override
-  public Feature getWrappedFeature( )
+  public Feature getFeature( )
   {
     return getFeature();
   }
@@ -324,7 +324,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
 
     // changeing the nodes invalidates my geometry
     wrappedList.invalidate();
-    getWrappedFeature().invalidEnvelope();
+    getFeature().invalidEnvelope();
   }
 
   /**
@@ -334,11 +334,11 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   public String toString( )
   {
     final StringBuffer buf = new StringBuffer( 256 );
-    buf.append( getWrappedFeature() );
+    buf.append( getFeature() );
     buf.append( '[' );
     for( final IFE1D2DNode node : m_nodes )
     {
-      buf.append( node.getWrappedFeature() );
+      buf.append( node.getFeature() );
       buf.append( ' ' );
     }
     buf.append( ']' );

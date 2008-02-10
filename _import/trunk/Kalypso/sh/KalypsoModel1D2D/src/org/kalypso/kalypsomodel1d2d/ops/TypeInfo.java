@@ -77,7 +77,7 @@ public class TypeInfo
     IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
     for( IFE1D2DElement element : containers )
     {
-      if( IElement1D.QNAME.equals( element.getWrappedFeature().getFeatureType().getQName() ) )
+      if( IElement1D.QNAME.equals( element.getFeature().getFeatureType().getQName() ) )
       {
         return true;
       }
@@ -118,7 +118,7 @@ public class TypeInfo
     IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
     for( IFE1D2DElement element : containers )
     {
-      if( IPolyElement.QNAME.equals( element.getWrappedFeature().getFeatureType().getQName() ) )
+      if( IPolyElement.QNAME.equals( element.getFeature().getFeatureType().getQName() ) )
       {
         return true;
       }
@@ -155,7 +155,7 @@ public class TypeInfo
     }
     else
     {
-      return isPolyElementFeature( featureWrapper.getWrappedFeature() );
+      return isPolyElementFeature( featureWrapper.getFeature() );
     }
   }
 

@@ -179,7 +179,7 @@ public class Transformer implements ICoreRunnableWithProgress
   private void setSelectedRoughnessChoice( ) throws Exception
   {
     final GMLWorkspace shpWorkspace = GmlSerializer.createGMLWorkspace( m_data.getRoughnessDatabaseLocationURL(), null );
-    final GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getWrappedFeature().getWorkspace();
+    final GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getFeature().getWorkspace();
     for( final String key : m_data.getRoughnessShapeStaticRelationMap().keySet() )
     {
       final Feature feature = myWorkspace.getFeature( key );

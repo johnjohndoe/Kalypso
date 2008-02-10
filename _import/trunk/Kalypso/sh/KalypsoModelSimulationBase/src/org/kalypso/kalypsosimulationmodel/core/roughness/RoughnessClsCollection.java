@@ -47,7 +47,7 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
   @Override
   public String getName( )
   {
-    return NamedFeatureHelper.getName( getWrappedFeature() );
+    return NamedFeatureHelper.getName( getFeature() );
   }
 
   public List<IRoughnessCls> selectRoughnessByName( String nameRegExp )
@@ -76,7 +76,7 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
   public void setName( String name ) throws IllegalArgumentException
   {
     name = Assert.throwIAEOnNullOrEmpty( name );
-    Feature wrappedFeature = getWrappedFeature();
+    Feature wrappedFeature = getFeature();
     FeatureHelper.addProperty( wrappedFeature, KalypsoModelRoughnessConsts.GML_PROP_NAME, Arrays.asList( new String[] { name } ) );
   }
 

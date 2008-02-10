@@ -80,7 +80,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     final IFE1D2DNode continuityLineNode = nodes.get( 0 );
     final FeatureList nodeList = (FeatureList) getFeature().getProperty( IFELine.PROP_NODES );
     nodeList.clear();
-    nodeList.add( continuityLineNode.getWrappedFeature().getId() );
+    nodeList.add( continuityLineNode.getFeature().getId() );
     IFE1D2DNode neighbour1 = null;
     IFE1D2DNode neighbour2 = null;
     final IFeatureWrapperCollection<IFeatureWrapper2> containers = continuityLineNode.getContainers();
@@ -109,7 +109,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ContinuityLine1D.1") + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     nodeList.invalidate();
-    getWrappedFeature().invalidEnvelope();
+    getFeature().invalidEnvelope();
     return m_nodes;
   }
 

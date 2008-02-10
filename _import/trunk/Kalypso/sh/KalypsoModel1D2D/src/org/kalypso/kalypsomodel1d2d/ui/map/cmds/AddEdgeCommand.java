@@ -116,7 +116,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   {
     if( addedEdge != null )
     {
-      model.getEdges().remove( addedEdge.getWrappedFeature() );
+      model.getEdges().remove( addedEdge.getFeature() );
       // TODO remove edges from node add method to node interface
     }
   }

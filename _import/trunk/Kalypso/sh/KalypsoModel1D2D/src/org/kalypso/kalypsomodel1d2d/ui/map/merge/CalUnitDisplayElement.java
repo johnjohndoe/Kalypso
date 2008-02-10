@@ -141,7 +141,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   {
     if( m_calculationUnit != null )
     {
-      return m_calculationUnit.getWrappedFeature();
+      return m_calculationUnit.getFeature();
     }
     else
     {

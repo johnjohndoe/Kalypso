@@ -206,8 +206,8 @@ public class AssignNodeElevationFaceComponent
             super.process();
 
             // get notification fired for the nodes
-            FeatureStructureChangeModellEvent modellEvent = new FeatureStructureChangeModellEvent( workspace, model1d2d.getWrappedFeature(), new Feature[] { getMovedNode().getWrappedFeature(),
-                model1d2d.getWrappedFeature() },// changedFeaturesArray,
+            FeatureStructureChangeModellEvent modellEvent = new FeatureStructureChangeModellEvent( workspace, model1d2d.getFeature(), new Feature[] { getMovedNode().getFeature(),
+                model1d2d.getFeature() },// changedFeaturesArray,
             FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
             workspace.fireModellEvent( modellEvent );
             Display display = m_table.getDisplay();
@@ -322,13 +322,13 @@ public class AssignNodeElevationFaceComponent
       // to easy feature wrapper
       EasyFeatureWrapper featureWrappers[] = new EasyFeatureWrapper[tableSelection.size()];
       CommandableWorkspace workspace = null;
-      Feature parentFeature = m_dataModel.getDiscretisationModel().getWrappedFeature();
+      Feature parentFeature = m_dataModel.getDiscretisationModel().getFeature();
       IRelationType property = null;
 
       for( int i = featureWrappers.length - 1; i >= 0; i-- )
       {
 
-        featureWrappers[i] = new EasyFeatureWrapper( workspace, ((IFE1D2DNode) tableSelection.get( i )).getWrappedFeature(), parentFeature, property );
+        featureWrappers[i] = new EasyFeatureWrapper( workspace, ((IFE1D2DNode) tableSelection.get( i )).getFeature(), parentFeature, property );
       }
       m_dataModel.getMapPanel().getSelectionManager().setSelection( featureWrappers );
       // }

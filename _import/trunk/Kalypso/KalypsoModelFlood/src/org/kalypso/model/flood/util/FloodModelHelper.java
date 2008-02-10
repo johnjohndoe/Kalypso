@@ -101,7 +101,7 @@ public class FloodModelHelper
         if( featureList.getParentFeatureTypeProperty().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
         {
           final Feature parentFeature = featureList.getParentFeature();
-          if( parentFeature.getId().equals( runoffEvent.getWrappedFeature().getId() ) )
+          if( parentFeature.getId().equals( runoffEvent.getFeature().getId() ) )
             return i;
         }
       }
@@ -139,7 +139,7 @@ public class FloodModelHelper
     final StyledLayerType wspLayer = new StyledLayerType();
 
     wspLayer.setName( "Flieﬂtiefen (" + event.getName() + ")" );
-    wspLayer.setFeaturePath( "#fid#" + event.getWrappedFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/"
+    wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/"
         + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() );
     wspLayer.setLinktype( "gml" );
     wspLayer.setType( "simple" );
@@ -194,7 +194,7 @@ public class FloodModelHelper
           /* Delete coverage from collection */
 //          final Feature parentFeature = resultCoverages.getWrappedFeature();
 //          final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
-          final Feature coverageFeature = coverageToDelete.getWrappedFeature();
+          final Feature coverageFeature = coverageToDelete.getFeature();
 
           final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
           workspace.postCommand( command );

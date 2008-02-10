@@ -199,7 +199,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     } );
 
     final IFEDiscretisationModel1d2d discModel = m_dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final GMLWorkspace workspace = discModel.getWrappedFeature().getWorkspace();
+    final GMLWorkspace workspace = discModel.getFeature().getWorkspace();
     final ModellEventListener modelListener = new ModellEventListener()
     {
       public void onModellChange( final ModellEvent modellEvent )

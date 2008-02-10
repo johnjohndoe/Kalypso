@@ -244,7 +244,6 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
 
       final IComponent[] components = result.getComponents();
       final IComponent domainComponent = components[0];
-      final IComponent valueComponent = components[1];
       result.setSortComponents( new IComponent[] { domainComponent } );
 
       final Double hStart = m_h[0];
@@ -256,8 +255,8 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
         final double q = linearEquation.computeY( h );
 
         final IRecord record = result.createRecord();
-        record.setValue( domainComponent, new BigDecimal( h ).setScale( 1, BigDecimal.ROUND_HALF_UP ) );
-        record.setValue( valueComponent, new BigDecimal( q ).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
+        record.setValue( 0, new BigDecimal( h ).setScale( 1, BigDecimal.ROUND_HALF_UP ) );
+        record.setValue( 1, new BigDecimal( q ).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
         result.add( record );
       }
     }

@@ -87,7 +87,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IPositionProvider positionProvider )
   {
     m_model = model;
-    m_workspace = model.getWrappedFeature().getWorkspace();
+    m_workspace = model.getFeature().getWorkspace();
     m_positionProvider = positionProvider;
   }
 
@@ -112,10 +112,10 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     final Feature[] createdFeatures = new Feature[size];
     for( int i = size - 1; i >= 0; i-- )
     {
-      createdFeatures[i] = m_createdFeatures.get( i ).getWrappedFeature();
+      createdFeatures[i] = m_createdFeatures.get( i ).getFeature();
       createdFeatures[i].invalidEnvelope();
     }
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getWrappedFeature(), createdFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), createdFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     // workspace.fireModellEvent( new )
   }
 

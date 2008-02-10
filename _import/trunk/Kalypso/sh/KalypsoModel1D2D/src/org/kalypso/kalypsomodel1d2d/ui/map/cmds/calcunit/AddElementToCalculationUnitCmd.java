@@ -226,17 +226,17 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
   private final void fireProcessChanges()
   {
     List<Feature> features = new ArrayList<Feature>( elementsToAdd.length * 2 );
-    features.add( calculationUnit.getWrappedFeature() );
+    features.add( calculationUnit.getFeature() );
     for( IFE1D2DElement ele: elementsToAdd )
     {
-      features.add( ele.getWrappedFeature() );
+      features.add( ele.getFeature() );
     }
     
-    GMLWorkspace workspace = calculationUnit.getWrappedFeature().getWorkspace();
+    GMLWorkspace workspace = calculationUnit.getFeature().getWorkspace();
     FeatureStructureChangeModellEvent event = 
         new FeatureStructureChangeModellEvent(
             workspace,//final GMLWorkspace workspace, 
-            model1d2d.getWrappedFeature(),// Feature parentFeature, 
+            model1d2d.getFeature(),// Feature parentFeature, 
             features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
             FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD//final int changeType
             );

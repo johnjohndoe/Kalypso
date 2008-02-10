@@ -134,13 +134,13 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
     for( final IFE1D2DComplexElement complexElement : complexElements )
     {
       complexElement.getElements().remove( elementID );
-      m_changedFeatureList.add( complexElement.getWrappedFeature() );
+      m_changedFeatureList.add( complexElement.getFeature() );
     }
 
     // delete link to edges
     final IFeatureWrapperCollection containers = edge.getContainers();
     boolean isRemoved = containers.remove( elementID );
-    m_changedFeatureList.add( edge.getWrappedFeature() );
+    m_changedFeatureList.add( edge.getFeature() );
     if( !isRemoved )
     {
       throw new RuntimeException( "Could not remove element as edge container" );
@@ -150,13 +150,13 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
     for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
     {
       IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
-      Feature wrappedFeature = featureWrapper.getWrappedFeature();
+      Feature wrappedFeature = featureWrapper.getFeature();
       m_changedFeatureList.add( wrappedFeature );
     }
 
     // delete element from model
     m_model1d2d.getElements().remove( m_element1D );
-    m_changedFeatureList.add( m_element1D.getWrappedFeature() );
+    m_changedFeatureList.add( m_element1D.getFeature() );
 
   }
 

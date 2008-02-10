@@ -41,27 +41,18 @@
 	<gft:validatorlabel property="wb1d2d:station" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-	<!-- 
-	<gft:label text="Profil-Referenz" visible="true" tooltip="Referenz auf Profil"
-		style="SWT.NONE">
+	
+	<gft:label text="Profil" visible="true" tooltip="Referenzierte Profil" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:composite tooltip="Referenz auf Profil" style="SWT.NONE">
-		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL"
-			grabExcessHorizontalSpace="true" />
-		<gft:gridLayout numColumns="2" marginWidth="1" makeColumnsEqualWidth="false" />
-		<gft:combo property="wb1d2d:profileMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-			<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
-		</gft:combo>
-		<gft:button property="wb1d2d:profileMember" style="SWT.PUSH">
-			<gft:gridData horizontalAlignment="GridData.BEGINNING" />
-		</gft:button>
-	</gft:composite>
+	<gft:extensioncontrol style="SWT.NONE" property="wb1d2d:profileMember" extension-id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControlFactory">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:extensioncontrol>
 	<gft:validatorlabel property="wb1d2d:profileMember" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-	 -->
+	
 	<gft:label text="Gefälle" visible="true" tooltip="Angabe des Gefälles." style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING"
 			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
@@ -74,7 +65,6 @@
 	<gft:validatorlabel property="wb1d2d:slope" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-	<!-- Anzeige des Profils? -->
 	
 	<gft:extensioncontrol property="wb1d2d:pointsMember" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
 		<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />

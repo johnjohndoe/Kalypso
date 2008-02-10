@@ -232,7 +232,7 @@ public class RoughnessAssignService extends Job
   {
     if( m_changesDiscretisationModel.size() > 0 )
     {
-      final GMLWorkspace workspace = m_model1d2d.getWrappedFeature().getWorkspace();
+      final GMLWorkspace workspace = m_model1d2d.getFeature().getWorkspace();
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext context = handlerService.getCurrentState();

@@ -6,7 +6,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Name>_FlowRelationship</Name>
 	<Title>_FlowRelationship</Title>
-	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship</FeatureTypeName>
+	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation1D</FeatureTypeName>
 
 <!-- 
 	<Rule>

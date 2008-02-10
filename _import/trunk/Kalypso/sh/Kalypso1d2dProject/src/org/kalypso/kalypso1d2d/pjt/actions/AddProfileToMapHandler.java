@@ -124,10 +124,10 @@ public class AddProfileToMapHandler extends AbstractHandler
     {
       final IRiverProfileNetwork network = (IRiverProfileNetwork) object;
 
-      final FeaturePath networkPath = new FeaturePath( network.getWrappedFeature() );
+      final FeaturePath networkPath = new FeaturePath( network.getFeature() );
       final FeaturePath profilesFeaturePath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
       final String profilesPath = profilesFeaturePath.toString();
-      final String source = terrainModel.getWrappedFeature().getWorkspace().getContext().toString();
+      final String source = terrainModel.getFeature().getWorkspace().getContext().toString();
 
       /* Check if this theme is already present, if true, just activate it */
       final IKalypsoThemePredicate predicate = new SoureAndPathThemePredicate( source, profilesPath );

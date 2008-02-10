@@ -40,20 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 
 /**
  * @author Gernot Belger
  */
-public interface ITeschkeFlowRelation extends IFlowRelationship
+public interface ITeschkeFlowRelation extends IFlowRelation1D
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TeschkeFlowRelation" );
 
@@ -67,17 +64,9 @@ public interface ITeschkeFlowRelation extends IFlowRelationship
 
   public static final QName QNAME_PROP_PROFILE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "profileMember" );
 
-  public BigDecimal getStation( );
-
-  public void setStation( final BigDecimal station );
-
   public List<IPolynomial1D> getPolynomials( );
 
   public double getSlope( );
 
   public void setSlope( final double slope );
-
-  public WspmProfile getProfile( );
-
-  public void setProfileLink( final String profileRef );
 }

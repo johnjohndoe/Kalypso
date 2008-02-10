@@ -85,14 +85,14 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
 
   public GM_Point getPoint( )
   {
-    return (GM_Point) getWrappedFeature().getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
+    return (GM_Point) getFeature().getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
   }
 
   public void setPoint( final GM_Point point )
   {
     if( point.getCoordinateSystem() == null )
       point.setCoordinateSystem( IFE1D2DNode.DEFAULT_COORDINATE_SYSTEM );
-    getWrappedFeature().setProperty( IFE1D2DNode.WB1D2D_PROP_POINT, point );
+    getFeature().setProperty( IFE1D2DNode.WB1D2D_PROP_POINT, point );
     // if(point.getCoordinateDimension()>2 || !Double.isNaN( point.getZ() ))
     // getWrappedFeature().setProperty( IFE1D2DNode.PROP_HAS_ELEVATION, true );
     // else
@@ -101,7 +101,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
 
   public static FE1D2DNode createNode( final IFEDiscretisationModel1d2d discModel )
   {
-    final Feature parentFeature = discModel.getWrappedFeature();
+    final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
     final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
     final IFeatureType nodeType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );

@@ -599,7 +599,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       viewer.setInput( StatusUtilities.createErrorStatus( "Flood-Modell nicht geladen." ) );
     else
     {
-      viewer.setInput( m_model.getWrappedFeature().getWorkspace() );
+      viewer.setInput( m_model.getFeature().getWorkspace() );
 
       final GMLXPathSegment segment = GMLXPathSegment.forQName( IFloodModel.QNAME );
       final GMLXPath pathToModel = new GMLXPath( segment );
@@ -993,14 +993,14 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
           final Object adaptedObject = adaptToKnownObject( selectedObject );
 
           if( adaptedObject instanceof ITinReference )
-            paintEnvelope( g, ((ITinReference) adaptedObject).getWrappedFeature().getEnvelope() );
+            paintEnvelope( g, ((ITinReference) adaptedObject).getFeature().getEnvelope() );
           else if( adaptedObject instanceof IRunoffEvent )
           {
             final IFeatureWrapperCollection<ITinReference> tins = ((IRunoffEvent) adaptedObject).getTins();
             paintEnvelope( g, tins.getWrappedList().getBoundingBox() );
 
             for( final ITinReference tinReference : tins )
-              paintEnvelope( g, tinReference.getWrappedFeature().getEnvelope() );
+              paintEnvelope( g, tinReference.getFeature().getEnvelope() );
           }
 
           final GM_Envelope envelope = envelopeForSelected( selectedObject );
@@ -1059,7 +1059,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final Object adaptedObject = adaptToKnownObject( selectedObject );
 
     if( adaptedObject instanceof ITinReference )
-      return ((ITinReference) adaptedObject).getWrappedFeature().getEnvelope();
+      return ((ITinReference) adaptedObject).getFeature().getEnvelope();
 
     if( adaptedObject instanceof IRunoffEvent )
       return ((IRunoffEvent) adaptedObject).getTins().getWrappedList().getBoundingBox();

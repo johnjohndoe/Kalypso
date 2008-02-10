@@ -176,7 +176,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
 
     final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" );
 
-    final Feature feature = hydrograph.getWrappedFeature();
+    final Feature feature = hydrograph.getFeature();
     OutputStreamWriter writer = null;
     try
     {

@@ -125,7 +125,7 @@ public class SelectedCalculationComponent
     } );
 
     final IFEDiscretisationModel1d2d discModel = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final GMLWorkspace workspace = discModel.getWrappedFeature().getWorkspace();
+    final GMLWorkspace workspace = discModel.getFeature().getWorkspace();
     final ModellEventListener modelListener = new ModellEventListener()
     {
       public void onModellChange( final ModellEvent modellEvent )

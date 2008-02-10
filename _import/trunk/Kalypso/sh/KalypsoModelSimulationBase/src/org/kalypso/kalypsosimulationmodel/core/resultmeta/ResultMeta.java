@@ -88,7 +88,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
    */
   public IPath getPath( )
   {
-    final String path = (String) getWrappedFeature().getProperty( QNAME_PROP_PATH );
+    final String path = (String) getFeature().getProperty( QNAME_PROP_PATH );
     if( path == null )
       return null;
 
@@ -121,7 +121,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   public void setStatus( IStatus status )
   {
     if( status instanceof org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus )
-      getFeature().setProperty( QNAME_PROP_STATUS, ((org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus) status).getWrappedFeature() );
+      getFeature().setProperty( QNAME_PROP_STATUS, ((org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus) status).getFeature() );
     else
     {
       // TODO: create new Status and copy values to it

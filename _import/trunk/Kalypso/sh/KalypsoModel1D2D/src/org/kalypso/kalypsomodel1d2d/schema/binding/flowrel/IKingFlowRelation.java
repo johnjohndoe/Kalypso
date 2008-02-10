@@ -45,12 +45,11 @@ import java.math.BigDecimal;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 
 /**
  * @author Gernot Belger
  */
-public interface IKingFlowRelation extends IFlowRelationship
+public interface IKingFlowRelation extends IFlowRelation1D
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "KingFlowRelation" );
 

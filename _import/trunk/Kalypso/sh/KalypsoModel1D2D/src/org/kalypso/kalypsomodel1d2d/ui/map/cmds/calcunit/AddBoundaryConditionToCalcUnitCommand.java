@@ -124,7 +124,7 @@ public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dCha
     {
       if( !done )
       {
-        final List calculationUnitID = (List) m_boundaryConditionToAdd.getWrappedFeature().getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+        final List calculationUnitID = (List) m_boundaryConditionToAdd.getFeature().getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
         calculationUnitID.add( m_calculationUnit.getGmlID() );
         fireProcessChanges();
       }
@@ -138,16 +138,16 @@ public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dCha
 
   private void fireProcessChanges( )
   {
-    final Feature calcUnitFeature = m_calculationUnit.getWrappedFeature();
+    final Feature calcUnitFeature = m_calculationUnit.getFeature();
     final List<Feature> features = new ArrayList<Feature>();
     features.add( calcUnitFeature );
-    features.add( m_boundaryConditionToAdd.getWrappedFeature() );
+    features.add( m_boundaryConditionToAdd.getFeature() );
 
     final GMLWorkspace calcUnitWorkspace = calcUnitFeature.getWorkspace();
     final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( calcUnitWorkspace, calcUnitFeature.getParent(), features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     calcUnitWorkspace.fireModellEvent( event );
 
-    final Feature bcFeature = m_boundaryConditionToAdd.getWrappedFeature();
+    final Feature bcFeature = m_boundaryConditionToAdd.getFeature();
     final GMLWorkspace bcWorkspace = bcFeature.getWorkspace();
     final FeatureStructureChangeModellEvent bcEvent = new FeatureStructureChangeModellEvent( bcWorkspace, bcFeature.getParent(), new Feature[] { bcFeature }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     bcWorkspace.fireModellEvent( bcEvent );

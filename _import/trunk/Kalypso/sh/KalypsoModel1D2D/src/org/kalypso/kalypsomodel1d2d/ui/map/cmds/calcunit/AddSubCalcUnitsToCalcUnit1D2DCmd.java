@@ -93,10 +93,10 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements ICommand
     final Feature[] changedFeatures = new Feature[m_subUnitsToAdd.length];
 
     for( int i = 0; i < changedFeatures.length; i++ )
-      changedFeatures[i] = m_subUnitsToAdd[i].getWrappedFeature();
+      changedFeatures[i] = m_subUnitsToAdd[i].getFeature();
 
-    final GMLWorkspace workspace = m_parentCalcUnit.getWrappedFeature().getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_parentCalcUnit.getWrappedFeature(), changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+    final GMLWorkspace workspace = m_parentCalcUnit.getFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_parentCalcUnit.getFeature(), changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
     workspace.fireModellEvent( event );
   }
 

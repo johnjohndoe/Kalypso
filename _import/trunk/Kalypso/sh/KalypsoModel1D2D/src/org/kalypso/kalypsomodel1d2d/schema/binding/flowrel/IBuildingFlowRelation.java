@@ -43,14 +43,13 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Gernot Belger
  */
-public interface IBuildingFlowRelation extends IFlowRelationship
+public interface IBuildingFlowRelation extends IFlowRelation1D
 {
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BuildingFlowRelation" ); //$NON-NLS-1$
 
@@ -59,6 +58,8 @@ public interface IBuildingFlowRelation extends IFlowRelationship
   public static final QName QNAME_PROP_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "direction" );
 
   public static final QName QNAME_PROP_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "observation" );
+
+  public static final QName QNAME_PROP_PROFILE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "profileMember" );
 
   public enum KIND
   {

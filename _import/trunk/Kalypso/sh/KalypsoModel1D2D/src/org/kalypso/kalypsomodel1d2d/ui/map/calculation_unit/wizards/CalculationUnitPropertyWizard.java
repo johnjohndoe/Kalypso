@@ -112,7 +112,7 @@ public class CalculationUnitPropertyWizard extends Wizard
       try
       {
         final ICommandManager commandManager = m_dataModel.getData( ICommandManager.class, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-        final Feature calcUnitFeature = m_parentCalcUnit.getWrappedFeature();
+        final Feature calcUnitFeature = m_parentCalcUnit.getFeature();
 
         final String newName = m_wizardPage.getChangedName();
         if( !ObjectUtils.equals( m_parentCalcUnit.getName(), newName ) )

@@ -340,11 +340,11 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
         if( edge.getNode( 1 ).equals( oldNode ) )
           edge.setNode( 1, newNode );
       }
-      oldNodecontainer.getWrappedFeature().invalidEnvelope();
+      oldNodecontainer.getFeature().invalidEnvelope();
     }
     oldNodecontainers.clear();
     m_nodes.removeAllRefs( oldNode );
-    m_nodes.remove( oldNode.getWrappedFeature() );
+    m_nodes.remove( oldNode.getFeature() );
     // m_nodes.getWrappedList().remove( oldNode.getWrappedFeature() );
   }
 }

@@ -119,7 +119,7 @@ public class ElementGeometryHelper
 
     newElement.setEdges( edges );
 
-    final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getWrappedFeature(), null, true );
+    final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getFeature(), null, true );
     command.addCommand( addElementCommand );
 
     addEdgeContainerCommand( edges, edgeContainerPT, newElement, changes );
@@ -130,9 +130,9 @@ public class ElementGeometryHelper
   @SuppressWarnings("unchecked")
   public static final void addNodeContainerCommand( final IFE1D2DNode node0, final IFE1D2DNode node1, final IPropertyType propertyType, final IFE1D2DEdge edge, final List<FeatureChange> changes )
   {
-    final Feature edgeFeature = edge.getWrappedFeature();
-    final Feature node0Feature = node0.getWrappedFeature();
-    final Feature node1Feature = node1.getWrappedFeature();
+    final Feature edgeFeature = edge.getFeature();
+    final Feature node0Feature = node0.getFeature();
+    final Feature node1Feature = node1.getFeature();
     final String edgeID = edgeFeature.getId();
     final FeatureChange change0 = new FeatureChange( node0Feature, propertyType, edgeID );
     changes.add( change0 );
@@ -143,14 +143,14 @@ public class ElementGeometryHelper
   @SuppressWarnings("unchecked")
   public static final void addEdgeContainerCommand( final IFE1D2DEdge[] edges, final IPropertyType propertyType, final IFE1D2DElement element, final List<FeatureChange> changes )
   {
-    final Feature elementFeature = element.getWrappedFeature();
+    final Feature elementFeature = element.getFeature();
     final String elementID = elementFeature.getId();
 
     // FeatureChange changes[]= new FeatureChange[edges.length];
 
     for( final IFE1D2DEdge element2 : edges )
     {
-      changes.add( new FeatureChange( element2.getWrappedFeature(), propertyType, elementID ) );
+      changes.add( new FeatureChange( element2.getFeature(), propertyType, elementID ) );
     }
   }
 

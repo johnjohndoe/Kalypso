@@ -90,7 +90,7 @@ public class TerrainModel extends VersionedModel implements ITerrainModel
    */
   public IRoughnessPolygonCollection getRoughnessPolygonCollection( final IRoughnessLayer roughnessLayer )
   {
-    return new RoughnessPolygonCollection( roughnessLayer.getWrappedFeature(), IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
+    return new RoughnessPolygonCollection( roughnessLayer.getFeature(), IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
   }
 
   public ITerrainElevationModelSystem getTerrainElevationModelSystem( )

@@ -355,11 +355,11 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   {
     try
     {
-      final Feature wrappedFeature = calUnit.getWrappedFeature();
+      final Feature wrappedFeature = calUnit.getFeature();
       final Feature parentFeature = getFeature();// control to link to
       final IPropertyType property = parentFeature.getFeatureType().getProperty( ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT );
 
-      final GMLWorkspace workspace = calUnit.getWrappedFeature().getWorkspace();
+      final GMLWorkspace workspace = calUnit.getFeature().getWorkspace();
       final URL context = workspace.getContext();
       final File filee = new File( FileLocator.resolve( context ).getFile() );
       final String name = filee.getName();// new java.io.File( uri ).getName();
@@ -400,7 +400,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
       {
         throw e;
       }
-      final GMLWorkspace modelWorkspace = model.getWrappedFeature().getWorkspace();
+      final GMLWorkspace modelWorkspace = model.getFeature().getWorkspace();
       final Feature calUnitFeature = modelWorkspace.getFeature( featureId );
       if( calUnitFeature == null )
       {

@@ -425,11 +425,6 @@
 	<xs:element name="riverProfileNetwork"
 		type="simBase:RiverProfileNetworkPropertyType" />
 	<xs:complexType name="RiverProfileNetworkPropertyType">
-		<xs:annotation>
-			<xs:documentation>
-				Wraps a wspn river profile into
-			</xs:documentation>
-		</xs:annotation>
 		<xs:sequence>
 			<xs:element ref="simBase:RiverProfileNetwork" minOccurs="0"
 				maxOccurs="1" />
@@ -439,7 +434,18 @@
 
 	<xs:element name="RiverProfileNetwork"
 		type="simBase:RiverProfileNetworkType"
-		substitutionGroup="gml:_Feature" />
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:name>Profil-Kontainer</xs:name>
+				<xs:label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:name>Profile-Container</xs:name>
+				<xs:label>${listProperty:http://www.opengis.net/gml#name;0;-name not set-}</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:complexType name="RiverProfileNetworkType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">

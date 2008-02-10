@@ -87,7 +87,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
       /* Add new feature */
       final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class );
-      final Feature parentFeature = events.getWrappedFeature();
+      final Feature parentFeature = events.getFeature();
       final IRelationType parentRelation = events.getWrappedList().getParentFeatureTypeProperty();
       final IFeatureType featureType = parentRelation.getTargetFeatureType();
       final Feature newEventFeature = workspace.createFeature( parentFeature, parentRelation, featureType, 1 );
@@ -102,7 +102,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       final IFile sldFile = newEventFolder.getFile( "wsp.sld" );
       // search/replace in order to configure filter
 
-      final String sldContent = FileUtilities.toString( m_sldContent, "UTF-8" ).replaceAll( "%eventFeatureId%", newEvent.getWrappedFeature().getId() );
+      final String sldContent = FileUtilities.toString( m_sldContent, "UTF-8" ).replaceAll( "%eventFeatureId%", newEvent.getFeature().getId() );
       ProgressUtilities.worked( monitor, 1 );
 
       final InputStream sldSource = IOUtils.toInputStream( sldContent, "UTF-8" );
@@ -185,7 +185,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       final StyledLayerType wspLayer = new StyledLayerType();
 
       wspLayer.setName( "Wasserspiegel (" + event.getName() + ")" );
-      wspLayer.setFeaturePath( "#fid#" + event.getWrappedFeature().getId() + "/tinMember" );
+      wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/tinMember" );
       wspLayer.setLinktype( "gml" );
       wspLayer.setType( "simple" );
       wspLayer.setVisible( true );

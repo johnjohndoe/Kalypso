@@ -108,7 +108,7 @@ public class RestartNodes
       final Feature rootFeature = resultWorkspace.getRootFeature();
       final INodeResultCollection nodeResults = (INodeResultCollection) rootFeature.getAdapter( INodeResultCollection.class );
       for( final INodeResult node : nodeResults )
-        m_nodes.add( node.getWrappedFeature() );
+        m_nodes.add( node.getFeature() );
     }
     catch( final Exception e )
     {

@@ -98,7 +98,7 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
    */
   public FeatureChange[] assignRoughness( final String roughnessID, final Double correctionParameterKS, final Double correctionParameterAxAy, final Double correctionParameterDP, final String roughnessStyle )
   {
-    final Feature elementFeature = getWrappedFeature();
+    final Feature elementFeature = getFeature();
 
     setRoughnessClsID( roughnessID );
     setRoughnessCorrectionKS( correctionParameterKS );

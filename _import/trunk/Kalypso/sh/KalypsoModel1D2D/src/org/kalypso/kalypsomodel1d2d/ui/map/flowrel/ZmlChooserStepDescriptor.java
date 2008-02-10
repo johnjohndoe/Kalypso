@@ -123,7 +123,6 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
     final IComponent[] components = result.getComponents();
 
     final IComponent domainComponent = components[0];
-    final IComponent valueComponent = components[1];
     result.setSortComponents( new IComponent[] { domainComponent } );
 
     try
@@ -161,43 +160,11 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
           final BigDecimal value = BigDecimal.valueOf( doubleValue );
 
           final IRecord record = result.createRecord();
-          record.setValue( domainComponent, DateUtilities.toXMLGregorianCalendar( date ) );
-          record.setValue( valueComponent, value );
+          record.setValue( 0, DateUtilities.toXMLGregorianCalendar( date ) );
+          record.setValue( 1, value );
           result.add( record );
         }
       }
-
-      // int cntFrom;
-      // int cntTo;
-      //      
-      // for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
-      // {
-      // final Date date = (Date) model.getElement( cntFrom, dateAxis );
-      // if( fromDate.before( date ) || fromDate.equals( date ) )
-      // break;
-      // }
-      //      
-      // for( cntTo = cntFrom; cntTo < model.getCount(); cntTo++ )
-      // {
-      // final Date date = (Date) model.getElement( cntTo, dateAxis );
-      // if( toDate.before( date ) )
-      // {
-      // cntTo--;
-      // break;
-      // }
-      // }
-      //
-      // for( int i = cntFrom; i < cntTo; i++ )
-      // {
-      // final Double doubleValue = (Double) model.getElement( i, valueAxis );
-      // final BigDecimal value = BigDecimal.valueOf( doubleValue );
-      // final Date date = (Date) model.getElement( i, dateAxis );
-      //
-      // final IRecord record = result.createRecord();
-      // record.setValue( domainComponent, DateUtilities.toXMLGregorianCalendar( date ) );
-      // record.setValue( valueComponent, value );
-      // result.add( record );
-      // }
     }
     catch( final SensorException e )
     {

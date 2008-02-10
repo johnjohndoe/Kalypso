@@ -137,10 +137,10 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   private final void fireProcessChanges( )
   {
     final List<Feature> features = new ArrayList<Feature>();
-    features.add( m_calculationUnit.getWrappedFeature() );
-    features.add( m_feLine.getWrappedFeature() );
-    final GMLWorkspace workspace = m_calculationUnit.getWrappedFeature().getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getWrappedFeature(), features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+    features.add( m_calculationUnit.getFeature() );
+    features.add( m_feLine.getFeature() );
+    final GMLWorkspace workspace = m_calculationUnit.getFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getFeature(), features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     workspace.fireModellEvent( event );
     m_commandProcessed = true;
   }

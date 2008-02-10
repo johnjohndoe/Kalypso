@@ -314,7 +314,7 @@ public class CalcUnitOps
    */
   public static final boolean isBoundaryConditionOf( final ICalculationUnit unit, final IBoundaryCondition bCondition )
   {
-    final List parents = (List) bCondition.getWrappedFeature().getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+    final List parents = (List) bCondition.getFeature().getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
     return parents.contains( unit.getGmlID() );
   }
 

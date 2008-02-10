@@ -100,7 +100,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
       }
     }
 
-    final Feature feature = getWrappedFeature();
+    final Feature feature = getFeature();
     if( edge == null )
     {
       feature.setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, null );

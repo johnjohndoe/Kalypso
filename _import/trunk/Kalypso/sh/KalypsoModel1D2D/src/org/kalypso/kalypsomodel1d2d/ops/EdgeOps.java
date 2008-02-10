@@ -61,7 +61,7 @@ public class EdgeOps
   {
     if( !TypeInfo.is1DEdge( elementEdge ) )
     {
-      throw new IllegalArgumentException( "Must be 1D node but is:" + "\n\tElementQName=" + elementEdge.getWrappedFeature().getFeatureType().getQName() + "\n\tValue=" + elementEdge );
+      throw new IllegalArgumentException( "Must be 1D node but is:" + "\n\tElementQName=" + elementEdge.getFeature().getFeatureType().getQName() + "\n\tValue=" + elementEdge );
     }
     IFE1D2DNode node1 = elementEdge.getNode( 1 );
     if( node1.getContainers().size() == 1 )

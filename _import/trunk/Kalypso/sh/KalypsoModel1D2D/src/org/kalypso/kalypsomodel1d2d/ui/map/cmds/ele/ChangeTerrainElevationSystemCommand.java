@@ -131,7 +131,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
           {
             if( changedFeature != null )
             {
-              final Feature wrappedFeature = changedFeature.getWrappedFeature();
+              final Feature wrappedFeature = changedFeature.getFeature();
               if( wrappedFeature != null )
               {
                 changedFeatures.add( wrappedFeature );
@@ -159,7 +159,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   {
     final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );
-    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d.getWrappedFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d.getFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   /**

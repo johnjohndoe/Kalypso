@@ -178,12 +178,12 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
   {
     final int changedType= FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
     
-    GMLWorkspace workspace = featureToRename.getWrappedFeature().getWorkspace();
+    GMLWorkspace workspace = featureToRename.getFeature().getWorkspace();
     FeatureStructureChangeModellEvent event = 
         new FeatureStructureChangeModellEvent(
             workspace, 
-            featureToRename.getWrappedFeature().getParent(), 
-            new Feature[]{featureToRename.getWrappedFeature()}, 
+            featureToRename.getFeature().getParent(), 
+            new Feature[]{featureToRename.getFeature()}, 
             changedType
             );
     workspace.fireModellEvent( event );

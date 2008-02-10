@@ -92,7 +92,7 @@ public class FlowResistanceModel extends UnversionedModel implements IFlowResist
     Assert.throwIAEOnNullParam( selectionZone, "selectionZone" );
 
     FeatureList wrappedList = flowResistanceConcepts.getWrappedList();
-    GMLWorkspace workspace = getWrappedFeature().getWorkspace();
+    GMLWorkspace workspace = getFeature().getWorkspace();
 
     if( selectionZone instanceof GM_Point )
     {

@@ -77,7 +77,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
    */
   private Feature getTimeserieFeature( )
   {
-    return (Feature) getWrappedFeature().getProperty( QNAME_P_OBSERVATION );
+    return (Feature) getFeature().getProperty( QNAME_P_OBSERVATION );
   }
 
   /**
@@ -141,7 +141,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
    */
   public double getStationaryCondition( )
   {
-    final Feature feature = getWrappedFeature();
+    final Feature feature = getFeature();
     final Object property = feature.getProperty( BoundaryCondition.OP1D2D_PROP_STATIONARY_COND );
     if( property instanceof Double )
     {
@@ -167,7 +167,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     {
       dValue = Double.valueOf( statCond );
     }
-    final Feature feature = getWrappedFeature();
+    final Feature feature = getFeature();
     feature.setProperty( BoundaryCondition.OP1D2D_PROP_STATIONARY_COND, dValue );
   }
 

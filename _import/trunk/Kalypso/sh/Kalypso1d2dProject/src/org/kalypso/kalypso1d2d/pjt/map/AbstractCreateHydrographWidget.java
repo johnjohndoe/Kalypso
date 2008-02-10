@@ -227,7 +227,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
       @SuppressWarnings("synthetic-access")
       public void run( )
       {
-        final Feature parentFeature = m_hydrographCollection.getWrappedFeature();
+        final Feature parentFeature = m_hydrographCollection.getFeature();
         final IRelationType parentRelation = m_hydrographCollection.getWrappedList().getParentFeatureTypeProperty();
         final IHydrograph hydro = createNewFeature( workspace, parentFeature, parentRelation, m_modelElement );
 
@@ -242,7 +242,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 
         /* Post it as an command */
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-        final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, hydro.getWrappedFeature(), selectionManager, true, true );
+        final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, hydro.getFeature(), selectionManager, true, true );
         try
         {
           workspace.postCommand( command );

@@ -64,7 +64,7 @@ public abstract class FlowRelationship extends AbstractFeatureBinder implements 
    */
   public GM_Point getPosition( )
   {
-    return (GM_Point) getWrappedFeature().getProperty( QNAME_PROP_POSITION );
+    return (GM_Point) getFeature().getProperty( QNAME_PROP_POSITION );
   }
 
   /**
@@ -72,6 +72,6 @@ public abstract class FlowRelationship extends AbstractFeatureBinder implements 
    */
   public void setPosition( final GM_Point point )
   {
-    getWrappedFeature().setProperty( QNAME_PROP_POSITION, point );
+    getFeature().setProperty( QNAME_PROP_POSITION, point );
   }
 }

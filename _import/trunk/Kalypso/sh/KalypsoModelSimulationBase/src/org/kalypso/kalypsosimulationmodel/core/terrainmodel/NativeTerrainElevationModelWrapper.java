@@ -97,7 +97,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
 
   private static final Feature createFeatureForTEMSystem( final ITerrainElevationModelSystem terrainElevationModelSystem, final String sourceName )
   {
-    return createFeature( terrainElevationModelSystem.getWrappedFeature(), KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_MODEL, sourceName );
+    return createFeature( terrainElevationModelSystem.getFeature(), KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_MODEL, sourceName );
   }
 
   public NativeTerrainElevationModelWrapper( final Feature featureToBind ) throws IllegalArgumentException, IOException, URISyntaxException

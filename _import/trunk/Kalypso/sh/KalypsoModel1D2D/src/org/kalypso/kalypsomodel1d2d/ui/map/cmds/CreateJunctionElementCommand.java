@@ -85,7 +85,7 @@ public class CreateJunctionElementCommand implements IDiscrModel1d2dChangeComman
         m_junctionElement = m_model.getComplexElements().addNew( IJunctionElement.QNAME, IJunctionElement.class );
         for( final IContinuityLine1D line : m_lines )
           m_junctionElement.addElementAsRef( line );
-        final Feature feature = m_junctionElement.getWrappedFeature();
+        final Feature feature = m_junctionElement.getFeature();
         feature.invalidEnvelope();
         final GMLWorkspace workspace = feature.getWorkspace();
         workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature.getParent(), feature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );

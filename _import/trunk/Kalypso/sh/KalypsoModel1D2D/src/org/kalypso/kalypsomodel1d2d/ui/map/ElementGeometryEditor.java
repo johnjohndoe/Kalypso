@@ -164,7 +164,7 @@ public class ElementGeometryEditor
     {
       if( element instanceof Element2D )
       {
-        final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( element.getWrappedFeature(), discModel );
+        final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( element.getFeature(), discModel );
         m_nodeTheme.getWorkspace().postCommand( deleteCmd );
       }
     }

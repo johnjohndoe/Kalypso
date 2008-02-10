@@ -205,8 +205,8 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD;
     else
       changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
-    final GMLWorkspace workspace = calculationUnit.getWrappedFeature().getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getWrappedFeature(), new Feature[] { calculationUnit.getWrappedFeature() }, changedType );
+    final GMLWorkspace workspace = calculationUnit.getFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getFeature(), new Feature[] { calculationUnit.getFeature() }, changedType );
     workspace.fireModellEvent( event );
   }
 
@@ -255,7 +255,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       throw new RuntimeException( Messages.getString( "CreateCalculationUnitCmd.1" ), e ); //$NON-NLS-1$
     }
     final IControlModel1D2DCollection model1D2DCollection = modelGroup.getModel1D2DCollection();
-    final Feature parentFeature = model1D2DCollection.getWrappedFeature();
+    final Feature parentFeature = model1D2DCollection.getFeature();
     final IRelationType relationType = (IRelationType) parentFeature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
     final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
     final int pos = 0;

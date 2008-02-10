@@ -193,7 +193,7 @@ public class CreateTransitionElementWidget extends AbstractWidget
       stroke.setWidth( 3 );
       stroke.setStroke( new Color( 255, 0, 0 ) );
       symb.setStroke( stroke );
-      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_currentSelectedLine.getWrappedFeature(), line, symb );
+      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_currentSelectedLine.getFeature(), line, symb );
       de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
     }
     catch( CoreException e )
@@ -213,7 +213,7 @@ public class CreateTransitionElementWidget extends AbstractWidget
     else
       m_line2D = (IContinuityLine2D) m_currentSelectedLine;
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    final Feature featureToSelect = m_currentSelectedLine.getWrappedFeature();
+    final Feature featureToSelect = m_currentSelectedLine.getFeature();
     final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_mapActiveTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
     selectionManager.changeSelection( new Feature[] {}, new EasyFeatureWrapper[] { easyToSelect } );
   }

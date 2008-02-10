@@ -650,7 +650,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
     if( m_selectedHydrograph != null )
     {
-      featureComposite.setFeature( m_selectedHydrograph.getWrappedFeature() );
+      featureComposite.setFeature( m_selectedHydrograph.getFeature() );
       featureComposite.createControl( hydrographInfoGroup, SWT.NONE );
       parent.layout( true, true );
     }

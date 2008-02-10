@@ -173,7 +173,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       // command manager since it is used in the dirty pool object framework
       // the commandable workspace of the target theme is taken
       // TODO: that cannot work, as the models workspace is not a commandable workspace
-      m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, model.getWrappedFeature().getWorkspace() );
+      m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, model.getFeature().getWorkspace() );
 
       m_dataModel.setData( ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, this );
       m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model ) );

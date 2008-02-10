@@ -98,7 +98,7 @@ public abstract class TerrainElevationModel extends AbstractFeatureBinder implem
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getWrappedFeature()
    */
-  public Feature getWrappedFeature( )
+  public Feature getFeature( )
   {
 
     return super.getFeature();
