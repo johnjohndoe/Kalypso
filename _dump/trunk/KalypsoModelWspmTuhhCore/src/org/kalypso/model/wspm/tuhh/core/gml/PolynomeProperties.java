@@ -85,6 +85,11 @@ public class PolynomeProperties extends AbstractFeatureBinder
     super( featureToBind, QNAME );
   }
 
+  public void setDeegree( final int degree )
+  {
+    setProperty( QNAME_PROP_DEEGREE, degree );
+  }
+
   public int getDeegree( )
   {
     final Integer value = getProperty( QNAME_PROP_DEEGREE, Integer.class );
@@ -92,6 +97,11 @@ public class PolynomeProperties extends AbstractFeatureBinder
       return 4;
 
     return value;
+  }
+
+  public void setTripleForAll( final boolean tripleForAll )
+  {
+    setProperty( QNAME_PROP_TRIPPLE_IT, tripleForAll );
   }
 
   public boolean getTripleForAll( )
@@ -103,10 +113,20 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value;
   }
 
+  public void setTripleMode( final TripleMode mode )
+  {
+    setProperty( QNAME_PROP_TRIPPLE_MODE, mode.name() );
+  }
+
   public TripleMode getTripleMode( )
   {
     final String value = getProperty( QNAME_PROP_TRIPPLE_MODE, String.class );
     return TripleMode.valueOf( value );
+  }
+
+  public void setIgnoreOutlier( final boolean ignoreOutlier )
+  {
+    setProperty( QNAME_PROP_INGORE_OUTLIER, ignoreOutlier );
   }
 
   public boolean getIgnoreOutlier( )
@@ -118,13 +138,23 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value;
   }
 
-  public double getAlphaLimit( )
+  public void setAlphaLimit( final BigDecimal alphaLimit )
+  {
+    setProperty( QNAME_PROP_ALPHALIMIT, alphaLimit );
+  }
+
+  public BigDecimal getAlphaLimit( )
   {
     final BigDecimal value = getProperty( QNAME_PROP_ALPHALIMIT, BigDecimal.class );
     if( value == null )
-      return 01.40;
+      return new BigDecimal( "01.40" );
 
-    return value.doubleValue();
+    return value;
+  }
+
+  public void setRunoffSlope( final BigDecimal runoffSlope )
+  {
+    setProperty( QNAME_PROP_RUNOFF_SLOPE, runoffSlope );
   }
 
   public BigDecimal getRunoffSlope( )
@@ -136,6 +166,11 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value;
   }
 
+  public void setAreaSlope( final BigDecimal areaSlope )
+  {
+    setProperty( QNAME_PROP_AREA_SLOPE, areaSlope );
+  }
+
   public BigDecimal getAreaSlope( )
   {
     final BigDecimal value = getProperty( QNAME_PROP_AREA_SLOPE, BigDecimal.class );
@@ -145,6 +180,11 @@ public class PolynomeProperties extends AbstractFeatureBinder
     return value;
   }
 
+  public void setAlphaSlope( final BigDecimal alphaSlope )
+  {
+    setProperty( QNAME_PROP_ALPHA_SLOPE, alphaSlope );
+  }
+
   public BigDecimal getAlphaSlope( )
   {
     final BigDecimal value = getProperty( QNAME_PROP_ALPHA_SLOPE, BigDecimal.class );
@@ -152,6 +192,11 @@ public class PolynomeProperties extends AbstractFeatureBinder
       return new BigDecimal( "02.0000" );
 
     return value;
+  }
+
+  public void setWeightSplinePoint( final BigDecimal weightSplinePoint )
+  {
+    setProperty( QNAME_PROP_WEIGHT_SPLINE_POINT, weightSplinePoint );
   }
 
   public BigDecimal getWeightSplinePoint( )

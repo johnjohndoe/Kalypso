@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.URL;
 
@@ -79,10 +80,37 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author Monika Thül
+ * @author Gernot Belger
  */
 public class WspmTuhhCalcJob implements ISimulation
 {
   public static final String CALCJOB_SPEC = "WspmTuhhCalcJob_spec.xml";
+
+  public static final String INPUT_OVW_MAP_SPECIAL = "OVW_MAP_SPECIAL";
+
+  public static final String INPUT_OVW_MAP_GENERAL = "OVW_MAP_GENERAL";
+
+  public static final String INPUT_EPS_THINNING = "EPS_THINNING";
+
+  public static final String INPUT_CALC_PATH = "CALC_PATH";
+
+  public static final String INPUT_MODELL_GML = "MODELL_GML";
+
+  public static final String OUTPUT_QINTERVALL_RESULT_GMV = "qIntervallResultGmv";
+
+  public static final String OUTPUT_QINTERVALL_RESULT = "qIntervallResultGml";
+
+  private final PrintStream m_calcOutConsumer;
+
+  public WspmTuhhCalcJob( )
+  {
+    this( System.out );
+  }
+
+  public WspmTuhhCalcJob( final PrintStream calcOutConsumer )
+  {
+    m_calcOutConsumer = calcOutConsumer;
+  }
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
@@ -90,14 +118,14 @@ public class WspmTuhhCalcJob implements ISimulation
    */
   public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final URL modellGmlURL = (URL) inputProvider.getInputForID( "MODELL_GML" );
-    final String calcXPath = (String) inputProvider.getInputForID( "CALC_PATH" );
-    final String epsThinning = (String) inputProvider.getInputForID( "EPS_THINNING" );
+    final URL modellGmlURL = (URL) inputProvider.getInputForID( INPUT_MODELL_GML );
+    final String calcXPath = (String) inputProvider.getInputForID( INPUT_CALC_PATH );
+    final String epsThinning = (String) inputProvider.getInputForID( INPUT_EPS_THINNING );
     URL ovwMapURL = null;
-    if( inputProvider.hasID( "OVW_MAP_GENERAL" ) )
-      ovwMapURL = (URL) inputProvider.getInputForID( "OVW_MAP_GENERAL" );
-    if( inputProvider.hasID( "OVW_MAP_SPECIAL" ) )
-      ovwMapURL = (URL) inputProvider.getInputForID( "OVW_MAP_SPECIAL" );
+    if( inputProvider.hasID( INPUT_OVW_MAP_GENERAL ) )
+      ovwMapURL = (URL) inputProvider.getInputForID( INPUT_OVW_MAP_GENERAL );
+    if( inputProvider.hasID( INPUT_OVW_MAP_SPECIAL ) )
+      ovwMapURL = (URL) inputProvider.getInputForID( INPUT_OVW_MAP_SPECIAL );
 
     final File simulogFile = new File( tmpDir, "simulation.log" );
     resultEater.addResult( "SimulationLog", simulogFile );
@@ -109,6 +137,7 @@ public class WspmTuhhCalcJob implements ISimulation
     PrintWriter mapWriter = null;
     try
     {
+      final PrintStream calcOutConsumer = m_calcOutConsumer;
       final OutputStream osSimuLog = new BufferedOutputStream( new FileOutputStream( simulogFile ) )
       {
         // REMARK: also stream stuff into System.out in order to have a log in the console.view
@@ -120,7 +149,7 @@ public class WspmTuhhCalcJob implements ISimulation
         {
           super.write( b, off, len );
 
-          System.out.write( b, off, len );
+          calcOutConsumer.write( b, off, len );
         }
 
         /**
@@ -131,12 +160,12 @@ public class WspmTuhhCalcJob implements ISimulation
         {
           super.write( b );
 
-          System.out.write( b );
+          calcOutConsumer.write( b );
         }
       };
       pwSimuLog = new PrintWriter( new OutputStreamWriter( osSimuLog, "CP1252" ) );
 
-      final LogHelper log = new LogHelper( pwSimuLog, monitor );
+      final LogHelper log = new LogHelper( pwSimuLog, monitor, calcOutConsumer );
       log.log( true, "Eingangsdaten werden geladen...", calcXPath );
 
       final GMLXPath calcpath = new GMLXPath( calcXPath, null );

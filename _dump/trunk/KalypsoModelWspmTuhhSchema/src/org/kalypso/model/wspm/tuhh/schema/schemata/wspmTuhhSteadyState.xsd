@@ -748,7 +748,7 @@
 		</complexContent>
 	</complexType>
 
-	<element name="bottomSlope" type="double">
+	<element name="bottomSlope" type="decimal">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>stationär-gleichförmiges Gefälle</label>
@@ -1045,7 +1045,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="exeVersion" default="latest">
+					<element name="exeVersion" default="_2_0_6_6">
 						<annotation>
 							<documentation xml:lang="de">
 								<label><![CDATA[Version Rechenkern]]></label>

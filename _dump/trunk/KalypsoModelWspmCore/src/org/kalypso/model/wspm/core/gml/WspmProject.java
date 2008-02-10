@@ -45,12 +45,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -59,43 +58,17 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * It has NO own member variables, everything is backed by the given feature instance.
  * </p>
  * 
- * @author belger
+ * @author Gernot Belger
  */
-public class WspmProject implements IWspmConstants
+public class WspmProject extends AbstractFeatureBinder implements IWspmConstants
 {
-  private final Feature m_wspProject;
+  private static final QName QNAME_WATER_BODY_MEMBER = new QName( NS_WSPM, "waterBodyMember" );
+
+  public final static QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" );
 
   public WspmProject( final Feature wspProject )
   {
-    if( !QNameUtilities.equals( wspProject.getFeatureType().getQName(), IWspmConstants.NS_WSPMPROJ, "WspmProject" ) )
-      throw new IllegalStateException( "wspmProject ist no wspmProject" );
-
-    m_wspProject = wspProject;
-  }
-
-  public Feature getFeature( )
-  {
-    return m_wspProject;
-  }
-
-  public String getName( )
-  {
-    return NamedFeatureHelper.getName( m_wspProject );
-  }
-
-  public void setName( final String name )
-  {
-    NamedFeatureHelper.setName( m_wspProject, name );
-  }
-
-  public String getDescription( )
-  {
-    return NamedFeatureHelper.getDescription( m_wspProject );
-  }
-
-  public void setDescription( final String desc )
-  {
-    NamedFeatureHelper.setDescription( m_wspProject, desc );
+    super( wspProject, QNAME );
   }
 
   public WspmWaterBody[] getWaterBodies( )
@@ -113,7 +86,7 @@ public class WspmProject implements IWspmConstants
 
   private FeatureList getWaterBodyList( )
   {
-    return (FeatureList) m_wspProject.getProperty( new QName( NS_WSPM, "waterBodyMember" ) );
+    return getProperty( QNAME_WATER_BODY_MEMBER, FeatureList.class );
   }
 
   public WspmWaterBody findWater( final String waterName )
@@ -140,7 +113,7 @@ public class WspmProject implements IWspmConstants
     if( water != null )
       return water;
 
-    final Feature feature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "waterBodyMember" ), null );
+    final Feature feature = FeatureHelper.addFeature( getFeature(), QNAME_WATER_BODY_MEMBER, null );
 
     final WspmWaterBody wspmWaterBody = new WspmWaterBody( feature );
 

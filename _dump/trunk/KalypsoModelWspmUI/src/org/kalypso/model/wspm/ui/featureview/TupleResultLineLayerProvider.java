@@ -80,13 +80,9 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
   public IChartLayer getLayer( final URL context )
   {
     final LayerType lt = getLayerType();
-    final String configLayerId = lt.getId();
     final IChartModel chartModel = getChartModel();
 
     final IParameterContainer pc = getParameterContainer();
-
-    final boolean showPoints = Boolean.valueOf( pc.getParameterValue( "showPoints", "true" ) );
-    final Boolean showLines = Boolean.valueOf( pc.getParameterValue( "showLines", "true" ) );
 
     final String featureKey = pc.getParameterValue( "featureKey", null );
     final String propertyNameStr = pc.getParameterValue( "propertyName", null );

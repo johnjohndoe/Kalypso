@@ -108,10 +108,12 @@ public class PolynomeHelper
 {
   // TODO: Deciding which approach to take, energy level or water stage
 
-   private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
-  //private static final String WEIR_FILE_NAME = "EOW_QWehr_EUW.txt";
+  private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
 
-   private static final String BRIDGE_FILE_NAME = "HOW_QBruecke_HUW.txt";
+  // private static final String WEIR_FILE_NAME = "EOW_QWehr_EUW.txt";
+
+  private static final String BRIDGE_FILE_NAME = "HOW_QBruecke_HUW.txt";
+
   // private static final String BRIDGE_FILE_NAME = "EOW_QBruecke_EUW.txt";
 
   private static final String QLANG_FILE_NAME = "Q_LangSchnitt.txt";
@@ -251,7 +253,7 @@ public class PolynomeHelper
     {
       readResults( resultDir, targetGmlFile, calculation, log, resultEater );
       final File gmvResultFile = new File( tmpDir, "Ergebnisse.gmv" );
-      resultEater.addResult( "qIntervallResultGmv", gmvResultFile );
+      resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT_GMV, gmvResultFile );
     }
     catch( final Throwable e )
     {
@@ -278,7 +280,7 @@ public class PolynomeHelper
       final int polynomialDeegree = pps.getDeegree();
       final boolean ignoreOutlier = pps.getIgnoreOutlier();
       final boolean isTripleForAll = pps.getTripleForAll();
-      final double alphaLimit = pps.getAlphaLimit();
+      final BigDecimal alphaLimit = pps.getAlphaLimit();
       final TripleMode tripleMode = pps.getTripleMode();
       final boolean autoSlopeDetection = tripleMode == TripleMode.slopeChange;
       final BigDecimal runoffSlope = pps.getRunoffSlope();
@@ -342,7 +344,7 @@ public class PolynomeHelper
 
     /* Write workspace into file */
     GmlSerializer.serializeWorkspace( targetGmlFile, workspace, "CP1252" );
-    resultEater.addResult( "qIntervallResultGml", targetGmlFile );
+    resultEater.addResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT, targetGmlFile );
   }
 
   private static Map<BigDecimal, QIntervallResult> readProfFiles( final File resultDir, final QIntervallResultCollection resultCollection, final TuhhCalculation calculation, final LogHelper log )
@@ -371,8 +373,8 @@ public class PolynomeHelper
 
       // REMARK: as the slope is not nicely written to the polynome result files, we get it from the calculation.
       // BUT: this is only valid for the REIB_KONST mode! So maybe we should change something later...?
-      final Double startSlope = calculation.getStartSlope();
-      final BigDecimal slope = new BigDecimal( startSlope ).setScale( 5, RoundingMode.HALF_UP );
+      final BigDecimal startSlope = calculation.getStartSlope();
+      final BigDecimal slope = startSlope.setScale( 5, RoundingMode.HALF_UP );
 
       try
       {
@@ -464,8 +466,6 @@ public class PolynomeHelper
 
   private static TupleResult readProfFile( final File profFile, final TupleResult tupleResult, final LogHelper log ) throws IOException
   {
-    final IComponent[] pointsComponents = tupleResult.getComponents();
-
     LineNumberReader reader = null;
     try
     {
@@ -501,7 +501,7 @@ public class PolynomeHelper
           try
           {
             final BigDecimal value = new BigDecimal( token );
-            record.setValue( pointsComponents[i], value );
+            record.setValue( i, value );
           }
           catch( final NumberFormatException nfe )
           {
@@ -691,7 +691,7 @@ public class PolynomeHelper
     if( tokens.length < 6 )
       return;
 
-    /* Determine if this is a good line: good lines are lines whos first token is a number */
+    /* Determine if this is a good line: good lines are lines whose first token is a number */
     final String firstToken = tokens[0];
     try
     {
@@ -752,9 +752,9 @@ public class PolynomeHelper
 
     // put extra result into observation
     final IRecord newRecord = result.createRecord();
-    newRecord.setValue( compRunoff, qOW );
-    newRecord.setValue( compHOW, hOW );
-    newRecord.setValue( compHUW, hUW );
+    newRecord.setValue( result.indexOfComponent( compRunoff ), qOW );
+    newRecord.setValue( result.indexOfComponent( compHOW ), hOW );
+    newRecord.setValue( result.indexOfComponent( compHUW ), hUW );
     result.add( newRecord );
 
     qresult.setWeirObservation( weirObs );

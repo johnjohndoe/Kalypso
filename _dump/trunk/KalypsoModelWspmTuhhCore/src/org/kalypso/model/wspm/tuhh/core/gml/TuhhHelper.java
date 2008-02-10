@@ -57,13 +57,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
 {
@@ -147,17 +143,4 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
     }
 
   }
-
-  /** TODO: shouldn't this belong to one of the feature wrapper classes? e.g. WaterBody? */
-  public static TuhhReach createNewReachForWaterBody( final WspmWaterBody waterBody ) throws GMLSchemaException
-  {
-    final Feature newTuhhReach = FeatureHelper.addFeature( waterBody.getFeature(), WspmWaterBody.QNAME_REACH_MEMBER, new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) );
-
-    final TuhhReach tuhhReach = new TuhhReach( newTuhhReach );
-
-    tuhhReach.setWaterBody( waterBody );
-
-    return tuhhReach;
-  }
-
 }

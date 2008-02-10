@@ -45,96 +45,66 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
  */
-public class WspmWaterBody implements IWspmConstants
+public class WspmWaterBody extends AbstractFeatureBinder implements IWspmConstants
 {
+  public final static QName QNAME = new QName( NS_WSPM, "WaterBody" );
+
   public final static QName QNAME_WSP_FIX_MEMBER = new QName( NS_WSPM, "waterlevelFixationMember" );
 
   public static final QName QNAME_REACH_MEMBER = new QName( NS_WSPM, "reachMember" );
 
   public static final QName QNAME_PROP_PROFILEMEMBER = new QName( NS_WSPM, "profileMember" );
 
-  private final Feature m_water;
-
-
   public WspmWaterBody( final Feature water )
   {
-    if( !QNameUtilities.equals( water.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) )
-      throw new IllegalStateException( "Feature is of wrong type: " + water );
-
-    m_water = water;
-  }
-
-  public String getName( )
-  {
-    return NamedFeatureHelper.getName( getFeature() );
-  }
-
-  public void setName( final String name )
-  {
-    NamedFeatureHelper.setName( getFeature(), name );
-  }
-
-  public String getDescription( )
-  {
-    return NamedFeatureHelper.getDescription( getFeature() );
-  }
-
-  public void setDescription( final String desc )
-  {
-    NamedFeatureHelper.setDescription( getFeature(), desc );
-  }
-
-  public Feature getFeature( )
-  {
-    return m_water;
+    super( water, QNAME );
   }
 
   public WspmProfile createNewProfile( ) throws GMLSchemaException
   {
-    final Feature profile = FeatureHelper.addFeature( m_water, QNAME_PROP_PROFILEMEMBER, WspmProfile.QNAME_PROFILE );
+    final Feature profile = FeatureHelper.addFeature( getFeature(), QNAME_PROP_PROFILEMEMBER, WspmProfile.QNAME_PROFILE );
 
     return new WspmProfile( profile );
   }
 
   public void setRefNr( final String refNr )
   {
-    m_water.setProperty( new QName( NS_WSPM, "refNr" ), refNr );
+    setProperty( new QName( NS_WSPM, "refNr" ), refNr );
   }
 
   public void setDirectionUpstreams( final boolean directionIsUpstream )
   {
-    m_water.setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), new Boolean( directionIsUpstream ) );
+    setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), new Boolean( directionIsUpstream ) );
   }
 
   public Feature createRunOffEvent( ) throws GMLSchemaException
   {
-    return FeatureHelper.addFeature( m_water, new QName( NS_WSPM, "runOffEventMember" ), new QName( NS_WSPMRUNOFF, "RunOffEvent" ) );
+    return FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "runOffEventMember" ), new QName( NS_WSPMRUNOFF, "RunOffEvent" ) );
   }
 
   public Feature createWspFix( ) throws GMLSchemaException
   {
-    return FeatureHelper.addFeature( m_water, QNAME_WSP_FIX_MEMBER, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) );
+    return FeatureHelper.addFeature( getFeature(), QNAME_WSP_FIX_MEMBER, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) );
   }
 
-  public List getWspFixations( )
+  public List< ? > getWspFixations( )
   {
-    return (List) m_water.getProperty( QNAME_WSP_FIX_MEMBER );
+    return getProperty( QNAME_WSP_FIX_MEMBER, List.class );
   }
 
   public boolean isDirectionUpstreams( )
   {
-    return (Boolean) m_water.getProperty( new QName( NS_WSPM, "isDirectionUpstream" ) );
+    return getProperty( new QName( NS_WSPM, "isDirectionUpstream" ), Boolean.class );
   }
 
   public WspmReach[] getReaches( )
@@ -144,7 +114,9 @@ public class WspmWaterBody implements IWspmConstants
     for( final Object object : reaches )
     {
       final Feature f = (Feature) object;
-      reachList.add( new WspmReach( f ){} );
+      reachList.add( new WspmReach( f )
+      {
+      } );
     }
 
     return reachList.toArray( new WspmReach[reachList.size()] );

@@ -217,16 +217,17 @@ public class WspWinExporter
   {
     final TupleResult result = runOffEvent.getResult();
 
-    IComponent stationComp = null;
-    IComponent abflussComp = null;
+    int stationComp = -1;
+    int abflussComp = -1;
     final IComponent[] components = result.getComponents();
-    for( final IComponent comp : components )
+    for( int i = 0; i < components.length; i++ )
     {
+      final IComponent comp = components[i];
       // TODO: get component via phenomenon
       if( comp.getName().startsWith( "Abfluss" ) )
-        abflussComp = comp;
+        abflussComp = i;
       if( comp.getName().startsWith( "Station" ) )
-        stationComp = comp;
+        stationComp = i;
     }
 
     final Comparator<BigDecimal> comp = new Comparator<BigDecimal>()
@@ -324,9 +325,9 @@ public class WspWinExporter
       final Double startWaterlevel = calculation.getStartWaterlevel();
       if( startWaterlevel != null )
         pw.println( "ANFANGSWASSERSPIEGEL=" + Double.toString( startWaterlevel ) );
-      final Double startSlope = calculation.getStartSlope();
+      final BigDecimal startSlope = calculation.getStartSlope();
       if( startSlope != null )
-        pw.println( "GEFAELLE=" + Double.toString( startSlope ) );
+        pw.println( "GEFAELLE=" + startSlope );
 
       pw.println();
       pw.println( "# mögliche Werte" );

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.gml;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
@@ -48,10 +50,13 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * This is an abstraction layer for tuhh wspm modells. It ensures, that only the right kind of data gets into the model.
@@ -59,9 +64,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * It has NO own member variables, everything is backed by the given feature instance.
  * </p>
  * 
- * @author belger
+ * @author Gernot Belger
  */
-public class TuhhWspmProject extends WspmProject
+public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 {
   public TuhhWspmProject( final Feature wspProject )
   {
@@ -77,7 +82,19 @@ public class TuhhWspmProject extends WspmProject
   public TuhhReach createNewReach( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
-    return TuhhHelper.createNewReachForWaterBody( newWater );
+    return createNewReachForWaterBody( newWater );
+  }
+
+  /** Not in waterbody, as we create a TuhhWaterBody */
+  public static TuhhReach createNewReachForWaterBody( final WspmWaterBody waterBody ) throws GMLSchemaException
+  {
+    final Feature newTuhhReach = FeatureHelper.addFeature( waterBody.getFeature(), WspmWaterBody.QNAME_REACH_MEMBER, new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) );
+
+    final TuhhReach tuhhReach = new TuhhReach( newTuhhReach );
+
+    tuhhReach.setWaterBody( waterBody );
+
+    return tuhhReach;
   }
 
   /**
@@ -89,12 +106,18 @@ public class TuhhWspmProject extends WspmProject
   public WspmProfile createNewProfile( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
-    return newWater.createNewProfile(  );
+    return newWater.createNewProfile();
   }
 
   public TuhhCalculation createCalculation( ) throws GMLSchemaException
   {
-    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "calculationMember" ), TuhhCalculation.QNAME_TUHH_CALC );
+    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "calculationMember" ), TuhhCalculation.QNAME_TUHH_CALC, -1 );
+    return new TuhhCalculation( calcFeature );
+  }
+
+  public TuhhCalculation createReibConstCalculation( ) throws GMLSchemaException
+  {
+    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "calculationMember" ), TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST, -1 );
     return new TuhhCalculation( calcFeature );
   }
 
@@ -116,6 +139,15 @@ public class TuhhWspmProject extends WspmProject
     }
 
     return calcs.toArray( new TuhhCalculation[calcs.size()] );
+  }
+
+  /**
+   * Creates a project from scratch. A gml workspace is created internally with the project as root feature.
+   */
+  public static TuhhWspmProject create( final URL context, final IFeatureProviderFactory factory ) throws InvocationTargetException
+  {
+    final GMLWorkspace projectWorkspace = FeatureFactory.createGMLWorkspace( QNAME, context, factory );
+    return new TuhhWspmProject( projectWorkspace.getRootFeature() );
   }
 
 }
