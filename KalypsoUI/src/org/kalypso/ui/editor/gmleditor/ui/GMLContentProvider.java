@@ -356,7 +356,7 @@ public class GMLContentProvider implements ITreeContentProvider
       else
         m_workspace = null;
 
-      m_rootPath = new GMLXPath( "", null );
+// m_rootPath = new GMLXPath( "", null );
     }
   }
 

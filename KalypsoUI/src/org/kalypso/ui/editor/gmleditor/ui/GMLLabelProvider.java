@@ -148,7 +148,7 @@ public class GMLLabelProvider extends LabelProvider
       return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL );
 
     if( element instanceof IFeatureWrapper2 )
-      return FeatureHelper.getAnnotationValue( ((IFeatureWrapper2) element).getWrappedFeature(), IAnnotation.ANNO_LABEL );
+      return FeatureHelper.getAnnotationValue( ((IFeatureWrapper2) element).getFeature(), IAnnotation.ANNO_LABEL );
 
     if( element instanceof FeatureAssociationTypeElement )
     {
@@ -188,7 +188,7 @@ public class GMLLabelProvider extends LabelProvider
     }
     else if( element instanceof IFeatureWrapper2 )
     {
-      final IFeatureType featureType = ((IFeatureWrapper2) element).getWrappedFeature().getFeatureType();
+      final IFeatureType featureType = ((IFeatureWrapper2) element).getFeature().getFeatureType();
       return featureType.getQName();
     }
     else if( element instanceof FeatureAssociationTypeElement )
