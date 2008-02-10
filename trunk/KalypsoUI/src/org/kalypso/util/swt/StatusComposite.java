@@ -197,4 +197,9 @@ public class StatusComposite extends Composite
     }
   }
 
+  public IStatus getStatus( )
+  {
+    return m_status;
+  }
+
 }
