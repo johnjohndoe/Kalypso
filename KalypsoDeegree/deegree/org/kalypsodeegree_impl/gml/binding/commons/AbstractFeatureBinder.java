@@ -43,8 +43,11 @@ package org.kalypsodeegree_impl.gml.binding.commons;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
@@ -52,17 +55,8 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * 
  * @author Gernot Belger
  */
-public class AbstractFeatureBinder
+public abstract class AbstractFeatureBinder implements IFeatureWrapper2
 {
-
-  /**
-   * Check if this feature is suitable for the given qname. If true, the constructor wont complain.
-   */
-  public static final boolean checkFeature( final Feature feature, final QName qname )
-  {
-    return GMLSchemaUtilities.substitutes( feature.getFeatureType(), qname );
-  }
-
   private final Feature m_featureToBind;
 
   private final QName m_qnameToBind;
@@ -72,27 +66,14 @@ public class AbstractFeatureBinder
     m_featureToBind = featureToBind;
     m_qnameToBind = qnameToBind;
 
-    if( !checkFeature( featureToBind, qnameToBind ) )
-    {
-      final String msg = String.format( "featureToBind (%s) does not substitute %s", featureToBind.getFeatureType().getQName(), qnameToBind );
-      throw new IllegalArgumentException( msg );
-    }
+    final String msg = String.format( "featureToBind (%s) does not substitute %s", featureToBind.getFeatureType().getQName(), qnameToBind );
+    Assert.isLegal( GMLSchemaUtilities.substitutes( featureToBind.getFeatureType(), qnameToBind ), msg );
   }
 
   /**
-   * TODO: remove
-   */
-  public Feature getFeature( )
-  {
-    return m_featureToBind;
-  }
-
-  /**
-   * TODO: rename to getFeature
-   * 
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getWrappedFeature()
    */
-  public Feature getWrappedFeature( )
+  public Feature getFeature( )
   {
     return m_featureToBind;
   }
@@ -189,18 +170,24 @@ public class AbstractFeatureBinder
   }
 
   /**
-   * TODO: also make helper to adapt to given class if it is not yet of the given type Returns the property of bind
    * feature given the property {@link QName}
    * 
    * @param propertyQName
    *            the {@link QName} of the property to get.
    */
+  @SuppressWarnings("unchecked")
   protected <T> T getProperty( final QName propertyQName, final Class<T> propClass )
   {
     final Object prop = m_featureToBind.getProperty( propertyQName );
     try
     {
-      return (T) prop;
+      if( propClass.isAssignableFrom( prop.getClass() ) )
+        return (T) prop;
+
+      if( prop instanceof IAdaptable )
+        return (T) ((IAdaptable) prop).getAdapter( propClass );
+
+      throw new RuntimeException( "Property of type[" + propClass + "] expected " + "\n\tbut found this type :" + prop.getClass() );
     }
     catch( final ClassCastException e )
     {

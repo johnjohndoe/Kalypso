@@ -132,6 +132,7 @@ public class FeatureFactory
    *            set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *            set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
    */
+  @SuppressWarnings("unchecked")
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final int depth )
   {
     if( featureType == null )
@@ -241,7 +242,7 @@ public class FeatureFactory
     return null;
   }
 
-  public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final List list )
+  public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final List< ? > list )
   {
     final SplitSort result = new SplitSort( parentFeature, parentFTP );
     result.addAll( list );
@@ -281,7 +282,7 @@ public class FeatureFactory
   public static GMLWorkspace createGMLWorkspace( final IGMLSchema schema, final Feature rootFeature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory, final NamespaceContext namespaceContext )
   {
     final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
-    return new GMLWorkspace_Impl( schema, featureTypes, rootFeature, context, null, schemaLocation, factory );
+    return new GMLWorkspace_Impl( schema, featureTypes, rootFeature, context, namespaceContext, schemaLocation, factory );
   }
 
   /**

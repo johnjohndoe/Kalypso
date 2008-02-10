@@ -106,7 +106,7 @@ public class CatalogManager
   {
     final Class key = urnGenerator.getSupportingClass();
     if( m_urnGenerators.containsKey( key ) )
-      throw new UnsupportedOperationException( "URNGenerator allready registeref for class " + key.toString() );
+      throw new UnsupportedOperationException( "URNGenerator already registered for class " + key.toString() );
     m_urnGenerators.put( key, urnGenerator );
   }
 

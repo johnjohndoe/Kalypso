@@ -44,6 +44,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -284,6 +285,24 @@ public final class GmlSerializer
     xmlReader.parse( inputSource );
 
     return exceptionHandler.getWorkspace();
+  }
+
+  public static GMLWorkspace createGMLWorkspace( final File file, final URL schemaURLhint, final boolean useGMLSChemaCache, final IFeatureProviderFactory factory ) throws Exception
+  {
+    BufferedInputStream is = null;
+
+    try
+    {
+      is = new BufferedInputStream( new FileInputStream( file ) );
+      final GMLWorkspace workspace = createGMLWorkspace( is, schemaURLhint, useGMLSChemaCache, factory );
+      is.close();
+      return workspace;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+
   }
 
   public static GMLWorkspace createGMLWorkspace( final BufferedInputStream inputStream, final URL schemaURLHint, final boolean useGMLSchemaCache, final IFeatureProviderFactory factory ) throws Exception

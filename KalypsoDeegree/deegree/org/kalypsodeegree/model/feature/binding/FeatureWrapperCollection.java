@@ -107,13 +107,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public void add( final int index, final FWCls element )
   {
-    final Feature f = element.getWrappedFeature();
+    final Feature f = element.getFeature();
     m_featureList.add( index, f );
   }
 
   public boolean add( final FWCls o )
   {
-    final Feature f = o.getWrappedFeature();
+    final Feature f = o.getFeature();
     return m_featureList.add( f );
   }
 
@@ -310,7 +310,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     if( o instanceof IFeatureWrapper2 )
     {
-      return m_featureList.lastIndexOf( ((IFeatureWrapper2) o).getWrappedFeature() );
+      return m_featureList.lastIndexOf( ((IFeatureWrapper2) o).getFeature() );
     }
     else
     {
@@ -332,7 +332,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       @SuppressWarnings("unchecked")
       public void add( final FWCls o )
       {
-        lit.add( o.getWrappedFeature() );
+        lit.add( o.getFeature() );
       }
 
       public boolean hasNext( )
@@ -376,7 +376,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
       public void set( final FWCls o )
       {
-        lit.set( o.getWrappedFeature() );
+        lit.set( o.getFeature() );
       }
 
     };
@@ -392,9 +392,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     if( o instanceof IFeatureWrapper2 )
     {
-      boolean removed = m_featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature() );
+      boolean removed = m_featureList.remove( ((IFeatureWrapper2) o).getFeature() );
       if( !removed )
-        removed = m_featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature().getId() );
+        removed = m_featureList.remove( ((IFeatureWrapper2) o).getFeature().getId() );
       return removed;
     }
     else if( o instanceof String )
@@ -423,7 +423,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   public FWCls set( final int index, final FWCls element )
   {
     final FWCls r = get( index );
-    final Feature f = element.getWrappedFeature();
+    final Feature f = element.getFeature();
 
     m_featureList.set( index, f );
     return r;
@@ -511,7 +511,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   }
 
   @Override
-  public Feature getWrappedFeature( )
+  public Feature getFeature( )
   {
     return m_featureCollection;
   }
@@ -570,7 +570,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
-        final GM_Object prop = feature.getWrappedFeature().getDefaultGeometryProperty();
+        final GM_Object prop = feature.getFeature().getDefaultGeometryProperty();
         if( containedOnly )
         {
           if( selectionSurface.contains( prop ) )
@@ -643,7 +643,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   public void cloneInto( final FWCls toClone ) throws Exception
   {
     final IRelationType relationType = m_featureList.getParentFeatureTypeProperty();
-    FeatureHelper.cloneFeature( getWrappedFeature(), relationType, toClone.getWrappedFeature() );
+    FeatureHelper.cloneFeature( getFeature(), relationType, toClone.getFeature() );
   }
 
   public void addSecondaryWrapper( final Class<FWCls> secondaryWrapper )

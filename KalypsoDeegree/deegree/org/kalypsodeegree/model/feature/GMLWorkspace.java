@@ -103,7 +103,7 @@ public interface GMLWorkspace extends ModellEventProvider
   /**
    * Creates a feature an puts it into this workspace.
    * <p>
-   * Generates a unique id througout this workspace.
+   * Generates a unique id throughout this workspace.
    * </p>
    */
   public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type );

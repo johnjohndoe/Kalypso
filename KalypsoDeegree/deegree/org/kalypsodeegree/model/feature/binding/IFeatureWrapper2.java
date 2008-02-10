@@ -79,5 +79,5 @@ public interface IFeatureWrapper2
   public void setLocation( final GM_Object location );
 
   /** Returns the bound feature, which this wrapper class is representing. */
-  public Feature getWrappedFeature( );
+  public Feature getFeature( );
 }
