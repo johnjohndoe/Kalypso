@@ -76,7 +76,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
     cancel
   }
 
-  private final IFeatureWrapperCollection<IGeoStatus> m_children = new FeatureWrapperCollection<IGeoStatus>( getWrappedFeature(), IGeoStatus.class, QNAME_PROP_STATUS_CHILD_MEMBER );
+  private final IFeatureWrapperCollection<IGeoStatus> m_children = new FeatureWrapperCollection<IGeoStatus>( getFeature(), IGeoStatus.class, QNAME_PROP_STATUS_CHILD_MEMBER );
 
   public GeoStatus( final Feature featureToBind )
   {
@@ -116,7 +116,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
 
     try
     {
-      final String encodedString = (String) getWrappedFeature().getProperty( QNAME_PROP_STATUS_EXCEPTION );
+      final String encodedString = (String) getFeature().getProperty( QNAME_PROP_STATUS_EXCEPTION );
 
       final byte[] encodedBytes = encodedString.getBytes( "UTF-8" );
 
@@ -205,7 +205,7 @@ public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements I
 
   private SEVERITYTYPE getSeverityType( )
   {
-    final String value = (String) getWrappedFeature().getProperty( QNAME_PROP_STATUS_SEVERITY );
+    final String value = (String) getFeature().getProperty( QNAME_PROP_STATUS_SEVERITY );
 
     return SEVERITYTYPE.valueOf( value );
   }

@@ -196,7 +196,7 @@ public class GeoGridUtilities
   public static IGeoGrid toGrid( final ICoverage coverage ) throws Exception
   {
     // REMARK: at the moment, only RectifiedGridCoverages are supported
-    return new RectifiedGridCoverageGeoGrid( coverage.getWrappedFeature() );
+    return new RectifiedGridCoverageGeoGrid( coverage.getFeature() );
   }
 
   /**

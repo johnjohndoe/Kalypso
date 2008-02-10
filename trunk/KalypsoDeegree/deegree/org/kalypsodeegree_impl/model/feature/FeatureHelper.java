@@ -215,7 +215,7 @@ public class FeatureHelper
       return (String) value;
     return value.toString();
   }
- 
+
   /**
    * Überträgt die Daten eines Features in die Daten eines anderen.
    * <p>
@@ -688,6 +688,14 @@ public class FeatureHelper
   }
 
   /**
+   * Same as {@link #addFeature(Feature, QName, QName, 0)}
+   */
+  public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName ) throws GMLSchemaException
+  {
+    return addFeature( feature, listProperty, newFeatureName, 0 );
+  }
+
+  /**
    * Adds a new member to a property of the given feature. The property must be a feature list.
    * 
    * @param newFeatureName
@@ -695,7 +703,7 @@ public class FeatureHelper
    *            list is taken.
    * @return The new feature member
    */
-  public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName ) throws GMLSchemaException
+  public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName, final int depth ) throws GMLSchemaException
   {
     final FeatureList list = (FeatureList) feature.getProperty( listProperty );
     final Feature parentFeature = list.getParentFeature();
@@ -713,7 +721,7 @@ public class FeatureHelper
     if( (newFeatureName != null) && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
       throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
 
-    final Feature newFeature = workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType );
+    final Feature newFeature = workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType, depth );
 
     list.add( newFeature );
     return newFeature;
@@ -863,7 +871,7 @@ public class FeatureHelper
       throw new IllegalArgumentException( message );
     }
 
-    final Feature wrappedFeature = featureWrapper.getWrappedFeature();
+    final Feature wrappedFeature = featureWrapper.getFeature();
     final T resolvedLink = FeatureHelper.resolveLink( wrappedFeature, propertyQName, adapterTargetClass );
     return resolvedLink;
   }
@@ -892,7 +900,7 @@ public class FeatureHelper
 
     // get object id
     final String objectID = (objectFeature != null) ? objectFeature.getGmlID() : null;
-    final Feature subjWF = subjectFeature.getWrappedFeature();
+    final Feature subjWF = subjectFeature.getFeature();
     subjWF.setProperty( propertyQName, objectID );
   }
 
@@ -1343,7 +1351,7 @@ public class FeatureHelper
       Feature f;
       for( final IFeatureWrapper2 fw : c )
       {
-        f = fw.getWrappedFeature();
+        f = fw.getFeature();
         if( f == null )
         {
           throw new IllegalArgumentException( "All feature wrapper must wrapp a non null feature:" + c );
