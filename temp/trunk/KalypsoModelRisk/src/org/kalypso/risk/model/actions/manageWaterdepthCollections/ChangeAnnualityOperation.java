@@ -53,8 +53,8 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
       m_coverageCollection.setName( "HQ " + m_newReturnPeriod ); //$NON-NLS-1$
       updateTheme( m_wspThemes, oldReturnPeriod );
 
-      final GMLWorkspace workspace = m_model.getWrappedFeature().getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_coverageCollection.getWrappedFeature().getParent(), new Feature[] { m_coverageCollection.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      final GMLWorkspace workspace = m_model.getFeature().getWorkspace();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_coverageCollection.getFeature().getParent(), new Feature[] { m_coverageCollection.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       m_provider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       m_provider.saveModel( IRasterDataModel.class, new SubProgressMonitor( monitor, 1 ) );
       return Status.OK_STATUS;

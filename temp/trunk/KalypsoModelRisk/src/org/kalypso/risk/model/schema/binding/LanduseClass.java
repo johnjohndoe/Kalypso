@@ -88,7 +88,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   public void setDamageFunction( final IDamageFunction damageFunction )
   {
     final String xFeaturePath = IRasterizationControlModel.MODEL_NAME + "#" + damageFunction.getGmlID();
-    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( getFeature(), damageFunction.getWrappedFeature().getParentRelation(), damageFunction.getWrappedFeature().getFeatureType(), xFeaturePath, "", "", "", "", "" );
+    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( getFeature(), damageFunction.getFeature().getParentRelation(), damageFunction.getFeature().getFeatureType(), xFeaturePath, "", "", "", "", "" );
     getFeature().setProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK, xFeature );
   }
 

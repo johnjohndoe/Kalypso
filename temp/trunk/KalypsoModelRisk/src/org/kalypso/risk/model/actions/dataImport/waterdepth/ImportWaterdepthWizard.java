@@ -183,8 +183,8 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               annualCoverageCollection.setName( "HQ " + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
               annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
               final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
-              final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getWrappedFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
-              final Feature coverageFeature = workspace.createFeature( annualCoverageCollection.getWrappedFeature(), parentRelation, rgcFeatureType );
+              final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
+              final Feature coverageFeature = workspace.createFeature( annualCoverageCollection.getFeature(), parentRelation, rgcFeatureType );
               final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
               annualCoverageCollection.add( coverage );
               coverage.setRangeSet( rangeSet );
@@ -232,7 +232,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
               parentKalypsoTheme.addLayer( layer );
 
               // fireModellEvent to redraw a map...
-              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getWrappedFeature(), new Feature[] { annualCoverageCollection.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getFeature(), new Feature[] { annualCoverageCollection.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             }
             scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 

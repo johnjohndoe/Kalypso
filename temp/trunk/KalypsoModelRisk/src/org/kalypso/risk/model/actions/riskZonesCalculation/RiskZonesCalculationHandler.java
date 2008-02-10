@@ -112,7 +112,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
                 count++;
 
                 // fireModellEvent to redraw a map...
-                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { outputCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel.getSpecificDamageCoverageCollection().getFeature(), new Feature[] { outputCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
               }
 
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$

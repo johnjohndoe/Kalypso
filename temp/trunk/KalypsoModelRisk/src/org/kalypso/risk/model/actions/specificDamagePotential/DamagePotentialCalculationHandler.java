@@ -210,7 +210,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
 
                 final StyledLayerType layer = new StyledLayerType();
                 layer.setName( layerName );
-                layer.setFeaturePath( "#fid#" + dstAnnualCoverages.getWrappedFeature().getId() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+                layer.setFeaturePath( "#fid#" + dstAnnualCoverages.getFeature().getId() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
                 layer.setLinktype( "gml" ); //$NON-NLS-1$
                 layer.setType( "simple" ); //$NON-NLS-1$
                 layer.setVisible( true );
@@ -238,7 +238,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
                 parentKalypsoTheme.addLayer( layer );
 
                 // fireModellEvent to redraw a map...
-                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getSpecificDamageCoverageCollection().getWrappedFeature(), new Feature[] { dstAnnualCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getSpecificDamageCoverageCollection().getFeature(), new Feature[] { dstAnnualCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
               }
 
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$

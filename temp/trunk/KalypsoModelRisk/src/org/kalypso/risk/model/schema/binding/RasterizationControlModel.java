@@ -144,7 +144,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
       for( final ILanduseClass landuseClass : m_landuseClasses )
         if( landuseClass.getGmlID().equals( landuseClassGmlID ) )
         {
-          linkedLanduseClass = landuseClass.getWrappedFeature();
+          linkedLanduseClass = landuseClass.getFeature();
           break;
         }
       if( linkedLanduseClass == null )
@@ -153,7 +153,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
       for( final IAdministrationUnit administrationUnit : m_administrationUnits )
         if( administrationUnit.getGmlID().equals( administrationUnitGmlID ) )
         {
-          linkedAdministrationUnit = administrationUnit.getWrappedFeature();
+          linkedAdministrationUnit = administrationUnit.getFeature();
           break;
         }
       if( linkedAdministrationUnit == null )

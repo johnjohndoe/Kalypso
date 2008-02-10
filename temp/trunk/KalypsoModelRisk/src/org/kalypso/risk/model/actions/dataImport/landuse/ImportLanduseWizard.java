@@ -496,19 +496,19 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                 for( int k = 0; k < surfaces.length; k++ )
                 {
                   polygon.setGeometry( surfaces[k] );
-                  polygon.setLanduseClass( getLanduseClassByName( polygon.getWrappedFeature(), scenarioFolder, shpPropertyValue ) );
-                  polygon.getWrappedFeature().invalidEnvelope();
-                  createdFeatures.add( polygon.getWrappedFeature() );
+                  polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), scenarioFolder, shpPropertyValue ) );
+                  polygon.getFeature().invalidEnvelope();
+                  createdFeatures.add( polygon.getFeature() );
                   // stule and landuse class ordinal number will be set automatically (property functions)
                 }
               }
               else if( shpGeometryProperty instanceof GM_Surface )
               {
                 polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
-                polygon.setLanduseClass( getLanduseClassByName( polygon.getWrappedFeature(), scenarioFolder, shpPropertyValue ) );
+                polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), scenarioFolder, shpPropertyValue ) );
                 // polygon.setStyleType( shpPropertyValue );
-                polygon.getWrappedFeature().invalidEnvelope();
-                createdFeatures.add( polygon.getWrappedFeature() );
+                polygon.getFeature().invalidEnvelope();
+                createdFeatures.add( polygon.getFeature() );
               }
               else
                 throw new RuntimeException( Messages.getString( "ImportLanduseWizard.4" ) + shpGeometryProperty.getClass().getName() ); //$NON-NLS-1$
@@ -517,7 +517,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
             // fireModellEvent to redraw a map...
             final GMLWorkspace workspace = szenarioDataProvider.getCommandableWorkSpace( IVectorDataModel.class );
-            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getWrappedFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             szenarioDataProvider.postCommand( IVectorDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
             // creating styles
@@ -567,7 +567,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         if( landuseClass.getName().equals( className ) )
         {
           final String xlinkedFeaturePath = linkedFeaturePath + landuseClass.getGmlID();
-          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getWrappedFeature().getParentRelation(), landuseClass.getWrappedFeature().getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getFeature().getParentRelation(), landuseClass.getFeature().getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
           return linkedFeature_Impl;
         }
       }

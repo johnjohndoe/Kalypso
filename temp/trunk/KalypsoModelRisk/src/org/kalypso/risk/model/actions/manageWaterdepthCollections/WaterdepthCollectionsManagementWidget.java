@@ -298,7 +298,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
       viewer.setInput( StatusUtilities.createErrorStatus( Messages.getString( "WaterdepthCollectionsManagementWidget.9" ) ) ); //$NON-NLS-1$
     else
     {
-      viewer.setInput( m_model.getWrappedFeature().getWorkspace() );
+      viewer.setInput( m_model.getFeature().getWorkspace() );
 
       final GMLXPathSegment segment = GMLXPathSegment.forQName( IRasterDataModel.QNAME );
       final GMLXPath pathToModel = new GMLXPath( segment );
@@ -562,7 +562,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         final Object adaptedObject = adaptToKnownObject( selectedObject );
 
         if( adaptedObject instanceof ICoverage )
-          paintEnvelope( g, ((ICoverage) adaptedObject).getWrappedFeature().getEnvelope() );
+          paintEnvelope( g, ((ICoverage) adaptedObject).getFeature().getEnvelope() );
         else if( adaptedObject instanceof IAnnualCoverageCollection )
         {
           paintEnvelope( g, ((IAnnualCoverageCollection) adaptedObject).getWrappedList().getBoundingBox() );
@@ -633,10 +633,10 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final Object adaptedObject = adaptToKnownObject( selectedObject );
 
     if( adaptedObject instanceof ICoverageCollection )
-      return ((ICoverageCollection) adaptedObject).getWrappedFeature().getEnvelope();
+      return ((ICoverageCollection) adaptedObject).getFeature().getEnvelope();
 
     if( adaptedObject instanceof ICoverage )
-      return ((ICoverage) adaptedObject).getWrappedFeature().getEnvelope();
+      return ((ICoverage) adaptedObject).getFeature().getEnvelope();
 
     return null;
   }

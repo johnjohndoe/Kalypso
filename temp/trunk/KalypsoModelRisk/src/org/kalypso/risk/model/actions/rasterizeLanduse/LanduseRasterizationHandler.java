@@ -165,7 +165,7 @@ public class LanduseRasterizationHandler extends AbstractHandler
 
               // fireModellEvent to redraw a map...
               // TODO: check if still ok
-              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getWrappedFeature(), new Feature[] { outputCoverages.getWrappedFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getFeature(), new Feature[] { outputCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
