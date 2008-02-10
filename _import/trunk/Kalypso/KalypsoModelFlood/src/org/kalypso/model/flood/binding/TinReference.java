@@ -199,7 +199,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
    */
   public IRunoffEvent getRunoffEvent( )
   {
-    final Feature parent = getWrappedFeature().getParent();
+    final Feature parent = getFeature().getParent();
     if( parent == null )
       return null;
 

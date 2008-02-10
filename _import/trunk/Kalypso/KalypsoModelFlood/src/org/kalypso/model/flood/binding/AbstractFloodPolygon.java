@@ -70,7 +70,7 @@ public abstract class AbstractFloodPolygon extends AbstractFeatureBinder impleme
   {
     for( final IRunoffEvent event : m_runoffEvents )
     {
-      if( eventId.equals( event.getWrappedFeature().getId() ) )
+      if( eventId.equals( event.getFeature().getId() ) )
         return true;
     }
 

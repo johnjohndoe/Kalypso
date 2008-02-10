@@ -149,7 +149,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
       properties.put( propName, value );
     }
 
-    final GMLWorkspace workspace = model.getWrappedFeature().getWorkspace();
+    final GMLWorkspace workspace = model.getFeature().getWorkspace();
     m_theme = new KalypsoFeatureTheme( new CommandableWorkspace( workspace ), m_featurePath, getName(), m_selectionManager, mapModell, legendIcon, context );
     m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
