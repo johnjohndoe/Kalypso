@@ -47,6 +47,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.DialogPage;
@@ -71,8 +73,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.math.LinearEquation;
+import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogPageUtilitites;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.Phenomenon;
@@ -84,7 +89,7 @@ import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
- * Constructs a simple timeserie with a time columnd and a value column.
+ * Constructs a simple timeserie with a time column and a value column.
  * 
  * @author Gernot Belger
  */
@@ -102,7 +107,9 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
 
   private Integer m_stepValue;
 
-  private BigDecimal m_value;
+  private BigDecimal m_fromValue;
+
+  private BigDecimal m_toValue;
 
   private WizardPage m_page;
 
@@ -179,22 +186,41 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     } );
     comboViewer.setSelection( new StructuredSelection( FIELD.HOUR ), true );
 
-    final Label labelValue = new Label( container, SWT.NONE );
-    labelValue.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    labelValue.setText( "Standardwert:" );
+    final Label labelFromValue = new Label( container, SWT.NONE );
+    labelFromValue.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+    labelFromValue.setText( "Startwert:" );
 
-    final Text defaultValue = new Text( container, SWT.BORDER );
-    defaultValue.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    defaultValue.addModifyListener( new ModifyListener()
+    final Text defaultFromValue = new Text( container, SWT.BORDER );
+    defaultFromValue.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    defaultFromValue.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
       {
-        final String text = defaultValue.getText();
-        handleValueChanged( text );
+        final String text = defaultFromValue.getText();
+        handleFromValueChanged( text );
       }
     } );
 
-    defaultValue.setText( DEFAULT_VALUE );
+    defaultFromValue.setText( DEFAULT_VALUE );
+
+    new Label( container, SWT.NONE ).setText( "" );
+
+    final Label labelToValue = new Label( container, SWT.NONE );
+    labelToValue.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+    labelToValue.setText( "Zielwert:" );
+
+    final Text defaultToValue = new Text( container, SWT.BORDER );
+    defaultToValue.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    defaultToValue.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( final ModifyEvent e )
+      {
+        final String text = defaultToValue.getText();
+        handleToValueChanged( text );
+      }
+    } );
+
+    defaultToValue.setText( DEFAULT_VALUE );
 
     new Label( container, SWT.NONE ).setText( "" );
 
@@ -265,13 +291,45 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
       return StatusUtilities.createWarningStatus( "Geben Sie ein Enddatum ein." );
     if( m_stepValue == null )
       return StatusUtilities.createWarningStatus( "Geben Sie eine Schrittweite ein." );
-    if( m_value == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie einen Standardwert ein." );
+    if( m_fromValue == null )
+      return StatusUtilities.createWarningStatus( "Geben Sie einen Startwert ein." );
+    if( m_toValue == null )
+      return StatusUtilities.createWarningStatus( "Geben Sie einen Zielwert ein." );
 
     if( !m_dates[0].before( m_dates[1] ) )
       return StatusUtilities.createErrorStatus( "Startdatum muss vor Enddatum liegen." );
 
     return Status.OK_STATUS;
+  }
+
+  protected BigDecimal interpolateValue( final GregorianCalendar calendar )
+  {
+    /* Linear interpolation */
+    final XMLGregorianCalendar from = DateUtilities.toXMLGregorianCalendar( m_dates[0] );
+    final XMLGregorianCalendar to = DateUtilities.toXMLGregorianCalendar( m_dates[1] );
+
+    final long before = from.toGregorianCalendar().getTimeInMillis();
+    final long after = to.toGregorianCalendar().getTimeInMillis();
+
+    final long dom = calendar.getTimeInMillis();
+
+    final double valBefore = ((Number) m_fromValue).doubleValue();
+    final double valAfter = ((Number) m_toValue).doubleValue();
+
+    try
+    {
+      final LinearEquation equation = new LinearEquation( before, valBefore, after, valAfter );
+      double value = equation.computeY( dom );
+
+      return new BigDecimal( value ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    }
+    catch( final SameXValuesException e )
+    {
+      e.printStackTrace();
+
+      return null;
+    }
+
   }
 
   /**
@@ -310,8 +368,15 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     {
       final IRecord record = result.createRecord();
       record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
-      record.setValue( valueComponent, m_value );
-      result.add( record );
+
+      // TODO: interpolate value
+      final BigDecimal value = interpolateValue( calendarFrom );
+
+      if( value != null )
+      {
+        record.setValue( valueComponent, value );
+        result.add( record );
+      }
       calendarFrom.add( m_field, m_stepValue );
     }
   }
@@ -340,17 +405,33 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     updatePageState( status );
   }
 
-  protected void handleValueChanged( final String text ) throws NumberFormatException
+  protected void handleFromValueChanged( final String text ) throws NumberFormatException
   {
     IStatus status = Status.OK_STATUS;
     try
     {
-      m_value = new BigDecimal( text );
+      m_fromValue = new BigDecimal( text );
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Formatfehler im Standardwert: geben Sie eine Dezimalzahl ein" );
-      m_value = null;
+      status = StatusUtilities.statusFromThrowable( t, "Formatfehler im Startwert: geben Sie eine Dezimalzahl ein" );
+      m_fromValue = null;
+    }
+
+    updatePageState( status );
+  }
+
+  protected void handleToValueChanged( final String text ) throws NumberFormatException
+  {
+    IStatus status = Status.OK_STATUS;
+    try
+    {
+      m_toValue = new BigDecimal( text );
+    }
+    catch( final Throwable t )
+    {
+      status = StatusUtilities.statusFromThrowable( t, "Formatfehler im Zielwert: geben Sie eine Dezimalzahl ein" );
+      m_toValue = null;
     }
 
     updatePageState( status );
