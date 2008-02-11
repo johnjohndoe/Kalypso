@@ -217,15 +217,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
-   */
-  @Override
-  public Feature getFeature( )
-  {
-    return getFeature();
-  }
-
-  /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
    */
   @Override
