@@ -69,70 +69,9 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
 
   public GridCoverageElevationModelWrapper( final Feature featureToBind, final QName qnameToBind ) throws Exception
   {
-
     super( featureToBind, qnameToBind );
     final Feature coverageFeature = (Feature) featureToBind.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_GRID_COVERAGE );
     doubleRaster = new RectifiedGridCoverageGeoGrid( coverageFeature );
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
-   */
-  @Override
-  public String getDescription( )
-  {
-
-    return super.getDescription();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
-   */
-  @Override
-  public String getName( )
-  {
-
-    return super.getName();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
-   */
-  @Override
-  public void setDescription( final String desc )
-  {
-    super.setDescription( desc );
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
-   */
-  @Override
-  public void setName( final String name )
-  {
-    super.setName( name );
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getGmlID()
-   */
-  @Override
-  public String getGmlID( )
-  {
-
-    return super.getGmlID();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getWrappedFeature()
-   */
-  @Override
-  public Feature getFeature( )
-  {
-    return super.getFeature();
   }
 
   /**

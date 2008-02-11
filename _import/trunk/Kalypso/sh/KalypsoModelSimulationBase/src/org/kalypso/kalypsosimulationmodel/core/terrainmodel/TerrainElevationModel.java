@@ -54,54 +54,9 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public abstract class TerrainElevationModel extends AbstractFeatureBinder implements ITerrainElevationModel
 {
-
-  public TerrainElevationModel( Feature featureToBind, QName qNameToBind )
+  public TerrainElevationModel( final Feature featureToBind, final QName qNameToBind )
   {
     super( featureToBind, qNameToBind );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
-   */
-  public String getDescription( )
-  {
-
-    return super.getDescription();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
-   */
-  public String getName( )
-  {
-
-    return super.getName();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
-   */
-  public void setDescription( String desc )
-  {
-    super.setDescription( desc );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
-   */
-  public void setName( String name )
-  {
-    super.setName( name );
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper#getWrappedFeature()
-   */
-  public Feature getFeature( )
-  {
-
-    return super.getFeature();
   }
 
 }
