@@ -45,14 +45,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -524,26 +521,9 @@ public class TupleResult implements List<IRecord>
    */
   public boolean removeComponent( final IComponent comp )
   {
-    /* get all components of type comp */
-    final Map<IComponent, Integer> remove = new IdentityHashMap<IComponent, Integer>();
-    for( int i = 0; i < m_components.size(); i++ )
+    while( m_components.contains( comp ) )
     {
-      final IComponent component = m_components.get( i );
-      if( component.equals( comp ) )
-        remove.put( component, i );
-    }
-
-    /* remove all components by their index */
-    final Set<Entry<IComponent, Integer>> entrySet = remove.entrySet();
-    for( final Entry<IComponent, Integer> entry : entrySet )
-    {
-      m_components.remove( entry.getValue() );
-
-      for( final IRecord record : this )
-      {
-        final Record r = (Record) record;
-        r.remove( entry.getValue() );
-      }
+      m_components.remove( comp );
     }
 
     if( m_sortComponents.contains( comp ) )
