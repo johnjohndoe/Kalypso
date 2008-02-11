@@ -92,15 +92,6 @@ public class FE1D2DComplexElement<ET extends IFeatureWrapper2> extends AbstractF
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
-   */
-  @Override
-  public Feature getFeature( )
-  {
-    return getFeature();
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
   public boolean addElementAsRef( final ET element )
