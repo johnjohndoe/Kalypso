@@ -496,14 +496,14 @@ public class TupleResult implements List<IRecord>
   {
     final boolean added = m_components.add( comp );
     int index = -1;
-    if( this.hasComponent( cloneFrom ) && cloneFrom.getValueTypeName().equals( comp.getValueTypeName() ) )
-      index = this.indexOfComponent( cloneFrom );
+    if( hasComponent( cloneFrom ) && cloneFrom.getValueTypeName().equals( comp.getValueTypeName() ) )
+      index = indexOfComponent( cloneFrom );
 
     for( final IRecord record : this )
     {
       final Record r = (Record) record;
-      if(index > -1)
-        r.set( m_components.size() - 1, record.getValue(index) );
+      if( index > -1 )
+        r.set( m_components.size() - 1, record.getValue( index ) );
       else
         r.set( m_components.size() - 1, comp.getDefaultValue() );
 
@@ -516,10 +516,15 @@ public class TupleResult implements List<IRecord>
     return added;
   }
 
+  /**
+   * removes all components of type IComponent
+   * 
+   * @param comp
+   *            interpreted as type!!!
+   */
   public boolean removeComponent( final IComponent comp )
   {
-    final boolean b = m_components.remove( comp );
-
+    /* get all components of type comp */
     final Map<IComponent, Integer> remove = new IdentityHashMap<IComponent, Integer>();
     for( int i = 0; i < m_components.size(); i++ )
     {
@@ -528,6 +533,7 @@ public class TupleResult implements List<IRecord>
         remove.put( component, i );
     }
 
+    /* remove all components by their index */
     final Set<Entry<IComponent, Integer>> entrySet = remove.entrySet();
     for( final Entry<IComponent, Integer> entry : entrySet )
     {
@@ -545,7 +551,10 @@ public class TupleResult implements List<IRecord>
 
     fireComponentsChanged( new IComponent[] { comp }, TYPE.REMOVED );
 
-    return b;
+    if( m_components.contains( comp ) )
+      return false;
+
+    return true;
   }
 
   // TODO: add other component methods:
