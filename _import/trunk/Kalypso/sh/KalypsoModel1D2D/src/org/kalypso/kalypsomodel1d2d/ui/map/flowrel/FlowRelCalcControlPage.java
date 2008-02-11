@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.Date;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -54,10 +50,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
-import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -65,6 +61,8 @@ import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -108,6 +106,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     featureviewFactory.addView( getClass().getResource( "resources/calcControlPage.gft" ) );
+    featureviewFactory.addView( getClass().getResource( "resources/waterlevelParameter.gft" ) );
     m_featureComposite = new FeatureComposite( null, null, featureviewFactory );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
@@ -159,44 +158,28 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     {
       e.printStackTrace();
 
-      setErrorMessage( "Fehler bei der Erstellung der Stuerparameter-Vorlage: " + e.toString() );
+      setErrorMessage( "Fehler bei der Erstellung der Steuerparameter-Vorlage: " + e.toString() );
     }
   }
 
-  public static TuhhCalculation createTemplateCalculation( final IFlowRelation1D[] flowRels ) throws InvocationTargetException, GMLSchemaException
+  public static TuhhCalculation createTemplateCalculation( final IFlowRelation1D[] flowRels ) throws Exception
   {
     if( flowRels.length == 0 )
       return null;
 
     // TODO: at the moment, all parameters are taken from the first flow relation; better: merge?
     final IFlowRelation1D flowRel = flowRels[0];
+    final Feature flowRelFeature = flowRel.getFeature();
+    final GMLWorkspace flowRelWorkspace = flowRelFeature.getWorkspace();
 
-    final TuhhWspmProject project = TuhhWspmProject.create( null, flowRel.getFeature().getWorkspace().getFeatureProviderFactory() );
+    final TuhhCalculation calculation = flowRel.getCalculation();
 
-    // Create calculation
-    final TuhhCalculation calculation = project.createReibConstCalculation();
-    calculation.setCalcCreation( "fe1d2d", new Date() );
-    calculation.setDescription( "Recalculation of 1d-parameters" );
-    calculation.setName( "1dparameters" );
+    final TuhhWspmProject project = TuhhWspmProject.create( null, flowRelWorkspace.getFeatureProviderFactory() );
+    final IFeatureType featureType = project.getFeature().getFeatureType();
+    final IRelationType rt = (IRelationType) featureType.getProperty( TuhhWspmProject.QNAME_PROP_CALC_MEMBER );
+    final Feature clonedFeature = FeatureHelper.cloneFeature( project.getFeature(), rt, calculation.getFeature() );
 
-    // TODO: get parameters from outside
-    calculation.setVersion( TuhhCalculation.ExeVersion._2_0_6_6 );
-    calculation.setQRange( 1, 5, 0.5 );
-    calculation.setWaterlevelParameters( TuhhCalculation.WSP_ITERATION_TYPE.SIMPLE, TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.DVWK, TuhhCalculation.REIBUNGSVERLUST_TYPE.TRAPEZ_FORMULA, true, true );
-    calculation.setStartSlope( new BigDecimal( "0.003" ) );
-
-    final PolynomeProperties polynomeProperties = calculation.getPolynomeProperties();
-    polynomeProperties.setAlphaLimit( new BigDecimal( "2.0" ) );
-    polynomeProperties.setAlphaSlope( new BigDecimal( "4.0" ) );
-    polynomeProperties.setAreaSlope( new BigDecimal( "4.0" ) );
-    polynomeProperties.setRunoffSlope( new BigDecimal( "4.0" ) );
-    polynomeProperties.setDeegree( 4 );
-    polynomeProperties.setIgnoreOutlier( true );
-    polynomeProperties.setTripleForAll( true );
-    polynomeProperties.setTripleMode( PolynomeProperties.TripleMode.slopeChange );
-    polynomeProperties.setWeightSplinePoint( new BigDecimal( "2.0" ) );
-
-    return calculation;
+    return new TuhhCalculation( clonedFeature );
   }
 
   public TuhhCalculation getTemplate( )

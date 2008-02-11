@@ -6,6 +6,7 @@
 
 <xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+	xmlns:wspmTuhh="org.kalypso.model.wspm.tuhh"
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:math="org.kalypso.gml.common.math"
 	xmlns:wspmprof="org.kalypso.model.wspmprofile" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
@@ -22,6 +23,7 @@
 	<xs:import namespace="http://www.opengis.net/om" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
 	<xs:import namespace="org.kalypso.model.wspmprofile" />
+	<xs:import namespace="org.kalypso.model.wspm.tuhh" />
 	<xs:import namespace="org.kalypso.gml.common.math" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
 		schemaLocation="sim_1d2d_observation.xsd" />
@@ -35,9 +37,20 @@
 	<xs:complexType name="AbstractFlowRelation1DType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractFlowRelationshipType">
-				<xs:sequence/>
+				<xs:sequence>
+					<xs:element name="wspmTuhhCalculationMember" minOccurs="0" maxOccurs="1" type="wb1d2d:WspmTuhhCalculationPropertyType">
+					
+					</xs:element>
+				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="WspmTuhhCalculationPropertyType">
+		<xs:sequence>
+			<!--  TODO: restrict to profiles of certain type -->
+			<xs:element ref="wspmTuhh:CalculationReibConstWspmTuhhSteadyState" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
 	</xs:complexType>
 	
 	<!-- ================================================

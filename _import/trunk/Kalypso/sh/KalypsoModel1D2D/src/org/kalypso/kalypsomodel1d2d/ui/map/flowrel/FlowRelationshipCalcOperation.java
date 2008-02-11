@@ -287,7 +287,7 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     {
       tmpDir = SimulationUtilitites.createSimulationTmpDir( "" + System.currentTimeMillis() );
 
-      final TuhhCalculation calculation = createCalculation( templateCalculation, profiles, flowRel.getFeature().getWorkspace().getFeatureProviderFactory() );
+      final TuhhCalculation calculation = createCalculation( flowRel, templateCalculation, profiles, flowRel.getFeature().getWorkspace().getFeatureProviderFactory() );
 
       // Prepare wspm model
       final File modelFile = new File( tmpDir, "modell.gml" );
@@ -397,7 +397,7 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     return m_running;
   }
 
-  private TuhhCalculation createCalculation( final TuhhCalculation template, final IProfil[] profiles, final IFeatureProviderFactory factory ) throws GMLSchemaException, InvocationTargetException
+  private TuhhCalculation createCalculation( final IFlowRelation1D flowRel, final TuhhCalculation template, final IProfil[] profiles, final IFeatureProviderFactory factory ) throws GMLSchemaException, InvocationTargetException
   {
     // Create empty project with one calculation and one reach
     final TuhhWspmProject project = TuhhWspmProject.create( null, factory );
@@ -433,7 +433,13 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     /* Copy control parameters from template */
     calculation.setVersion( template.getVersion() );
     calculation.setQRange( template.getMinQ(), template.getMaxQ(), template.getQStep() );
-    calculation.setWaterlevelParameters( template.getIterationType(), template.getVerzoegerungsverlust(), template.getReibungsverlust(), true, true );
+    final boolean calcBuildings;
+    if( flowRel instanceof ITeschkeFlowRelation )
+      calcBuildings = false;
+    else
+      calcBuildings = true;
+
+    calculation.setWaterlevelParameters( template.getIterationType(), template.getVerzoegerungsverlust(), template.getReibungsverlust(), calcBuildings, calcBuildings );
     calculation.setStartSlope( template.getStartSlope() );
 
     final PolynomeProperties polynomeProperties = calculation.getPolynomeProperties();
@@ -462,6 +468,8 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
         copyTeschkeData( (ITeschkeFlowRelation) flowRelation1D, qresult );
       else
         copyBuildingData( (IBuildingFlowRelation) flowRelation1D, qresult );
+
+      flowRelation1D.setCalculation( m_templateCalculation );
     }
   }
 
@@ -488,6 +496,7 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
       if( polynomeFeature != null )
         FeatureHelper.cloneFeature( flowRel.getFeature(), flowRelPolynomeRelation, polynomeFeature );
     }
+
   }
 
   public static void copyBuildingData( final IBuildingFlowRelation buildingRelation, final QIntervallResult qresult )
@@ -505,5 +514,4 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     TupleResultUtilities.copyValues( qresultResult, buildingResult, componentMap );
     buildingRelation.setBuildingObservation( buildingObservation );
   }
-
 }

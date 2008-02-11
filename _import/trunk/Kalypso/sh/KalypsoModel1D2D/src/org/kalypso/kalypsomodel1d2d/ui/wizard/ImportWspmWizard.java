@@ -87,6 +87,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
@@ -365,14 +366,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
         final BigDecimal station = qresult.getStation();
 
-        // Only handle results of choosen segments
+        // Only handle results of chosen segments
         if( !allowedStations.contains( station ) )
           continue;
 
         // get corresponding 1d-element
         final IFE1D2DNode node = (IFE1D2DNode) PolynomeHelper.forStation( elementsByStation, station );
 
-        final IFlowRelationship flowRel;
+        final IFlowRelation1D flowRel;
 
         /* Do we have a building? */
         final IObservation<TupleResult> buildingObs = qresult.getBuildingObservation( false );
@@ -400,6 +401,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
         if( flowRel != null )
         {
+          flowRel.setCalculation( calculation );
+
           /* Set common properties and add to list of freshly generated features. */
           flowRel.setName( qresult.getName() );
           flowRel.setDescription( qresult.getDescription() );
@@ -422,7 +425,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return Status.OK_STATUS;
   }
 
-  private static IFlowRelationship addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws Exception
+  private static IFlowRelation1D addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws Exception
   {
     final BigDecimal station = qresult.getStation();
 
