@@ -45,7 +45,6 @@ import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
@@ -57,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 /**
  * @author Gernot Belger
  */
-public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlowRelation
+public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITeschkeFlowRelation
 {
   private final IFeatureWrapperCollection<IPolynomial1D> m_polynomes = new FeatureWrapperCollection<IPolynomial1D>( getFeature(), IPolynomial1D.class, QNAME_PROP_POLYNOMES );
 

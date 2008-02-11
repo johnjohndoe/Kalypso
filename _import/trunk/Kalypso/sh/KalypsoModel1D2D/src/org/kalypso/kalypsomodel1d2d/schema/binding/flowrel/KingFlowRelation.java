@@ -42,14 +42,13 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.math.BigDecimal;
 
-import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class KingFlowRelation extends FlowRelationship implements IKingFlowRelation
+public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlowRelation
 {
   public KingFlowRelation( final Feature featureToBind )
   {

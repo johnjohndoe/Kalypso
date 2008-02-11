@@ -48,7 +48,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -62,7 +61,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 /**
  * @author Gernot Belger
  */
-public abstract class BuildingFlowRelation extends FlowRelationship implements IBuildingFlowRelation
+public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implements IBuildingFlowRelation
 {
   public BuildingFlowRelation( final Feature featureToBind, final QName qname )
   {

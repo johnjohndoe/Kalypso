@@ -42,14 +42,22 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.math.BigDecimal;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 
 /**
  * @author Gernot Belger
  */
 public interface IFlowRelation1D extends IFlowRelationship
 {
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "_FlowRelation1D" );
+
+  public static final QName QNAME_PROP_TUHH_CALCULATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wspmTuhhCalculationMember" );
+
   public BigDecimal getStation( );
 
   public void setStation( final BigDecimal station );
@@ -57,4 +65,8 @@ public interface IFlowRelation1D extends IFlowRelationship
   public WspmProfile getProfile( );
 
   public void setProfileLink( final String profileRef );
+
+  public void setCalculation( final TuhhCalculation calculation );
+
+  public TuhhCalculation getCalculation( );
 }
