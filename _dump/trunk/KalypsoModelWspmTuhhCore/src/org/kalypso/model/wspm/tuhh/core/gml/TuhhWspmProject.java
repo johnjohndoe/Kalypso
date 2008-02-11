@@ -68,6 +68,8 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  */
 public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 {
+  public static final QName QNAME_PROP_CALC_MEMBER = new QName( NS_WSPM, "calculationMember" );
+
   public TuhhWspmProject( final Feature wspProject )
   {
     super( wspProject );
@@ -111,13 +113,13 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 
   public TuhhCalculation createCalculation( ) throws GMLSchemaException
   {
-    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "calculationMember" ), TuhhCalculation.QNAME_TUHH_CALC, -1 );
+    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC, -1 );
     return new TuhhCalculation( calcFeature );
   }
 
   public TuhhCalculation createReibConstCalculation( ) throws GMLSchemaException
   {
-    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "calculationMember" ), TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST, -1 );
+    final Feature calcFeature = FeatureHelper.addFeature( getFeature(), QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST, -1 );
     return new TuhhCalculation( calcFeature );
   }
 
@@ -125,7 +127,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
   {
     final GMLWorkspace workspace = getFeature().getWorkspace();
 
-    final FeatureList calcList = (FeatureList) getFeature().getProperty( new QName( NS_WSPM, "calculationMember" ) );
+    final FeatureList calcList = (FeatureList) getFeature().getProperty( QNAME_PROP_CALC_MEMBER );
     final ArrayList<TuhhCalculation> calcs = new ArrayList<TuhhCalculation>( calcList.size() );
     for( final Object o : calcList )
     {
