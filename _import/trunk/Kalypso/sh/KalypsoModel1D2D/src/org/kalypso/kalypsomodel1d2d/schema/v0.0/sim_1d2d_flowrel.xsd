@@ -26,9 +26,9 @@
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
 		schemaLocation="sim_1d2d_observation.xsd" />
 
-	<xs:element name="_FlowRelation1D" type="wb1d2d:AbstractFlowRelation1DType" abstract="true">
+	<xs:element name="_FlowRelation1D" type="wb1d2d:AbstractFlowRelation1DType" abstract="true" substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
-			<xs:documentation>Abstract substitution-head of all 1D-parameter relations.</xs:documentation>
+			<xs:documentation>Abstract substitution-head of all 1D-parameter relations</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 
