@@ -90,15 +90,32 @@
 	<xs:element name="ControlModel" type="c1d2d:ControlModelType"
 		substitutionGroup="gml:_Feature">
 		<xs:annotation>
+		<!-- 
 			<xs:documentation xml:lang="de">
-				<xs:label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></xs:label>
+				<xs:label><![CDATA[${listProperty:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl#name;0;-no name-}]]></xs:label>
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
-				<xs:label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></xs:label>
+				<xs:label><![CDATA[${listProperty:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl#name;0;-no name-}]]></xs:label>
+			</xs:documentation>
+		 -->
+			<xs:documentation xml:lang="de">
+				<xs:label><![CDATA[Steuerparameter für ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl#title;<nicht existierend Berechnungseinheit>}]]></xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label><![CDATA[Control parameters for ${property:http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl#title;<non-existent calculation unit>}]]></xs:label>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:complexType name="ControlModelType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction"
+					kapp:property="c1d2d:title" kapp:valueType="xs:string"
+					kapp:isVirtual="true">
+				</kapp:functionProperty>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractControlModelType">
 				<xs:sequence>
@@ -138,7 +155,8 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>
-									Berücksichtigung des Boussinesq-Beiwertes
+									Berücksichtigung des
+									Boussinesq-Beiwertes
 								</xs:label>
 								<xs:tooltip>
 									Berücksichtigung des Boussinesq-
@@ -707,8 +725,9 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="restartInfoMember" type="c1d2d:RestartInfoPropertyType"
-						minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="restartInfoMember"
+						type="c1d2d:RestartInfoPropertyType" minOccurs="0"
+						maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Restart file paths</xs:label>
@@ -719,7 +738,8 @@
 						default="1">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
-							TODO: default 1??? does not match the comment below!
+								TODO: default 1??? does not match the
+								comment below!
 								<xs:label>Restart step</xs:label>
 								<xs:tooltip>
 									Angabe des Restart Zeitschrittes
@@ -812,8 +832,8 @@
 						type="xs:string" minOccurs="1" maxOccurs="1" />
 					<xs:element name="stepResultMetaID" type="xs:string"
 						minOccurs="1" maxOccurs="1" />
-					<xs:element name="filePath"
-						type="xs:string" minOccurs="1" maxOccurs="1" />
+					<xs:element name="filePath" type="xs:string"
+						minOccurs="1" maxOccurs="1" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

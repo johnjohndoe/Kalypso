@@ -29,6 +29,11 @@
               class="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
               id="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
               name="AbstractJunctionGeometryPropertyFunction"/>
+              
+         <function
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.ControlModelNamePropertyFunction"
+              name="ControlModelNamePropertyFunction"/>
 
          <!--function
               class="org.kalypso.kalypsomodel1d2d.schema.functions.ModelFiniteElements"

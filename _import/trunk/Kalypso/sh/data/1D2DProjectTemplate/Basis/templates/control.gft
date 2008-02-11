@@ -38,12 +38,15 @@
 				heightHint="270"
 				grabExcessHorizontalSpace="true" />
 			<gft:columnDescriptor
+				component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"
+				alignment="SWT.LEFT" displayFormat="%d" editable="false" width="75" />
+			<gft:columnDescriptor
 				component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"
 				alignment="SWT.LEFT" displayFormat="%1$td.%1$tm.%1$tY %1$tH:%1$tM"
 				parseFormat="dd.MM.yyyy HH:mm" width="150"/>
 			<gft:columnDescriptor
 				component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"
-				alignment="SWT.LEFT" displayFormat="%.1f" width="200"/>
+				alignment="SWT.LEFT" displayFormat="%.1f" width="150"/>
 			<gft:toolbar/>
 		</gft:tupleResult>
 	</gft:view>
@@ -87,7 +90,7 @@
 								horizontalAlignment="GridData.BEGINNING"
 								grabExcessHorizontalSpace="false" />
 						</gft:label>
-						<gft:text editable="true" property="gml:name" tooltip=""
+						<gft:text editable="true" property="c1d2d:title" tooltip=""
 							style="SWT.BORDER">
 							<gft:gridData horizontalAlignment="GridData.FILL"
 								grabExcessHorizontalSpace="true" />

@@ -273,7 +273,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
         final Feature newControlFeature = getNewFeature();
         final IControlModel1D2D newControlModel = (IControlModel1D2D) newControlFeature.getAdapter( IControlModel1D2D.class );
 
-        newControlModel.setName( Messages.getString( "CreateCalculationUnitCmd.2" ) + m_calcUnitName ); //$NON-NLS-1$
+//        newControlModel.setName( Messages.getString( "CreateCalculationUnitCmd.2" ) + m_calcUnitName ); //$NON-NLS-1$
         newControlModel.setCalculationUnit( m_calculationUnit );
         model1D2DCollection.setActiveControlModel( newControlModel );
 
