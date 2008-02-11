@@ -73,7 +73,8 @@ public interface IRecord
    * 
    * @throws IllegalArgumentException
    *             if the component is unknown to this record
-   * @deprecated Use {@link #setValue(int, Object)} instead.
+   * @deprecated Use {@link #setValue(int, Object)} instead. This is because there could be more values for one column
+   *             (comp). In this case the value would be only applied to the first one!
    */
   public void setValue( IComponent comp, Object value );
 

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.jts;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -100,41 +99,49 @@ public class JTSUtilities
   }
 
   /**
-   * @param lineString
+   * This function calculates the distance from the start point to a point, lying on the line.
+   * 
+   * @param line
+   *            The line.
    * @param point
-   *            of lineString
-   * @param buffer
-   *            point buffer - point almost doesn't intersects lineString
-   * @return distance of point on lineString
+   *            One point lying on the line.
+   * @return The distance of the point on the line.
    */
-  public static Double pointDistanceOnLine( final LineString lineString, final Point point, final double buffer )
+  public static double pointDistanceOnLine( LineString line, Point point )
   {
-    final Polygon geo = (Polygon) point.buffer( buffer );
-    if( !lineString.intersects( geo ) )
-      throw new IllegalStateException();
+    /* Check for intersection. */
+    if( (point.distance( line ) >= 10E-08) )
+      throw new IllegalStateException( "The point does not lie on the line ..." );
 
-    final GeometryFactory GF = new GeometryFactory();
+    /* The needed factory. */
+    GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
-    final Coordinate[] coordinates = lineString.getCoordinates();
-    for( int i = 1; i < coordinates.length; i++ )
+    /* Get all coordinates. */
+    Coordinate[] coordinates = line.getCoordinates();
+
+    /* Only loop until the one before the last one. */
+    for( int i = 0; i < coordinates.length - 1; i++ )
     {
-      final Coordinate[] c = (Coordinate[]) ArrayUtils.subarray( coordinates, 0, i + 1 );
+      /* Get the coordinates to the current one + 1. */
+      Coordinate[] coords = (Coordinate[]) ArrayUtils.subarray( coordinates, 0, i + 2 );
 
-      final LineString ls = GF.createLineString( c );
-      if( !ls.intersects( geo ) )
+      /* Create a new line with the coordinates. */
+      LineString ls = factory.createLineString( coords );
+      if( (point.distance( ls ) >= 10E-08) )
         continue;
 
-      final List<Coordinate> list = new ArrayList<Coordinate>();
-      for( int j = 0; j < c.length - 1; j++ )
-      {
-        list.add( c[j] );
-      }
+      /* Point was intersecting the last segment, now take all coordinates but the last one ... */
+      LinkedList<Coordinate> lineCoords = new LinkedList<Coordinate>();
+      for( int j = 0; j < coords.length - 1; j++ )
+        lineCoords.add( coords[j] );
 
-      list.add( point.getCoordinate() );
+      /* ... and add the point as last one. */
+      lineCoords.add( point.getCoordinate() );
 
-      final LineString myLineString = GF.createLineString( list.toArray( new Coordinate[] {} ) );
+      /* Create the new geometry. */
+      LineString tempLine = factory.createLineString( lineCoords.toArray( new Coordinate[] {} ) );
 
-      return myLineString.getLength();
+      return tempLine.getLength();
     }
 
     throw new IllegalStateException();
@@ -624,4 +631,31 @@ public class JTSUtilities
     return area;
   }
 
+  /**
+   * This function will check all line segments and return the one, in which the given point lies. If no segment is
+   * found it will return null.
+   * 
+   * @param curve
+   *            The curve to check.
+   * @param point
+   *            The point, which marks the segment (e.g. an intersection point of another geometry.
+   * @return The line segment or null.
+   */
+  public static LineSegment findLineSegment( LineString curve, Point point )
+  {
+    for( int i = 0; i < curve.getNumPoints() - 1; i++ )
+    {
+      final Point pointN = curve.getPointN( i );
+      final Point pointN1 = curve.getPointN( i + 1 );
+
+      /* Build a line with the two points to check the intersection. */
+      final LineSegment segment = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
+
+      /* If found, return it. */
+      if( segment.distance( point.getCoordinate() ) < 10E-08 )
+        return segment;
+    }
+
+    return null;
+  }
 }
