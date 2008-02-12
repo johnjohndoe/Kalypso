@@ -45,7 +45,6 @@ import java.net.URL;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import org.eclipse.core.resources.IProject;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
@@ -63,8 +62,6 @@ public interface ISobekModelMember extends IModelMember
     eStructures,
     eBoundaryConditions
   }
-
-  public IProject getMappedProject( );
 
   public IRepositoryContainer getRepositoryContainer( );
 

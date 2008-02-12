@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -90,7 +91,16 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        m_snapPainter = new FNSnapPainterCreateProfileNode( SobekModelMember.getModel(), FNCreateCrossSectionNode.this );
+        try
+        {
+          m_snapPainter = new FNSnapPainterCreateProfileNode( SobekModelMember.getModel(), FNCreateCrossSectionNode.this );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+          return Status.CANCEL_STATUS;
+        }
+
         return Status.OK_STATUS;
       }
     }.schedule();
@@ -189,7 +199,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
             performFinish( branch, crossSection, mp.getPointAt( 0 ) );
           }
           else
-            throw (new NotImplementedException());
+            throw new NotImplementedException();
         }
 
         return Status.OK_STATUS;
@@ -218,7 +228,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
   @Override
   public void paint( final Graphics g )
   {
-    if( (m_snapPainter != null) && (m_currentPoint != null) )
+    if( m_snapPainter != null && m_currentPoint != null )
     {
       final Point point = m_snapPainter.paint( g, getMapPanel(), m_currentPoint );
       if( point != null )

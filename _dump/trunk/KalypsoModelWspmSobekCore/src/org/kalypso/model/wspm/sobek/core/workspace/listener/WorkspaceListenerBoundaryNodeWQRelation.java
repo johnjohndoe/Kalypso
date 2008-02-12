@@ -101,20 +101,19 @@ public class WorkspaceListenerBoundaryNodeWQRelation extends GmlWorkspaceListene
         /* modified property -> bcType? */
         final IPropertyType property = change.getProperty();
         final QName qProperty = property.getQName();
+        try
+        {
+          final ISobekModelMember model = SobekModelMember.getModel();
+          if( model == null )
+            continue;
 
-        final ISobekModelMember model = SobekModelMember.getModel();
-        if( model == null )
-          continue;
-
-        if( qProperty.equals( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) )
-          try
-          {
+          if( qProperty.equals( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) )
             resetBoundaryConditions( model, new BoundaryNode( model, change.getFeature() ) );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-          }
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+        }
       }
     }
   }

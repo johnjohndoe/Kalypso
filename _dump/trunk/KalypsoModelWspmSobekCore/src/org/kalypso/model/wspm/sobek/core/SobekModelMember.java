@@ -45,7 +45,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -70,7 +72,9 @@ import nl.wldelft.fews.pi.LocationsComplexType.Location;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
@@ -86,7 +90,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.IWorkspaceInterface;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
 import org.kalypso.model.wspm.sobek.core.model.Lastfall;
@@ -104,11 +107,14 @@ import org.xml.sax.SAXException;
  */
 public final class SobekModelMember implements ISobekModelMember
 {
-  private static ISobekModelMember m_model = null;
 
-  public static ISobekModelMember getModel( )
+  private static CommandableWorkspace m_lastUsedWorkspace = null;
+
+  private static Map<CommandableWorkspace, SobekModelMember> m_models = new HashMap<CommandableWorkspace, SobekModelMember>();
+
+  public static ISobekModelMember getModel( ) throws CoreException
   {
-    return SobekModelMember.getModel( null, null, null );
+    return SobekModelMember.getModel( m_lastUsedWorkspace, null, null );
   }
 
   /**
@@ -119,24 +125,29 @@ public final class SobekModelMember implements ISobekModelMember
    * @param reposContainer
    *            Time Series repository container
    */
-  public static ISobekModelMember getModel( final IWorkspaceInterface workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
+  public static ISobekModelMember getModel( final CommandableWorkspace workspace, final Feature modelMember, final IRepositoryContainer reposContainer ) throws CoreException
   {
-    if( (SobekModelMember.m_model == null) && (modelMember != null) )
-      SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
+    if( workspace == null )
+      throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), "workspace can't be null" ) );
 
-    if( (SobekModelMember.m_model.getMappedProject() == null) || ((workspace != null) && !(SobekModelMember.m_model.getMappedProject().equals( workspace.getMappedProject() ))) )
-      SobekModelMember.m_model = new SobekModelMember( workspace, modelMember, reposContainer );
+    final SobekModelMember model = m_models.get( workspace );
 
-    return SobekModelMember.m_model;
+    if( model != null )
+      return model;
+
+    if( modelMember == null || reposContainer == null )
+      throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), "can't create a new ISobekModel Member with null valued parameters" ) );
+
+    return new SobekModelMember( workspace, modelMember, reposContainer );
   }
 
   private final Feature m_modelMember;
 
   private final IRepositoryContainer m_reposContainer;
 
-  private final IWorkspaceInterface m_workspace;
+  private final CommandableWorkspace m_workspace;
 
-  private SobekModelMember( final IWorkspaceInterface workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
+  private SobekModelMember( final CommandableWorkspace workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
   {
     m_workspace = workspace;
     m_reposContainer = reposContainer;
@@ -148,7 +159,9 @@ public final class SobekModelMember implements ISobekModelMember
       throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL_MEMBER );
 
     m_modelMember = modelMember;
-    SobekModelMember.m_model = this;
+
+    m_models.put( workspace, this );
+    m_lastUsedWorkspace = workspace;
   }
 
   /**
@@ -161,7 +174,7 @@ public final class SobekModelMember implements ISobekModelMember
     if( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH.equals( qn ) )
       new Branch( this, feature ).delete();
     else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qn ) )
-      FeatureUtils.deleteFeature( m_workspace.getCommandableWorkspace(), feature );
+      FeatureUtils.deleteFeature( m_workspace, feature );
     else
       throw new NotImplementedException();
   }
@@ -223,7 +236,7 @@ public final class SobekModelMember implements ISobekModelMember
     final INode[] allNodes = getNodeMembers();
     final List<INode> connNodes = new ArrayList<INode>();
     for( final INode node : allNodes )
-      if( (node instanceof IBoundaryNode) || (node instanceof IConnectionNode) || (node instanceof ILinkageNode) )
+      if( node instanceof IBoundaryNode || node instanceof IConnectionNode || node instanceof ILinkageNode )
         connNodes.add( node );
     return connNodes.toArray( new INode[] {} );
   }
@@ -264,17 +277,6 @@ public final class SobekModelMember implements ISobekModelMember
     }
 
     return myLastfalls.toArray( new ILastfall[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#getMappedProject()
-   */
-  public IProject getMappedProject( )
-  {
-    if( m_workspace == null )
-      return null;
-    else
-      return m_workspace.getMappedProject();
   }
 
   /**
@@ -328,10 +330,7 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public CommandableWorkspace getWorkspace( )
   {
-    if( m_workspace == null )
-      return null;
-    else
-      return m_workspace.getCommandableWorkspace();
+    return m_workspace;
   }
 
   /**

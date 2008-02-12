@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -88,7 +89,17 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        m_snapPainter = new FNSnapPainterExtendBranches( SobekModelMember.getModel() );
+        try
+        {
+          m_snapPainter = new FNSnapPainterExtendBranches( SobekModelMember.getModel() );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+
+          return Status.CANCEL_STATUS;
+        }
+
         return Status.OK_STATUS;
       }
     }.schedule();
@@ -128,13 +139,13 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
     if( !check() )
       return;
 
-    final ISobekModelMember model = SobekModelMember.getModel();
-
-    if( model == null )
-      throw new IllegalStateException( "Flow Network Model can't be null" );
-
     try
     {
+      final ISobekModelMember model = SobekModelMember.getModel();
+
+      if( model == null )
+        throw new IllegalStateException( "Flow Network Model can't be null" );
+
       final GM_Curve curve = (GM_Curve) m_geoBuilder.finish();
       if( curve == null )
         return;
@@ -250,7 +261,7 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
     if( mapPanel == null )
       return;
 
-    if( (m_snapPainter != null) && (m_currentPoint != null) )
+    if( m_snapPainter != null && m_currentPoint != null )
     {
       final Point point = m_snapPainter.paint( g, mapPanel, m_currentPoint );
       if( point != null )
