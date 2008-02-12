@@ -175,6 +175,13 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     final TuhhCalculation calculation = flowRel.getCalculation();
 
     final TuhhWspmProject project = TuhhWspmProject.create( null, flowRelWorkspace.getFeatureProviderFactory() );
+    if( calculation == null )
+    {
+      /* If no calculated existed before, use default values */
+      return project.createReibConstCalculation();
+    }
+
+    /* If a calculation exists, copy its values */
     final IFeatureType featureType = project.getFeature().getFeatureType();
     final IRelationType rt = (IRelationType) featureType.getProperty( TuhhWspmProject.QNAME_PROP_CALC_MEMBER );
     final Feature clonedFeature = FeatureHelper.cloneFeature( project.getFeature(), rt, calculation.getFeature() );

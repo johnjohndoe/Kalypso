@@ -184,7 +184,9 @@ public class CalculateFlowrelationWidget extends AbstractSelectFeatureWidget
       final IWizard wizard = new FlowRelCalcWizard( flowRels, flowModel, discModel );
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
       if( wizardDialog2.open() == Window.OK )
-        getMapPanel().getSelectionManager().clear();
+      {
+        // getMapPanel().getSelectionManager().clear();
+      }
     }
     catch( final CoreException e )
     {

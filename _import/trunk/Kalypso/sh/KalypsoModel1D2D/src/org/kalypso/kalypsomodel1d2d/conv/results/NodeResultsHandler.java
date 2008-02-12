@@ -81,6 +81,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
@@ -469,7 +470,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  private ITeschkeFlowRelation getFlowRelation( final INodeResult nodeResult )
+  private IFlowRelation1D getFlowRelation( final INodeResult nodeResult )
   {
     final GM_Position nodePos = nodeResult.getPoint().getPosition();
 
@@ -479,9 +480,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // go through the found array and get the first found teschke flow relation
     for( final IFlowRelationship element : flowRelationships )
     {
-      if( element instanceof ITeschkeFlowRelation )
+      if( element instanceof IFlowRelation1D )
       {
-        return (ITeschkeFlowRelation) element;
+        return (IFlowRelation1D) element;
       }
     }
     return null;
@@ -490,9 +491,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * collects the necessary data for the length section and stores it in an observation.
    */
-  private IStatus handleLengthSectionData( final INodeResult nodeResult, final ITeschkeFlowRelation teschkeRelation, final ICalculationUnit1D calcUnit )
+  private IStatus handleLengthSectionData( final INodeResult nodeResult, final IFlowRelation1D flowRelation1d, final ICalculationUnit1D calcUnit )
   {
-    final WspmProfile profile = teschkeRelation.getProfile();
+    final WspmProfile profile = flowRelation1d.getProfile();
     final double profileStation = profile.getStation();
     // station
     final BigDecimal station = WspmProfile.stationToBigDecimal( profileStation );
@@ -513,7 +514,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     /* discharge */
     // Q = v x A
     // A = A(y) //get it from the polynomials
-    final BigDecimal area = NodeResultHelper.getCrossSectionArea( teschkeRelation, depth );
+    final BigDecimal area = NodeResultHelper.getCrossSectionArea( (ITeschkeFlowRelation) flowRelation1d, depth );
 
     if( area == null )
       return StatusUtilities.createErrorStatus( "Es konnten keine Profilflächendaten gelesen werden (Knoten: " + nodeResult.getGmlID() + ", Station: " + station.doubleValue() );
@@ -553,20 +554,20 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     for( int i = 0; i < nodes.length; i++ )
     {
-      final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodes[i] );
+      final IFlowRelation1D flowRelation1d = getFlowRelation( nodes[i] );
 
-      if( teschkeRelation == null )
+      if( flowRelation1d == null )
         break;
 
       /* check, if node was already handled for lengthsection */
       if( !m_lengthsection1dNodes.contains( nodes[i].getGmlID() ) )
       {
-        final IStatus status = handleLengthSectionData( nodes[i], teschkeRelation, calcUnit );
+        final IStatus status = handleLengthSectionData( nodes[i], flowRelation1d, calcUnit );
         // TODO: right now, no consequences of the returned status
         m_lengthsection1dNodes.add( nodes[i].getGmlID() );
       }
 
-      final WspmProfile profile = teschkeRelation.getProfile();
+      final WspmProfile profile = flowRelation1d.getProfile();
 
       // get the profile Curves of the two nodes defining the current element
       curves[i] = NodeResultHelper.getProfileCurveFor1dNode( profile );
@@ -1749,7 +1750,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     try
     {
-      final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodeResult1d );
+      final IFlowRelation1D teschkeRelation = getFlowRelation( nodeResult1d );
       final GM_Curve nodeCurve1d = NodeResultHelper.getProfileCurveFor1dNode( teschkeRelation.getProfile() );
 
       final List<IFELine> continuityLine2Ds = m_controlModel.getCalculationUnit().getContinuityLines();
@@ -1849,7 +1850,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         final INodeResult nodeResult = m_nodeIndex.get( nodeID );
 
-        final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodeResult );
+        final IFlowRelation1D teschkeRelation = getFlowRelation( nodeResult );
 
         if( teschkeRelation == null )
           break;

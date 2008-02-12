@@ -226,6 +226,11 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
           }
         }
       }
+
+      // TODO: set name of flowrel according to profile or create a dummy name
+      if( flowRel.getName().equals( "" ) )
+        flowRel.setName( "" + profile.getStation() );
+
     }
     catch( final CoreException e )
     {
