@@ -67,6 +67,12 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
 {
   private GisTemplateMapModell m_innerMapModel;
 
+  protected int m_width = 0;
+
+  protected int m_height = 0;
+
+  protected GM_Envelope m_extent = null;
+
   private final IMapModellListener m_modelListener = new MapModellAdapter()
   {
     /**
@@ -97,12 +103,15 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
       // HACK FIXME: commented out so a map with wms themes may still work
-      // else map laoding with wms themes that are not accessible cannot be used at the moment...
+      // else map loading with wms themes that are not accessible cannot be used at the moment...
 
       if( isVisible() )
         invalidate( null/* theme.getFullExtent() */);
 
       handleThemeStatusChanged();
+
+      /* Extent setzen. */
+      theme.setExtent( m_width, m_height, m_extent );
     }
 
     /**
@@ -475,6 +484,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
 
   protected void setInnerMapModel( final GisTemplateMapModell model )
   {
+    if( m_innerMapModel != null )
+      m_innerMapModel.removeMapModelListener( m_modelListener );
+
     m_innerMapModel = model;
 
     m_innerMapModel.addMapModelListener( m_modelListener );
@@ -499,4 +511,15 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     return CascadingThemeHelper.getAllChildThemes( this );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setExtent(int, int, org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  @Override
+  public void setExtent( int width, int height, GM_Envelope extent )
+  {
+    /* If the extent is changed, it is memorized, so that the theme could set it to its added childs. */
+    m_width = width;
+    m_height = height;
+    m_extent = extent;
+  }
 }
