@@ -37,6 +37,7 @@
 		style="SWT.BORDER">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2"
 			horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+			<gft:format>%.4f</gft:format>
 	</gft:text>
 	<gft:validatorlabel property="wb1d2d:station" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
@@ -61,6 +62,7 @@
 		style="SWT.BORDER">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2"
 			horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	 	<gft:format>%.4f</gft:format>
 	</gft:text>
 	<gft:validatorlabel property="wb1d2d:slope" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
