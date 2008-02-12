@@ -43,9 +43,7 @@ package org.kalypso.model.wspm.core.gml;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -56,8 +54,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.result.IComponent;
@@ -82,13 +78,13 @@ public class ProfileFeatureFactory implements IWspmConstants
   public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" );
 
   public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" );
-  
+
   public final static QName QN_PROF_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
 
   public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
 
   private final static ProfileFeatureManager m_profileManager = new ProfileFeatureManager();
-  
+
   private ProfileFeatureFactory( )
   {
     // private: never instatiate
@@ -218,9 +214,8 @@ public class ProfileFeatureFactory implements IWspmConstants
 
   public synchronized static IProfil toProfile( final Feature profileFeature )
   {
+    final IProfil profile = m_profileManager.getProfile( profileFeature );
 
-    IProfil profile = m_profileManager.getProfile(profileFeature); 
-    
     return profile;
   }
 

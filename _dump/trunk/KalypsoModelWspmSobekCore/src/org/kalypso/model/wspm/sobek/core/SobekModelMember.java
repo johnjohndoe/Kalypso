@@ -529,4 +529,9 @@ public final class SobekModelMember implements ISobekModelMember
       }
     }
   }
+
+  public static void removeModel( final CommandableWorkspace workspace )
+  {
+    m_models.remove( workspace );
+  }
 }
