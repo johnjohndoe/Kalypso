@@ -181,6 +181,9 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
     final Object prop = m_featureToBind.getProperty( propertyQName );
     try
     {
+      if( prop == null )
+        return null;
+
       if( propClass.isAssignableFrom( prop.getClass() ) )
         return (T) prop;
 
