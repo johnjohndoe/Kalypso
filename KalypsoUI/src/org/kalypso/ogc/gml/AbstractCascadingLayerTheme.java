@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.net.URL;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -53,6 +55,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
+import org.kalypso.ogc.gml.wms.provider.CascadingThemeLegendProvider;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -521,5 +524,16 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     m_width = width;
     m_height = height;
     m_extent = extent;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(java.awt.Font, java.lang.String)
+   */
+  @Override
+  public Image getLegendGraphic( Font font, String layerName ) throws CoreException
+  {
+    CascadingThemeLegendProvider provider = new CascadingThemeLegendProvider( this );
+
+    return provider.getLegendGraphic( font, layerName );
   }
 }
