@@ -93,7 +93,7 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
     else if( property.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
       return new Component( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Durchströmter Bereich", "", "", IWspmConstants.Q_BOOLEAN, null, new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Duchströmter Bereich" ) );
     else if( property.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
-      return new Component( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner", "Wehrfeldtrenner", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner", "Wehrfeldtrenner" ) );
+      return new Component( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner", "Wehrfeldtrenner", "", "", IWspmConstants.Q_DOUBLE, null, new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner", "Wehrfeldtrenner" ) );
 
     throw new IllegalStateException( "property not defined" );
   }

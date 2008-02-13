@@ -162,7 +162,6 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
 
   public void removeYourself( )
   {
-    // FIXME
     final IProfilChange pc = new ProfileObjectSet( getProfil(), new IProfileObject[] {} );
     final ProfilOperation operation = new ProfilOperation( "Bauwerk entfernen", getProfilEventManager(), pc, true );
     new ProfilOperationJob( operation ).schedule();

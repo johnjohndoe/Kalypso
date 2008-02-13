@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import java.util.List;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,7 +47,6 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -58,10 +54,13 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * Brï¿½ckenkanten dï¿½rfen nicht unterhalb des Gelï¿½ndeniveaus liegen Oberkante darf nicht unter Unterkante
+ * kein Bewuchs im Flußschlauch
+ * wenn Bewuchs, dann (AX und AY und DP) != 0.0
+ * wenn Bewuchs, dann  muß auch an Trennflächen Bewuchs definiert sein
  * 
  * @author kimwerner
  */
@@ -69,49 +68,58 @@ public class BewuchsRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
+
     if( profil == null )
       return;
 
     final IRecord[] points = profil.getPoints();
     if( points == null )
       return;
-    if( profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) )
-        || profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) )
-        || !profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) )
+
+    final int iOKW = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    final int iOKB = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    final int iAX = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
+
+    if( iOKW >= 0 || iOKB >= 0 || iAX < 0 )
       return;
 
-    final IProfilPointMarker[] devider = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-    final IRecord leftP = devider.length > 0 ? devider[0].getPoint() : null;
-    final IRecord rightP = devider.length > 1 ? devider[devider.length - 1].getPoint() : null;
+    final IComponent cTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] devider = profil.getPointMarkerFor( cTrennF );
+    if( devider.length < 2 )
+      return;
+
+    final IRecord leftP = devider[0].getPoint();
+    final IRecord rightP = devider[devider.length - 1].getPoint();
     if( leftP == null || rightP == null )
       return;
-    final int leftIndex = ArrayUtils.indexOf( points, leftP );
-    final int rightIndex = ArrayUtils.indexOf( points, rightP );
-    final List<IRecord> VorlandL = profil.getResult().subList( 0, leftIndex );
-    final List<IRecord> VorlandR = profil.getResult().subList( rightIndex, points.length );
-    final List<IRecord> Flussschl = profil.getResult().subList( leftIndex, rightIndex );
+
+    final int leftIndex = profil.indexOfPoint( leftP );
+    final int rightIndex = profil.indexOfPoint( rightP );
+    final IRecord[] VorlandL = profil.getPoints( 0, leftIndex - 1 );
+    final IRecord[] VorlandR = profil.getPoints( rightIndex, points.length - 1 );
+    final IRecord[] Flussschl = profil.getPoints( leftIndex, rightIndex - 1 );
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-    final boolean VorlandLhasValues = validateArea( collector, VorlandL, 0, pluginId );
-    final boolean VorlandRhasValues = validateArea( collector, VorlandR, 0, pluginId );
+    final boolean VorlandLhasValues = validateArea( profil, collector, VorlandL, pluginId );
+    final boolean VorlandRhasValues = validateArea( profil, collector, VorlandR, pluginId );
 
     try
     {
-      if( VorlandLhasValues | VorlandRhasValues && !Flussschl.isEmpty() )
+      if( VorlandLhasValues | VorlandRhasValues && Flussschl.length > 0 )
       {
         int i = leftIndex;
         for( final IRecord point : Flussschl )
         {
-          final double ax = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-          final double ay = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-          final double dp = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+          final double ax = (Double) point.getValue( iAX );
+          final double ay = (Double) point.getValue( profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+          final double dp = (Double) point.getValue( profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) );
           if( ax + ay + dp != 0 )
             collector.createProfilMarker( false, "Bewuchsparameter im Fluï¿½schlauch werden ignoriert", "", i, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new DelBewuchsResolution() } );
           i++;
         }
         final int lastIndex = leftIndex > 0 ? leftIndex - 1 : leftIndex;
-        if( VorlandLhasValues && (Double) points[lastIndex].getValue( ProfilObsHelper.getPropertyFromId( points[lastIndex], IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) == 0 )
+        if( VorlandLhasValues && (Double) points[lastIndex].getValue( iAX ) == 0.0 )
           collector.createProfilMarker( false, "Bewuchsparameter an Trennflï¿½chen ï¿½berprï¿½fen", "", lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0 ) } );
-        if( VorlandRhasValues && (Double) rightP.getValue( ProfilObsHelper.getPropertyFromId( rightP, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) == 0 )
+        if( VorlandRhasValues && (Double) rightP.getValue( iAX ) == 0.0 )
           collector.createProfilMarker( false, "Bewuchsparameter an Trennflï¿½chen ï¿½berprï¿½fen", "", rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( devider.length - 1 ) } );
       }
     }
@@ -122,17 +130,19 @@ public class BewuchsRule extends AbstractValidatorRule
     }
   }
 
-  private boolean validateArea( final IValidatorMarkerCollector collector, final List<IRecord> subList, final int fromIndex, final String pluginId ) throws CoreException
+  private boolean validateArea( final IProfil profil, final IValidatorMarkerCollector collector, final IRecord[] subList, final String pluginId ) throws CoreException
   {
     boolean hasValues = false;
-    if( subList.isEmpty() )
+    if( subList.length < 1 )
       return false;
-    int i = fromIndex;
+    final int iAX = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    final int iAY = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    final int iDP = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
     for( final IRecord point : subList )
     {
-      final double ax = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-      final double ay = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-      final double dp = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+      final double ax = (Double) point.getValue( iAX );
+      final double ay = (Double) point.getValue( iAY );
+      final double dp = (Double) point.getValue( iDP );
       if( ax + ay + dp != 0.0 )
         if( ax * ay * dp == 0.0 )
         {
@@ -144,11 +154,10 @@ public class BewuchsRule extends AbstractValidatorRule
           if( dp == 0.0 )
             stringBuffer.append( "dP" );
           stringBuffer.append( ") fehlt" );
-          collector.createProfilMarker( true, stringBuffer.toString(), "", i, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, null );
+          collector.createProfilMarker( true, stringBuffer.toString(), "", profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, null );
         }
         else
           hasValues = true;
-      i++;
     }
     return hasValues;
   }

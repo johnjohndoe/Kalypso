@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -53,10 +52,9 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+
 /**
- * 
  * @author kimwerner
- *
  */
 public class RuecksprungRule extends AbstractValidatorRule
 {
@@ -70,25 +68,30 @@ public class RuecksprungRule extends AbstractValidatorRule
     try
     {
       final IRecord[] points = profil.getPoints();
+      final IComponent cB = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+      final IComponent cH = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+      if( cB == null || cH == null )
+        return;
+      final int iB = profil.indexOfProperty( cB );
+      final int iH = profil.indexOfProperty( cH );
       IRecord prevPoint = null;
       for( final IRecord point : points )
       {
         if( prevPoint != null )
         {
-          final Object x1 = prevPoint.getValue( ProfilObsHelper.getPropertyFromId( prevPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
-          final Object x2 = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
-          final Object y1 = prevPoint.getValue( ProfilObsHelper.getPropertyFromId( prevPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-          final Object y2 = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+          final Object x1 = prevPoint.getValue( iB );
+          final Object x2 = point.getValue( iB );
+          final Object y1 = prevPoint.getValue( iH );
+          final Object y2 = point.getValue( iH );
           if( x1 == null || x2 == null || y1 == null || y2 == null )
             continue;
-          final IComponent ppB = ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE );
-          final IComponent ppH = ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
-          final double deltaX = ppB == null ? 0.0001 : ProfilObsHelper.getPrecision( ppB );
-          final double deltaY = ppB == null ? 0.0001 : ProfilObsHelper.getPrecision( ppH );
+
+          final double deltaX = ProfilObsHelper.getPrecision( cB );
+          final double deltaY = ProfilObsHelper.getPrecision( cH );
           if( (Double) x1 - (Double) x2 > deltaX )
-            collector.createProfilMarker( true, "Gauss-R�cksprung bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "", ArrayUtils.indexOf( profil.getPoints(), point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+            collector.createProfilMarker( true, "Gauss-R�cksprung bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "", profil.indexOfPoint(  point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
           else if( Math.abs( (Double) x2 - (Double) x1 ) < deltaX && Math.abs( (Double) y2 - (Double) y1 ) > deltaY )
-            collector.createProfilMarker( false, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "", ArrayUtils.indexOf( profil.getPoints(), point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+            collector.createProfilMarker( false, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "", profil.indexOfPoint(  point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
         }
 
         prevPoint = point;

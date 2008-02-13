@@ -40,24 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+
 /**
- * 
  * @author kimwerner
- *
  */
 public class DoppelterPunktRule extends AbstractValidatorRule
 {
@@ -71,18 +68,21 @@ public class DoppelterPunktRule extends AbstractValidatorRule
       final IRecord[] points = profil.getPoints();
       IRecord prevPoint = null;
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+      final IComponent cB = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+      final IComponent cH = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+      if( cB == null || cH == null )
+        return;
+      final int iB = profil.indexOfProperty( cB );
+
       for( final IRecord point : points )
       {
         if( prevPoint != null )
-          if( ProfilUtil.comparePoints( new IComponent[] { ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ),
-              ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) }, prevPoint, point ) )
+          if( ProfilUtil.comparePoints( new IComponent[] { cB, cH }, prevPoint, point ) )
           {
-            final String msg = "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) ) );
+            final String msg = "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValue( iB ) );
             final String location = "";
-            final int pointPos = ArrayUtils.indexOf( profil.getPoints(), point );
-            final IComponent pointProperty = ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE );
-
-            collector.createProfilMarker( false, msg, location, pointPos, pointProperty.getId(), pluginId, null );
+  
+            collector.createProfilMarker( false, msg, location,profil.indexOfPoint( point ), cB.getId(), pluginId, null );
           }
         prevPoint = point;
       }

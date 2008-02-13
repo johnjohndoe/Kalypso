@@ -62,6 +62,8 @@ public interface IProfil extends IObservation<TupleResult>
    * @param pointProperty
    */
   public void addPointProperty( final IComponent pointProperty );
+  
+  public void addPointProperty( final IComponent pointProperty,final IComponent initialValues );
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
@@ -113,6 +115,20 @@ public interface IProfil extends IObservation<TupleResult>
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider
    */
   public IComponent[] getPointMarkerTypes( );
+  
+  public int indexOfPoint(final IRecord point);
+  
+  public int indexOfProperty(final IComponent pointProperty);
+  
+  public int indexOfProperty(final String id);
+  
+  public IRecord getPoint(final int index);
+  
+  /**
+   * @return include both , startPoint and endPoint
+   */
+  public IRecord[] getPoints(final int startPoint,final int endPoint);
+  
 
   /**
    * @return all PointProperties used by this profile

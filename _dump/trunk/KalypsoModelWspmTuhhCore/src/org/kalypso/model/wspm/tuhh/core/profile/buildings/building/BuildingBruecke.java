@@ -79,10 +79,10 @@ final public class BuildingBruecke extends AbstractObservationBuilding
     final IRecord emptyRecord = result.createRecord();
     result.add( emptyRecord );
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
-    
+
     m_observation = observation;
-    profil.getResult().addComponent( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
-    profil.getResult().addComponent( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
 
   }
 
@@ -90,8 +90,8 @@ final public class BuildingBruecke extends AbstractObservationBuilding
   {
     m_profil = profil;
     m_observation = observation;
-    profil.getResult().addComponent( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
-    profil.getResult().addComponent( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
   }
 
   @Override
@@ -99,22 +99,6 @@ final public class BuildingBruecke extends AbstractObservationBuilding
   {
     return new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE };
   }
-
-// private IComponent createComponent( final String type )
-// {
-// /* building observation properties */
-// final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders(
-// IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-// for (final IProfilPointPropertyProvider provider : providers)
-// {
-// if (provider.providesPointProperty( type ))
-// return provider.getPointProperty( type );
-// }
-// 
-//  
-// throw new NotImplementedException();
-//
-// }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()

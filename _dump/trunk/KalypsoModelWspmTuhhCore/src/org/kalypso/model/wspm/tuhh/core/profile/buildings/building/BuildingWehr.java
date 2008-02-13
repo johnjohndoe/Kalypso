@@ -76,35 +76,17 @@ public class BuildingWehr extends AbstractObservationBuilding
 
     m_profil = profil;
     m_observation = observation;
-    profil.getResult().addComponent( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
 
-
+    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
   }
 
   public BuildingWehr( final IProfil profil, final IObservation<TupleResult> observation )
   {
     m_profil = profil;
     m_observation = observation;
-    profil.getResult().addComponent( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
 
+    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
   }
-
-//  private IComponent createComponent( final String type )
-//  {
-//    /* building observation properties */
-//    if( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART.equals( type ) )
-//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, IWspmTuhhConstants.WEHR_TYP_BEIWERT, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart" ) );
-//
-//    else if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( type ) )
-//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert" ) );
-//
-//    /* profile observation properties */
-//    else if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR.equals( type ) )
-//      return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr" ) );
-//
-//    throw new NotImplementedException();
-//
-//  }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
@@ -120,29 +102,6 @@ public class BuildingWehr extends AbstractObservationBuilding
     }
     return null;
   }
-
-// public IProfilChange getWehrartProfileChange( final WEHRART type )
-// {
-//
-// switch( type )
-// {
-// case eBeiwert:
-// return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this,
-// IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eBeiwert.name() );
-// case eBreitkronig:
-// return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this,
-// IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eBreitkronig.name() );
-// case eRundkronig:
-// return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this,
-// IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eRundkronig.name() );
-// case eScharfkantig:
-// return new ProfileObjectEdit( this, ProfilObsHelper.getPropertyFromId( this,
-// IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ), WEHRART.eScharfkantig.name() );
-//
-// default:
-// throw new NotImplementedException();
-// }
-// }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getProfileProperties()
@@ -161,42 +120,4 @@ public class BuildingWehr extends AbstractObservationBuilding
     return ID;
   }
 
-//  /**
-//   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#init(org.kalypso.model.wspm.core.profil.IProfil,
-//   *      org.kalypso.observation.IObservation)
-//   */
-//  @Override
-//  protected void init( final IProfil profil, final IObservation<TupleResult> observation )
-//  {
-//    super.init( profil, observation );
-//
-//    final IComponent cmpHoehe = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-//    final IComponent cmpWehr = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-//
-//    if( cmpHoehe == null || cmpWehr == null )
-//      return;
-//
-//    boolean update = true;
-//
-//    for( final IRecord record : profil.getResult() )
-//    {
-//      final IProfilPointMarker[] markers = profil.getPointMarkerFor( record );
-//
-//      boolean cont = false;
-//      for( final IProfilPointMarker marker : markers )
-//      {
-//        if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( marker.getId().getId() ) )
-//        {
-//          update = !update;
-//          cont = true;
-//        }
-//      }
-//
-//      if( cont == true )
-//        continue;
-//
-//      if( update == true )
-//        record.setValue( cmpWehr, record.getValue( cmpHoehe ) );
-//    }
-//  }
 }

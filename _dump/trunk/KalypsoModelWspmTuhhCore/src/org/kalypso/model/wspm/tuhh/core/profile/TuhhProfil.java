@@ -95,7 +95,9 @@ public class TuhhProfil extends AbstractProfil
     if( profileObjects == null || profileObjects.length > 1 )
       throw new IllegalStateException( "only one profileObject allowed" );
     setProperty( PROFILE_OBJECTS, null );
+    if (profileObjects.length > 0)
     return super.addProfileObjects( profileObjects );
+    return profileObjects;
   }
 
   /**

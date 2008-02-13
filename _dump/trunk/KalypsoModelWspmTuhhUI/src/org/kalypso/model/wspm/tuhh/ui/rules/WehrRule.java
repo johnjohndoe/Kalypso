@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import java.util.List;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -57,7 +55,6 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -69,7 +66,7 @@ public class WehrRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    
+
     final IProfileObject[] profileObjects = profil.getProfileObjects();
     IProfileObject building = null;
     if( profileObjects.length > 0 )
@@ -118,9 +115,9 @@ public class WehrRule extends AbstractValidatorRule
     IProfileObject building = null;
     if( profileObjects.length > 0 )
       building = profileObjects[0];
-   
+
     final Object beiwert = building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
-    IRecord point = (beiwert == null || (Double)beiwert == 0.0) ? p : null;
+    IRecord point = (beiwert == null || (Double) beiwert == 0.0) ? p : null;
     if( deviders != null )
       for( final IProfilPointMarker devider : deviders )
       {
@@ -146,7 +143,7 @@ public class WehrRule extends AbstractValidatorRule
 
   private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
   {
-    final IRecord[] points = profil.getPoints();
+
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( deviders.length < 1 )
       return;
@@ -154,18 +151,17 @@ public class WehrRule extends AbstractValidatorRule
     final IComponent cOKWehr = profil.hasPointProperty( IWspmTuhhConstants.BUILDING_TYP_WEHR );
     if( cOKWehr == null || cHoehe == null )
       return;
-    final int left = ArrayUtils.indexOf( points, deviders[0].getPoint() );
-    final int right = ArrayUtils.indexOf( points, deviders[deviders.length - 1].getPoint() );
+    final int left = profil.indexOfPoint( deviders[0].getPoint() );
+    final int right = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
     if( left + 1 > right )
       return;
-    final List<IRecord> midPoints = profil.getResult().subList( left + 1, right );
+    final IRecord[] midPoints = profil.getPoints( left + 1, right - 1 );
     for( final IRecord point : midPoints )
     {
-      final Object h = point.getValue(cHoehe  );
-      final Object wk =  point.getValue( cOKWehr );
-      if((h instanceof Double)&&(wk instanceof Double)&& (Double)wk < (Double)h )
-        collector.createProfilMarker( true, "Wehrkante[" + String.format( FMT_BREITE, point.getValue(cHoehe ) )
-            + "] unterhalb Gel�ndeniveau", "", ArrayUtils.indexOf( points, point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+      final Object h = point.getValue( profil.indexOfProperty( cHoehe ) );
+      final Object wk = point.getValue( profil.indexOfProperty( cOKWehr ) );
+      if( (h instanceof Double) && (wk instanceof Double) && (Double) wk < (Double) h )
+        collector.createProfilMarker( true, "Wehrkante[" + String.format( FMT_BREITE, point.getValue( profil.indexOfProperty( cHoehe ) ) ) + "] unterhalb Gel�ndeniveau", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
     }
   }
 
@@ -177,27 +173,43 @@ public class WehrRule extends AbstractValidatorRule
     final IRecord firstPoint = devider[0].getPoint();
     final IRecord lastPoint = devider[devider.length - 1].getPoint();
     IRecord point = null;
-    final IComponent cHoehe = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent cOKWehr = profil.hasPointProperty( IWspmTuhhConstants.BUILDING_TYP_WEHR );
-    if( cOKWehr == null || cHoehe == null )
+    final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.BUILDING_TYP_WEHR );
+    final int iBreite = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+    if( iOKWehr < 0 || iHoehe < 0 )
       return null;
-    final Object p1H = firstPoint.getValue( cHoehe );
-    final Object p1OkW = firstPoint.getValue( cOKWehr );
-    final Object p2H = lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-    final Object p2OkW = lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
+    final Object p1H = firstPoint.getValue( iHoehe );
+    final Object p1OkW = firstPoint.getValue( iOKWehr );
+    final Object p2H = lastPoint.getValue( iHoehe );
+    final Object p2OkW = lastPoint.getValue( iOKWehr );
     if( p1H == null || p1OkW == null || p2H == null || p2OkW == null )
       return null;
 
-    final double dOkW = ProfilObsHelper.getPrecision( cOKWehr );
-    if( Math.abs( (Double)p1H - (Double)p1OkW ) > dOkW )
+    final double dOkW = ProfilObsHelper.getPrecision( profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
+    if( Math.abs( (Double) p1H - (Double) p1OkW ) > dOkW )
       point = firstPoint;
-    if( Math.abs( (Double)p2H - (Double)p2OkW ) > dOkW )
+    if( Math.abs( (Double) p2H - (Double) p2OkW ) > dOkW )
       point = lastPoint;
     if( point != null )
     {
-      final int index = ArrayUtils.indexOf( profil.getPoints(), point );
-      collector.createProfilMarker( true, "ung�ltige Randbedingung ["
-          + String.format( FMT_BREITE, (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) ) ) + "]", "", ArrayUtils.indexOf( profil.getPoints(), point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, new IMarkerResolution2[] { new EditPointResolution( index, ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) ) ) } );
+      collector.createProfilMarker( true, "ung�ltige Randbedingung [" + String.format( FMT_BREITE, point.getValue( iBreite ) ) + "]", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );// new
+                                                                                                                                                                                                                                            // IMarkerResolution2[]
+                                                                                                                                                                                                                                            // {
+                                                                                                                                                                                                                                            // new
+                                                                                                                                                                                                                                            // EditPointResolution(
+                                                                                                                                                                                                                                            // index,
+                                                                                                                                                                                                                                            // ProfilObsHelper.getPropertyFromId(
+                                                                                                                                                                                                                                            // point,
+                                                                                                                                                                                                                                            // IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR
+                                                                                                                                                                                                                                            // ),
+                                                                                                                                                                                                                                            // (Double)
+                                                                                                                                                                                                                                            // point.getValue(
+                                                                                                                                                                                                                                            // ProfilObsHelper.getPropertyFromId(
+                                                                                                                                                                                                                                            // point,
+                                                                                                                                                                                                                                            // IWspmConstants.POINT_PROPERTY_HOEHE
+                                                                                                                                                                                                                                            // ) )
+                                                                                                                                                                                                                                            // ) }
+                                                                                                                                                                                                                                            // );
     }
     return firstPoint;
   }

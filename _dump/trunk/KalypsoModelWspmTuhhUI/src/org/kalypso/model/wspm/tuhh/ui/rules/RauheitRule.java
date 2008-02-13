@@ -40,25 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+
 /**
- * 
  * @author kimwerner
- *
  */
 public class RauheitRule extends AbstractValidatorRule
 {
@@ -66,29 +63,42 @@ public class RauheitRule extends AbstractValidatorRule
   {
     if( profil == null )
       return;
-    IComponent pointProp = null;
-    if( profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) ) )
-      pointProp = ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
-    if( profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) ) )
-      pointProp = ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
+
+    final IProfileObject[] buildings = profil.getProfileObjects();
+    if( buildings != null && buildings.length > 0 )
+    {
+      if( !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( buildings[0].getId() ) && !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( buildings[0].getId() ) )
+        return;
+    }
+    IComponent pointProp = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
+    if( pointProp == null )
+      pointProp = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
     if( pointProp == null )
       return;
-    final List<IRecord> points = ProfilUtil.getInnerPoints( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
-    if( points == null )
+
+    final int index = profil.indexOfProperty( pointProp );
+    final IProfilPointMarker[] durchS = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+
+    if( durchS.length < 2 )
       return;
-    int i = 0;
+    final int leftD = profil.indexOfPoint( durchS[0].getPoint() );
+    final int rightD = profil.indexOfPoint( durchS[durchS.length - 1].getPoint() );
+    final IRecord[] points = profil.getPoints( leftD, rightD );
+
+    if( points.length == 0 )
+      return;
+
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
     for( final IRecord point : points )
     {
       try
       {
-        final double rh = (Double) point.getValue( pointProp );
+        final double rh = (Double) point.getValue( index );
         if( rh <= 0.0 )
         {
-          collector.createProfilMarker( true, "unzulässiger Rauheitswert [" + rh + "]", "", i, pointProp.getId(), pluginId, null );
+          collector.createProfilMarker( true, "unzulässiger Rauheitswert [" + rh + "]", "", profil.indexOfPoint( point ), pointProp.getId(), pluginId, null );
           break;
         }
-        i++;
       }
       catch( final CoreException e )
       {

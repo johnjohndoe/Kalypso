@@ -74,6 +74,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
@@ -411,16 +412,29 @@ public class WehrPanel extends AbstractProfilView
         if( (building == null) || !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
           return;
         final IComponent cTrennF = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-        final IComponent cWehrT = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
+        // final IComponent cWehrT = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
         final IProfilPointMarker[] trennFl = getProfil().getPointMarkerFor( cTrennF );
 
         final IRecord point = trennFl.length > 0 ? trennFl[0].getPoint() : getProfil().getPoints()[0];
-        final IProfilChange[] changes = new IProfilChange[3];
-        changes[0] = new PointPropertyAdd( getProfil(), cWehrT );
-        changes[1] = new PointMarkerEdit( new ProfilDevider( cWehrT, point ), 0.0 );
-        changes[2] = new ActiveObjectEdit( getProfil(), point, null );
-        final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", getProfilEventManager(), changes, true );
-        new ProfilOperationJob( operation ).schedule();
+// final IProfilChange[] changes = new IProfilChange[3];
+// changes[0] = new PointPropertyAdd( getProfil(), cWehrT );
+// changes[1] = new PointMarkerEdit( new ProfilDevider( cWehrT, point ), 0.0 );
+// changes[2] = new ActiveObjectEdit( getProfil(), point, null );
+        final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", getProfilEventManager(), true );
+        final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
+        IProfilPointMarker marker = null;
+        for( final IProfilPointMarkerProvider provider : providers )
+        {
+          marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
+          if( marker != null )
+            break;
+        }
+        if( marker != null )
+        {
+          operation.addChange( new PointMarkerEdit( marker, 0.0 ) );
+          operation.addChange( new ActiveObjectEdit( getProfil(), point, null ) );
+          new ProfilOperationJob( operation ).schedule();
+        }
       }
     } );
 
