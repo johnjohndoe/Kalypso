@@ -75,6 +75,9 @@
 	<catalog:system
 		systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.KingFlowRelation.kod" />
+	<catalog:system
+		systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:BuildingFlowRelation:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.BuildingFlowRelation.kod" />
 
 	<!--  Lengthsection - Results -->
 	<catalog:system
