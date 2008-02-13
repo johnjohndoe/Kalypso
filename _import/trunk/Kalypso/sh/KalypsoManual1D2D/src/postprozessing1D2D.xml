@@ -24,7 +24,7 @@
   </orderedlist>
 
   <figure>
-    <title>Ansicht "Aktivitäten" im Postprocessing</title>
+    <title>Ansicht 'Aktivitäten' im Postprocessing</title>
 
     <mediaobject>
       <imageobject>
@@ -50,7 +50,7 @@
         <primary>Ergebniskarte konfigurieren in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>In der Ansicht "Aktivitäten" muss der Baum
+      <para>In der Ansicht 'Aktivitäten' muss der Baum
       <guimenuitem>Postprocessing &gt; Kartenansicht </guimenuitem>geöffnet
       werden und <guilabel>Ergebniskarte konfigurieren </guilabel>mit einem
       Doppelklick aktiviert werden, um den zugehörigen Assistenten zu öffnen.
@@ -189,7 +189,7 @@
       auch schon auf vorhandene Ergebnisdarstellungen in der Karte aus. Soll
       ein neuer Style angelegt werden, kann ein bereits vorhandener Style
       selektiert und im Style-Manager bearbeitet werden. Dort muss nun im Feld
-      "Style-Name" ein neuer Name eingegeben werden, unter dem der Style
+      'Style-Name' ein neuer Name eingegeben werden, unter dem der Style
       abgespeichert werden soll.</para>
 
       <para>Je nach Darstellungsform (Isolinien, Isoflächen) erscheint ein
@@ -225,10 +225,10 @@
       </indexterm>
 
       <para>Um die Ergebnisse in einer Karte zu visualisieren, muss in der
-      Ansicht " Aktivitäten" der Baum <guimenuitem>Postprocessing &gt;
+      Ansicht 'Aktivitäten' der Baum <guimenuitem>Postprocessing &gt;
       Kartenansicht</guimenuitem> geöffnet werden. Die Karte wird geöffnet,
       wenn <guimenuitem>Ergebniskarte anzeigen</guimenuitem> mit einem
-      Doppelklick aktiviert wird. In der Ansicht "Gliederung" kann ausgewählt
+      Doppelklick aktiviert wird. In der Ansicht 'Gliederung' kann ausgewählt
       werden, welche Werte beziehungsweise Objekte angezeigt werden
       sollen.</para>
 
@@ -245,7 +245,7 @@
       <para>Im Postprocessing können auch sämtliche Kartenansichten aus dem
       Preprocessing bis hin zu den importierten Grundlagenkarten angezeigt
       werden. Werden diese nicht benötigt, können sie genau wie die
-      berechneten Ergebnisse in der Ansicht "Gliederung" mittels Checkbox
+      berechneten Ergebnisse in der Ansicht 'Gliederung' mittels Checkbox
       deaktiviert werden. Des weiteren können die Ergebnis-Themen auch
       komplett aus der Kartenansicht gelöscht werden.</para>
 
@@ -294,7 +294,7 @@
       </figure>
 
       <para>Ausgewählt wird das TIN-Thema mittels Linksklick auf den
-      Schriftzug. Ein ausgewähltes Thema erscheint in der Ansicht "Gliederung"
+      Schriftzug. Ein ausgewähltes Thema erscheint in der Ansicht 'Gliederung'
       blau hinterlegt.</para>
 
       <figure>
@@ -357,14 +357,14 @@
       </indexterm>
 
       <para>Um einen Längsschnitt für ein zweidimensionales Modell zu
-      konfigurieren, muss in der Ansicht " Aktivitäten" der Baum
+      konfigurieren, muss in der Ansicht 'Aktivitäten' der Baum
       <guimenuitem>Postprocessing &gt; Längsschnittansicht</guimenuitem>
       geöffnet werden und<guilabel> Längsschnitt konfigurieren</guilabel> mit
       einem Doppelklick aktiviert werden.</para>
 
-      <para>Im anschließenden Assistenten ist unter "Gewässerachse" zunächst
+      <para>Im anschließenden Assistenten ist unter 'Gewässerachse' zunächst
       die entsprechende Shape-Datei auszuwählen, welche die zu verwendende
-      Gewässerachse enthält. Unter "Parameter" werden dann die entprechenden
+      Gewässerachse enthält. Unter 'Parameter' werden dann die entprechenden
       Spalten der Shape-Datei ausgewählt. Generell sollte das Thema ein
       Linienthema sein, welches aus mehreren Liniensegmenten bestehen kann.
       Zunächst muss die Tabellenspalte selektiert werden, die die vorhandenen
@@ -417,7 +417,7 @@
       </indexterm>
 
       <para>Damit ein Längsschnitt angezeigt wird muss in der Ansicht
-      "Aktivitäten" der Baum <guimenuitem>Postprocessing &gt;
+      'Aktivitäten' der Baum <guimenuitem>Postprocessing &gt;
       Längsschnittansicht</guimenuitem> geöffnet und<guilabel> Längsschnitt
       anzeigen</guilabel> mit einem Doppelklick aktiviert werden.</para>
 
@@ -485,8 +485,7 @@
           <para>Horizontaler Zoom: Unterhalb der Achse der Stationen mit der
           linken Maustaste klicken, gedrückt halten und waagerecht zur Seite
           ziehen. Die Ansicht wird vertikal nicht verändert, aber es werden
-          nur die Stationen angezeigt, die innerhalb der Auswahl lagen.
-          </para>
+          nur die Stationen angezeigt, die innerhalb der Auswahl lagen.</para>
         </listitem>
 
         <listitem>
@@ -495,7 +494,7 @@
           gesamten Vorgangs die <guibutton>Strg</guibutton>-Taste gedrückt
           gehalten werden muss. Dementsprechend wird nur die Achsendarstellung
           verändert/ gezoomt, neben der auch mit dem Mauszeiger geklickt
-          wurde. </para>
+          wurde.</para>
         </listitem>
       </itemizedlist>
 
@@ -571,13 +570,13 @@
         <primary>Diffenrenzen erzeugen in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>Um eine Differenz bilden zu können, muss in der Ansicht "
-      Aktivitäten" der Baum <guimenuitem>Postprocessing &gt;Differenzenbildung
-      </guimenuitem>geöffnet werden. Wenn <guilabel>Differenzen
-      erzeugen</guilabel> mit einem Doppelklick aktiviert wird, öffnet sich
-      der zugehörige Assistent für die Differenzenbildung. Als erstes wird der
-      Minuend ausgewählt. Anschließend wird der Assistent mit
-      <guibutton>Next</guibutton> fortgesetzt.</para>
+      <para>Um eine Differenz bilden zu können, muss in der Ansicht
+      'Aktivitäten' der Baum <guimenuitem>Postprocessing
+      &gt;Differenzenbildung </guimenuitem>geöffnet werden. Wenn
+      <guilabel>Differenzen erzeugen</guilabel> mit einem Doppelklick
+      aktiviert wird, öffnet sich der zugehörige Assistent für die
+      Differenzenbildung. Als erstes wird der Minuend ausgewählt. Anschließend
+      wird der Assistent mit <guibutton>Next</guibutton> fortgesetzt.</para>
 
       <figure>
         <title>Assistent zur Auswahl des Minuenden</title>
@@ -616,7 +615,7 @@
 
       <para>Die Differenz wird als zusätzliches Ergebnis abgelegt und kann
       über die Funktion <guilabel>Ergebniskarte konfigurieren</guilabel> in
-      die Karte geladen werden. Wenn nun in der Ansicht "Aktivitäten" der Baum
+      die Karte geladen werden. Wenn nun in der Ansicht 'Aktivitäten' der Baum
       <guimenuitem>Postprocessing &gt; Kartenansicht </guimenuitem>geöffnet
       wird und <guimenuitem>Ergebniskarte konfigurieren</guimenuitem> mit
       einem Doppelklick aktiviert wird, ist in dem Assistenten die neu
@@ -634,7 +633,7 @@
 
       <para>Jetzt kann die Differenz in der Karte angezeigt werden (Siehe
       <link linkend="???">1.2 Ergebniskarte anzeigen)</link> Die Differenz
-      kann in der Ansicht "Gliederung" mittels Checkbox aktiviert
+      kann in der Ansicht 'Gliederung' mittels Checkbox aktiviert
       beziehungsweise deaktiviert werden.</para>
 
       <figure>
