@@ -50,6 +50,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 
 /**
  * @author Dirk Kuch
@@ -108,6 +110,20 @@ public class ToolTipRenderer
     }
 
     return maxRect;
+  }
+
+  private org.eclipse.swt.graphics.Point calculateBoxWidth( final GC gc )
+  {
+    final org.eclipse.swt.graphics.Point bounds = new org.eclipse.swt.graphics.Point( 0, 0 );
+    for( final String row : m_rows )
+    {
+      final org.eclipse.swt.graphics.Point rowBounds = gc.textExtent( row );
+
+      bounds.x = Math.max( bounds.x, rowBounds.x );
+      bounds.y = bounds.y + rowBounds.y;
+    }
+
+    return bounds;
   }
 
   /**
@@ -169,12 +185,77 @@ public class ToolTipRenderer
     /* draw tooltip labels */
     g.setColor( m_textColor );
     final int magicNumber = 3; // move text a bit to the top, in order to nicely center it
-    int baseLineY = basePoint.y + m_insets.top + textHeight - magicNumber;
+    int baseLineY = basePoint.y + m_insets.top + +textHeight - magicNumber;
     for( final String element : m_rows )
     {
       g.drawString( element, basePoint.x + m_insets.left, baseLineY );
       baseLineY += textHeight;
     }
+  }
+
+  public void paintTooltip( final org.eclipse.swt.graphics.Point point, final GC gc, final org.eclipse.swt.graphics.Rectangle screenRect )
+  {
+    Assert.isNotNull( point );
+    Assert.isNotNull( gc );
+
+    /* Do not show empty tooltips */
+    if( m_rows == null || m_rows.length == 0 )
+      return;
+
+    final org.eclipse.swt.graphics.Point maxRect = calculateBoxWidth( gc );
+
+    final int textHeight = maxRect.y; // height of one line
+    final int textboxWidth = maxRect.x; // width of textbox
+    final int textboxHeight = textHeight * m_rows.length; // height of textbox
+
+    final int insetsHeigth = m_insets.bottom + m_insets.top;
+    final int insetsWidth = m_insets.left + m_insets.right;
+
+    final Point basePoint = new Point( point.x + m_offset.x, point.y - m_offset.y - textboxHeight - insetsHeigth );
+
+    final int outlineWidth = textboxWidth + insetsWidth;
+    final int outlineHeight = textboxHeight + insetsHeigth;
+
+    if( screenRect != null )
+    {
+      /* Adjust basePoint in order to show the whole tooltip */
+
+      if( basePoint.x + outlineWidth > screenRect.x + screenRect.width )
+        basePoint.x = screenRect.x + screenRect.width - outlineWidth - 1;
+
+      if( basePoint.y + outlineHeight > screenRect.y + screenRect.height )
+        basePoint.y = screenRect.y - outlineHeight;
+
+      if( basePoint.x < screenRect.x )
+        basePoint.x = screenRect.x;
+
+      if( basePoint.y < screenRect.y )
+        basePoint.y = screenRect.y;
+    }
+
+    final org.eclipse.swt.graphics.Color textColor = gc.getDevice().getSystemColor( SWT.COLOR_INFO_FOREGROUND );
+    final org.eclipse.swt.graphics.Color bgColor = gc.getDevice().getSystemColor( SWT.COLOR_INFO_BACKGROUND );
+    final org.eclipse.swt.graphics.Color borderColor = gc.getDevice().getSystemColor( SWT.COLOR_BLACK );
+
+    /* draw outer rectangle */
+    gc.setBackground( bgColor );
+    gc.fillRectangle( basePoint.x, basePoint.y, outlineWidth, outlineHeight );
+
+    /* Draw Border */
+    gc.setForeground( borderColor );
+    gc.drawRectangle( basePoint.x, basePoint.y, outlineWidth, outlineHeight );
+
+    /* draw tooltip labels */
+    gc.setForeground( textColor );
+    int baseLineY = basePoint.y + m_insets.top;
+    for( final String element : m_rows )
+    {
+      gc.drawString( element, basePoint.x + m_insets.left, baseLineY );
+      baseLineY += textHeight;
+    }
+
+// // debug: draw textbox
+// gc.drawRectangle( basePoint.x + m_insets.left, basePoint.y + m_insets.top, textboxWidth, textboxHeight );
   }
 
   public void setInputData( final String[] rows )
