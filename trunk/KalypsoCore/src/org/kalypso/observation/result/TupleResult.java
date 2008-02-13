@@ -267,16 +267,6 @@ public class TupleResult implements List<IRecord>
   }
 
   /**
-   * @see java.util.List#indexOf(java.lang.Object)
-   */
-  public int indexOf( final Object o )
-  {
-    sort();
-
-    return m_records.indexOf( o );
-  }
-
-  /**
    * @see java.util.List#isEmpty()
    */
   public boolean isEmpty( )
@@ -537,6 +527,18 @@ public class TupleResult implements List<IRecord>
     return true;
   }
 
+  public boolean removeComponent( final int index )
+  {
+
+    for( final IRecord record : m_records )
+    {
+      ((Record) record).remove( index );
+    }
+    final IComponent comp = m_components.remove( index );
+    fireComponentsChanged( new IComponent[] { comp }, TYPE.REMOVED );
+    return true;
+  }
+
   // TODO: add other component methods:
   // - addComponent( index, comp )
   // - removeComponent( index )
@@ -627,5 +629,21 @@ public class TupleResult implements List<IRecord>
   public IComponent getComponent( final int index ) throws IndexOutOfBoundsException
   {
     return m_components.get( index );
+  }
+
+  /**
+   * @see java.util.List#indexOf(java.lang.Object)
+   */
+  public int indexOf( Object o )
+  {
+    if( o instanceof IRecord )
+    {
+      sort();
+      return m_records.indexOf( o );
+    }
+    else if( o instanceof IComponent )
+      return indexOfComponent( (IComponent) o );
+    else
+      return -1;
   }
 }
