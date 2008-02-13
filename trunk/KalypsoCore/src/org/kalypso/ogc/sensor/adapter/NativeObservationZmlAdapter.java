@@ -41,11 +41,15 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
+import java.util.Date;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -79,10 +83,23 @@ public class NativeObservationZmlAdapter implements INativeObservationAdapter
   }
 
   /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return m_title;
+  }
+
+  /**
    * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createAxis()
    */
   public IAxis[] createAxis( )
   {
-    return new IAxis[0];
+// return new IAxis[0];
+    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
+    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
+    final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
+    return axis;
   }
 }
