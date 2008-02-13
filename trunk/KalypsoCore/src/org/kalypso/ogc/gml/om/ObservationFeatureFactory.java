@@ -252,7 +252,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return components.toArray( new IComponent[components.size()] );
   }
 
-  private static XsdBaseTypeHandler< ? >[] typeHandlersForComponents( final IComponent[] components )
+  public static XsdBaseTypeHandler< ? >[] typeHandlersForComponents( final IComponent[] components )
   {
     final XsdBaseTypeHandler< ? >[] typeHandlers = new XsdBaseTypeHandler[components.length];
 
