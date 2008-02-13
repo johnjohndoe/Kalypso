@@ -44,10 +44,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -70,23 +69,19 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class NativeObservationZrxAdapter implements INativeObservationAdapter
+public class NativeObservationDVWKAdapter implements INativeObservationAdapter
 {
-  private final DateFormat m_zrxDateFormat = new SimpleDateFormat( "yyyyMMddHHmm" );
+  public static Pattern m_patternLine = Pattern.compile( "[A-Za-z0-9]{4}\\s([0-9\\s]{10})\\s*([0-9]{1,2})\\s*([0-9]{1,2})([A-Za-z\\s]{1})(.*)" );
 
-  private final DateFormat m_zrxDateFormatSec = new SimpleDateFormat( "yyyyMMddHHmmss" );
-
-  public static Pattern m_zrxHeaderPattern = Pattern.compile( "#.*" );
-
-  public static Pattern m_zrxDataPattern = Pattern.compile( "([0-9]{12,14})\\s+(-??[0-9]+(.[0-9]*))\\s*" );
-
-  public static Pattern m_zrxSNAMEPattern = Pattern.compile( "(#\\S*SNAME)(\\w+)(\\|\\*\\|\\S*)" );
+  public static Pattern m_subPatternData = Pattern.compile( "\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})" );
 
   private String m_title;
 
   private String m_axisTypeValue;
 
   private String m_SNAME = "titel";
+
+  private TimeZone m_timeZone;
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -103,20 +98,20 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     return createObservationFromSource( source, null, true );
   }
 
-  public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
+  public IObservation createObservationFromSource( final File source, final TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
     metaDataList.put( ObservationConstants.MD_ORIGIN, source.getAbsolutePath() );
 
     /* this is due to backwards compatibility */
     if( timeZone == null )
-      timeZone = TimeZone.getTimeZone( "GMT+1" );
+      m_timeZone = TimeZone.getTimeZone( "GMT+1" );
+    else
+      m_timeZone = timeZone;
 
-    m_zrxDateFormat.setTimeZone( timeZone );
-    m_zrxDateFormatSec.setTimeZone( timeZone );
     // create axis
-    IAxis[] axis = createAxis();
-    ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
+    final IAxis[] axis = createAxis();
+    final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
     final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, null, metaDataList, axis, tuppelModel );
@@ -134,68 +129,89 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     final List<Date> dateCollector = new ArrayList<Date>();
     final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
+    GregorianCalendar previousNlineCalendar = null;
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
         return null;
       try
       {
-        Matcher matcher = m_zrxDataPattern.matcher( lineIn );
+
+        final Matcher matcher = m_patternLine.matcher( lineIn );
         if( matcher.matches() )
         {
-          Date date = null;
-          Double value = null;
-          if( matcher.group( 1 ).length() == 14 ) // date with seconds
+          // end of file?
+          if( matcher.group( 4 ).equals( "E" ) )
+            break;
+
+          final String dateTime = matcher.group( 1 );
+          final int day = Integer.parseInt( dateTime.substring( 0, 2 ).trim() );
+          final int month = Integer.parseInt( dateTime.substring( 2, 4 ).trim() );
+          final int year = Integer.parseInt( dateTime.substring( 4, 8 ).trim() );
+          final int hour = Integer.parseInt( dateTime.substring( 8, 10 ).trim() );
+
+          // comment line
+          if( day == 0 && month == 0 && year == 0 )
+            continue;
+
+          final GregorianCalendar calendar = new GregorianCalendar( m_timeZone );
+// final GregorianCalendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "UTC" ) );
+          calendar.set( year, month - 1, day, hour, 0, 0 );
+
+          if( previousNlineCalendar != null )
           {
-            try
+            while( previousNlineCalendar.compareTo( calendar ) < 0 )
             {
-              date = m_zrxDateFormatSec.parse( matcher.group( 1 ) );
+              dateCollector.add( previousNlineCalendar.getTime() );
+              valueCollector.add( 0.0 );
+              previousNlineCalendar.add( GregorianCalendar.MINUTE, 5 );
             }
-            catch( Exception e )
-            {
-              errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
-              numberOfErrors++;
-            }
+          }
+
+          // data line
+          if( matcher.group( 4 ).equals( "N" ) )
+          {
+            // TODO check if this is means all zeros for the whole day
+            // or just for this hour,
+            // or all zeros until the next entry?
+
+            // all zeros until the next entry!
+            previousNlineCalendar = calendar;
+            continue;
+
+// for( int i = 0; i < 12; i++ )
+// {
+// dateCollector.add( calendar.getTime() );
+// valueCollector.add( 0.0 );
+// calendar.add( GregorianCalendar.MINUTE, 5 );
+// }
           }
           else
           {
-            try
+            previousNlineCalendar = null;
+            final Matcher dataMatcher = m_subPatternData.matcher( matcher.group( 5 ) );
+            if( dataMatcher.matches() )
             {
-              date = m_zrxDateFormat.parse( matcher.group( 1 ) );
+              for( int i = 1; i < 13; i++ )
+              {
+                try
+                {
+                  final double value = new Double( dataMatcher.group( i ) );
+                  dateCollector.add( calendar.getTime() );
+                  valueCollector.add( value );
+                }
+                catch( Exception e )
+                {
+                  errorBuffer.append( "line " + reader.getLineNumber() + " value not parseable: \"" + lineIn + "\"\n" );
+                  numberOfErrors++;
+                }
+                calendar.add( GregorianCalendar.MINUTE, 5 );
+              }
             }
-            catch( Exception e )
-            {
-              errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
-              numberOfErrors++;
-            }
           }
-          try
-          {
-            value = new Double( matcher.group( 2 ) );
-          }
-          catch( Exception e )
-          {
-            errorBuffer.append( "line " + reader.getLineNumber() + " value not parseable: \"" + lineIn + "\"\n" );
-            numberOfErrors++;
-          }
-          dateCollector.add( date );
-          valueCollector.add( value );
         }
         else
-        {
-          matcher = m_zrxHeaderPattern.matcher( lineIn );
-          if( matcher.matches() )
-          {
-            matcher = m_zrxSNAMEPattern.matcher( lineIn );
-            if( matcher.matches() )
-              m_SNAME = matcher.group( 2 );
-          }
-          else
-          {
-            errorBuffer.append( "line " + reader.getLineNumber() + " is not parseable: \"" + lineIn + "\"\n" );
-            numberOfErrors++;
-          }
-        }
+          numberOfErrors++;
       }
       catch( Exception e )
       {
