@@ -115,7 +115,10 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
       {
         try
         {
+          // System.out.println( "Processing!!!" );
           changeCommand.process();
+
+          m_featureComposite.updateControl();
         }
         catch( final Exception e )
         {
