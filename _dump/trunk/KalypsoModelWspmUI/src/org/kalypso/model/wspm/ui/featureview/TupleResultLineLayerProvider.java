@@ -59,12 +59,12 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.ksp.chart.factory.LayerType;
 
 /**
- * Layer provider which provides a {@link TupleResultLineChartLayer} on a feature beased observation.
+ * Layer provider which provides a {@link TupleResultLineChartLayer} on a feature based observation.
  * <p>
  * The following arguments are supported:
  * <ul>
  * <li>showPoints [default=true]: If true, points are drawn even if no point style is given.</li>
- * <li>showlines [default=true]: Same as showPoints for lines.</li>
+ * <li>showLines [default=true]: Same as showPoints for lines.</li>
  * <li>featureKey: String. Key, where to get the feature from the ChartDataProvider.</li>
  * <li>propertyName: QName. If non null, the observation feature is found at that property of the given feature. Else
  * the given feature must be an observation itself.</li>

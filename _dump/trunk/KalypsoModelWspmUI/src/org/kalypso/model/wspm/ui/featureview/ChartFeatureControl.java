@@ -160,7 +160,6 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     updateControl();
 
     return folder;
-
   }
 
   protected void handleFolderSelectionChanged( final int selectionIndex )

@@ -56,6 +56,7 @@ import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * A feature control which shows a chart. The chart configuration comes from the parameters of the extension, its
@@ -119,9 +120,13 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
 
       final ChartConfigurationLoader ccl = new ChartConfigurationLoader( configUrl );
 
-      ChartDataProvider.FEATURE_MAP.put( featureKeyName, feature );
+      final Object property = feature.getProperty( pt );
+      final Feature childFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
+      final Feature chartFeature = childFeature == null ? feature : childFeature;
 
-      return new ChartFeatureControl( feature, pt, ccl, configUrl, commands );
+      ChartDataProvider.FEATURE_MAP.put( featureKeyName, chartFeature );
+
+      return new ChartFeatureControl( chartFeature, pt, ccl, configUrl, commands );
     }
     catch( final Throwable e )
     {
