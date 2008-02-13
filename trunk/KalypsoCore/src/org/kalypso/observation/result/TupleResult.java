@@ -646,4 +646,21 @@ public class TupleResult implements List<IRecord>
     else
       return -1;
   }
+
+  /**
+   * Returns the index of the first component with a given id.
+   * 
+   * @return -1, if no such component exists.
+   */
+  public int indexOfComponent( final String domainComponentId )
+  {
+    for( int i = 0; i < m_components.size(); i++ )
+    {
+      final IComponent comp = m_components.get( i );
+      if( comp.getId().equals( domainComponentId ) )
+        return i;
+    }
+
+    return -1;
+  }
 }
