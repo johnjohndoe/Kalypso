@@ -782,8 +782,11 @@ public class SegmentData
         final IComponent[] properties = orgIProfil.getPointProperties();
         for( final IComponent property : properties )
         {
-          final Double value = (Double) point.getValue( property );
-          pt.setValue( property, value );
+          if( tmpProfil.hasPointProperty( property ) )
+          {
+            Object object = point.getValue( property );
+            pt.setValue( property, object );
+          }
         }
 
         // set rw/hw to the projected coordinates
