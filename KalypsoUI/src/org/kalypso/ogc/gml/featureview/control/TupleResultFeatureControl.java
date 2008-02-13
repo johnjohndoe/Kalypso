@@ -496,7 +496,10 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       tfc.addToolbarItem( "org.kalypso.ui.tupleResult.copyToClipboardCommand", SWT.PUSH );
 
       if( !tfc.m_recordsFixed )
+      {
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.pasteFromClipboardCommand", SWT.PUSH );
         tfc.addToolbarItem( "org.kalypso.ui.tupleResult.deleteSelectedRowsCommand", SWT.PUSH );
+      }
     }
 
     final List<org.kalypso.template.featureview.TupleResult.Toolbar.Command> commands = toolbar.getCommand();
