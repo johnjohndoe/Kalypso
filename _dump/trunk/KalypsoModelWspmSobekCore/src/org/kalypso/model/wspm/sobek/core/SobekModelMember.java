@@ -534,4 +534,12 @@ public final class SobekModelMember implements ISobekModelMember
   {
     m_models.remove( workspace );
   }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#dispose()
+   */
+  public void dispose( )
+  {
+    removeModel( getWorkspace() );
+  }
 }

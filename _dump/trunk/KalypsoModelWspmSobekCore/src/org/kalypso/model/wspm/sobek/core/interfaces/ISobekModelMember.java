@@ -80,4 +80,5 @@ public interface ISobekModelMember extends IModelMember
 
   public void writePi( final URL targetDir, final TARGET target ) throws IOException, GM_Exception, DatatypeConfigurationException, Exception;
 
+  public void dispose( );
 }
