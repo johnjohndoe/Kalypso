@@ -51,6 +51,9 @@ import java.util.Map;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BuildingParameters;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
 
 /**
  * Helper class to write the building file of a RMA10S calculation.
@@ -99,7 +102,8 @@ public class Building1D2DConverter
       final Integer buildingID = buildingEntry.getKey();
       final BuildingParameters buildingParameters = building.getBuildingParameters();
 
-      writeBuildingBlock( formatter, buildingID, buildingParameters );
+      // writeBuildingBlock( formatter, buildingID, buildingParameters );
+      writeNewBuildingBlock( formatter, buildingID, buildingParameters );
     }
 
     formatter.format( "ENDDATA" );
@@ -107,6 +111,34 @@ public class Building1D2DConverter
     FormatterUtils.checkIoException( formatter );
   }
 
+  private void writeNewBuildingBlock( final Formatter formatter, final Integer buildingID, final BuildingParameters buildingParameters ) throws IOException
+  {
+    final TupleResult values = buildingParameters.getValues();
+
+    final int qCount = buildingParameters.getDischargeCount();
+    final int totalCount = values.size();
+
+    formatter.format( "DLI      %7d% 7d %7d%n", buildingID, qCount, totalCount );
+
+    final int qComp = TupleResultUtilities.indexOfComponent( values, BuildingParameters.COMPONENT_DISCHARGE );
+    final int howComp = TupleResultUtilities.indexOfComponent( values, BuildingParameters.COMPONENT_WATERLEVEL_UPSTREAM );
+    final int huwComp = TupleResultUtilities.indexOfComponent( values, BuildingParameters.COMPONENT_WATERLEVEL_DOWNSTREAM );
+
+    for( final IRecord record : values )
+    {
+      final BigDecimal q = (BigDecimal) record.getValue( qComp );
+      final BigDecimal huw = (BigDecimal) record.getValue( huwComp );
+      final BigDecimal how = (BigDecimal) record.getValue( howComp );
+
+      formatter.format( "CST     %.3f %.3f %.3f%n", q, huw, how );
+    }
+
+    formatter.format( "ENDBLOC  %8d%n", buildingID );
+
+    FormatterUtils.checkIoException( formatter );
+  }
+
+  // TODO: remove, and rename writeNewBuildingBlock to writeBuildingBlock
   private void writeBuildingBlock( final Formatter formatter, final Integer buildingID, final BuildingParameters buildingParameters ) throws IOException
   {
     final BigDecimal[] upstreamWaterlevels = buildingParameters.getUpstreamWaterlevels();

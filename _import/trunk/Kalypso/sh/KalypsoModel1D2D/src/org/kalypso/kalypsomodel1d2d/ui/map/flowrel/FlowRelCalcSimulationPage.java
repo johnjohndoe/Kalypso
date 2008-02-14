@@ -58,6 +58,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
@@ -168,9 +170,9 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
     {
       m_op.applyResults();
 
-      // TODO: write used calculation parameters to flow-rels
+      // Post an empty command to flowrelationship model in order to make it dirty
+      KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class, new EmptyCommand( "", false ) );
 
-      // TODO: make flowmodel dirty
       return Status.OK_STATUS;
     }
     catch( final Exception e )

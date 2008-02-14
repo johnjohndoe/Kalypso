@@ -25,7 +25,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
@@ -36,8 +35,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDecimal> implements IDataContainer<BigDecimal, BigDecimal>
 {
-  private final TupleResult m_workResult;
-
   private final int m_domainComponent;
 
   private final int m_valueComponent;
@@ -52,6 +49,8 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
 
   private final Feature m_obsFeature;
 
+  private final TupleResult m_result;
+
   public BuildingParameterLayer( final IAxis<BigDecimal> domainAxis, final IAxis<BigDecimal> targetAxis, final Feature obsFeature, final String domainComponentId, final String valueComponentId, final String classComponentId )
   {
     super( domainAxis, targetAxis );
@@ -62,35 +61,13 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     m_domainComponent = result.indexOfComponent( domainComponentId );
     m_valueComponent = result.indexOfComponent( valueComponentId );
     m_classComponent = result.indexOfComponent( classComponentId );
-    m_workResult = cloneSorted( result );
 
     // REMARK: at the moment, we do not react to changes in the result; if we do later, this must be done every time the
     // result is changed
     m_obsFeature = obsFeature;
+    m_result = result;
 
     setDataContainer( this );
-  }
-
-  private TupleResult cloneSorted( final TupleResult result )
-  {
-    final IComponent[] components = result.getComponents();
-    final TupleResult clone = new TupleResult( components );
-    final IComponent classComponent = clone.getComponent( m_classComponent );
-    final IComponent domainComponent = clone.getComponent( m_domainComponent );
-    final IComponent[] sortComponents = new IComponent[] { classComponent, domainComponent };
-    clone.setSortComponents( sortComponents );
-
-    for( final IRecord record : result )
-    {
-      final IRecord newRecord = clone.createRecord();
-
-      for( int i = 0; i < components.length; i++ )
-        newRecord.setValue( i, record.getValue( i ) );
-
-      clone.add( newRecord );
-    }
-
-    return clone;
   }
 
   public void drawIcon( final Image img )
@@ -129,7 +106,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     BigDecimal lastClass = null;
     final List<Point> path = new ArrayList<Point>();
     final List<EditInfo> editInfos = new ArrayList<EditInfo>();
-    for( final IRecord record : m_workResult )
+    for( final IRecord record : m_result )
     {
       final BigDecimal classValue = (BigDecimal) record.getValue( m_classComponent );
       final BigDecimal domainValue = (BigDecimal) record.getValue( m_domainComponent );
@@ -221,7 +198,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     BigDecimal min = new BigDecimal( Double.MAX_VALUE );
     BigDecimal max = new BigDecimal( Double.MIN_VALUE );
 
-    for( final IRecord record : m_workResult )
+    for( final IRecord record : m_result )
     {
       final BigDecimal value = (BigDecimal) record.getValue( component );
       max = max.max( value );
@@ -260,7 +237,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
       return;
 
     final IRecord record = (IRecord) info.data;
-    m_workResult.remove( record );
+    m_result.remove( record );
 
     // TODO
     // - redraw via tuple result mechanism
@@ -282,7 +259,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     ProgressUtilities.worked( monitor, 1 );
 
     final int compCount = result.getComponents().length;
-    for( final IRecord record : m_workResult )
+    for( final IRecord record : m_result )
     {
       final IRecord newRecord = result.createRecord();
 

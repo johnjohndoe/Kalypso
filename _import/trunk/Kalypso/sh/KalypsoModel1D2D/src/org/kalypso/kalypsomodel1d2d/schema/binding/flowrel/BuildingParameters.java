@@ -43,7 +43,9 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -51,7 +53,6 @@ import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
@@ -63,6 +64,12 @@ import org.kalypso.observation.result.TupleResultUtilities;
  */
 public class BuildingParameters
 {
+  public static final String COMPONENT_DISCHARGE = Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE;
+
+  public static final String COMPONENT_WATERLEVEL_DOWNSTREAM = Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM;
+
+  public static final String COMPONENT_WATERLEVEL_UPSTREAM = Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM;
+
   private static final BigDecimal UNKNOWN_DISCHARGE = new BigDecimal( "-999.999" );
 
   private final Map<Object, BigDecimal> m_dischargeMap = new HashMap<Object, BigDecimal>();
@@ -73,13 +80,19 @@ public class BuildingParameters
   /** Downstream waterlevels, sorted in ascending order. */
   private final SortedSet<BigDecimal> m_downstreamWaterlevels = new TreeSet<BigDecimal>();
 
-  public BuildingParameters( final IObservation<TupleResult> weirObservation )
-  {
-    final TupleResult result = weirObservation.getResult();
+  private final IObservation<TupleResult> m_buildingObservation;
 
-    final IComponent compUpstream = TupleResultUtilities.findComponentById( result, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
-    final IComponent compDownstream = TupleResultUtilities.findComponentById( result, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
-    final IComponent compDischarge = TupleResultUtilities.findComponentById( result, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+  private final Set<BigDecimal> m_dischargeSet = new HashSet<BigDecimal>();
+
+  public BuildingParameters( final IObservation<TupleResult> buildingObservation )
+  {
+    m_buildingObservation = buildingObservation;
+
+    final TupleResult result = buildingObservation.getResult();
+
+    final int compUpstream = TupleResultUtilities.indexOfComponent( result, COMPONENT_WATERLEVEL_UPSTREAM );
+    final int compDownstream = TupleResultUtilities.indexOfComponent( result, COMPONENT_WATERLEVEL_DOWNSTREAM );
+    final int compDischarge = TupleResultUtilities.indexOfComponent( result, COMPONENT_DISCHARGE );
 
     for( final IRecord record : result )
     {
@@ -92,6 +105,8 @@ public class BuildingParameters
 
       final Object createWaterlevelTupel = createWaterlevelTupel( upstream, downstream );
       m_dischargeMap.put( createWaterlevelTupel, discharge );
+
+      m_dischargeSet.add( discharge );
     }
   }
 
@@ -183,6 +198,16 @@ public class BuildingParameters
     final Object tupel = createWaterlevelTupel( upstreamWaterlevel, downstreamWaterlevel );
     final BigDecimal discharge = m_dischargeMap.get( tupel );
     return discharge;
+  }
+
+  public TupleResult getValues( )
+  {
+    return m_buildingObservation.getResult();
+  }
+
+  public int getDischargeCount( )
+  {
+    return m_dischargeSet.size();
   }
 
 }

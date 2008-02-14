@@ -103,6 +103,7 @@ import org.kalypso.simulation.core.util.DefaultSimulationResultEater;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -490,7 +491,8 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
 
   public static void copyTeschkeData( final ITeschkeFlowRelation flowRel, final QIntervallResult qresult ) throws Exception
   {
-    final Feature flowRelParentFeature = flowRel.getFeature();
+    final Feature feature = flowRel.getFeature();
+    final Feature flowRelParentFeature = feature;
     final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
     final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
     final IRelationType flowRelObsRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POINTSOBSERVATION );
@@ -499,7 +501,7 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     /* clone observation */
     final Feature pointObsFeature = (Feature) qresult.getFeature().getProperty( QIntervallResult.QNAME_P_QIntervallResult_pointsMember );
     if( pointObsFeature != null )
-      FeatureHelper.cloneFeature( flowRel.getFeature(), flowRelObsRelation, pointObsFeature );
+      FeatureHelper.cloneFeature( feature, flowRelObsRelation, pointObsFeature );
 
     /* clone polynomials */
     flowRel.getPolynomials().clear(); // clear polynomials in case, the relation already existed
@@ -509,14 +511,19 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
       final GMLWorkspace qresultsWorkspace = qresult.getFeature().getWorkspace();
       final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
       if( polynomeFeature != null )
-        FeatureHelper.cloneFeature( flowRel.getFeature(), flowRelPolynomeRelation, polynomeFeature );
+      {
+        FeatureHelper.cloneFeature( feature, flowRelPolynomeRelation, polynomeFeature );
+      }
     }
 
+    flowRelworkspace.fireModellEvent( new FeaturesChangedModellEvent( flowRelworkspace, new Feature[] { feature } ) );
   }
 
   public static void copyBuildingData( final IBuildingFlowRelation buildingRelation, final QIntervallResult qresult )
   {
     /* copy building parameter from one observation to the other */
+    final Feature buildingFeature = buildingRelation.getFeature();
+    final GMLWorkspace buildingWorkspace = buildingFeature.getWorkspace();
     final IObservation<TupleResult> buildingObservation = buildingRelation.getBuildingObservation();
     final IObservation<TupleResult> qresultBuildingObs = qresult.getBuildingObservation( false );
     final TupleResult qresultResult = qresultBuildingObs.getResult();
@@ -528,5 +535,7 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
     TupleResultUtilities.copyValues( qresultResult, buildingResult, componentMap );
     buildingRelation.setBuildingObservation( buildingObservation );
+
+    buildingWorkspace.fireModellEvent( new FeaturesChangedModellEvent( buildingWorkspace, new Feature[] { buildingFeature } ) );
   }
 }

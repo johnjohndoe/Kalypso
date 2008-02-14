@@ -136,8 +136,8 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
       return obs;
 
     /* If not yet initialized, create components and write obs back to feature. */
-    final String[] componentUrns = new String[] { Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM,
-        Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE };
+    final String[] componentUrns = new String[] { Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM,
+        Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM };
     final IComponent[] components = new IComponent[componentUrns.length];
 
     for( int i = 0; i < components.length; i++ )
@@ -145,6 +145,9 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
 
     for( final IComponent component : components )
       result.addComponent( component );
+
+    // Sort by discharge and then downstream waterlevel
+    result.setSortComponents( new IComponent[] { components[0], components[1] } );
 
     ObservationFeatureFactory.toFeature( obs, obsFeature );
     return obs;
