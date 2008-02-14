@@ -251,7 +251,11 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
   {
     if( flowRel instanceof ITeschkeFlowRelation )
     {
-      return runCalculation( calculation, flowRel, new IProfil[] { ((ITeschkeFlowRelation) flowRel).getProfile().getProfil() }, monitor );
+      final WspmProfile teschkeProfile = ((ITeschkeFlowRelation) flowRel).getProfile();
+      if( teschkeProfile == null )
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Knoten-Parameter ist kein Profil zugeordnet:" + teschkeProfile.getName(), null ) );
+
+      return runCalculation( calculation, flowRel, new IProfil[] { teschkeProfile.getProfil() }, monitor );
     }
     else if( flowRel instanceof IBuildingFlowRelation )
     {
@@ -268,9 +272,20 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
       final ITeschkeFlowRelation tDown = (ITeschkeFlowRelation) downRel;
 
       // find adjacent teschke parameters
-      final IProfil downStreamProfil = tDown.getProfile().getProfil();
-      final IProfil buildingProfil = building.getProfile().getProfil();
-      final IProfil upStreamProfil = tUp.getProfile().getProfil();
+      final WspmProfile downProfile = tDown.getProfile();
+      final WspmProfile buildingProfile = building.getProfile();
+      final WspmProfile upProfile = tUp.getProfile();
+
+      if( downProfile == null )
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Unterwasserknoten kein Profil zugeordnet:" + tDown.getName(), null ) );
+      if( upProfile == null )
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Oberwasserknoten kein Profil zugeordnet:" + tUp.getName(), null ) );
+      if( buildingProfile == null )
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Bauwerk kein Profil zugeordnet:" + building.getName(), null ) );
+
+      final IProfil downStreamProfil = downProfile.getProfil();
+      final IProfil buildingProfil = buildingProfile.getProfil();
+      final IProfil upStreamProfil = upProfile.getProfil();
 
       return runCalculation( calculation, flowRel, new IProfil[] { downStreamProfil, buildingProfil, upStreamProfil }, monitor );
     }
