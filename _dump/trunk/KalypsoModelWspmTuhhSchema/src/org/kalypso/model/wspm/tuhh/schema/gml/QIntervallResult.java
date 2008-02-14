@@ -222,9 +222,16 @@ public class QIntervallResult extends AbstractFeatureBinder
     final Feature obsFeature = workspace.createFeature( feature, pointsObsRelation, ftObservation );
     feature.setProperty( QNAME_P_QIntervallResult_buildingMember, obsFeature );
 
-    final IComponent[] pointsComponents = createWeirComponents( obsFeature );
+    final IComponent[] pointsComponents = new IComponent[3];
+    pointsComponents[0] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
+    pointsComponents[1] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
+    pointsComponents[2] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
 
     final TupleResult tupleResult = new TupleResult( pointsComponents );
+
+    // Sort by discharge and then downstream waterlevel
+    tupleResult.setSortComponents( new IComponent[] { pointsComponents[0], pointsComponents[1] } );
+
     return new Observation<TupleResult>( "", "", tupleResult, new ArrayList<MetadataObject>() );
   }
 
@@ -247,17 +254,6 @@ public class QIntervallResult extends AbstractFeatureBinder
     components[5] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_DELTA_AREA );
     components[6] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_DELTA_RUNOFF );
     components[7] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_DELTA_ALPHA );
-
-    return components;
-  }
-
-  private static IComponent[] createWeirComponents( final Feature obsFeature )
-  {
-    final IComponent[] components = new IComponent[3];
-
-    components[0] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
-    components[1] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
-    components[2] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
 
     return components;
   }

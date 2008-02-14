@@ -185,7 +185,7 @@ public class PolynomeHelper
   {
     final ISimulationMonitor monitor = log.getMonitor();
 
-    log.log( true, "Polynomfuktionen werden ermittelt" );
+    log.log( true, "Polynomfunktionen werden ermittelt" );
 
     log.log( true, "- Übertrage Ergebnisse der Q-Intervallberechnung" );
 
