@@ -8,7 +8,6 @@ import java.util.List;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -34,8 +33,14 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+
 public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDecimal> implements IDataContainer<BigDecimal, BigDecimal>, IEditableChartLayer<BigDecimal, BigDecimal>
 {
+  private final GeometryFactory GF = new GeometryFactory();
+
   private final int m_domainComponent;
 
   private final int m_valueComponent;
@@ -73,27 +78,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
 
   public void drawIcon( final Image img )
   {
-    // final Rectangle bounds = img.getBounds();
-    // final int height = bounds.height;
-    // final int width = bounds.width;
-    final GC gc = new GC( img );
-    //
-    // final ArrayList<Point> path = new ArrayList<Point>();
-    //
-    // path.add( new Point( 0, height / 2 ) );
-    // path.add( new Point( width / 5, height / 2 ) );
-    // path.add( new Point( width / 5 * 2, height / 4 ) );
-    // path.add( new Point( width / 5 * 3, height / 4 * 3 ) );
-    // path.add( new Point( width / 5 * 4, height / 2 ) );
-    // path.add( new Point( width, height / 2 ) );
-    //
-    // final IStyledElement element = getStyle().getElement( SE_TYPE.LINE, 1 );
-    //
-    // element.setPath( path );
-    // element.paint( gcw );
-    //
-
-    gc.dispose();
+    // we do not have an legend item (yet?)
   }
 
   public void paint( final GCWrapper gc )
@@ -101,11 +86,15 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     final IAxis<BigDecimal> xAxis = getDomainAxis();
     final IAxis<BigDecimal> yAxis = getTargetAxis();
 
-    final IStyledElement sl = getStyle().getElement( SE_TYPE.LINE, 0 );
-    final IStyledElement sp = getStyle().getElement( SE_TYPE.POINT, 0 );
+    final IStyledElement okLineStyle = getStyle().getElement( SE_TYPE.LINE, 0 );
+    final IStyledElement okPointStyle = getStyle().getElement( SE_TYPE.POINT, 0 );
+    final IStyledElement crossLineStyle = getStyle().getElement( SE_TYPE.LINE, 1 );
+    final IStyledElement crossPointStyle = getStyle().getElement( SE_TYPE.POINT, 1 );
 
     BigDecimal lastClass = null;
+    Coordinate[] lastCrds = null;
     final List<Point> path = new ArrayList<Point>();
+    final List<Coordinate> crds = new ArrayList<Coordinate>();
     final List<EditInfo> editInfos = new ArrayList<EditInfo>();
     for( final IRecord record : m_result )
     {
@@ -115,10 +104,12 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
 
       if( !ObjectUtils.equals( classValue, lastClass ) )
       {
-        drawPath( gc, sl, sp, path );
+        drawCurrentLine( gc, okLineStyle, okPointStyle, crossLineStyle, crossPointStyle, lastCrds, crds, path );
 
         // clear current path
+        lastCrds = crds.toArray( new Coordinate[crds.size()] );
         path.clear();
+        crds.clear();
       }
 
       // add value to path
@@ -126,6 +117,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
       final int y = yAxis.logicalToScreen( targetValue );
       final Point pos = new Point( x, y );
       path.add( pos );
+      crds.add( new Coordinate( domainValue.doubleValue(), targetValue.doubleValue() ) );
 
       // Edit info
       final String msg = String.format( "%.4f / %.4f (%.4f)", domainValue, targetValue, classValue );
@@ -136,12 +128,30 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
       lastClass = classValue;
     }
 
-    drawPath( gc, sl, sp, path );
+    drawCurrentLine( gc, okLineStyle, okPointStyle, crossLineStyle, crossPointStyle, lastCrds, crds, path );
 
     m_editInfos = editInfos.toArray( new EditInfo[editInfos.size()] );
 
     if( m_tooltipPoint != null )
       m_tooltipRenderer.paintTooltip( m_tooltipPoint, gc.m_gc, gc.getClipping() );
+  }
+
+  private void drawCurrentLine( final GCWrapper gc, final IStyledElement okLineStyle, final IStyledElement okPointStyle, final IStyledElement crossLineStyle, final IStyledElement crossPointStyle, final Coordinate[] lastCrds, final List<Coordinate> crds, final List<Point> path )
+  {
+    if( lastCrds != null && checkIntersect( lastCrds, crds ) )
+      drawPath( gc, crossLineStyle, crossPointStyle, path );
+    else
+      drawPath( gc, okLineStyle, okPointStyle, path );
+  }
+
+  private boolean checkIntersect( final Coordinate[] crds1, final List<Coordinate> crds2List )
+  {
+    final Coordinate[] crds2 = crds2List.toArray( new Coordinate[crds2List.size()] );
+
+    final LineString ls1 = GF.createLineString( crds1 );
+    final LineString ls2 = GF.createLineString( crds2 );
+
+    return ls1.intersects( ls2 );
   }
 
   private void drawPath( final GCWrapper gc, final IStyledElement sl, final IStyledElement sp, final List<Point> path )

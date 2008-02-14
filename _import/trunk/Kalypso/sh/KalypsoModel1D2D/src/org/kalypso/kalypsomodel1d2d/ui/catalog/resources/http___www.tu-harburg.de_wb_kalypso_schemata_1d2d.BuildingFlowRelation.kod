@@ -53,15 +53,17 @@
 			<TargetAxisRef ref="h_ow_Axis" />
 		</Mapper>
 		<Style>
-			<StyleRef ref="runoffLineStyle" />
-			<StyleRef ref="runoffPointStyle" />
+			<StyleRef ref="runoffLineStyleOK" />
+			<StyleRef ref="runoffPointStyleOK" />
+			<StyleRef ref="runoffLineStyleCrossing" />
+			<StyleRef ref="runoffPointStyleCrossing" />
 		</Style>
 	</Layer>
 	
-	<Style id="runoffLineStyle">
+	<Style id="runoffLineStyleOK">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
 		<Parameters>
-			<Parameter value="3" name="lineWidth"/>
+			<Parameter value="2" name="lineWidth"/>
 			<Parameter value="SOLID" name="lineStyle"/>
 			<Parameter value="#00AAFF" name="lineColor"/>
 		</Parameters>
@@ -70,7 +72,34 @@
         <Type>LINE</Type>
 	</Style>
 	
-	<Style id="runoffPointStyle">
+	<Style id="runoffPointStyleOK">
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
+			<Parameters>
+				<Parameter name="pointWidth" value="8" />
+				<Parameter name="pointHeight" value="8" />
+				<Parameter name="borderWidth" value="1" />
+				<Parameter name="fillColor" value="#00ff00" />
+				<Parameter name="borderColor" value="#000000" />
+				<Parameter name="alpha" value="255" />
+			</Parameters>
+		</Provider>
+		<StyleID></StyleID>
+		<Type>POINT</Type>
+	</Style>
+
+	<Style id="runoffLineStyleCrossing">
+		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
+		<Parameters>
+			<Parameter value="2" name="lineWidth"/>
+			<Parameter value="SOLID" name="lineStyle"/>
+			<Parameter value="#FFAA00" name="lineColor"/>
+		</Parameters>
+	</Provider>
+        <StyleID></StyleID>
+        <Type>LINE</Type>
+	</Style>
+	
+	<Style id="runoffPointStyleCrossing">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
 			<Parameters>
 				<Parameter name="pointWidth" value="8" />
