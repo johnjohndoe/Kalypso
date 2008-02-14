@@ -148,6 +148,10 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
   {
     final Coordinate[] crds2 = crds2List.toArray( new Coordinate[crds2List.size()] );
 
+    /* Single point lines cannot intersect anything */
+    if( crds1.length < 2 || crds2.length < 2 )
+      return false;
+
     final LineString ls1 = GF.createLineString( crds1 );
     final LineString ls2 = GF.createLineString( crds2 );
 
