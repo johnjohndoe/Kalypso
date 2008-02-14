@@ -56,6 +56,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class LastLineLabelProvider implements ITableLabelProvider, IColorProvider
 {
+  public static final String DUMMY_ELEMENT_TEXT = "Zeile hinzufügen";
   private final ITableLabelProvider m_provider;
   private Color m_backgroundColor;
 
@@ -98,7 +99,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   public String getColumnText( final Object element, final int columnIndex )
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )
-      return "Zeile hinzufügen";
+      return DUMMY_ELEMENT_TEXT;
 
     return m_provider.getColumnText( element, columnIndex );
   }

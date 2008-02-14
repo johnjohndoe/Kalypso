@@ -87,20 +87,29 @@ public class PasteFromClipboardHandler extends AbstractHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-
+    String trstring = null;
     try
     {
-      final String trstring = (String) (Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor ));
+      trstring = (String) (Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor ));
       // if Cipboard content is not text or that content is empty, just ignore it
       if( trstring == null || trstring.trim().length() == 0 )
       {
         MessageDialog.openError( shell, "Error", "No suitable data on clipboard available." );
         return null;
       }
+    }
+    catch( Exception e )
+    {
+      MessageDialog.openError( shell, "Error", "No suitable data on clipboard available." );
+      return null;
+    }
+    
+    try
+    {
       final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
       if( tupleResultViewer == null )
       {
-        MessageDialog.openError( shell, "Error", "No tuple result viewer available." );
+        MessageDialog.openError( shell, "Error", "No tuple result data viewer available." );
         return null;
       }
       final IContentProvider contentProvider = tupleResultViewer.getContentProvider();
@@ -195,6 +204,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
     }
     catch( final Exception ex )
     {
+      MessageDialog.openError( shell, "Error", "Non-parsable data pasted from the clipboard." );
       ex.printStackTrace();
     }
     return null;
