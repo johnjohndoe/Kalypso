@@ -260,11 +260,11 @@ public class BreakLinesHelper implements IWspmConstants
           if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
           // simulation does not concern the whole reach.
           {
-            points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue() );
+            points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue(), null );
           }
         }
         else
-          points = WspmProfileHelper.calculateWspPoints( profil, Double.MAX_VALUE );
+          points = WspmProfileHelper.calculateWspPoints( profil, Double.MAX_VALUE, null );
 
         if( points != null )
         {

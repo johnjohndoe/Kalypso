@@ -296,7 +296,7 @@ public class WspmProfileHelper
    * @param wspHoehe
    *            water level
    */
-  public static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe )
+  public static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe, String srsName )
   {
     if( !profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
         || !profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) ) // ignore
@@ -340,8 +340,10 @@ public class WspmProfileHelper
       final double rw = rwLine.getYFor( x, false );
       final double hw = hwLine.getYFor( x, false );
 
-      final String crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-      final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
+      if( srsName == null )
+        srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+
+      final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
       final GM_Point point = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rw, hw, wspHoehe, crs );
 
       poses[count++] = point;
