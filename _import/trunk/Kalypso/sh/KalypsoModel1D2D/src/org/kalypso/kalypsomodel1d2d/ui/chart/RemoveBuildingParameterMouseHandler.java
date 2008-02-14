@@ -59,6 +59,8 @@ public class RemoveBuildingParameterMouseHandler implements IChartDragHandler
 {
   private final ChartComposite m_chartComposite;
 
+  private EditInfo m_info;
+
   public RemoveBuildingParameterMouseHandler( final ChartComposite chartComposite )
   {
     m_chartComposite = chartComposite;
@@ -72,8 +74,7 @@ public class RemoveBuildingParameterMouseHandler implements IChartDragHandler
     final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
     final EditInfo info = layer.getEditInfo( new Point( e.x, e.y ) );
 
-    // TODO: move into layer or generalize
-    layer.edit( info );
+    layer.delete( info );
   }
 
   /**
@@ -81,6 +82,8 @@ public class RemoveBuildingParameterMouseHandler implements IChartDragHandler
    */
   public void mouseDown( final MouseEvent e )
   {
+    final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
+    m_info = layer.getEditInfo( new Point( e.x, e.y ) );
   }
 
   /**
@@ -88,7 +91,15 @@ public class RemoveBuildingParameterMouseHandler implements IChartDragHandler
    */
   public void mouseUp( final MouseEvent e )
   {
+    final EditInfo info = m_info;
+    if( info == null )
+      return;
 
+    // prepare for exception
+    m_info = null;
+
+    final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
+    layer.edit( new Point( e.x, e.y ), info );
   }
 
   /**
@@ -106,15 +117,14 @@ public class RemoveBuildingParameterMouseHandler implements IChartDragHandler
 
     if( info == null )
     {
-      m_chartComposite.setCursor( e.display.getSystemCursor( SWT.CURSOR_ARROW ) );
+      m_chartComposite.getPlot().setCursor( e.display.getSystemCursor( SWT.CURSOR_ARROW ) );
       layer.setTooltip( null, null );
     }
     else
     {
-      m_chartComposite.setCursor( e.display.getSystemCursor( SWT.CURSOR_HAND ) );
-      layer.setTooltip( info.text + " (Doppelklick zum Löschen)", point );
+      m_chartComposite.getPlot().setCursor( e.display.getSystemCursor( SWT.CURSOR_HAND ) );
+      layer.setTooltip( info.text + " (Ziehen zum verschieben, Doppelklick zum Löschen)", point );
     }
-
   }
 
   public static BuildingParameterLayer findLayer( final IChartModel model )

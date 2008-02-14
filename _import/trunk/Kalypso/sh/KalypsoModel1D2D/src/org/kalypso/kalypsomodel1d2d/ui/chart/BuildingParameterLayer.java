@@ -18,6 +18,7 @@ import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
 import org.kalypso.chart.framework.model.layer.EditInfo;
+import org.kalypso.chart.framework.model.layer.IEditableChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
@@ -33,7 +34,7 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
-public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDecimal> implements IDataContainer<BigDecimal, BigDecimal>
+public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDecimal> implements IDataContainer<BigDecimal, BigDecimal>, IEditableChartLayer<BigDecimal, BigDecimal>
 {
   private final int m_domainComponent;
 
@@ -231,7 +232,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     getEventHandler().fireLayerContentChanged( this );
   }
 
-  public void edit( final EditInfo info )
+  public void delete( final EditInfo info )
   {
     if( info == null )
       return;
@@ -282,6 +283,47 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     ProgressUtilities.worked( monitor, 1 );
 
     ProgressUtilities.done( monitor );
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#alwaysAllowsEditing()
+   */
+  public boolean alwaysAllowsEditing( )
+  {
+    return true;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#edit(org.eclipse.swt.graphics.Point,
+   *      org.kalypso.chart.framework.model.layer.EditInfo)
+   */
+  public EditInfo edit( final Point point, final EditInfo info )
+  {
+    // find real point from point
+    final IAxis<BigDecimal> xAxis = getDomainAxis();
+    final IAxis<BigDecimal> yAxis = getTargetAxis();
+
+    final BigDecimal xValue = new BigDecimal( ((Number) xAxis.screenToLogical( point.x )).doubleValue() );
+    final BigDecimal yValue = new BigDecimal( ((Number) yAxis.screenToLogical( point.y )).doubleValue() );
+
+    final IRecord record = (IRecord) info.data;
+
+    record.setValue( m_domainComponent, xValue );
+    record.setValue( m_valueComponent, yValue );
+
+    // TODO
+    // - redraw via tuple result mechanism
+    getEventHandler().fireLayerContentChanged( this );
+
+    return info;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#setActivePoint(java.lang.Object)
+   */
+  public void setActivePoint( final Object data )
+  {
+    throw new UnsupportedOperationException();
   }
 
 }
