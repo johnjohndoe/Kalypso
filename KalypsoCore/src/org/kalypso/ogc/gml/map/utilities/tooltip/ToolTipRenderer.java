@@ -157,7 +157,6 @@ public class ToolTipRenderer
     if( screenRect != null )
     {
       /* Adjust basePoint in order to show the whole tooltip */
-
       if( basePoint.x + outlineWidth > screenRect.getMaxX() )
         basePoint.x = (int) screenRect.getMaxX() - outlineWidth - 1;
 

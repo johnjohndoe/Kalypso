@@ -321,4 +321,22 @@ public class TupleResultUtilities
       targetResult.add( targetRecord );
     }
   }
+
+  /**
+   * Returns the index of the first component with a given id.
+   * 
+   * @return -1, if no such component exists.
+   */
+  public static int indexOfComponent( final TupleResult result, final String id )
+  {
+    final IComponent[] components = result.getComponents();
+    for( int i = 0; i < components.length; i++ )
+    {
+      final IComponent component = components[i];
+      if( component.getId().equals( id ) )
+        return i;
+    }
+
+    return -1;
+  }
 }
