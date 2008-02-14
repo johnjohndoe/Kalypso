@@ -63,6 +63,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlHandlerProvider;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.LastLineContentProvider;
+import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.template.featureview.ColumnDescriptor;
@@ -141,7 +142,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
       while( st1.hasMoreTokens() )
       {
         final String nextToken = st1.nextToken();
-        if( nextToken.startsWith( "Zeile hinzufügen" ) )
+        if( nextToken.startsWith( LastLineLabelProvider.DUMMY_ELEMENT_TEXT ) )
           break;
         final StringTokenizer st2 = new StringTokenizer( nextToken, "\t" );
         final IRecord record = tupleResult.createRecord();
