@@ -157,6 +157,10 @@
               class="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider"
               id="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider">
         </provider>
+        <provider
+              class="org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayerProvider"
+              id="org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayerProvider">
+        </provider>
      </extension>
      <extension
            point="org.eclipse.ui.handlers">
@@ -891,5 +895,29 @@
            adapterClass="org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor"
            featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}DiscretisationModel">
      </modelAdapter>
+  </extension>
+  <extension
+        name="1d2dChartCommands"
+        point="org.eclipse.ui.commands">
+     <command
+           categoryId="org.kalypso.chart.ui.commands.category"
+           id="org.kalypso.model1d2d.removeBuildingParameter"
+           name="Parameter löschen">
+     </command>
+  </extension>
+  <extension
+        name="chartHandlers"
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="org.kalypso.kalypsomodel1d2d.ui.chart.RemoveBuildingParameterHandler"
+           commandId="org.kalypso.model1d2d.removeBuildingParameter">
+     </handler>
+  </extension>
+  <extension
+        point="org.eclipse.ui.commandImages">
+     <image
+           commandId="org.kalypso.model1d2d.removeBuildingParameter"
+           icon="icons/obj16/removeBuildingParameter.gif">
+     </image>
   </extension>
 </plugin>
