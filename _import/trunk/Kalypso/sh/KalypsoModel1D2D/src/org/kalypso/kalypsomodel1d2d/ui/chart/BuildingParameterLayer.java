@@ -1,14 +1,18 @@
 package org.kalypso.kalypsomodel1d2d.ui.chart;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
 import org.kalypso.chart.framework.model.data.IDataContainer;
 import org.kalypso.chart.framework.model.data.IDataRange;
@@ -18,14 +22,21 @@ import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypsodeegree.model.feature.Feature;
 
 public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDecimal> implements IDataContainer<BigDecimal, BigDecimal>
 {
-  private final TupleResult m_result;
+  private final TupleResult m_workResult;
 
   private final int m_domainComponent;
 
@@ -39,17 +50,23 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
 
   private EditInfo[] m_editInfos;
 
-  public BuildingParameterLayer( final IAxis<BigDecimal> domainAxis, final IAxis<BigDecimal> targetAxis, final TupleResult result, final String domainComponentId, final String valueComponentId, final String classComponentId )
+  private final Feature m_obsFeature;
+
+  public BuildingParameterLayer( final IAxis<BigDecimal> domainAxis, final IAxis<BigDecimal> targetAxis, final Feature obsFeature, final String domainComponentId, final String valueComponentId, final String classComponentId )
   {
     super( domainAxis, targetAxis );
+
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
+    final TupleResult result = obs.getResult();
 
     m_domainComponent = result.indexOfComponent( domainComponentId );
     m_valueComponent = result.indexOfComponent( valueComponentId );
     m_classComponent = result.indexOfComponent( classComponentId );
+    m_workResult = cloneSorted( result );
 
     // REMARK: at the moment, we do not react to changes in the result; if we do later, this must be done every time the
     // result is changed
-    m_result = cloneSorted( result );
+    m_obsFeature = obsFeature;
 
     setDataContainer( this );
   }
@@ -112,7 +129,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     BigDecimal lastClass = null;
     final List<Point> path = new ArrayList<Point>();
     final List<EditInfo> editInfos = new ArrayList<EditInfo>();
-    for( final IRecord record : m_result )
+    for( final IRecord record : m_workResult )
     {
       final BigDecimal classValue = (BigDecimal) record.getValue( m_classComponent );
       final BigDecimal domainValue = (BigDecimal) record.getValue( m_domainComponent );
@@ -204,7 +221,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     BigDecimal min = new BigDecimal( Double.MAX_VALUE );
     BigDecimal max = new BigDecimal( Double.MIN_VALUE );
 
-    for( final IRecord record : m_result )
+    for( final IRecord record : m_workResult )
     {
       final BigDecimal value = (BigDecimal) record.getValue( component );
       max = max.max( value );
@@ -243,13 +260,51 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
       return;
 
     final IRecord record = (IRecord) info.data;
-    m_result.remove( record );
+    m_workResult.remove( record );
 
     // TODO
-    // - change real tuple result
     // - redraw via tuple result mechanism
 
     getEventHandler().fireLayerContentChanged( this );
+  }
+
+  /**
+   * Writes the cloned result back into the real result.
+   */
+  public void saveData( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
+  {
+    monitor.beginTask( "Speichere Parameter", 3 );
+
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( m_obsFeature );
+    final TupleResult result = obs.getResult();
+    result.clear();
+
+    ProgressUtilities.worked( monitor, 1 );
+
+    final int compCount = result.getComponents().length;
+    for( final IRecord record : m_workResult )
+    {
+      final IRecord newRecord = result.createRecord();
+
+      for( int i = 0; i < compCount; i++ )
+        newRecord.setValue( i, record.getValue( i ) );
+
+      result.add( newRecord );
+    }
+
+    ProgressUtilities.worked( monitor, 1 );
+
+    final FeatureChange[] changes = ObservationFeatureFactory.toFeatureAsChanges( obs, m_obsFeature );
+    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_obsFeature.getWorkspace(), changes );
+
+    // HACK: we post the command directly to the flow-model.... it would be of course much better to get the commandable
+    // workspace from outside...
+
+    KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class, command );
+
+    ProgressUtilities.worked( monitor, 1 );
+
+    ProgressUtilities.done( monitor );
   }
 
 }

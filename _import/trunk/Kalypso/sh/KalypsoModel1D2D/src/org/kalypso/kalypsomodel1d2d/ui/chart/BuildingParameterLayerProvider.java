@@ -51,9 +51,6 @@ import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.model.wspm.ui.featureview.ChartDataProvider;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.ksp.chart.factory.LayerType;
@@ -99,9 +96,6 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
     if( feature == null )
       return null;
 
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
-    final TupleResult result = obs.getResult();
-
     final String domainAxisId = lt.getMapper().getDomainAxisRef().getRef();
     final String valueAxisId = lt.getMapper().getTargetAxisRef().getRef();
 
@@ -113,7 +107,7 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
 
     final IAxis<BigDecimal> valAxis = (IAxis<BigDecimal>) chartModel.getMapperRegistry().getAxis( valueAxisId );
 
-    final BuildingParameterLayer icl = new BuildingParameterLayer( domAxis, valAxis, result, domainComponentId, valueComponentId, classComponentId );
+    final BuildingParameterLayer icl = new BuildingParameterLayer( domAxis, valAxis, feature, domainComponentId, valueComponentId, classComponentId );
 
     icl.setVisible( lt.getVisible() );
     return icl;

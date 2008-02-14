@@ -69,12 +69,11 @@ public class RemoveBuildingParameterMouseHandler implements IChartDragHandler
    */
   public void mouseDoubleClick( final MouseEvent e )
   {
-    final BuildingParameterLayer layer = findLayer();
+    final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
     final EditInfo info = layer.getEditInfo( new Point( e.x, e.y ) );
 
     // TODO: move into layer or generalize
     layer.edit( info );
-
   }
 
   /**
@@ -100,7 +99,7 @@ public class RemoveBuildingParameterMouseHandler implements IChartDragHandler
     final Point point = new Point( e.x, e.y );
 
     // Show tooltip
-    final BuildingParameterLayer layer = findLayer();
+    final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
     final EditInfo info = layer.getEditInfo( point );
     // HACK/TODO: this is ugly and should not be necessary: there should be another mechanism, so that mouse handler can
     // draw tooltips (or other things) on the map.
@@ -118,9 +117,8 @@ public class RemoveBuildingParameterMouseHandler implements IChartDragHandler
 
   }
 
-  private BuildingParameterLayer findLayer( )
+  public static BuildingParameterLayer findLayer( final IChartModel model )
   {
-    final IChartModel model = m_chartComposite.getModel();
     final ILayerManager layerManager = model.getLayerManager();
     final IChartLayer< ? , ? >[] layers = layerManager.getLayers();
     for( final IChartLayer< ? , ? > chartLayer : layers )
