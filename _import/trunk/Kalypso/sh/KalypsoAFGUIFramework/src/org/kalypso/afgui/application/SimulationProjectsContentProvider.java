@@ -54,6 +54,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.intro.config.IIntroContentProviderSite;
@@ -105,9 +106,13 @@ public abstract class SimulationProjectsContentProvider implements IIntroXHTMLCo
 
   public void handleResourceChanged( )
   {
-    // TODO: sometimes causes swt-exception: widget disposed
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    // Do not refresh if workbench is closing as welcome page is disposed in that case
+    if( workbench.isClosing() )
+      return;
+
     final IIntroContentProviderSite site = m_site;
-    PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
+    workbench.getDisplay().asyncExec( new Runnable()
     {
       public void run( )
       {
