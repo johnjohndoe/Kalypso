@@ -264,7 +264,7 @@ public class NodeResultHelper
 
   public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final CS_CoordinateSystem crs ) throws Exception, GM_Exception
   {
-    final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
+    final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel, null );
     IProfil cutProfile = null;
 
     if( points != null )
