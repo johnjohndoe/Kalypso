@@ -88,13 +88,13 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
   private final Map<String, Integer> m_commands;
 
-  public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final URL context, final Map<String, Integer> commands )
+  public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final Map<String, Integer> commands )
   {
     super( feature, ftp );
     m_ccl = ccl;
     m_commands = commands;
 
-    m_chartTypes = m_ccl.getCharts();
+    m_chartTypes = chartTypes;
     m_context = context;
   }
 

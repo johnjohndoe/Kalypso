@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.ksp.chart.factory.ChartType;
 
 /**
  * A feature control which shows a chart. The chart configuration comes from the parameters of the extension, its
@@ -80,6 +81,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
     final String configurationUrn = arguments.getProperty( "configuration", null );
+    final String chartName = arguments.getProperty( "chart", null );
     final String featureKeyName = arguments.getProperty( "featureKeyName", null );
     final String cmdIds = arguments.getProperty( "commands", "" );
     final String cmdStyles = arguments.getProperty( "commandStyles", "" );
@@ -120,13 +122,26 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
 
       final ChartConfigurationLoader ccl = new ChartConfigurationLoader( configUrl );
 
+      final ChartType[] chartTypes;
+      if( chartName == null )
+        chartTypes = ccl.getCharts();
+      else
+      {
+        chartTypes = new ChartType[1];
+        for( final ChartType chartType : ccl.getCharts() )
+        {
+          if( chartType.getId().equals( chartName ) )
+            chartTypes[0] = chartType;
+        }
+      }
+
       final Object property = feature.getProperty( pt );
       final Feature childFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
       final Feature chartFeature = childFeature == null ? feature : childFeature;
 
       ChartDataProvider.FEATURE_MAP.put( featureKeyName, chartFeature );
 
-      return new ChartFeatureControl( chartFeature, pt, ccl, configUrl, commands );
+      return new ChartFeatureControl( chartFeature, pt, ccl, chartTypes, configUrl, commands );
     }
     catch( final Throwable e )
     {
