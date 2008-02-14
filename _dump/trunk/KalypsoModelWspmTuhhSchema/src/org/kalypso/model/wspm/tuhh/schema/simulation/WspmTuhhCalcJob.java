@@ -286,13 +286,18 @@ public class WspmTuhhCalcJob implements ISimulation
             return;
 
           final LengthSectionProcessor[] processedLengthSections = lsProcessor.getProcessedLengthSections();
-          if( processedLengthSections.length != 1 )
+          if( processedLengthSections.length < 1 )
           {
-            log.log( true, "Fehler bei der Ergebnisauswertung. Bitte prüfen Sie die Ergebnis-Logs.", new Object[0] );
-            monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der Ergebnisauswertung. Bitte prüfen Sie die Ergebnis-Logs." );
+            log.log( true, "Fehler bei der Ergebnisauswertung. Bitte prüfen Sie die Ergebnis-Logs. ", new Object[0] );
+            monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der Ergebnisauswertung. Bitte prüfen Sie die Ergebnis-Logs. " );
             return;
           }
-
+          else if( processedLengthSections.length > 1 )
+          {
+            log.log( true, "Fehler bei der Ergebnisauswertung. Bitte prüfen Sie die Ergebnis-Logs. Eventuell existieren Stationsrücksprünge entlang des Gewässers (z.B. infolge interpolierter Brückenprofile).", new Object[0] );
+            monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der Ergebnisauswertung. Bitte prüfen Sie die Ergebnis-Logs. Eventuell existieren Stationsrücksprünge entlang des Gewässers (z.B. infolge interpolierter Brückenprofile)." );
+            return;
+          }
           final LengthSectionProcessor processedLS = processedLengthSections[0];
 
           final File gmlFile = processedLS.getGmlFile();
