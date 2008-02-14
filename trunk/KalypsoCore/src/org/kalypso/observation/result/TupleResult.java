@@ -634,7 +634,7 @@ public class TupleResult implements List<IRecord>
   /**
    * @see java.util.List#indexOf(java.lang.Object)
    */
-  public int indexOf( Object o )
+  public int indexOf( final Object o )
   {
     if( o instanceof IRecord )
     {
