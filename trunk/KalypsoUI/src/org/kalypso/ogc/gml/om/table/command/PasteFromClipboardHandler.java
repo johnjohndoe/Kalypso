@@ -50,12 +50,22 @@ import java.util.TimeZone;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlHandlerProvider;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.gml.om.table.LastLineContentProvider;
+import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
+import org.kalypso.template.featureview.ColumnDescriptor;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
@@ -75,18 +85,42 @@ public class PasteFromClipboardHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+
     try
     {
       final String trstring = (String) (Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor ));
       // if Cipboard content is not text or that content is empty, just ignore it
       if( trstring == null || trstring.trim().length() == 0 )
+      {
+        MessageDialog.openError( shell, "Error", "No suitable data on clipboard available." );
         return null;
+      }
       final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
       if( tupleResultViewer == null )
-        throw new ExecutionException( "No tuple result viewer available" );
-      
-      tupleResultViewer.getContentProvider();
-      
+      {
+        MessageDialog.openError( shell, "Error", "No tuple result viewer available." );
+        return null;
+      }
+      final IContentProvider contentProvider = tupleResultViewer.getContentProvider();
+      TupleResultContentProvider resultContentProvider = null;
+      if( contentProvider instanceof TupleResultContentProvider )
+        resultContentProvider = (TupleResultContentProvider) contentProvider;
+      else if( contentProvider instanceof LastLineContentProvider )
+      {
+        final IStructuredContentProvider wrappedProvider = ((LastLineContentProvider) contentProvider).getWrappedProvider();
+        if( wrappedProvider instanceof TupleResultContentProvider )
+          resultContentProvider = (TupleResultContentProvider) wrappedProvider;
+      }
+      if( resultContentProvider == null )
+        return null;
+      final IComponentUiHandlerProvider factory = resultContentProvider.getFactory();
+      if( !(factory instanceof TupleResultFeatureControlHandlerProvider) )
+        return null;
+      final TupleResultFeatureControlHandlerProvider controlHandlerProvider = (TupleResultFeatureControlHandlerProvider) factory;
+      final ColumnDescriptor[] descriptors = controlHandlerProvider.getDescriptors();
+
       final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
 
       tupleResult.clear();
@@ -94,37 +128,66 @@ public class PasteFromClipboardHandler extends AbstractHandler
       final XsdBaseTypeHandler< ? >[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
 
       final StringTokenizer st1 = new StringTokenizer( trstring, "\n" );
+      int ordinalNumber = 0;
       while( st1.hasMoreTokens() )
       {
-        final StringTokenizer st2 = new StringTokenizer( st1.nextToken(), "\t" );
+        final String nextToken = st1.nextToken();
+        if( nextToken.startsWith( "Zeile hinzufügen" ) )
+          break;
+        final StringTokenizer st2 = new StringTokenizer( nextToken, "\t" );
         final IRecord record = tupleResult.createRecord();
-        for( int i = 0; st2.hasMoreTokens(); i++ )
+        for( int i = 0; i < components.length; i++ )
         {
+          int descriptorIndex = -1;
           final XsdBaseTypeHandler< ? > handler = typeHandlers[i];
-          final String token = st2.nextToken();
-          try
+          for( int j = 0; j < descriptors.length; j++ )
           {
-            if( handler instanceof XsdBaseTypeHandlerString )
+            if( components[i].getId().equals( descriptors[j].getComponent() ) )
             {
-              final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-              record.setValue( i, myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ) );
+              descriptorIndex = j;
+              break;
             }
-            else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
+          }
+          if( descriptorIndex < 0 )
+          {
+            if( components[i].getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) )
             {
-// final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
-              final SimpleDateFormat dateFormat = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
-// final GregorianCalendar calendar = new GregorianCalendar(KalypsoGisPlugin.getDefault().getDisplayTimeZone());
-              final GregorianCalendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "GMT+1" ) );
-              calendar.setTime( dateFormat.parse( token ) );
-              record.setValue( i, new XMLGregorianCalendarImpl( calendar ) );
+              record.setValue( i, handler.convertToJavaValue( new Integer( ++ordinalNumber ).toString() ) );
             }
             else
-              record.setValue( i, handler.convertToJavaValue( token ) );
+              record.setValue( i, components[i].getDefaultValue() );
           }
-          catch( final Exception e )
+          else
           {
-            e.printStackTrace();
-            record.setValue( i, components[i].getDefaultValue() );
+            final String token = st2.nextToken();
+            try
+            {
+              if( handler instanceof XsdBaseTypeHandlerString )
+              {
+                final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
+                record.setValue( i, myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ) );
+              }
+              else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
+              {
+                final SimpleDateFormat dateFormat = new SimpleDateFormat( descriptors[descriptorIndex].getParseFormat() );
+                final GregorianCalendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "GMT+1" ) );
+                calendar.setTime( dateFormat.parse( token ) );
+                record.setValue( i, new XMLGregorianCalendarImpl( calendar ) );
+              }
+              else if( components[i].getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) )
+              {
+                record.setValue( i, handler.convertToJavaValue( token ) );
+                // record.setValue( i, new Integer(++ordinalNumber) );
+              }
+              else
+                record.setValue( i, handler.convertToJavaValue( token ) );
+            }
+            catch( final Exception e )
+            {
+              e.printStackTrace();
+              record.setValue( i, components[i].getDefaultValue() );
+            }
+
           }
         }
         tupleResult.add( record );
@@ -134,11 +197,6 @@ public class PasteFromClipboardHandler extends AbstractHandler
     {
       ex.printStackTrace();
     }
-    finally
-    {
-// tupleResult.
-    }
     return null;
   }
-
 }

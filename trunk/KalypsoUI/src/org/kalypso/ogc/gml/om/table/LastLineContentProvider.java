@@ -95,4 +95,9 @@ public class LastLineContentProvider implements IStructuredContentProvider
     m_provider.inputChanged( viewer, oldInput, newInput );
   }
 
+  public IStructuredContentProvider getWrappedProvider( )
+  {
+    return m_provider;
+  }
+
 }
