@@ -115,4 +115,9 @@ public class TupleResultFeatureControlHandlerProvider implements IComponentUiHan
     return result;
   }
 
+  public ColumnDescriptor[] getDescriptors( )
+  {
+    return m_descriptors;
+  }
+
 }

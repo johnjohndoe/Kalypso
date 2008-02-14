@@ -311,4 +311,9 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     final String property = m_tableViewer.getProperty( columnIndex );
     return getHandler( property );
   }
+
+  public IComponentUiHandlerProvider getFactory( )
+  {
+    return m_factory;
+  }
 }
