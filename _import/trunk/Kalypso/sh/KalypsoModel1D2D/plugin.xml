@@ -904,6 +904,11 @@
            id="org.kalypso.model1d2d.removeBuildingParameter"
            name="Parameter löschen">
      </command>
+     <command
+           categoryId="org.kalypso.chart.ui.commands.category"
+           id="org.kalypso.model1d2d.saveBuildingParameter"
+           name="geänderter Parameter übernehmen">
+     </command>
   </extension>
   <extension
         name="chartHandlers"
@@ -912,12 +917,20 @@
            class="org.kalypso.kalypsomodel1d2d.ui.chart.RemoveBuildingParameterHandler"
            commandId="org.kalypso.model1d2d.removeBuildingParameter">
      </handler>
+     <handler
+           class="org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler"
+           commandId="org.kalypso.model1d2d.saveBuildingParameter">
+     </handler>
   </extension>
   <extension
         point="org.eclipse.ui.commandImages">
      <image
            commandId="org.kalypso.model1d2d.removeBuildingParameter"
            icon="icons/obj16/removeBuildingParameter.gif">
+     </image>
+     <image
+           commandId="org.kalypso.model1d2d.saveBuildingParameter"
+           icon="icons/obj16/saveBuildingParameter.gif">
      </image>
   </extension>
 </plugin>
