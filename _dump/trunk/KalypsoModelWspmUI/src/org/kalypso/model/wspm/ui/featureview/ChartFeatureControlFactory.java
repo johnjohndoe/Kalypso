@@ -135,7 +135,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
         }
       }
 
-      final Object property = feature.getProperty( pt );
+      final Object property = pt == null ? null : feature.getProperty( pt );
       final Feature childFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
       final Feature chartFeature = childFeature == null ? feature : childFeature;
 
