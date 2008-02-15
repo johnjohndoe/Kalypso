@@ -48,7 +48,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
@@ -139,8 +138,7 @@ public class FloodModelHelper
     final StyledLayerType wspLayer = new StyledLayerType();
 
     wspLayer.setName( "Fließtiefen (" + event.getName() + ")" );
-    wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/"
-        + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() );
+    wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/" + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() );
     wspLayer.setLinktype( "gml" );
     wspLayer.setType( "simple" );
     wspLayer.setVisible( true );
@@ -187,13 +185,15 @@ public class FloodModelHelper
       {
         /* Delete underlying grid grid file */
         final IStatus status = CoverageManagmentHelper.deleteGridFile( coverageToDelete );
-        ErrorDialog.openError( shell, "Löschen von Raster-Daten fehlgeschlagen", "Rasterdatei (" + coverageToDelete.getName() + ") konnte nicht gelöscht werden.", status );
+        // ErrorDialog.openError( shell, "Löschen von Raster-Daten fehlgeschlagen", "Rasterdatei (" +
+        // coverageToDelete.getName() + ") konnte nicht gelöscht werden.", status );
 
         if( status == Status.OK_STATUS )
         {
           /* Delete coverage from collection */
-//          final Feature parentFeature = resultCoverages.getWrappedFeature();
-//          final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+          // final Feature parentFeature = resultCoverages.getWrappedFeature();
+          // final IRelationType pt = (IRelationType) parentFeature.getFeatureType().getProperty(
+          // ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
           final Feature coverageFeature = coverageToDelete.getFeature();
 
           final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
@@ -203,7 +203,8 @@ public class FloodModelHelper
           // TODO: use a flag if the model should be getting save
           dataProvider.saveModel( IFloodModel.class, new NullProgressMonitor() );
         }
-        return status;
+        else
+          return status;
       }
       return Status.OK_STATUS;
     }
