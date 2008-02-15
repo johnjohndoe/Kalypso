@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.themes;
 
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -54,6 +53,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
@@ -61,8 +61,8 @@ import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
-import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider;
+import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.Debug;
@@ -90,7 +90,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * This variable stores the legend, if any.
    */
-  private Image m_legend;
+  private org.eclipse.swt.graphics.Image m_legend;
 
   /**
    * This variable stores the max envelope of layer on WMS (local SRS).
@@ -241,7 +241,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     /* Dispose the legend. */
     if( m_legend != null )
     {
-      m_legend.flush();
+      m_legend.dispose();
       m_legend = null;
     }
 
@@ -340,26 +340,27 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(java.awt.Font, java.lang.String)
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( Font font, String layerName ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException
   {
     if( m_provider == null )
-      return null;
+      return super.getLegendGraphic( font );
 
     if( !(m_provider instanceof IKalypsoLegendProvider) )
-      return null;
+      return super.getLegendGraphic( font );
 
     if( m_legend == null )
     {
       IKalypsoLegendProvider legendProvider = (IKalypsoLegendProvider) m_provider;
-      Image legend = legendProvider.getLegendGraphic( font, layerName );
-
-      m_legend = legend;
+      m_legend = legendProvider.getLegendGraphic( font );
     }
 
-    return m_legend;
+    if( m_legend != null )
+      return m_legend;
+
+    return super.getLegendGraphic( font );
   }
 
   /**

@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.net.URL;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -51,11 +49,13 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
-import org.kalypso.ogc.gml.wms.provider.CascadingThemeLegendProvider;
+import org.kalypso.ogc.gml.wms.provider.legends.cascading.CascadingThemeLegendProvider;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -527,13 +527,13 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(java.awt.Font, java.lang.String)
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( Font font, String layerName ) throws CoreException
+  public Image getLegendGraphic( Font font ) throws CoreException
   {
     CascadingThemeLegendProvider provider = new CascadingThemeLegendProvider( this );
 
-    return provider.getLegendGraphic( font, layerName );
+    return provider.getLegendGraphic( font );
   }
 }

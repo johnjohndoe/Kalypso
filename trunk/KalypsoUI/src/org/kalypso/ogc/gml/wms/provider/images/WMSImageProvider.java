@@ -38,13 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.wms.provider;
+package org.kalypso.ogc.gml.wms.provider.images;
 
 import java.awt.Image;
-import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
-
-import javax.imageio.ImageIO;
 
 import org.deegree.ogcwebservices.OGCWebServiceException;
 import org.deegree.ogcwebservices.OGCWebServiceRequest;
@@ -58,6 +56,7 @@ import org.deegree.ogcwebservices.wms.operation.GetMapResult;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
@@ -171,7 +170,7 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
    * @see org.kalypso.ogc.gml.wms.provider.AbstractDeegreeImageProvider#loadLegendGraphic(java.lang.String)
    */
   @Override
-  protected Image loadLegendGraphic( String layerName ) throws CoreException
+  protected org.eclipse.swt.graphics.Image loadLegendGraphic( String layerName ) throws CoreException
   {
     /* We need a remote WMS. */
     if( getWms() == null )
@@ -224,20 +223,17 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
     /* Get the real URL. */
     URL onlineResource = legendURL.getOnlineResource();
 
-    /* The result image. */
-    BufferedImage result = null;
-
     try
     {
-      /* Load the image. */
-      result = ImageIO.read( onlineResource );
+      /* The result image. */
+      org.eclipse.swt.graphics.Image result = new org.eclipse.swt.graphics.Image( Display.getCurrent(), onlineResource.openStream() );
+
+      return result;
     }
-    catch( Exception e )
+    catch( IOException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
-
-    return result;
   }
 
   /**

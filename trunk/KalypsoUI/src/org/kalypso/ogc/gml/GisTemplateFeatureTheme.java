@@ -40,9 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -56,6 +54,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -68,7 +68,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.wms.provider.FeatureThemeLegendProvider;
+import org.kalypso.ogc.gml.wms.provider.legends.feature.FeatureThemeLegendProvider;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
@@ -720,17 +720,17 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(java.awt.Font, java.lang.String)
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( Font font, String layerName ) throws CoreException
+  public Image getLegendGraphic( Font font ) throws CoreException
   {
     if( m_theme != null )
     {
       FeatureThemeLegendProvider provider = new FeatureThemeLegendProvider( m_theme );
-      return provider.getLegendGraphic( font, layerName );
+      return provider.getLegendGraphic( font );
     }
 
-    return super.getLegendGraphic( font, layerName );
+    return super.getLegendGraphic( font );
   }
 }

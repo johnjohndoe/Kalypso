@@ -40,16 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.properties;
 
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
@@ -58,7 +54,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -98,7 +93,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     try
     {
       /* Get the legend graphic. */
-      legendGraphic = theme.getLegendGraphic( new Font( "Arial", Font.PLAIN, 10 ), theme.getName() );
+      legendGraphic = theme.getLegendGraphic( new Font( composite.getDisplay(), "Arial", 10, SWT.NORMAL ) );
     }
     catch( CoreException e )
     {
@@ -109,26 +104,25 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     if( legendGraphic == null )
       return createError( composite, "Keine Legende verfügbar." );
 
-    /* Convert to swt image date. */
-    ImageData swtLegendData = ImageConverter.convertToSWT( (BufferedImage) legendGraphic );
-    if( swtLegendData == null )
-      return createError( composite, "Keine Legende verfügbar." );
-
-    /* Create swt image. */
-    org.eclipse.swt.graphics.Image swtLegend = new org.eclipse.swt.graphics.Image( getShell().getDisplay(), swtLegendData );
+    /* Create a group. */
+    Composite group = new Composite( composite, SWT.BORDER );
+    group.setLayout( new GridLayout( 1, false ) );
+    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    group.setBackground( group.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
     /* Create a scrolled composite. */
-    ScrolledComposite sComposite = new ScrolledComposite( composite, SWT.H_SCROLL | SWT.V_SCROLL );
-    sComposite.setLayout( new FillLayout() );
+    ScrolledComposite sComposite = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL );
+    sComposite.setLayout( new GridLayout( 1, false ) );
     GridData sCompData = new GridData( SWT.FILL, SWT.FILL, true, true );
     sCompData.widthHint = 300;
     sCompData.heightHint = 300;
     sComposite.setLayoutData( sCompData );
+    sComposite.setBackground( sComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
     /* And finally display it. */
     Canvas canvas = new Canvas( sComposite, SWT.NONE );
-    canvas.setSize( swtLegend.getBounds().width, swtLegend.getBounds().height );
-    canvas.setBackgroundImage( swtLegend );
+    canvas.setSize( legendGraphic.getBounds().width, legendGraphic.getBounds().height );
+    canvas.setBackgroundImage( legendGraphic );
 
     sComposite.setContent( canvas );
 

@@ -38,20 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.wms.provider;
+package org.kalypso.ogc.gml.wms.provider.legends.feature;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.outline.GisMapOutlineContentProvider;
 import org.kalypso.ogc.gml.outline.GisMapOutlineLabelProvider;
+import org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider;
 
 /**
  * This class provides the legend for a feature theme.
@@ -63,7 +63,7 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
   /**
    * The border, left free in the image.
    */
-  private static int BORDER = 15;
+  private static int BORDER = 0;
 
   /**
    * The size of the icon.
@@ -89,9 +89,9 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
   }
 
   /**
-   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(java.awt.Font, java.lang.String)
+   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
-  public Image getLegendGraphic( Font font, String layerName )
+  public Image getLegendGraphic( Font font )
   {
     /* No theme, no legend. */
     if( m_theme == null )
@@ -100,50 +100,47 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
     /* All elements in this theme. */
     ArrayList<LegendElement> elements = collectElements( font );
 
+    if( elements.size() == 0 )
+      return null;
+
     /* Compute the size for the image. */
-    Rectangle2D computeSize = computeSize( elements );
+    Rectangle computeSize = computeSize( elements );
 
     /* Create the image. */
-    BufferedImage image = new BufferedImage( (int) computeSize.getWidth(), (int) computeSize.getHeight(), BufferedImage.TYPE_INT_RGB );
+    Image image = new Image( Display.getCurrent(), computeSize.width, computeSize.height );
 
-    /* Get the graphic context. */
-    Graphics graphics = image.getGraphics();
+    /* Need a graphical context. */
+    GC gc = new GC( image );
+
+    /* Set the font. */
+    gc.setFont( font );
 
     /* Change the color. */
-    graphics.setColor( Color.WHITE );
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
 
     /* Draw on the context. */
-    graphics.fillRect( 0, 0, (int) computeSize.getWidth(), (int) computeSize.getHeight() );
+    gc.fillRectangle( 0, 0, computeSize.width, computeSize.height );
 
     /* Change the color. */
-    graphics.setColor( Color.BLACK );
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
 
-    double heightSoFar = BORDER;
+    int heightSoFar = BORDER;
     for( int i = 0; i < elements.size(); i++ )
     {
       /* Get the legend element. */
       LegendElement legendElement = elements.get( i );
 
       /* Get the icon. */
-      org.eclipse.swt.graphics.Image swtImage = legendElement.getImage();
-
-      /* Convert to a AWT-image. */
-      BufferedImage awtImage = ImageConverter.convertToAWT( swtImage.getImageData() );
-
-      /* get rid of the SWT-image. */
-      swtImage.dispose();
+      Image icon = legendElement.getImage();
 
       /* Draw the icon. */
-      graphics.drawImage( awtImage, BORDER + legendElement.getLevel() * (ICON_SIZE + GAP), (int) heightSoFar, ICON_SIZE, ICON_SIZE, null );
-
-      /* Add the height of the element, because the awt-drawing of text starts from bottom of the text. */
-      heightSoFar = heightSoFar + legendElement.getSize().getHeight();
+      gc.drawImage( icon, BORDER + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar );
 
       /* Draw the text. */
-      graphics.drawString( legendElement.getText(), BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), (int) heightSoFar );
+      gc.drawString( legendElement.getText(), BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar );
 
-      /* Increase by gap. */
-      heightSoFar = heightSoFar + GAP;
+      /* Add the height of the element and increase by gap. */
+      heightSoFar = heightSoFar + legendElement.getSize().height + GAP;
     }
 
     /* Return the image. */
@@ -210,16 +207,16 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
    * @param elements
    *            The list of elements.
    */
-  private Rectangle2D computeSize( ArrayList<LegendElement> elements )
+  private Rectangle computeSize( ArrayList<LegendElement> elements )
   {
     /* Start width. */
-    double width = 2 * BORDER;
+    int width = 2 * BORDER;
 
     /* Start height. */
-    double height = 2 * BORDER;
+    int height = 2 * BORDER;
 
     /* Memory for storing the longest width so far temporarly. */
-    double temp = 0;
+    int temp = 0;
 
     /* Memory for the highest level. */
     int amount = 0;
@@ -228,22 +225,25 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
     for( LegendElement legendElement : elements )
     {
       /* Get the size of the element. */
-      Rectangle2D size = legendElement.getSize();
+      Rectangle size = legendElement.getSize();
 
       /* For the longest width. */
-      if( size.getWidth() > temp )
-        temp = size.getWidth();
+      if( size.width > temp )
+        temp = size.width;
 
       if( legendElement.getLevel() > amount )
         amount = legendElement.getLevel();
 
       /* Add the height an a small space. */
-      height = height + size.getHeight() + GAP;
+      height = height + size.height + GAP;
     }
 
     /* Store the longest width. */
     width = width + temp + amount * (ICON_SIZE + GAP);
 
-    return new Rectangle2D.Double( 0, 0, width, height );
+    /* After the last image, there is no need for a gap. */
+    height = height - GAP;
+
+    return new Rectangle( 0, 0, width, height );
   }
 }

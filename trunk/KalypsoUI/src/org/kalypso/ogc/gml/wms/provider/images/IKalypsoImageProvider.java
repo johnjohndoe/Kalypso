@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.wms.provider;
+package org.kalypso.ogc.gml.wms.provider.images;
 
 import java.awt.Image;
 

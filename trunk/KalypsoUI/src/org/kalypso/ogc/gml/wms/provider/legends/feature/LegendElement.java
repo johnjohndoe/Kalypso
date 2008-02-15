@@ -38,14 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.wms.provider;
-
-import java.awt.Font;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
+package org.kalypso.ogc.gml.wms.provider.legends.feature;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * This class wraps an object for the legend graphic.
@@ -94,7 +92,7 @@ public class LegendElement
    * @param object
    *            The object of this legend element.
    */
-  public LegendElement( Font font, int level, Object object, LabelProvider labelProvider )
+  public LegendElement( org.eclipse.swt.graphics.Font font, int level, Object object, LabelProvider labelProvider )
   {
     m_font = font;
     m_level = level;
@@ -107,22 +105,20 @@ public class LegendElement
    * 
    * @return The dimension of this element.
    */
-  public Rectangle2D getSize( )
+  public Rectangle getSize( )
   {
-    FontRenderContext context = new FontRenderContext( m_font.getTransform(), true, false );
-
-    Rectangle2D bounds = m_font.getStringBounds( getText(), context );
+    int textWidth = 300;
+    int textHeight = 10;
 
     /* Width. */
-    double width = bounds.getWidth() + (ICON_SIZE + GAP) + m_level * (ICON_SIZE + GAP);
+    int width = textWidth + (ICON_SIZE + GAP) + m_level * (ICON_SIZE + GAP);
 
     /* Height. */
-    double height = ICON_SIZE;
-    double temp = bounds.getHeight();
-    if( temp > ICON_SIZE )
-      height = temp;
+    int height = ICON_SIZE;
+    if( textHeight > ICON_SIZE )
+      height = textHeight;
 
-    return new Rectangle2D.Double( 0, 0, width, height );
+    return new Rectangle( 0, 0, width, height );
   }
 
   /**
