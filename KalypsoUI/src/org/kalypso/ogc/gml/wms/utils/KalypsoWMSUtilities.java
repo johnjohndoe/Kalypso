@@ -48,8 +48,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.wms.provider.WMSImageProvider;
+import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**

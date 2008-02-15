@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
-import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 
 /**

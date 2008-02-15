@@ -41,12 +41,30 @@
 package org.kalypso.ogc.gml.map.utilities;
 
 import java.awt.Point;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -202,4 +220,167 @@ public class MapUtilities
     return MapUtilities.calculateWorldDistance( mapPanel, reference, distancePx );
   }
 
+  /**
+   * This function returns the map scale from the given map panel.
+   * 
+   * @return The map scale.
+   */
+  public static double getMapScale( MapPanel mapPanel )
+  {
+    if( mapPanel == null )
+      return 0.0;
+
+    IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null )
+      return 0.0;
+
+    GM_Envelope extent = mapPanel.getBoundingBox();
+    int width = mapPanel.getWidth();
+    int height = mapPanel.getHeight();
+
+    return MapModellHelper.calcScale( mapModell, extent, width, height );
+  }
+
+  /**
+   * This function sets the map scale, if different from the given map panel.
+   * 
+   * @param scale
+   *            The new map scale.
+   */
+  public static void setMapScale( MapPanel mapPanel, double scale )
+  {
+    /* Get the current map scale. */
+    double mapScale = getMapScale( mapPanel );
+
+    /* If it is the same as before, don't change anything. */
+    if( mapScale == scale )
+      return;
+
+    /* Get the current extent. */
+    GM_Envelope extent = mapPanel.getBoundingBox();
+
+    /* Get the current displayed distance (meter). */
+    double width = extent.getWidth();
+    double height = extent.getHeight();
+
+    /* Calculate the center of the extent (coordinates). */
+    double x = extent.getMin().getX();
+    double y = extent.getMin().getY();
+    x = x + width / 2;
+    y = y + height / 2;
+
+    /* Calculate the new extent. */
+    double newWidth = (width / mapScale) * scale;
+    double newHeight = (height / mapScale) * scale;
+
+    double newX = x - newWidth / 2;
+    double newY = y - newHeight / 2;
+
+    /* Create the new extent. */
+    GM_Envelope newExtent = GeometryFactory.createGM_Envelope( newX, newY, newX + newWidth, newY + newHeight );
+
+    /* Set the new extent. */
+    mapPanel.setBoundingBox( newExtent );
+  }
+
+  /**
+   * This function exports the legend of the given themes to a file. It seems that it has to be run in an UI-Thread.
+   * 
+   * @param themes
+   *            The list of the themes.
+   * @param file
+   *            The file, where it should save to.
+   * @param format
+   *            The image format (for example: SWT.IMAGE_PNG).
+   * @param monitor
+   *            A progress monitor.
+   * @return A status, containing information about the process.
+   */
+  public static IStatus exportLegends( List<IKalypsoTheme> themes, File file, int format, IProgressMonitor monitor )
+  {
+    /* Monitor. */
+    monitor.beginTask( "Exporting legend", themes.size() * 100 + 100 );
+
+    try
+    {
+      /* This font will be used to generate the legend. */
+      Font font = new Font( Display.getCurrent(), "Arial", 10, SWT.NORMAL );
+
+      /* Memory for the legends. */
+      ArrayList<Image> legends = new ArrayList<Image>();
+
+      /* Collect the legends. */
+      for( int i = 0; i < themes.size(); i++ )
+      {
+        /* Get the theme. */
+        IKalypsoTheme theme = themes.get( i );
+
+        /* Monitor. */
+        monitor.subTask( "Creating legend from \"" + theme.getName() + "\" ..." );
+
+        /* Get the legend. */
+        Image legend = theme.getLegendGraphic( font );
+        if( legend != null )
+          legends.add( legend );
+
+        /* Monitor. */
+        monitor.worked( 100 );
+      }
+
+      /* No legends there. Perhaps all themes did not provide legends. */
+      if( legends.size() == 0 )
+        return StatusUtilities.createWarningStatus( "No legends available ..." );
+
+      /* Calculate the size. */
+      int width = 0;
+      int height = 0;
+
+      for( Image legend : legends )
+      {
+        Rectangle bounds = legend.getBounds();
+        if( bounds.width > width )
+          width = bounds.width;
+
+        height = height + bounds.height;
+      }
+
+      /* Monitor. */
+      monitor.worked( 25 );
+
+      /* Now create the new image. */
+      Image image = new Image( Display.getCurrent(), width, height );
+
+      /* Need a GC. */
+      GC gc = new GC( image );
+
+      /* Draw on it. */
+      int heightSoFar = 0;
+      for( Image legend : legends )
+      {
+        gc.drawImage( legend, 0, heightSoFar );
+        heightSoFar = heightSoFar + legend.getBounds().height;
+      }
+
+      /* Monitor. */
+      monitor.worked( 50 );
+
+      ImageLoader imageLoader = new ImageLoader();
+      imageLoader.data = new ImageData[] { image.getImageData() };
+      imageLoader.save( file.toString(), format );
+
+      /* Monitor. */
+      monitor.worked( 25 );
+
+      return Status.OK_STATUS;
+    }
+    catch( Exception e )
+    {
+      return StatusUtilities.statusFromThrowable( e );
+    }
+    finally
+    {
+      /* Monitor. */
+      monitor.done();
+    }
+  }
 }

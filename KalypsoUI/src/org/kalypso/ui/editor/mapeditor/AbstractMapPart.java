@@ -109,11 +109,12 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
 // (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
 // functionality (save when dirty, command target).
+@SuppressWarnings("restriction")
 public abstract class AbstractMapPart extends AbstractEditorPart implements IExportableObjectFactory, IMapPanelProvider
 {
   private final IFeatureSelectionManager m_selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-  private final StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
+  public final StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
 
   private final MapModellContextSwitcher m_mapModellContextSwitcher = new MapModellContextSwitcher();
 
@@ -133,7 +134,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private IResourceChangeListener m_resourceChangeListener;
 
-  private boolean m_saving;
+  protected boolean m_saving;
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
@@ -148,7 +149,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       /* Update the text. */
       display.asyncExec( new Runnable()
       {
-        @SuppressWarnings("restriction")
         public void run( )
         {
           m_statusBar.setText( message );

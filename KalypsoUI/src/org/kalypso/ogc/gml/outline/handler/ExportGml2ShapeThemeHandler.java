@@ -169,5 +169,4 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
 
     return Status.OK_STATUS;
   }
-
 }

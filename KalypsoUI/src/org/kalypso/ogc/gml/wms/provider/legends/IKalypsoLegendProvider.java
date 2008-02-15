@@ -38,12 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.wms.provider;
-
-import java.awt.Font;
-import java.awt.Image;
+package org.kalypso.ogc.gml.wms.provider.legends;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * This interface provides functions for providers that should return legends.
@@ -58,9 +57,7 @@ public interface IKalypsoLegendProvider
    * 
    * @param font
    *            This font will be used for the self created text of the legend.
-   * @param layerName
-   *            The name of the layer, for which the legend should be loaded.
    * @return An legend graphic or null.
    */
-  public Image getLegendGraphic( Font font, String layerName ) throws CoreException;
+  public Image getLegendGraphic( Font font ) throws CoreException;
 }

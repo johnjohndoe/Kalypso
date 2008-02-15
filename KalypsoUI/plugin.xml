@@ -805,6 +805,19 @@
            tooltip="Die Daten des Themas als ESRI Shape exportieren.">
      </action>
   </objectContribution>
+  <objectContribution
+        id="org.kalypso.objectclass.IKalypsoTheme"
+        objectClass="org.kalypso.ogc.gml.IKalypsoTheme">
+     <action
+           class="org.kalypso.ui.actions.ExportLegendAction"
+           icon="icons/full/obj16/exportGml2Shp.gif"
+           id="org.kalypso.ui.actions.ExportLegendAction"
+           label="Legenden..."
+           menubarPath="exports"
+           style="push"
+           tooltip="Die Legenden der Themen exportieren.">
+     </action>
+  </objectContribution>
 	</extension>
 	<extension id="resourceFilters" name="resourceFilters"
 		point="org.eclipse.ui.ide.resourceFilters">
@@ -1201,6 +1214,12 @@
             id="org.kalypso.ui.views.outline.GMLExport"
             name="GML Export">
       </command>
+      <command
+            categoryId="org.kalypso.ui.views.outline.category"
+            defaultHandler="org.kalypso.ogc.gml.outline.handler.LegendExportHandler"
+            id="org.kalypso.ui.views.outline.LegendExport"
+            name="Legenden Export">
+      </command>
       </extension>
  <extension
        point="org.eclipse.ui.viewActions">
@@ -1550,6 +1569,15 @@
         </toolbar>
      </menuContribution>
      <menuContribution
+           locationURI="toolbar:org.eclipse.ui.trim.status">
+        <toolbar
+              id="org.kalypso.ui.views.map.MapScaleStatusLineItem">
+           <control
+                 class="org.kalypso.ui.views.map.MapScaleStatusLineItem">
+           </control>
+        </toolbar>
+     </menuContribution>
+     <menuContribution
            locationURI="toolbar:org.kalypso.ui.repository.view.RepositoryExplorerPart">
         <separator
               name="manageContainers"
@@ -1665,6 +1693,26 @@
                        operator="and">
                     <instanceof
                           value="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
+                    </instanceof>
+                 </iterate>
+              </with>
+           </visibleWhen>
+        </command>
+        <command
+              commandId="org.kalypso.ui.views.outline.LegendExport"
+              icon="icons/full/obj16/exportGml2Shp.gif"
+              label="Legenden Export"
+              style="push"
+              tooltip="Die Legenden der selektierten Layer exportieren.">
+           <visibleWhen
+                 checkEnabled="false">
+              <with
+                    variable="selection">
+                 <iterate
+                       ifEmpty="false"
+                       operator="and">
+                    <instanceof
+                          value="org.kalypso.ogc.gml.IKalypsoTheme">
                     </instanceof>
                  </iterate>
               </with>

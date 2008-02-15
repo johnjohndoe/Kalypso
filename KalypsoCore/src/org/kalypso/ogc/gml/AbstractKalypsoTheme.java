@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.awt.Font;
-import java.awt.Image;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -60,6 +58,8 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -503,13 +503,46 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(java.awt.Font, java.lang.String)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
-  @SuppressWarnings("unused")
-  public Image getLegendGraphic( final Font font, final String layerName ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( org.eclipse.swt.graphics.Font font ) throws CoreException
   {
-    /* Nothing to do here, childs should implement. */
-    return null;
+    int BORDER = 0;
+    int ICON_SIZE = 16;
+    int GAP = 4;
+
+    int width = 300;
+    int height = 16;
+
+    /* Create the image. */
+    org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image( Display.getCurrent(), width, height );
+
+    /* Need a graphical context. */
+    GC gc = new GC( image );
+
+    /* Set the font. */
+    gc.setFont( font );
+
+    /* Change the color. */
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
+
+    /* Draw on the context. */
+    gc.fillRectangle( 0, 0, width, height );
+
+    /* Change the color. */
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+
+    /* Get the icon. */
+    ImageDescriptor descriptor = getImageDescriptor( this );
+
+    /* Draw the icon. */
+    org.eclipse.swt.graphics.Image icon = descriptor.createImage();
+    gc.drawImage( icon, BORDER, 0 );
+
+    /* Draw the text. */
+    gc.drawString( getLabel( this ), BORDER + ICON_SIZE + GAP, 0 );
+
+    return image;
   }
 
   /**

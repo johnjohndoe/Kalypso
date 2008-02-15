@@ -81,7 +81,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
-import org.kalypso.ogc.gml.wms.provider.WMSImageProvider;
+import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.Gismapview;

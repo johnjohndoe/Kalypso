@@ -40,14 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -154,9 +154,7 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
    * 
    * @param font
    *            This font will be used for the self created text of the legend.
-   * @param layerName
-   *            The name of the layer, for which the legend should be loaded.
    * @return An legend graphic or null.
    */
-  public Image getLegendGraphic( Font font, String layerName ) throws CoreException;
+  public Image getLegendGraphic( Font font ) throws CoreException;
 }

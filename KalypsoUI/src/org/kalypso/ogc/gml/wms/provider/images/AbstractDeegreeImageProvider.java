@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.wms.provider;
+package org.kalypso.ogc.gml.wms.provider.images;
 
-import java.awt.Font;
 import java.awt.Image;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -51,9 +50,11 @@ import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
+import org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
@@ -154,15 +155,15 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   }
 
   /**
-   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(java.awt.Font, java.lang.String)
+   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
-  public Image getLegendGraphic( Font font, String layerName ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
     initializeRemoteWMS();
 
     /* Load the legend. */
-    Image result = loadLegendGraphic( layerName );
+    org.eclipse.swt.graphics.Image result = loadLegendGraphic( "" );
 
     return result;
   }
@@ -280,7 +281,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    *            The name of the layer, for which the legend should be loaded.
    * @return The legend graphic.
    */
-  protected abstract Image loadLegendGraphic( String layerName ) throws CoreException;
+  protected abstract org.eclipse.swt.graphics.Image loadLegendGraphic( String layerName ) throws CoreException;
 
   /**
    * @see org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider#getFullExtent()

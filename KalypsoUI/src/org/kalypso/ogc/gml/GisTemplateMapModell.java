@@ -67,7 +67,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.Gismapview;
