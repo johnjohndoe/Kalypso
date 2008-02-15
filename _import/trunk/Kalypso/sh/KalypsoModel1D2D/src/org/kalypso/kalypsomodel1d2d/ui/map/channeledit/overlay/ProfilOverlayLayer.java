@@ -136,7 +136,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   protected void editProfil( final Point currentScreenPoint, final Object data ) // release
   {
     final EditData editData = (EditData) data;
-    IRecord[] points = m_profile.getPoints();
+    final IRecord[] points = m_profile.getPoints();
     final IRecord profilePoint = points[editData.getIndex()];
     final Point2D logPoint = screen2logical( currentScreenPoint );
     double width;
@@ -147,7 +147,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     double widthDifference = Double.NaN;
     Point nearestProfScreenPoint = null;
 
-    final IProfil origProfil = m_data.getProfilEventManager().getProfil();
+    final IProfil origProfil = m_data.getProfil();
 
     /* get / create components */
     final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( origProfil, IWspmConstants.POINT_PROPERTY_BREITE );
@@ -284,14 +284,14 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     tmpProfil.addPointProperty( rwComponent );
     tmpProfil.addPointProperty( hwComponent );
 
-    for( int i = 0; i < points.length; i++ )
+    for( final IRecord element : points )
     {
       final IRecord profilPoint = tmpProfil.createProfilPoint();
 
-      final double breite = (Double) points[i].getValue( breiteComponent );
-      final double hoehe = (Double) points[i].getValue( hoeheComponent );
-      final double rw = (Double) points[i].getValue( rwComponent );
-      final double hw = (Double) points[i].getValue( hwComponent );
+      final double breite = (Double) element.getValue( breiteComponent );
+      final double hoehe = (Double) element.getValue( hoeheComponent );
+      final double rw = (Double) element.getValue( rwComponent );
+      final double hw = (Double) element.getValue( hwComponent );
 
       profilPoint.setValue( breiteComponent, breite );
       profilPoint.setValue( hoeheComponent, hoehe );
@@ -373,7 +373,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       // FIRST
       final WIDTHORDER widthorder1 = CreateChannelData.WIDTHORDER.FIRST;
       final double width1 = newStartWidth;
-      final GM_Point point1 = WspmProfileHelper.getGeoPosition( width1, m_data.getProfilEventManager().getProfil() );
+      final GM_Point point1 = WspmProfileHelper.getGeoPosition( width1, m_data.getProfil() );
 
       /* update the first intersection point */
       currentSegment.setIntersPoint( point1, prof, widthorder1, width1 );
@@ -383,7 +383,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       // LAST
       final WIDTHORDER widthorder2 = CreateChannelData.WIDTHORDER.LAST;
       final double width2 = newEndWidth;
-      final GM_Point point2 = WspmProfileHelper.getGeoPosition( width2, m_data.getProfilEventManager().getProfil() );
+      final GM_Point point2 = WspmProfileHelper.getGeoPosition( width2, m_data.getProfil() );
 
       /* update the last intersection point */
       currentSegment.setIntersPoint( point2, prof, widthorder2, width2 );
@@ -404,7 +404,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     {
       widthorder = CreateChannelData.WIDTHORDER.FIRST;
       width = newStartWidth;
-      point = WspmProfileHelper.getGeoPosition( width, m_data.getProfilEventManager().getProfil() );
+      point = WspmProfileHelper.getGeoPosition( width, m_data.getProfil() );
 
       /* update the last intersection point */
       currentSegment.setIntersPoint( point, prof, widthorder, width );
@@ -422,7 +422,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     {
       widthorder = CreateChannelData.WIDTHORDER.LAST;
       width = newEndWidth;
-      point = WspmProfileHelper.getGeoPosition( width, m_data.getProfilEventManager().getProfil() );
+      point = WspmProfileHelper.getGeoPosition( width, m_data.getProfil() );
 
       /* update the last intersection point */
       currentSegment.setIntersPoint( point, prof, widthorder, width );
@@ -685,7 +685,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     final Point2D logPoint = screen2logical( currentScreenPoint );
     final double currentWidth = logPoint.getX();
 
-    final IProfil origProfil = m_data.getProfilEventManager().getProfil();
+    final IProfil origProfil = m_data.getProfil();
     final IRecord point = ProfilUtil.findNearestPoint( origProfil, currentWidth );
 
     final double xCoord = (Double) point.getValue( breiteComponent );

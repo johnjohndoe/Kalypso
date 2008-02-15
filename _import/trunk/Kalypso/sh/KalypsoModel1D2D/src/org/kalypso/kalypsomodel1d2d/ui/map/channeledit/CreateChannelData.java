@@ -75,8 +75,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
-import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -344,24 +342,24 @@ public class CreateChannelData
 
   /* --------------------- profile chart handling ---------------------------------- */
 
-  public IProfilEventManager getProfilEventManager( )
+  public IProfil getProfil( )
   {
     if( m_selectedProfiles == null )
-      return new ProfilEventManager( null, null );
+      return null;
 
     if( m_selectedProfiles.size() <= 1 )
-      return new ProfilEventManager( null, null );
+      return null;
 
     if( m_segmentList.size() <= (getSelectedSegment() - 1) )
-      return new ProfilEventManager( null, null );
+      return null;
 
     if( getSelectedSegment() == 0 )
-      return new ProfilEventManager( null, null );
+      return null;
 
     final SegmentData segment = m_segmentList.get( getSelectedSegment() - 1 );
 
     if( segment == null )
-      return new ProfilEventManager( null, null );
+      return null;
 
     final IProfil profil;
     if( m_selectedProfile == PROF.UP )
@@ -373,8 +371,7 @@ public class CreateChannelData
       profil = segment.getProfilDownOrg();
     }
 
-    final ProfilEventManager pem = new ProfilEventManager( profil, null );
-    return pem;
+    return profil;
   }
 
   /* --------------------- workflow handling ---------------------------------- */
@@ -574,7 +571,7 @@ public class CreateChannelData
 
       return Status.OK_STATUS;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, "Schlauchgenerator: Fehler bei Erstellung des FLussschlauches. Überprüfen Sie Ihre Eingangsdaten." );
