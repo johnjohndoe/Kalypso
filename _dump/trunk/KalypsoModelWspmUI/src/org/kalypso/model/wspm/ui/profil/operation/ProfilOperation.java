@@ -52,8 +52,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.changes.IllegalChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -62,7 +62,7 @@ public final class ProfilOperation extends AbstractOperation
 {
   private final List<IProfilChange> m_undoChanges = new ArrayList<IProfilChange>();
 
-  private final IProfilEventManager m_pem;
+  private final IProfil m_profile;
 
   private final List<IProfilChange> m_changes = new ArrayList<IProfilChange>();
 
@@ -70,24 +70,24 @@ public final class ProfilOperation extends AbstractOperation
 
   private boolean m_canUndo = true;
 
-  public ProfilOperation( final String label, final IProfilEventManager pem, boolean rollbackAll )
+  public ProfilOperation( final String label, final IProfil profile, boolean rollbackAll )
   {
-    this( label, pem, new IProfilChange[] {}, rollbackAll );
+    this( label, profile, new IProfilChange[] {}, rollbackAll );
   }
 
-  public ProfilOperation( final String label, final IProfilEventManager pem, final IProfilChange change, boolean rollbackAll )
+  public ProfilOperation( final String label, final IProfil profile, final IProfilChange change, boolean rollbackAll )
   {
-    this( label, pem, new IProfilChange[] { change }, rollbackAll );
+    this( label, profile, new IProfilChange[] { change }, rollbackAll );
   }
 
-  public ProfilOperation( final String label, final IProfilEventManager pem, final IProfilChange[] changes, boolean rollbackAll )
+  public ProfilOperation( final String label, final IProfil profile, final IProfilChange[] changes, boolean rollbackAll )
   {
     super( label );
 
-    addContext( new ProfilUndoContext( pem.getProfil() ) );
+    addContext( new ProfilUndoContext( profile ) );
 
     m_changes.addAll( Arrays.asList( changes ) );
-    m_pem = pem;
+    m_profile = profile;
     m_rollbackAll = rollbackAll;
   }
 
@@ -96,9 +96,9 @@ public final class ProfilOperation extends AbstractOperation
     m_changes.add( change );
   }
 
-  protected final IProfilEventManager getProfilEventManager( )
+  protected final IProfil getProfil( )
   {
-    return m_pem;
+    return m_profile;
   }
 
   @Override
@@ -172,7 +172,7 @@ public final class ProfilOperation extends AbstractOperation
       // einen fire auf allen changes absetzen (zuviel ist nicht schlimm)
       m_canUndo = undoChanges.size() > 0;
       monitor.done();
-      m_pem.fireProfilChanged( hint, doneChanges.toArray( new IProfilChange[doneChanges.size()] ) );
+      //m_profile.fireProfilChanged( hint, doneChanges.toArray( new IProfilChange[doneChanges.size()] ) );
     }
     // auf jeden Fall OK zurückgeben da sonst die UNDO-Liste nicht gefüllt wird
     return Status.OK_STATUS;

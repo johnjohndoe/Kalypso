@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.ui.profil;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 
 /**
@@ -69,10 +69,10 @@ public abstract class AbstractProfilProvider2 implements IProfilProvider2
     m_listeners.remove( l );
   }
 
-  protected void fireOnProfilProviderChanged( final IProfilProvider2 provider, final IProfilEventManager oldPem, final IProfilEventManager newPem, final ProfilViewData oldViewData, final ProfilViewData newViewData )
+  protected void fireOnProfilProviderChanged( final IProfilProvider2 provider, final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData )
   {
     for( final IProfilProviderListener l : m_listeners )
-      l.onProfilProviderChanged( provider, oldPem, newPem, oldViewData, newViewData );
+      l.onProfilProviderChanged( provider, oldProfile, newProfile, oldViewData, newViewData );
 
   }
 }

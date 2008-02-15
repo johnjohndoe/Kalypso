@@ -52,7 +52,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
@@ -149,21 +148,20 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
-    return new BuildingPanel( pem, viewData );
+    return new BuildingPanel( profile, viewData );
   }
 
   public void removeYourself( )
   {
-    final IProfilEventManager pem = getProfilEventManager();
-    final IProfil profile = pem.getProfil();
+      final IProfil profile = getProfil();
     final IProfileObject building = profile.getProfileObjects()[0];
     final IProfilChange[] changes = new IProfilChange[3];
     changes[0] = new ProfileObjectSet( profile, new IProfileObject[] {} );
     changes[1] = new PointPropertyRemove( profile, building.getPointProperties()[0]);
     changes[2] = new PointPropertyRemove( profile,  building.getPointProperties()[1] );
-    final ProfilOperation operation = new ProfilOperation( " entfernen", pem, changes, true );
+    final ProfilOperation operation = new ProfilOperation( " entfernen", profile, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }
 }

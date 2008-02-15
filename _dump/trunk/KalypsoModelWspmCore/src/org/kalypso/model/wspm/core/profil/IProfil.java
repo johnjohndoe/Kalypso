@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -62,8 +63,8 @@ public interface IProfil extends IObservation<TupleResult>
    * @param pointProperty
    */
   public void addPointProperty( final IComponent pointProperty );
-  
-  public void addPointProperty( final IComponent pointProperty,final IComponent initialValues );
+
+  public void addPointProperty( final IComponent pointProperty, final IComponent initialValues );
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
@@ -73,6 +74,12 @@ public interface IProfil extends IObservation<TupleResult>
    *            must not be null, in this case use removeProfileObject()
    */
   public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects );
+
+  public void addProfilListener( final IProfilListener pl );
+
+  public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
+
+  public void removeProfilListener( final IProfilListener pl );
 
   public void createProfileObjects( IObservation<TupleResult>[] profileObjects );
 
@@ -115,20 +122,19 @@ public interface IProfil extends IObservation<TupleResult>
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider
    */
   public IComponent[] getPointMarkerTypes( );
-  
-  public int indexOfPoint(final IRecord point);
-  
-  public int indexOfProperty(final IComponent pointProperty);
-  
-  public int indexOfProperty(final String id);
-  
-  public IRecord getPoint(final int index);
-  
+
+  public int indexOfPoint( final IRecord point );
+
+  public int indexOfProperty( final IComponent pointProperty );
+
+  public int indexOfProperty( final String id );
+
+  public IRecord getPoint( final int index );
+
   /**
    * @return include both , startPoint and endPoint
    */
-  public IRecord[] getPoints(final int startPoint,final int endPoint);
-  
+  public IRecord[] getPoints( final int startPoint, final int endPoint );
 
   /**
    * @return all PointProperties used by this profile

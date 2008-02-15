@@ -58,10 +58,8 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.AbstractProfilProvider2;
@@ -83,13 +81,21 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 implements IProfilProvider2, ISelectionChangedListener, IProfilListener, ModellEventListener
 {
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider2#getProfil()
+   */
+  public IProfil getProfil( )
+  {
+    return m_profile;
+  }
+
   private final ProfilViewData m_viewData = new ProfilViewData();
 
   private final ISelectionProvider m_provider;
 
   private IFile m_file;
 
-  private IProfilEventManager m_pem = null;
+  private IProfil m_profile = null;
 
   private Feature m_feature;
 
@@ -113,12 +119,72 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     unhookListeners();
   }
 
+  /* find all results connected to this water */
+  private IStationResult[] findResults( final WspmProfile profileMember )
+  {
+    final WspmWaterBody water = profileMember.getWater();
+    if( water == null )
+      return new IStationResult[] {};
+
+    final GMLWorkspace workspace = water.getFeature().getWorkspace();
+
+    final List<IStationResult> results = new ArrayList<IStationResult>();
+
+    /* Waterlevel fixations */
+    final List wspFixations = water.getWspFixations();
+    for( final Object wspFix : wspFixations )
+    {
+      final Feature feature = FeatureHelper.getFeature( workspace, wspFix );
+
+      final IStationResult result = new ObservationStationResult( feature, profileMember.getStation() );
+      results.add( result );
+    }
+
+    /* Calculated results. */
+    // TRICKY: this depends currently on the concrete model
+    // so we need to know the model-type (such as tuhh) and
+    // delegate the search for results to model-specific code.
+    return results.toArray( new IStationResult[results.size()] );
+  }
+
   /**
    * @see com.bce.profil.ui.view.IProfilProvider2#getEventManager()
    */
-  public IProfilEventManager getEventManager( )
+//  public IProfilEventManager getEventManager( )
+//  {
+//    return m_pem;
+//  }
+
+  /**
+   * @deprecated Use {@link #getProfile()} instead
+   */
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider2#getEventManager()
+   */
+  public IProfil getEventManager( )
   {
-    return m_pem;
+    return getProfile();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider2#getEventManager()
+   */
+  public IProfil getProfile( )
+  {
+    return m_profile;
+  }
+
+  /**
+   * @see com.bce.profil.ui.view.IProfilProvider2#getFile()
+   */
+  public IFile getFile( )
+  {
+    return m_file;
+  }
+
+  public ISelectionProvider getSelectionProvider( )
+  {
+    return m_provider;
   }
 
   /**
@@ -127,6 +193,69 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   public ProfilViewData getViewData( )
   {
     return m_viewData;
+  }
+
+  /**
+   * If the feature changes, write it back to the profile.
+   * 
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   */
+  public void onModellChange( final ModellEvent modellEvent )
+  {
+    if( m_lockNextModelChange )
+    {
+      m_lockNextModelChange = false;
+      return;
+    }
+
+    // do no react to my own event, beware of recursion
+    if( m_feature == null )
+      return;
+
+    if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
+      try
+      {
+        final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );
+        /**
+         *  TODO implement IStationResult to profiles
+         **/  
+        final IStationResult[] results = null;//m_pem == null ? null : m_pem.getResults();
+        setProfile( profil, results, m_feature, m_workspace );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+      }
+  }
+
+  /**
+   * If the profile changes, write it back to the feature.
+   * 
+   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
+   *      com.bce.eind.core.profil.IProfilChange[])
+   */
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  {
+    if( (m_profile != null) && (m_feature != null) )
+      try
+      {
+        if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
+            || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
+        {
+          final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( m_profile, m_feature );
+
+          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_feature.getWorkspace(), featureChanges );
+          m_lockNextModelChange = true;
+          m_workspace.postCommand( command );
+        }
+      }
+      catch( final Exception e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+      }
   }
 
   /**
@@ -181,32 +310,24 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     setProfile( profile, results, profileFeature, workspace );
   }
 
-  /* find all results connected to this water */
-  private IStationResult[] findResults( final WspmProfile profileMember )
+  private void setProfile( final IProfil profil, final IStationResult[] results, final Feature feature, final CommandableWorkspace workspace )
   {
-    final WspmWaterBody water = profileMember.getWater();
-    if( water == null )
-      return new IStationResult[] {};
+    final IProfil oldProfile = m_profile;
 
-    final GMLWorkspace workspace = water.getFeature().getWorkspace();
+    unhookListeners();
 
-    final List<IStationResult> results = new ArrayList<IStationResult>();
+    m_feature = feature;
+    m_workspace = workspace;
+    
+    m_profile = profil;
 
-    /* Waterlevel fixations */
-    final List wspFixations = water.getWspFixations();
-    for( final Object wspFix : wspFixations )
-    {
-      final Feature feature = FeatureHelper.getFeature( workspace, wspFix );
+    if( m_profile != null )
+      m_profile.addProfilListener( this );
 
-      final IStationResult result = new ObservationStationResult( feature, profileMember.getStation() );
-      results.add( result );
-    }
+    if( m_feature != null )
+      m_feature.getWorkspace().addModellListener( this );
 
-    /* Calculated results. */
-    // TRICKY: this depends currently on the concrete model
-    // so we need to know the model-type (such as tuhh) and
-    // delegate the search for results to model-specific code.
-    return results.toArray( new IStationResult[results.size()] );
+    fireOnProfilProviderChanged( this, oldProfile, m_profile, m_viewData, m_viewData );
   }
 
   private void unhookListeners( )
@@ -217,107 +338,11 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       m_feature = null;
     }
 
-    if( m_pem != null )
+    if( m_profile != null )
     {
-      m_pem.removeProfilListener( this );
-      m_pem = null;
+      m_profile.removeProfilListener( this );
+      m_profile = null;
     }
-  }
-
-  /**
-   * @see com.bce.profil.ui.view.IProfilProvider2#getFile()
-   */
-  public IFile getFile( )
-  {
-    return m_file;
-  }
-
-  /**
-   * If the profile changes, write it back to the feature.
-   * 
-   * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
-   *      com.bce.eind.core.profil.IProfilChange[])
-   */
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
-  {
-    final IProfil profil = m_pem.getProfil();
-    if( (profil != null) && (m_feature != null) )
-      try
-      {
-        if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
-            || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
-        {
-          final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( profil, m_feature );
-
-          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_feature.getWorkspace(), featureChanges );
-          m_lockNextModelChange = true;
-          m_workspace.postCommand( command );
-        }
-      }
-      catch( final Exception e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-      }
-  }
-
-  /**
-   * If the feature changes, write it back to the profile.
-   * 
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
-  public void onModellChange( final ModellEvent modellEvent )
-  {
-    if( m_lockNextModelChange )
-    {
-      m_lockNextModelChange = false;
-      return;
-    }
-
-    // do no react to my own event, beware of recursion
-    if( m_feature == null )
-      return;
-
-    if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
-      try
-      {
-        final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );
-        /* Results probably haven't changed. */
-        final IStationResult[] results = m_pem == null ? null : m_pem.getResults();
-        setProfile( profil, results, m_feature, m_workspace );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-      }
-  }
-
-  private void setProfile( final IProfil profil, final IStationResult[] results, final Feature feature, final CommandableWorkspace workspace )
-  {
-    final IProfilEventManager oldPem = m_pem;
-
-    unhookListeners();
-
-    if( profil != null )
-      m_pem = new ProfilEventManager( profil, results );
-
-    m_feature = feature;
-    m_workspace = workspace;
-
-    if( m_pem != null )
-      m_pem.addProfilListener( this );
-
-    if( m_feature != null )
-      m_feature.getWorkspace().addModellListener( this );
-
-    fireOnProfilProviderChanged( this, oldPem, m_pem, m_viewData, m_viewData );
-  }
-
-  public ISelectionProvider getSelectionProvider( )
-  {
-    return m_provider;
   }
 
 }

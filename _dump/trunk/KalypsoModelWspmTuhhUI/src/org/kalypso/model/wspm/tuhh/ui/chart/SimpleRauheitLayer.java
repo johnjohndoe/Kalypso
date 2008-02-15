@@ -51,7 +51,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -156,9 +155,9 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
   }
 
   @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
-    return new RauheitenPanel( pem, viewData );
+    return new RauheitenPanel( profile, viewData );
   }
 
   /**

@@ -53,7 +53,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
@@ -90,9 +89,9 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
-    return new WehrPanel( pem, viewData );
+    return new WehrPanel( profile, viewData );
   }
 
   public final void editDevider( final Point point, final IProfilPointMarker devider )
@@ -104,7 +103,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
     final IRecord oldPos = activeDevider.getPoint();
     if( oldPos != destinationPoint )
     {
-      final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfilEventManager(), true );
+      final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfil(), true );
       operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
       operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, ProfilObsHelper.getPropertyFromId( destinationPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
       new ProfilOperationJob( operation ).schedule();
@@ -287,15 +286,15 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 
   public void removeYourself( )
   {
-    final IProfilEventManager pem = getProfilEventManager();
-    final IProfil profile = pem.getProfil();
+   
+    final IProfil profile = getProfil();
     final IProfilPointMarker[] deviders = profile.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     final IProfilChange[] changes = new IProfilChange[deviders.length + 2];
     changes[0] = new ProfileObjectSet( profile, new IProfileObject[] {} );
     changes[1] = new PointPropertyRemove( profile, ProfilObsHelper.getPropertyFromId( profile, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
     for( int i = 0; i < deviders.length; i++ )
       changes[i + 2] = new PointMarkerEdit( deviders[i], null );
-    final ProfilOperation operation = new ProfilOperation( "Wehr entfernen", pem, changes, true );
+    final ProfilOperation operation = new ProfilOperation( "Wehr entfernen", profile, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }
 

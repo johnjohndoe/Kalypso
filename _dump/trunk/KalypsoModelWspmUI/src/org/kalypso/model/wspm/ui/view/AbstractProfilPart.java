@@ -55,7 +55,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
 import org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
@@ -101,7 +100,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   protected ProfilChartView m_chartview;
 
-  private IProfilEventManager m_pem;
+  private IProfil m_profile;
 
   private ValidationProfilListener m_profilValidator;
   
@@ -134,11 +133,11 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
     m_profilColorRegistry = null;
 
-    if( m_pem != null )
+    if( m_profile != null )
     {
       if( m_profilValidator != null )
       {
-        m_pem.removeProfilListener( m_profilValidator );
+        m_profile.removeProfilListener( m_profilValidator );
         m_profilValidator.dispose();
         m_profilValidator = null;
       }
@@ -146,7 +145,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       final IOperationHistory operationHistory = getUndoHistory();
       operationHistory.dispose( getUndoContext(), true, true, true );
     }
-    m_pem = null;
+    m_profile = null;
   }
 
   public void updateControl()
@@ -165,7 +164,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     for( final Control c : children )
       c.dispose();
 
-    if( m_pem == null )
+    if( m_profile == null )
     {
       final Label label = new Label( m_control, SWT.CENTER );
       label.setText( "Kein Profil selektiert." );
@@ -185,7 +184,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       // PROFIL_PROPERTY.KOMMENTAR );
 
       // setContentDescription( (kommentare == null) ? "" : kommentare.toString() );
-      m_chartview = new ProfilChartView( m_pem, m_viewdata, m_profilColorRegistry );
+      m_chartview = new ProfilChartView( m_profile, m_viewdata, m_profilColorRegistry );
       m_chartview.setLayerProvider(m_layerProvider);
       m_chartview.createControl( m_control, SWT.BORDER );
       m_chartview.restoreState( m_viewdata.getChartMemento() );
@@ -201,7 +200,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   public ProfilUndoContext getUndoContext( )
   {
-    return m_pem == null ? null : new ProfilUndoContext( m_pem.getProfil() );
+    return m_profile == null ? null : new ProfilUndoContext( m_profile );
   }
 
   public IOperationHistory getUndoHistory( )
@@ -215,30 +214,30 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       m_control.setFocus();
   }
 
-  public synchronized void setProfil( final IProfilEventManager pem, final IFile file, final String editorID )
+  public synchronized void setProfil( final IProfil profile, final IFile file, final String editorID )
   {
     if( m_profilValidator != null )
     {
-      if( m_pem != null )
-        m_pem.removeProfilListener( m_profilValidator );
+      if( m_profile != null )
+        m_profile.removeProfilListener( m_profilValidator );
       m_profilValidator.dispose();
       m_profilValidator = null;
     }
 
     // die undo queue für dieses profil löschen
-    if( m_pem != null )
+    if( m_profile != null )
     {
       final IOperationHistory operationHistory = getUndoHistory();
       operationHistory.dispose( getUndoContext(), true, true, true );
     }
 
-    m_pem = pem;
+    m_profile = profile;
     m_profilValidator = null;
 
-    if( m_pem != null && file != null )
+    if( m_profile != null && file != null )
     {
-      m_profilValidator = new ValidationProfilListener( m_pem, file, editorID );
-      m_pem.addProfilListener( m_profilValidator );
+      m_profilValidator = new ValidationProfilListener( m_profile, file, editorID );
+      m_profile.addProfilListener( m_profilValidator );
     }
 
     if( m_control != null && !m_control.isDisposed() )
@@ -270,7 +269,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   public IProfil getProfil( )
   {
-    return m_pem == null ? null : m_pem.getProfil();
+    return m_profile;
   }
 
   public ChartLegend createChartLegend( final Composite control, final int style )
@@ -292,11 +291,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       chartlegend.saveState( m_viewdata.getLegendMemento() );
   }
 
-  public IProfilEventManager getProfilEventManager( )
-  {
-    return m_pem;
-  }
-
+  
   public void runChartAction( final ProfilChartActionsEnum chartAction )
   {
     if( m_chartview != null )

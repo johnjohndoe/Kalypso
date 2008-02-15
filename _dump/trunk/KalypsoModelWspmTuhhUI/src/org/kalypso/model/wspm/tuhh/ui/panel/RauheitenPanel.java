@@ -69,8 +69,8 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
@@ -108,9 +108,9 @@ public class RauheitenPanel extends AbstractProfilView
 
   protected Button m_updateOnDeviderMove;
 
-  public RauheitenPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
+  public RauheitenPanel( final IProfil profile, final ProfilViewData viewdata )
   {
-    super( pem, viewdata );
+    super( profile, viewdata );
 
     final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getProfil().getType() );
     for( final IProfilPointPropertyProvider provider : providers )
@@ -175,7 +175,7 @@ public class RauheitenPanel extends AbstractProfilView
 
         if( component != null && old != null && !m_rauheitTyp.equals( component.getId() ) )
         {
-          final ProfilOperation operation = new ProfilOperation( "Rauheitstyp ändern", getProfilEventManager(), true );
+          final ProfilOperation operation = new ProfilOperation( "Rauheitstyp ändern", getProfil(), true );
 
           final Double[] oldValues = ProfilUtil.getValuesFor( getProfil(), old );
           operation.addChange( new PointPropertyAdd( getProfil(), component, oldValues ) );
@@ -247,7 +247,7 @@ public class RauheitenPanel extends AbstractProfilView
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final IProfilPointMarker[] marker = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-        final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfilEventManager(), true );
+        final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfil(), true );
         final Double value = NumberUtils.parseQuietDouble( m_VL.getText() );
         if( !value.isNaN() )
         {
@@ -311,7 +311,7 @@ public class RauheitenPanel extends AbstractProfilView
       {
         final IProfilPointMarker[] marker = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
         final List<IRecord> points = ProfilUtil.getInnerPoints( getProfil(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-        final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfilEventManager(), true );
+        final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfil(), true );
         final Double value = NumberUtils.parseQuietDouble( m_HF.getText() );
         if( !value.isNaN() )
         {
@@ -373,7 +373,7 @@ public class RauheitenPanel extends AbstractProfilView
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final IProfilPointMarker[] marker = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-        final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfilEventManager(), true );
+        final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfil(), true );
         try
         {
           Double value = null;
@@ -411,7 +411,7 @@ public class RauheitenPanel extends AbstractProfilView
     final IProfilPointMarker[] trennflaechen = getProfil().getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     // final IProfilPointMarker[] durchstroemte = getProfil().getPointMarkerFor(
     // IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfilEventManager(), true );
+    final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfil(), true );
     try
     {
       Double value = value1;// (Double) durchstroemte[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );

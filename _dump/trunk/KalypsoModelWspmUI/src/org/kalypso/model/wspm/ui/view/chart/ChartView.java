@@ -85,7 +85,7 @@ public class ChartView extends AbstractProfilViewPart2
     else
       editorID = null;
 
-    m_profilPart.setProfil( getProfilEventManager(), getFile(), editorID );
+    m_profilPart.setProfil( getProfil(), getFile(), editorID );
 
     return control;
   }

@@ -53,7 +53,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
@@ -97,9 +96,9 @@ public class TrennerLayer extends AbstractProfilChartLayer
   }
 
   @Override
-  public final IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public final IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
-    return new TrennerPanel( pem, viewData );
+    return new TrennerPanel( profile, viewData );
   }
 
   /**
@@ -115,7 +114,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     final IRecord oldPos = activeDevider.getPoint();
     if( oldPos != destinationPoint )
     {
-      final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfilEventManager(), true );
+      final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfil(), true );
       operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
 
       final String id = activeDevider.getId().getId() == IWspmTuhhConstants.MARKER_TYP_WEHR ? IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR : null;
@@ -357,7 +356,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
     {
       final IProfilPointMarker devider = (IProfilPointMarker) data;
       final IRecord activePoint = devider.getPoint();
-      final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), activePoint, null ), true );
+      final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ActiveObjectEdit( getProfil(), activePoint, null ), true );
       final IStatus status = operation.execute( new NullProgressMonitor(), null );
       operation.dispose();
       if( !status.isOK() )

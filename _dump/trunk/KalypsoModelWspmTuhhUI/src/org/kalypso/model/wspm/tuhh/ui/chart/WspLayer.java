@@ -53,7 +53,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.result.IStationResult;
@@ -223,9 +222,9 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
   }
 
   @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
-    return new WspPanel( pem, viewData, m_result );
+    return new WspPanel( profile, viewData, m_result );
   }
 
   public void removeYourself( )

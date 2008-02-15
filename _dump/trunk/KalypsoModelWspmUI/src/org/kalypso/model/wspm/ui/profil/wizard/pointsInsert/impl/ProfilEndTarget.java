@@ -46,7 +46,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -57,7 +56,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author Belger
+ * @author kimwerner
  */
 public class ProfilEndTarget extends AbstractPointsTarget
 {
@@ -66,12 +65,12 @@ public class ProfilEndTarget extends AbstractPointsTarget
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget#insertPoints(org.kalypso.model.wspm.core.profil.impl.ProfilEventManager,
    *      IProfilPoints)
    */
-  public void insertPoints( final IProfilEventManager pem, final List<IRecord> points )
+  public void insertPoints( final IProfil profile, final List<IRecord> points )
   {
     if( points != null )
-      insertPointsInternal( pem, points );
+      insertPointsInternal( profile, points );
     else
-      addPointInternal( pem.getProfil() );
+      addPointInternal( profile );
   }
 
   private final void addPointInternal( final IProfil profile )
@@ -91,16 +90,16 @@ public class ProfilEndTarget extends AbstractPointsTarget
     result.add( point );
   }
 
-  public void insertPointsInternal( final IProfilEventManager pem, final List<IRecord> points )
+  public void insertPointsInternal( final IProfil profile, final List<IRecord> points )
   {
     final int pointsCount = points.size();
-    final IComponent[] existingProps = pem.getProfil().getPointProperties();
+    final IComponent[] existingProps = profile.getPointProperties();
 
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
-      final IRecord[] existingPoints = pem.getProfil().getPoints();
-      final IRecord targetPkt = existingPoints.length == 0 ? pem.getProfil().createProfilPoint() : existingPoints[existingPoints.length - 1];
+      final IRecord[] existingPoints = profile.getPoints();
+      final IRecord targetPkt = existingPoints.length == 0 ? profile.createProfilPoint() : existingPoints[existingPoints.length - 1];
       // final IProfilPoint targetPkt = (activePkt != null) ? activePkt : pem.getProfil().getPoints().getLast();
       final double deltaX = existingPoints.length == 0 ? 0.0 : (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_BREITE ) )
           - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_BREITE ) );
@@ -115,14 +114,14 @@ public class ProfilEndTarget extends AbstractPointsTarget
         newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) )
             - deltaY );
         for( final IComponent prop : existingProps )
-          if( pem.getProfil().hasPointProperty( prop ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) && !IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() ) )
+          if( profile.hasPointProperty( prop ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) && !IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() ) )
           {
             final IComponent[] components = point.getOwner().getComponents();
 
             if( ArrayUtils.contains( components, prop ) )
               newPoint.setValue( prop, point.getValue( prop ) );
           }
-        changes[i--] = new PointAdd( pem.getProfil(), existingPoints.length == 0 ? null : targetPkt, newPoint );
+        changes[i--] = new PointAdd( profile, existingPoints.length == 0 ? null : targetPkt, newPoint );
       }
     }
     catch( final Exception e )
@@ -130,7 +129,7 @@ public class ProfilEndTarget extends AbstractPointsTarget
       // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
       changes[0] = null;
     }
-    final ProfilOperation operation = new ProfilOperation( "Punkte einf�gen", pem, changes, false );
+    final ProfilOperation operation = new ProfilOperation( "Punkte einf�gen", profile, changes, false );
     new ProfilOperationJob( operation ).schedule();
 
   }

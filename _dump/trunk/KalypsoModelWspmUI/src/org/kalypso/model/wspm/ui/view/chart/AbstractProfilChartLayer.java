@@ -44,7 +44,6 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
@@ -118,14 +117,13 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
    */
   protected final IProfil getProfil( )
   {
-    return getProfilEventManager().getProfil();
+    return m_chartView.getProfil();
   }
-
-  public IProfilEventManager getProfilEventManager( )
-  {
-    return m_chartView.getProfilEventManager();
-  }
-
+/**
+ * @deprecated
+ */
+  
+  
   /**
    * @return Returns the viewData.
    */
@@ -140,7 +138,7 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
    * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfilEventManager,
    *      org.kalypso.model.wspm.ui.profil.view.ProfilViewData)
    */
-  public IProfilView createLayerPanel( IProfilEventManager pem, ProfilViewData viewData )
+  public IProfilView createLayerPanel( IProfil profile, ProfilViewData viewData )
   {
     // TODO Auto-generated method stub
     return null;

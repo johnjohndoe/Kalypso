@@ -46,18 +46,29 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.metadata.MetadataObject;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultChangeAdapter;
+import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
+import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -83,6 +94,10 @@ public abstract class AbstractProfil implements IProfil
   private String m_name;
 
   private String m_description;
+  
+  private ITupleResultChangedListener m_resultListener;
+  
+  private List <IProfilListener>m_listeners = new ArrayList<IProfilListener>( 10 );
 
   private List<MetadataObject> m_metaDataList = new ArrayList<MetadataObject>();
 
@@ -91,8 +106,69 @@ public abstract class AbstractProfil implements IProfil
   public AbstractProfil( final String type )
   {
     m_type = type;
+    m_resultListener = new TupleResultChangeAdapter(){
+
+      /**
+       * @see org.kalypso.observation.result.TupleResultChangeAdapter#componentsChanged(org.kalypso.observation.result.IComponent[], org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
+       */
+      @Override
+      public void componentsChanged( IComponent[] components, TYPE type )
+      {
+        // TODO Auto-generated method stub
+        super.componentsChanged( components, type );
+      }
+
+      /**
+       * @see org.kalypso.observation.result.TupleResultChangeAdapter#recordsChanged(org.kalypso.observation.result.IRecord[], org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
+       */
+      @Override
+      public void recordsChanged( IRecord[] records, TYPE type )
+      {
+        // TODO Auto-generated method stub
+        super.recordsChanged( records, type );
+      }
+
+      /**
+       * @see org.kalypso.observation.result.TupleResultChangeAdapter#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
+       */
+      @Override
+      public void valuesChanged( ValueChange[] changes )
+      {
+        // TODO Auto-generated method stub
+        super.valuesChanged( changes );
+      }};
+  }
+  public void addProfilListener( final IProfilListener pl )
+  {
+    m_listeners.add( pl );
   }
 
+  
+  public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  {
+    if( (changes == null) && changes.length == 0 )
+      return;
+
+    final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
+    for( final IProfilListener l : listeners )
+    {
+      try
+      {
+        l.onProfilChanged( hint, changes );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+      }
+    }
+  }
+
+  
+  public void removeProfilListener( final IProfilListener pl )
+  {
+    m_listeners.remove( pl );
+  }
   public boolean addPoint( final IRecord point )
   {
     return getResult().add( point );
@@ -464,6 +540,9 @@ public abstract class AbstractProfil implements IProfil
   public void setActivePoint( final IRecord point )
   {
     m_activePoint = point;
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setActivePointChanged();
+    fireProfilChanged( hint , new IProfilChange[]{new ActiveObjectEdit(this,point,m_activePointProperty)} );
   }
 
   /**
@@ -522,7 +601,9 @@ public abstract class AbstractProfil implements IProfil
    */
   public void setResult( final TupleResult result )
   {
+  //  m_result.removeChangeListener( m_resultListener );
     m_result = result;
+  //  m_result.addChangeListener( m_resultListener );
   }
 
   /**

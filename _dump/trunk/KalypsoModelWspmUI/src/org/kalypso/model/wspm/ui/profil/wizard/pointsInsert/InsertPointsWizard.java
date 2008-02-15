@@ -47,7 +47,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 /**
@@ -55,15 +55,15 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
  */
 public class InsertPointsWizard extends Wizard
 {
-  protected final IProfilEventManager m_pem;
+  protected final IProfil m_profile;
 
   protected PointsSourceChooserPage m_pointsSourceChooserPage;
 
   protected PointsTargetChooserPage m_pointsTargetChooserPage;
 
-  public InsertPointsWizard( final IProfilEventManager pem )
+  public InsertPointsWizard( final IProfil profile)
   {
-    m_pem = pem;
+    m_profile = profile;
 
     final IDialogSettings wizardSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), "InsertPointsWizardSettings" ); //$NON-NLS-1$
     setDialogSettings( wizardSettings );
@@ -97,7 +97,7 @@ public class InsertPointsWizard extends Wizard
         final IPointsSource choosenSource = m_pointsSourceChooserPage.getChoosenSource();
         final IPointsTarget selectedTarget = m_pointsTargetChooserPage.getSelectedTarget();
 
-        selectedTarget.insertPoints( m_pem, choosenSource.getPoints() );
+        selectedTarget.insertPoints( m_profile, choosenSource.getPoints() );
       }
     };
 

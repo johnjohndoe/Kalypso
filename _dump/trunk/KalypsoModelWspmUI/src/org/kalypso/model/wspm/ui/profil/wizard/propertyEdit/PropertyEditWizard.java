@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -80,7 +79,7 @@ public class PropertyEditWizard extends Wizard
 
   private ArrayChooserPage m_propertyChooserPage;
 
-  final private IProfilEventManager m_pem;
+  final private IProfil m_profile;
 
   final private List<Feature> m_profiles;
 
@@ -92,7 +91,7 @@ public class PropertyEditWizard extends Wizard
 
   public PropertyEditWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
   {
-    m_pem = null;
+    m_profile = null;
     m_workspace = workspace;
     m_profiles = profiles;
     m_selectedProfiles = selection;
@@ -106,13 +105,13 @@ public class PropertyEditWizard extends Wizard
     m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Werte zugeweisen werden sollen." );
   }
 
-  public PropertyEditWizard( final IProfilEventManager pem )
+  public PropertyEditWizard( final IProfil profile)
   {
-    m_pem = pem;
+    m_profile = profile;
     m_workspace = null;
     m_profiles = null;
     m_selectedProfiles = null;
-    m_profiletype = m_pem.getProfil().getType();
+    m_profiletype = m_profile.getType();
     m_profileChooserPage = null;
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
@@ -125,7 +124,7 @@ public class PropertyEditWizard extends Wizard
   public void addPages( )
   {
     super.addPages();
-    if( m_pem == null )
+    if( m_profile == null )
       addPage( m_profileChooserPage );
 
     final IProfilPointPropertyProvider[] ppps = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profiletype );
@@ -174,7 +173,7 @@ public class PropertyEditWizard extends Wizard
   private IProfil[] toProfiles( final Object[] features )
   {
     if( features == null )
-      return new IProfil[] { m_pem.getProfil() };
+      return new IProfil[] {m_profile };
     final IProfil[] choosenProfiles = new IProfil[features.length];
     for( int i = 0; i < features.length; i++ )
     {
@@ -190,7 +189,7 @@ public class PropertyEditWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final Object[] profilFeatures = m_pem == null ? m_profileChooserPage.getChoosen() : null;
+    final Object[] profilFeatures = m_profile == null ? m_profileChooserPage.getChoosen() : null;
     final IProfil[] choosenProfiles = toProfiles( profilFeatures );
     final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
     final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
@@ -199,7 +198,7 @@ public class PropertyEditWizard extends Wizard
     for( int i = 0; i < choosenProfiles.length; i++ )
     {
       profilChanges = m_operationChooserPage.changeProfile( choosenProfiles[i], choosenProperties );
-      if( m_pem == null )
+      if( m_profile == null )
       {
         try
         {
@@ -215,7 +214,7 @@ public class PropertyEditWizard extends Wizard
         featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
       }
     }
-    if( m_pem == null )
+    if( m_profile == null )
     {
       final GMLWorkspace workspace = m_profiles.get( 0 ).getWorkspace();
       final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[0] ) );
@@ -231,7 +230,7 @@ public class PropertyEditWizard extends Wizard
     }
     else
     {
-      final ProfilOperation operation = new ProfilOperation( "Profilpunkteigenschaften ändern", m_pem, profilChanges, true );
+      final ProfilOperation operation = new ProfilOperation( "Profilpunkteigenschaften ändern", m_profile, profilChanges, true );
       new ProfilOperationJob( operation ).schedule();
     }
 

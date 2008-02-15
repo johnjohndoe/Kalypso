@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,6 +47,10 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -71,16 +72,13 @@ import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -109,7 +107,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
   private IProfilProvider2 m_provider;
 
-  protected IProfilEventManager m_pem;
+  protected IProfil m_profile;
 
   private DefaultTableViewer m_view;
 
@@ -121,16 +119,29 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   {
     public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
     {
-      new UIJob( "updating cross section table..." )
+      if( hint.isActivePointChanged() )
       {
-        @Override
-        public IStatus runInUIThread( IProgressMonitor monitor )
+        for( IProfilChange change : changes )
         {
-          updateControl();
+          if( change instanceof ActiveObjectEdit )
+          {
+            final IRecord point = (IRecord) (change.getObjects()[0]);
+            new UIJob( "updating cross section table..." )
+            {
+              @Override
+              public IStatus runInUIThread( IProgressMonitor monitor )
+              {
+                // updateControl();
 
-          return Status.OK_STATUS;
+                m_view.setSelection( new StructuredSelection( point ) );
+                m_view.reveal( point );
+                return Status.OK_STATUS;
+              }
+            }.schedule();
+          }
+          break;
         }
-      }.schedule();
+      }
     }
   };
 
@@ -158,21 +169,22 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     public void valuesChanged( final ValueChange[] changes )
     {
-      final List<IProfilChange> profileChanges = new ArrayList<IProfilChange>();
-
-      for( ValueChange change : changes )
-      {
-        IRecord record = change.getRecord();
-        int compIndex = change.getComponent();
-        final IComponent component = record.getOwner().getComponent( compIndex );
-
-        Object value = change.getNewValue();
-
-        profileChanges.add( new PointPropertyEdit( record, component, value ) );
-      }
-
-      final ProfilOperation operation = new ProfilOperation( "Applying profile changes...", m_pem, profileChanges.toArray( new IProfilChange[] {} ), true );
-      new ProfilOperationJob( operation ).schedule();
+// final List<IProfilChange> profileChanges = new ArrayList<IProfilChange>();
+//
+// for( ValueChange change : changes )
+// {
+// IRecord record = change.getRecord();
+// int compIndex = change.getComponent();
+// final IComponent component = record.getOwner().getComponent( compIndex );
+//
+// Object value = change.getNewValue();
+//
+// profileChanges.add( new PointPropertyEdit( record, component, value ) );
+// }
+//
+// final ProfilOperation operation = new ProfilOperation( "Applying profile changes...", m_profile,
+// profileChanges.toArray( new IProfilChange[] {} ), true );
+// new ProfilOperationJob( operation ).schedule();
     }
   };
 
@@ -199,8 +211,8 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   {
     super.dispose();
 
-    if( m_pem != null )
-      m_pem.removeProfilListener( m_profileListener );
+    if( m_profile != null )
+      m_profile.removeProfilListener( m_profileListener );
 
     m_menuManager.dispose();
     m_menuManager = null;
@@ -261,6 +273,20 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     m_view.getTable().setMenu( m_menuManager.createContextMenu( m_view.getTable() ) );
 
+    m_view.addPostSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        if( !selection.isEmpty() )
+        {
+          final IRecord point = (IRecord)selection.getFirstElement();
+          if( point != m_profile.getActivePoint() )
+            m_profile.setActivePoint( point );
+        }
+      }
+    } );
+
     registerGlobalActions( m_view );
 
     m_control.layout();
@@ -287,10 +313,10 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     if( m_control == null || m_control.isDisposed() )
       return;
 
-    final IProfilEventManager pem = m_provider == null ? null : m_provider.getEventManager();
+    // final IProfil pem = m_provider == null ? null : m_provider.getEventManager();
     final ProfilViewData pvd = m_provider == null ? null : m_provider.getViewData();
 
-    if( pem == null || pvd == null )
+    if( m_profile == null || pvd == null )
     {
       setContentDescription( "Kein Profil geladen" );
 
@@ -307,9 +333,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     tableGrid.exclude = false;
     m_view.getTable().setVisible( true );
 
-    final IProfil profil = getProfilEventManager().getProfil();
-
-    final ComponentHandlerFactory componentHandlerFactory = new ComponentHandlerFactory( profil );
+    final ComponentHandlerFactory componentHandlerFactory = new ComponentHandlerFactory( m_profile );
 
     if( m_view.getContentProvider() != null )
       m_view.setInput( null ); // Reset input in order to avoid double refresh
@@ -324,9 +348,9 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType( KalypsoCorePlugin.getDefault().getSelectionManager(), ObservationFeatureFactory.OM_OBSERVATION );
     if( obsFeatures.length > 0 )
     {
-      m_view.setInput( profil.getResult() );
+      m_view.setInput( m_profile.getResult() );
 
-      final TupleResult result = profil.getResult();
+      final TupleResult result = m_profile.getResult();
       result.remove( m_changedListener );
       result.addChangeListener( m_changedListener );
     }
@@ -401,9 +425,9 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     if( m_provider != null )
       m_provider.addProfilProviderListener( this );
 
-    final IProfilEventManager pem = m_provider == null ? null : m_provider.getEventManager();
+    // final IProfilEventManager pem = m_provider == null ? null : m_provider.getEventManager();
     final ProfilViewData viewData = m_provider == null ? null : m_provider.getViewData();
-    onProfilProviderChanged( m_provider, null, pem, null, viewData );
+    onProfilProviderChanged( m_provider, null, m_profile, null, viewData );
   }
 
   /**
@@ -412,7 +436,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
    *      org.kalypso.model.wspm.core.profil.IProfilEventManager, org.kalypso.model.wspm.ui.profil.view.ProfilViewData,
    *      org.kalypso.model.wspm.ui.profil.view.ProfilViewData)
    */
-  public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfilEventManager oldPem, final IProfilEventManager newPem, final ProfilViewData oldViewData, final ProfilViewData newViewData )
+  public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData )
   {
     // if( m_group != null )
     // {
@@ -436,13 +460,13 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     // } );
     // }
 
-    if( m_pem != null )
-      m_pem.removeProfilListener( m_profileListener );
+    if( m_profile != null )
+      m_profile.removeProfilListener( m_profileListener );
 
-    m_pem = newPem;
+    m_profile = newProfile;
 
-    if( m_pem != null )
-      m_pem.addProfilListener( m_profileListener );
+    if( m_profile != null )
+      m_profile.addProfilListener( m_profileListener );
 
     if( m_control != null && !m_control.isDisposed() )
       m_control.getDisplay().asyncExec( new Runnable()
@@ -454,9 +478,9 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
       } );
   }
 
-  public IProfilEventManager getProfilEventManager( )
+  public IProfil getProfil( )
   {
-    return m_pem;
+    return m_profile;
   }
 
   /**

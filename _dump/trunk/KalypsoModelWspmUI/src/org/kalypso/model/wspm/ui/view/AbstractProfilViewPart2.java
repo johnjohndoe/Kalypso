@@ -55,7 +55,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
@@ -70,7 +70,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
 
   private final AdapterPartListener m_adapterPartListener = new AdapterPartListener( IProfilProvider2.class, this, new EditorFirstAdapterFinder(), new EditorFirstAdapterFinder() );
 
-  private IProfilEventManager m_pem = null;
+  private IProfil m_profile = null;
 
   private Composite m_control;
 
@@ -112,7 +112,10 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     m_actionContributor.contributeTo( actionBars.getToolBarManager() );
     m_actionContributor.contributeTo( actionBars.getStatusLineManager() );
   }
-
+public IProfil getProfil()
+{
+  return m_profile;
+}
   public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
     final IProfilProvider2 provider = (IProfilProvider2) adapter;
@@ -131,7 +134,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
       m_provider = null;
     }
 
-    final IProfilEventManager oldPem = getProfilEventManager();
+    final IProfil oldProfile = m_profile;
     final ProfilViewData oldViewData = getProfilViewData();
 
     m_provider = provider;
@@ -143,10 +146,10 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
 
     }
 
-    final IProfilEventManager newPem = m_provider == null ? null : m_provider.getEventManager();
+    final IProfil newProfile = m_provider == null ? null : m_provider.getProfil();
     final ProfilViewData newViewData = m_provider == null ? null : m_provider.getViewData();
 
-    onProfilProviderChanged( m_provider, oldPem, newPem, oldViewData, newViewData );
+    onProfilProviderChanged( m_provider, oldProfile, newProfile, oldViewData, newViewData );
   }
 
   /**
@@ -177,7 +180,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     gridLayout.marginWidth = 0;
     m_control.setLayout( gridLayout );
 
-    onProfilProviderChanged( m_provider, null, m_pem, null, getProfilViewData() );
+    onProfilProviderChanged( m_provider, null, m_profile, null, getProfilViewData() );
   }
 
   /**
@@ -185,17 +188,17 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
    *      com.bce.eind.core.profil.IProfilEventManager, com.bce.profil.ui.view.ProfilViewData,
    *      com.bce.profil.ui.view.ProfilViewData)
    */
-  public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfilEventManager oldPem, final IProfilEventManager newPem, final ProfilViewData oldViewData, final ProfilViewData newViewData )
+  public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData )
   {
     unhookProvider();
 
     setPartNames( "Profil Diagrammansicht", "Kein Profil selektiert" );
 
-    m_pem = newPem;
+    m_profile = newProfile;
     m_viewData = newViewData;
 
-    if( m_pem != null )
-      m_pem.addProfilListener( this );
+    if( m_profile != null )
+      m_profile.addProfilListener( this );
 
     if( m_viewData != null )
       m_viewData.addProfilViewDataListener( this );
@@ -236,10 +239,10 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   {
     saveState();
 
-    if( m_pem != null )
+    if( m_profile != null )
     {
-      m_pem.removeProfilListener( this );
-      m_pem = null;
+      m_profile.removeProfilListener( this );
+      m_profile = null;
     }
 
     if( m_viewData != null )
@@ -273,13 +276,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     return m_control;
   }
 
-  /**
-   * @see com.bce.profil.eclipse.view.IProfilViewPart2#getProfilEventManager()
-   */
-  public IProfilEventManager getProfilEventManager( )
-  {
-    return m_pem;
-  }
+  
 
   public ProfilViewData getProfilViewData( )
   {
@@ -296,7 +293,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   {
     final IFile file = m_provider == null ? null : m_provider.getFile();
 
-    final String partName = m_pem == null ? "Profil Diagrammansicht" : "Station km " + m_pem.getProfil().getStation();
+    final String partName = m_profile == null ? "Profil Diagrammansicht" : "Station km " + m_profile.getStation();
     final String tooltip = file == null ? null : file.getFullPath().toOSString();
 
     setPartNames( partName, tooltip );

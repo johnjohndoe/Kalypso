@@ -51,7 +51,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
@@ -70,7 +69,7 @@ public class ValidationProfilListener implements IProfilListener
 
   // private ReparatorRuleSet m_reparatorRules = KalypsoModelWspmCorePlugin.getDefault().createReparatorRuleSet();
 
-  private final IProfilEventManager m_pem;
+  private final IProfil m_profile;
 
   private IPropertyChangeListener m_propertyListener;
 
@@ -82,17 +81,16 @@ public class ValidationProfilListener implements IProfilListener
 
   private final ResourceValidatorMarkerCollector m_collector;
 
-  public ValidationProfilListener( final IProfilEventManager pem, final IFile file, final String editorID )
+  public ValidationProfilListener( final IProfil profile, final IFile file, final String editorID )
   {
     // validierung (re-)initialisieren
     // TODO: das (WspWin-)Projekt weiss, welcher Art es ist
 
-    m_pem = pem;
+    m_profile = profile;
     m_file = file;
     m_editorID = editorID;
 
-    final IProfil profil = m_pem.getProfil();
-    final String profiletype = profil == null ? null : profil.getType();
+    final String profiletype = m_profile == null ? null : m_profile.getType();
     m_rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
     m_collector = new ResourceValidatorMarkerCollector( m_file, m_editorID );
@@ -135,7 +133,6 @@ public class ValidationProfilListener implements IProfilListener
     final String excludes = m_preferenceStore.getString( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
 
     final ValidatorRuleSet rules = m_rules;
-    final IProfil profil = m_pem.getProfil();
     final IValidatorMarkerCollector collector = m_collector;
 
     final WorkspaceJob job = new WorkspaceJob( "Profil wird validiert" )
@@ -152,7 +149,7 @@ public class ValidationProfilListener implements IProfilListener
           return e.getStatus();
         }
 
-        return rules.validateProfile( profil, collector, validate, excludes.split( ";" ) );
+        return rules.validateProfile( m_profile, collector, validate, excludes.split( ";" ) );
       }
     };
     job.schedule();

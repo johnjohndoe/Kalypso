@@ -46,7 +46,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -58,7 +57,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author Belger
+ * @author kimwerner
  */
 public class ProfilMidTarget extends AbstractPointsTarget
 {
@@ -66,12 +65,12 @@ public class ProfilMidTarget extends AbstractPointsTarget
    * @see org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget#insertPoints(org.kalypso.model.wspm.core.profil.impl.ProfilEventManager,
    *      IProfilPoints)
    */
-  public void insertPoints( final IProfilEventManager pem, final List<IRecord> points )
+  public void insertPoints( final IProfil profile, final List<IRecord> points )
   {
     if( points != null )
-      insertPointsInternal( pem, points );
+      insertPointsInternal( profile, points );
     else
-      addPointInternal( pem.getProfil() );
+      addPointInternal( profile );
   }
 
   private final void addPointInternal( final IProfil profile )
@@ -84,16 +83,16 @@ public class ProfilMidTarget extends AbstractPointsTarget
 
   }
 
-  private final void insertPointsInternal( final IProfilEventManager pem, final List<IRecord> points )
+  private final void insertPointsInternal( final IProfil profile, final List<IRecord> points )
   {
     final int pointsCount = points.size();
-    final IComponent[] existingProps = pem.getProfil().getPointProperties();
+    final IComponent[] existingProps = profile.getPointProperties();
 
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
-      final IRecord activePkt = pem.getProfil().getActivePoint();
-      final IRecord targetPkt = activePkt != null ? activePkt : pem.getProfil().createProfilPoint();
+      final IRecord activePkt = profile.getActivePoint();
+      final IRecord targetPkt = activePkt != null ? activePkt : profile.createProfilPoint();
       final double deltaX = (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_BREITE ) )
           - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_BREITE ) );
       final double deltaY = (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_HOEHE ) )
@@ -108,7 +107,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
             - deltaY );
         for( final IComponent prop : existingProps )
         {
-          final IComponent[] pointProperties = pem.getProfil().getPointProperties();
+          final IComponent[] pointProperties = profile.getPointProperties();
 
           if( ArrayUtils.contains( pointProperties, prop ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) && !IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() ) )
           {
@@ -117,7 +116,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
               newPoint.setValue( prop, point.getValue( prop ) );
           }
         }
-        changes[i--] = new PointAdd( pem.getProfil(), targetPkt, newPoint );
+        changes[i--] = new PointAdd( profile, targetPkt, newPoint );
       }
     }
     catch( final Exception e )
@@ -125,7 +124,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
       // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
       changes[0] = null;
     }
-    final ProfilOperation operation = new ProfilOperation( "Punkte einf�gen", pem, changes, false );
+    final ProfilOperation operation = new ProfilOperation( "Punkte einf�gen", profile, changes, false );
     new ProfilOperationJob( operation ).schedule();
   }
 }

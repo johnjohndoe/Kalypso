@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.view;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.result.IStationResult;
 
@@ -54,29 +53,29 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
 {
   private final ProfilViewData m_viewdata;
 
-  protected final IProfilEventManager m_pem;
+  protected final IProfil m_profile;
 
   private Control m_control;
 
   private final IStationResult[] m_results;
 
-  public AbstractProfilView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results )
+  public AbstractProfilView( final IProfil profile, final ProfilViewData viewdata, final IStationResult[] results )
   {
-    m_pem = pem;
+    m_profile = profile;
     m_viewdata = viewdata;
     m_results = results == null ? new IStationResult[0] : results;
 
-    if( m_pem != null )
-      m_pem.addProfilListener( this );
+    if( m_profile != null )
+      m_profile.addProfilListener( this );
 
     if( m_viewdata != null )
       m_viewdata.addProfilViewDataListener( this );
 
   }
 
-  public AbstractProfilView( final IProfilEventManager pem, final ProfilViewData viewdata )
+  public AbstractProfilView( final IProfil profile, final ProfilViewData viewdata )
   {
-    this( pem, viewdata, new IStationResult[0] );
+    this( profile, viewdata, new IStationResult[0] );
   }
 
   /**
@@ -84,8 +83,8 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
    */
   public void dispose( )
   {
-    if( m_pem != null )
-      m_pem.removeProfilListener( this );
+    if( m_profile != null )
+      m_profile.removeProfilListener( this );
 
     if( m_viewdata != null )
       m_viewdata.removeProfilViewDataListener( this );
@@ -112,7 +111,7 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
    */
   public final IProfil getProfil( )
   {
-    return m_pem == null ? null : m_pem.getProfil();
+    return m_profile;
   }
 
   /**
@@ -132,8 +131,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   {
   }
 
-  public IProfilEventManager getProfilEventManager( )
-  {
-    return m_pem;
-  }
+  
+
 }

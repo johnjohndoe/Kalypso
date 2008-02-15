@@ -47,8 +47,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -66,7 +66,7 @@ import de.belger.swtchart.layer.IChartLayer;
 
 public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
-  private final IProfilEventManager m_pem;
+  private IProfil m_profile;
 
   private final Color m_color;
 
@@ -74,12 +74,12 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   {
     super( IWspmTuhhConstants.LAYER_GEOKOORDINATEN, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Geokoordinaten", false );
 
-    m_pem = pcv.getProfilEventManager();
+    m_profile = pcv.getProfil();
     m_color = pcv.getColorRegistry().get( IWspmTuhhConstants.LAYER_GELAENDE );
   }
 
   @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
     return null;
   }
@@ -87,10 +87,10 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[2];
-    changes[0] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) );
-    changes[1] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) );
+    changes[0] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) );
+    changes[1] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) );
 
-    final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_pem, changes, true );
+    final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_profile, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }
 

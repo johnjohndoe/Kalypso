@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.ui.profil.operation;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 /**
@@ -51,17 +51,17 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
  */
 public class NullProgressProfilOperation
 {
-  final public static IStatus execute( final IProfilEventManager pem, IProfilChange[] changes )
+  final public static IStatus execute( final IProfil profile, IProfilChange[] changes )
   {
-    final ProfilOperation operation = new ProfilOperation( "", pem, changes, true );
+    final ProfilOperation operation = new ProfilOperation( "", profile, changes, true );
     final IStatus status = operation.execute( new NullProgressMonitor(), null );
     operation.dispose();
     if( !status.isOK() )
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
     return status;
   }
-  final public static IStatus execute( final IProfilEventManager pem, IProfilChange change )
+  final public static IStatus execute( final IProfil profile, IProfilChange change )
   {
-   return execute (pem, new IProfilChange[]{change});
+   return execute (profile, new IProfilChange[]{change});
   }
 }

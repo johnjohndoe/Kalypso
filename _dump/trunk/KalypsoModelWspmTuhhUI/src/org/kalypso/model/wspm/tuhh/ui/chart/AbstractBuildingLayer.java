@@ -47,8 +47,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.ui.panel.BuildingPanel;
@@ -145,9 +145,9 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
   }
 
   @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
-    return new BuildingPanel( pem, viewData );
+    return new BuildingPanel( profile, viewData );
   }
 
   /**
@@ -163,7 +163,7 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
   public void removeYourself( )
   {
     final IProfilChange pc = new ProfileObjectSet( getProfil(), new IProfileObject[] {} );
-    final ProfilOperation operation = new ProfilOperation( "Bauwerk entfernen", getProfilEventManager(), pc, true );
+    final ProfilOperation operation = new ProfilOperation( "Bauwerk entfernen", getProfil(), pc, true );
     new ProfilOperationJob( operation ).schedule();
   }
 

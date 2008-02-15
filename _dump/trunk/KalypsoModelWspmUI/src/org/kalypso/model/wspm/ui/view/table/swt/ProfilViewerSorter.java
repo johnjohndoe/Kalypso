@@ -45,7 +45,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -80,7 +80,7 @@ public class ProfilViewerSorter extends ViewerSorter
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
     final Object input = viewer.getInput();
-    if( m_columnKey == null || input == null || !(input instanceof ProfilEventManager) || e1 == null || !(e1 instanceof IRecord) || e2 == null || !(e2 instanceof IRecord) )
+    if( m_columnKey == null || input == null || !(input instanceof IProfil) || e1 == null || !(e1 instanceof IRecord) || e2 == null || !(e2 instanceof IRecord) )
       return super.compare( viewer, e1, e2 );
 
     final IRecord point1 = (IRecord) e1;

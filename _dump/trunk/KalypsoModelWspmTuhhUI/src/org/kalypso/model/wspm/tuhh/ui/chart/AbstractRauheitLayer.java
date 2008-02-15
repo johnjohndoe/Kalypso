@@ -46,7 +46,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -58,13 +58,13 @@ public abstract class AbstractRauheitLayer extends AbstractProfilChartLayer impl
 {
   private final Color m_color;
 
-  protected IProfilEventManager m_pem;
+  protected IProfil m_profile;
 
   public AbstractRauheitLayer( final ProfilChartView pcv, final String layerId, final String label, final RGB color )
 
   {
     super( layerId, pcv, pcv.getDomainRange(), pcv.getValueRangeRight(), label, true );
-    m_pem = pcv.getProfilEventManager();
+    m_profile = pcv.getProfil();
     final ColorRegistry cr = pcv.getColorRegistry();
     if( !cr.getKeySet().contains(layerId) )
     {

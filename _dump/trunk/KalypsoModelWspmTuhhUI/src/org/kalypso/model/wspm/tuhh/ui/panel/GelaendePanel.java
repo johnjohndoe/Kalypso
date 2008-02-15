@@ -52,8 +52,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -68,9 +68,9 @@ public class GelaendePanel extends AbstractProfilView
 {
   protected Text m_comment;
 
-  public GelaendePanel( final IProfilEventManager pem, final ProfilViewData viewdata )
+  public GelaendePanel( final IProfil profile, final ProfilViewData viewdata )
   {
-    super( pem, viewdata );
+    super( profile, viewdata );
   }
 
   /**
@@ -130,7 +130,7 @@ public class GelaendePanel extends AbstractProfilView
       public void focusLost( final FocusEvent e )
       {
 
-        final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true );
+        final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true );
         new ProfilOperationJob( operation ).schedule();
       }
     } );

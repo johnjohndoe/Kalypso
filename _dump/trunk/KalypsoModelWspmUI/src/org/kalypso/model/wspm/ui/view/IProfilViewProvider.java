@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 
 /**
@@ -50,6 +49,5 @@ import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 public interface IProfilViewProvider extends IProfilProvider
 {
   public ProfilViewData getViewData( );
-  
-  public IProfilEventManager getProfilEventManager();
+ 
 }

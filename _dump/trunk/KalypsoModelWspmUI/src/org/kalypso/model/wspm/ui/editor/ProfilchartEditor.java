@@ -91,10 +91,8 @@ import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.impl.ProfilEventManager;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
@@ -420,7 +418,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
           if( monitor.isCanceled() )
             return Status.CANCEL_STATUS;
 
-          setProfil( new ProfilEventManager( profil, getResults() ), file );
+          setProfil( profil, file );
 
           return Status.OK_STATUS;
         }
@@ -442,25 +440,25 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     job.schedule();
   }
 
-  public synchronized void setProfil( final IProfilEventManager pem, final IFile file )
+  public synchronized void setProfil( final IProfil profile, final IFile file )
   {
-    final IProfilEventManager oldPem = m_profilPart.getProfilEventManager();
+    final IProfil oldProfile = m_profilPart.getProfil();
     final ProfilViewData oldViewData = m_profilPart.getViewData();
 
-    if( oldPem == null && oldViewData != null && pem != null )
+    if( oldProfile == null && oldViewData != null && profile != null )
     {
-      final IProfil profile = pem.getProfil();
+ 
       if( profile != null )
         for( final IComponent markerId : profile.getPointMarkerTypes() )
           oldViewData.setMarkerVisibility( markerId, true );
     }
 
-    m_profilPart.setProfil( pem, file, getEditorSite().getId() );
+    m_profilPart.setProfil( profile, file, getEditorSite().getId() );
 
-    fireOnProfilProviderChanged( oldPem, m_profilPart.getProfilEventManager(), oldViewData, m_profilPart.getViewData() );
+    fireOnProfilProviderChanged( oldProfile, m_profilPart.getProfil(), oldViewData, m_profilPart.getViewData() );
 
     // TODO: remove this, it is deprecated
-    fireProfilChanged( pem == null ? null : pem.getProfil() );
+    //fireProfilChanged( pem == null ? null : pem.getProfil() );
 
     fireDirtyChanged();
   }
@@ -642,7 +640,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         return;
 
       final IRecord point = profil.getPoints()[pointPos];
-      final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( profil, point, null ), true );
+      final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ActiveObjectEdit( profil, point, null ), true );
       final IStatus status = operation.execute( new NullProgressMonitor(), null );
       operation.dispose();
       if( !status.isOK() )
@@ -656,10 +654,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     }
   }
 
-  public IProfilEventManager getProfilEventManager( )
-  {
-    return m_profilPart.getProfilEventManager();
-  }
+ 
 
   public void runChartAction( final ProfilChartActionsEnum chartAction )
   {
@@ -734,11 +729,22 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
   }
 
   /**
+   * @deprecated Use {@link #getProfile()} instead
+   */
+  /**
    * @see com.bce.profil.ui.view.IProfilProvider2#getEventManager()
    */
-  public IProfilEventManager getEventManager( )
+  public IProfil getEventManager( )
   {
-    return m_profilPart.getProfilEventManager();
+    return getProfile();
+  }
+
+  /**
+   * @see com.bce.profil.ui.view.IProfilProvider2#getEventManager()
+   */
+  public IProfil getProfile( )
+  {
+    return m_profilPart.getProfil();
   }
 
   /**
@@ -765,10 +771,10 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     m_profilProviderListener.remove( l );
   }
 
-  private void fireOnProfilProviderChanged( final IProfilEventManager oldPem, final IProfilEventManager newPem, final ProfilViewData oldViewData, final ProfilViewData newViewData )
+  private void fireOnProfilProviderChanged( final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData )
   {
     for( final IProfilProviderListener l : m_profilProviderListener )
-      l.onProfilProviderChanged( this, oldPem, newPem, oldViewData, newViewData );
+      l.onProfilProviderChanged( this, oldProfile, newProfile, oldViewData, newViewData );
   }
 
 }

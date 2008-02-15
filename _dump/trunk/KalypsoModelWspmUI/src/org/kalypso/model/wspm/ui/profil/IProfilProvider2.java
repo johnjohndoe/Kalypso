@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.ui.profil;
 
 import org.eclipse.core.resources.IFile;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 
 /**
@@ -49,7 +49,8 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
  */
 public interface IProfilProvider2
 {
-  public IProfilEventManager getEventManager( );
+ 
+  public IProfil getProfil( );
 
   public ProfilViewData getViewData( );
 

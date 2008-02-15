@@ -53,7 +53,6 @@ import org.eclipse.ui.ide.IDE;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -69,12 +68,12 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
    */
   public void run( IMarker marker )
   {
-    final IProfilEventManager pem = getProfilEventManager( marker );
-    final IProfil profil = pem == null ? null : pem.getProfil();
+   
+    final IProfil profil = getProfil(marker);
     final IProfilChange[] changes = profil == null ? null : resolve( profil );
     if( changes != null )
     {
-      final ProfilOperation operation = new ProfilOperation( marker.getAttribute( IMarker.MESSAGE, "Profiloperation" ), pem, changes, true );
+      final ProfilOperation operation = new ProfilOperation( marker.getAttribute( IMarker.MESSAGE, "Profiloperation" ), profil, changes, true );
       new ProfilOperationJob( operation ).schedule();
     }
   }
@@ -85,7 +84,7 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
 
   private final Image m_image;
 
-  private IProfilEventManager getProfilEventManager( final IMarker marker )
+  private IProfil getProfil( final IMarker marker )
   {
     try
     {
@@ -101,7 +100,7 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
           final IEditorPart editor = editorRef.getEditor( false );
           final IFile editorFile = editor == null ? null : (IFile) editor.getAdapter( IFile.class );
           final IProfilProvider2 profilProvider = (editorFile != null && editorFile.equals( resource )) ? (IProfilProvider2) editor.getAdapter( IProfilProvider2.class ) : null;
-          return profilProvider == null ? null : profilProvider.getEventManager();
+          return profilProvider == null ? null : profilProvider.getProfil();
         }
       }
 

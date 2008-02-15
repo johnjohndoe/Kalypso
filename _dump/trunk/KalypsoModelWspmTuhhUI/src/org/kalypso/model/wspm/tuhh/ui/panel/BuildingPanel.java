@@ -58,7 +58,6 @@ import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
@@ -80,9 +79,9 @@ public class BuildingPanel extends AbstractProfilView
 
   private final IProfileObject m_building;
 
-  public BuildingPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
+  public BuildingPanel( final IProfil profile, final ProfilViewData viewdata )
   {
-    super( pem, viewdata );
+    super( profile, viewdata );
 
     // TODO IProfileObjects now returned as list from IProfile
     final IProfileObject[] profileObjects = getProfil().getProfileObjects();
@@ -167,7 +166,7 @@ public class BuildingPanel extends AbstractProfilView
             if( value == currentValue )
               return;
             final ProfileObjectEdit edit = new ProfileObjectEdit( building, buildingProperty, value );
-            final ProfilOperation operation = new ProfilOperation( /* TODO: labelProvider */"" + " ändern", getProfilEventManager(), edit, true );
+            final ProfilOperation operation = new ProfilOperation( /* TODO: labelProvider */"" + " ändern", getProfil(), edit, true );
             new ProfilOperationJob( operation ).schedule();
           }
           catch( final Exception e1 )

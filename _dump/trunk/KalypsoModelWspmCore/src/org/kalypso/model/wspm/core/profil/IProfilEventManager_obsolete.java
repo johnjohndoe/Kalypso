@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.core.profil;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 
-public interface IProfilEventManager
+public interface IProfilEventManager_obsolete
 {
   public IProfil getProfil( );
   

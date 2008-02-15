@@ -77,7 +77,6 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -106,7 +105,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
   private final IPointsProvider[] m_pointsProviders;
 
-  private final IProfilEventManager m_pem;
+  private final IProfil m_profile;
 
   private IPointsProvider m_provider = null;
 
@@ -116,11 +115,11 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
   private IDialogSettings m_dialogSettings;
 
-  public DouglasPeuckerDialog( final Shell parentShell, final IProfilEventManager pem, final IPointsProvider[] pointsProviders )
+  public DouglasPeuckerDialog( final Shell parentShell, final IProfil profile, final IPointsProvider[] pointsProviders )
   {
     super( parentShell );
 
-    m_pem = pem;
+    m_profile = profile;
     m_pointsProviders = pointsProviders;
     final IDialogSettings dialogSettings = KalypsoModelWspmUIPlugin.getDefault().getDialogSettings();
     m_dialogSettings = dialogSettings.getSection( SETTINGS_SECTION );
@@ -453,10 +452,9 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
     final double allowedDistance = m_distance;
     final IRecord[] points = m_provider.getPoints();
-    final IProfil profil = m_pem.getProfil();
 
     // reduce points
-    final IRecord[] pointsToKeep = profil.getMarkedPoints();
+    final IRecord[] pointsToKeep = m_profile.getMarkedPoints();
     final IRecord[] pointsToRemove;
     pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
     if( pointsToRemove.length == 0 )
@@ -465,8 +463,8 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     // remove points
     final IProfilChange[] removeChanges = new IProfilChange[pointsToRemove.length];
     for( int i = 0; i < pointsToRemove.length; i++ )
-      removeChanges[i] = new PointRemove( profil, pointsToRemove[i] );
-    m_operation = new ProfilOperation( "Profil ausdünnen", m_pem, removeChanges, false );
+      removeChanges[i] = new PointRemove( m_profile, pointsToRemove[i] );
+    m_operation = new ProfilOperation( "Profil ausdünnen", m_profile, removeChanges, false );
 
     final ProfilOperationRunnable operationRunnable = new ProfilOperationRunnable( m_operation );
 

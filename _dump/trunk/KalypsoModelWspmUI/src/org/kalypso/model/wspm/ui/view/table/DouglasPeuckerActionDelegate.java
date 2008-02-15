@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.IPointsProvider;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider;
@@ -85,20 +84,20 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
     // get profilpoints from selection and view
     // TODO: this does not work any more
     // final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
-    final IProfilEventManager pem = m_view instanceof TableView ? ((TableView) m_view).getProfilEventManager() : null;
+    final IProfil profile = m_view instanceof TableView ? ((TableView) m_view).getProfil() : null;
 
-    if( pem == null )
+    if( profile == null )
     {
       // should never happen
       MessageDialog.openError( viewShell, "Profil ausd�nnnen", "Die aktive Ansicht unterst�tz diese Aktion nicht." );
       return;
     }
 
-    final IProfil profil = pem.getProfil();
-    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( "aus allen Punkten des Profils", profil.getPoints() );
-    final IPointsProvider selectionPointProvider = new SelectionPointsProvider( profil, m_selection );
 
-    final DouglasPeuckerDialog dialog = new DouglasPeuckerDialog( viewShell, pem, new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );
+    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( "aus allen Punkten des Profils", profile.getPoints() );
+    final IPointsProvider selectionPointProvider = new SelectionPointsProvider( profile, m_selection );
+
+    final DouglasPeuckerDialog dialog = new DouglasPeuckerDialog( viewShell, profile, new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );
     dialog.open();
   }
 

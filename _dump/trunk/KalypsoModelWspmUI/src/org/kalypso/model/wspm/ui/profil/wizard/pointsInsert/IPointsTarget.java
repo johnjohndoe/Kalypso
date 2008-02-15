@@ -44,12 +44,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IRecord;
 
 public interface IPointsTarget extends IExecutableExtension
 {
-  public void insertPoints( final IProfilEventManager pem, final List<IRecord> points ) throws InvocationTargetException;
+  public void insertPoints( final IProfil profile, final List<IRecord> points ) throws InvocationTargetException;
 
   public String getLabel( );
 

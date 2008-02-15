@@ -51,7 +51,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -93,7 +92,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   public Rectangle2D getBounds( )
   {
 
-    final IRecord[] points = m_pem.getProfil().getPoints();
+    final IRecord[] points = m_profile.getPoints();
     Rectangle2D bounds = null;
     for( final IRecord p : points )
     {
@@ -154,7 +153,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
     {
       final EditData editData = (EditData) data;
       final IRecord activePoint = getProfil().getPoints()[editData.getIndex()];
-      NullProgressProfilOperation.execute( m_pem, new ActiveObjectEdit( getProfil(), activePoint, null ) );
+      NullProgressProfilOperation.execute( m_profile, new ActiveObjectEdit( getProfil(), activePoint, null ) );
     }
   }
 
@@ -179,9 +178,9 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   }
 
   @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
-    return new RauheitenPanel( pem, viewData );
+    return new RauheitenPanel( profile, viewData );
   }
 
   private final void updateRauheit( )
@@ -222,8 +221,8 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
    */
   public void removeYourself( )
   {
-    final IProfilChange change = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), m_rauheit ) );
-    final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_pem, change, true );
+    final IProfilChange change = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, m_rauheit ) );
+    final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_profile, change, true );
     new ProfilOperationJob( operation ).schedule();
   }
 

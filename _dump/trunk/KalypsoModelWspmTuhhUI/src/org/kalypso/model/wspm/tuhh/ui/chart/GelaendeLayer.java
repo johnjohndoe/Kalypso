@@ -45,11 +45,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -60,7 +59,9 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 import de.belger.swtchart.axis.AxisRange;
 import de.belger.swtchart.util.LogicalRange;
@@ -84,9 +85,9 @@ public class GelaendeLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
-    return new GelaendePanel( pem, viewData );
+    return new GelaendePanel( profile, viewData );
   }
 
   @Override
@@ -118,8 +119,15 @@ public class GelaendeLayer extends AbstractPolyLineLayer
         for( final IRecord point : (IRecord[]) change.getObjects() )
           try
           {
-            final double breite = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
-            final double hoehe = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+            final TupleResult owner = point.getOwner();
+
+            final IComponent cBreite = ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE );
+            int iBreite = owner.indexOfComponent( cBreite );
+            final double breite = (Double) point.getValue( iBreite );
+
+            final IComponent cHoehe = ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE );
+            int iHoehe = owner.indexOfComponent( cHoehe );
+            final double hoehe = (Double) point.getValue( iHoehe );
 
             if( breite > right || breite < left || hoehe > top || hoehe < bottom )
             {

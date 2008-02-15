@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
@@ -54,7 +54,7 @@ import de.belger.swtchart.layer.IChartLayer;
 public interface IProfilChartLayer extends IChartLayer
 {
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData );
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData );
 
   /**
    * Löscht diesen Layer aus dem Profil. Besser gesagt, löscht die Daten aus dem Profil, die durch diesen Layer

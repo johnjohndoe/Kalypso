@@ -51,8 +51,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -72,7 +72,7 @@ import de.belger.swtchart.layer.IChartLayer;
 
 public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
-  private final IProfilEventManager m_pem;
+  private final IProfil m_profile;
 
   private final Color m_color;
 
@@ -82,7 +82,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   {
     super( IWspmTuhhConstants.LAYER_BEWUCHS, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Bewuchs" );
 
-    m_pem = pcv.getProfilEventManager();
+    m_profile = pcv.getProfil();
     final ColorRegistry cr = pcv.getColorRegistry();
     if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BEWUCHS ) )
       cr.put( IWspmTuhhConstants.LAYER_BEWUCHS, new RGB( 0, 255, 0 ) );
@@ -90,7 +90,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   }
 
   @Override
-  public IProfilView createLayerPanel( final IProfilEventManager pem, final ProfilViewData viewData )
+  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
     return null;
   }
@@ -98,10 +98,10 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-    changes[1] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-    changes[2] = new PointPropertyRemove( m_pem.getProfil(), ProfilObsHelper.getPropertyFromId( m_pem.getProfil(), IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
-    final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", m_pem, changes, true );
+    changes[0] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId(m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+    changes[1] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+    changes[2] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+    final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", m_profile, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }
 
@@ -128,7 +128,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   {
     try
     {
-      final IRecord[] ppoints = m_pem.getProfil().getPoints();
+      final IRecord[] ppoints = m_profile.getPoints();
       final Point2D[] points = new Point2D[ppoints.length];
       int i = 0;
       for( final IRecord p : ppoints )
@@ -162,7 +162,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     final Point2D[] points = getPoints();
     for( int i = 0; i < points.length - 1; i++ )
     {
-      final IRecord pp = m_pem.getProfil().getPoints()[i];
+      final IRecord pp =m_profile.getPoints()[i];
       try
       {
         final double ax = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
@@ -208,7 +208,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
 
   public void paint( final GCWrapper gc )
   {
-    final IRecord[] points = m_pem.getProfil().getPoints();
+    final IRecord[] points = m_profile.getPoints();
     if( points.length == 0 )
       return;
     Point2D p2dL = null;

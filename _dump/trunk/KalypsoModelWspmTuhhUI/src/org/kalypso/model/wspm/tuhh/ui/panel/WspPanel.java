@@ -47,8 +47,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -65,9 +65,9 @@ public class WspPanel extends AbstractProfilView
 
   private final IStationResult m_result;
 
-  public WspPanel( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult result )
+  public WspPanel( final IProfil profile, final ProfilViewData viewdata, final IStationResult result )
   {
-    super( pem, viewdata );
+    super( profile, viewdata );
 
     m_result = result;
   }

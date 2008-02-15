@@ -69,10 +69,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -80,13 +79,11 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -158,7 +155,7 @@ public class WehrPanel extends AbstractProfilView
             final IProfilChange[] changes = new IProfilChange[2];
             changes[0] = new PointMarkerEdit( m_devider, value );
             changes[1] = new ActiveObjectEdit( getProfil(), m_devider.getPoint(), null );
-            final ProfilOperation operation = new ProfilOperation( "Wehrfeldparameter ändern", getProfilEventManager(), changes, true );
+            final ProfilOperation operation = new ProfilOperation( "Wehrfeldparameter ändern", getProfil(), changes, true );
             new ProfilOperationJob( operation ).schedule();
 
           }
@@ -192,7 +189,7 @@ public class WehrPanel extends AbstractProfilView
               final IProfilChange[] changes = new IProfilChange[2];
               changes[0] = new PointMarkerSetPoint( m_devider, point );
               changes[1] = new ActiveObjectEdit( getProfil(), point, null );
-              final ProfilOperation operation = new ProfilOperation( "Wehrfeld verschieben", getProfilEventManager(), changes, true );
+              final ProfilOperation operation = new ProfilOperation( "Wehrfeld verschieben", getProfil (), changes, true );
               new ProfilOperationJob( operation ).schedule();
             }
           }
@@ -209,7 +206,7 @@ public class WehrPanel extends AbstractProfilView
         public void widgetSelected( final SelectionEvent e )
         {
           final IProfilChange change = new PointMarkerEdit( m_devider, null );
-          final ProfilOperation operation = new ProfilOperation( "Wehrfeld löschen", getProfilEventManager(), change, true );
+          final ProfilOperation operation = new ProfilOperation( "Wehrfeld löschen", getProfil (), change, true );
           new ProfilOperationJob( operation ).schedule();
         }
       } );
@@ -254,9 +251,9 @@ public class WehrPanel extends AbstractProfilView
 
   private final IProfilPointPropertyProvider[] m_pointPropertyProviders;
 
-  public WehrPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
+  public WehrPanel( final IProfil profile, final ProfilViewData viewdata )
   {
-    super( pem, viewdata );
+    super( profile, viewdata );
     m_deviderLines = new LinkedList<DeviderLine>();
     m_deleteImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
     m_addImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
@@ -343,7 +340,7 @@ public class WehrPanel extends AbstractProfilView
           return;
 
         final IProfilChange change = new ProfileObjectEdit( building, wehrart, type );
-        final ProfilOperation operation = new ProfilOperation( "Wehrart ändern", getProfilEventManager(), change, true );
+        final ProfilOperation operation = new ProfilOperation( "Wehrart ändern", getProfil (), change, true );
         new ProfilOperationJob( operation ).schedule();
 
       }
@@ -389,7 +386,7 @@ public class WehrPanel extends AbstractProfilView
             building = profileObjects[0];
 
           final IProfilChange change = new ProfileObjectEdit( building, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), value );
-          final ProfilOperation operation = new ProfilOperation( "Wehrfeldparameter ändern", getProfilEventManager(), change, true );
+          final ProfilOperation operation = new ProfilOperation( "Wehrfeldparameter ändern", getProfil (), change, true );
           new ProfilOperationJob( operation ).schedule();
         }
       }
@@ -420,7 +417,7 @@ public class WehrPanel extends AbstractProfilView
 // changes[0] = new PointPropertyAdd( getProfil(), cWehrT );
 // changes[1] = new PointMarkerEdit( new ProfilDevider( cWehrT, point ), 0.0 );
 // changes[2] = new ActiveObjectEdit( getProfil(), point, null );
-        final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", getProfilEventManager(), true );
+        final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", getProfil (), true );
         final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
         IProfilPointMarker marker = null;
         for( final IProfilPointMarkerProvider provider : providers )
@@ -458,7 +455,7 @@ public class WehrPanel extends AbstractProfilView
       @Override
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
-        final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern:", getProfilEventManager(), true );
+        final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern:", getProfil (), true );
         operation.addChange( new VisibleMarkerEdit( getViewData(), ProfilObsHelper.getPropertyFromId( m_pointPropertyProviders, IWspmTuhhConstants.MARKER_TYP_WEHR ), m_WehrfeldVisible.getSelection() ) );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();

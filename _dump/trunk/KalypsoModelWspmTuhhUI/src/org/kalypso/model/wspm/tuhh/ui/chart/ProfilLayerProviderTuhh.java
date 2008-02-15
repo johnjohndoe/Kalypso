@@ -145,26 +145,28 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
       final IProfilChange[] changes = new IProfilChange[3];
-      changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ));
-      changes[1] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ));
-      changes[2] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ));
-      final ProfilOperation operation = new ProfilOperation( "Bewuchs einfügen", view.getProfilEventManager(), changes, true );
+      changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+      changes[1] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+      changes[2] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+      final ProfilOperation operation = new ProfilOperation( "Bewuchs einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-//      profil.addPointProperty( ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-//      profil.addPointProperty( ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-//      profil.addPointProperty( ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
-//    final IProfilChange[] changes = new IProfilChange[1];
-//    changes[0] = new Active( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ),0.0);
-//  final ProfilOperation operation = new ProfilOperation( "Bewuchs einfügen", view.getProfilEventManager(), changes, true );
-//  new ProfilOperationJob( operation ).schedule();
+// profil.addPointProperty( ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+// profil.addPointProperty( ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+// profil.addPointProperty( ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+// final IProfilChange[] changes = new IProfilChange[1];
+// changes[0] = new Active( profil, ProfilObsHelper.getPropertyFromId( provider,
+// IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ),0.0);
+// final ProfilOperation operation = new ProfilOperation( "Bewuchs einfügen", view.getProfilEventManager(), changes,
+// true );
+// new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new BewuchsLayer( view ) };
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
     {
       final IProfilChange[] changes = new IProfilChange[2];
-      changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_HOCHWERT ));
-      changes[1] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_RECHTSWERT ));
-      final ProfilOperation operation = new ProfilOperation( "Geokoordinaten einfügen", view.getProfilEventManager(), changes, true );
+      changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+      changes[1] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
+      final ProfilOperation operation = new ProfilOperation( "Geokoordinaten einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new HochRechtsLayer( view ) };
     }
@@ -173,28 +175,28 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfilChange[] changes = new IProfilChange[2];
       changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_HOEHE ) );
       changes[1] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final ProfilOperation operation = new ProfilOperation( "Profillinie einfügen", view.getProfilEventManager(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( "Profillinie einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new GelaendeLayer( view ) };
     }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KS ) )
     {
-      final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfilEventManager(), true );
+      final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfil(), true );
       if( profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) ) )
       {
         operation.addChange( new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ), ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) ) ) );
         operation.addChange( new PointPropertyRemove( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) ) );
       }
       else
-        operation.addChange( new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS )) );
+        operation.addChange( new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new ExtendedRauheitLayer( view, layerId, "Rauheit-ks" ) };
     }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
     {
-      final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfilEventManager(), true );
+      final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfil(), true );
       if( profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) ) )
       {
         operation.addChange( new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ), ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) ) ) );
@@ -209,22 +211,25 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     {
       final Double[] values = ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
       final IProfilChange[] changes = new IProfilChange[1];
-//      changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), values );
-//      changes[1] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), values );
+// changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider,
+// IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), values );
+// changes[1] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider,
+// IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), values );
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { new BuildingBruecke( profil ) } );
 
-
-      final ProfilOperation operation = new ProfilOperation( "Brücke einfügen", view.getProfilEventManager(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( "Brücke einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new BrueckeBuildingLayer( view ) };
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
       final IProfilChange[] changes = new IProfilChange[1];
-      //changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
+      // changes[0] = new PointPropertyAdd( profil, ProfilObsHelper.getPropertyFromId( provider,
+      // IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), ProfilUtil.getValuesFor( profil,
+      // ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) ) );
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { new BuildingWehr( profil ) } );
 
-      final ProfilOperation operation = new ProfilOperation( "Wehr einfügen", view.getProfilEventManager(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( "Wehr einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new WehrBuildingLayer( view ) };
     }
@@ -233,7 +238,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfileObject building = new BuildingKreis( profil );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
-      final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfilEventManager(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new KreisBuildingLayer( view ) };
     }
@@ -242,7 +247,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfileObject building = new BuildingMaul( profil );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
-      final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfilEventManager(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new MaulBuildingLayer( view ) };
     }
@@ -251,7 +256,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfileObject building = new BuildingTrapez( profil );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
-      final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfilEventManager(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new TrapezBuildingLayer( view ) };
     }
@@ -260,7 +265,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfileObject building = new BuildingEi( profil );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
-      final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfilEventManager(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new EiBuildingLayer( view ) };
     }

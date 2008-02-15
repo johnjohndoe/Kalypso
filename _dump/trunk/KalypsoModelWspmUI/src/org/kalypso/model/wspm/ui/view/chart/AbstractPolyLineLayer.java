@@ -180,7 +180,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
     final Point2D logPoint = screen2logical( moveTo );
 
-    final ProfilOperation profilOperation = new ProfilOperation( "Gel�ndeh�he �ndern", getProfilEventManager(), true );
+    final ProfilOperation profilOperation = new ProfilOperation( "Gel�ndeh�he �ndern", getProfil(), true );
 
     final IComponent property = editData.getProperty();
     if( getViewData().isEditvert() )
@@ -194,33 +194,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
   }
 
-  // private Point2D[] getPoints2D( List<IProfilPoint> ppoints, final POINT_PROPERTY pointProperty )
-  // {
-  // try
-  // {
-  // // final List<IProfilPoint> ppoints = getPoints();
-  // final Point2D[] points = new Point2D[ppoints.size()];
-  // int i = 0;
-  // for( final IProfilPoint p : ppoints )
-  // points[i++] = convertPoint( p, pointProperty );
-  //
-  // return points;
-  // }
-  // catch( final Exception e )
-  // {
-  // e.printStackTrace();
-  //
-  // return new Point2D[0];
-  // }
-  // }
-
-  // private Point2D.Double convertPoint( final IProfilPoint p, final POINT_PROPERTY pointProperty ) throws
-  // IllegalProfileOperationException
-  // {
-  // final double x = p.getValueFor( POINT_PROPERTY.BREITE );
-  // final double y = p.getValueFor( pointProperty );
-  // return new Point2D.Double( x, y );
-  // }
+  
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
@@ -380,7 +354,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     {
       final EditData editData = (EditData) data;
       final IRecord activePoint = getProfil().getPoints()[editData.getIndex()];
-      final ProfilOperation operation = new ProfilOperation( "", getProfilEventManager(), new ActiveObjectEdit( getProfil(), activePoint, null ), true );
+      final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ActiveObjectEdit( getProfil(), activePoint, null ), true );
       final IStatus status = operation.execute( new NullProgressMonitor(), null );
       operation.dispose();
       if( !status.isOK() )

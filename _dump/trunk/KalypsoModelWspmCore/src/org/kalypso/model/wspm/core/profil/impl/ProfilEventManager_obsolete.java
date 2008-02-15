@@ -48,7 +48,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
+import org.kalypso.model.wspm.core.profil.IProfilEventManager_obsolete;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.core.result.IStationResult;
 /**
  * @author kimwerner
  */
-public class ProfilEventManager implements IProfilEventManager
+public class ProfilEventManager_obsolete implements IProfilEventManager_obsolete
 {
   private final List<IProfilListener> m_listeners = new ArrayList<IProfilListener>( 10 );
 
@@ -64,7 +64,7 @@ public class ProfilEventManager implements IProfilEventManager
 
   private final IStationResult[] m_results;
 
-  public ProfilEventManager( final IProfil profil, final IStationResult[] results )
+  public ProfilEventManager_obsolete( final IProfil profil, final IStationResult[] results )
   {
     m_profil = profil;
     m_results = results;

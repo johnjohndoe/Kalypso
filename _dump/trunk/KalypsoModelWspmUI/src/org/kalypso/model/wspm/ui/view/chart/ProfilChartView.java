@@ -57,7 +57,6 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -112,19 +111,19 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   private IProfilLayerProvider m_layerProvider;
 
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
+  public ProfilChartView( final IProfil profile, final ProfilViewData viewdata, final ColorRegistry colorRegistry )
   {
-    this( pem, viewdata, new IStationResult[0], colorRegistry );
+    this( profile, viewdata, new IStationResult[0], colorRegistry );
   }
 
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry )
+  public ProfilChartView( final IProfil profile, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry )
   {
-    this( pem, viewdata, results, colorRegistry, new Insets( 20, 0, 0, 0 ) );
+    this( profile, viewdata, results, colorRegistry, new Insets( 20, 0, 0, 0 ) );
   }
 
-  public ProfilChartView( final IProfilEventManager pem, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry, Insets insets )
+  public ProfilChartView( final IProfil profile, final ProfilViewData viewdata, final IStationResult[] results, final ColorRegistry colorRegistry, Insets insets )
   {
-    super( pem, viewdata, results );
+    super( profile, viewdata, results );
     m_colorRegistry = colorRegistry;
     m_insets = insets;
   }
