@@ -112,20 +112,6 @@ public class ToolTipRenderer
     return maxRect;
   }
 
-  private org.eclipse.swt.graphics.Point calculateBoxWidth( final GC gc )
-  {
-    final org.eclipse.swt.graphics.Point bounds = new org.eclipse.swt.graphics.Point( 0, 0 );
-    for( final String row : m_rows )
-    {
-      final org.eclipse.swt.graphics.Point rowBounds = gc.textExtent( row );
-
-      bounds.x = Math.max( bounds.x, rowBounds.x );
-      bounds.y = bounds.y + rowBounds.y;
-    }
-
-    return bounds;
-  }
-
   /**
    * Paints a tooltip to the given position.<br>
    * If a <code>screenRect</code> is given, the position may be adjusted in order to show the whole tooltip inside the
@@ -201,19 +187,25 @@ public class ToolTipRenderer
     if( m_rows == null || m_rows.length == 0 )
       return;
 
-    final org.eclipse.swt.graphics.Point maxRect = calculateBoxWidth( gc );
+    final StringBuffer text = new StringBuffer();
+    for( int i = 0; i < m_rows.length; i++ )
+    {
+      text.append( m_rows[i] );
+      if( i != m_rows.length - 1 )
+        text.append( '\n' );
+    }
+    final String tooltip = text.toString();
 
-    final int textHeight = maxRect.y; // height of one line
-    final int textboxWidth = maxRect.x; // width of textbox
-    final int textboxHeight = textHeight * m_rows.length; // height of textbox
+    final int drawFlags = SWT.DRAW_DELIMITER | SWT.DRAW_MNEMONIC | SWT.DRAW_TAB | SWT.DRAW_TRANSPARENT;
+    final org.eclipse.swt.graphics.Point textBoxSize = gc.textExtent( tooltip, drawFlags );
 
     final int insetsHeigth = m_insets.bottom + m_insets.top;
     final int insetsWidth = m_insets.left + m_insets.right;
 
-    final Point basePoint = new Point( point.x + m_offset.x, point.y - m_offset.y - textboxHeight - insetsHeigth );
+    final Point basePoint = new Point( point.x + m_offset.x, point.y - m_offset.y - textBoxSize.y - insetsHeigth );
 
-    final int outlineWidth = textboxWidth + insetsWidth;
-    final int outlineHeight = textboxHeight + insetsHeigth;
+    final int outlineWidth = textBoxSize.x + insetsWidth;
+    final int outlineHeight = textBoxSize.y + insetsHeigth;
 
     if( screenRect != null )
     {
@@ -236,6 +228,8 @@ public class ToolTipRenderer
     final org.eclipse.swt.graphics.Color bgColor = gc.getDevice().getSystemColor( SWT.COLOR_INFO_BACKGROUND );
     final org.eclipse.swt.graphics.Color borderColor = gc.getDevice().getSystemColor( SWT.COLOR_BLACK );
 
+    gc.setAlpha( 255 );
+
     /* draw outer rectangle */
     gc.setBackground( bgColor );
     gc.fillRectangle( basePoint.x, basePoint.y, outlineWidth, outlineHeight );
@@ -246,20 +240,27 @@ public class ToolTipRenderer
 
     /* draw tooltip labels */
     gc.setForeground( textColor );
-    int baseLineY = basePoint.y + m_insets.top;
-    for( final String element : m_rows )
-    {
-      gc.drawString( element, basePoint.x + m_insets.left, baseLineY );
-      baseLineY += textHeight;
-    }
+    gc.drawText( tooltip, basePoint.x + m_insets.left, basePoint.y + m_insets.top, drawFlags );
 
-// // debug: draw textbox
-// gc.drawRectangle( basePoint.x + m_insets.left, basePoint.y + m_insets.top, textboxWidth, textboxHeight );
+// // debug: draw textbox and basepoint
+// gc.drawRectangle( basePoint.x + m_insets.left, basePoint.y + m_insets.top, textBoxSize.x, textBoxSize.y );
+// gc.drawOval( basePoint.x, basePoint.y, 2, 2 );
   }
 
   public void setInputData( final String[] rows )
   {
-    m_rows = rows;
+    if( rows == null )
+    {
+      m_rows = null;
+      return;
+    }
+
+    // Strip any carriage returns from the input
+    m_rows = new String[rows.length];
+    for( int i = 0; i < rows.length; i++ )
+    {
+      m_rows[i] = rows[i].replaceAll( "\n|\r", "" );
+    }
   }
 
   public void setTooltip( final String tooltip )
