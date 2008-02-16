@@ -84,7 +84,7 @@ public class SaveBuildingParameterHandler extends AbstractHandler implements IEl
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
-        final BuildingParameterLayer layer = RemoveBuildingParameterMouseHandler.findLayer( chartPart.getChartComposite().getModel() );
+        final BuildingParameterLayer layer = EditBuildingParameterMouseHandler.findLayer( chartPart.getChartComposite().getModel() );
         layer.saveData( monitor );
 
         ChartHandlerUtilities.updateElements( chartPart );

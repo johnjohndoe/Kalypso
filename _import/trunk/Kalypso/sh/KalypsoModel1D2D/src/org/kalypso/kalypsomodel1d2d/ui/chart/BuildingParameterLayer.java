@@ -3,7 +3,10 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -34,12 +37,21 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDecimal> implements IDataContainer<BigDecimal, BigDecimal>, IEditableChartLayer<BigDecimal, BigDecimal>
 {
-  private final GeometryFactory GF = new GeometryFactory();
+  private final static GeometryFactory GF = new GeometryFactory();
+
+  private Coordinate[] m_paintOkPoints = null;
+
+  private Coordinate[] m_paintCrossPoints = null;
+
+  private final List<Coordinate[]> m_paintOkLines = new ArrayList<Coordinate[]>();
+
+  private final List<Coordinate[]> m_paintCrossLines = new ArrayList<Coordinate[]>();
 
   private final int m_domainComponent;
 
@@ -74,6 +86,8 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     m_result = result;
 
     setDataContainer( this );
+
+    updatePaintData();
   }
 
   public void drawIcon( final Image img )
@@ -83,91 +97,95 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
 
   public void paint( final GCWrapper gc )
   {
-    final IAxis<BigDecimal> xAxis = getDomainAxis();
-    final IAxis<BigDecimal> yAxis = getTargetAxis();
-
     final IStyledElement okLineStyle = getStyle().getElement( SE_TYPE.LINE, 0 );
     final IStyledElement okPointStyle = getStyle().getElement( SE_TYPE.POINT, 0 );
     final IStyledElement crossLineStyle = getStyle().getElement( SE_TYPE.LINE, 1 );
     final IStyledElement crossPointStyle = getStyle().getElement( SE_TYPE.POINT, 1 );
 
-    BigDecimal lastClass = null;
-    Coordinate[] lastCrds = null;
-    final List<Point> path = new ArrayList<Point>();
-    final List<Coordinate> crds = new ArrayList<Coordinate>();
-    final List<EditInfo> editInfos = new ArrayList<EditInfo>();
+    for( final Coordinate[] okLine : m_paintOkLines )
+    {
+      okLineStyle.setPath( toPointList( okLine ) );
+      okLineStyle.paint( gc );
+    }
+
+    for( final Coordinate[] crossLine : m_paintCrossLines )
+    {
+      crossLineStyle.setPath( toPointList( crossLine ) );
+      crossLineStyle.paint( gc );
+    }
+
+    final List<Point> okPoints = toPointList( m_paintOkPoints );
+    okPointStyle.setPath( okPoints );
+    okPointStyle.paint( gc );
+
+    crossPointStyle.setPath( toPointList( m_paintCrossPoints ) );
+    crossPointStyle.paint( gc );
+
+    m_editInfos = updateEditInfos();
+
+    if( m_tooltipPoint != null )
+      m_tooltipRenderer.paintTooltip( m_tooltipPoint, gc.m_gc, gc.getClipping() );
+  }
+
+  private EditInfo[] updateEditInfos( )
+  {
+    final String classLabel = m_result.getComponent( m_classComponent ).getName();
+
+    // Create current edit infos from ok points
+    final List<EditInfo> editInfos = new ArrayList<EditInfo>( m_result.size() );
+    final IAxis<BigDecimal> xAxis = getDomainAxis();
+    final IAxis<BigDecimal> yAxis = getTargetAxis();
     for( final IRecord record : m_result )
     {
       final BigDecimal classValue = (BigDecimal) record.getValue( m_classComponent );
       final BigDecimal domainValue = (BigDecimal) record.getValue( m_domainComponent );
       final BigDecimal targetValue = (BigDecimal) record.getValue( m_valueComponent );
 
-      if( !ObjectUtils.equals( classValue, lastClass ) )
-      {
-        drawCurrentLine( gc, okLineStyle, okPointStyle, crossLineStyle, crossPointStyle, lastCrds, crds, path );
-
-        // clear current path
-        lastCrds = crds.toArray( new Coordinate[crds.size()] );
-        path.clear();
-        crds.clear();
-      }
-
-      // add value to path
+      // convert to screen-point
       final int x = xAxis.logicalToScreen( domainValue );
       final int y = yAxis.logicalToScreen( targetValue );
       final Point pos = new Point( x, y );
-      path.add( pos );
-      crds.add( new Coordinate( domainValue.doubleValue(), targetValue.doubleValue() ) );
 
       // Edit info
-      final String msg = String.format( "%.4f / %.4f (%.4f)", domainValue, targetValue, classValue );
+      final String msg = String.format( "%10.4f\t%s%n%10.4f\t%s%n%10.4f\t%s", domainValue, xAxis.getLabel(), targetValue, yAxis.getLabel(), classValue, classLabel );
       final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
       final EditInfo info = new EditInfo( null, shape, record, msg, pos );
       editInfos.add( info );
-
-      lastClass = classValue;
     }
 
-    drawCurrentLine( gc, okLineStyle, okPointStyle, crossLineStyle, crossPointStyle, lastCrds, crds, path );
+    for( final Coordinate crd : m_paintCrossPoints )
+    {
+      // convert to screen-point
+      final int x = xAxis.logicalToScreen( new BigDecimal( crd.x ) );
+      final int y = yAxis.logicalToScreen( new BigDecimal( crd.y ) );
+      final Point pos = new Point( x, y );
 
-    m_editInfos = editInfos.toArray( new EditInfo[editInfos.size()] );
+      // Edit info
+      final String msg = String.format( "Schnittpunkt" );
+      final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
+      final EditInfo info = new EditInfo( null, shape, null, msg, pos );
+      editInfos.add( info );
+    }
 
-    if( m_tooltipPoint != null )
-      m_tooltipRenderer.paintTooltip( m_tooltipPoint, gc.m_gc, gc.getClipping() );
+    return editInfos.toArray( new EditInfo[editInfos.size()] );
   }
 
-  private void drawCurrentLine( final GCWrapper gc, final IStyledElement okLineStyle, final IStyledElement okPointStyle, final IStyledElement crossLineStyle, final IStyledElement crossPointStyle, final Coordinate[] lastCrds, final List<Coordinate> crds, final List<Point> path )
+  private List<Point> toPointList( final Coordinate[] crds )
   {
-    if( lastCrds != null && checkIntersect( lastCrds, crds ) )
-      drawPath( gc, crossLineStyle, crossPointStyle, path );
-    else
-      drawPath( gc, okLineStyle, okPointStyle, path );
-  }
+    final IAxis<BigDecimal> xAxis = getDomainAxis();
+    final IAxis<BigDecimal> yAxis = getTargetAxis();
 
-  private boolean checkIntersect( final Coordinate[] crds1, final List<Coordinate> crds2List )
-  {
-    final Coordinate[] crds2 = crds2List.toArray( new Coordinate[crds2List.size()] );
+    final List<Point> points = new ArrayList<Point>( crds.length );
 
-    /* Single point lines cannot intersect anything */
-    if( crds1.length < 2 || crds2.length < 2 )
-      return false;
+    for( final Coordinate crd : crds )
+    {
+      final int x = xAxis.logicalToScreen( new BigDecimal( crd.x ) );
+      final int y = yAxis.logicalToScreen( new BigDecimal( crd.y ) );
+      final Point pos = new Point( x, y );
+      points.add( pos );
+    }
 
-    final LineString ls1 = GF.createLineString( crds1 );
-    final LineString ls2 = GF.createLineString( crds2 );
-
-    return ls1.intersects( ls2 );
-  }
-
-  private void drawPath( final GCWrapper gc, final IStyledElement sl, final IStyledElement sp, final List<Point> path )
-  {
-    if( path.isEmpty() )
-      return;
-
-    // draw old path
-    sl.setPath( path );
-    sl.paint( gc );
-    sp.setPath( path );
-    sp.paint( gc );
+    return points;
   }
 
   /**
@@ -254,10 +272,77 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     final IRecord record = (IRecord) info.data;
     m_result.remove( record );
 
-    // TODO
-    // - redraw via tuple result mechanism
-
+    updatePaintData();
     getEventHandler().fireLayerContentChanged( this );
+  }
+
+  private void updatePaintData( )
+  {
+    m_paintCrossLines.clear();
+    m_paintOkLines.clear();
+    m_paintCrossPoints = null;
+    m_paintOkPoints = null;
+
+    // sort into coordinate arrays!
+    BigDecimal lastClass = null;
+    final List<Coordinate> crds = new ArrayList<Coordinate>();
+
+    final List<Coordinate> okPoints = new ArrayList<Coordinate>( m_result.size() );
+    for( final IRecord record : m_result )
+    {
+      final BigDecimal classValue = (BigDecimal) record.getValue( m_classComponent );
+      final BigDecimal domainValue = (BigDecimal) record.getValue( m_domainComponent );
+      final BigDecimal targetValue = (BigDecimal) record.getValue( m_valueComponent );
+
+      if( !ObjectUtils.equals( classValue, lastClass ) )
+      {
+        m_paintOkLines.add( crds.toArray( new Coordinate[crds.size()] ) );
+        crds.clear();
+      }
+
+      // add value to path
+      final Coordinate currentCrd = new Coordinate( domainValue.doubleValue(), targetValue.doubleValue() );
+
+      okPoints.add( currentCrd );
+      crds.add( currentCrd );
+
+      lastClass = classValue;
+    }
+
+    // additionally add last line
+    m_paintOkLines.add( crds.toArray( new Coordinate[crds.size()] ) );
+    crds.clear();
+
+    m_paintOkPoints = okPoints.toArray( new Coordinate[okPoints.size()] );
+
+    // Determine intersections and intersecting lines
+    // REMARK: brute force at the moment, we normally do not have too many lines. If performance problems occur, use
+    // spatial-index for the lines
+    final Set<Coordinate[]> crossLines = new HashSet<Coordinate[]>();
+    final Set<Coordinate> crossPoints = new HashSet<Coordinate>();
+    for( final Coordinate[] line1 : m_paintOkLines )
+    {
+      for( final Coordinate[] line2 : m_paintOkLines )
+      {
+        if( line1 == line2 )
+          continue;
+
+        final LineString ls1 = GF.createLineString( line1 );
+        final LineString ls2 = GF.createLineString( line2 );
+        if( ls1.intersects( ls2 ) )
+        {
+          crossLines.add( line1 );
+          crossLines.add( line2 );
+
+          final Geometry intersection = ls1.intersection( ls2 );
+          crossPoints.addAll( Arrays.asList( intersection.getCoordinates() ) );
+        }
+      }
+    }
+
+    m_paintOkLines.removeAll( crossLines );
+    m_paintCrossLines.addAll( crossLines );
+    m_paintCrossPoints = crossPoints.toArray( new Coordinate[crossPoints.size()] );
   }
 
   /**
@@ -325,8 +410,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     record.setValue( m_domainComponent, xValue );
     record.setValue( m_valueComponent, yValue );
 
-    // TODO
-    // - redraw via tuple result mechanism
+    updatePaintData();
     getEventHandler().fireLayerContentChanged( this );
 
     return info;

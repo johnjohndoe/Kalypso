@@ -54,7 +54,7 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 /**
  * @author Gernot Belger
  */
-public class RemoveBuildingParameterHandler extends AbstractHandler implements IElementUpdater
+public class EditBuildingParameterHandler extends AbstractHandler implements IElementUpdater
 {
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -68,7 +68,7 @@ public class RemoveBuildingParameterHandler extends AbstractHandler implements I
     if( chartPart == null )
       return null;
 
-    final RemoveBuildingParameterMouseHandler plotDragZoomInHandler = new RemoveBuildingParameterMouseHandler( chartPart.getChartComposite() );
+    final EditBuildingParameterMouseHandler plotDragZoomInHandler = new EditBuildingParameterMouseHandler( chartPart.getChartComposite() );
     chartPart.getPlotDragHandler().setActiveHandler( plotDragZoomInHandler );
 
     ChartHandlerUtilities.updateElements( chartPart );
@@ -82,6 +82,6 @@ public class RemoveBuildingParameterHandler extends AbstractHandler implements I
   @SuppressWarnings("unchecked")
   public void updateElement( final UIElement element, final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, parameters, RemoveBuildingParameterMouseHandler.class );
+    ElementUpdateHelper.updateElement( element, parameters, EditBuildingParameterMouseHandler.class );
   }
 }
