@@ -45,6 +45,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,6 @@ import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeLoadStatusVisitor;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -78,6 +78,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class MapModellHelper
 {
+  private static final int EARTH_RADIUS_M = 6378137;
+
   public MapModellHelper( )
   {
     throw new UnsupportedOperationException( "Do not instantiate this helper class" );
@@ -143,39 +145,31 @@ public class MapModellHelper
    * 
    * @return scale of the map
    */
-  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth, final int mapHeight )
+  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth, @SuppressWarnings("unused")
+  final int mapHeight )
   {
     try
     {
-      final CS_CoordinateSystem crs = model.getCoordinatesSystem();
-
       if( bbox == null )
         return 0.0;
 
-      final GM_Envelope box;
-      if( !crs.getName().equalsIgnoreCase( "EPSG:4326" ) )
-      {
-        // transform the bounding box of the request to EPSG:4326
-        final GeoTransformer transformer = new GeoTransformer( "EPSG:4326", true );
-        box = transformer.transformEnvelope( bbox, crs );
-      }
-      else
-        box = bbox;
-
+      final GM_Envelope box = getWgs84BBox( model, bbox );
       if( box == null )
         return 0.0;
 
-      final double dx = box.getWidth() / mapWidth;
-      final double dy = box.getHeight() / mapHeight;
+      // As long as we do not know the real pixel size (dpi) of the current graphics context, we
+      // assume quadratic pixels of 0.28 mm size.
 
-      // create a box on the central map pixel to determine its size in meters
-      final GM_Position min = GeometryFactory.createGM_Position( box.getMin().getX() + dx * (mapWidth / 2d - 1), box.getMin().getY() + dy * (mapHeight / 2d - 1) );
-      final GM_Position max = GeometryFactory.createGM_Position( box.getMin().getX() + dx * (mapWidth / 2d), box.getMin().getY() + dy * (mapHeight / 2d) );
-      final double distance = MapModellHelper.calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
+      final double dLon = box.getMax().getX() - box.getMin().getX(); // Map-x-Distance in deegrees
+// final double dLat = box.getMax().getY() - box.getMin().getY(); // Map-y-Distance in deegrees
 
-      // default pixel size defined in SLD specs is 28mm
-      final double scale = distance / 0.00028;
-      return scale;
+      final double mx = Math.toRadians( dLon ) * EARTH_RADIUS_M; // Map-x-Distance in Meters
+// final double my = Math.toRadians( dLat ) * EARTH_RADIUS_M; // Map-y-Distance in Meters
+
+      final double scalex = mx / mapWidth / 0.00028;
+// final double scaley = my / mapHeight / 0.00028;
+
+      return scalex;
     }
     catch( final Exception e )
     {
@@ -183,6 +177,17 @@ public class MapModellHelper
     }
 
     return 0.0;
+  }
+
+  private static GM_Envelope getWgs84BBox( final IMapModell model, final GM_Envelope bbox ) throws RemoteException, Exception
+  {
+    final CS_CoordinateSystem crs = model.getCoordinatesSystem();
+    if( crs.getName().equalsIgnoreCase( "EPSG:4326" ) )
+      return bbox;
+
+    // transform the bounding box of the request to EPSG:4326
+    final GeoTransformer transformer = new GeoTransformer( "EPSG:4326", true );
+    return transformer.transformEnvelope( bbox, crs );
   }
 
   /**
@@ -250,21 +255,6 @@ public class MapModellHelper
     }
 
     return image;
-  }
-
-  /**
-   * calculates the distance in meters between two points in EPSG:4326 coodinates .
-   */
-  private static double calcDistance( final double lon1, final double lat1, final double lon2, final double lat2 )
-  {
-    final double r = 6378.137;
-    final double rad = Math.PI / 180d;
-    double cose = 0;
-
-    cose = Math.sin( rad * lon1 ) * Math.sin( rad * lon2 ) + Math.cos( rad * lon1 ) * Math.cos( rad * lon2 ) * Math.cos( rad * (lat1 - lat2) );
-    final double dist = r * Math.acos( cose );
-
-    return dist * 1000;
   }
 
   public static IKalypsoTheme[] filterThemes( final IMapModell modell, final IKalypsoThemeFilter filter )
