@@ -150,7 +150,8 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
             listViewer.getList().showSelection();
           }
         };
-        control.getDisplay().asyncExec( runnable );
+        if( !control.isDisposed() )
+          control.getDisplay().asyncExec( runnable );
       }
     };
 
