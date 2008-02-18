@@ -5,11 +5,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
@@ -37,12 +39,12 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( Messages.getString("WaterdepthCoveragesWidgetHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "WaterdepthCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
 
     final MapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("WaterdepthCoveragesWidgetHandler.1"), Messages.getString("WaterdepthCoveragesWidgetHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "WaterdepthCoveragesWidgetHandler.1" ), Messages.getString( "WaterdepthCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -54,12 +56,14 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
         mapModell.activateTheme( hqTheme );
     }
 
-    final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString("WaterdepthCoveragesWidgetHandler.4"), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    widget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
 
-    ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", widget, mapPanel, activePart ); //$NON-NLS-1$
+    final ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", widget, mapPanel, activePart ); //$NON-NLS-1$
     job.schedule();
 
     return null;

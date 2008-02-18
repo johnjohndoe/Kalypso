@@ -5,11 +5,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -36,34 +38,36 @@ public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler 
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( Messages.getString("ExportRiskZoneCoveragesWidgetHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
 
     final MapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("ExportRiskZoneCoveragesWidgetHandler.1"), Messages.getString("ExportRiskZoneCoveragesWidgetHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
     {
       final IKalypsoTheme[] themes = mapModell.getAllThemes();
-      for( int i = 0; i < themes.length; i++ )
-        if( themes[i].getName().equals( "Schadenspotentials" ) ) //$NON-NLS-1$
+      for( final IKalypsoTheme element : themes )
+        if( element.getName().equals( "Schadenspotentials" ) ) //$NON-NLS-1$
         {
-          mapModell.activateTheme( themes[i] );
+          mapModell.activateTheme( element );
           break;
         }
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString("ExportRiskZoneCoveragesWidgetHandler.3"), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.3" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
     coverageManagementWidget.setShowStyle( false );
     coverageManagementWidget.setShowAddRemoveButtons( false );
+    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
 
-    ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", coverageManagementWidget, mapPanel, activePart ); //$NON-NLS-1$
+    final ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", coverageManagementWidget, mapPanel, activePart ); //$NON-NLS-1$
     job.schedule();
 
     return null;
