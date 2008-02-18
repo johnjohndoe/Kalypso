@@ -45,7 +45,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +60,7 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilComparator;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -97,70 +97,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class SegmentData
 {
-  private static final class ProfileSegmentData
-  {
-    public final IRecord[] segmPoints;
-
-    public final int startInd;
-
-    public final int endInd;
-
-    public final double distance;
-
-    public int distInd;
-
-    public ProfileSegmentData( final IRecord[] points, final int start, final int end )
-    {
-      segmPoints = points;
-      startInd = start;
-      endInd = end;
-      distance = maxSegmentDistance();
-    }
-
-    private final double maxSegmentDistance( )
-    {
-      double maxDistance = Double.NEGATIVE_INFINITY;
-      if( endInd - startInd >= 2 )
-        for( int i = 1; i < endInd - startInd - 1; i++ )
-        {
-          final double currentDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + i] );
-          if( currentDistance > maxDistance )
-          {
-            maxDistance = currentDistance;
-            distInd = startInd + i;
-          }
-        }
-      else if( endInd - startInd == 2 )
-      {
-        maxDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + 1] );
-        distInd = startInd + 1;
-      }
-      else if( endInd - startInd == 1 )
-      {
-        maxDistance = 0;
-        distInd = startInd;
-      }
-
-      return maxDistance;
-    }
-
-    private double calcDistance( final IRecord beginPoint, final IRecord endPoint, final IRecord middlePoint )
-    {
-      final double bx = (Double) beginPoint.getValue( ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double by = (Double) beginPoint.getValue( ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      final double ex = (Double) endPoint.getValue( ProfilObsHelper.getPropertyFromId( endPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double ey = (Double) endPoint.getValue( ProfilObsHelper.getPropertyFromId( endPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      final double mx = (Double) middlePoint.getValue( ProfilObsHelper.getPropertyFromId( middlePoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double my = (Double) middlePoint.getValue( ProfilObsHelper.getPropertyFromId( middlePoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-
-      final double f = (ey - by) / (ex - bx);
-
-      final double distance1 = (f * mx - 1 * my - f * bx + by) / Math.sqrt( 1 + f * f );
-      return Math.abs( distance1 );
-    }
-
-  }
-
   // LineStrings derived from the original data
   private LineString m_profUpOrg;
 
@@ -603,7 +539,7 @@ public class SegmentData
       // get the most important points (some kind of Douglas-Peucker)
       final IRecord[] profPoints = profilPointList;
       // do it by Douglas-Peucker
-      final IRecord[] DPpoints = findIProfileVIPPoints( profPoints, numProfInters );
+      final IRecord[] DPpoints = DouglasPeuckerHelper.findIProfileVIPPoints( profPoints, numProfInters );
 
       Arrays.sort( DPpoints, new ProfilComparator( breiteComponent ) );
       for( final IRecord element : DPpoints )
@@ -1228,55 +1164,6 @@ public class SegmentData
       }
     }
 
-  }
-
-  /**
-   * gets the most important profile points by sequently adding the points with the maximum distance to the segment
-   * initially defined by the start and end point of the profile
-   */
-  protected IRecord[] findIProfileVIPPoints( final IRecord[] points, final int allowedNumPoints )
-  {
-    final List<IRecord> pointsToKeep = new ArrayList<IRecord>( allowedNumPoints - 1 );
-
-    // store the first point of the input profile in the profile point list.
-    pointsToKeep.add( points[0] );
-
-    final LinkedList<ProfileSegmentData> profSegmentList = new LinkedList<ProfileSegmentData>();
-
-    /* begin with the start and end point of the profile */
-    final ProfileSegmentData startSegment = new ProfileSegmentData( points, 0, points.length - 1 );
-    profSegmentList.add( startSegment );
-
-    for( int i = 1; i < allowedNumPoints - 1; i++ )
-    {
-      double maxDist = Double.NEGATIVE_INFINITY;
-      int indexMax = 0;
-
-      for( int j = 0; j < profSegmentList.size(); j++ )
-      {
-        // find the maxDistanceSegment
-
-        final ProfileSegmentData currentProfSegment = profSegmentList.get( j );
-        final double currentDist = currentProfSegment.distance;
-        if( currentDist > maxDist )
-        {
-          maxDist = currentDist;
-          indexMax = j;
-        }
-      }
-      // store the found maximum in the profile point list
-      pointsToKeep.add( points[profSegmentList.get( indexMax ).distInd] );
-
-      // split the maxDistanceSegment
-      final ProfileSegmentData firstSplittedSegment = new ProfileSegmentData( points, profSegmentList.get( indexMax ).startInd, profSegmentList.get( indexMax ).distInd );
-      final ProfileSegmentData secondSplittedSegment = new ProfileSegmentData( points, profSegmentList.get( indexMax ).distInd, profSegmentList.get( indexMax ).endInd );
-
-      // store the new segments in the list
-      profSegmentList.set( indexMax, firstSplittedSegment );
-      profSegmentList.add( indexMax + 1, secondSplittedSegment );
-    }
-    pointsToKeep.add( points[points.length - 1] );
-    return pointsToKeep.toArray( new IRecord[pointsToKeep.size()] );
   }
 
   public int getNumBankIntersections( )
