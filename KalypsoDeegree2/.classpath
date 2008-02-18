@@ -48,7 +48,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jetspeed/torque-3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jetspeed/turbine-2.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jetspeed/velocity-1.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.8.jar" sourcepath="/KalypsoDeegree/lib/jts/jts-1.8_src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit/junit.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j/log4j-1.2.9.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail/activation.jar"/>
