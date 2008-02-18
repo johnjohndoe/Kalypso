@@ -131,6 +131,11 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   private org.eclipse.swt.graphics.Image m_standardThemeIcon;
 
   /**
+   * True, if the theme should show its children in an outline. Otherwise false.
+   */
+  private boolean m_shouldShowChildren;
+
+  /**
    * The constructor.
    * 
    * @param name
@@ -143,8 +148,10 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    *            Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
    * @param context
    *            The context, if the theme is part of a template loaded from a file. May be null.
+   * @param shouldShowChildren
+   *            True, if the theme should show its children in an outline. Otherwise false.
    */
-  public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel, final String legendIcon, final URL context )
+  public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     Assert.isNotNull( mapModel );
 
@@ -153,6 +160,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_mapModel = mapModel;
     m_legendIcon = legendIcon;
     m_context = context;
+    m_shouldShowChildren = shouldShowChildren;
     m_externIcon = null;
 
     /* Initialize properties */
@@ -730,5 +738,16 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   protected URL getContext( )
   {
     return m_context;
+  }
+
+  /**
+   * This function returns true, if the theme allows showing its children in an outline. Otherwise, it will return
+   * false.
+   * 
+   * @return True,if the theme allows showing its children in an outline. Otherwise, false.
+   */
+  public boolean shouldShowChildren( )
+  {
+    return m_shouldShowChildren;
   }
 }

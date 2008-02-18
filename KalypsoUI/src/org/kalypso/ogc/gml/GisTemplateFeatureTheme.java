@@ -129,9 +129,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final List<GisTemplateUserStyle> m_gisTemplateUserStyles = new ArrayList<GisTemplateUserStyle>();
 
-  public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon )
+  public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren )
   {
-    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ), layerType.getLinktype(), mapModel, legendIcon, context ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ), layerType.getLinktype(), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
 
     m_selectionManager = selectionManager;
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -322,7 +322,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
             properties.put( propName, value );
           }
 
-          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell(), getLegendIcon(), getContext() );
+          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell(), getLegendIcon(), getContext(), shouldShowChildren() );
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
           /* Put current property set into m_theme */

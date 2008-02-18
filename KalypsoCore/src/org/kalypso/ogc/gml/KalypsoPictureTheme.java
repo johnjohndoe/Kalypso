@@ -58,14 +58,14 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
   // TODO: use tracing instead
   private static final Logger LOGGER = Logger.getLogger( KalypsoPictureTheme.class.getName() );
 
-  public static IKalypsoTheme getPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendGraphic ) throws Exception
+  public static IKalypsoTheme getPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
   {
     final String[] arrWorldTypes = new String[] { "tif", "jpg", "png", "gif" };
     final CS_CoordinateSystem system = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     if( ArrayUtils.contains( arrWorldTypes, layerType.getLinktype().toLowerCase() ) )
-      return new KalypsoPictureThemeWorldFile( layerType, context, modell, system, legendGraphic );
+      return new KalypsoPictureThemeWorldFile( layerType, context, modell, system, legendGraphic, shouldShowChildren );
     else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) )
-      return new KalypsoPictureThemeGml( layerType, context, modell, legendGraphic );
+      return new KalypsoPictureThemeGml( layerType, context, modell, legendGraphic, shouldShowChildren );
 
     throw new IllegalStateException( "not supported layerType: " + layerType.getLinktype() );
   }
@@ -80,9 +80,9 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private final IMapModell m_modell;
 
-  public KalypsoPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendIcon ) throws Exception
+  public KalypsoPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendIcon, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerType.getName(), layerType.getLinktype(), modell, legendIcon, context );
+    super( layerType.getName(), layerType.getLinktype(), modell, legendIcon, context, shouldShowChildren );
 
     m_layerType = layerType;
     m_context = context;

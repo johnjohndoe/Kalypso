@@ -71,9 +71,9 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 {
   private final ICoverageCollection m_coverages;
 
-  public KalypsoPictureThemeGml( final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendIcon ) throws Exception
+  public KalypsoPictureThemeGml( final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendIcon, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerType, context, modell, legendIcon );
+    super( layerType, context, modell, legendIcon, shouldShowChildren );
 
     // TODO: botch... find a better way of loading gml workspace!
     // maybe it could be treated as normal gm with a special display element?

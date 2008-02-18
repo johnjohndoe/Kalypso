@@ -68,9 +68,9 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
   /**
    * The constructor.
    */
-  public KalypsoScaleTheme( String name, String type, IMapModell mapModel, String legendIcon, URL context )
+  public KalypsoScaleTheme( String name, String type, IMapModell mapModel, String legendIcon, URL context, boolean shouldShowChildren )
   {
-    super( name, type, mapModel, legendIcon, context );
+    super( name, type, mapModel, legendIcon, context, shouldShowChildren );
   }
 
   /**

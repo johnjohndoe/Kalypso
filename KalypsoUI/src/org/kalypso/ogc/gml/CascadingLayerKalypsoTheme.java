@@ -61,9 +61,9 @@ import org.kalypso.template.types.StyledLayerType;
 // themes.
 public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 {
-  public CascadingLayerKalypsoTheme( final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon ) throws Exception
+  public CascadingLayerKalypsoTheme( final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerType.getName(), layerType.getLinktype(), mapModel, legendIcon, context );
+    super( layerType.getName(), layerType.getLinktype(), mapModel, legendIcon, context, shouldShowChildren );
 
     GisTemplateFeatureTheme.configureProperties( this, layerType );
 

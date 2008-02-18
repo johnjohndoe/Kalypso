@@ -121,9 +121,9 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
   private Image m_image = null;
 
-  public KalypsoLegendTheme( final String name, final IMapModell mapModell, final String legendIcon, final URL context )
+  public KalypsoLegendTheme( final String name, final IMapModell mapModell, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( name, "legend", mapModell, legendIcon, context );
+    super( name, "legend", mapModell, legendIcon, context, shouldShowChildren );
 
     mapModell.addMapModelListener( m_modellListener );
   }

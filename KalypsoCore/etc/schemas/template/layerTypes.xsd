@@ -43,6 +43,11 @@
               <xs:documentation>Defines a graphic icon, which can be displayed as legend icon.</xs:documentation>
             </xs:annotation>
           </xs:element>
+          <xs:element type="xs:boolean" name="showChildren" minOccurs="0" maxOccurs="1" nillable="true">
+            <xs:annotation>
+              <xs:documentation>If true, this layer will never display its children.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
           <xs:element name="style" minOccurs="0" maxOccurs="unbounded">
             <xs:complexType>
               <xs:complexContent>
