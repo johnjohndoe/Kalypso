@@ -174,9 +174,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
 
   };
 
-  public AbstractCascadingLayerTheme( final String name, final String linktype, final IMapModell mapModel, final String legendIcon, final URL context )
+  public AbstractCascadingLayerTheme( final String name, final String linktype, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( name, linktype, mapModel, legendIcon, context );
+    super( name, linktype, mapModel, legendIcon, context, shouldShowChildren );
   }
 
   /**

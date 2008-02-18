@@ -186,9 +186,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param mapModel
    *            The map modell.
    */
-  public KalypsoWMSTheme( String source, String linktype, String themeName, IKalypsoImageProvider imageProvider, IMapModell mapModel, String legendIcon, URL context )
+  public KalypsoWMSTheme( String source, String linktype, String themeName, IKalypsoImageProvider imageProvider, IMapModell mapModel, String legendIcon, URL context, boolean shouldShowChildren )
   {
-    super( themeName, linktype.toUpperCase(), mapModel, legendIcon, context );
+    super( themeName, linktype.toUpperCase(), mapModel, legendIcon, context, shouldShowChildren );
 
     m_source = source;
     m_provider = imageProvider;

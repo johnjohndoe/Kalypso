@@ -341,7 +341,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
         final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
 
-        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, pseudoModell, null );
+        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, pseudoModell, null, true );
         setInput( theme );
       }
       final Sort sort = layer.getSort();
@@ -370,7 +370,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
 
-      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, pseudoModell, null );
+      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, pseudoModell, null, true );
       setInput( theme );
 
       final Sort sort = layer.getSort();

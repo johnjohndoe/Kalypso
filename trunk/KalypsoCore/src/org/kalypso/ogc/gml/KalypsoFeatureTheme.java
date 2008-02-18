@@ -103,9 +103,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   private Image m_featureThemeIcon;
 
-  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context )
+  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( name, "FeatureTheme", mapModel, legendIcon, context );
+    super( name, "FeatureTheme", mapModel, legendIcon, context, shouldShowChildren );
 
     m_workspace = workspace;
     m_featurePath = featurePath;

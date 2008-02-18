@@ -94,9 +94,9 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   private final IFile m_file;
 
-  public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon ) throws Exception
+  public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerType.getName(), "Cascading", mapModel, legendIcon, context );
+    super( layerType.getName(), "Cascading", mapModel, legendIcon, context, shouldShowChildren );
 
     m_mapViewRefUrl = layerType.getHref();
 

@@ -330,7 +330,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
       final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
 
-      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName, m_selectionManager, pseudoModell, null, null );
+      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName, m_selectionManager, pseudoModell, null, null, true );
 
       pseudoModell.addTheme( m_kft );
 

@@ -231,13 +231,14 @@ public class LineGeometryBuilder implements IGeometryBuilder
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#removePoints()
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#reset()
    */
   public void reset( )
   {
     m_cnt_points = 0;
     m_points.clear();
 
-    m_extender.setCursor( CROSSHAIR_CURSOR );
+    if( m_extender != null )
+      m_extender.setCursor( CROSSHAIR_CURSOR );
   }
 }

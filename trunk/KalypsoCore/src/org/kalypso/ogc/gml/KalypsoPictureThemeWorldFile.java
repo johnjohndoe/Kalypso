@@ -65,9 +65,9 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 {
 
-  public KalypsoPictureThemeWorldFile( final StyledLayerType layerType, final URL context, final IMapModell modell, final CS_CoordinateSystem system, final String legendGraphic ) throws Exception
+  public KalypsoPictureThemeWorldFile( final StyledLayerType layerType, final URL context, final IMapModell modell, final CS_CoordinateSystem system, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerType, context, modell, legendGraphic );
+    super( layerType, context, modell, legendGraphic, shouldShowChildren );
 
     final String href = layerType.getHref();
     if( href == null || !href.contains( "." ) )

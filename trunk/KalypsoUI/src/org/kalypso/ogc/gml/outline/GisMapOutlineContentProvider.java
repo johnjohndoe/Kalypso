@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.RuleTreeObject;
 import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 
@@ -65,6 +66,14 @@ public class GisMapOutlineContentProvider extends WorkbenchContentProvider
   @Override
   public Object[] getChildren( Object element )
   {
+    /* A moment please, if the theme is configured, not to show its children, then ignore them. */
+    if( element instanceof AbstractKalypsoTheme )
+    {
+      AbstractKalypsoTheme theme = (AbstractKalypsoTheme) element;
+      if( theme.shouldShowChildren() == false )
+        return new Object[] {};
+    }
+
     Object[] children = super.getChildren( element );
 
     /* If no childs are there, return the result. */

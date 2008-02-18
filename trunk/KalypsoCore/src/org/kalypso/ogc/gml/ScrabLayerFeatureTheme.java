@@ -77,9 +77,9 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public ScrabLayerFeatureTheme( final String layerName, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context )
+  public ScrabLayerFeatureTheme( final String layerName, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( layerName, "scrab", mapModel, legendIcon, context );
+    super( layerName, "scrab", mapModel, legendIcon, context, shouldShowChildren );
 
     m_selectionManager = selectionManager;
 
@@ -101,7 +101,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
     }
 
     // IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, ScrabLayerFeatureTheme.FEATURE_MEMBER, "Skizzier-Thema", selectionManager, mapModel, legendIcon, context );
+    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, ScrabLayerFeatureTheme.FEATURE_MEMBER, "Skizzier-Thema", selectionManager, mapModel, legendIcon, context, shouldShowChildren );
     // add styles for visualisation
     final ArrayList<Symbolizer> symbolizers = new ArrayList<Symbolizer>();
     symbolizers.add( StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, null, 1, 5, 0 ), new PropertyName( ScrabLayerFeatureTheme.POINT_GEOM_PROP_NAME ) ) );
