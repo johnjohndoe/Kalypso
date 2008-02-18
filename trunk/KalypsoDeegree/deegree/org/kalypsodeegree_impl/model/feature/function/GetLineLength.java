@@ -47,7 +47,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 
@@ -93,10 +93,10 @@ public class GetLineLength extends FeaturePropertyFunction
       return null;
 
     final Object objGeometry = feature.getProperty( lineProperty );
-    if( !(objGeometry instanceof GM_LineString) )
+    if( !(objGeometry instanceof GM_Curve) )
       return null;
 
-    final GM_LineString line = (GM_LineString) objGeometry;
+    final GM_Curve line = (GM_Curve) objGeometry;
 
     return line.getLength();
 
