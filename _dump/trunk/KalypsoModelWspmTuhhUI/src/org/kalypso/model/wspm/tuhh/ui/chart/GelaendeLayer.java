@@ -73,7 +73,7 @@ public class GelaendeLayer extends AbstractPolyLineLayer
 {
   public GelaendeLayer( final ProfilChartView pcv )
   {
-    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelï¿½nde", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] { IWspmConstants.POINT_PROPERTY_HOEHE } ), true, true, true );
+    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelände", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] { IWspmConstants.POINT_PROPERTY_HOEHE } ), true, true, true );
     setColors( setColor( pcv.getColorRegistry() ) );
   }
 
@@ -173,6 +173,6 @@ public class GelaendeLayer extends AbstractPolyLineLayer
   @Override
   public String toString( )
   {
-    return "Gelï¿½ndehï¿½he";
+    return "Geländehöhe";
   }
 }
