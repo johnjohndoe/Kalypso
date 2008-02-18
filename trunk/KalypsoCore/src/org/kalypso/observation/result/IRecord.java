@@ -56,7 +56,7 @@ public interface IRecord
    * @return the value for the given component (can be null)
    * @throws IllegalArgumentException
    *             if the component is unknown to this record
-   * @deprecated Use {@link #setValue(int, Object)} instead.
+   * @deprecated Use {@link #getValue(int)} instead.
    */
   public Object getValue( IComponent comp ) throws IllegalArgumentException;
 
