@@ -291,7 +291,7 @@ public class BreakLinesHelper implements IWspmConstants
       for( final ListIterator<GM_Point> iter = rightPoints.listIterator( rightPoints.size() ); iter.hasPrevious(); )
         posList.add( iter.previous().getPosition() );
 
-      if( !leftPoints.isEmpty() )
+      if( leftPoints.size() > 1 )
       {
         final GM_Point firstLeftPoint = leftPoints.getFirst();
         /* We assume here that all points have the same crs */

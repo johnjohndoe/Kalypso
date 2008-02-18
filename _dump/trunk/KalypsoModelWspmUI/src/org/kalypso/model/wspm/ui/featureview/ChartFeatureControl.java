@@ -203,7 +203,6 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       ChartFactory.doConfiguration( chart.getModel(), m_ccl, m_chartTypes[i], m_context );
 
       ChartUtilities.maximize( chart.getModel() );
-
     }
   }
 

@@ -36,6 +36,7 @@
 	</gft:label>
 	<gft:text editable="true" property="tuhh:slope" tooltip="Gefälle" style="SWT.BORDER">
 		<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		<gft:format>%.5f</gft:format>		
 	</gft:text>
 	<gft:extensioncontrol property="om:result"
 		extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">

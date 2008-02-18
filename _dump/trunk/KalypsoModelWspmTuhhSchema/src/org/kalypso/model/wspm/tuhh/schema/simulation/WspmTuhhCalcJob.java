@@ -84,6 +84,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class WspmTuhhCalcJob implements ISimulation
 {
+
   public static final String CALCJOB_SPEC = "WspmTuhhCalcJob_spec.xml";
 
   public static final String INPUT_OVW_MAP_SPECIAL = "OVW_MAP_SPECIAL";
@@ -99,6 +100,8 @@ public class WspmTuhhCalcJob implements ISimulation
   public static final String OUTPUT_QINTERVALL_RESULT_GMV = "qIntervallResultGmv";
 
   public static final String OUTPUT_QINTERVALL_RESULT = "qIntervallResultGml";
+
+  public static final String OUTPUT_SIMULATION_LOG = "SimulationLog";
 
   private final PrintStream m_calcOutConsumer;
 
@@ -128,7 +131,7 @@ public class WspmTuhhCalcJob implements ISimulation
       ovwMapURL = (URL) inputProvider.getInputForID( INPUT_OVW_MAP_SPECIAL );
 
     final File simulogFile = new File( tmpDir, "simulation.log" );
-    resultEater.addResult( "SimulationLog", simulogFile );
+    resultEater.addResult( OUTPUT_SIMULATION_LOG, simulogFile );
 
     PrintWriter pwSimuLog = null;
     InputStream zipInputStream = null;
