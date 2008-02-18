@@ -19,7 +19,7 @@ public class KalypsoAFGUIThemeFactory implements IKalypsoThemeFactory
   public IKalypsoTheme createTheme( final String linkType, final LayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager ) throws CoreException
   {
     if( "scenario".equals( linkType ) )
-      return new ScenarioFeatureTheme( layerType, context, selectionManager, mapModell, null );
+      return new ScenarioFeatureTheme( layerType, context, selectionManager, mapModell, null, true );
     return null;
   }
 

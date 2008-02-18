@@ -160,7 +160,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, targetTheme.getWorkspace() );
 
     final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default";
-    m_calcUnitTheme = new Model1d2dCalUnitTheme( "Aktuelle Berechnungseinheit", mapModell, imageUrn, null ); //$NON-NLS-1$
+    m_calcUnitTheme = new Model1d2dCalUnitTheme( "Aktuelle Berechnungseinheit", mapModell, imageUrn, null, true ); //$NON-NLS-1$
     // mapModell.addTheme( calUnitTheme );
     mapModell.insertTheme( m_calcUnitTheme, 0 );
     m_dataModel.addKeyBasedDataChangeListener( calThemeUpdater );

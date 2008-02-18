@@ -106,9 +106,9 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
 
   private final JobExclusiveCommandTarget m_commandTarget;
 
-  public ScenarioFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModell, final String legendIcon ) throws CoreException
+  public ScenarioFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModell, final String legendIcon, final boolean shouldShowChildren ) throws CoreException
   {
-    super( "<no name>", layerType.getLinktype(), mapModell, legendIcon, context );
+    super( "<no name>", layerType.getLinktype(), mapModell, legendIcon, context, shouldShowChildren );
 
     m_featurePath = layerType.getFeaturePath();
     m_selectionManager = selectionManager;
@@ -150,7 +150,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
     }
 
     final GMLWorkspace workspace = model.getFeature().getWorkspace();
-    m_theme = new KalypsoFeatureTheme( new CommandableWorkspace( workspace ), m_featurePath, getName(), m_selectionManager, mapModell, legendIcon, context );
+    m_theme = new KalypsoFeatureTheme( new CommandableWorkspace( workspace ), m_featurePath, getName(), m_selectionManager, mapModell, legendIcon, context, shouldShowChildren );
     m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
     /* Put current property set into m_theme */

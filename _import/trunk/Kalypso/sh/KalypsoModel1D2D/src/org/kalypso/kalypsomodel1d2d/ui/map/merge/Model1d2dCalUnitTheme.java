@@ -78,9 +78,9 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   private final ImageIcon imgIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/apply.png" ) ); //$NON-NLS-1$
 
-  public Model1d2dCalUnitTheme( final String name, final IMapModell mapModel, final String legendIcon, final URL context )
+  public Model1d2dCalUnitTheme( final String name, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( name, Messages.getString( "Model1d2dCalUnitTheme.3" ), mapModel, legendIcon, context ); //$NON-NLS-1$
+    super( name, Messages.getString( "Model1d2dCalUnitTheme.3" ), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
   }
 
   public void setCalculationUnit( final ICalculationUnit calcUnit )
