@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -54,21 +51,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
@@ -95,7 +89,6 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.NullSimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.DefaultSimulationDataProvider;
@@ -112,7 +105,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 /**
  * @author Gernot Belger
  */
-public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
+public class FlowRelationshipCalcOperation implements IAdaptable
 {
   private final static class NullSimulationMonitorExtension extends NullSimulationMonitor
   {
@@ -175,77 +168,56 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private final IFlowRelation1D[] m_flowRels;
-
   private final IFEDiscretisationModel1d2d m_discModel;
 
   private final IFlowRelationshipModel m_flowRelModel;
 
-  private final ISimulationMonitor m_simulationMonitor;
-
   private boolean m_running;
 
-  private Map<IFlowRelation1D, QIntervallResult> m_results;
+  private final OutputStream m_outputStream;
 
-  private final TuhhCalculation m_templateCalculation;
+  private QIntervallResult m_result;
 
-  public FlowRelationshipCalcOperation( final TuhhCalculation templateCalculation, final IFlowRelation1D[] flowRels, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final ISimulationMonitor simMonitor )
+  private final IFlowRelation1D m_flowRel;
+
+  private final TuhhCalculation m_calculation;
+
+  private IStatus m_status;
+
+  private String m_consoleText;
+
+  public FlowRelationshipCalcOperation( final TuhhCalculation calculation, final IFlowRelation1D flowRel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final OutputStream outputStream )
   {
-    m_templateCalculation = templateCalculation;
-    m_flowRels = flowRels;
+    m_calculation = calculation;
+    m_flowRel = flowRel;
     m_flowRelModel = flowModel;
     m_discModel = discModel;
-    m_simulationMonitor = simMonitor;
+    m_outputStream = outputStream;
+    m_status = StatusUtilities.createStatus( IStatus.INFO, "Berechnung steht aus: " + m_flowRel.getName(), null );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
+  public void execute( final IProgressMonitor monitor )
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Berechne Parameter", m_flowRels.length );
-
-    final String pluginId = PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() );
-    final MultiStatus multiStatus = new MultiStatus( pluginId, -1, "Ergebnisse der Paremeterberechnung", null );
-
-    m_results = new HashMap<IFlowRelation1D, QIntervallResult>();
-    for( final IFlowRelation1D flowRel : m_flowRels )
+    try
     {
-      progress.subTask( flowRel.getName() );
+      m_running = true;
 
-      try
-      {
-        final QIntervallResult result = calculateFlowRel( m_templateCalculation, flowRel, progress.newChild( 1 ) );
-        m_results.put( flowRel, result );
-        multiStatus.add( StatusUtilities.createStatus( IStatus.OK, "Berechnung erfolgreich an Station km " + flowRel.getStation(), null ) );
-      }
-      catch( final CoreException e )
-      {
-        // If canceled, exit
-        if( e.getStatus().matches( IStatus.CANCEL ) )
-          throw e;
-
-        multiStatus.add( e.getStatus() );
-      }
-      catch( final Throwable t )
-      {
-        throw new InvocationTargetException( t );
-      }
+      m_status = StatusUtilities.createStatus( IStatus.INFO, "Berechnung läuft: " + m_flowRel.getName(), null );
+      m_result = calculateFlowRel( m_calculation, m_flowRel, monitor );
+      m_status = StatusUtilities.createStatus( IStatus.OK, "Berechnung erfolgreich: " + m_flowRel.getName(), null );
     }
-
-    /* Create nice message for multi-status */
-    final String message;
-
-    if( multiStatus.isOK() || multiStatus.matches( IStatus.INFO ) )
-      message = "Alle Parameter wurden erfolgreich berechnet";
-    else if( multiStatus.matches( IStatus.WARNING ) )
-      message = "Warnung(en) bei der Parameterberechnung";
-    else if( multiStatus.matches( IStatus.ERROR ) )
-      message = "Fehler bei der Parameterberechnung";
-    else
-      message = "unbekannter status";
-
-    return new MultiStatus( pluginId, -1, multiStatus.getChildren(), message, null );
+    catch( final CoreException e )
+    {
+      m_status = StatusUtilities.createStatus( IStatus.ERROR, "Berechnung fehlgeschlagen: " + m_flowRel.getName(), e );
+    }
+    catch( final InvocationTargetException e )
+    {
+      m_status = StatusUtilities.createStatus( IStatus.ERROR, "Berechnung fehlgeschlagen: " + m_flowRel.getName(), e.getTargetException() );
+    }
+    finally
+    {
+      m_running = false;
+    }
   }
 
   private QIntervallResult calculateFlowRel( final TuhhCalculation calculation, final IFlowRelation1D flowRel, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
@@ -296,8 +268,6 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
 
   private QIntervallResult runCalculation( final TuhhCalculation templateCalculation, final IFlowRelation1D flowRel, final IProfil[] profiles, final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    m_running = true;
-
     File tmpDir = null;
     try
     {
@@ -311,41 +281,7 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
       GmlSerializer.serializeWorkspace( modelFile, calcWorkspace, Charset.defaultCharset().name() );
 
       // prepare calcjob
-      final PipedInputStream pip = new PipedInputStream();
-      final PrintStream outStream = new PrintStream( new PipedOutputStream( pip ) );
-
-      final Thread thread = new Thread()
-      {
-        /**
-         * @see java.lang.Thread#run()
-         */
-        @Override
-        public void run( )
-        {
-          BufferedReader bis = new BufferedReader( new InputStreamReader( pip ) );
-
-          while( getRunning() )
-          {
-            try
-            {
-              String readLine = bis.readLine();
-              if( readLine == null )
-                break;
-
-              m_simulationMonitor.setMessage( readLine );
-            }
-            catch( IOException e )
-            {
-              e.printStackTrace();
-            }
-          }
-
-          super.run();
-        }
-      };
-      thread.start();
-
-      final WspmTuhhCalcJob wspmTuhhCalcJob = new WspmTuhhCalcJob( outStream );
+      final WspmTuhhCalcJob wspmTuhhCalcJob = new WspmTuhhCalcJob( new PrintStream( m_outputStream ) );
       final DefaultSimulationDataProvider inputProvider = new DefaultSimulationDataProvider();
       inputProvider.put( WspmTuhhCalcJob.INPUT_MODELL_GML, modelFile.toURI().toURL() );
       inputProvider.put( WspmTuhhCalcJob.INPUT_CALC_PATH, new GMLXPath( calculation.getFeature() ).toString() );
@@ -359,6 +295,10 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
 
       if( simMonitor.getFinishStatus() != IStatus.OK )
         throw new CoreException( StatusUtilities.createStatus( simMonitor.getFinishStatus(), simMonitor.getFinishText(), null ) );
+
+      // read simulation log
+      final File logFile = (File) resultEater.getResult( WspmTuhhCalcJob.OUTPUT_SIMULATION_LOG );
+      m_consoleText = FileUtils.readFileToString( logFile, Charset.defaultCharset().name() );
 
       // read interval results and remember them
       final File qintervallFile = (File) resultEater.getResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT );
@@ -375,6 +315,10 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
       }
 
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Kein Ergebnis gefunden", null ) );
+    }
+    catch( final InvocationTargetException e )
+    {
+      throw e;
     }
     catch( final GMLSchemaException e )
     {
@@ -403,12 +347,10 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     finally
     {
       SimulationUtilitites.clearTmpDir( tmpDir );
-
-      m_running = false;
     }
   }
 
-  protected boolean getRunning( )
+  public boolean isRunning( )
   {
     return m_running;
   }
@@ -448,7 +390,13 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
 
     /* Copy control parameters from template */
     calculation.setVersion( template.getVersion() );
-    calculation.setQRange( template.getMinQ(), template.getMaxQ(), template.getQStep() );
+    final Double minQ = template.getMinQ();
+    final Double maxQ = template.getMaxQ();
+    final Double step = template.getQStep();
+    if( minQ == null || maxQ == null || step == null )
+      throw new InvocationTargetException( new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Abflussintervall nicht definiert", null ) ) );
+
+    calculation.setQRange( minQ, maxQ, step );
     final boolean calcBuildings;
     if( flowRel instanceof ITeschkeFlowRelation )
       calcBuildings = false;
@@ -471,22 +419,6 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     polynomeProperties.setWeightSplinePoint( templateProperties.getWeightSplinePoint() );
 
     return calculation;
-  }
-
-  public void applyResults( ) throws Exception
-  {
-    for( final Entry<IFlowRelation1D, QIntervallResult> entry : m_results.entrySet() )
-    {
-      final IFlowRelation1D flowRelation1D = entry.getKey();
-      final QIntervallResult qresult = entry.getValue();
-
-      if( flowRelation1D instanceof ITeschkeFlowRelation )
-        copyTeschkeData( (ITeschkeFlowRelation) flowRelation1D, qresult );
-      else
-        copyBuildingData( (IBuildingFlowRelation) flowRelation1D, qresult );
-
-      flowRelation1D.setCalculation( m_templateCalculation );
-    }
   }
 
   public static void copyTeschkeData( final ITeschkeFlowRelation flowRel, final QIntervallResult qresult ) throws Exception
@@ -537,5 +469,55 @@ public class FlowRelationshipCalcOperation implements ICoreRunnableWithProgress
     buildingRelation.setBuildingObservation( buildingObservation );
 
     buildingWorkspace.fireModellEvent( new FeaturesChangedModellEvent( buildingWorkspace, new Feature[] { buildingFeature } ) );
+  }
+
+  public IStatus getStatus( )
+  {
+    return m_status;
+  }
+
+  public void applyResult( ) throws Exception
+  {
+    m_flowRel.setCalculation( m_calculation );
+
+    if( m_status == null || m_result == null || !m_status.isOK() )
+      return;
+
+    if( m_flowRel instanceof ITeschkeFlowRelation )
+      FlowRelationshipCalcOperation.copyTeschkeData( (ITeschkeFlowRelation) m_flowRel, m_result );
+    else
+      FlowRelationshipCalcOperation.copyBuildingData( (IBuildingFlowRelation) m_flowRel, m_result );
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == IStatus.class )
+      return m_status;
+
+    return null;
+  }
+
+  public IFlowRelation1D getFlowRelation1D( )
+  {
+    return m_flowRel;
+  }
+
+  public void setConsoleText( final String consoleText )
+  {
+    m_consoleText = consoleText;
+  }
+
+  public String getConsoleText( )
+  {
+    return m_consoleText;
+  }
+
+  public QIntervallResult getResult( )
+  {
+    return m_result;
   }
 }

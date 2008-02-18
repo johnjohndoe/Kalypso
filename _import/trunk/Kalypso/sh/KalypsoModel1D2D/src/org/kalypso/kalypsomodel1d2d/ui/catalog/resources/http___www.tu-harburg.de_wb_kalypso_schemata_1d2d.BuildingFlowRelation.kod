@@ -63,7 +63,7 @@
 	<Style id="runoffLineStyleOK">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
 		<Parameters>
-			<Parameter value="2" name="lineWidth"/>
+			<Parameter value="1" name="lineWidth"/>
 			<Parameter value="SOLID" name="lineStyle"/>
 			<Parameter value="#00AAFF" name="lineColor"/>
 		</Parameters>
@@ -79,7 +79,7 @@
 				<Parameter name="pointHeight" value="8" />
 				<Parameter name="borderWidth" value="1" />
 				<Parameter name="fillColor" value="#00ff00" />
-				<Parameter name="borderColor" value="#000000" />
+				<Parameter name="borderColor" value="#555555" />
 				<Parameter name="alpha" value="255" />
 			</Parameters>
 		</Provider>
@@ -102,12 +102,12 @@
 	<Style id="runoffPointStyleCrossing">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
 			<Parameters>
-				<Parameter name="pointWidth" value="8" />
-				<Parameter name="pointHeight" value="8" />
-				<Parameter name="borderWidth" value="1" />
-				<Parameter name="fillColor" value="#ff0000" />
+				<Parameter name="pointWidth" value="12" />
+				<Parameter name="pointHeight" value="12" />
+				<Parameter name="borderWidth" value="2" />
+				<!-- Parameter name="fillColor" value="#ff0000" / -->
 				<Parameter name="borderColor" value="#000000" />
-				<Parameter name="alpha" value="255" />
+				<Parameter name="alpha" value="128" />
 			</Parameters>
 		</Provider>
 		<StyleID></StyleID>

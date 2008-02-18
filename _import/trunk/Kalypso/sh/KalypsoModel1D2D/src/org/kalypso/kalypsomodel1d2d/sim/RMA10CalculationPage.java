@@ -173,7 +173,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     {
       /* Do not block the UI while simulation is running... */
       final WizardDialog2 wd2 = (WizardDialog2) container;
-      m_simulationStatus = wd2.executeUnblocked( true, calculationOperation );
+      m_simulationStatus = wd2.executeUnblocked( true, true, calculationOperation );
     }
     else
       m_simulationStatus = RunnableContextHelper.execute( container, true, true, calculationOperation );

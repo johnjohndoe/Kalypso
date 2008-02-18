@@ -27,7 +27,9 @@ Require-Bundle: org.junit,
  org.kalypso.chart.ext.base,
  org.kalypso.afgui,
  org.kalypso.gml.ui,
- org.kalypso.chart.ui
+ org.kalypso.chart.ui,
+ org.eclipse.ui.console,
+ org.eclipse.jface.text
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.conv,

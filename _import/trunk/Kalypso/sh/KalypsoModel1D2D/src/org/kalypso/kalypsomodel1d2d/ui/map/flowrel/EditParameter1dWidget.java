@@ -40,20 +40,193 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.ui.map.AbstractEditFeatureWidget;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
 public class EditParameter1dWidget extends AbstractEditFeatureWidget
 {
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
   public EditParameter1dWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten oder Elements bearbeiten", false, new QName[] { ITeschkeFlowRelation.QNAME, IBuildingFlowRelation.QNAME }, IFlowRelationship.QNAME_PROP_POSITION );
+    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten oder Elements bearbeiten", true, new QName[] { ITeschkeFlowRelation.QNAME, IBuildingFlowRelation.QNAME }, IFlowRelationship.QNAME_PROP_POSITION );
+
+    m_toolTipRenderer.setTooltip( "Selektieren Sie Parameter in der Karte.\n    'Enter': selektierte Parameter neu berechnen" );
+
+    // TODO: change general selection behavior: (and write corresponding tooltip)
+    // - Click: selects feature at pos; clears selection if nothing found
+    // - drag: selects features within rect (or touching?); clears selection if nothing found
+    // - control: selection toggle mode (selection works as without ctrl, but found features are added/removed from
+    // current selection)
+    // - shift: selection add mode (selection works as without ctrl, but found features are added to the current
+    // selection)
+    // - escape: clear selection
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
+   */
+  @Override
+  public void moved( final Point p )
+  {
+    super.moved( p );
+
+    // getMapPanel().repaint();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
+  {
+    super.paint( g );
+
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel != null )
+    {
+      final Rectangle bounds = mapPanel.getBounds();
+      m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+    }
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.ui.map.AbstractSelectFeatureWidget#featureGrabbed(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
+   *      org.kalypsodeegree.model.feature.Feature[])
+   */
+  @Override
+  protected void featureGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
+  {
+    // Toggle selection
+    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+
+    if( selectedFeatures.length == 0 )
+      selectionManager.clear();
+
+    final List<Feature> toRemove = new ArrayList<Feature>();
+    final List<EasyFeatureWrapper> toAdd = new ArrayList<EasyFeatureWrapper>();
+
+    for( final Feature feature : selectedFeatures )
+    {
+      if( selectionManager.isSelected( feature ) )
+        toRemove.add( feature );
+      else
+        toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
+    }
+
+    selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
+
+    /* Open the feature view */
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        try
+        {
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+        }
+        catch( final Throwable pie )
+        {
+          // final IStatus status = StatusUtilities.statusFromThrowable( pie );
+          // KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+          pie.printStackTrace();
+        }
+      }
+    } );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyTyped( final KeyEvent e )
+  {
+    if( e.getKeyChar() == '\n' )
+    {
+      e.consume();
+
+      final EasyFeatureWrapper[] features = getMapPanel().getSelectionManager().getAllFeatures();
+      final List<IFlowRelationship> flowRels = new ArrayList<IFlowRelationship>( features.length );
+      for( final EasyFeatureWrapper feature : features )
+      {
+        final IFlowRelationship adapter = (IFlowRelationship) feature.getFeature().getAdapter( IFlowRelationship.class );
+        if( adapter != null )
+          flowRels.add( adapter );
+      }
+
+      // Force it into swt
+      final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+      final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
+      shell.getDisplay().asyncExec( new Runnable()
+      {
+        public void run( )
+        {
+          startCalculation( shell, flowRels.toArray( new IFlowRelationship[flowRels.size()] ) );
+        }
+      } );
+    }
+  }
+
+  protected void startCalculation( final Shell shell, final IFlowRelationship[] flowRels )
+  {
+    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+
+    try
+    {
+      final IFEDiscretisationModel1d2d discModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
+      final IFlowRelationshipModel flowModel = dataProvider.getModel( IFlowRelationshipModel.class );
+
+      final FlowRelCalcWizard wizard = new FlowRelCalcWizard( flowRels, flowModel, discModel );
+      wizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "flowRelCalcWizard" ) );
+      final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
+      wizardDialog2.setRememberSize( true );
+      if( wizardDialog2.open() == Window.OK )
+      {
+        // getMapPanel().getSelectionManager().clear();
+      }
+    }
+    catch( final CoreException e )
+    {
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( e.getStatus() );
+      ErrorDialog.openError( shell, "Parameter berechnen", "Modelldaten stehen nicht zur Verfügung", e.getStatus() );
+    }
+  }
+
 }

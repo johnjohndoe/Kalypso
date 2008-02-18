@@ -50,6 +50,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Button;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
@@ -79,7 +80,7 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
   {
     public void handlePageChanging( PageChangingEvent event )
     {
-      handlePageChanged( event );
+      FlowRelCalcWizard.this.handlePageChanging( event );
     }
   };
 
@@ -122,7 +123,7 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
     setNeedsProgressMonitor( true );
   }
 
-  protected void handlePageChanged( final PageChangingEvent event )
+  protected void handlePageChanging( final PageChangingEvent event )
   {
     if( event.getCurrentPage() == m_chooseFlowsRelPage && event.getTargetPage() == m_controlPage )
     {
@@ -135,7 +136,11 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
     }
 
     if( event.getTargetPage() == m_simulationPage )
-      m_simulationPage.reset();
+    {
+      final IFlowRelation1D[] flowRels = m_controlPage.getFlowRels();
+      final TuhhCalculation templateCalculation = m_controlPage.getTemplate();
+      m_simulationPage.reset( templateCalculation, flowRels, m_flowModel, m_discModel );
+    }
   }
 
   /**
@@ -189,11 +194,14 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
 
     /* Simulation was not yet run, do it now. */
     container.showPage( m_simulationPage );
-    final IFlowRelation1D[] flowRels = m_controlPage.getFlowRels();
-    final TuhhCalculation templateCalculation = m_controlPage.getTemplate();
-    m_simulationPage.runSimulation( templateCalculation, flowRels, m_flowModel, m_discModel );
+    m_simulationPage.runSimulation();
+
     if( container instanceof WizardDialog2 )
-      ((WizardDialog2) container).getButton( IDialogConstants.FINISH_ID ).setText( IDialogConstants.OK_LABEL );
+    {
+      final Button button = ((WizardDialog2) container).getButton( IDialogConstants.FINISH_ID );
+      if( button != null )
+        button.setText( IDialogConstants.OK_LABEL );
+    }
     return false;
   }
 

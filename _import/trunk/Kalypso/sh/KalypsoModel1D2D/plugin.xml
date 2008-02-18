@@ -726,18 +726,6 @@
             </parameter>
          </defaultHandler>
       </command>
-      <command
-            categoryId="org.kalypso.ogc.gml.map.category"
-            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CalculateFlowRelations"
-            name="1D-Parameter berechnen">
-         <defaultHandler
-               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-                  value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CalculateFlowrelationWidget">
-            </parameter>
-         </defaultHandler>
-      </command>
      </extension>
 	 <extension
            point="org.eclipse.ui.menus">

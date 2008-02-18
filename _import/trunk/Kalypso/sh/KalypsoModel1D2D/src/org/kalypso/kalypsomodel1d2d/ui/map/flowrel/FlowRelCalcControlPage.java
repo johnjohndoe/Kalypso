@@ -95,6 +95,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
   public void createControl( final Composite parent )
   {
     m_scrolledForm = new ScrolledForm( parent );
+    m_scrolledForm.setExpandHorizontal( true );
     setControl( m_scrolledForm );
 
     m_scrolledForm.getBody().setLayout( new GridLayout() );

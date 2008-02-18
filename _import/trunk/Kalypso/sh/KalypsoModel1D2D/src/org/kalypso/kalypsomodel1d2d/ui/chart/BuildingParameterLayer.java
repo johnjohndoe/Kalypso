@@ -324,7 +324,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     {
       for( final Coordinate[] line2 : m_paintOkLines )
       {
-        if( line1 == line2 )
+        if( line1 == line2 || line1.length < 2 || line2.length < 2 )
           continue;
 
         final LineString ls1 = GF.createLineString( line1 );

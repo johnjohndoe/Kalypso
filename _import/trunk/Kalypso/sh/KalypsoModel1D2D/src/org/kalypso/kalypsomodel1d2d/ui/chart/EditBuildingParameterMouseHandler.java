@@ -86,7 +86,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
   {
     final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
     final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
-    if( editInfo.data != null )
+    if( editInfo != null && editInfo.data != null )
       m_info = editInfo;
   }
 
@@ -101,7 +101,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
       // Klick on cross-point?
       final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
       final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
-      if( editInfo.data == null )
+      if( editInfo != null && editInfo.data == null )
       {
         final Rectangle bounds = m_chartComposite.getPlot().getBounds();
         final int zoomFactor = 3;

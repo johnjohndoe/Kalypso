@@ -173,7 +173,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     if( container instanceof WizardDialog2 )
     {
       final WizardDialog2 wd2 = (WizardDialog2) container;
-      m_resultStatus = wd2.executeUnblocked( true, operation );
+      m_resultStatus = wd2.executeUnblocked( true, true, operation );
     }
     else
       m_resultStatus = RunnableContextHelper.execute( container, true, true, operation );

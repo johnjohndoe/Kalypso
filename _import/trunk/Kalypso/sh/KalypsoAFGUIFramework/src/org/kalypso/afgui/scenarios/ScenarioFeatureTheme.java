@@ -76,9 +76,9 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Style;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -166,7 +166,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
 
     if( m_gisTemplateUserStyles.isEmpty() )
     {
-      final DefaultStyleFactory defaultStyleFactory = KalypsoGisPlugin.getDefaultStyleFactory();
+      final DefaultStyleFactory defaultStyleFactory = KalypsoDeegreePlugin.getDefaultStyleFactory();
       final IFeatureType featureType = getFeatureType();
       if( featureType != null )
       {
