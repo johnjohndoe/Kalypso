@@ -138,7 +138,7 @@ public class ListSelectionWizardPage extends WizardPage
     new Label( composite, SWT.NONE );
 
     final Table table = new Table( composite, SWT.BORDER | SWT.CHECK );
-    final GridData tableGridData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    final GridData tableGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     tableGridData.heightHint = 200;
 
     table.setLayoutData( tableGridData );

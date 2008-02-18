@@ -177,16 +177,36 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     if( value > m_max )
       return null;
 
-    int index;
     final int binarySearch = Arrays.binarySearch( m_values, value );
-    if( binarySearch > 0 )
-      index = binarySearch;
-    else
-      index = Math.abs( binarySearch ) - 1;
-    if( index >= 0 && index < m_colors.length )
-      return m_colors[index];
+    if( binarySearch >= 0 )
+      return m_colors[binarySearch];
 
-    return null;
+    final int index = Math.abs( binarySearch ) - 1;
+    if( index == m_colors.length )
+      return null;
+
+    // Experimental: set to true to linearly interpolate the color
+    // Using colormaps with many entries produces the same result
+    final boolean interpolate = false;
+
+    if( interpolate )
+    {
+      if( index == 0 )
+        return m_colors[index];
+
+      final Color lower = m_colors[index - 1];
+      final Color upper = m_colors[index];
+
+      return interpolate( lower, upper, m_values[index - 1], m_values[index], value );
+    }
+
+    return m_colors[index];
+  }
+
+  private Color interpolate( final Color lowerColor, final Color upperColor, final double lowerValue, final double upperValue, final double value )
+  {
+    final double factor = (value - lowerValue) / (upperValue - lowerValue);
+    return ColorUtilities.interpolateLinear( lowerColor, upperColor, factor );
   }
 
   @Override

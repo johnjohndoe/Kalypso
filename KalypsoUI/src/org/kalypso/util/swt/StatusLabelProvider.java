@@ -42,6 +42,7 @@ package org.kalypso.util.swt;
 
 import java.text.DateFormat;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -97,13 +98,11 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
   @SuppressWarnings("restriction")
   public Image getColumnImage( final Object element, final int columnIndex )
   {
-    if( !(element instanceof IStatus) )
+    final IStatus status = statusForElement( element );
+    if( status == null )
       return null;
 
     final Object columnProperty = m_columnProperties[columnIndex];
-
-    final IStatus status = (IStatus) element;
-
     if( columnProperty == SEVERITY )
     {
       // Special treatment for cancel: show as warning
@@ -116,18 +115,27 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
     return null;
   }
 
+  private IStatus statusForElement( final Object element )
+  {
+    if( element instanceof IStatus )
+      return (IStatus) element;
+
+    if( element instanceof IAdaptable )
+      return (IStatus) ((IAdaptable) element).getAdapter( IStatus.class );
+
+    return null;
+  }
+
   /**
    * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnText(java.lang.Object, int)
    */
   public String getColumnText( final Object element, final int columnIndex )
   {
-    if( !(element instanceof IStatus) )
+    final IStatus status = statusForElement( element );
+    if( status == null )
       return "";
 
     final Object columnProperty = m_columnProperties[columnIndex];
-
-    final IStatus status = (IStatus) element;
-
     if( columnProperty == MESSAGE )
       return status.getMessage();
 

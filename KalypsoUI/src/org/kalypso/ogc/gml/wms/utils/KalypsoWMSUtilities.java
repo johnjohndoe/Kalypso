@@ -46,10 +46,13 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -85,7 +88,7 @@ public class KalypsoWMSUtilities
    *            The client coordinate system. Will be used to initialize the image provider.
    * @return An image provider. Should never be null.
    */
-  public static IKalypsoImageProvider getImageProvider( String themeName, String layers, String styles, String service, String providerID )
+  public static IKalypsoImageProvider getImageProvider( final String themeName, final String layers, final String styles, final String service, final String providerID )
   {
     final CS_CoordinateSystem localSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
@@ -94,30 +97,37 @@ public class KalypsoWMSUtilities
       return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
 
     /* Get the extension registry. */
-    IExtensionRegistry er = Platform.getExtensionRegistry();
+    final IExtensionRegistry er = Platform.getExtensionRegistry();
 
     /* The registry must exist. */
     if( er == null )
       return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
 
-    IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" );
-    for( IConfigurationElement element : configurationElementsFor )
+    final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" );
+    for( final IConfigurationElement element : configurationElementsFor )
     {
       /* Get some attributes. */
-      String id = element.getAttribute( "id" );
+      final String id = element.getAttribute( "id" );
       if( id.equals( providerID ) )
       {
         try
         {
           /* This is the wanted provider. */
-          IKalypsoImageProvider provider = (IKalypsoImageProvider) element.createExecutableExtension( "class" );
+          final IKalypsoImageProvider provider = (IKalypsoImageProvider) element.createExecutableExtension( "class" );
           provider.init( themeName, layers, styles, service, localSRS );
-
           return provider;
         }
-        catch( CoreException e )
+        catch( final CoreException e )
         {
-          e.printStackTrace();
+          KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+
+          return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
+        }
+        catch( final Throwable t )
+        {
+          // protect against bad extensions
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim initalisieren des KalypsoImageProvider: " + id, t );
+          KalypsoGisPlugin.getDefault().getLog().log( status );
 
           return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
         }
@@ -142,9 +152,9 @@ public class KalypsoWMSUtilities
    *            The client coordinate system.
    * @return The default wms image provider.
    */
-  public static IKalypsoImageProvider getDefaultImageProvider( String themeName, String layers, String styles, String service, CS_CoordinateSystem localSRS )
+  public static IKalypsoImageProvider getDefaultImageProvider( final String themeName, final String layers, final String styles, final String service, final CS_CoordinateSystem localSRS )
   {
-    WMSImageProvider provider = new WMSImageProvider();
+    final WMSImageProvider provider = new WMSImageProvider();
     provider.init( themeName, layers, styles, service, localSRS );
 
     return provider;
@@ -157,12 +167,12 @@ public class KalypsoWMSUtilities
    *            The base URL.
    * @return The get capabilities request URL.
    */
-  public static URL createCapabilitiesRequest( URL baseURL ) throws MalformedURLException
+  public static URL createCapabilitiesRequest( final URL baseURL ) throws MalformedURLException
   {
-    String query = baseURL.getQuery();
-    String getCapabilitiesQuery = "SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities";
-    String queryToken = (query == null || query.length() == 0) ? "?" : "&";
-    String urlGetCapabilitiesString = baseURL.toString() + queryToken + getCapabilitiesQuery;
+    final String query = baseURL.getQuery();
+    final String getCapabilitiesQuery = "SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities";
+    final String queryToken = (query == null || query.length() == 0) ? "?" : "&";
+    final String urlGetCapabilitiesString = baseURL.toString() + queryToken + getCapabilitiesQuery;
 
     return new URL( urlGetCapabilitiesString );
   }

@@ -290,7 +290,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
       }
       else if( gmo instanceof GM_Surface )
       {
-        inter = LinearIntersects.intersects( this, (GM_Surface) gmo );
+        inter = LinearIntersects.intersects( this, (GM_Surface< ? >) gmo );
       }
       else if( gmo instanceof GM_Aggregate )
       {
@@ -299,6 +299,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
     }
 
     return inter;
@@ -369,7 +370,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     Debug.debugMethodBegin( this, "transformPoint" );
 
     final double[] din = getAsArray();
-    // TODO macht der folgende if Sinn ?
+    // TODO macht der folgende if Sinn ? Eigentlich nein: denn dann ist der Punkt eh schon nicht gültig...
     if( getCoordinateSystem().getName().equalsIgnoreCase( "EPSG:4326" ) )
     {
       if( din[0] <= -180 )
@@ -381,28 +382,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
       else if( din[1] >= 90 )
         din[1] = 89.999;
     }
-    final double[] dout = new double[din.length];
-    try
-    {
-      if( din.length < 3 )
-        trans.transform( din, 0, dout, 0, din.length - 1 );
-      else
-      {
-        final double[] din2d = new double[2];
-        final double[] dout2d = new double[2];
-        din2d[0] = din[0];
-        din2d[1] = din[1];
-        trans.transform( din2d, 0, dout2d, 0, din2d.length - 1 );
-        dout[0] = dout2d[0];
-        dout[1] = dout2d[1];
-        dout[2] = din[2];
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    if( din.length > 2 )
+
+    final double[] dout = GM_Position_Impl.transform( din, trans );
+    if( dout.length > 2 )
     {
       Debug.debugMethodEnd();
       return GeometryFactory.createGM_Point( dout[0], dout[1], dout[2], targetOGCCS );

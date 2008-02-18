@@ -65,8 +65,8 @@ import java.io.Serializable;
 import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.kalypsodeegree_impl.model.ct.TransformException;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is
@@ -254,14 +254,21 @@ class GM_Position_Impl implements GM_Position, Serializable
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Position#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree.model.geometry.GM_Position#transform(org.kalypsodeegree_impl.model.ct.MathTransform)
    */
-  public GM_Position transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Position transform( final MathTransform trans ) throws TransformException
   {
     Debug.debugMethodBegin( this, "transformPosition" );
 
     final double[] din = getAsArray();
+    final double[] dout = transform( din, trans );
+
+    Debug.debugMethodEnd();
+    return GeometryFactory.createGM_Position( dout );
+  }
+
+  public static double[] transform( final double[] din, final MathTransform trans ) throws TransformException
+  {
     final double[] dout = new double[din.length];
 
     if( din.length < 3 )
@@ -277,7 +284,7 @@ class GM_Position_Impl implements GM_Position, Serializable
       dout[1] = dout2d[1];
       dout[2] = din[2];
     }
-    Debug.debugMethodEnd();
-    return GeometryFactory.createGM_Position( dout );
+
+    return dout;
   }
 }

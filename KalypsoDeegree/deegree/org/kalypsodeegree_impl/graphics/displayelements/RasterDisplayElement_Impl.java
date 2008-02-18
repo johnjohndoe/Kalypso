@@ -80,6 +80,7 @@ import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
+import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -165,11 +166,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final double cellPixelWidth = gridPixelWidth / grid.getSizeX();
     final int clusterSize = (int) Math.ceil( CLUSTER_CELL_COUNT / cellPixelWidth );
 
-    // TODO: refactor and put the whole iteration into a walk( grid, bbox, clusterSize ) method of the grid, allowing
-    // for
-    // optimization according to
-    // underlying grid
-
     final Envelope paintEnvelope = JTSAdapter.export( projection.getSourceRect() );
 
     final Envelope env = gridEnvelope.intersection( paintEnvelope );
@@ -189,8 +185,13 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final GeoGridCell clippedMinCell = normalizedMinCell.max( originCell );
     final GeoGridCell clippedMaxCell = normaliedMaxCell.min( maxGridCell );
 
-    if( cellPixelWidth < 1 )
+    // Experimental: change interpolation method for better rendering; is quit slow however
+    final GeoGridUtilities.Interpolation interpolation = Interpolation.none;
+
+    if( cellPixelWidth < 1 || interpolation != Interpolation.none )
     {
+      // cell is smaller than one pixel, we iterate through all pixels and get their values
+
       final int screenXfrom = (int) projection.getDestX( env.getMinX() );
       final int screenXto = (int) projection.getDestX( env.getMaxX() );
       final int screenYfrom = (int) projection.getDestY( env.getMaxY() );
@@ -200,8 +201,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
       progress.setWorkRemaining( screenYheight );
 
-      GeoGridCell lastCell = null;
-      Color lastColor = null;
       for( int y = screenYfrom; y < screenYto; y++ )
       {
         for( int x = screenXfrom; x < screenXto; x++ )
@@ -211,38 +210,34 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
           final Coordinate crd = new Coordinate( geoX, geoY );
 
-          final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, crd );
-
-          final Color color;
-          if( lastCell == null || !cell.equals( lastCell ) )
+          final double value;
+          // If cell size is lower than pixel size, we do not need to interpolate
+          if( cellPixelWidth < 1 )
           {
-            final double value = grid.getValueChecked( cell.x, cell.y );
-            color = symbolizer.getColor( value );
+            final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, crd );
+            value = grid.getValueChecked( cell.x, cell.y );
           }
           else
-            color = lastColor;
+            value = GeoGridUtilities.getValue( grid, crd, interpolation );
 
-          if( color == null )
-            continue;
-
-          g.setColor( color );
-          g.fillRect( x, y, 1, 1 );
-
-          lastCell = cell;
-          lastColor = color;
+          final Color color = symbolizer.getColor( value );
+          if( color != null )
+          {
+            g.setColor( color );
+            g.fillRect( x, y, 1, 1 );
+          }
         }
 
         ProgressUtilities.worked( monitor, 1 );
       }
-
     }
     else
     {
       progress.setWorkRemaining( clippedMaxCell.y + 2 - clippedMinCell.y );
 
       /* Iterate through the grid */
-      // REMARK: always iterate through a bigger extent in order to compemsate for rounding problems during detmination
-      // of the cell-box
+      // REMARK: always iterate through a bigger extent in order to compensate for rounding problems during
+      // determination of the cell-box
       for( int j = clippedMinCell.y - 1; j < clippedMaxCell.y + 1; j += clusterSize )
       {
         for( int i = clippedMinCell.x - 1; i < clippedMaxCell.x + 1; i += clusterSize )
@@ -256,8 +251,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
             final Coordinate currentCellCrd = GeoGridUtilities.toCoordinate( grid, i, j, null );
             final Coordinate nextCellCrd = GeoGridUtilities.toCoordinate( grid, i + clusterSize, j + clusterSize, null );
-            final Envelope clusterEnvelope = new Envelope( currentCellCrd, nextCellCrd ); // necessairy to normalize
-            // rect
+            final Envelope clusterEnvelope = new Envelope( currentCellCrd, nextCellCrd ); // Necessary to normalize the
+            // envelope
             paintEnvelope( g, projection, clusterEnvelope, color );
           }
         }

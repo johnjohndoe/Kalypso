@@ -317,7 +317,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
       else if( gmo instanceof GM_Surface )
       {
         final GM_Curve curve = new GM_Curve_Impl( new GM_CurveSegment[] { sp } );
-        inter = LinearIntersects.intersects( curve, (GM_Surface) gmo );
+        inter = LinearIntersects.intersects( curve, (GM_Surface< ? >) gmo );
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {
@@ -443,17 +443,14 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
    *      org.opengis.cs.CS_CoordinateSystem)
    */
-  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
   {
     Debug.debugMethodBegin( this, "transformRing" );
 
-    GM_Position[] pos = getPositions();
-    GM_Position[] transPos = new GM_Position[pos.length];
-
+    final GM_Position[] pos = getPositions();
+    final GM_Position[] transPos = new GM_Position[pos.length];
     for( int i = 0; i < pos.length; i++ )
-    {
-      transPos[i] = pos[i].transform( trans, targetOGCCS );
-    }
+      transPos[i] = pos[i].transform( trans );
 
     Debug.debugMethodEnd();
     return GeometryFactory.createGM_Ring( transPos, targetOGCCS );
