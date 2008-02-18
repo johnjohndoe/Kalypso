@@ -190,9 +190,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
     final IKalypsoThemeFactory themeFactory = getThemeFactory( linktype );
     if( themeFactory != null )
-    {
       return themeFactory.createTheme( linktype, layerType, context, this, m_selectionManager );
-    }
+    // TODO: move all code into different factories
     else if( "wms".equals( linktype ) ) //$NON-NLS-1$
     {
       final String source = layerType.getHref();

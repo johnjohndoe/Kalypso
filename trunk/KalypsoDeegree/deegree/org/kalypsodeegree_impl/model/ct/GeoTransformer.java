@@ -60,6 +60,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -67,7 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -83,9 +85,12 @@ final public class GeoTransformer
 {
   private static final ConvenienceCSFactory m_csFactory = ConvenienceCSFactory.getInstance();
 
-  private CS_CoordinateSystem m_targetOGCCS = null;
+  /** Cache for math-transforms */
+  private final Map<CoordinateSystem, MathTransform> m_transformHash = new HashMap<CoordinateSystem, MathTransform>();
 
-  private CoordinateSystem m_targetCS = null;
+  private final CS_CoordinateSystem m_targetOGCCS;
+
+  private final CoordinateSystem m_targetCS;
 
   private final boolean m_shouldTransform;
 
@@ -130,8 +135,7 @@ final public class GeoTransformer
    */
   public GeoTransformer( final CoordinateSystem targetCS, final boolean shouldTransform ) throws Exception
   {
-    setTargetCS( targetCS );
-    m_shouldTransform = shouldTransform;
+    this( org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( targetCS ), targetCS, shouldTransform );
   }
 
   /**
@@ -140,9 +144,9 @@ final public class GeoTransformer
    * @param targetCS
    * @throws Exception
    */
-  public GeoTransformer( final CS_CoordinateSystem targetCS ) throws Exception
+  public GeoTransformer( final CS_CoordinateSystem targetOGCCS ) throws Exception
   {
-    this( targetCS, TransformUtilities.shouldTransform() );
+    this( targetOGCCS, TransformUtilities.shouldTransform() );
   }
 
   /**
@@ -153,26 +157,14 @@ final public class GeoTransformer
    */
   public GeoTransformer( final CS_CoordinateSystem targetCS, final boolean shouldTransform ) throws Exception
   {
-    setTargetCS( targetCS );
-    m_shouldTransform = shouldTransform;
+    this( targetCS, org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap( targetCS ), shouldTransform );
   }
 
-  /**
-   * sets the target coordinate reference system of the Transformer
-   */
-  public void setTargetCS( final CS_CoordinateSystem targetCS ) throws Exception
+  private GeoTransformer( final CS_CoordinateSystem targetOGCCS, final CoordinateSystem targetCS, final boolean shouldTransform ) throws Exception
   {
-    m_targetOGCCS = targetCS;
-    m_targetCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap( targetCS );
-  }
-
-  /**
-   * sets the target coordinate reference system of the Transformer
-   */
-  public void setTargetCS( final CoordinateSystem targetCS ) throws Exception
-  {
+    m_targetOGCCS = targetOGCCS;
     m_targetCS = targetCS;
-    m_targetOGCCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( targetCS );
+    m_shouldTransform = shouldTransform;
   }
 
   /**
@@ -184,43 +176,52 @@ final public class GeoTransformer
   }
 
   /**
-   * transforms the coodinates of a deegree geometry to the target coordinate reference system.
+   * transforms the coordinates of a deegree geometry to the target coordinate reference system.
    */
-  public GM_Object transform( GM_Object geo ) throws Exception
+  public GM_Object transform( final GM_Object geo ) throws Exception
   {
+    if( geo == null )
+      return null;
+
     if( !m_shouldTransform )
       return geo;
 
     final CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap( geo.getCoordinateSystem() );
-
     if( cs == null || cs.equals( m_targetCS ) )
       return geo;
+
+    return geo.transform( getTransform( cs ), m_targetOGCCS );
+  }
+
+  private MathTransform getTransform( final CoordinateSystem cs ) throws Exception
+  {
+    // REMARK: we hash the transform objects, as one geo-transformer object is often
+    // used for a transformation between a large number of geo-objects of the same
+    // source and target CRSes. The creation of the math-transform however is a heavy operation.
+    final MathTransform transform = m_transformHash.get( cs );
+    if( transform != null )
+      return transform;
 
     final ConvenienceTransformFactory ctf = ConvenienceTransformFactory.getInstance();
     final MathTransform trans = ctf.getTransform( cs, m_targetCS );
 
-    return geo.transform( trans, m_targetOGCCS );
+    m_transformHash.put( cs, trans );
 
+    return trans;
   }
 
   /**
-   * transfroms a <tt>GM_Envelope</tt> to the target crs of the <tt>GeoTransformer</tt> instance
+   * transforms a <tt>GM_Envelope</tt> to the target crs of the <tt>GeoTransformer</tt> instance
    * 
    * @param envelope
    * @param sourceCRS
    *            CRS of the envelope
    * @throws Exception
    */
-  public GM_Envelope transformEnvelope( GM_Envelope envelope, final String sourceCRS ) throws Exception
+  public GM_Envelope transformEnvelope( final GM_Envelope envelope, final String sourceCRS ) throws Exception
   {
-    Debug.debugMethodBegin( this, "transformPositions" );
-
     final CoordinateSystem cs = m_csFactory.getCSByName( sourceCRS );
-
-    envelope = transformEnvelope( envelope, cs );
-
-    Debug.debugMethodEnd();
-    return envelope;
+    return transformEnvelope( envelope, cs );
   }
 
   /**
@@ -231,15 +232,10 @@ final public class GeoTransformer
    *            CRS of the envelope
    * @throws Exception
    */
-  public GM_Envelope transformEnvelope( GM_Envelope envelope, final CoordinateSystem sourceCRS ) throws Exception
+  public GM_Envelope transformEnvelope( final GM_Envelope envelope, final CoordinateSystem sourceCRS ) throws Exception
   {
-    Debug.debugMethodBegin( this, "transformPositions" );
-
     final CS_CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( sourceCRS );
-    envelope = transformEnvelope( envelope, cs );
-
-    Debug.debugMethodEnd();
-    return envelope;
+    return transformEnvelope( envelope, cs );
   }
 
   /**
@@ -256,9 +252,8 @@ final public class GeoTransformer
     if( !m_shouldTransform )
       return envelope;
 
-    // Debug.debugMethodBegin( this, "transformPositions" );
-    //
-    final GM_Surface asSurface = GeometryFactory.createGM_Surface( envelope, sourceCRS );
+    // TODO: this can be improved....
+    final GM_Surface< ? > asSurface = GeometryFactory.createGM_Surface( envelope, sourceCRS );
     return transform( asSurface ).getEnvelope();
   }
 }

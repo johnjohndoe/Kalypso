@@ -60,5 +60,4 @@ public interface IGeoGrid extends IGeoValueProvider
   public BigDecimal getMin( ) throws GeoGridException;
 
   public BigDecimal getMax( ) throws GeoGridException;
-
 }

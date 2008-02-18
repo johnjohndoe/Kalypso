@@ -47,6 +47,8 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.commons.math.LinearEquation;
+import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -380,6 +382,74 @@ public class GeoGridUtilities
     coordinate.z = z;
 
     return coordinate;
+  }
+
+  public enum Interpolation
+  {
+    none, // no interpolation: grid values are of constant value in a grid cell with middle-point the given coordinate
+    bilinear, // bilinear interpolation
+    bicubic; // bilinear interpolation
+  }
+
+  public static double getValue( final IGeoGrid grid, final Coordinate crd, final Interpolation interpolation ) throws GeoGridException
+  {
+    switch( interpolation )
+    {
+      case none:
+        final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, crd );
+        return grid.getValueChecked( cell.x, cell.y );
+
+      case bilinear:
+        return interpolateBilinear( grid, crd );
+
+      default:
+        throw new UnsupportedOperationException( "Unsupported interpolation method: " + interpolation );
+    }
+  }
+
+  private static double interpolateBilinear( final IGeoGrid grid, final Coordinate crd ) throws GeoGridException
+  {
+    // Find four adjacent cells
+    final GeoGridCell c11 = cellFromPosition( grid, crd );
+    final GeoGridCell c12 = new GeoGridCell( c11.x + 1, c11.y );
+    final GeoGridCell c21 = new GeoGridCell( c11.x, c11.y + 1 );
+    final GeoGridCell c22 = new GeoGridCell( c11.x + 1, c11.y + 1 );
+
+    final double v11 = grid.getValueChecked( c11.x, c11.y );
+    final double v12 = grid.getValueChecked( c12.x, c12.y );
+    final double v21 = grid.getValueChecked( c21.x, c21.y );
+    final double v22 = grid.getValueChecked( c22.x, c22.y );
+
+    final Coordinate crd11 = toCoordinate( grid, c11 );
+    final Coordinate crd12 = toCoordinate( grid, c12 );
+    final Coordinate crd21 = toCoordinate( grid, c21 );
+    final Coordinate crd22 = toCoordinate( grid, c22 );
+
+    try
+    {
+      // interpolate in x direction
+      final LinearEquation lex1 = new LinearEquation( crd11.x, v11, crd12.x, v12 );
+      final LinearEquation lex2 = new LinearEquation( crd21.x, v21, crd22.x, v22 );
+
+      final double vx1 = lex1.computeY( crd.x );
+      final double vx2 = lex2.computeY( crd.x );
+
+      // interpolate in y direction
+      final LinearEquation ley = new LinearEquation( crd11.y, vx1, crd22.y, vx2 );
+      return ley.computeY( crd.y );
+    }
+    catch( final SameXValuesException e )
+    {
+      // should never happen...
+      e.printStackTrace();
+
+      return Double.NaN;
+    }
+  }
+
+  private static Coordinate toCoordinate( final IGeoGrid grid, final GeoGridCell cell ) throws GeoGridException
+  {
+    return toCoordinate( grid, cell.x, cell.y, null );
   }
 
 }

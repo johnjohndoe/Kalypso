@@ -83,7 +83,7 @@ public class ConvenienceCSFactory
 
   private static ConvenienceCSFactory factory = null;
 
-  private CoordinateSystemFactory csFactory = CoordinateSystemFactory.getDefault();
+  private final CoordinateSystemFactory csFactory = CoordinateSystemFactory.getDefault();
 
   private static ParameterListDescriptor pld = getDescriptor( new Object[] { "semi_major", Double.class, ParameterListDescriptor.NO_PARAMETER_DEFAULT, null, "semi_minor", Double.class,
       ParameterListDescriptor.NO_PARAMETER_DEFAULT, null, "central_meridian", Double.class, new Double( 0 ), null, "latitude_of_origin", Double.class, new Double( 0 ), null, "false_easting",
@@ -92,10 +92,10 @@ public class ConvenienceCSFactory
       new Double( 40 ), null, "hemisphere", Integer.class, new Integer( 1 ), null } );
 
   // keys are names (i.e. "EPSG:4326"), values are CoordinateSystems
-  private Hashtable<String, CoordinateSystem> systems = new Hashtable<String, CoordinateSystem>();
+  private final Hashtable<String, CoordinateSystem> systems = new Hashtable<String, CoordinateSystem>();
 
   // values are names (Strings)
-  private Vector<String> names = new Vector<String>();
+  private final Vector<String> names = new Vector<String>();
 
   /**
    * implementation f the singleton pattern.
@@ -113,23 +113,23 @@ public class ConvenienceCSFactory
   /**
    * @param cs
    */
-  private void save( CoordinateSystem cs )
+  private void save( final CoordinateSystem cs )
   {
     systems.put( cs.getName( Locale.getDefault() ), cs );
     names.add( cs.getName( Locale.getDefault() ) );
   }
 
-  public CS_CoordinateSystem getOGCCSByName( String crsName )
+  public CS_CoordinateSystem getOGCCSByName( final String crsName )
   {
 
     CS_CoordinateSystem crs = null;
 
     try
     {
-      CoordinateSystem cs = getCSByName( crsName );
+      final CoordinateSystem cs = getCSByName( crsName );
       crs = Adapters.getDefault().export( cs );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -137,10 +137,10 @@ public class ConvenienceCSFactory
     return crs;
   }
 
-  public CoordinateSystem getCSByName( String name )
+  public CoordinateSystem getCSByName( final String name )
   {
 
-    CoordinateSystem cs = systems.get( name );
+    final CoordinateSystem cs = systems.get( name );
 
     if( cs != null )
     {
@@ -262,8 +262,8 @@ public class ConvenienceCSFactory
         || name.equalsIgnoreCase( "EPSG:25832" ) || name.equalsIgnoreCase( "EPSG:25833" ) || name.equalsIgnoreCase( "EPSG:25834" ) || name.equalsIgnoreCase( "EPSG:25835" )
         || name.equalsIgnoreCase( "EPSG:25836" ) || name.equalsIgnoreCase( "EPSG:25837" ) || name.equalsIgnoreCase( "EPSG:25838" ) )
     {
-      String s = name.substring( 8, 10 );
-      int code = Integer.parseInt( s );
+      final String s = name.substring( 8, 10 );
+      final int code = Integer.parseInt( s );
       addEPSG258XX( code );
     }
     else if( name.equalsIgnoreCase( "EPSG:26591" ) )
@@ -353,8 +353,8 @@ public class ConvenienceCSFactory
     else if( name.equalsIgnoreCase( "EPSG:28462" ) || name.equalsIgnoreCase( "EPSG:28463" ) || name.equalsIgnoreCase( "EPSG:28464" ) || name.equalsIgnoreCase( "EPSG:28465" )
         || name.equalsIgnoreCase( "EPSG:28466" ) || name.equalsIgnoreCase( "EPSG:28467" ) || name.equalsIgnoreCase( "EPSG:28468" ) || name.equalsIgnoreCase( "EPSG:28469" ) )
     {
-      String s = name.substring( 9 );
-      int code = Integer.parseInt( s );
+      final String s = name.substring( 9 );
+      final int code = Integer.parseInt( s );
       addEPSG2846X( code );
     }
     else if( name.equalsIgnoreCase( "EPSG:29900" ) )
@@ -407,15 +407,15 @@ public class ConvenienceCSFactory
     }
     else if( name.equalsIgnoreCase( "EPSG:31466" ) || name.equalsIgnoreCase( "EPSG:31467" ) || name.equalsIgnoreCase( "EPSG:31468" ) || name.equalsIgnoreCase( "EPSG:31469" ) )
     {
-      String s = name.substring( 9 );
-      int code = Integer.parseInt( s );
+      final String s = name.substring( 9 );
+      final int code = Integer.parseInt( s );
       addEPSG3146X( code );
     }
     else if( name.equalsIgnoreCase( "EPSG:31491" ) || name.equalsIgnoreCase( "EPSG:31492" ) || name.equalsIgnoreCase( "EPSG:31493" ) || name.equalsIgnoreCase( "EPSG:31494" )
         || name.equalsIgnoreCase( "EPSG:31495" ) )
     {
-      String s = name.substring( 9 );
-      int code = Integer.parseInt( s );
+      final String s = name.substring( 9 );
+      final int code = Integer.parseInt( s );
       addEPSG3149X( code );
     }
     else if( name.equalsIgnoreCase( "EPSG:32201" ) || name.equalsIgnoreCase( "EPSG:32202" ) || name.equalsIgnoreCase( "EPSG:32203" ) || name.equalsIgnoreCase( "EPSG:32204" )
@@ -434,8 +434,8 @@ public class ConvenienceCSFactory
         || name.equalsIgnoreCase( "EPSG:32253" ) || name.equalsIgnoreCase( "EPSG:32254" ) || name.equalsIgnoreCase( "EPSG:32255" ) || name.equalsIgnoreCase( "EPSG:32256" )
         || name.equalsIgnoreCase( "EPSG:32257" ) || name.equalsIgnoreCase( "EPSG:32258" ) || name.equalsIgnoreCase( "EPSG:32259" ) || name.equalsIgnoreCase( "EPSG:32260" ) )
     {
-      String s = name.substring( 8, 10 );
-      int code = Integer.parseInt( s );
+      final String s = name.substring( 8, 10 );
+      final int code = Integer.parseInt( s );
       addEPSG322XX( code );
     }
     else if( name.equalsIgnoreCase( "EPSG:32401" ) || name.equalsIgnoreCase( "EPSG:32402" ) || name.equalsIgnoreCase( "EPSG:32403" ) || name.equalsIgnoreCase( "EPSG:32404" )
@@ -454,8 +454,8 @@ public class ConvenienceCSFactory
         || name.equalsIgnoreCase( "EPSG:32453" ) || name.equalsIgnoreCase( "EPSG:32454" ) || name.equalsIgnoreCase( "EPSG:32455" ) || name.equalsIgnoreCase( "EPSG:32456" )
         || name.equalsIgnoreCase( "EPSG:32457" ) || name.equalsIgnoreCase( "EPSG:32458" ) || name.equalsIgnoreCase( "EPSG:32459" ) || name.equalsIgnoreCase( "EPSG:32460" ) )
     {
-      String s = name.substring( 8, 10 );
-      int code = Integer.parseInt( s );
+      final String s = name.substring( 8, 10 );
+      final int code = Integer.parseInt( s );
       addEPSG324XX( code );
     }
     else if( name.equalsIgnoreCase( "EPSG:32601" ) || name.equalsIgnoreCase( "EPSG:32602" ) || name.equalsIgnoreCase( "EPSG:32603" ) || name.equalsIgnoreCase( "EPSG:32604" )
@@ -474,8 +474,8 @@ public class ConvenienceCSFactory
         || name.equalsIgnoreCase( "EPSG:32653" ) || name.equalsIgnoreCase( "EPSG:32654" ) || name.equalsIgnoreCase( "EPSG:32655" ) || name.equalsIgnoreCase( "EPSG:32656" )
         || name.equalsIgnoreCase( "EPSG:32657" ) || name.equalsIgnoreCase( "EPSG:32658" ) || name.equalsIgnoreCase( "EPSG:32659" ) || name.equalsIgnoreCase( "EPSG:32660" ) )
     {
-      String s = name.substring( 8, 10 );
-      int code = Integer.parseInt( s );
+      final String s = name.substring( 8, 10 );
+      final int code = Integer.parseInt( s );
       addEPSG326XX( code );
     }
     else if( name.equalsIgnoreCase( "EPSG:4120" ) )
@@ -673,14 +673,14 @@ public class ConvenienceCSFactory
   private static ParameterListDescriptor getDescriptor( final Object[] properties )
   {
     final String[] names = new String[properties.length / 4];
-    final Class[] classes = new Class[names.length];
+    final Class< ? >[] classes = new Class[names.length];
     final Object[] defaults = new Object[names.length];
     final Range[] ranges = new Range[names.length];
     for( int i = 0; i < names.length; i++ )
     {
       final int j = i * 4;
       names[i] = (String) properties[j + 0];
-      classes[i] = (Class) properties[j + 1];
+      classes[i] = (Class< ? >) properties[j + 1];
       defaults[i] = properties[j + 2];
       ranges[i] = (Range) properties[j + 3];
     }
@@ -692,7 +692,7 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4326( )
   {
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4326", Unit.DEGREE, HorizontalDatum.WGS84, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4326", Unit.DEGREE, HorizontalDatum.WGS84, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
 
     save( cs );
   }
@@ -707,18 +707,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4817( )
   {
-    Ellipsoid ellipsoid = csFactory.createFlattenedSphere( "NGO 1948 (Oslo)", 6377492.018, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = csFactory.createFlattenedSphere( "NGO 1948 (Oslo)", 6377492.018, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 0;
     convInfo.dy = 0;
     convInfo.dz = 0;
 
-    HorizontalDatum hz = csFactory.createHorizontalDatum( "NGO 1948 (Oslo)", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum hz = csFactory.createHorizontalDatum( "NGO 1948 (Oslo)", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    PrimeMeridian pm = csFactory.createPrimeMeridian( "NGO 1948 (Oslo)", Unit.DEGREE, 10.72291667 );
+    final PrimeMeridian pm = csFactory.createPrimeMeridian( "NGO 1948 (Oslo)", Unit.DEGREE, 10.72291667 );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4817", Unit.DEGREE, hz, pm, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4817", Unit.DEGREE, hz, pm, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
 
     save( cs );
   }
@@ -728,9 +728,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4322( )
   {
-    Ellipsoid ellipsoid = csFactory.createFlattenedSphere( "WGS 72", 6378135, 298.26, Unit.METRE );
+    final Ellipsoid ellipsoid = csFactory.createFlattenedSphere( "WGS 72", 6378135, 298.26, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 0;
     convInfo.dy = 0;
     convInfo.dz = 4.5;
@@ -739,9 +739,9 @@ public class ConvenienceCSFactory
     convInfo.ez = 0.554;
     convInfo.ppm = 0.2263;
 
-    HorizontalDatum hz = csFactory.createHorizontalDatum( "WGS 72", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum hz = csFactory.createHorizontalDatum( "WGS 72", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4322", Unit.DEGREE, hz, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4322", Unit.DEGREE, hz, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
 
     save( cs );
   }
@@ -751,9 +751,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4324( )
   {
-    Ellipsoid ellipsoid = csFactory.createFlattenedSphere( "WGS 72BE", 6378135, 298.26, Unit.METRE );
+    final Ellipsoid ellipsoid = csFactory.createFlattenedSphere( "WGS 72BE", 6378135, 298.26, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 0;
     convInfo.dy = 0;
     convInfo.dz = 1.9;
@@ -762,9 +762,9 @@ public class ConvenienceCSFactory
     convInfo.ez = 0.814;
     convInfo.ppm = -0.38;
 
-    HorizontalDatum hz = csFactory.createHorizontalDatum( "WGS 72 Transit Broadcast Ephemeris", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum hz = csFactory.createHorizontalDatum( "WGS 72 Transit Broadcast Ephemeris", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4324", Unit.DEGREE, hz, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4324", Unit.DEGREE, hz, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
 
     save( cs );
   }
@@ -774,9 +774,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4314( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 582;
     convInfo.dy = 105;
     convInfo.dz = 414;
@@ -785,9 +785,9 @@ public class ConvenienceCSFactory
     convInfo.ez = 3.08;
     convInfo.ppm = 8.3;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4314", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4314", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -804,9 +804,9 @@ public class ConvenienceCSFactory
   private void addEPSG4272( )
   {
 
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 59.47;
     convInfo.dy = -5.04;
     convInfo.dz = 187.44;
@@ -815,9 +815,9 @@ public class ConvenienceCSFactory
     convInfo.ez = -1.024;
     convInfo.ppm = -4.5993;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4272", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4272", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -826,16 +826,16 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4230( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -87;
     convInfo.dy = -98;
     convInfo.dz = -121;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4230", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4230", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -844,9 +844,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4801( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 660.077;
     convInfo.dy = 13.551;
     convInfo.dz = 369.344;
@@ -855,9 +855,9 @@ public class ConvenienceCSFactory
     convInfo.ez = 2.939;
     convInfo.ppm = 5.66;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4801", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4801", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -866,18 +866,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4806( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -225;
     convInfo.dy = -65;
     convInfo.dz = -9;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    PrimeMeridian pm = csFactory.createPrimeMeridian( "Rome", Unit.DEGREE, 12.45233333333333 );
+    final PrimeMeridian pm = csFactory.createPrimeMeridian( "Rome", Unit.DEGREE, 12.45233333333333 );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4806", Unit.DEGREE, horDatum, pm, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4806", Unit.DEGREE, horDatum, pm, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -886,18 +886,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23028( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = -15.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = -15.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23028", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23028", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -906,18 +906,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23029( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = -9.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = -9.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23029", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23029", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -926,18 +926,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23030( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = -3.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = -3.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23030", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23030", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -946,18 +946,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23031( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 3.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 3.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23031", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23031", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -966,18 +966,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23032( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 9.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 9.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23032", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23032", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -986,18 +986,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23033( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 15.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 15.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23033", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23033", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1006,18 +1006,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23034( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 21.0;
-    double easting = 0;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 21.0;
+    final double easting = 0;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23034", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23034", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1026,18 +1026,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23035( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 27.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 27.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23035", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23035", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1046,18 +1046,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23036( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 33.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 33.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23036", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23036", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1066,18 +1066,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23037( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 39.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 39.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23037", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23037", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1086,18 +1086,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23038( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 45.0;
-    double easting = 500000;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 45.0;
+    final double easting = 500000;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23038", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23038", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1106,18 +1106,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23090( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 0.0;
-    double easting = 0;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 0.0;
+    final double easting = 0;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23090", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23090", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1126,18 +1126,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG23095( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 5.0;
-    double easting = 0;
-    double northing = 0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 5.0;
+    final double easting = 0;
+    final double northing = 0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23095", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:23095", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1146,20 +1146,20 @@ public class ConvenienceCSFactory
    * 
    * @param code
    */
-  private void addEPSG3146X( int code )
+  private void addEPSG3146X( final int code )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = ((code - 6) * 3.0) + 6;
-    double easting = 2500000 + ((code - 6) * 1000000);
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = ((code - 6) * 3.0) + 6;
+    final double easting = 2500000 + ((code - 6) * 1000000);
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:3146" + code, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:3146" + code, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1168,20 +1168,20 @@ public class ConvenienceCSFactory
    * 
    * @param code
    */
-  private void addEPSG3149X( int code )
+  private void addEPSG3149X( final int code )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = (code * 3.0);
-    double easting = 2500000 + ((code - 2) * 1000000);
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = (code * 3.0);
+    final double easting = 2500000 + ((code - 2) * 1000000);
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:3149" + code, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:3149" + code, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1190,9 +1190,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4231( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -82.981;
     convInfo.dy = -99.719;
     convInfo.dz = -110.709;
@@ -1201,9 +1201,9 @@ public class ConvenienceCSFactory
     convInfo.ez = 0.3898;
     convInfo.ppm = -0.3143;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4231", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4231", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1212,13 +1212,13 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4258( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6378137.0, 298.2572221, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6378137.0, 298.2572221, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4258", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4258", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1227,16 +1227,16 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4150( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 674.374;
     convInfo.dy = 15.056;
     convInfo.dz = 405.346;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4150", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4150", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1245,16 +1245,16 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4120( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -199.87;
     convInfo.dy = 74.79;
     convInfo.dz = 246.62;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4120", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4120", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1263,9 +1263,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4124( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 419.3836;
     convInfo.dy = 99.3335;
     convInfo.dz = 591.3451;
@@ -1274,9 +1274,9 @@ public class ConvenienceCSFactory
     convInfo.ez = 7.862238;
     convInfo.ppm = -0.99496;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4124", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4124", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1285,9 +1285,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4149( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 660.077;
     convInfo.dy = 13.551;
     convInfo.dz = 369.344;
@@ -1296,9 +1296,9 @@ public class ConvenienceCSFactory
     convInfo.ez = 2.939;
     convInfo.ppm = 5.66;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4149", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4149", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1307,16 +1307,16 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4151( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 674.374;
     convInfo.dy = 15.056;
     convInfo.dz = 405.346;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4151", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4151", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1325,16 +1325,16 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4121( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6378137.0, 298.2572221, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6378137.0, 298.2572221, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -199.87;
     convInfo.dy = 74.79;
     convInfo.dz = 246.62;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4121", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4121", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1343,13 +1343,13 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4171( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6378137.0, 298.2572221, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6378137.0, 298.2572221, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4171", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4171", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1358,13 +1358,13 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4173( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6378137.0, 298.2572221, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1980", 6378137.0, 298.2572221, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4173", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4173", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1373,9 +1373,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4237( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1967", 6378160.0, 298.2471674, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "GRS 1967", 6378160.0, 298.2471674, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -56;
     convInfo.dy = 75.77;
     convInfo.dz = 15.31;
@@ -1384,9 +1384,9 @@ public class ConvenienceCSFactory
     convInfo.ez = -0.21;
     convInfo.ppm = -1.01;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4237", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4237", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1395,16 +1395,16 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4265( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -225;
     convInfo.dy = -65;
     convInfo.dz = 9;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4265", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4265", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1413,16 +1413,16 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4275( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Clark 1880 (IGN)", 6378249.2, 293.466021, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Clark 1880 (IGN)", 6378249.2, 293.466021, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -168;
     convInfo.dy = -60;
     convInfo.dz = 320;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4275", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4275", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1431,19 +1431,19 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4807( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Clark 1880 (IGN)", 6378249.2, 293.466021, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Clark 1880 (IGN)", 6378249.2, 293.466021, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -168;
     convInfo.dy = -60;
     convInfo.dz = +320;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    PrimeMeridian pm = csFactory.createPrimeMeridian( "Paris", Unit.DEGREE, 2.337229166666667 ); // 2.5969213
+    final PrimeMeridian pm = csFactory.createPrimeMeridian( "Paris", Unit.DEGREE, 2.337229166666667 ); // 2.5969213
     // );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4807", Unit.DEGREE, horDatum, pm, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4807", Unit.DEGREE, horDatum, pm, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1452,9 +1452,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4277( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Airy 1830", 6377563.0, 299.3249646, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Airy 1830", 6377563.0, 299.3249646, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 535.948;
     convInfo.dy = -31.357;
     convInfo.dz = 665.16;
@@ -1463,9 +1463,9 @@ public class ConvenienceCSFactory
     convInfo.ez = 0.998;
     convInfo.ppm = -21.689;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4277", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4277", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1474,9 +1474,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4284( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Krassowsky 1940", 6378245.0, 298.3, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Krassowsky 1940", 6378245.0, 298.3, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 21.53219;
     convInfo.dy = -97.00027;
     convInfo.dz = -60.74046;
@@ -1485,9 +1485,9 @@ public class ConvenienceCSFactory
     convInfo.ez = -0.2418;
     convInfo.ppm = -4.5981;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4284", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4284", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1496,9 +1496,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4289( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 593.16;
     convInfo.dy = 26.15;
     convInfo.dz = 478.54;
@@ -1507,9 +1507,9 @@ public class ConvenienceCSFactory
     convInfo.ez = -5.5487;
     convInfo.ppm = 4.0775;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4289", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4289", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1518,16 +1518,16 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4299( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Airy Modified 1849", 6377340.189, 299.3249646, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Airy Modified 1849", 6377340.189, 299.3249646, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 506;
     convInfo.dy = -122;
     convInfo.dz = 611;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4299", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4299", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1536,16 +1536,16 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4312( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = 682;
     convInfo.dy = -203;
     convInfo.dz = 480;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4312", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4312", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1554,9 +1554,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4308( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Bessel 1841", 6377397.155, 299.1528128, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
 
     // ??????
     convInfo.dx = 682;
@@ -1564,9 +1564,9 @@ public class ConvenienceCSFactory
     convInfo.dz = 480;
 
     // ??????
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4308", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4308", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1580,18 +1580,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4803( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Lisbon 1937 (Lisbon)", 6378388, 297, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Lisbon 1937 (Lisbon)", 6378388, 297, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
 
     // ??????
     convInfo.dx = 0;
     convInfo.dy = 0;
     convInfo.dz = 0;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4803", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4803", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1605,9 +1605,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4274( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Datum 73", 6378388, 297, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "Datum 73", 6378388, 297, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
 
     convInfo.dx = -231;
     convInfo.dy = 102.6;
@@ -1617,9 +1617,9 @@ public class ConvenienceCSFactory
     convInfo.ez = 0.881;
     convInfo.ppm = 1.79;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "Datum 73", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "Datum 73", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4274", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4274", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1628,9 +1628,9 @@ public class ConvenienceCSFactory
    */
   private void addEPSG4313( )
   {
-    Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
+    final Ellipsoid ellipsoid = Ellipsoid.createFlattenedSphere( "International 1924", 6378388.0, 297.0, Unit.METRE );
 
-    WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
+    final WGS84ConversionInfo convInfo = new WGS84ConversionInfo();
     convInfo.dx = -99.059;
     convInfo.dy = 53.322;
     convInfo.dz = -112.486;
@@ -1639,9 +1639,9 @@ public class ConvenienceCSFactory
     convInfo.ez = -1.885;
     convInfo.ppm = 0.999999;
 
-    HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
+    final HorizontalDatum horDatum = new HorizontalDatum( "My HorizontalDatum", DatumType.CLASSIC, ellipsoid, convInfo );
 
-    GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4313", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
+    final GeographicCoordinateSystem cs = csFactory.createGeographicCoordinateSystem( "EPSG:4313", Unit.DEGREE, horDatum, PrimeMeridian.GREENWICH, AxisInfo.LONGITUDE, AxisInfo.LATITUDE );
     save( cs );
   }
 
@@ -1650,18 +1650,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG20790( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4803" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4803" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 1.0;
-    double easting = 200000.0;
-    double northing = 300000.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 1.0;
+    final double easting = 200000.0;
+    final double northing = 300000.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:20790", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:20790", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1670,12 +1670,12 @@ public class ConvenienceCSFactory
    */
   private void addEPSG21780( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4801" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4801" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 0.0;
-    double easting = 0.0;
+    final double centerMeridian = 0.0;
+    final double easting = 0.0;
 
     Projection projection = null;
 
@@ -1684,7 +1684,7 @@ public class ConvenienceCSFactory
      */
     projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, 0 ), 0 );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:21780", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:21780", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1693,38 +1693,38 @@ public class ConvenienceCSFactory
    */
   private void addEPSG21781( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4149" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4149" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 7.495833333; // (7-26-22,5)
-    double easting = 600000.0;
+    final double centerMeridian = 7.495833333; // (7-26-22,5)
+    final double easting = 600000.0;
 
     Projection projection = null;
 
     projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, 0 ), 0 );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:21781", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:21781", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
   /**
    * @param code
    */
-  private void addEPSG258XX( int code )
+  private void addEPSG258XX( final int code )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4258" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4258" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = ((code - 28) * 6.0) - 15.0;
-    double easting = 500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = ((code - 28) * 6.0) - 15.0;
+    final double easting = 500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:258" + code, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:258" + code, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1733,18 +1733,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG25884( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4258" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4258" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 24.0;
-    double easting = 500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 24.0;
+    final double easting = 500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:25884", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:25884", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1753,18 +1753,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG26591( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4806" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4806" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 9.0;
-    double easting = 1500000.0;
-    double northing = 0.0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 9.0;
+    final double easting = 1500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:26591", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:26591", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1773,18 +1773,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG26592( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4806" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4806" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 15.0;
-    double easting = 2520000.0;
-    double northing = 0.0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = 15.0;
+    final double easting = 2520000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:26592", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:26592", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1793,18 +1793,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27391( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 4.66667; // (4-40-0)
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 4.66667; // (4-40-0)
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27391", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27391", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1813,18 +1813,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27392( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 2.33333; // (2-20-0)
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 2.33333; // (2-20-0)
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27392", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27392", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1833,18 +1833,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27393( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 0.0;
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 0.0;
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27393", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27393", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1853,18 +1853,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27394( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 2.50; // (2-30-0)
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 2.50; // (2-30-0)
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27394", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27394", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1873,18 +1873,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27395( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 6.16667; // (6-10-0)
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 6.16667; // (6-10-0)
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27395", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27395", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1893,18 +1893,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27396( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 10.16667; // (10-10-0)
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 10.16667; // (10-10-0)
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27396", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27396", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1913,18 +1913,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27397( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 14.16667; // (14-10-0)
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 14.16667; // (14-10-0)
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27397", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27397", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1933,18 +1933,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27398( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4817" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 18.33333; // (18-20-0)
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 18.33333; // (18-20-0)
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27398", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27398", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1953,18 +1953,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27429( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4274" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4274" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 9.0;
-    double easting = 500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 9.0;
+    final double easting = 500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27429", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27429", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1973,18 +1973,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27700( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4277" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4277" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 2.0;
-    double easting = 400000.0;
-    double northing = -100000.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 2.0;
+    final double easting = 400000.0;
+    final double northing = -100000.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27700", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27700", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -1993,18 +1993,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG28402( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 9.0;
-    double easting = 2500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 9.0;
+    final double easting = 2500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28402", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28402", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2013,18 +2013,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG28403( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 15.0;
-    double easting = 3500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 15.0;
+    final double easting = 3500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28403", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28403", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2033,18 +2033,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG28404( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 21.0;
-    double easting = 4500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 21.0;
+    final double easting = 4500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28404", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28404", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2053,18 +2053,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG28405( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 27.0;
-    double easting = 5500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 27.0;
+    final double easting = 5500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28405", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28405", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2073,18 +2073,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG28406( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 33.0;
-    double easting = 6500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 33.0;
+    final double easting = 6500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28406", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28406", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2093,18 +2093,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG28407( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 39.0;
-    double easting = 7500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 39.0;
+    final double easting = 7500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28407", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28407", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2113,18 +2113,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG28408( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 45.0;
-    double easting = 8500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 45.0;
+    final double easting = 8500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28408", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28408", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2133,18 +2133,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG28409( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 51.0;
-    double easting = 9500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 51.0;
+    final double easting = 9500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28409", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28409", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2153,38 +2153,38 @@ public class ConvenienceCSFactory
    */
   private void addEPSG28462( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 9.0;
-    double easting = 500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 9.0;
+    final double easting = 500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28462", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:28462", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
   /**
    * @param code
    */
-  private void addEPSG2846X( int code )
+  private void addEPSG2846X( final int code )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4284" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = (code * 6) - 3;
-    double easting = 500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = (code * 6) - 3;
+    final double easting = 500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:2846X" + code, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:2846X" + code, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2193,18 +2193,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG29900( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4299" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4299" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 8.0;
-    double easting = 200000.0;
-    double northing = 250000.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 8.0;
+    final double easting = 200000.0;
+    final double northing = 250000.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:29900", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:29900", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2213,18 +2213,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG30800( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4299" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4299" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 15.88277; // 15-48-29,8
-    double easting = 1500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 15.88277; // 15-48-29,8
+    final double easting = 1500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:30800", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:30800", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2233,18 +2233,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31275( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 15.0;
-    double easting = 5500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 15.0;
+    final double easting = 5500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31275", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31275", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2253,18 +2253,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31276( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 18.0;
-    double easting = 6500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 18.0;
+    final double easting = 6500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31276", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31276", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2273,18 +2273,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31277( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 21.0;
-    double easting = 7500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 21.0;
+    final double easting = 7500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31277", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31277", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2293,18 +2293,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31278( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 21.0;
-    double easting = 7500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 21.0;
+    final double easting = 7500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31278", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31278", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2313,18 +2313,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31281( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 28.0;
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 28.0;
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31281", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31281", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2333,18 +2333,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31282( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 31.0;
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 31.0;
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31282", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31282", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2353,18 +2353,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31283( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4314" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 34.0;
-    double easting = 0.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 34.0;
+    final double easting = 0.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31283", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31283", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2373,18 +2373,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31284( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 10.33333; // 10-20-0
-    double easting = 150000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 10.33333; // 10-20-0
+    final double easting = 150000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31284", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31284", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2393,18 +2393,18 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31285( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 13.33333; // 13-20-0
-    double easting = 450000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 13.33333; // 13-20-0
+    final double easting = 450000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31285", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31285", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2413,36 +2413,36 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31286( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 16.33333; // 16-20-0
-    double easting = 750000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 16.33333; // 16-20-0
+    final double easting = 750000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31286", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31286", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
   /**
    * @param code
    */
-  private void addEPSG322XX( int code )
+  private void addEPSG322XX( final int code )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4322" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4322" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = ((code - 28) * 6.0) - 15.0;
-    double easting = 500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = ((code - 28) * 6.0) - 15.0;
+    final double easting = 500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
     String s = null;
 
@@ -2455,25 +2455,25 @@ public class ConvenienceCSFactory
       s = "EPSG:322" + code;
     }
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( s, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( s, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
   /**
    * @param code
    */
-  private void addEPSG324XX( int code )
+  private void addEPSG324XX( final int code )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4324" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4324" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = ((code - 28) * 6.0) - 15.0;
-    double easting = 500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = ((code - 28) * 6.0) - 15.0;
+    final double easting = 500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
     String s = null;
 
     if( code < 10 )
@@ -2485,25 +2485,25 @@ public class ConvenienceCSFactory
       s = "EPSG:324" + code;
     }
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( s, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( s, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
   /**
    * @param code
    */
-  private void addEPSG326XX( int code )
+  private void addEPSG326XX( final int code )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4326" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4326" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = ((code - 28) * 6.0) - 15.0;
-    double easting = 500000.0;
-    double northing = 0.0;
-    double scaleFactor = 0.9996;
+    final double centerMeridian = ((code - 28) * 6.0) - 15.0;
+    final double easting = 500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 0.9996;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
     String s = null;
 
@@ -2516,7 +2516,7 @@ public class ConvenienceCSFactory
       s = "EPSG:326" + code;
     }
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( s, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( s, geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2525,23 +2525,23 @@ public class ConvenienceCSFactory
    */
   private void addEPSG32661( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4326" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4326" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 0.0;
-    double easting = 500000.0;
-    double northing = 0.0;
-    double scaleFactor = 1.0;
+    final double centerMeridian = 0.0;
+    final double easting = 500000.0;
+    final double northing = 0.0;
+    final double scaleFactor = 1.0;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, 0 ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:32661", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:32661", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2550,19 +2550,19 @@ public class ConvenienceCSFactory
    */
   private void addLuRef( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4230" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    double centerMeridian = 6.16666666666666666666666;
-    double centerLat = 49.833333333333333333333333;
-    double easting = 80000;
-    double northing = 100000;
-    double scaleFactor = 1;
+    final double centerMeridian = 6.16666666666666666666666;
+    final double centerLat = 49.833333333333333333333333;
+    final double easting = 80000;
+    final double northing = 100000;
+    final double scaleFactor = 1;
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, centerLat ), new Point2D.Double( easting, northing ), scaleFactor );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", ellipsoid, new Point2D.Double( centerMeridian, centerLat ), new Point2D.Double( easting, northing ), scaleFactor );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "LuRef", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "LuRef", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2571,14 +2571,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31287( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4312" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 400000.0 );
@@ -2589,9 +2589,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 46.0 );
     param.setParameter( "scale_factor", 1.0 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31287", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31287", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2600,14 +2600,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG31300( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4313" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4313" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 150000.013 );
@@ -2617,9 +2617,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel1", 49.8333339 );
     param.setParameter( "standard_parallel2", 51.1666672333333 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31300", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:31300", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2628,14 +2628,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27561( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2646,9 +2646,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 50.39591166666670 );
     param.setParameter( "scale_factor", 0.999877341 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27561", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27561", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2657,14 +2657,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27562( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2675,9 +2675,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 47.6960144444444 );
     param.setParameter( "scale_factor", 0.99987742 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27562", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27562", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2686,14 +2686,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27563( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2704,9 +2704,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 44.9960938888888889 );
     param.setParameter( "scale_factor", 0.999877499 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27563", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27563", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2715,14 +2715,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27564( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 234.358 );
@@ -2733,9 +2733,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 42.76766333333333 );
     param.setParameter( "scale_factor", 0.99994471 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27564", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27564", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2744,14 +2744,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27571( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2762,9 +2762,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 50.39591166666670 );
     param.setParameter( "scale_factor", 0.999877341 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27571", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27571", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2773,14 +2773,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27572( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2791,9 +2791,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 47.6960144444444 );
     param.setParameter( "scale_factor", 0.99987742 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27572", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27572", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2802,14 +2802,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27573( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2820,9 +2820,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 44.9960938888888889 );
     param.setParameter( "scale_factor", 0.999877499 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27573", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27573", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2831,14 +2831,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27574( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 234.358 );
@@ -2849,9 +2849,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 42.76766333333333 );
     param.setParameter( "scale_factor", 0.99994471 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27574", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27574", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2860,14 +2860,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27581( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2878,9 +2878,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 50.39591166666670 );
     param.setParameter( "scale_factor", 0.999877341 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27581", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27581", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2889,14 +2889,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27582( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2907,9 +2907,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 47.6960144444444 );
     param.setParameter( "scale_factor", 0.99987742 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27582", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27582", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2918,14 +2918,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27583( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2936,9 +2936,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 44.9960938888888889 );
     param.setParameter( "scale_factor", 0.999877499 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27583", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27583", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2947,14 +2947,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27584( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 234.358 );
@@ -2965,9 +2965,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 42.76766333333333 );
     param.setParameter( "scale_factor", 0.99994471 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27584", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27584", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -2976,14 +2976,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27591( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -2994,9 +2994,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 50.39591166666670 );
     param.setParameter( "scale_factor", 0.999877341 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27591", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27591", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -3005,14 +3005,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27592( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -3023,9 +3023,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 47.6960144444444 );
     param.setParameter( "scale_factor", 0.99987742 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27592", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27592", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -3034,14 +3034,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27593( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 600000.0 );
@@ -3052,9 +3052,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 44.9960938888888889 );
     param.setParameter( "scale_factor", 0.999877499 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27593", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27593", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -3063,14 +3063,14 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27594( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4807" );
 
     if( geoCS == null )
     {
       return;
     }
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "semi_major", geoCS.getHorizontalDatum().getEllipsoid().getSemiMajorAxis() );
     param.setParameter( "semi_minor", geoCS.getHorizontalDatum().getEllipsoid().getSemiMinorAxis() );
     param.setParameter( "false_easting", 234.358 );
@@ -3081,9 +3081,9 @@ public class ConvenienceCSFactory
     param.setParameter( "standard_parallel2", 42.76766333333333 );
     param.setParameter( "scale_factor", 0.99994471 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Lambert_Conformal_Conic_2SP", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27594", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27594", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -3105,11 +3105,11 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27291( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4272" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4272" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "hemisphere", -1 );
     param.setParameter( "semi_major", ellipsoid.getSemiMajorAxis() );
     param.setParameter( "semi_minor", ellipsoid.getSemiMinorAxis() );
@@ -3119,9 +3119,9 @@ public class ConvenienceCSFactory
     param.setParameter( "latitude_of_origin", -39.0 );
     param.setParameter( "scale_factor", 1.0 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27291", geoCS, projection, Unit.BRITISHYARD, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27291", geoCS, projection, Unit.BRITISHYARD, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -3143,11 +3143,11 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27292( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4272" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4272" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "hemisphere", -1 );
     param.setParameter( "semi_major", ellipsoid.getSemiMajorAxis() );
     param.setParameter( "semi_minor", ellipsoid.getSemiMinorAxis() );
@@ -3157,9 +3157,9 @@ public class ConvenienceCSFactory
     param.setParameter( "latitude_of_origin", -44.0 );
     param.setParameter( "scale_factor", 1.0 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27292", geoCS, projection, Unit.BRITISHYARD, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27292", geoCS, projection, Unit.BRITISHYARD, AxisInfo.X, AxisInfo.Y );
     save( cs );
   }
 
@@ -3179,11 +3179,11 @@ public class ConvenienceCSFactory
    */
   private void addEPSG27200( )
   {
-    GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4272" );
+    final GeographicCoordinateSystem geoCS = (GeographicCoordinateSystem) getCSByName( "EPSG:4272" );
 
-    Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
+    final Ellipsoid ellipsoid = geoCS.getHorizontalDatum().getEllipsoid();
 
-    ParameterList param = new ParameterListImpl( pld );
+    final ParameterList param = new ParameterListImpl( pld );
     param.setParameter( "hemisphere", -1 );
     param.setParameter( "semi_major", ellipsoid.getSemiMajorAxis() );
     param.setParameter( "semi_minor", ellipsoid.getSemiMinorAxis() );
@@ -3193,9 +3193,9 @@ public class ConvenienceCSFactory
     param.setParameter( "latitude_of_origin", -41.0 );
     param.setParameter( "scale_factor", 1.0 );
 
-    Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", param );
+    final Projection projection = csFactory.createProjection( "My projection", "Transverse_Mercator", param );
 
-    ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27200", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
+    final ProjectedCoordinateSystem cs = csFactory.createProjectedCoordinateSystem( "EPSG:27200", geoCS, projection, Unit.METRE, AxisInfo.X, AxisInfo.Y );
 
     save( cs );
   }

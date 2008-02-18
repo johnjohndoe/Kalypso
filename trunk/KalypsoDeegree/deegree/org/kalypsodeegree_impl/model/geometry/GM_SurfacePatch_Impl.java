@@ -116,7 +116,9 @@ class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   {
     m_crs = crs;
 
-    if( (exteriorRing == null) || (exteriorRing.length < 3) )
+    // REMARK: we need at least 4 points, as the first and last must be identical, else we do not get a non-corrupt
+    // surface
+    if( exteriorRing == null || exteriorRing.length < 4 )
     {
       throw new GM_Exception( "The exterior ring doesn't contains enough point!" );
     }
@@ -360,10 +362,10 @@ class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
 
     if( m_interiorRings != null )
     {
-      for( int i = 0; i < m_interiorRings.length; i++ )
+      for( final GM_Position[] element : m_interiorRings )
       {
-        final double dum = -1 * calculateArea( m_interiorRings[i] );
-        final GM_Position temp = calculateCentroid( m_interiorRings[i] );
+        final double dum = -1 * calculateArea( element );
+        final GM_Position temp = calculateCentroid( element );
         x += (temp.getX() * dum);
         y += (temp.getY() * dum);
         varea += dum;
@@ -471,7 +473,7 @@ class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     ret = "interpolation = " + m_interpolation + "\n";
     ret += "exteriorRing = \n";
 
-    for( int i = 0; i < m_exteriorRing.length; i++ )
+    for( final GM_Position element : m_exteriorRing )
     {
       ret += (m_exteriorRing + "\n");
     }
@@ -521,7 +523,7 @@ class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
    *      org.opengis.cs.CS_CoordinateSystem)
    */
-  public GM_SurfacePatch transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_SurfacePatch transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
   {
     /* exterior ring */
     final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );

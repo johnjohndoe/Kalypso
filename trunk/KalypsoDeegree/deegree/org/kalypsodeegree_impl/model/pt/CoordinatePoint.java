@@ -77,7 +77,6 @@ import org.kalypsodeegree_impl.model.resources.css.Resources;
  * @version 1.00
  * @author OpenGIS (www.opengis.org)
  * @author Martin Desruisseaux
- * 
  * @see org.opengis.pt.PT_CoordinatePoint
  * @see java.awt.geom.Point2D
  */
@@ -99,9 +98,9 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
    * Construct a coordinate with the specified number of dimensions.
    * 
    * @param numDim
-   *          Number of dimensions.
+   *            Number of dimensions.
    * @throws NegativeArraySizeException
-   *           if <code>numDim</code> is negative.
+   *             if <code>numDim</code> is negative.
    */
   public CoordinatePoint( final int numDim ) throws NegativeArraySizeException
   {
@@ -113,7 +112,7 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
    */
   public CoordinatePoint( final double[] ord )
   {
-    this.ord = (double[])ord.clone();
+    this.ord = ord.clone();
   }
 
   /**
@@ -121,10 +120,7 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
    */
   public CoordinatePoint( final double x, final double y )
   {
-    ord = new double[]
-    {
-        x,
-        y };
+    ord = new double[] { x, y };
   }
 
   /**
@@ -132,11 +128,7 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
    */
   public CoordinatePoint( final double x, final double y, final double z )
   {
-    ord = new double[]
-    {
-        x,
-        y,
-        z };
+    ord = new double[] { x, y, z };
   }
 
   /**
@@ -160,7 +152,7 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
    * The number of ordinates of a <code>CoordinatePoint</code>. This is equivalent to
    * <code>{@link #ord}.length</code>.
    */
-  public final int getDimension()
+  public final int getDimension( )
   {
     return ord.length;
   }
@@ -169,9 +161,9 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
    * Convenience method for checking the point's dimension validity. This method is usually call for argument checking.
    * 
    * @param expectedDimension
-   *          Expected dimension for this point.
+   *            Expected dimension for this point.
    * @throws MismatchedDimensionException
-   *           if this point doesn't have the expected dimension.
+   *             if this point doesn't have the expected dimension.
    */
   final void ensureDimensionMatch( final int expectedDimension ) throws MismatchedDimensionException
   {
@@ -187,23 +179,23 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
    * method for interoperability with Java2D.
    * 
    * @throws IllegalStateException
-   *           if this coordinate point is not two-dimensional.
+   *             if this coordinate point is not two-dimensional.
    */
-  public Point2D toPoint2D() throws IllegalStateException
+  public Point2D toPoint2D( ) throws IllegalStateException
   {
     if( ord.length == 2 )
     {
       return new Point2D.Double( ord[0], ord[1] );
     }
-    throw new IllegalStateException( Resources.format( ResourceKeys.ERROR_NOT_TWO_DIMENSIONAL_$1, new Integer(
-        ord.length ) ) );
+    throw new IllegalStateException( Resources.format( ResourceKeys.ERROR_NOT_TWO_DIMENSIONAL_$1, new Integer( ord.length ) ) );
   }
 
   /**
    * Returns a hash value for this coordinate. This value need not remain consistent between different implementations
    * of the same class.
    */
-  public int hashCode()
+  @Override
+  public int hashCode( )
   {
     return hashCode( ord );
   }
@@ -219,17 +211,18 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
       for( int i = ord.length; --i >= 0; )
         code = code * 31 + Double.doubleToLongBits( ord[i] );
     }
-    return (int)( code >>> 32 ) ^ (int)code;
+    return (int) (code >>> 32) ^ (int) code;
   }
 
   /**
    * Compares the specified object with this coordinate for equality.
    */
+  @Override
   public boolean equals( final Object object )
   {
     if( object instanceof CoordinatePoint )
     {
-      final CoordinatePoint that = (CoordinatePoint)object;
+      final CoordinatePoint that = (CoordinatePoint) object;
       return Arrays.equals( this.ord, that.ord );
     }
     return false;
@@ -238,7 +231,8 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
   /**
    * Returns a deep copy of this coordinate.
    */
-  public Object clone()
+  @Override
+  public Object clone( )
   {
     return new CoordinatePoint( ord );
   }
@@ -247,7 +241,8 @@ public class CoordinatePoint implements Dimensioned, Cloneable, Serializable
    * Returns a string representation of this coordinate. The returned string is implementation dependent. It is usually
    * provided for debugging purposes.
    */
-  public String toString()
+  @Override
+  public String toString( )
   {
     return toString( this, ord );
   }
