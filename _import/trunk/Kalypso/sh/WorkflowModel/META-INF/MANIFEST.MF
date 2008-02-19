@@ -4,6 +4,7 @@ Bundle-Name: WorkflowModel Plug-in
 Bundle-SymbolicName: de.renew.workflow.model;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
+Bundle-ClassPath: bin
 Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,

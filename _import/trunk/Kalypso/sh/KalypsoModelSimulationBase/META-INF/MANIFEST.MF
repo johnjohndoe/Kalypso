@@ -4,6 +4,7 @@ Bundle-Name: KalypsoModelSimulationBase
 Bundle-SymbolicName: org.kalypso.ModelSimulationBase;singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Localization: plugin
+Bundle-ClassPath: bin
 Require-Bundle: 
  org.eclipse.core.expressions;visibility:=reexport,
  org.kalypso.deegree;visibility:=reexport,

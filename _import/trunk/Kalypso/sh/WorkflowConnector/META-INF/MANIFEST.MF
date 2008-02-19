@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: de.renew.workflow.connector;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: .
+Bundle-ClassPath: bin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: de.renew.workflow.connector,

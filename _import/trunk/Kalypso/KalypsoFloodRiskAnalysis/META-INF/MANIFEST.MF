@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoFloodRiskAnalysis Plug-in
 Bundle-SymbolicName: org.kalypso.floodrisk; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: KalypsoFloodRiskAnalysis.jar
+Bundle-ClassPath: bin
 Bundle-Activator: org.kalypso.floodrisk.KalypsoFloodRiskAnalysisPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

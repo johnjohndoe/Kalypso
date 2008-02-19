@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: kalypso.org.dss
 Bundle-SymbolicName: org.kalypso.dss; singleton:=true
 Bundle-Version: 0.0.1
-Bundle-ClassPath: KalypsoDSS.jar
+Bundle-ClassPath: build/bin
 Bundle-Activator: org.kalypso.dss.KalypsoDSSPlugin
 Bundle-Vendor: University of Technology Hamburg-Harburg
 Bundle-Localization: plugin
@@ -17,4 +17,4 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.simulation.core,
  org.kalypso.simulation.ui,
  org.kalypso.NACalcJob
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
