@@ -319,9 +319,9 @@ public class SegmentData
    */
   private IProfil adjustProfileArea( final IProfil profile, final double targetArea, final double currentArea )
   {
-    final IProfilPointPropertyProvider[] pointProviders = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
 
-    IRecord[] points = profile.getPoints();
+    final IRecord[] points = profile.getPoints();
     final int numProfPoints = points.length;
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
@@ -345,8 +345,8 @@ public class SegmentData
     /* get / create components */
     final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent rwComponent = ProfilObsHelper.getPointPropertyFromProviders( pointProviders, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent hwComponent = ProfilObsHelper.getPointPropertyFromProviders( pointProviders, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent rwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
     /* add components to new profile */
     tmpProfil.addPointProperty( breiteComponent );
@@ -375,12 +375,12 @@ public class SegmentData
     // System.out.println( t );
 
     // start point will not be changed
-    IRecord profilStartPoint = tmpProfil.createProfilPoint();
+    final IRecord profilStartPoint = tmpProfil.createProfilPoint();
 
-    double startBreite = (Double) profilPointList[0].getValue( breiteComponent );
-    double startHoehe = (Double) profilPointList[0].getValue( hoeheComponent );
-    double startRw = (Double) profilPointList[0].getValue( rwComponent );
-    double startHw = (Double) profilPointList[0].getValue( hwComponent );
+    final double startBreite = (Double) profilPointList[0].getValue( breiteComponent );
+    final double startHoehe = (Double) profilPointList[0].getValue( hoeheComponent );
+    final double startRw = (Double) profilPointList[0].getValue( rwComponent );
+    final double startHw = (Double) profilPointList[0].getValue( hwComponent );
 
     profilStartPoint.setValue( breiteComponent, startBreite );
     profilStartPoint.setValue( hoeheComponent, startHoehe );
@@ -415,7 +415,7 @@ public class SegmentData
       tmpProfil.addPoint( point );
     }
 
-    IRecord profilEndPoint = tmpProfil.createProfilPoint();
+    final IRecord profilEndPoint = tmpProfil.createProfilPoint();
 
     // end point will be the same
     final double endBreite = (Double) profilPointList[profilPointList.length - 1].getValue( breiteComponent );
@@ -455,7 +455,7 @@ public class SegmentData
    */
   private IProfil createIntersectedIProfile( final IProfil profile ) throws Exception
   {
-    final IProfilPointPropertyProvider[] pointProviders = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
 
     final int numProfInters = m_channelData.getNumProfileIntersections();
     final IRecord[] profilPointList = profile.getPoints();
@@ -466,8 +466,8 @@ public class SegmentData
     /* get / create components */
     final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent rwComponent = ProfilObsHelper.getPointPropertyFromProviders( pointProviders, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent hwComponent = ProfilObsHelper.getPointPropertyFromProviders( pointProviders, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent rwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
     /* add components to new profile */
     tmpProfil.addPointProperty( breiteComponent );
@@ -634,7 +634,7 @@ public class SegmentData
    */
   private IProfil createCroppedIProfile( final WspmProfile wspmprofile, final CreateChannelData.PROF prof ) throws Exception
   {
-    final IProfilPointPropertyProvider[] pointProviders = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( wspmprofile.getProfil().getType() );
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( wspmprofile.getProfil().getType() );
 
     final double width1 = calcWidthCoord( wspmprofile, prof, CreateChannelData.WIDTHORDER.FIRST );
     final double width2 = calcWidthCoord( wspmprofile, prof, CreateChannelData.WIDTHORDER.LAST );
@@ -678,8 +678,8 @@ public class SegmentData
     /* get / create components */
     final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent hwComponent = ProfilObsHelper.getPointPropertyFromProviders( pointProviders, IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final IComponent rwComponent = ProfilObsHelper.getPointPropertyFromProviders( pointProviders, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent rwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
 
     /* add components to new profile */
     tmpProfil.addPointProperty( breiteComponent );
@@ -720,7 +720,7 @@ public class SegmentData
         {
           if( tmpProfil.hasPointProperty( property ) )
           {
-            Object object = point.getValue( property );
+            final Object object = point.getValue( property );
             pt.setValue( property, object );
           }
         }
@@ -1276,7 +1276,7 @@ public class SegmentData
    */
   private IProfil adaptProfileElevations( final IProfil intersProfile, final IProfil croppedProfile )
   {
-    final IProfilPointPropertyProvider[] pointProviders = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( intersProfile.getType() );
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( intersProfile.getType() );
 
     final IRecord[] profilPointList = intersProfile.getPoints();
 
@@ -1285,8 +1285,8 @@ public class SegmentData
     /* get / create components */
     final IComponent breiteComponent = ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( tmpProfil, IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent rwComponent = ProfilObsHelper.getPointPropertyFromProviders( pointProviders, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent hwComponent = ProfilObsHelper.getPointPropertyFromProviders( pointProviders, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent rwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hwComponent = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
     /* add components to new profile */
     tmpProfil.addPointProperty( breiteComponent );
