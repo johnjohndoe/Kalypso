@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-Name: KalypsoWavosPlugin
+Bundle-SymbolicName: org.kalypso.wavos
+Bundle-Version: 1.0.0
+Bundle-ClassPath: kalypsoModelWavos.jar
+Bundle-Activator: org.kalypso.wavos.KalypsoModelWavosPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime
+Eclipse-AutoStart: true
