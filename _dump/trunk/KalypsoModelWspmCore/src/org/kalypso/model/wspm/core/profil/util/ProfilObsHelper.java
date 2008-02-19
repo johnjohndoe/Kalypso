@@ -226,18 +226,4 @@ public class ProfilObsHelper
 
     return null;
   }
-
-  public static IComponent getPointPropertyFromProviders( final IProfilPointPropertyProvider[] providers, final String idComponent )
-  {
-    for( final IProfilPointPropertyProvider provider : providers )
-    {
-      if( !provider.providesPointProperty( idComponent ) )
-        continue;
-
-      return provider.getPointProperty( idComponent );
-    }
-
-    return null;
-  }
-
 }

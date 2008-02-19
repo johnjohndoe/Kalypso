@@ -41,12 +41,23 @@
 package org.kalypso.model.wspm.core.profil;
 
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
  */
 public interface IProfilPointPropertyProvider
 {
+  /**
+   * creates a new empty IProfil object - builders are registered over extension points
+   */
+  public IProfil createProfil( );
+
+  /**
+   * create a new IProfil object, takes given Observation as profile data
+   */
+  public IProfil createProfil( TupleResult observation );
+
   /**
    * @return all PointPropertyIds handled by this provider NOTE: the natural order in this Array is the initial
    *         columnsort used in the tableview
@@ -60,4 +71,8 @@ public interface IProfilPointPropertyProvider
    */
   public boolean providesPointProperty( final String property );
 
+  /**
+   * Check, if a given {@link TupleResult} is valid according to this profile type.
+   */
+  public void checkComponents( TupleResult result ) throws IllegalArgumentException;
 }

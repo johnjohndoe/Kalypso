@@ -13,10 +13,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
-import org.kalypso.model.wspm.core.profil.IProfilBuilder;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
+import org.kalypso.model.wspm.core.profil.ProfileType;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilReparator;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
@@ -31,9 +31,7 @@ public class KalypsoModelWspmCoreExtensions
 
   private static Map<String, List<IProfilPointMarkerProvider>> THE_MARKER_PROVIDER_MAP = null;
 
-  private static Map<String, List<IProfilPointPropertyProvider>> THE_PROPERTY_PROVIDER_MAP = null;
-
-  private static Map<String, IProfilBuilder> THE_PROFIL_BUILDER_MAP = null;
+  private static Map<String, ProfileType> THE_PROFILE_TYPE_MAP = null;
 
   private static Map<String, List<IProfileObjectProvider>> THE_OBJECT_PROVIDER_MAP = null;
 
@@ -265,38 +263,40 @@ public class KalypsoModelWspmCoreExtensions
     return THE_OBJECT_PROVIDER_MAP;
   }
 
-  public static IProfilPointPropertyProvider[] getPointPropertyProviders( final String profilType )
+  public static IProfilPointPropertyProvider getPointPropertyProviders( final String profilType )
   {
-    final Map<String, List<IProfilPointPropertyProvider>> map = getPointPropertyProviders();
-    final List<IProfilPointPropertyProvider> list = map.get( profilType );
-    if( list == null )
-      return new IProfilPointPropertyProvider[0];
+    final Map<String, ProfileType> map = getProfileTypes();
+    final ProfileType profileType = map.get( profilType );
+    if( profileType == null )
+      return null;
 
-    return list.toArray( new IProfilPointPropertyProvider[list.size()] );
+    return profileType.pointProvider;
   }
 
-  private static synchronized Map<String, List<IProfilPointPropertyProvider>> getPointPropertyProviders( )
+  private static synchronized Map<String, ProfileType> getProfileTypes( )
   {
-    if( THE_PROPERTY_PROVIDER_MAP != null )
-      return THE_PROPERTY_PROVIDER_MAP;
+    if( THE_PROFILE_TYPE_MAP != null )
+      return THE_PROFILE_TYPE_MAP;
 
-    THE_PROPERTY_PROVIDER_MAP = new HashMap<String, List<IProfilPointPropertyProvider>>();
+    // TODO: hashing this map is not robust against registry changes; listen to extension registry and clear the map if
+    // necessary
+
+    THE_PROFILE_TYPE_MAP = new HashMap<String, ProfileType>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] propertyProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilPointPropertyProvider" );
+    final IConfigurationElement[] propertyProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profiletype" );
     for( final IConfigurationElement configurationElement : propertyProvider )
     {
       try
       {
-        // TODO: eventuell nur die elemente des gewünschten typs erzeugen und in map merken
-        final String profilType = configurationElement.getAttribute( "profiletype" );
-        final Object protoProvider = configurationElement.createExecutableExtension( "provider" );
-        final IProfilPointPropertyProvider provider = (IProfilPointPropertyProvider) protoProvider;
+        final String id = configurationElement.getAttribute( "id" );
+        final String label = configurationElement.getAttribute( "name" );
+        final String desc = configurationElement.getAttribute( "description" );
+        final IProfilPointPropertyProvider provider = (IProfilPointPropertyProvider) configurationElement.createExecutableExtension( "class" );
 
-        if( !THE_PROPERTY_PROVIDER_MAP.containsKey( profilType ) )
-          THE_PROPERTY_PROVIDER_MAP.put( profilType, new ArrayList<IProfilPointPropertyProvider>() );
+        final ProfileType profileType = new ProfileType( id, label, desc, provider );
 
-        THE_PROPERTY_PROVIDER_MAP.get( profilType ).add( provider );
+        THE_PROFILE_TYPE_MAP.put( id, profileType );
       }
       catch( final CoreException e )
       {
@@ -304,36 +304,6 @@ public class KalypsoModelWspmCoreExtensions
       }
     }
 
-    return THE_PROPERTY_PROVIDER_MAP;
+    return THE_PROFILE_TYPE_MAP;
   }
-
-  public static IProfilBuilder getProfilBuilder( final String type )
-  {
-    if( THE_PROFIL_BUILDER_MAP != null )
-      return THE_PROFIL_BUILDER_MAP.get( type );
-
-    THE_PROFIL_BUILDER_MAP = new HashMap<String, IProfilBuilder>();
-
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] propertyProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilbuilder" );
-    for( final IConfigurationElement configurationElement : propertyProvider )
-    {
-      try
-      {
-        // TODO: eventuell nur die elemente des gewünschten typs erzeugen und in map merken
-        final String profilType = configurationElement.getAttribute( "profiletype" );
-        final Object builderProvider = configurationElement.createExecutableExtension( "provider" );
-        final IProfilBuilder provider = (IProfilBuilder) builderProvider;
-
-        THE_PROFIL_BUILDER_MAP.put( profilType, provider );
-      }
-      catch( final CoreException e )
-      {
-        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
-      }
-    }
-
-    return THE_PROFIL_BUILDER_MAP.get( type );
-  }
-
 }

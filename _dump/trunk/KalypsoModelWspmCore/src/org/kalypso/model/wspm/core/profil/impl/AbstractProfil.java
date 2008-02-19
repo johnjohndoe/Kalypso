@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -56,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -66,14 +68,13 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultChangeAdapter;
-import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
-import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * @author kimwerner Basisprofil mit Events
+ * Basisprofil mit Events
+ * 
+ * @author kimwerner
  */
 public abstract class AbstractProfil implements IProfil
 {
@@ -94,56 +95,26 @@ public abstract class AbstractProfil implements IProfil
   private String m_name;
 
   private String m_description;
-  
-  private ITupleResultChangedListener m_resultListener;
-  
-  private List <IProfilListener>m_listeners = new ArrayList<IProfilListener>( 10 );
+
+  private final List<IProfilListener> m_listeners = new ArrayList<IProfilListener>( 10 );
 
   private List<MetadataObject> m_metaDataList = new ArrayList<MetadataObject>();
 
   private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
 
-  public AbstractProfil( final String type )
+  private final ITupleResultChangedListener m_tupleResultListener = new ProfilTupleResultChangeListener( this );
+
+  public AbstractProfil( final String type, final TupleResult result )
   {
     m_type = type;
-    m_resultListener = new TupleResultChangeAdapter(){
-
-      /**
-       * @see org.kalypso.observation.result.TupleResultChangeAdapter#componentsChanged(org.kalypso.observation.result.IComponent[], org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
-       */
-      @Override
-      public void componentsChanged( IComponent[] components, TYPE type )
-      {
-        // TODO Auto-generated method stub
-        super.componentsChanged( components, type );
-      }
-
-      /**
-       * @see org.kalypso.observation.result.TupleResultChangeAdapter#recordsChanged(org.kalypso.observation.result.IRecord[], org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
-       */
-      @Override
-      public void recordsChanged( IRecord[] records, TYPE type )
-      {
-        // TODO Auto-generated method stub
-        super.recordsChanged( records, type );
-      }
-
-      /**
-       * @see org.kalypso.observation.result.TupleResultChangeAdapter#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
-       */
-      @Override
-      public void valuesChanged( ValueChange[] changes )
-      {
-        // TODO Auto-generated method stub
-        super.valuesChanged( changes );
-      }};
+    setResult( result );
   }
+
   public void addProfilListener( final IProfilListener pl )
   {
     m_listeners.add( pl );
   }
 
-  
   public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( (changes == null) && changes.length == 0 )
@@ -164,11 +135,11 @@ public abstract class AbstractProfil implements IProfil
     }
   }
 
-  
   public void removeProfilListener( final IProfilListener pl )
   {
     m_listeners.remove( pl );
   }
+
   public boolean addPoint( final IRecord point )
   {
     return getResult().add( point );
@@ -256,7 +227,11 @@ public abstract class AbstractProfil implements IProfil
 
   public String getComment( )
   {
-    return getDescription();
+    final String description = getDescription();
+    if( description == null )
+      return "";
+
+    return description;
   }
 
   /**
@@ -304,7 +279,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPoint(int)
    */
-  public IRecord getPoint( int index )
+  public IRecord getPoint( final int index )
   {
     return getResult().get( index );
   }
@@ -384,7 +359,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPoints(int, int)
    */
-  public IRecord[] getPoints( int startPoint, int endPoint )
+  public IRecord[] getPoints( final int startPoint, final int endPoint )
   {
     final int size = endPoint - startPoint + 1;
     final IRecord[] subList = new IRecord[size];
@@ -462,7 +437,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#indexOfPoint(org.kalypso.observation.result.IRecord)
    */
-  public int indexOfPoint( IRecord point )
+  public int indexOfPoint( final IRecord point )
   {
     return getResult().indexOf( point );
   }
@@ -470,7 +445,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#indexOfProperty(org.kalypso.observation.result.IComponent)
    */
-  public int indexOfProperty( IComponent pointProperty )
+  public int indexOfProperty( final IComponent pointProperty )
   {
     return getResult().indexOfComponent( pointProperty );
   }
@@ -478,7 +453,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#indexOfProperty(java.lang.String)
    */
-  public int indexOfProperty( String id )
+  public int indexOfProperty( final String id )
   {
     final IComponent comp = hasPointProperty( id );
     if( comp != null )
@@ -542,7 +517,7 @@ public abstract class AbstractProfil implements IProfil
     m_activePoint = point;
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setActivePointChanged();
-    fireProfilChanged( hint , new IProfilChange[]{new ActiveObjectEdit(this,point,m_activePointProperty)} );
+    fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, point, m_activePointProperty ) } );
   }
 
   /**
@@ -601,9 +576,17 @@ public abstract class AbstractProfil implements IProfil
    */
   public void setResult( final TupleResult result )
   {
-  //  m_result.removeChangeListener( m_resultListener );
+    Assert.isNotNull( result );
+
+    if( m_result != null )
+      m_result.removeChangeListener( m_tupleResultListener );
+
     m_result = result;
-  //  m_result.addChangeListener( m_resultListener );
+
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_type );
+    provider.checkComponents( result );
+
+    m_result.addChangeListener( m_tupleResultListener );
   }
 
   /**

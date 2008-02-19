@@ -58,7 +58,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ProfileFeatureManager
 {
-
   private class CachedFeature
   {
     public Feature feature;

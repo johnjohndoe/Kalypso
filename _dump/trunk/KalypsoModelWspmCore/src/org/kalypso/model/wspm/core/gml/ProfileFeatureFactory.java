@@ -214,9 +214,7 @@ public class ProfileFeatureFactory implements IWspmConstants
 
   public synchronized static IProfil toProfile( final Feature profileFeature )
   {
-    final IProfil profile = m_profileManager.getProfile( profileFeature );
-
-    return profile;
+    return m_profileManager.getProfile( profileFeature );
   }
 
 }

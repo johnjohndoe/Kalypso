@@ -40,12 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.observation.result.IComponent;
-
 /**
- * @author kimwerner
+ * This class represents a profile type and is usually read from the extension-registry.
+ * 
+ * @author Gernot Belger
  */
-public interface IProfilPointPropertyProvider2 extends IProfilPointPropertyProvider
+public class ProfileType
 {
-  public Double createDoubleFor( final IComponent pointPropertyId, final Object value );
+  public final String id;
+
+  public final String label;
+
+  public final String description;
+
+  public final IProfilPointPropertyProvider pointProvider;
+
+  @SuppressWarnings("hiding")
+  public ProfileType( final String id, final String label, final String description, final IProfilPointPropertyProvider pointProvider )
+  {
+    this.id = id;
+    this.label = label;
+    this.description = description;
+    this.pointProvider = pointProvider;
+  }
+
 }

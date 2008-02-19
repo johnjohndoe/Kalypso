@@ -74,16 +74,21 @@ public class WspmGeometryUtilities
    * We assume that rw/hw are in a GAUSS-KRUEGER coordinate system, the exact one is determined from the first digit of
    * the rw value.
    */
-  public static GM_Point pointFromRrHw( final double rw, final double hw, final double h ) throws Exception
+  public static GM_Point pointFromRrHw( final Double rw, final Double hw, final Double h ) throws Exception
   {
-    String crsName = null;
+    // TODO: should not be used?
+    final String crsName = null;
 
     return pointFromRwHw( rw, hw, h, crsName );
   }
 
-  public static GM_Point pointFromRwHw( final double rw, final double hw, final double h, String crsName ) throws Exception
+  public static GM_Point pointFromRwHw( final Double rw, final Double hw, final Double h, String crsName ) throws Exception
   {
-    final GM_Position position = GeometryFactory.createGM_Position( rw, hw, h );
+    final GM_Position position;
+    if( h == null )
+      position = GeometryFactory.createGM_Position( rw, hw, h );
+    else
+      position = GeometryFactory.createGM_Position( rw, hw, h );
 
     /* If CRS is not known, we assume here that we have a GAUSS-KRUEGER crs in a profile. */
     if( crsName == null )

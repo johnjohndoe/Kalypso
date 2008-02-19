@@ -8,8 +8,6 @@
    <extension-point id="profilePointFilter" name="profilePointFilter" schema="schema/profilePointFilter.exsd"/>
    <extension-point id="reparatorrule" name="reparatorrule" schema="schema/reparatorrule.exsd"/>
    <extension-point id="profilPointMarkerProvider" name="profilPointMarkerProvider" schema="schema/profilPointMarkerProvider.exsd"/>
-   <extension-point id="profilPointPropertyProvider" name="rofilPointPropertyProvider" schema="schema/profilPointPropertyProvider.exsd"/>
    <extension-point id="profileObjectProvider" name="profileObjectProvider" schema="schema/profileObjectProvider.exsd"/>
-   <extension-point id="profilbuilder" name="ProfilBuilder" schema="schema/profilbuilder.exsd"/>
    
 </plugin>
