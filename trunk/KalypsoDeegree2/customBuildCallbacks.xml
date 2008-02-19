@@ -4,8 +4,6 @@
 <!-- ===================================================================== -->
 <project name="Build specific targets and properties" default="noDefault">
 	
-	<fileset includes="${workspace}/deegree2/lib/**"/>
-
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
 	<!-- ===================================================================== -->
@@ -97,7 +95,7 @@
 	<!--   target.folder - destination folder                                  -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.bin.parts">
-		<copydir dest="${target.folder}/lib" src="d:/eclipse_workspace/deegree2/lib"/>
+		<copydir dest="${target.folder}/lib" src="${workspace}/deegree2/lib"/>
 	</target>
 		
 	<!-- ===================================================================== -->
@@ -115,7 +113,7 @@
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.sources">
-		<copydir dest="${destination.temp.folder}" src="d:/eclipse_workspace/deegree2/src"/>
+		<copydir dest="${destination.temp.folder}/deegree" src="d:/eclipse-workspace/deegree2/src"/>
 	</target>
 
 	<!-- ===================================================================== -->

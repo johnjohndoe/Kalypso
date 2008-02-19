@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.kalypso.portal; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.portal.KalypsoPortalPlugin
 Bundle-Localization: plugin
+Bundle-ClassPath: build/bin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.intro,

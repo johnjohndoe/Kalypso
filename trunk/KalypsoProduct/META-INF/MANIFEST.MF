@@ -7,6 +7,7 @@ Bundle-ClassPath: KalypsoProduct.jar
 Bundle-Activator: org.kalypso.product.KalypsoProductPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
+Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.product,
  org.kalypso.ui,
  org.kalypso.ui.application
@@ -16,4 +17,4 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.jwsdp,
  org.kalypso.simulation.ui,
  org.kalypso.auth
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
