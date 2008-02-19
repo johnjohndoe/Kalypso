@@ -16,7 +16,7 @@
 	<!-- Available parameters :                                                -->
 	<!--   build.result.folder - folder to contain the build results           -->
 	<!-- ===================================================================== -->
-	<target name="pre.build.jars">
+	<target name="pre.build.jars">		
 	</target>
 
 	<!-- ===================================================================== -->
@@ -113,7 +113,7 @@
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.sources">
-		<copydir dest="${destination.temp.folder}/deegree" src="${workspace}/deegree2/src"/>
+		<copydir dest="${target.folder}/deegree" src="${workspace}/deegree2/src"/>
 	</target>
 
 	<!-- ===================================================================== -->
