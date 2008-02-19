@@ -1,4 +1,4 @@
-!     Last change:  WP    1 Aug 2006   11:08 am
+!     Last change:  EN   19 Feb 2008   10:40 am
 !--------------------------------------------------------------------------
 ! This code, U_WSP.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -764,7 +764,9 @@ ELSEIF (iprof.eq.'k') then
   term2 = sin (winkel)
   f (2) = f (2) * (term1 - term2)
   u (2) = 2 * pi * durchm / 2 * alf / 360.
-  br (2) = u (2)
+  !br (2) = u (2)
+  ! EN Korrekte Berechnung der Wasserspiegelbreite
+  br (2) = durchm * SIN (winkel/2)
 
   IF (u (2) .gt.1.e-04) then
     ira = int (200. * f (2) / u (2) + 0.5)
@@ -818,7 +820,10 @@ ELSEIF (iprof.eq.'m') then
   nue1 = MAX (nue1, 1)
   f (2) = psim (nue1) * hd * hd
   u (2) = omegm (nue1) * hd
-  br (2) = u (2)
+  !br (2) = u (2)
+  ! EN Korrekte Berechnung der Wasserspiegelbreite
+  br (2) =2*(SQRT(1-(ht-hd/2)**2/(hd/2)**2)*durchm/2)
+
 
   IF (u (2) .gt.1.e-04) then
     ra (2) = f (2) / u (2)
@@ -868,7 +873,10 @@ ELSEIF (iprof.eq.'e') then
   nue1 = MAX (nue1, 1)
   f (2) = psie (nue1) * hd * hd
   u (2) = omege (nue1) * hd
-  br (2) = u (2)
+  !br (2) = u (2)
+  ! EN Korrekte Berechnung der Wasserspiegelbreite
+  br (2) =2*(SQRT(1-(ht-hd/2)**2/(hd/2)**2)*durchm/2)
+
 
   IF (u (2) .gt.1.e-04) then
     ra (2) = f (2) / u (2)
