@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoClientUser Plug-in
 Bundle-SymbolicName: org.kalypso.services.user.client; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: KalypsoClientUser.jar
+Bundle-ClassPath: build/bin
 Bundle-Activator: org.kalypso.services.user.client.KalypsoServiceUserClientPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

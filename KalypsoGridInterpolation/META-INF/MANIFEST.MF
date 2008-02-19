@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.interpolation.KalypsoInterpolationPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
+Bundle-ClassPath: bin
 Require-Bundle: org.eclipse.ui,
  org.kalypso.core,
  org.kalypso.deegree,
