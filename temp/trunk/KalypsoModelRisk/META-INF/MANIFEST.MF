@@ -4,6 +4,7 @@ Bundle-Name: org.kalypso.risk
 Bundle-SymbolicName: org.kalypso.risk;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.risk.plugin.KalypsoRiskPlugin
+Bundle-ClassPath: bin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
