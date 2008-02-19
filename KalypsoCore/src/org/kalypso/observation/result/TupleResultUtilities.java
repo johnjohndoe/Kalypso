@@ -49,6 +49,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.observation.IObservation;
 
 /**
  * TODO: Merge most of the stuff with {@link ComponentUtilities}.
@@ -79,6 +80,16 @@ public class TupleResultUtilities
     }
 
     return null;
+  }
+
+  /**
+   * Find component by id.
+   * 
+   * @return The first component with the given id, null, none was found.
+   */
+  public static IComponent findComponentById( final IObservation<TupleResult> observation, final String id )
+  {
+    return findComponentById( observation.getResult(), id );
   }
 
   /**
@@ -320,6 +331,16 @@ public class TupleResultUtilities
 
       targetResult.add( targetRecord );
     }
+  }
+
+  /**
+   * Returns the index of the first component with a given id.
+   * 
+   * @return -1, if no such component exists.
+   */
+  public static int indexOfComponent( final IObservation<TupleResult> observation, final String id )
+  {
+    return indexOfComponent( observation.getResult(), id );
   }
 
   /**
