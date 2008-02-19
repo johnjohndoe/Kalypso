@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: kalypsoUIRRM.KalypsoUIRRMPlugin
 Bundle-Vendor: org.kalypso
 Bundle-Localization: plugin
+Bundle-ClassPath: bin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.core,

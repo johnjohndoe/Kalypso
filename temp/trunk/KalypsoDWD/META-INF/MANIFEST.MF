@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoDWD
 Bundle-SymbolicName: org.kalypso.dwd; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: lib/servlet-api.jar
+Bundle-ClassPath: lib/servlet-api.jar,
+ build/bin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: javax.servlet,
@@ -18,4 +19,4 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.jwsdp;visibility:=reexport,
  org.kalypso.core,
  org.eclipse.ant.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

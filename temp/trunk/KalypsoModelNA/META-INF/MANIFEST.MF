@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.kalypso.NACalcJob; singleton:=true
 Bundle-Version: 1.0.2
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
+Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.convert.namodel,
  org.kalypso.convert.namodel.example,
  org.kalypso.convert.namodel.formats,
