@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    5:24 pm
+!     Last change:  EN   19 Feb 2008    4:02 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -257,15 +257,23 @@ CALL uf (hr, hi, xi, s, indmax, nfli, nfre)
 !end do
 
 
+
+
+
 IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
-  ! -----------------------------------------------------------------
-  ! STATIONAER UNGLEICHFOERMIGER ABFLUSS (SPIEGELLINIENBERECHNUNG)
-  ! -----------------------------------------------------------------
+  ! EN Bei der Rohrberechnung bei konstantem Reibungsgefaelle soll der vorgegebene Wasserstand
+  ! EN sowie zugehoerige der Fliessquerschnitt nicht veraendert werden
+  IF ((iprof .eq. 'k' .or. iprof .eq. 't' .or. iprof .eq. 'm' .or. iprof .eq. 'e') .AND. BERECHNUNGSMODUS == 'REIB_KONST' ) THEN
+    !nichts
+  ELSE
+    ! -----------------------------------------------------------------
+    ! STATIONAER UNGLEICHFOERMIGER ABFLUSS (SPIEGELLINIENBERECHNUNG)
+    ! -----------------------------------------------------------------
 
-  !write (*,*) 'In VERLUSTE. fges = ', fges, '  q = ', q
+    !write (*,*) 'In VERLUSTE. fges = ', fges, '  q = ', q
 
-  IF (fges < 0.01) then
+    IF (fges < 0.01) then
 
     ! WP Wenn Fliessquerschnitt sehr klein, dann Anheben des
     ! WP Wasserstandes HR um DX ( = 0.05 m )
@@ -273,7 +281,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     f_alt = fges
     GOTO 101
 
-  ELSE IF ( (q/fges) .gt. 20) then
+    ELSE IF ( (q/fges) .gt. 20) then
    
     ! WP Wenn zu erwartende Fließgeschwindigkeit (v = Q/A) sehr
     ! WP gross wird, dann Anheben des Wasserstandes HR um DX ( = 0.05 m)
@@ -282,12 +290,13 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       f_alt = fges
       ifehlg = 0
       GOTO 101
-    ELSE
+     ELSE
       ifehlg = 1
+     ENDIF
+
     ENDIF
 
-  ENDIF                                     
-                                                                        
+  ENDIF
                                                                         
   ! ------------------------------------------------------------------
   ! Berechnung des wirksamen Reibungsverlustes des Profils (rg)
