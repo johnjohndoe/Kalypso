@@ -73,6 +73,8 @@ public interface IFE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE
 
   public static final QName PROP_ROUGHNESS_CORRECTION_DP = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_dp" ); //$NON-NLS-1$
 
+  public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
+
   public void setRoughnessClsID( final String value );
 
   public void setRoughnessStyle( final String value );
