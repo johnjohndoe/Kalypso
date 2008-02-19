@@ -54,7 +54,6 @@ public class WriteShapeTest extends TestCase
     {
       final double aDouble = i * Math.PI;
       final String aString = "Item Number: " + i;
-
       final GM_Point aPoint = GeometryFactory.createGM_Point( i * 4.3, i * 2.1, crs );
 
       final Object[] data = new Object[] { aPoint, aDouble, aString };

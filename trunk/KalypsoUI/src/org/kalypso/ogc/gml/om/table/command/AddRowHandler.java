@@ -71,7 +71,7 @@ public class AddRowHandler extends AbstractHandler
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
     final Object target = selection.getFirstElement();
     final int index = tupleResult.indexOf( target );
-    final Object next = index < tupleResult.size() - 2 ? tupleResult.get( index + 1 ) : null;
+    final IRecord next = index < tupleResult.size() - 2 ? tupleResult.get( index + 1 ) : null;
     final IRecord row = tupleResult.createRecord();
     for( final IComponent component : tupleResult.getComponents() )
     {
@@ -79,12 +79,12 @@ public class AddRowHandler extends AbstractHandler
       {
         if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE".equals( component.getId() ) )
         {
-          if( next != null && next instanceof IRecord )
+          if( next != null )
           {
             final Object b1 = ((IRecord) target).getValue( component );
             if( b1 == null )
               continue;
-            final Object l = ((IRecord) next).getValue( component );
+            final Object l = next.getValue( component );
             if( l == null )
               continue;
             row.setValue( component, (Double) b1 - ((Double) b1 - (Double) l) / 2.0 );
@@ -93,17 +93,17 @@ public class AddRowHandler extends AbstractHandler
           {
             final Object value = ((IRecord) target).getValue( component );
             if( value != null )
-              row.setValue( component, (Double)value+10 );
+              row.setValue( component, (Double) value + 10 );
           }
         }
         else if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE".equals( component.getId() ) )
         {
-          if( next != null && next instanceof IRecord )
+          if( next != null )
           {
             final Object h1 = ((IRecord) target).getValue( component );
             if( h1 == null )
               continue;
-            final Object z = ((IRecord) next).getValue( component );
+            final Object z = next.getValue( component );
             if( z == null )
               continue;
             row.setValue( component, (Double) h1 - ((Double) h1 - (Double) z) / 2.0 );

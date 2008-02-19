@@ -76,7 +76,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
     if( value == null )
       return "";
 
-    return value.toString();
+    return getStringRepresentation( record );
   }
 
   /**
