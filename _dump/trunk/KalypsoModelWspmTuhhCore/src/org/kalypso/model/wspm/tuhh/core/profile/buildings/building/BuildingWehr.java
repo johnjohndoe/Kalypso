@@ -94,13 +94,8 @@ public class BuildingWehr extends AbstractObservationBuilding
   @Override
   protected IComponent getPointProperty( final String id )
   {
-    final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    for( final IProfilPointPropertyProvider provider : providers )
-    {
-      if( provider.providesPointProperty( id ) )
-        return provider.getPointProperty( id );
-    }
-    return null;
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    return provider.getPointProperty( id );
   }
 
   /**

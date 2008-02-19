@@ -139,10 +139,11 @@ public class PrfSource implements IProfilSource
     if( dbx == null || dby == null || dbp == null )
       return;
 
-    final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
-    final IComponent prAx = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
-    final IComponent prAy = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
-    final IComponent prDp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+
+    final IComponent prAx = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    final IComponent prAy = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    final IComponent prDp = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
 
     writePointProperty( p, prAx, dbx );
     writePointProperty( p, prAy, dby );
@@ -169,9 +170,10 @@ public class PrfSource implements IProfilSource
     if( dbh == null || dbr == null )
       return;
 
-    final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
-    final IComponent hochwert = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final IComponent rechtswert = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+
+    final IComponent hochwert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent rechtswert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
 
     writePointProperty( p, hochwert, dbh );
     writePointProperty( p, rechtswert, dbr );
@@ -368,15 +370,15 @@ public class PrfSource implements IProfilSource
     if( db == null )
       return;
 
-    final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
-
     final String rks = db.getSecondLine().toUpperCase();
     IComponent rTyp = ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
 
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+
     if( rks.startsWith( "KST" ) )
-      rTyp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+      rTyp = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     else if( rks.startsWith( "KS" ) || rks.startsWith( "K-S " ) )
-      rTyp = ProfilObsHelper.getPointPropertyFromProviders( providers, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+      rTyp = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     else
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "Unbekannter Rauheits-typ[" + rks + "], wird 'ks' interpretiert.", null ) );
 
@@ -516,6 +518,8 @@ public class PrfSource implements IProfilSource
 
   private void readWehrtrenner( final double[] values, final IProfil p, final PrfReader pr )
   {
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
+
     final IDataBlock dbt = pr.getDataBlock( "TRENNLINIE" );
     if( dbt == null )
       return;
@@ -526,8 +530,7 @@ public class PrfSource implements IProfilSource
       if( point != null )
         if( values != null && values.length > i + 1 )
         {
-          final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( p.getType() );
-          final IComponent cWehr = ProfilObsHelper.getPropertyFromId( providers, IWspmTuhhConstants.MARKER_TYP_WEHR );
+          final IComponent cWehr = provider.getPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
 
           final ProfilDevider devider = new ProfilDevider( cWehr, point );
           devider.setValue( values[i + 1] );

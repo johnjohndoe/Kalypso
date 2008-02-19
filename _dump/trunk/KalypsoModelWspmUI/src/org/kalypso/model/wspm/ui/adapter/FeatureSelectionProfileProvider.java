@@ -150,11 +150,10 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   /**
    * @see com.bce.profil.ui.view.IProfilProvider2#getEventManager()
    */
-//  public IProfilEventManager getEventManager( )
-//  {
-//    return m_pem;
-//  }
-
+// public IProfilEventManager getEventManager( )
+// {
+// return m_pem;
+// }
   /**
    * @deprecated Use {@link #getProfile()} instead
    */
@@ -217,9 +216,9 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       {
         final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );
         /**
-         *  TODO implement IStationResult to profiles
-         **/  
-        final IStationResult[] results = null;//m_pem == null ? null : m_pem.getResults();
+         * TODO implement IStationResult to profiles
+         */
+        final IStationResult[] results = null;// m_pem == null ? null : m_pem.getResults();
         setProfile( profil, results, m_feature, m_workspace );
       }
       catch( final Exception e )
@@ -238,7 +237,8 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
    */
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( (m_profile != null) && (m_feature != null) )
+    if( m_profile != null && m_feature != null )
+    {
       try
       {
         if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
@@ -256,6 +256,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
+    }
   }
 
   /**
@@ -318,7 +319,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
     m_feature = feature;
     m_workspace = workspace;
-    
+
     m_profile = profil;
 
     if( m_profile != null )

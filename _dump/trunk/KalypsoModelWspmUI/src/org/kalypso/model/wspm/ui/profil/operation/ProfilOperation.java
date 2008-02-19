@@ -70,17 +70,17 @@ public final class ProfilOperation extends AbstractOperation
 
   private boolean m_canUndo = true;
 
-  public ProfilOperation( final String label, final IProfil profile, boolean rollbackAll )
+  public ProfilOperation( final String label, final IProfil profile, final boolean rollbackAll )
   {
     this( label, profile, new IProfilChange[] {}, rollbackAll );
   }
 
-  public ProfilOperation( final String label, final IProfil profile, final IProfilChange change, boolean rollbackAll )
+  public ProfilOperation( final String label, final IProfil profile, final IProfilChange change, final boolean rollbackAll )
   {
     this( label, profile, new IProfilChange[] { change }, rollbackAll );
   }
 
-  public ProfilOperation( final String label, final IProfil profile, final IProfilChange[] changes, boolean rollbackAll )
+  public ProfilOperation( final String label, final IProfil profile, final IProfilChange[] changes, final boolean rollbackAll )
   {
     super( label );
 
@@ -120,7 +120,7 @@ public final class ProfilOperation extends AbstractOperation
   }
 
   private IStatus doit( final IProgressMonitor monitor, @SuppressWarnings("unused")
-  final IAdaptable info, final List<IProfilChange> undoChanges, List<IProfilChange> changes )
+  final IAdaptable info, final List<IProfilChange> undoChanges, final List<IProfilChange> changes )
   {
     monitor.beginTask( "Profil wird geändert", changes.size() );
     final ProfilChangeHint hint = new ProfilChangeHint();
@@ -129,18 +129,14 @@ public final class ProfilOperation extends AbstractOperation
     {
       for( final IProfilChange change : changes )
       {
-
+        final IProfilChange undoChange = change == null ? null : change.doChange( hint );
+        if( undoChange != null && undoChange instanceof IllegalChange )
         {
-          final IProfilChange undoChange = change == null ? null : change.doChange( hint );
-          if( undoChange != null && undoChange instanceof IllegalChange )
-          {
-            throw new IllegalProfileOperationException( undoChange.getInfo(), change );
-          }
-          doneChanges.add( change );
-          undoChanges.add( 0, undoChange );
-          monitor.worked( 1 );
+          throw new IllegalProfileOperationException( undoChange.getInfo(), change );
         }
-
+        doneChanges.add( change );
+        undoChanges.add( 0, undoChange );
+        monitor.worked( 1 );
       }
     }
     catch( final IllegalProfileOperationException e )
@@ -172,7 +168,7 @@ public final class ProfilOperation extends AbstractOperation
       // einen fire auf allen changes absetzen (zuviel ist nicht schlimm)
       m_canUndo = undoChanges.size() > 0;
       monitor.done();
-      //m_profile.fireProfilChanged( hint, doneChanges.toArray( new IProfilChange[doneChanges.size()] ) );
+      m_profile.fireProfilChanged( hint, doneChanges.toArray( new IProfilChange[doneChanges.size()] ) );
     }
     // auf jeden Fall OK zurückgeben da sonst die UNDO-Liste nicht gefüllt wird
     return Status.OK_STATUS;
@@ -181,14 +177,14 @@ public final class ProfilOperation extends AbstractOperation
   private void rollback( final List<IProfilChange> changes )
   {
     final ProfilChangeHint hint = new ProfilChangeHint();
-    for( IProfilChange undo : changes )
+    for( final IProfilChange undo : changes )
     {
       try
       {
         if( undo != null )
           undo.doChange( hint );
       }
-      catch( IllegalProfileOperationException e )
+      catch( final IllegalProfileOperationException e )
       {
         // should never happen
         e.printStackTrace();

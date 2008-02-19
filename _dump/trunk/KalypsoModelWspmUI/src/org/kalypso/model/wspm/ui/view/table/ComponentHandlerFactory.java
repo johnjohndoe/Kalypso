@@ -135,10 +135,10 @@ public class ComponentHandlerFactory implements IComponentUiHandlerProvider
       return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" );
 
     if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
-      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "null", "" );
+      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "null", "%.03f" );
 
     if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
-      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "null", "" );
+      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "null", "%.03f" );
 
     if( ComponentUiHandlerFactory.Q_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "null", "" );

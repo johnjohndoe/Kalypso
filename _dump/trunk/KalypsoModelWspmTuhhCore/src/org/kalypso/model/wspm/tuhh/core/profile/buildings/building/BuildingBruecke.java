@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
@@ -57,8 +56,6 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author kimwerner
@@ -112,15 +109,10 @@ final public class BuildingBruecke extends AbstractObservationBuilding
    * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
    */
   @Override
-  protected IComponent getPointProperty( String id )
+  protected IComponent getPointProperty( final String id )
   {
-    final IProfilPointPropertyProvider[] providers = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    for( final IProfilPointPropertyProvider provider : providers )
-    {
-      if( provider.providesPointProperty( id ) )
-        return provider.getPointProperty( id );
-    }
-    return null;
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    return provider.getPointProperty( id );
   }
 
 }

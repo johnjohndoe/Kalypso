@@ -42,17 +42,6 @@
             provider="org.kalypso.model.wspm.tuhh.core.profile.DeviderProvider"/>
    </extension>
    <extension
-         point="org.kalypso.model.wspm.core.profilPointPropertyProvider">
-      <pointPropertyProvider
-            id="org.kalypso.model.wspm.tuhh.core.profile.pointPropertyproviderTUHH"
-            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
-            provider="org.kalypso.model.wspm.tuhh.core.profile.PointPropertyProviderTUHH"/>
-      <pointPropertyProvider
-            id="KalypsoModelWspmCore.pointPropertyProvider"
-            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
-            provider="org.kalypso.model.wspm.core.profil.impl.points.PointPropertyProvider"/>
-   </extension>
-   <extension
          point="org.kalypso.model.wspm.core.profileObjectProvider">
       <objectProvider
             id="KalypsoModelWspmTuhhCore.objectProviderTUHH"
@@ -60,11 +49,13 @@
             provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.TuhhBuildingProvider"/>
    </extension>
    <extension
-         point="org.kalypso.model.wspm.core.profilbuilder">
-      <Profil_Builder
-            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
-            provider="org.kalypso.model.wspm.tuhh.core.profile.TuhhProfilBuilder">
-      </Profil_Builder>
+         point="org.kalypso.model.wspm.core.profiletype">
+      <profiletype
+            class="org.kalypso.model.wspm.tuhh.core.profile.PointPropertyProviderTUHH"
+            description="Profile nach dem 1D-stationären Rechenkern der TUHH (nach Prof. Pasche)"
+            id="org.kalypso.model.wspm.tuhh.profiletype"
+            name="Pasche">
+      </profiletype>
    </extension>
 
 </plugin>

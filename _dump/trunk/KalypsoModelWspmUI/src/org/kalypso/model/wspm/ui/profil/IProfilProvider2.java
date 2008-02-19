@@ -49,7 +49,6 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
  */
 public interface IProfilProvider2
 {
- 
   public IProfil getProfil( );
 
   public ProfilViewData getViewData( );

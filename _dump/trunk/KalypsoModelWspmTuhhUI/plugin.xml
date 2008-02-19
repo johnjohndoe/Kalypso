@@ -79,13 +79,6 @@
       </wizard>
    </extension>
 
-     <extension
-           point="org.kalypso.model.wspm.core.profiletype">
-        <profiletype
-              name="Pasche"
-              description="Profile nach dem 1D-stationären Rechenkern der TUHH (nach Prof. Pasche)"
-              id="org.kalypso.model.wspm.tuhh.profiletype"/>
-     </extension>
    <extension
          point="org.kalypso.model.wspm.core.validatorrule">
       <rule

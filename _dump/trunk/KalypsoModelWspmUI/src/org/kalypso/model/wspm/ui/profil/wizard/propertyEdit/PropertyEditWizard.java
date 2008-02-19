@@ -105,7 +105,7 @@ public class PropertyEditWizard extends Wizard
     m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Werte zugeweisen werden sollen." );
   }
 
-  public PropertyEditWizard( final IProfil profile)
+  public PropertyEditWizard( final IProfil profile )
   {
     m_profile = profile;
     m_workspace = null;
@@ -127,15 +127,11 @@ public class PropertyEditWizard extends Wizard
     if( m_profile == null )
       addPage( m_profileChooserPage );
 
-    final IProfilPointPropertyProvider[] ppps = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profiletype );
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profiletype );
     final List<IComponent> properties = new ArrayList<IComponent>();
-    for( final IProfilPointPropertyProvider ppp : ppps )
-    {
-      for( final IComponent property : ppp.getPointProperties() )
-      {
-        properties.add( property );
-      }
-    }
+    for( final IComponent property : provider.getPointProperties() )
+      properties.add( property );
+
     m_propertyChooserPage = new ArrayChooserPage( properties.toArray( new IComponent[0] ), new Object[0], new Object[0], 1, "profilePropertiesChooserPage", "Profileigenschaften auswählen", null );
     m_propertyChooserPage.setLabelProvider( new LabelProvider()
     {
@@ -155,10 +151,9 @@ public class PropertyEditWizard extends Wizard
     m_operationChooserPage = new OperationChooserPage();
     m_operationChooserPage.setPageComplete( false );
 
-    
     addPage( m_propertyChooserPage );
     addPage( m_operationChooserPage );
-  
+
   }
 
   /**
@@ -173,7 +168,7 @@ public class PropertyEditWizard extends Wizard
   private IProfil[] toProfiles( final Object[] features )
   {
     if( features == null )
-      return new IProfil[] {m_profile };
+      return new IProfil[] { m_profile };
     final IProfil[] choosenProfiles = new IProfil[features.length];
     for( int i = 0; i < features.length; i++ )
     {

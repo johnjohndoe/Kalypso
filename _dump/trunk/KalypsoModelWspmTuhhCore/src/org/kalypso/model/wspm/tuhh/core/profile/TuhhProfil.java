@@ -43,14 +43,12 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.TuhhBuildingHelper;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
-import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -61,26 +59,11 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class TuhhProfil extends AbstractProfil
 {
-
   public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype";
-
-  public TuhhProfil( )
-  {
-    super( PROFIL_TYPE );
-
-    final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe" ) );
-    final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite" ) );
-
-    final TupleResult result = new TupleResult( new IComponent[] { hoehe, breite } );
-
-    setResult( result );
-  }
 
   public TuhhProfil( final TupleResult result )
   {
-    super( PROFIL_TYPE );
-
-    setResult( result );
+    super( PROFIL_TYPE, result );
   }
 
   /**
@@ -95,8 +78,8 @@ public class TuhhProfil extends AbstractProfil
     if( profileObjects == null || profileObjects.length > 1 )
       throw new IllegalStateException( "only one profileObject allowed" );
     setProperty( PROFILE_OBJECTS, null );
-    if (profileObjects.length > 0)
-    return super.addProfileObjects( profileObjects );
+    if( profileObjects.length > 0 )
+      return super.addProfileObjects( profileObjects );
     return profileObjects;
   }
 
@@ -131,12 +114,13 @@ public class TuhhProfil extends AbstractProfil
   @Override
   public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
   {
-    final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
+    final List<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
     final IComponent[] markers = getPointMarkerTypes();
-    for( final IComponent marker : markers )
+    for( final IComponent component : markers )
     {
-      if( record.getValue( marker ) != null )
-        pointMarkers.add( new ProfilDevider( marker, record ) );
+      final IProfilPointMarker marker = getMarker( component, record );
+      if( marker != null )
+        pointMarkers.add( marker );
     }
     return pointMarkers.toArray( new IProfilPointMarker[] {} );
   }
@@ -155,13 +139,34 @@ public class TuhhProfil extends AbstractProfil
     final TupleResult result = getResult();
     for( final IRecord record : result )
     {
-      final Object value = record.getValue( markerColumn );
-      if( value != null )
-      {
-        markers.add( new ProfilDevider( markerColumn, record ) );
-      }
+      final IProfilPointMarker marker = getMarker( markerColumn, record );
+      if( marker != null )
+        markers.add( marker );
     }
 
     return markers.toArray( new IProfilPointMarker[] {} );
+  }
+
+  private IProfilPointMarker getMarker( final IComponent component, final IRecord record )
+  {
+    final Object value = record.getValue( component );
+
+    if( value == null )
+      return null;
+
+    final String id = component.getId();
+    if( id.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) && value.equals( "none" ) )
+      return null;
+
+    if( id.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) && value.equals( Boolean.FALSE ) )
+      return null;
+
+    if( id.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) && value.equals( Boolean.FALSE ) )
+      return null;
+
+    if( id.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) && ((Double) value).isNaN() )
+      return null;
+
+    return new ProfilDevider( component, record );
   }
 }
