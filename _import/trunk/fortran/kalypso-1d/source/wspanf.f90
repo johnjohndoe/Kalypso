@@ -1,4 +1,4 @@
-!     Last change:  MD    7 Aug 2007   12:17 pm
+!     Last change:  MD   19 Feb 2008    6:43 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -90,6 +90,7 @@ REAL :: wsanf                   ! Anfangswasserspiegelhöhe
 REAL, INTENT(IN) :: strbr       ! Strecke zwischen den Profilen
 REAL :: q                       ! Abfluss
 REAL :: q1                      ! Abfluss
+REAL :: qvar                    ! Jeweiliger Abfluss
 REAL :: hr                      ! Wasserspiegelhoehe
 REAL :: hv                      ! Verlusthoehe gesamt
 REAL :: rg                      ! Reibungsverlusthoehe
@@ -168,8 +169,12 @@ COMMON / erg / wsp, hen, qs, fgesp, froudp, hvs, hrs, hs, fp, up, &
 INTEGER :: igrnz, ifehl, itere1, ifehlg, istat
 REAL :: str
 REAL :: froud
-
 REAL :: xi (maxkla), hi (maxkla), s (maxkla)
+
+
+! EN ++++++++++++++
+REAL :: qsi, qvarsi   ! Sicherung der Abflussdaten aus qbordv
+REAL :: rohrkenn      ! Kennung fuer RohrBerechnung unter bei konstantem reibungsgefaelle
 
 
 ! ------------------------------------------------------------------
@@ -205,18 +210,27 @@ CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
 ! Dieses ist dann der Fall, wenn nprof.ne.1 .or. strbr.eq.0)
 igrnz = 0
                                                                         
-IF (nprof.eq.1.or.strbr.ne.0.) then
+! EN --------------------------------------------------------------
+! EN Wenn Rohrprofil dann wird grnzh nicht aufgerufen
+
+
+IF ((iprof.eq.'k' .or. iprof.eq.'t' .or. iprof.eq.'m' .or. iprof.eq.'e') .AND. BERECHNUNGSMODUS == 'REIB_KONST' ) THEN
+  GOTO 100
+
+ELSE
+  IF (nprof.eq.1.or.strbr.ne.0.) then
                                                                         
-  IF (nprof.eq.1) then
-
-    write (UNIT_OUT_LOG, 1000) hmin
-    1000 format (/1X, 'Aufruf von GRNZH in WSPANF mit   hmin = ', F8.3)
-
-  ENDIF
+    IF (nprof.eq.1) then
+      write (UNIT_OUT_LOG, 1000) hmin
+      1000 format (/1X, 'Aufruf von GRNZH in WSPANF mit   hmin = ', F8.3)
+    ENDIF
                                                                         
   CALL grnzh (q, indmax, hgrenz, xi, hi, s)
 
-ENDIF
+  ENDIF
+
+END IF
+! EN --------------------------------------------------------------
 
 100 CONTINUE
                                                                         
@@ -243,11 +257,49 @@ IF (wsanf.lt.0.) then
    !MD neu** fges1 = fges
   END IF
 
-  CALL station (wsanf, nprof, hgrenz, q, hr, hv, rg, indmax, hvst, &
-      & hrst, psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl, &
-      & nblatt, nz, idr1)
 
-  !UT       FALLS DAS AUS station ERHALTENE ifehl ne.0, DANN IN FILE
+
+!EN Beginn der Erweiterung zur Rohrberechnung bei konstantem Reibungsgefaelle
+!EN -------------------------------------------------------------------------
+
+  IF ((iprof.eq.'k' .or. iprof.eq.'t' .or. iprof.eq.'m' .or. iprof.eq.'e') .AND. BERECHNUNGSMODUS=='REIB_KONST') THEN
+
+
+    IF (rohrkenn .eq. 0) THEN
+      ! Sicherung der Werte der auesseren Abflussschleife aus qbordv
+      qsi = q
+      qvarsi = qvar
+    END IF
+
+    ! Kennung, dass Sonderprofil durchlaufen wurde
+    rohrkenn = 1
+
+    CALL rohre (wsanf, nprof, q, hr, indmax, hvst, hrst, froud, str)
+
+    !WRITE (UNIT_OUT_LOG, '(''hrst nach ROHRE = '',f12.5, /)') hrst
+
+  ELSE
+
+    IF (rohrkenn .ne. 0) THEN
+      ! Rueckholen der Werte
+      qvar = qvarsi
+      q = qsi
+      ! Ruecksetzten der Sonderprofil- Kennung
+      rohrkenn = 0
+    END IF
+
+    CALL station (wsanf, nprof, hgrenz, q, hr, hv, rg, indmax, hvst, &
+        & hrst, psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl, &
+        & nblatt, nz, idr1)
+
+  END IF
+!EN Ende Erweiterung zur Rohrberechnung bei konstantem Reibungsgefaelle
+!EN --------------------------------------------------------------
+
+
+
+
+  !UT  FALLS DAS AUS station ERHALTENE ifehl ne.0, DANN IN FILE
   IF (ifehl.ne.0) then
 
     WRITE (UNIT_OUT_LOG, 1001)
@@ -255,7 +307,7 @@ IF (wsanf.lt.0.) then
 
     wsanf = 0.
                                                                         
-    !JK      Weiter zur BERECHNUNG mit GRENZTIEFE
+    !JK  Weiter zur BERECHNUNG mit GRENZTIEFE
     GOTO 100
                                                                         
   ENDIF
