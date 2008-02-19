@@ -43,6 +43,7 @@ package org.kalypso.jts;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
@@ -666,7 +667,12 @@ public class JTSUtilities
   }
 
   /**
-   * This function adds points to the line.
+   * This function adds points to the line.<br>
+   * <br>
+   * REMARK:<br>
+   * Not used at the moment and should only be used after a small refactoring.<br>
+   * It can be very slow, in dependance of the amount of points to be added.<br>
+   * Furthermore the given list of points is modified. It should be cloned here.
    * 
    * @param line
    *            The line, to which the points are added to.
@@ -742,19 +748,19 @@ public class JTSUtilities
   }
 
   /**
-   * This function adds points every 1m to the geometry.
+   * This function calculates points every 1m on the line.
    * 
    * @param curve
-   *            The curve, which represents the geometry on the map of the profile.
-   * @return A new curve with the new points.
+   *            The curve with original points.
+   * @return A map containing the distance as key and the points as value (original and new points).
    */
-  public static LineString addPointsToLine( LineString curve )
+  public static TreeMap<Double, Point> calculatePointsOnLine( LineString curve )
   {
     /* The length of the line. */
     double length = curve.getLength();
 
     /* Memory for the new points. */
-    ArrayList<Point> points = new ArrayList<Point>();
+    TreeMap<Double, Point> points = new TreeMap<Double, Point>();
 
     /* If there is only 1 meter, the start- and endpoint have to suffice. */
     double usedLength = 1.0;
@@ -763,17 +769,21 @@ public class JTSUtilities
       /* Create a new point. */
       Point pointOnLine = pointOnLine( curve, usedLength );
 
-      /* Add the found point to the list. */
-      points.add( pointOnLine );
+      /* Add the found point to the map. */
+      points.put( usedLength, pointOnLine );
 
       /* Increse the used length by 1 meter. */
       usedLength = usedLength + 1;
     }
 
-    /* Add the points to the line. */
-    /* ATTENTION: curve will be a new line, the original line is not modified! */
-    curve = addPointsToLine( curve, points );
+    /* Add the points of the line. */
+    for( int i = 0; i < curve.getNumPoints(); i++ )
+    {
+      Point point = curve.getPointN( i );
+      Double distance = pointDistanceOnLine( curve, point );
+      points.put( distance, point );
+    }
 
-    return curve;
+    return points;
   }
 }
