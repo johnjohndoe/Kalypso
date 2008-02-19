@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>KalypsoElbeWavosSachsen</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	<natures>
+		<nature>org.kalypso.simulation.ui.ModelNature</nature>
+	</natures>
+</projectDescription>
