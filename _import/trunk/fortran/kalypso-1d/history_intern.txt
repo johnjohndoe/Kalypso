@@ -1437,3 +1437,26 @@ Kalypso 2.0.6.6     07. Februar 2008
 							          Monika Donner, 07.02.2008
 
 
+Kalypso 2.1.0.0     19. Februar 2008
+-------------------------------------                                                           
+
+1.)  Neue Subroutine ROHRE zur Berechnung von Rohren/Durchlässen bei der Berechnungsvariante "konstantes Reibungsgefälle".  
+     Im Verlaufe der Berechnng werden Rohrprofile (k,e,m,t) in der Subroutine WSPANF abgefangen und die Subroutine ROHRE 
+     aufgerufen, während die übrigen Profile weiterhin in die Subroutine STATION übergeben werden. In der neuen Routine 
+     erfolgt die Berechnung wasserstandsgesteuert und nicht wie sonst abflussgesteuert, wodurch Iterationsprobleme
+     vermieden werden. Die Schrittzahl wurde jedoch von der äusseren Abflussschleife (QBORDV) übernommen, so dass die 
+     Anzahl der berechneten Stützstellen gleichbleibt. 
+     (Betroffene Routinen: Rohre, Wspanf, Verluste) 
+
+2.)  Fehlerbehebung:
+     Beim Einlesen der Daten (Lage, Geometrie, etc.) für Maulprofile aus der Profil- Datei, gesteuert über die Subroutine 
+     INTDAT wurde als "Bezgugspunkt Breite" das Sohlgefälle und als "Bezugspunkt Höhe" der Bereitenwert eingelesen.
+     (Betroffene Routine: Intdat)
+
+3.)  Fehlerbehebung:
+     Bei der Berechnung der Rohrgeometrie in der Subroutine UF wurde für Kreis-, Maul- und Eiprofile angenommen, dass die 
+     Wasserspiegelbreite gleich dem benetzen Umfang ist.
+     (Betroffene Routine: Uf)      
+							
+							 Edgar Nehlsen & Monika Donner, 19.02.2008 
+
