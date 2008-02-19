@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.coverages;
 
+import java.util.Iterator;
+import java.util.TreeMap;
+import java.util.Map.Entry;
+
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.jts.JTSUtilities;
@@ -57,8 +61,8 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * This class should help handling coverages and profiles.
@@ -116,11 +120,11 @@ public class CoverageProfile
     LineString jtsCurve = (LineString) JTSAdapter.export( curve );
 
     /* Add every 1m a point. */
-    LineString newCurve = JTSUtilities.addPointsToLine( jtsCurve );
+    TreeMap<Double, Point> points = JTSUtilities.calculatePointsOnLine( jtsCurve );
 
     /* STEP 2: Compute the width and height for each point of the new line. */
     /* STEP 3: Create the new profile. */
-    IProfil profile = calculatePointsAndCreateProfile( GeoGridUtilities.toGrid( m_coverage ), newCurve );
+    IProfil profile = calculatePointsAndCreateProfile( GeoGridUtilities.toGrid( m_coverage ), points );
 
     /* STEP 4: Thin the profile. */
     thinProfile( profile, 10 );
@@ -133,15 +137,12 @@ public class CoverageProfile
    * 
    * @param grid
    *            The grid.
-   * @param curve
-   *            The curve, which points will be used as geo coordinates in the profile.
+   * @param points
+   *            All points of the new geo line.
    * @return The new profile.
    */
-  private IProfil calculatePointsAndCreateProfile( IGeoGrid grid, LineString curve ) throws Exception
+  private IProfil calculatePointsAndCreateProfile( IGeoGrid grid, TreeMap<Double, Point> points ) throws Exception
   {
-    /* The geometry factory. */
-    GeometryFactory factory = new GeometryFactory( curve.getPrecisionModel(), curve.getSRID() );
-
     /* Create the new profile. */
     IProfil profile = ProfilFactory.createProfil( m_type );
 
@@ -152,10 +153,17 @@ public class CoverageProfile
     IComponent cHoehe = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE );
 
     /* Iterate over all points in the curve. */
-    Coordinate[] coordinates = curve.getCoordinates();
-    for( Coordinate coordinate : coordinates )
+    Iterator<Entry<Double, Point>> iterator = points.entrySet().iterator();
+    while( iterator.hasNext() )
     {
+      /* Get the current entry set. */
+      Entry<Double, Point> entry = iterator.next();
+
+      Double distance = entry.getKey();
+      Point point = entry.getValue();
+
       /* Get grid value. */
+      Coordinate coordinate = point.getCoordinate();
       double value = grid.getValue( coordinate );
       if( value == Double.NaN )
         continue;
@@ -163,22 +171,22 @@ public class CoverageProfile
       /* All neccessary values. */
       double rechtswert = coordinate.x;
       double hochwert = coordinate.y;
-      double breite = JTSUtilities.pointDistanceOnLine( curve, factory.createPoint( coordinate ) );
+      double breite = distance;
       double hoehe = value;
 
       /* Create a new profile point. */
-      IRecord point = profile.createProfilPoint();
+      IRecord profilePoint = profile.createProfilPoint();
 
       /* Add geo values. */
-      point.setValue( cRechtswert, rechtswert );
-      point.setValue( cHochwert, hochwert );
+      profilePoint.setValue( cRechtswert, rechtswert );
+      profilePoint.setValue( cHochwert, hochwert );
 
       /* Add length section values. */
-      point.setValue( cBreite, breite );
-      point.setValue( cHoehe, hoehe );
+      profilePoint.setValue( cBreite, breite );
+      profilePoint.setValue( cHoehe, hoehe );
 
       /* Add the new point to the profile. */
-      profile.addPoint( point );
+      profile.addPoint( profilePoint );
     }
 
     return profile;
