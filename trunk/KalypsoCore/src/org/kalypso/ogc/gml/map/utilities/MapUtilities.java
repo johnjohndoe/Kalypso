@@ -102,39 +102,39 @@ public class MapUtilities
    *            This type of snapping will be used. {@link SNAP_TYPE}
    * @return The GM_Point snapped on the geometry.
    */
-  public static GM_Point snap( final MapPanel mapPanel, final GM_Object geometry, final Point p, final int radiusPx, final SNAP_TYPE type ) throws GM_Exception
+  public static GM_Point snap( MapPanel mapPanel, GM_Object geometry, Point p, int radiusPx, SNAP_TYPE type ) throws GM_Exception
   {
     /* Get the JTS geometry. */
-    final Geometry geometryJTS = JTSAdapter.export( geometry );
+    Geometry geometryJTS = JTSAdapter.export( geometry );
 
     /* Transform the point to a GM_Point. */
-    final GM_Point point = MapUtilities.transform( mapPanel, p );
+    GM_Point point = MapUtilities.transform( mapPanel, p );
     if( point == null )
       return null;
 
-    final com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
+    com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
 
     /* Buffer the point. */
-    final Geometry pointBuffer = pointJTS.buffer( MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx ) );
+    Geometry pointBuffer = pointJTS.buffer( MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx ) );
 
     if( !pointBuffer.intersects( geometryJTS ) )
       return null;
 
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
     {
-      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
+      com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
       if( snapPoint != null )
         return (GM_Point) JTSAdapter.wrap( snapPoint );
     }
     else if( geometryJTS instanceof LineString )
     {
-      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
+      com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
       if( snapPoint != null )
         return (GM_Point) JTSAdapter.wrap( snapPoint );
     }
     else if( geometryJTS instanceof Polygon )
     {
-      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
+      com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
       if( snapPoint != null )
         return (GM_Point) JTSAdapter.wrap( snapPoint );
     }
@@ -150,17 +150,17 @@ public class MapUtilities
    * @param p
    *            The AWT-Point.
    */
-  public static GM_Point transform( final MapPanel mapPanel, final Point p )
+  public static GM_Point transform( MapPanel mapPanel, Point p )
   {
-    final GeoTransform projection = mapPanel.getProjection();
-    final IMapModell mapModell = mapPanel.getMapModell();
+    GeoTransform projection = mapPanel.getProjection();
+    IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
       return null;
 
-    final CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
+    CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
 
-    final double x = p.getX();
-    final double y = p.getY();
+    double x = p.getX();
+    double y = p.getY();
 
     return GeometryFactory.createGM_Point( projection.getSourceX( x ), projection.getSourceY( y ), coordinatesSystem );
   }
@@ -173,12 +173,12 @@ public class MapUtilities
    * @param p
    *            The GM_Point.
    */
-  public static Point retransform( final MapPanel mapPanel, final GM_Point p )
+  public static Point retransform( MapPanel mapPanel, GM_Point p )
   {
-    final GeoTransform projection = mapPanel.getProjection();
+    GeoTransform projection = mapPanel.getProjection();
 
-    final double x = p.getX();
-    final double y = p.getY();
+    double x = p.getX();
+    double y = p.getY();
 
     return new Point( (int) projection.getDestX( x ), (int) projection.getDestY( y ) );
   }
@@ -194,12 +194,12 @@ public class MapUtilities
    *            The distance to be calculated.
    * @return The distance in the world coords.
    */
-  public static double calculateWorldDistance( final MapPanel mapPanel, final GM_Point reference, final int distancePx )
+  public static double calculateWorldDistance( MapPanel mapPanel, GM_Point reference, int distancePx )
   {
-    final Point point = MapUtilities.retransform( mapPanel, reference );
+    Point point = MapUtilities.retransform( mapPanel, reference );
     point.x = point.x + distancePx;
 
-    final GM_Point destination = MapUtilities.transform( mapPanel, point );
+    GM_Point destination = MapUtilities.transform( mapPanel, point );
     return destination.getX() - reference.getX();
   }
 
@@ -212,10 +212,10 @@ public class MapUtilities
    *            The distance in pixel to be calculated.
    * @return The distance in the world coordinates system.
    */
-  public static double calculateWorldDistance( final MapPanel mapPanel, final int distancePx )
+  public static double calculateWorldDistance( MapPanel mapPanel, int distancePx )
   {
-    final GM_Position minPosition = mapPanel.getBoundingBox().getMin();
-    final GM_Point reference = GeometryFactory.createGM_Point( minPosition.getX(), minPosition.getY(), mapPanel.getMapModell().getCoordinatesSystem() );
+    GM_Position minPosition = mapPanel.getBoundingBox().getMin();
+    GM_Point reference = GeometryFactory.createGM_Point( minPosition.getX(), minPosition.getY(), mapPanel.getMapModell().getCoordinatesSystem() );
 
     return MapUtilities.calculateWorldDistance( mapPanel, reference, distancePx );
   }
@@ -255,6 +255,10 @@ public class MapUtilities
     /* If it is the same as before, don't change anything. */
     if( mapScale == scale )
       return;
+
+    // TODO Transform to EPSG4XXX like in the function where the scale is calculated.
+    // Then calculate the new BBOX.
+    // Then retransform to the original CS.
 
     /* Get the current extent. */
     GM_Envelope extent = mapPanel.getBoundingBox();

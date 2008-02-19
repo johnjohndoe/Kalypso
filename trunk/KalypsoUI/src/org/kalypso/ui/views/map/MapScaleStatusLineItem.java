@@ -41,6 +41,9 @@
 package org.kalypso.ui.views.map;
 
 import java.awt.Point;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -146,23 +149,20 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
     /* The main composite */
     m_composite = new Composite( parent, SWT.NONE );
     GridLayout gridLayout = new GridLayout( 2, false );
-    gridLayout.marginWidth = 0;
-    gridLayout.horizontalSpacing = 0;
-    gridLayout.verticalSpacing = 0;
+    gridLayout.marginBottom = 0;
+    gridLayout.marginHeight = 0;
     m_composite.setLayout( gridLayout );
 
     /* Create the components. */
 
     /* Create the label. */
     Label label = new Label( m_composite, SWT.NONE );
-    label.setLayoutData( new GridData( SWT.END, SWT.TOP, false, false ) );
+    label.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, true ) );
     label.setText( "Scale 1 : " );
 
     /* Create the text. */
     m_text = new Text( m_composite, SWT.BORDER );
-    GridData gridData = new GridData( SWT.FILL, SWT.TOP, true, false );
-    gridData.heightHint = 10;
-    m_text.setLayoutData( gridData );
+    m_text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, true ) );
     m_text.setText( "" );
 
     /* Add the selection listener. */
@@ -234,7 +234,10 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
       if( m_text != null )
       {
         double mapScale = MapUtilities.getMapScale( m_panel );
-        m_text.setText( String.format( "%,.5f", mapScale ) );
+        BigDecimal bigScale = new BigDecimal( mapScale, new MathContext( 3, RoundingMode.HALF_UP ) );
+        String scaleString = bigScale.toPlainString();
+
+        m_text.setText( scaleString );
       }
     }
   }
@@ -247,7 +250,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
   {
     if( m_text != null && !m_text.isDisposed() )
     {
-      final UIJob job = new UIJob( "updating position label..." )
+      final UIJob job = new UIJob( "Updating scale box ..." )
       {
         @Override
         public IStatus runInUIThread( IProgressMonitor monitor )
@@ -255,7 +258,10 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
           if( m_text != null && !m_text.isDisposed() )
           {
             double mapScale = MapUtilities.getMapScale( source );
-            m_text.setText( String.format( "%,.5f", mapScale ) );
+            BigDecimal bigScale = new BigDecimal( mapScale, new MathContext( 3, RoundingMode.HALF_UP ) );
+            String scaleString = bigScale.toPlainString();
+
+            m_text.setText( scaleString );
           }
 
           return Status.OK_STATUS;

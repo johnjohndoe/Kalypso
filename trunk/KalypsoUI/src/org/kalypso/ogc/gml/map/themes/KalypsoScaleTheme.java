@@ -44,6 +44,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.LinkedList;
 
@@ -291,7 +294,8 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     if( scale > 0 )
     {
       g.drawString( scaleUnit.getName(), START_X, START_Y + FONT_HEIGHT );
-      String scaleString = "1:" + String.format( "%,.0f%n", scale );
+      BigDecimal bigScale = new BigDecimal( scale, new MathContext( 3, RoundingMode.HALF_UP ) );
+      String scaleString = "1:" + bigScale.toPlainString();
       int stringWidth = g.getFontMetrics().stringWidth( scaleString );
       g.drawString( scaleString, START_X + WIDTH_SCALE - stringWidth, START_Y + FONT_HEIGHT );
     }
