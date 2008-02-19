@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006    1:29 pm
+!     Last change:  EN   18 Feb 2008    4:36 pm
 !--------------------------------------------------------------------------
 ! This code, intda.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -748,8 +748,8 @@ DO 1000 j = 1, npr
       sohlg = feldr (3)
 
       sohlg = sohlg / ( - 1000.)
-      x1 (1) = feldr (3)
-      h1 (1) = feldr (4)
+      x1 (1) = feldr (4)
+      h1 (1) = feldr (5)
       np (j) = 1
       hmin = h1 (1)
       isohl = 1
