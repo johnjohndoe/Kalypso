@@ -212,4 +212,20 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
     // TODO Auto-generated method stub
     return null;
   }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMin()
+   */
+  public void setMin( final BigDecimal minValue )
+  {
+    // TODO Auto-generated method stub
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getMax()
+   */
+  public void setMax( final BigDecimal maxValue )
+  {
+    // TODO Auto-generated method stub
+  }
 }

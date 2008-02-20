@@ -51,4 +51,6 @@ public interface IWriteableGeoGrid extends IGeoGrid
   public void setValue( final int x, final int y, final double value ) throws GeoGridException;
 
   void setStatistically( final BigDecimal min, final BigDecimal max ) throws IOException;
+
+  public void saveStatistically( ) throws IOException;
 }

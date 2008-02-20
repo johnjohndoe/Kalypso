@@ -174,4 +174,24 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
   {
     return new BigDecimal( m_min );
   }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
+   */
+  public void setMax( BigDecimal maxValue ) throws GeoGridException
+  {
+    if( maxValue != null )
+      m_max = maxValue.doubleValue();
+
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
+   */
+  public void setMin( BigDecimal minValue ) throws GeoGridException
+  {
+    if( minValue != null )
+      m_max = minValue.doubleValue();
+
+  }
 }

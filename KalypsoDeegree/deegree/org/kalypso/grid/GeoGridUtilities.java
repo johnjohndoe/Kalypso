@@ -271,12 +271,13 @@ public class GeoGridUtilities
 
       ProgressUtilities.worked( monitor, 20 );
 
-      final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
+      final CopyGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
 
       grid.getWalkingStrategy().walk( grid, walker, progress.newChild( 70 ) );
 
-      final BigDecimal min = grid.getMin();
-      final BigDecimal max = grid.getMax();
+      final BigDecimal min = walker.getMin();
+      final BigDecimal max = walker.getMax();
+
       if( min != null && max != null )
         outputGrid.setStatistically( min, max );
 
@@ -450,6 +451,34 @@ public class GeoGridUtilities
   private static Coordinate toCoordinate( final IGeoGrid grid, final GeoGridCell cell ) throws GeoGridException
   {
     return toCoordinate( grid, cell.x, cell.y, null );
+  }
+
+  /**
+   * gets the min and max values for the given {@link ICoverageCollection}
+   */
+  public static BigDecimal[] getMinMax( ICoverageCollection covCollection ) throws Exception
+  {
+    BigDecimal[] minmax = new BigDecimal[2];
+
+    BigDecimal minValue = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    BigDecimal maxValue = new BigDecimal( Double.MIN_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+
+    for( ICoverage coverage : covCollection )
+    {
+      IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+
+      BigDecimal min = grid.getMin();
+      BigDecimal max = grid.getMax();
+
+      minValue = minValue.min( min );
+      maxValue = maxValue.max( max );
+    }
+
+    minmax[0] = minValue;
+    minmax[1] = maxValue;
+
+    return minmax;
+
   }
 
 }

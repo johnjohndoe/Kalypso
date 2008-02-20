@@ -196,4 +196,24 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
 
     return grid.getMin();
   }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
+   */
+  public void setMax( BigDecimal maxValue ) throws GeoGridException
+  {
+    final IGeoGrid grid = getGrid();
+    if( grid == null )
+      grid.setMax( maxValue );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
+   */
+  public void setMin( BigDecimal minValue ) throws GeoGridException
+  {
+    final IGeoGrid grid = getGrid();
+    if( grid == null )
+      grid.setMin( minValue );
+  }
 }
