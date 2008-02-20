@@ -5,5 +5,7 @@ Bundle-Version: 1.0.0
 Bundle-ClassPath: kalypsoModelWavos.jar
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ org.kalypso.core,
+ org.kalypso.services.calculation.local
 Eclipse-AutoStart: true
