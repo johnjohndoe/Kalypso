@@ -43,10 +43,13 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.model.wspm.ui.view.table.GenericComponentUiHandlerProvider;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 /**
  * @author kimwerner
@@ -64,7 +67,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#createLayer(org.kalypso.model.wspm.ui.view.chart.ProfilChartView,
    *      java.lang.String)
    */
-  public IProfilChartLayer[] addLayerToChart( ProfilChartView view, String layerId )
+  public IProfilChartLayer[] addLayerToChart( final ProfilChartView view, final String layerId )
   {
     view.getChart().addLayer( new ProfilOverlayLayer( view ), true );
     return m_TuhhLayerProvider.addLayerToChart( view, layerId );
@@ -73,7 +76,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getAddableLayers(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
-  public String[] getAddableLayers( ProfilChartView view )
+  public String[] getAddableLayers( final ProfilChartView view )
   {
     return m_TuhhLayerProvider.getAddableLayers( view );
   }
@@ -82,7 +85,7 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getLayer(java.lang.String,
    *      org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
-  public IProfilChartLayer[] getLayer( String layerId, ProfilChartView view )
+  public IProfilChartLayer[] getLayer( final String layerId, final ProfilChartView view )
   {
     final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>();
     layers.addAll( Arrays.asList( m_TuhhLayerProvider.getLayer( layerId, view ) ) );
@@ -106,9 +109,17 @@ public class ProfilOverlayLayerProvider implements IProfilLayerProvider
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#providesLayer(java.lang.String)
    */
-  public boolean providesLayer( String layerId )
+  public boolean providesLayer( final String layerId )
   {
     return IWspmOverlayConstants.LAYER_OVERLAY.equals( layerId ) ? true : m_TuhhLayerProvider.providesLayer( layerId );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getComponentUiHandlerProvider(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile )
+  {
+    return new GenericComponentUiHandlerProvider( profile );
   }
 
 }
