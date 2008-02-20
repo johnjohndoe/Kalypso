@@ -141,4 +141,5 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
 
     return "";
   }
+
 }
