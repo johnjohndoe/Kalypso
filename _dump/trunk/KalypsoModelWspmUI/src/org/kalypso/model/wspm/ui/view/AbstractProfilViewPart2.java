@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -92,7 +91,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   /**
    * Constructor to add an own ActionContributor.
    */
-  public AbstractProfilViewPart2( ProfilChartViewActionBarContributor actionContributor )
+  public AbstractProfilViewPart2( final ProfilChartViewActionBarContributor actionContributor )
   {
     m_actionContributor = actionContributor;
   }
@@ -112,10 +111,12 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     m_actionContributor.contributeTo( actionBars.getToolBarManager() );
     m_actionContributor.contributeTo( actionBars.getStatusLineManager() );
   }
-public IProfil getProfil()
-{
-  return m_profile;
-}
+
+  public IProfil getProfil( )
+  {
+    return m_profile;
+  }
+
   public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
     final IProfilProvider2 provider = (IProfilProvider2) adapter;
@@ -276,25 +277,16 @@ public IProfil getProfil()
     return m_control;
   }
 
-  
-
   public ProfilViewData getProfilViewData( )
   {
     return m_viewData;
   }
 
-  public IFile getFile( )
-  {
-    return m_provider == null ? null : m_provider.getFile();
-  }
-
   /** Used internally. Must be called in the SWT-Thread. */
   protected void handleProfilChanged( )
   {
-    final IFile file = m_provider == null ? null : m_provider.getFile();
-
     final String partName = m_profile == null ? "Profil Diagrammansicht" : "Station km " + m_profile.getStation();
-    final String tooltip = file == null ? null : file.getFullPath().toOSString();
+    final String tooltip = null;
 
     setPartNames( partName, tooltip );
 

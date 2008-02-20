@@ -386,7 +386,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
   {
     if( file == null )
     {
-      setProfil( null, null );
+      setProfil( null );
       return;
     }
 
@@ -418,13 +418,13 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
           if( monitor.isCanceled() )
             return Status.CANCEL_STATUS;
 
-          setProfil( profil, file );
+          setProfil( profil );
 
           return Status.OK_STATUS;
         }
         catch( final Exception e )
         {
-          setProfil( null, null );
+          setProfil( null );
           return new Status( IStatus.ERROR, AbstractUIPluginExt.ID, 0, "Fehler beim Laden eines Profils:\n" + e.getLocalizedMessage(), e );
         }
         finally
@@ -440,25 +440,24 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     job.schedule();
   }
 
-  public synchronized void setProfil( final IProfil profile, final IFile file )
+  public synchronized void setProfil( final IProfil profile )
   {
     final IProfil oldProfile = m_profilPart.getProfil();
     final ProfilViewData oldViewData = m_profilPart.getViewData();
 
     if( oldProfile == null && oldViewData != null && profile != null )
     {
- 
       if( profile != null )
         for( final IComponent markerId : profile.getPointMarkerTypes() )
           oldViewData.setMarkerVisibility( markerId, true );
     }
 
-    m_profilPart.setProfil( profile, file, getEditorSite().getId() );
+    m_profilPart.setProfil( profile );
 
     fireOnProfilProviderChanged( oldProfile, m_profilPart.getProfil(), oldViewData, m_profilPart.getViewData() );
 
     // TODO: remove this, it is deprecated
-    //fireProfilChanged( pem == null ? null : pem.getProfil() );
+    // fireProfilChanged( pem == null ? null : pem.getProfil() );
 
     fireDirtyChanged();
   }
@@ -503,6 +502,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -653,8 +653,6 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( e.getStatus() );
     }
   }
-
- 
 
   public void runChartAction( final ProfilChartActionsEnum chartAction )
   {

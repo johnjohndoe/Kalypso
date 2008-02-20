@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.AbstractProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -104,9 +105,14 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   /** Flag to prevent update when source of model change is this */
   private boolean m_lockNextModelChange = false;
 
-  public FeatureSelectionProfileProvider( final ISelectionProvider provider )
+  private final String m_editorID;
+
+  private ValidationProfilListener m_profilValidator;
+
+  public FeatureSelectionProfileProvider( final ISelectionProvider provider, final String editorID )
   {
     m_provider = provider;
+    m_editorID = editorID;
 
     m_provider.addSelectionChangedListener( this );
     selectionChanged( new SelectionChangedEvent( m_provider, m_provider.getSelection() ) );
@@ -145,24 +151,6 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     // so we need to know the model-type (such as tuhh) and
     // delegate the search for results to model-specific code.
     return results.toArray( new IStationResult[results.size()] );
-  }
-
-  /**
-   * @see com.bce.profil.ui.view.IProfilProvider2#getEventManager()
-   */
-// public IProfilEventManager getEventManager( )
-// {
-// return m_pem;
-// }
-  /**
-   * @deprecated Use {@link #getProfile()} instead
-   */
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider2#getEventManager()
-   */
-  public IProfil getEventManager( )
-  {
-    return getProfile();
   }
 
   /**
@@ -212,6 +200,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       return;
 
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
+    {
       try
       {
         final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );
@@ -227,6 +216,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
+    }
   }
 
   /**
@@ -260,6 +250,14 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  public void onProblemMarkerChanged( final IProfil source )
+  {
+    // Nothing to do: this class is probably the source for the event anyway
+  }
+
+  /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
   public void selectionChanged( final SelectionChangedEvent event )
@@ -285,12 +283,18 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
           profileMember = ProfileFeatureProvider.findProfile( feature );
           if( profileMember != null )
           {
-            profile = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+            final Feature pf = profileMember.getFeature();
+            // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
+            // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
+            // and directly set the prefered type.
+            if( ProfileFeatureFactory.getProfileType( pf ) == null )
+              ProfileFeatureFactory.setProfileType( pf, "org.kalypso.model.wspm.tuhh.profiletype" );
+
+            profile = ProfileFeatureFactory.toProfile( pf );
             results = findResults( profileMember );
             break;
           }
         }
-
       }
     }
     catch( final Exception e )
@@ -300,7 +304,10 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     }
 
     if( profileMember == null )
+    {
+      setProfile( null, results, null, null );
       return;
+    }
 
     final Feature feature = profileMember == null ? null : profileMember.getFeature();
     final CommandableWorkspace workspace = fs.getWorkspace( feature );
@@ -323,7 +330,15 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     m_profile = profil;
 
     if( m_profile != null )
+    {
       m_profile.addProfilListener( this );
+
+      if( m_profile != null && m_file != null )
+      {
+        m_profilValidator = new ValidationProfilListener( m_profile, m_file, m_editorID );
+        m_profile.addProfilListener( m_profilValidator );
+      }
+    }
 
     if( m_feature != null )
       m_feature.getWorkspace().addModellListener( this );
@@ -341,6 +356,13 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
     if( m_profile != null )
     {
+      if( m_profilValidator != null )
+      {
+        m_profile.removeProfilListener( m_profilValidator );
+        m_profilValidator.dispose();
+        m_profilValidator = null;
+      }
+
       m_profile.removeProfilListener( this );
       m_profile = null;
     }

@@ -65,7 +65,7 @@ public class ProfilFactory
 
     profile.setName( observation.getName() );
     profile.setDescription( observation.getDescription() );
-    profile.setMedataList( observation.getMetadataList() );
+    profile.setMedataList( observation.getMetadataList() ); // ?? really necessary?
     profile.setPhenomenon( observation.getPhenomenon() );
 
     return profile;

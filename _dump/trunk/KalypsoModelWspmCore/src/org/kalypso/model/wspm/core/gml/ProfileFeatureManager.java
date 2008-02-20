@@ -84,7 +84,8 @@ public class ProfileFeatureManager
     if( profil == null )
     {
       /* profile type */
-      final String type = (String) profileFeature.getProperty( ProfileFeatureFactory.QNAME_TYPE );
+      final String type = ProfileFeatureFactory.getProfileType( profileFeature );
+
       if( type == null )
         return null;
 

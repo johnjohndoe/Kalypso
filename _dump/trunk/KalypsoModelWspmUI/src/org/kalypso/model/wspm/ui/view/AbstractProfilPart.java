@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.commands.operations.IOperationHistory;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
@@ -56,7 +55,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
-import org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
@@ -102,11 +100,8 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   private IProfil m_profile;
 
-  private ValidationProfilListener m_profilValidator;
-  
   private IProfilLayerProvider m_layerProvider;
-  
-  
+
   public Control createPartControl( final Composite parent )
   {
     m_control = new Composite( parent, SWT.NONE );
@@ -135,12 +130,6 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
     if( m_profile != null )
     {
-      if( m_profilValidator != null )
-      {
-        m_profile.removeProfilListener( m_profilValidator );
-        m_profilValidator.dispose();
-        m_profilValidator = null;
-      }
       // die undo queue für dieses profil löschen
       final IOperationHistory operationHistory = getUndoHistory();
       operationHistory.dispose( getUndoContext(), true, true, true );
@@ -148,7 +137,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     m_profile = null;
   }
 
-  public void updateControl()
+  public void updateControl( )
   {
     if( m_chartview != null )
     {
@@ -185,7 +174,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
       // setContentDescription( (kommentare == null) ? "" : kommentare.toString() );
       m_chartview = new ProfilChartView( m_profile, m_viewdata, m_profilColorRegistry );
-      m_chartview.setLayerProvider(m_layerProvider);
+      m_chartview.setLayerProvider( m_layerProvider );
       m_chartview.createControl( m_control, SWT.BORDER );
       m_chartview.restoreState( m_viewdata.getChartMemento() );
 
@@ -214,16 +203,8 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       m_control.setFocus();
   }
 
-  public synchronized void setProfil( final IProfil profile, final IFile file, final String editorID )
+  public synchronized void setProfil( final IProfil profile )
   {
-    if( m_profilValidator != null )
-    {
-      if( m_profile != null )
-        m_profile.removeProfilListener( m_profilValidator );
-      m_profilValidator.dispose();
-      m_profilValidator = null;
-    }
-
     // die undo queue für dieses profil löschen
     if( m_profile != null )
     {
@@ -232,13 +213,6 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     }
 
     m_profile = profile;
-    m_profilValidator = null;
-
-    if( m_profile != null && file != null )
-    {
-      m_profilValidator = new ValidationProfilListener( m_profile, file, editorID );
-      m_profile.addProfilListener( m_profilValidator );
-    }
 
     if( m_control != null && !m_control.isDisposed() )
     {
@@ -250,6 +224,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -291,7 +266,6 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       chartlegend.saveState( m_viewdata.getLegendMemento() );
   }
 
-  
   public void runChartAction( final ProfilChartActionsEnum chartAction )
   {
     if( m_chartview != null )
@@ -317,14 +291,14 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#removeProfilChartViewProviderListener(org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
    */
-  public void removeProfilChartViewProviderListener( IProfilChartViewProviderListener l )
+  public void removeProfilChartViewProviderListener( final IProfilChartViewProviderListener l )
   {
     m_listener.remove( l );
   }
 
   private void fireOnProfilChartViewChanged( )
   {
-    for( IProfilChartViewProviderListener l : m_listener )
+    for( final IProfilChartViewProviderListener l : m_listener )
       l.onProfilChartViewChanged( getProfilChartView() );
   }
 

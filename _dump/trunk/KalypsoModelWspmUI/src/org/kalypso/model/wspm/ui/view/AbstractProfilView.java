@@ -131,6 +131,10 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   {
   }
 
-  
-
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  public void onProblemMarkerChanged( final IProfil source )
+  {
+  }
 }

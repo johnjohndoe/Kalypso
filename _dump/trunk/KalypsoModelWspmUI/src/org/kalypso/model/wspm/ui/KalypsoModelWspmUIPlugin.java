@@ -67,7 +67,7 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -76,7 +76,7 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
     plugin = null;
@@ -94,10 +94,10 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
    * Returns an image descriptor for the image file at the given plug-in relative path.
    * 
    * @param path
-   *          the path
+   *            the path
    * @return the image descriptor
    */
-  public static ImageDescriptor getImageDescriptor( String path )
+  public static ImageDescriptor getImageDescriptor( final String path )
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.wspm", path );
   }

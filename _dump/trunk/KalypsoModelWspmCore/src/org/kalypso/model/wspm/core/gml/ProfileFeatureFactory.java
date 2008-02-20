@@ -217,4 +217,14 @@ public class ProfileFeatureFactory implements IWspmConstants
     return m_profileManager.getProfile( profileFeature );
   }
 
+  public static String getProfileType( final Feature profileFeature )
+  {
+    return (String) profileFeature.getProperty( ProfileFeatureFactory.QNAME_TYPE );
+  }
+
+  public static void setProfileType( final Feature profileFeature, final String type )
+  {
+    profileFeature.setProperty( ProfileFeatureFactory.QNAME_TYPE, type );
+  }
+
 }

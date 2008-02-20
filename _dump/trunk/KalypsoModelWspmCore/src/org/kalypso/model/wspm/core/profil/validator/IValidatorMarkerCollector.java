@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.validator;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 
 public interface IValidatorMarkerCollector
@@ -72,4 +73,6 @@ public interface IValidatorMarkerCollector
    * @throws CoreException
    */
   public void reset( ) throws CoreException;
+
+  public IMarker[] getMarkers( );
 }

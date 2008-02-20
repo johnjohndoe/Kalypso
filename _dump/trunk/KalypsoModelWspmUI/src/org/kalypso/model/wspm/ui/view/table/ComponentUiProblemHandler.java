@@ -40,12 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.CellEditor;
@@ -57,12 +52,16 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 
 /**
+ * TODO: show marker text as tooltip<br>
+ * TODO: open dialog that shows all markers if user clicks on marker (use cell-editor)
+ * 
  * @author Gernot Belger
  * @author Kim Werner
  */
@@ -163,43 +162,24 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    */
   public String getStringRepresentation( final IRecord record )
   {
-    // TODO: find problem for record
-    final Map<IRecord, Collection<IMarker>> markerIndex = new HashMap<IRecord, Collection<IMarker>>(); // ((ProfilContentProvider)
-    // contentProvider).getMarkerIndex();
-
-    final Collection<IMarker> markers = markerIndex.get( record );
-    final Integer severity = worstOf( markers );
-    final IComponent deviderTyp = getDeviderTyp( record );
-    if( severity != null )
-    {
-      // TODO: das bei 'getImage()
-// if( IMarker.SEVERITY_ERROR == severity )
-// return m_imgRegistry.get( IMAGE_ERROR );
-// if( IMarker.SEVERITY_WARNING == severity )
-// return m_imgRegistry.get( IMAGE_WARNING );
-
-      // TODO: text des schlimmsten markers, bzw. nix: dann tooltip stattdessen
-      return "" + severity;
-    }
-
     return "";
   }
 
-  // TODO: add to interface and use in label provider
   public Image getImage( final IRecord record )
   {
-    // TODO: find problem for record
-    final Map<IRecord, Collection<IMarker>> markerIndex = new HashMap<IRecord, Collection<IMarker>>(); // ((ProfilContentProvider)
-    // contentProvider).getMarkerIndex();
+    final MarkerIndex markerIndex = m_profile.getProblemMarker();
 
-    final Collection<IMarker> markers = markerIndex.get( record );
-    final Integer severity = worstOf( markers );
-    if( severity != null )
+    final IMarker[] markers = markerIndex.get( record );
+    final IMarker worst = MarkerUtils.worstOf( markers );
+    if( worst != null )
     {
+      final int severity = MarkerUtils.getSeverity( worst );
       if( IMarker.SEVERITY_ERROR == severity )
         return m_imgRegistry.get( IMAGE_ERROR );
       if( IMarker.SEVERITY_WARNING == severity )
         return m_imgRegistry.get( IMAGE_WARNING );
+// if( IMarker.SEVERITY_INFO == severity )
+// return m_imgRegistry.get( IMAGE_INFO );
     }
 
     final IComponent deviderTyp = getDeviderTyp( record );
@@ -214,6 +194,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    */
   public boolean isEditable( )
   {
+    // TODO: set to true and implement editor
     return false;
   }
 
@@ -239,34 +220,6 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    */
   public void setValue( final IRecord record, final Object value )
   {
-  }
-
-  private Integer worstOf( final Collection<IMarker> markers )
-  {
-    if( markers == null )
-      return null;
-
-    Integer severity = null;
-    try
-    {
-      for( final IMarker marker : markers )
-      {
-        // if it is an error, immediatly return
-        final Integer sev = (Integer) marker.getAttribute( IMarker.SEVERITY );
-        if( sev.equals( IMarker.SEVERITY_ERROR ) )
-          return sev;
-
-        // else remember it, but maybe it gets worse
-        if( sev.equals( IMarker.SEVERITY_WARNING ) )
-          severity = sev;
-      }
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-
-    return severity;
   }
 
   public final IComponent getDeviderTyp( final IRecord point )

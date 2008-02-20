@@ -45,8 +45,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -66,6 +64,7 @@ import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -73,18 +72,14 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
@@ -96,13 +91,13 @@ import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * TableView für ein Profil. Ist eine feste View auf genau einem(!) Editor.
+ * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
  * 
- * @author belger
+ * @author Gernot Belger
  */
-public class TableView extends ViewPart implements IPropertyChangeListener, IAdapterEater, IProfilProviderListener, ITupleResultViewerProvider
+public class TableView extends ViewPart implements IAdapterEater<IProfilProvider2>, IProfilProviderListener, ITupleResultViewerProvider
 {
-  private final AdapterPartListener m_profilProviderListener = new AdapterPartListener( IProfilProvider2.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
+  private final AdapterPartListener<IProfilProvider2> m_profilProviderListener = new AdapterPartListener<IProfilProvider2>( IProfilProvider2.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
   private Composite m_control;
 
@@ -118,76 +113,36 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
   private TupleResultLabelProvider m_tupleResultLabelProvider;
 
+  // TODO: consider moving this in the contentprovider: to do this, extends the TupleResultContentProvider to a
+  // ProfileContentProvider
   private final IProfilListener m_profileListener = new IProfilListener()
   {
     public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
     {
       if( hint.isActivePointChanged() )
       {
-        for( IProfilChange change : changes )
+        new UIJob( "updating cross section table..." )
         {
-          if( change instanceof ActiveObjectEdit )
+          @Override
+          public IStatus runInUIThread( IProgressMonitor monitor )
           {
-            final IRecord point = (IRecord) change.getObjects()[0];
-            new UIJob( "updating cross section table..." )
-            {
-              @Override
-              public IStatus runInUIThread( IProgressMonitor monitor )
-              {
-                // updateControl();
-
-                m_view.setSelection( new StructuredSelection( point ) );
-                m_view.reveal( point );
-                return Status.OK_STATUS;
-              }
-            }.schedule();
+            final IRecord activePoint = m_profile.getActivePoint();
+            m_view.setSelection( new StructuredSelection( activePoint ) );
+            m_view.reveal( activePoint );
+            return Status.OK_STATUS;
           }
-          break;
-        }
+        }.schedule();
       }
     }
-  };
 
-  private final ITupleResultChangedListener m_changedListener = new ITupleResultChangedListener()
-  {
-    public void componentsChanged( final IComponent[] components, final TYPE type )
+    /**
+     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+     */
+    public void onProblemMarkerChanged( IProfil source )
     {
-      // FIXME
-      /** not fired, because of eventloops with pem */
-// final ProfilChangeHint hint = new ProfilChangeHint();
-// hint.setProfilPropertyChanged( true );
-//
-// m_pem.fireProfilChanged( hint, new IProfilChange[] {} );
-    }
-
-    public void recordsChanged( final IRecord[] records, final TYPE type )
-    {
-      // FIXME
-      /** not fired, because of eventloops with pem */
-// final ProfilChangeHint hint = new ProfilChangeHint();
-// hint.setPointsChanged();
-//
-// m_pem.fireProfilChanged( hint, new IProfilChange[] { new TupleResultChange() } );
-    }
-
-    public void valuesChanged( final ValueChange[] changes )
-    {
-// final List<IProfilChange> profileChanges = new ArrayList<IProfilChange>();
-//
-// for( ValueChange change : changes )
-// {
-// IRecord record = change.getRecord();
-// int compIndex = change.getComponent();
-// final IComponent component = record.getOwner().getComponent( compIndex );
-//
-// Object value = change.getNewValue();
-//
-// profileChanges.add( new PointPropertyEdit( record, component, value ) );
-// }
-//
-// final ProfilOperation operation = new ProfilOperation( "Applying profile changes...", m_profile,
-// profileChanges.toArray( new IProfilChange[] {} ), true );
-// new ProfilOperationJob( operation ).schedule();
+      // TODO: only refresh what we need
+// m_view.update( source.getResult().toArray(), null );
+      ViewerUtilities.refresh( m_view, true );
     }
   };
 
@@ -205,8 +160,6 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     m_menuManager = new MenuManager();
     m_menuManager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
-
-    KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener( this );
   }
 
   @Override
@@ -221,7 +174,6 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     m_menuManager = null;
 
     unhookProvider();
-    unregisterGlobalActions();
 
     if( m_tupleResultContentProvider != null )
       m_tupleResultContentProvider.dispose();
@@ -236,8 +188,6 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     if( m_control != null )
       m_control.dispose();
-
-    KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener( this );
   }
 
   private void unhookProvider( )
@@ -290,8 +240,6 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
       }
     } );
 
-    registerGlobalActions( m_view );
-
     m_control.layout();
 
     updateControl();
@@ -337,12 +285,11 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     m_view.getTable().setVisible( true );
 
     final IProfilLayerProvider layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
-    final IComponentUiHandlerProvider handler = layerProvider.getComponentUiHandlerProvider( m_profile );
-
+    final IComponentUiHandlerProvider handlerProvider = layerProvider.getComponentUiHandlerProvider( m_profile );
     if( m_view.getContentProvider() != null )
       m_view.setInput( null ); // Reset input in order to avoid double refresh
 
-    m_tupleResultContentProvider = new TupleResultContentProvider( handler );
+    m_tupleResultContentProvider = new TupleResultContentProvider( handlerProvider );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
 
     m_view.setContentProvider( m_tupleResultContentProvider );
@@ -351,57 +298,11 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType( KalypsoCorePlugin.getDefault().getSelectionManager(), ObservationFeatureFactory.OM_OBSERVATION );
     if( obsFeatures.length > 0 )
-    {
       m_view.setInput( m_profile.getResult() );
-
-      final TupleResult result = m_profile.getResult();
-      result.remove( m_changedListener );
-      result.addChangeListener( m_changedListener );
-    }
     else
       m_view.setInput( null );
 
     m_view.getControl().getParent().layout();
-  }
-
-  private void registerGlobalActions( final DefaultTableViewer tableView )
-  {
-    // final IActionBars actionBars = getViewSite().getActionBars();
-
-    // TODO: we can't do that, because then caopy/paste within a cell does not work any more
-    // actionBars.setGlobalActionHandler( ActionFactory.COPY.getId(), tableView.getAction(
-    // ProfilSWTTableView.ACTION_COPY ) );
-    // actionBars.setGlobalActionHandler( ActionFactory.PASTE.getId(), tableView.getAction(
-    // ProfilSWTTableView.ACTION_PASTE ) );
-    // actionBars.setGlobalActionHandler( ActionFactory.DELETE.getId(), tableView.getAction(
-    // ProfilSWTTableView.ACTION_DELETEPOINTS ) );
-    // actionBars.setGlobalActionHandler( ActionFactory.SELECT_ALL.getId(), tableView.getAction(
-    // ProfilSWTTableView.ACTION_SELECTALL ) );
-    // actionBars.setGlobalActionHandler( ProfilchartEditorContributor.RETARGET_INSERT, tableView.getAction(
-    // ProfilSWTTableView.ACTION_INSERTPOINT ) );
-
-    // actionBars.updateActionBars();
-  }
-
-  private void unregisterGlobalActions( )
-  {
-// final IActionBars actionBars = getViewSite().getActionBars();
-
-    // actionBars.setGlobalActionHandler( ActionFactory.COPY.getId(), null );
-    // actionBars.setGlobalActionHandler( ActionFactory.PASTE.getId(), null );
-    // actionBars.setGlobalActionHandler( ActionFactory.DELETE.getId(), null );
-// actionBars.setGlobalActionHandler( ActionFactory.SELECT_ALL.getId(), null );
-// actionBars.setGlobalActionHandler( ProfilchartEditorContributor.RETARGET_INSERT, null );
-//
-// actionBars.updateActionBars();
-  }
-
-  /**
-   * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
-   */
-  public void propertyChange( final PropertyChangeEvent event )
-  {
-    // FIXME wie spalten, die hinzukommen
   }
 
   /** Must be called in the swt thread */
@@ -415,10 +316,8 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
-  public void setAdapter( final IWorkbenchPart part, final Object adapter )
+  public void setAdapter( final IWorkbenchPart part, final IProfilProvider2 provider )
   {
-    final IProfilProvider2 provider = (IProfilProvider2) adapter;
-
     if( m_provider == provider && provider != null )
       return;
 

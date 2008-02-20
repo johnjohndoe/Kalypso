@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -47,9 +50,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollector
 {
@@ -61,14 +61,16 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
 
   private final String m_editorID;
 
-  private final XStream m_xstream;
+  private final List<IMarker> m_markers = new ArrayList<IMarker>();
+
+// private final XStream m_xstream;
 
   public ResourceValidatorMarkerCollector( final IResource resource, final String editorID )
   {
     m_resource = resource;
     m_editorID = editorID;
 
-    m_xstream = new XStream( new DomDriver() );
+// m_xstream = new XStream( new DomDriver() );
 
   }
 
@@ -97,11 +99,21 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
         resSerialised };
 
     marker.setAttributes( USED_ATTRIBUTES, values );
+
+    m_markers.add( marker );
   }
 
   public void reset( ) throws CoreException
   {
     m_resource.deleteMarkers( KalypsoModelWspmUIPlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector#getMarkers()
+   */
+  public IMarker[] getMarkers( )
+  {
+    return m_markers.toArray( new IMarker[m_markers.size()] );
   }
 
 }

@@ -91,7 +91,6 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
 
   public Rectangle2D getBounds( )
   {
-
     final IRecord[] points = m_profile.getPoints();
     Rectangle2D bounds = null;
     for( final IRecord p : points )
@@ -107,6 +106,10 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
       else
         bounds.add( area );
     }
+
+    if( bounds == null )
+      return null;
+
     bounds.add( bounds.getX(), bounds.getMinY() * 0.9 );
     return bounds;
   }

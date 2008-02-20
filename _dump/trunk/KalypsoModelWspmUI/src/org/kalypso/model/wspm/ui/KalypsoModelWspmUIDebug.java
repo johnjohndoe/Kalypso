@@ -38,34 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.table.swt.handlers;
+package org.kalypso.model.wspm.ui;
 
-import java.util.LinkedList;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.changes.PointMove;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
+import org.kalypso.contribs.eclipse.core.runtime.Debug;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
-public class MoveUpHandler extends AbstractSWTTableHandler
+public class KalypsoModelWspmUIDebug
 {
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.table.swt.handlers.AbstractSWTTableHandler#doAction(java.util.LinkedList,
-   *      org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
-   */
-  @Override
-  public IStatus executeEvent( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
-  {
-    final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointMove( tableView.getProfil(), selection, -1 ), true );
-    new ProfilOperationJob( operation ).schedule();
-    return Status.OK_STATUS;
-  }
-
+  public final static Debug DEBUG_VALIDATION_MARKER = new Debug( KalypsoModelWspmUIPlugin.getDefault(), "/debug/validationMarkers/table" );
 }

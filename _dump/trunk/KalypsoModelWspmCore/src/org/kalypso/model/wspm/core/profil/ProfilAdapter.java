@@ -38,33 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.table.swt.handlers;
+package org.kalypso.model.wspm.core.profil;
 
-import java.util.LinkedList;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.changes.PointMove;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 
 /**
- * @author kimwerner
+ * Empty implementation of {@link IProfilListener}.
+ * 
+ * @author belger
  */
-public class MoveDownHandler extends AbstractSWTTableHandler
+public class ProfilAdapter implements IProfilListener
 {
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  public void onProblemMarkerChanged( final IProfil source )
+  {
+    // nothing to do, overwrite to implement
+  }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.table.swt.handlers.AbstractSWTTableHandler#doAction(java.util.LinkedList,
-   *      org.kalypso.model.wspm.ui.view.table.swt.ProfilSWTTableView)
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
-  @Override
-  public IStatus executeEvent( LinkedList<IProfilPoint> selection, ProfilSWTTableView tableView )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    final ProfilOperation operation = new ProfilOperation( "", tableView.getProfilEventManager(), new PointMove( tableView.getProfil(), selection, 1 ), true );
-    new ProfilOperationJob( operation ).schedule();
-    return Status.OK_STATUS;
+    // nothing to do, overwrite to implement
   }
+
 }

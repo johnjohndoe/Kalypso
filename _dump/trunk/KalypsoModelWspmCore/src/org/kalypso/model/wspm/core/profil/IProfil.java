@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.eclipse.core.resources.IMarker;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -223,4 +224,15 @@ public interface IProfil extends IObservation<TupleResult>
   public void setProperty( final Object key, final Object value );
 
   public void setStation( final double station );
+
+  /**
+   * Returns the current problem markers, if any, attached to this profile.
+   */
+  public MarkerIndex getProblemMarker( );
+
+  /**
+   * Sets the current problem markers of this profile.<br>
+   * A profile event is fired upon this action.
+   */
+  public void setProblemMarker( IMarker[] markers );
 }

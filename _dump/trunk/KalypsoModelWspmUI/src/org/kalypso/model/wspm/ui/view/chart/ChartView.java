@@ -42,8 +42,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.AbstractProfilPart;
@@ -78,14 +77,7 @@ public class ChartView extends AbstractProfilViewPart2
   {
     final Control control = m_profilPart.createPartControl( parent );
 
-    final String editorID;
-    final IWorkbenchPart part = getProfileProviderPart();
-    if( part instanceof IEditorPart )
-      editorID = part.getSite().getId();
-    else
-      editorID = null;
-
-    m_profilPart.setProfil( getProfil(), getFile(), editorID );
+    m_profilPart.setProfil( getProfil() );
 
     return control;
   }
@@ -109,8 +101,17 @@ public class ChartView extends AbstractProfilViewPart2
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  public void onProblemMarkerChanged( final IProfil source )
+  {
+    // do nothing the ProfilChartView is itself a listener on the profile
+  }
+
+  /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {

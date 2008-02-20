@@ -65,103 +65,70 @@ import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
  */
 public class ValidationProfilListener implements IProfilListener
 {
-  private final ValidatorRuleSet m_rules;
+  private final IPropertyChangeListener m_propertyListener;
 
-  // private ReparatorRuleSet m_reparatorRules = KalypsoModelWspmCorePlugin.getDefault().createReparatorRuleSet();
-
-  private final IProfil m_profile;
-
-  private IPropertyChangeListener m_propertyListener;
-
-  private IPreferenceStore m_preferenceStore;
-
-  private final IFile m_file;
-
-  private final String m_editorID;
-
-  private final ResourceValidatorMarkerCollector m_collector;
+  private final WorkspaceJob m_validateJob;
 
   public ValidationProfilListener( final IProfil profile, final IFile file, final String editorID )
   {
-    // validierung (re-)initialisieren
-    // TODO: das (WspWin-)Projekt weiss, welcher Art es ist
+    final String profiletype = profile == null ? null : profile.getType();
 
-    m_profile = profile;
-    m_file = file;
-    m_editorID = editorID;
+    final ValidatorRuleSet rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
-    final String profiletype = m_profile == null ? null : m_profile.getType();
-    m_rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
+    m_validateJob = new WorkspaceJob( "Profil wird validiert" )
+    {
+      @Override
+      public IStatus runInWorkspace( final IProgressMonitor monitor )
+      {
+        final IPreferenceStore preferenceStore = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
+        final boolean validate = preferenceStore.getBoolean( PreferenceConstants.P_VALIDATE_PROFILE );
+        final String excludes = preferenceStore.getString( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
 
-    m_collector = new ResourceValidatorMarkerCollector( m_file, m_editorID );
+        final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( file, editorID );
+
+        try
+        {
+          // TODO: only reset markers of this profile
+          collector.reset();
+
+          // TODO: use monitor and check for cancel
+          final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ) );
+
+          profile.setProblemMarker( collector.getMarkers() );
+
+          return status;
+        }
+        catch( final CoreException e )
+        {
+          return e.getStatus();
+        }
+      }
+    };
+    m_validateJob.setRule( file.getWorkspace().getRuleFactory().markerRule( file ) );
 
     m_propertyListener = new IPropertyChangeListener()
     {
       public void propertyChange( final PropertyChangeEvent event )
       {
         if( PreferenceConstants.P_VALIDATE_PROFILE.equals( event.getProperty() ) || PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE.equals( event.getProperty() ) )
-          revalidate();
+          revalidate(); // TODO: validate all profiles... in that case!
       }
     };
-    m_preferenceStore = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
-    m_preferenceStore.addPropertyChangeListener( m_propertyListener );
+
+    KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener( m_propertyListener );
 
     revalidate();
   }
 
   public void dispose( )
   {
-    try
-    {
-      m_collector.reset();
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-
     KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener( m_propertyListener );
   }
 
   protected void revalidate( )
   {
-    // bisserl hack, aber der richtige zeitpunkt, um das profil zu validieren
-    // if( m_reparatorRules.repairProfile( m_pem.getProfil() ) )
-    // return;
-
-    final boolean validate = m_preferenceStore.getBoolean( PreferenceConstants.P_VALIDATE_PROFILE );
-    final String excludes = m_preferenceStore.getString( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
-
-    final ValidatorRuleSet rules = m_rules;
-    final IValidatorMarkerCollector collector = m_collector;
-
-    final WorkspaceJob job = new WorkspaceJob( "Profil wird validiert" )
-    {
-      @Override
-      public IStatus runInWorkspace( final IProgressMonitor monitor )
-      {
-        try
-        {
-          collector.reset();
-        }
-        catch( final CoreException e )
-        {
-          return e.getStatus();
-        }
-
-        return rules.validateProfile( m_profile, collector, validate, excludes.split( ";" ) );
-      }
-    };
-    job.schedule();
-    try
-    {
-      // Join the job, because we only want to return, when validation has finished
-      job.join();
-    }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
-    }
+    m_validateJob.cancel(); // Just in case, to avoid too much validations
+    m_validateJob.schedule();
   }
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
@@ -170,5 +137,13 @@ public class ValidationProfilListener implements IProfilListener
     if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
         || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
       revalidate();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  public void onProblemMarkerChanged( final IProfil source )
+  {
+    // Ignored
   }
 }
