@@ -318,6 +318,11 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
       seekValue( x, y );
 
       writeBigDecimal( value );
+
+      /* manage min max */
+      m_max = m_max.max( value );
+      m_min = m_min.min( value );
+
     }
     catch( final IOException e )
     {
@@ -408,8 +413,8 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    */
   public void setMax( BigDecimal max )
   {
-    // TODO Auto-generated method stub
-
+    if( max != null )
+      m_max = max;
   }
 
   /**
@@ -417,7 +422,17 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    */
   public void setMin( BigDecimal min )
   {
-    // TODO Auto-generated method stub
+    if( min != null )
+      m_min = min;
+  }
+
+  /**
+   * @see org.kalypso.grid.IWriteableGeoGrid#saveStatistically()
+   */
+  public void saveStatistically( ) throws IOException
+  {
+    if( m_min != null && m_max != null )
+      setStatistically( getMin(), getMax() );
 
   }
 }

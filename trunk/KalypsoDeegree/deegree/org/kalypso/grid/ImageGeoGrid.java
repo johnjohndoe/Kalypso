@@ -137,4 +137,22 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
     return null;
   }
 
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
+   */
+  public void setMax( BigDecimal maxValue ) throws GeoGridException
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
+   */
+  public void setMin( BigDecimal minValue ) throws GeoGridException
+  {
+    // TODO Auto-generated method stub
+
+  }
+
 }

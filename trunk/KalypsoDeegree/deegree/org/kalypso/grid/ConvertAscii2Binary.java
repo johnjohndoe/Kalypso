@@ -111,10 +111,6 @@ public class ConvertAscii2Binary
       final BinaryGeoGrid binaryGrid = BinaryGeoGrid.createGrid( m_ascbinFile, sizeX, sizeY, m_scale, null, null, null );
       ProgressUtilities.worked( monitor, 1 );
 
-      /* Generate some statistical data while writing */
-      BigDecimal min = BigDecimal.valueOf( Double.MAX_VALUE );
-      BigDecimal max = BigDecimal.valueOf( Double.MIN_VALUE );
-
       for( int y = 0; y < sizeY; y++ )
       {
         for( int x = 0; x < sizeX; x++ )
@@ -122,19 +118,14 @@ public class ConvertAscii2Binary
           final String next = scanner.next(); // do not use 'nextDouble' it is much too slow
           final BigDecimal currentValue = new BigDecimal( next );
           if( !currentValue.equals( noData ) )
-          {
             binaryGrid.setValue( x, y, currentValue );
-
-            min = min.min( currentValue );
-            max = max.max( currentValue );
-          }
         }
 
         ProgressUtilities.worked( monitor, 1 );
       }
 
       /* Write statistically data */
-      binaryGrid.setStatistically( min, max );
+      binaryGrid.saveStatistically();
 
       bis.close();
       binaryGrid.dispose();

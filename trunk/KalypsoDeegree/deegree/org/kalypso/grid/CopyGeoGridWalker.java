@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
+import java.math.BigDecimal;
+
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
@@ -50,6 +52,10 @@ import com.vividsolutions.jts.geom.Coordinate;
 public class CopyGeoGridWalker implements IGeoGridWalker
 {
   private final IWriteableGeoGrid m_outputGrid;
+
+  private BigDecimal m_min = new BigDecimal( Double.MAX_VALUE );
+
+  private BigDecimal m_max = new BigDecimal( -Double.MAX_VALUE );
 
   public CopyGeoGridWalker( final IWriteableGeoGrid outputGrid )
   {
@@ -70,6 +76,14 @@ public class CopyGeoGridWalker implements IGeoGridWalker
   public void operate( final int x, final int y, final Coordinate c ) throws GeoGridException
   {
     m_outputGrid.setValue( x, y, c.z );
+
+    if( Double.isNaN( c.z ) )
+      return;
+
+    final BigDecimal value = new BigDecimal( c.z ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    m_min = m_min.min( value );
+    m_max = m_max.max( value );
+
   }
 
   /**
@@ -81,4 +95,13 @@ public class CopyGeoGridWalker implements IGeoGridWalker
     return null;
   }
 
+  public BigDecimal getMin( )
+  {
+    return m_min;
+  }
+
+  public BigDecimal getMax( )
+  {
+    return m_max;
+  }
 }
