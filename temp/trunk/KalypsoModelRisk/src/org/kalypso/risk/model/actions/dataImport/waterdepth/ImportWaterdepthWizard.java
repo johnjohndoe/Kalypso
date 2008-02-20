@@ -132,7 +132,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( Messages.getString("ImportWaterdepthWizard.8") ); //$NON-NLS-1$
+      StatusUtilities.createWarningStatus( Messages.getString( "ImportWaterdepthWizard.8" ) ); //$NON-NLS-1$
       return false;
     }
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
@@ -140,7 +140,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQi" ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wassertiefen" ); //$NON-NLS-1$
     parentKalypsoTheme.setVisible( true );
     try
     {
