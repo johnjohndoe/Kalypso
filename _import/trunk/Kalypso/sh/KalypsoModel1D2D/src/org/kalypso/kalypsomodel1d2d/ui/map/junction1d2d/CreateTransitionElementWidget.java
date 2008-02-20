@@ -40,14 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import javax.xml.namespace.QName;
+
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
@@ -58,26 +57,19 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
+import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 
-public class CreateTransitionElementWidget extends AbstractWidget
+public class CreateTransitionElementWidget extends AbstractDelegateWidget
 {
-  private final int m_grabRadius = 10;
 
   private IKalypsoFeatureTheme m_mapActiveTheme;
 
@@ -87,16 +79,38 @@ public class CreateTransitionElementWidget extends AbstractWidget
 
   private IContinuityLine2D m_line2D;
 
-  private IFELine m_currentSelectedLine;
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
+  private final SelectFeatureWidget m_selDelegateWidget;
 
   public CreateTransitionElementWidget( )
   {
-    this( "name", "tooltip" );
+    super( "Kopplung erzeugen", "Kopplung erzeugen", new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) );
+
+    m_toolTipRenderer.setTooltip( "Selektieren Sie zwei Randlinien in der Karte.\n    'Enter': Kopplungselement erzeugen." );
+
+    m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
+
   }
 
-  public CreateTransitionElementWidget( final String name, final String toolTip )
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
   {
-    super( name, toolTip );
+    super.paint( g );
+
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel != null )
+    {
+      final Rectangle bounds = mapPanel.getBounds();
+      final String delegateTooltip = getDelegate().getToolTip();
+
+      m_toolTipRenderer.setTooltip( "Selektieren Sie zwei Randlinien in der Karte.\n    'Enter': Kopplungselement erzeugen.\n" + delegateTooltip );
+
+      m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+    }
   }
 
   @Override
@@ -121,6 +135,18 @@ public class CreateTransitionElementWidget extends AbstractWidget
     m_discretisationModel = UtilMap.findFEModelTheme( mapModell );
     if( m_discretisationModel == null )
       return;
+
+    IKalypsoTheme[] themes = mapModell.getAllThemes();
+    for( IKalypsoTheme theme : themes )
+    {
+      if( theme instanceof IKalypsoFeatureTheme )
+      {
+        IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final QName qName = ft.getFeatureType().getQName();
+        if( qName.equals( IFELine.QNAME ) )
+          m_selDelegateWidget.setTheme( ft );
+      }
+    }
     final FeatureList featureList = m_mapActiveTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
     m_discretisationModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
@@ -137,12 +163,36 @@ public class CreateTransitionElementWidget extends AbstractWidget
   {
     if( e.getKeyChar() == KeyEvent.VK_ESCAPE )
       reinit();
+
     else if( e.getKeyChar() == KeyEvent.VK_ENTER )
     {
+
+      IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+
+      final EasyFeatureWrapper[] eFeatures = selectionManager.getAllFeatures();
+      CommandableWorkspace workspace = eFeatures[0].getWorkspace();
+
+      Feature[] features = FeatureSelectionHelper.getFeatures( selectionManager );
+
+      for( int i = 0; i < features.length; i++ )
+      {
+        final Object object2d = features[i].getAdapter( IContinuityLine2D.class );
+
+        if( object2d != null )
+          m_line2D = (IContinuityLine2D) object2d;
+
+        final Object object1d = features[i].getAdapter( IContinuityLine1D.class );
+
+        if( object1d != null )
+          m_line1D = (IContinuityLine1D) object1d;
+
+        if( m_line1D != null && m_line2D != null )
+          break;
+      }
+
       if( m_line1D != null && m_line2D != null )
       {
         final CreateTransitionElementCommand command = new CreateTransitionElementCommand( m_discretisationModel, m_line1D, m_line2D );
-        final CommandableWorkspace workspace = m_mapActiveTheme.getWorkspace();
         try
         {
           workspace.postCommand( command );
@@ -159,63 +209,6 @@ public class CreateTransitionElementWidget extends AbstractWidget
       }
     }
     super.keyPressed( e );
-  }
-
-  @Override
-  public void moved( final Point p )
-  {
-    final MapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
-    if( m_discretisationModel == null )
-    {
-      m_line1D = null;
-      m_line2D = null;
-      mapPanel.repaint();
-      return;
-    }
-    final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
-    final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius );
-    m_currentSelectedLine = m_discretisationModel.findContinuityLine( currentPos, grabDistance / 2 );
-    mapPanel.repaint();
-  }
-
-  @Override
-  public void paint( final Graphics g )
-  {
-    if( m_currentSelectedLine == null )
-      return;
-    try
-    {
-      final GM_Curve line = m_currentSelectedLine.getGeometry();
-      final LineSymbolizer symb = new LineSymbolizer_Impl();
-      final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
-      stroke.setWidth( 3 );
-      stroke.setStroke( new Color( 255, 0, 0 ) );
-      symb.setStroke( stroke );
-      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_currentSelectedLine.getFeature(), line, symb );
-      de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
-    }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-
-  @Override
-  public void leftClicked( final Point p )
-  {
-    if( m_currentSelectedLine == null )
-      return;
-    if( m_currentSelectedLine instanceof IContinuityLine1D )
-      m_line1D = (IContinuityLine1D) m_currentSelectedLine;
-    else
-      m_line2D = (IContinuityLine2D) m_currentSelectedLine;
-    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    final Feature featureToSelect = m_currentSelectedLine.getFeature();
-    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_mapActiveTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
-    selectionManager.changeSelection( new Feature[] {}, new EasyFeatureWrapper[] { easyToSelect } );
   }
 
   @Override

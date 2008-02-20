@@ -8,6 +8,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -15,7 +18,6 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsosimulationmodel.ui.map.AbstractEditFeatureWidget;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -27,6 +29,8 @@ import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PointGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -254,7 +258,7 @@ public abstract class AbstractCreateFloodPolygonWidget extends AbstractWidget
 
         /* Also select the newly created feature */
         final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-        AbstractEditFeatureWidget.selectAndShowFeatures( workspace, new Feature[] { newFeature }, selectionManager );
+        selectAndShowFeatures( workspace, new Feature[] { newFeature }, selectionManager );
       }
       catch( final Exception e )
       {
@@ -263,6 +267,35 @@ public abstract class AbstractCreateFloodPolygonWidget extends AbstractWidget
 
       reinit();
     }
+  }
+
+  /* Public in order to be called as utility method. Maybe use elsewhere? */
+  public static void selectAndShowFeatures( final CommandableWorkspace workspace, final Feature[] selectedFeatures, final IFeatureSelectionManager selectionManager )
+  {
+    final Feature featureToSelect = selectedFeatures[0];
+    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( workspace, featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
+
+    final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+    selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
+
+    /* Open the feature view */
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        try
+        {
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+        }
+        catch( final Throwable pie )
+        {
+          // final IStatus status = StatusUtilities.statusFromThrowable( pie );
+          // KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+          pie.printStackTrace();
+        }
+      }
+    } );
   }
 
   /**

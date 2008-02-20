@@ -40,19 +40,97 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.kalypsosimulationmodel.ui.map.AbstractEditFeatureWidget;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
+import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 
 /**
  * @author Gernot Belger
  */
-public class EditBCWidget extends AbstractEditFeatureWidget
+public class EditBCWidget extends AbstractDelegateWidget
 {
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
   public EditBCWidget( )
   {
-    super( "Randbedingungen bearbeiten", "Randbedingungen bearbeiten", false, new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION );
+    super( "Randbedingungen bearbeiten", "Randbedingungen bearbeiten", new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
+
+    m_toolTipRenderer.setTooltip( "Selektieren Sie die Randbedingung in der Karte.\n" );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
+  {
+    super.paint( g );
+
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel != null )
+    {
+      final Rectangle bounds = mapPanel.getBounds();
+      final String delegateTooltip = getDelegate().getToolTip();
+
+      m_toolTipRenderer.setTooltip( "Selektieren Sie die Randbedingung in der Karte.\n" + delegateTooltip );
+
+      m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
+   */
+  @Override
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  {
+    super.activate( commandPoster, mapPanel );
+
+    /* Open the feature view */
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      public void run( )
+      {
+        try
+        {
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+        }
+        catch( final Throwable pie )
+        {
+          // final IStatus status = StatusUtilities.statusFromThrowable( pie );
+          // KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+          pie.printStackTrace();
+        }
+      }
+    } );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    /* Deselect all */
+    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+    selectionManager.clear();
+
+    super.finish();
   }
 }

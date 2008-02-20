@@ -60,6 +60,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -68,46 +69,27 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.ui.map.AbstractEditFeatureWidget;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
+import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
+ * @author Thomas Jung
  */
-public class EditParameter1dWidget extends AbstractEditFeatureWidget
+public class EditParameter1dWidget extends AbstractDelegateWidget
 {
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
   public EditParameter1dWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten oder Elements bearbeiten", true, new QName[] { ITeschkeFlowRelation.QNAME, IBuildingFlowRelation.QNAME }, IFlowRelationship.QNAME_PROP_POSITION );
+    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten oder Elements bearbeiten", new SelectFeatureWidget( "", "", new QName[] { ITeschkeFlowRelation.QNAME,
+        IBuildingFlowRelation.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie Parameter in der Karte.\n    'Enter': selektierte Parameter neu berechnen" );
-
-    // TODO: change general selection behavior: (and write corresponding tooltip)
-    // - Click: selects feature at pos; clears selection if nothing found
-    // - drag: selects features within rect (or touching?); clears selection if nothing found
-    // - control: selection toggle mode (selection works as without ctrl, but found features are added/removed from
-    // current selection)
-    // - shift: selection add mode (selection works as without ctrl, but found features are added to the current
-    // selection)
-    // - escape: clear selection
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
-  @Override
-  public void moved( final Point p )
-  {
-    super.moved( p );
-
-    // getMapPanel().repaint();
   }
 
   /**
@@ -122,35 +104,22 @@ public class EditParameter1dWidget extends AbstractEditFeatureWidget
     if( mapPanel != null )
     {
       final Rectangle bounds = mapPanel.getBounds();
+      final String delegateTooltip = getDelegate().getToolTip();
+
+      m_toolTipRenderer.setTooltip( "Selektieren Sie Parameter in der Karte.\n    'Enter': selektierte Parameter neu berechnen.\n" + delegateTooltip );
+
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.ui.map.AbstractSelectFeatureWidget#featureGrabbed(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature[])
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  protected void featureGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
-    // Toggle selection
-    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-
-    if( selectedFeatures.length == 0 )
-      selectionManager.clear();
-
-    final List<Feature> toRemove = new ArrayList<Feature>();
-    final List<EasyFeatureWrapper> toAdd = new ArrayList<EasyFeatureWrapper>();
-
-    for( final Feature feature : selectedFeatures )
-    {
-      if( selectionManager.isSelected( feature ) )
-        toRemove.add( feature );
-      else
-        toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
-    }
-
-    selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
+    super.activate( commandPoster, mapPanel );
 
     /* Open the feature view */
     final Display display = PlatformUI.getWorkbench().getDisplay();
@@ -201,7 +170,9 @@ public class EditParameter1dWidget extends AbstractEditFeatureWidget
           startCalculation( shell, flowRels.toArray( new IFlowRelationship[flowRels.size()] ) );
         }
       } );
+      return;
     }
+    super.keyTyped( e );
   }
 
   protected void startCalculation( final Shell shell, final IFlowRelationship[] flowRels )
@@ -227,6 +198,19 @@ public class EditParameter1dWidget extends AbstractEditFeatureWidget
       KalypsoModel1D2DPlugin.getDefault().getLog().log( e.getStatus() );
       ErrorDialog.openError( shell, "Parameter berechnen", "Modelldaten stehen nicht zur Verfügung", e.getStatus() );
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    /* Deselect all */
+    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+    selectionManager.clear();
+
+    super.finish();
   }
 
 }

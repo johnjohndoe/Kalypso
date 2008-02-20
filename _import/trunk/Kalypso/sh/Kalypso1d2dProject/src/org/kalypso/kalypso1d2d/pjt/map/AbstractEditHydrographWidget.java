@@ -55,7 +55,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsosimulationmodel.ui.map.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -163,7 +162,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), Messages.getString( "AbstractSelectFlowrelationWidget.0" ), status ); //$NON-NLS-1$
+              ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
             }
           } );
         }
@@ -222,7 +221,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
   {
     final String problemMessage;
     if( m_foundFeature == null )
-      problemMessage = Messages.getString( "AbstractSelectFlowrelationWidget.1" ); //$NON-NLS-1$
+      problemMessage = "Kein Feature gefunden";
     else
       problemMessage = null;
 
@@ -259,7 +258,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          ErrorDialog.openError( shell, getName(), Messages.getString( "AbstractSelectFlowrelationWidget.2" ), status ); //$NON-NLS-1$
+          ErrorDialog.openError( shell, getName(), "Selektion konnte nicht durchgeführt werden", status );
         }
       } );
     }

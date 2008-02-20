@@ -40,17 +40,83 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D;
-import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
+import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 
 /**
  * @author Gernot Belger
+ * @author Thomas Jung
  */
-public class DeleteFEElements2DWidget extends DeleteFEElementsWidget
+public class DeleteFEElements2DWidget extends AbstractDelegateWidget
 {
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
   public DeleteFEElements2DWidget( )
   {
-    super( new FENetConceptSelectionWidget( Element2D.WB1D2D_F_FE1D2D_2DElement, "2D-Element löschen", "2D-Element löschen" ) );
+    super( "2D-Elemente löschen", "2D-Elemente löschen", new SelectFeatureWidget( "", "", new QName[] { IElement2D.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) );
+
+    m_toolTipRenderer.setTooltip( "Selektieren Sie die 2D-Elemente in der Karte.\n    'Del': selektierte Elemente löschen." );
+
   }
-  
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
+  {
+    super.paint( g );
+
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel != null )
+    {
+      final Rectangle bounds = mapPanel.getBounds();
+      final String delegateTooltip = getDelegate().getToolTip();
+
+      m_toolTipRenderer.setTooltip( "Selektieren Sie die 2D-Elemente in der Karte.\n    'Del': selektierte Elemente löschen.\n" + delegateTooltip );
+
+      m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyPressed( final KeyEvent e )
+  {
+    if( e.getKeyCode() == KeyEvent.VK_DELETE )
+    {
+      e.consume();
+
+      MapPanel mapPanel = getMapPanel();
+      if( mapPanel == null )
+        return;
+
+      IStatus status = DeleteFeElementsHelper.deleteSelectedFeElements( mapPanel );
+      if( status != Status.OK_STATUS )
+      {
+        final Shell shell = Display.getCurrent().getActiveShell();
+        MessageDialog.openError( shell, "1D-Elemente löschen", status.getMessage() );
+      }
+    }
+    super.keyPressed( e );
+  }
+
 }

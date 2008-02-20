@@ -40,124 +40,82 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.List;
 
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.widgets.SingleElementSelectWidget;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
+import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 
-public class DeleteFEContlineWidget extends SingleElementSelectWidget
+/**
+ * 
+ * @author Thomas Jung
+ * 
+ */
+public class DeleteFEContlineWidget extends AbstractDelegateWidget
 {
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
   public DeleteFEContlineWidget( )
   {
-    super( Messages.getString( "DeleteFEContlineWidget.0" ), Messages.getString( "DeleteFEContlineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "Kontinuitätslinien löschen", "Kontinuitätslinien löschen", new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) );
+
+    m_toolTipRenderer.setTooltip( "Selektieren Sie die Kontinuitätslinien in der Karte.\n    'Del': selektierte Linien löschen." );
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
+  {
+    super.paint( g );
+
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel != null )
+    {
+      final Rectangle bounds = mapPanel.getBounds();
+      final String delegateTooltip = getDelegate().getToolTip();
+
+      m_toolTipRenderer.setTooltip( "Selektieren Sie die Kontinuitätslinien in der Karte.\n    'Del': selektierte Linien löschen.\n" + delegateTooltip );
+
+      m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+    }
   }
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractSelectWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyReleased( final KeyEvent event )
+  public void keyPressed( final KeyEvent event )
   {
-    if( event.getKeyCode() != KeyEvent.VK_DELETE )
-      return;
-
-    event.consume();
-
-    final MapPanel mapPanel = getMapPanel();
-    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-    final EasyFeatureWrapper[] selected = selectionManager.getAllFeatures();
-    if( selected.length == 0 )
-      return;
-
-    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString( "DeleteFEContlineWidget.2" ), Messages.getString( "DeleteFEContlineWidget.3" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
-      return;
-
-    // selectionManager.clear(); active selection is still needed for super.keyReleased( event );
-
-    try
+    if( event.getKeyCode() == KeyEvent.VK_DELETE )
     {
-      // to allow continuity line to be deleted, no boundary conditions cannot be positioned on that line
-      // also, this line cannot be a part of any transition or junction element
+      event.consume();
 
-      final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
-      final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
-      final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
+      final MapPanel mapPanel = getMapPanel();
 
-      final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = discretisationModel.getComplexElements();
-      for( final IFE1D2DComplexElement complexElement : complexElements )
+      IStatus status = DeleteFeElementsHelper.deleteSelectedFeContiLines( mapPanel );
+      if( status != Status.OK_STATUS )
       {
-        if( complexElement instanceof ITransitionElement )
-        {
-          final ITransitionElement transitionElement = (ITransitionElement) complexElement;
-          final List<IFELine> continuityLines = transitionElement.getContinuityLines();
-          for( final IFELine line : continuityLines )
-          {
-            for( final EasyFeatureWrapper element : selected )
-              if( line.getGmlID().equals( element.getFeature().getId() ) )
-              {
-                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "DeleteFEContlineWidget.4" ), Messages.getString( "DeleteFEContlineWidget.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-                selectionManager.clear();
-                return;
-              }
-          }
-        }
-        if( complexElement instanceof IJunctionElement )
-        {
-          final IJunctionElement junctionElement = (IJunctionElement) complexElement;
-          final List<IFELine> continuityLines = junctionElement.getContinuityLines();
-          for( final IFELine line : continuityLines )
-          {
-            for( final EasyFeatureWrapper element : selected )
-              if( line.getGmlID().equals( element.getFeature().getId() ) )
-              {
-                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "DeleteFEContlineWidget.6" ), Messages.getString( "DeleteFEContlineWidget.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-                selectionManager.clear();
-                return;
-              }
-          }
-        }
+        final Shell shell = Display.getCurrent().getActiveShell();
+        MessageDialog.openError( shell, "1D-Elemente löschen", status.getMessage() );
       }
-
-      final FeatureList wrappedList = flowRelationshipModel.getWrappedList();
-      for( final Object object : wrappedList )
-      {
-        final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) object).getAdapter( IBoundaryCondition.class );
-        if( bc != null )
-        {
-          final String parentElementID = bc.getParentElementID();
-          for( final EasyFeatureWrapper element : selected )
-            if( element.getFeature().getId().equals( parentElementID ) )
-            {
-              SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "DeleteFEContlineWidget.8" ), Messages.getString( "DeleteFEContlineWidget.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-              selectionManager.clear();
-              return;
-            }
-        }
-      }
-
-      super.keyReleased( event );
     }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new RuntimeException( e.getMessage(), e );
-    }
-
+    super.keyPressed( event );
   }
 }
