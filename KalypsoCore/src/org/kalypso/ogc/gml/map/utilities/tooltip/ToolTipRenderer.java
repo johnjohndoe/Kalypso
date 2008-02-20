@@ -196,7 +196,9 @@ public class ToolTipRenderer
     }
     final String tooltip = text.toString();
 
-    final int drawFlags = SWT.DRAW_DELIMITER | SWT.DRAW_MNEMONIC | SWT.DRAW_TAB | SWT.DRAW_TRANSPARENT;
+    final int drawFlags = SWT.DRAW_DELIMITER; // SWT.DRAW_DELIMITER | SWT.DRAW_MNEMONIC | SWT.DRAW_TAB /* |
+                                              // SWT.DRAW_TRANSPARENT
+    // */;
     final org.eclipse.swt.graphics.Point textBoxSize = gc.textExtent( tooltip, drawFlags );
 
     final int insetsHeigth = m_insets.bottom + m_insets.top;

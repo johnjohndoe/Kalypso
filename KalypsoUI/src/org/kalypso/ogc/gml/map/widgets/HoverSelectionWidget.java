@@ -70,10 +70,10 @@ public class HoverSelectionWidget extends AbstractWidget
   public void moved( final Point p )
   {
     m_function.execute( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
-    
+
     // TODO: check if this repaint is necessary for the widget
     MapPanel panel = getMapPanel();
-    if ( panel != null)
+    if( panel != null )
       panel.repaint();
   }
 
@@ -96,6 +96,6 @@ public class HoverSelectionWidget extends AbstractWidget
   {
     super.setSelection( selection );
 
-    getMapPanel().setMessage( "Bewegen Sie die Maus über ein Feature, um ein es auszuwählen." );
+    getMapPanel().setMessage( "Bewegen Sie die Maus über ein Feature, um es auszuwählen." );
   }
 }

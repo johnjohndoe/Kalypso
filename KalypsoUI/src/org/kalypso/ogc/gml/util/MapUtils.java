@@ -107,4 +107,17 @@ public class MapUtils
     workspace.postCommand( compositeCommand );
   }
 
+  public static void paintGrabbedFeature( final Graphics g, final MapPanel panel, final Feature feature, QName geomQName )
+  {
+    if( feature == null )
+      return;
+    final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
+    if( geom == null )
+      return;
+
+    final int smallRect = 10;
+    final Point nodePoint = MapUtilities.retransform( panel, geom.getCentroid() );
+    g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+  }
+
 }
