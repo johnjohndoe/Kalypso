@@ -34,11 +34,11 @@
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" label="Ist bebaute Fläche?" name="isUrbanLanduseType" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="unten Grenzwert für Risikozone [€/m²]" name="lowerBoundaryValue" width="200" />
+							format="" label="unterer Grenzwert für Risikozone [€/m²/a]" name="lowerBoundaryValue" width="200" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="colorStyle" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="Angabe" name="description" width="1600" />
+							format="" label="Beschreibung" name="description" width="600" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>

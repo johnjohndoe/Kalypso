@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.actions.riskZonesCalculation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +54,7 @@ import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -72,90 +74,143 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final double m_cellSize;
 
+  private BigDecimal m_min;
+
+  private BigDecimal m_max;
+
   private final List<IRiskZoneDefinition> m_riskZoneDefinitionsList;
 
   public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
     super( resultGrid );
+
     m_cellSize = Math.abs( resultGrid.getOffsetX().x - resultGrid.getOffsetY().x ) * Math.abs( resultGrid.getOffsetX().y - resultGrid.getOffsetY().y );
     m_annualCoverageCollection = annualCoverageCollection;
     m_landusePolygonCollection = landusePolygonCollection;
     m_landuseClassesList = landuseClassesList;
     m_riskZoneDefinitionsList = riskZoneDefinitionsList;
     m_gridMap = new HashMap<String, List<IGeoGrid>>();
+
     for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
     {
       final List<IGeoGrid> gridList = new ArrayList<IGeoGrid>();
+
       for( final ICoverage coverage : collection )
         gridList.add( GeoGridUtilities.toGrid( coverage ) );
+
       m_gridMap.put( collection.getGmlID(), gridList );
     }
+
+    m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+    m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
   }
 
+  @Override
   public final double getValue( final int x, final int y ) throws GeoGridException
   {
     final double[] damage = new double[m_annualCoverageCollection.size()];
     final double[] probability = new double[m_annualCoverageCollection.size()];
-    int i = 0;
-    for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
+
+    /* fill the probabilies and damages */
+    for( int i = 0; i < probability.length; i++ )
     {
+      final IAnnualCoverageCollection collection = m_annualCoverageCollection.get( i );
+
       final double value = getValue( collection, x, y );
       damage[i] = Double.isNaN( value ) ? 0.0 : value;
-      probability[i++] = 1.0 / collection.getReturnPeriod();
+      probability[i] = 1.0 / collection.getReturnPeriod();
     }
-    double result = 0.0;
-    for( i = 1; i < probability.length; i++ )
-    {
-      final double p = Math.abs( probability[i - 1] - probability[i] );
-      result += (damage[i - 1] + damage[i]) * p / 2;
-    }
-    if( result == 0 || Double.isNaN( result ) )
+
+    /* calculate average annual damage */
+    double averageAnnualDamageValue = RiskModelHelper.calcAverageAnnualDamageValue( damage, probability );
+
+    if( averageAnnualDamageValue == 0 || Double.isNaN( averageAnnualDamageValue ) )
       return Double.NaN;
+
     final Coordinate coordinate = GeoGridUtilities.toCoordinate( this, x, y, null );
-    final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-    final List<ILandusePolygon> list = m_landusePolygonCollection.query( positionAt );
+    final GM_Position position = JTSAdapter.wrap( coordinate );
+    final List<ILandusePolygon> list = m_landusePolygonCollection.query( position );
+
     if( list == null || list.size() == 0 )
       return Double.NaN;
-    else
-      for( final ILandusePolygon polygon : list )
+
+    for( final ILandusePolygon polygon : list )
+    {
+      if( polygon.contains( position ) )
       {
-        if( polygon.contains( positionAt ) )
-        {
-          polygon.getLanduseClassOrdinalNumber();
-          polygon.updateStatisticsAverageAnnualDamage( result );
-          fillStatistics( polygon, result );
-          return getRiskZone( result, polygon.isUrbanLanduseType() );
-        }
+        final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
+
+        /* set statistic for landuse class */
+        fillStatistics( polygon, averageAnnualDamageValue, landuseClassOrdinalNumber );
+
+        final double riskZoneValue = getRiskZone( averageAnnualDamageValue, polygon.isUrbanLanduseType() );
+
+        /* check min/max */
+        m_min = m_min.min( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+        m_max = m_max.max( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+
+        // TODO: maybe in addition we should provide the real grid values (not the ordinal numbers), too
+
+        return riskZoneValue;
       }
+    }
+
     return Double.NaN;
   }
 
-  private void fillStatistics( final ILandusePolygon polygon, final double result )
+  private void fillStatistics( final ILandusePolygon polygon, final double averageAnnualDamageValue, final int landuseClassOrdinalNumber )
   {
-    final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
+    /* add the current average annual damage value to all landuse polygons that covers the current raster cell */
+    polygon.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );
+
+    /* find the right landuse class that holds the polygon */
     for( final ILanduseClass landuseClass : m_landuseClassesList )
     {
       if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
       {
-        if( result < landuseClass.getMinDamage() )
-          landuseClass.setMinDamage( result );
-        if( result > landuseClass.getMaxDamage() )
-          landuseClass.setMaxDamage( result );
-        final double totalDamage = landuseClass.getTotalDamage() + result * m_cellSize;
+        /* check for min / max */
+        if( averageAnnualDamageValue < landuseClass.getMinDamage() )
+          landuseClass.setMinDamage( averageAnnualDamageValue );
+        if( averageAnnualDamageValue > landuseClass.getMaxDamage() )
+          landuseClass.setMaxDamage( averageAnnualDamageValue );
+
+        /* update total damage value of the current landuse class */
+        final double totalDamage = landuseClass.getTotalDamage() + averageAnnualDamageValue * m_cellSize;
         landuseClass.setTotalDamage( totalDamage );
+
+        /* update the average annual damage value for the landuse class */
         landuseClass.setAverageAnnualDamage( polygon.getStatisticsAverageAnnualDamage() );
       }
     }
   }
 
+  /**
+   * returns the flow depth value for a given position.
+   * 
+   * @param collection
+   *            grid collection of water depth grids
+   * @param x
+   *            column number of the grid
+   * @param y
+   *            row number of the grid
+   * @return the first found valid grid value within the grid collection
+   * @throws GeoGridException
+   */
   private double getValue( final IAnnualCoverageCollection collection, final int x, final int y ) throws GeoGridException
   {
     final List<IGeoGrid> list = m_gridMap.get( collection.getGmlID() );
     for( final IGeoGrid geoGrid : list )
     {
       final double value = geoGrid.getValueChecked( x, y );
-      if( !Double.isNaN( value ) )
-        return value;
+
+      if( Double.isNaN( value ) )
+        return Double.NaN;
+
+      // we allow no negative flow depths!
+      if( value < 0.0 )
+        return 0.0;
+
+      return value;
     }
     return Double.NaN;
   }
@@ -164,8 +219,11 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   {
     if( isUrbanLanduseType == null )
       return Double.NaN;
+
     IRiskZoneDefinition selectedRiskZoneDefinition = null;
+
     double minDifference = Double.MAX_VALUE;
+
     for( final IRiskZoneDefinition riskZoneDefinition : m_riskZoneDefinitionsList )
       if( isUrbanLanduseType.equals( riskZoneDefinition.isUrbanLanduseType() ) && damageValue >= riskZoneDefinition.getLowerBoundary() )
       {

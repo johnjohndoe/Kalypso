@@ -79,9 +79,8 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return null;
     }
-    // TODO Auto-generated method stub
-    return null;
   }
 
   public IDamageFunction createNewDamageFunction( )
@@ -97,9 +96,8 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return null;
     }
-    // TODO Auto-generated method stub
-    return null;
   }
 
   public IAdministrationUnit createNewAdministrationUnit( final String name, final String description )
@@ -117,9 +115,8 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return null;
     }
-    // TODO Auto-generated method stub
-    return null;
   }
 
   public IAssetValueClass getAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final boolean createIfNotExists )
@@ -171,9 +168,8 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return null;
     }
-    // TODO Auto-generated method stub
-    return null;
   }
 
   public List<IAssetValueClass> getAssetValueClassesList( )
@@ -229,13 +225,15 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   {
     for( final ILanduseClass landuseClass : m_landuseClasses )
     {
-      landuseClass.setMinDamage( Double.MAX_VALUE );
-      landuseClass.setMaxDamage( Double.MIN_VALUE );
+      landuseClass.setMinDamage( Double.POSITIVE_INFINITY );
+      landuseClass.setMaxDamage( Double.NEGATIVE_INFINITY );
       landuseClass.setAverageAnnualDamage( 0.0 );
       landuseClass.setTotalDamage( 0.0 );
     }
   }
 
+  // TODO: what is that good for? when gets the damage value negative? this should never happen! Maybe it is better to
+  // check the values while processing / creating them!
   public void fixStatisticsForShowingToUser( )
   {
     for( final ILanduseClass landuseClass : m_landuseClasses )

@@ -93,23 +93,25 @@ public class RiskZonesCalculationHandler extends AbstractHandler
             try
             {
               final ICoverageCollection outputCoverages = rasterModel.getRiskZonesCoverage();
-              int count = 0;
-              for( final ICoverage srcSpecificDamageCoverage : baseCoverages )
+
+              for( int i = 0; i < baseCoverages.size(); i++ )
               {
+                final ICoverage srcSpecificDamageCoverage = baseCoverages.get( i );
+
                 final IGeoGrid inputGrid = GeoGridUtilities.toGrid( srcSpecificDamageCoverage );
                 final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection(), controlModel.getLanduseClassesList(), controlModel.getRiskZoneDefinitionsList() );
+
                 // TODO: change name: better: use input name
-                final String outputFilePath = "raster/output/RiskZonesCoverage" + count + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
+                final String outputFilePath = "raster/output/RiskZonesCoverage" + i + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
 
                 final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
                 final File file = new File( ifile.getRawLocation().toPortableString() );
                 final ICoverage coverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
                 inputGrid.dispose();
 
-                coverage.setName( "Risikozonen [" + count + "]" );
+                coverage.setName( "Risikozonen [" + i + "]" );
                 // TODO: check for right time zone?
                 coverage.setDescription( Messages.getString( "RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
-                count++;
 
                 // fireModellEvent to redraw a map...
                 workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel.getSpecificDamageCoverageCollection().getFeature(), new Feature[] { outputCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
@@ -118,6 +120,9 @@ public class RiskZonesCalculationHandler extends AbstractHandler
               scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
               // statistics...
+
+              // TODO: what gets fixed here? the data should be valid!
+              // if not, then there is a general error in the calculation of the values!
               controlModel.fixStatisticsForShowingToUser();
               scenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 

@@ -108,13 +108,13 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     return getFeature().getDefaultGeometryProperty().contains( position );
   }
 
-  public double getDamageValue( double waterLevel )
+  public double getDamageValue( double depth )
   {
     if( m_damageFunction == null || m_assetValue == null )
       return Double.NaN;
     try
     {
-      return m_assetValue * m_damageFunction.getResult( waterLevel ) / 100.0;
+      return m_assetValue * m_damageFunction.getResult( depth ) / 100.0;
     }
     catch( Exception e )
     {
@@ -123,34 +123,22 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     }
   }
 
-  public double getRiskZone( double damageValue )
-  {
-    return 0.0;
-    // if( m_isUrbanLanduseType == null || Double.isNaN( damageValue ) )
-    // return Double.NaN;
-    // if( m_isUrbanLanduseType )
-    // {
-    // if( damageValue < m_riskBorderLowMiddle )
-    // return IRasterizationControlModel.RISKZONE_URBANAREA_LOW;
-    // if( damageValue < m_riskBorderMiddleHigh )
-    // return IRasterizationControlModel.RISKZONE_URBANAREA_MIDDLE;
-    // return IRasterizationControlModel.RISKZONE_URBANAREA_HIGH;
-    // }
-    // else
-    // {
-    // if( damageValue < m_riskBorderLowMiddle )
-    // return IRasterizationControlModel.RISKZONE_NONURBANAREA_LOW;
-    // if( damageValue < m_riskBorderMiddleHigh )
-    // return IRasterizationControlModel.RISKZONE_NONURBANAREA_MIDDLE;
-    // return IRasterizationControlModel.RISKZONE_NONURBANAREA_HIGH;
-    // }
-  }
-
+  /**
+   * adds a average annual damage value to the polygon
+   */
   public void updateStatisticsAverageAnnualDamage( final double value )
   {
-    m_statisticsAverageAnnualDamage = m_statisticsAverageAnnualDamage * m_statisticsNumberOfRasterCells + value;
+    /* get the current overall average annual damage value (€/a) */
+    final double currentValue = m_statisticsAverageAnnualDamage * m_statisticsNumberOfRasterCells;
+
+    /* add the new value */
+    final double updatedValue = currentValue + value;
+
+    /* raise number of cells */
     m_statisticsNumberOfRasterCells++;
-    m_statisticsAverageAnnualDamage = m_statisticsAverageAnnualDamage / m_statisticsNumberOfRasterCells;
+
+    /* calculate the average annual damage value (€/a) per cell */
+    m_statisticsAverageAnnualDamage = updatedValue / m_statisticsNumberOfRasterCells;
   }
 
   public double getStatisticsAverageAnnualDamage( )

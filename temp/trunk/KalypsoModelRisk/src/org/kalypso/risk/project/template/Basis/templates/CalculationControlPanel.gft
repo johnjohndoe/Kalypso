@@ -38,7 +38,7 @@
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="colorStyle" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="Angabe" name="description" width="1600" />
+							format="" label="Beschreibung" name="description" width="1600" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>
@@ -63,14 +63,14 @@
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" label="Funktion" name="function" width="200" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="Angabe" name="description" width="250" />
+							format="" label="Beschreibung" name="description" width="250" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>
 			</gft:table>
 		</gft:group>
 
-		<gft:group text="Schadenspotentials" style="0">
+		<gft:group text="Schadenspotentiale" style="0">
 			<gft:gridData horizontalSpan="1" verticalSpan="2"
 				minimumHeight="200" horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
@@ -91,7 +91,7 @@
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="value" width="150" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="Angabe" name="description" width="200" />
+							format="" label="Beschreibung" name="description" width="200" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>

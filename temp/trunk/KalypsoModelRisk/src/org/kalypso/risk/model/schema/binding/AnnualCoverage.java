@@ -3,6 +3,9 @@ package org.kalypso.risk.model.schema.binding;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 
+/**
+ * @author Dejan Antanskovic
+ */
 public class AnnualCoverage extends CoverageCollection implements IAnnualCoverageCollection
 {
   public AnnualCoverage( final Feature feature )

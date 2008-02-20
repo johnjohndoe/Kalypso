@@ -38,8 +38,6 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public double getDamageValue( final double waterLevel );
 
-  public double getRiskZone( final double damage );
-
   public boolean contains( final GM_Position position );
 
   public Boolean isUrbanLanduseType( );
