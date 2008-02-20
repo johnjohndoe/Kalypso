@@ -117,7 +117,7 @@ public abstract class AbstractProfil implements IProfil
 
   public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( (changes == null) && changes.length == 0 )
+    if( changes == null && changes.length == 0 )
       return;
 
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
@@ -325,20 +325,16 @@ public abstract class AbstractProfil implements IProfil
    */
   public IComponent[] getPointMarkerTypes( )
   {
-    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( getType() );
-    if( providers.length == 0 )
-      return new IComponent[] {};
+    final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getType() );
 
     final List<IComponent> marker = new ArrayList<IComponent>();
     final IComponent[] properties = getPointProperties();
 
-    for( final IProfilPointMarkerProvider provider : providers )
-    {
-      final String[] markerTypes = provider.getMarkerTypes();
-      for( final IComponent component : properties )
-        if( ArrayUtils.contains( markerTypes, component.getId() ) && !marker.contains( component ) )
-          marker.add( component );
-    }
+    final String[] markerTypes = provider.getMarkerTypes();
+    for( final IComponent component : properties )
+      if( ArrayUtils.contains( markerTypes, component.getId() ) && !marker.contains( component ) )
+        marker.add( component );
+
     return marker.toArray( new IComponent[] {} );
   }
 

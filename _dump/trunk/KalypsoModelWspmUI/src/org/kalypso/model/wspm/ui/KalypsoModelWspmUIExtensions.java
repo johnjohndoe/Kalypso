@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget;
@@ -97,10 +96,12 @@ public class KalypsoModelWspmUIExtensions
 
     return targets.toArray( a );
   }
+
   public static IPointPropertyCalculator[] createPointPropertyCalculator( )
   {
     return createExtensions( "org.kalypso.model.wspm.ui.pointPropertyCalculator", new IPointPropertyCalculator[0] );
   }
+
   /**
    * @return the LayerProvider for the given profiletype and providerId or null
    */

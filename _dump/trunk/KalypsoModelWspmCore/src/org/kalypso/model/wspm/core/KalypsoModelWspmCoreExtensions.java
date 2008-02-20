@@ -167,14 +167,17 @@ public class KalypsoModelWspmCoreExtensions
     return PROFILE_POINT_FILTER;
   }
 
-  public static IProfilPointMarkerProvider[] getMarkerProviders( final String profilType )
+  public static IProfilPointMarkerProvider getMarkerProviders( final String profilType )
   {
     final Map<String, List<IProfilPointMarkerProvider>> map = getMarkerProviders();
     final List<IProfilPointMarkerProvider> list = map.get( profilType );
     if( list == null )
-      return new IProfilPointMarkerProvider[0];
+      return null;
 
-    return list.toArray( new IProfilPointMarkerProvider[list.size()] );
+    if( list.size() > 1 )
+      throw new IllegalStateException();
+
+    return list.get( 0 );
   }
 
   public static IProfilPointMarkerProvider[] getAllMarkerProviders( )

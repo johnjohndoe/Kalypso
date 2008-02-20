@@ -85,6 +85,8 @@ public class ProfileFeatureManager
     {
       /* profile type */
       final String type = (String) profileFeature.getProperty( ProfileFeatureFactory.QNAME_TYPE );
+      if( type == null )
+        return null;
 
       /* observation of profile */
       final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( profileFeature );

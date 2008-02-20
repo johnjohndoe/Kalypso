@@ -440,11 +440,7 @@ public class PrfSource implements IProfilSource
 // }
     // --------------------
 
-    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( p.getType() );
-    if( providers.length != 1 )
-      throw new IllegalStateException();
-
-    final IProfilPointMarkerProvider provider = providers[0];
+    final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( p.getType() );
 
     if( p1 != null )
     {
@@ -497,11 +493,7 @@ public class PrfSource implements IProfilSource
 // + "]" );
 // }
 
-    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( p.getType() );
-    if( providers.length != 1 )
-      throw new IllegalStateException();
-
-    final IProfilPointMarkerProvider provider = providers[0];
+    final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( p.getType() );
 
     if( p1 != null )
     {
@@ -647,11 +639,7 @@ public class PrfSource implements IProfilSource
 // }
     // ----------------------------
 
-    final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( p.getType() );
-    if( providers.length != 1 )
-      throw new IllegalStateException();
-
-    final IProfilPointMarkerProvider provider = providers[0];
+    final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( p.getType() );
 
     if( p1 != null )
     {

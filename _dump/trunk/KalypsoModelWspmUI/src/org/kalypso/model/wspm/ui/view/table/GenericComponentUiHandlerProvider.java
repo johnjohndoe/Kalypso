@@ -52,6 +52,7 @@ import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.view.table.ComponentUiProblemHandler;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -67,18 +68,15 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 /**
- * TODO: refaktor in order to create the component handler depending on the profile type (extension-point).
- * 
- * @author Gernot Belger
- * @author Kim Werner
+ * @author Dirk Kuch
  */
-public class ComponentHandlerFactory implements IComponentUiHandlerProvider
+public class GenericComponentUiHandlerProvider implements IComponentUiHandlerProvider
 {
-  private final IProfil m_profil;
+  private final IProfil m_profile;
 
-  public ComponentHandlerFactory( final IProfil profil )
+  public GenericComponentUiHandlerProvider( final IProfil profile )
   {
-    m_profil = profil;
+    m_profile = profile;
   }
 
   /**
@@ -86,15 +84,15 @@ public class ComponentHandlerFactory implements IComponentUiHandlerProvider
    */
   public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
   {
-    Assert.isTrue( tupleResult == m_profil.getResult() );
+    Assert.isTrue( tupleResult == m_profile.getResult() );
 
-    final IComponent[] pointMarkerTypes = m_profil.getPointMarkerTypes();
-    final IComponent[] components = m_profil.getPointProperties();
+    final IComponent[] pointMarkerTypes = m_profile.getPointMarkerTypes();
+    final IComponent[] components = m_profile.getPointProperties();
 
     final Map<Integer, IComponentUiHandler> handler = new LinkedHashMap<Integer, IComponentUiHandler>();
 
     // TODO: get display from outside
-    handler.put( -1, new ComponentUiProblemHandler( m_profil, null ) );
+    handler.put( -1, new ComponentUiProblemHandler( m_profile, null ) );
 
     for( int i = 0; i < components.length; i++ )
     {

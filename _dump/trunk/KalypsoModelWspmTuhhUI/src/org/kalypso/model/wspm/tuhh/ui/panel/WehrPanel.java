@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -219,7 +220,7 @@ public class WehrPanel extends AbstractProfilView
       else
         value = (Double) dev.getValue() == null ? 0.0 : (Double) dev.getValue();
       m_beiwert.setText( Double.toString( value ) );
-      m_point.setText( Double.toString( (Double) dev.getPoint().getValue( ProfilObsHelper.getPropertyFromId( dev.getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) );
+      m_point.setText( Double.toString( (Double) dev.getPoint().getValue( ProfilObsHelper.getPropertyFromId( dev.getPoint(), IWspmConstants.POINT_PROPERTY_BREITE ) ) ) );
     }
 
     @Override
@@ -404,7 +405,7 @@ public class WehrPanel extends AbstractProfilView
         if( profileObjects.length > 0 )
           building = profileObjects[0];
 
-        if( (building == null) || !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
+        if( building == null || !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
           return;
         final IComponent cTrennF = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
         // final IComponent cWehrT = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
@@ -416,14 +417,9 @@ public class WehrPanel extends AbstractProfilView
 // changes[1] = new PointMarkerEdit( new ProfilDevider( cWehrT, point ), 0.0 );
 // changes[2] = new ActiveObjectEdit( getProfil(), point, null );
         final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", getProfil(), true );
-        final IProfilPointMarkerProvider[] providers = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
-        IProfilPointMarker marker = null;
-        for( final IProfilPointMarkerProvider provider : providers )
-        {
-          marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
-          if( marker != null )
-            break;
-        }
+        final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
+        final IProfilPointMarker marker = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
+
         if( marker != null )
         {
           operation.addChange( new PointMarkerEdit( marker, 0.0 ) );

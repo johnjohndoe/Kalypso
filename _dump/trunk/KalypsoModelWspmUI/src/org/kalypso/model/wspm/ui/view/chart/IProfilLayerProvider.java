@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
+
 /**
  * A layer provider provides layers for the view, depending on the specific profile type.
  * 
@@ -77,4 +80,6 @@ public interface IProfilLayerProvider
    * return true if The provider can create the layer
    */
   public boolean providesLayer( final String layerId );
+
+  public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
 }

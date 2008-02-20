@@ -71,8 +71,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="type" type="string" minOccurs="1" maxOccurs="1"
-						default="org.kalypso.model.wspm.tuhh.profiletype">
+					<element name="type" type="string" minOccurs="1" maxOccurs="1">
 						<annotation>
 							<documentation xml:lang="de">
 								Der Profiltyp, bestimmt wie das Profil dargestellt oder validiert wird.

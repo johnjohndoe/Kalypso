@@ -75,11 +75,13 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -89,6 +91,7 @@ import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -125,7 +128,7 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
         {
           if( change instanceof ActiveObjectEdit )
           {
-            final IRecord point = (IRecord) (change.getObjects()[0]);
+            final IRecord point = (IRecord) change.getObjects()[0];
             new UIJob( "updating cross section table..." )
             {
               @Override
@@ -275,12 +278,12 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
 
     m_view.addPostSelectionChangedListener( new ISelectionChangedListener()
     {
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         if( !selection.isEmpty() )
         {
-          final IRecord point = (IRecord)selection.getFirstElement();
+          final IRecord point = (IRecord) selection.getFirstElement();
           if( point != m_profile.getActivePoint() )
             m_profile.setActivePoint( point );
         }
@@ -333,12 +336,13 @@ public class TableView extends ViewPart implements IPropertyChangeListener, IAda
     tableGrid.exclude = false;
     m_view.getTable().setVisible( true );
 
-    final ComponentHandlerFactory componentHandlerFactory = new ComponentHandlerFactory( m_profile );
+    final IProfilLayerProvider layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
+    final IComponentUiHandlerProvider handler = layerProvider.getComponentUiHandlerProvider( m_profile );
 
     if( m_view.getContentProvider() != null )
       m_view.setInput( null ); // Reset input in order to avoid double refresh
 
-    m_tupleResultContentProvider = new TupleResultContentProvider( componentHandlerFactory );
+    m_tupleResultContentProvider = new TupleResultContentProvider( handler );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
 
     m_view.setContentProvider( m_tupleResultContentProvider );
