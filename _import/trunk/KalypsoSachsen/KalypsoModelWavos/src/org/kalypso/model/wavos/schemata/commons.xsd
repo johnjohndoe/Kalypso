@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.wavos.commons" version="0.1" xmlns:commons="org.kalypso.wavos.commons" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+<schema targetNamespace="org.kalypso.wavos.commons" version="0.1" xmlns:commons="org.kalypso.wavos.commons" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <annotation>
         <appinfo xmlns:kapp="org.kalypso.appinfo">
             <kapp:gmlVersion>2.1.2</kapp:gmlVersion>
@@ -7,17 +7,11 @@
     </annotation>
     <!--    <import namespace="http://www.opengis.net/gml" schemaLocation="basis/feature.xsd"/>-->
     <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
-    <import namespace="obslink.zml.kalypso.org" schemaLocation="basis/obslink.xsd"/>
     <!-- 
         _________________________________________________________________________________________
         COMPLEX TYPES
         _________________________________________________________________________________________	
     -->
-    <complexType name="TimeseriesLinkType">
-        <sequence>
-            <element name="TimeseriesLink" type="obslink:TimeseriesLinkType" minOccurs="0"/>
-        </sequence>
-    </complexType>
     <complexType name="EmptyFeatureBaseType">
         <complexContent>
             <restriction base="gml:AbstractFeatureType"> </restriction>
@@ -77,6 +71,68 @@
                         <label>Elbe (Sachsen-Anhalt)</label>
                         <tooltip>Elbe (Sachsen-Anhalt)</tooltip>
                         <description>Elbe (Sachsen-Anhalt)</description>
+                    </documentation>
+                </annotation>
+            </enumeration>
+        </restriction>
+    </simpleType>
+    <simpleType name="projektionType">
+        <restriction base="string">
+            <enumeration value="0">
+                <annotation>
+                    <documentation xml:lang="de">
+                        <label>nein</label>
+                        <tooltip>nein</tooltip>
+                        <description>nein</description>
+                    </documentation>
+                </annotation>
+            </enumeration>
+            <!--<enumeration value="1">
+                <annotation>
+                    <documentation xml:lang="de">
+                        <label>W</label>
+                        <tooltip>W</tooltip>
+                        <description>W</description>
+                    </documentation>
+                </annotation>
+            </enumeration> -->
+            <enumeration value="W">
+                <annotation>
+                    <documentation xml:lang="de">
+                        <label>W</label>
+                        <tooltip>W</tooltip>
+                        <description>W</description>
+                    </documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="Q">
+                <annotation>
+                    <documentation xml:lang="de">
+                        <label>Q</label>
+                        <tooltip>Q</tooltip>
+                        <description>Q</description>
+                    </documentation>
+                </annotation>
+            </enumeration>
+        </restriction>
+    </simpleType>
+    <simpleType name="dataDeliveryType">
+        <restriction base="string">
+            <enumeration value="W">
+                <annotation>
+                    <documentation xml:lang="de">
+                        <label>W</label>
+                        <tooltip>W</tooltip>
+                        <description>W</description>
+                    </documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="Q">
+                <annotation>
+                    <documentation xml:lang="de">
+                        <label>Q</label>
+                        <tooltip>Q</tooltip>
+                        <description>Q</description>
                     </documentation>
                 </annotation>
             </enumeration>

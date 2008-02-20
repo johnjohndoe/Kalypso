@@ -73,23 +73,13 @@
                             </documentation>
                         </annotation>
                     </element>
-                    <element ref="modell:vorhersagePegelMember" minOccurs="0" maxOccurs="unbounded">
+                    <element ref="modell:bauwerkMember" minOccurs="0" maxOccurs="unbounded">
                         <annotation>
                             <documentation xml:lang="de">
-                                <name>Vorhersage-Pegel</name>
-                                <label>Vorhersage-Pegel</label>
-                                <tooltip>Vorhersage-Pegel</tooltip>
-                                <description>Vorhersage-Pegel</description>
-                            </documentation>
-                        </annotation>
-                    </element>
-                    <element ref="modell:zuflussPegelMember" minOccurs="0" maxOccurs="unbounded">
-                        <annotation>
-                            <documentation xml:lang="de">
-                                <name>Zuflüsse</name>
-                                <label>Zuflüsse</label>
-                                <tooltip>Zuflüsse</tooltip>
-                                <description>Zuflüsse</description>
+                                <name>Polder</name>
+                                <label>Polder</label>
+                                <tooltip>Polder</tooltip>
+                                <description>Polder</description>
                             </documentation>
                         </annotation>
                     </element>
@@ -115,21 +105,32 @@
             </documentation>
         </annotation>
     </element>
+    <element name="AbstractBauwerk" type="modell:AbstractBauwerkType" substitutionGroup="gml:_Feature" abstract="true">
+        <annotation>
+            <documentation xml:lang="de">
+                <name>Bauwerk</name>
+                <label>Bauwerk</label>
+                <tooltip>Bauwerk</tooltip>
+                <description>Bauwerk</description>
+            </documentation>
+        </annotation>
+    </element>
+    <element name="AbstractPolder" type="modell:AbstractPolderType" substitutionGroup="modell:AbstractBauwerk" abstract="true">
+        <annotation>
+            <documentation xml:lang="de">
+                <name>Polder</name>
+                <label>Polder</label>
+                <tooltip>Polder</tooltip>
+                <description>Polder</description>
+            </documentation>
+        </annotation>
+    </element>
     <!-- 
         _________________________________________________________________________________________
         ELEMENTS
         _________________________________________________________________________________________
     -->
-    <element name="vorhersagePegelMember" type="modell:VorhersagePegelPropertyType">
-        <annotation>
-            <documentation xml:lang="de">
-                <name>Vorhersage-Pegel</name>
-                <label>Vorhersage-Pegel</label>
-                <tooltip>Vorhersage-Pegel</tooltip>
-                <description>Vorhersage-Pegel</description>
-            </documentation>
-        </annotation>
-    </element>
+    <!-- PEGEL -->
     <element name="VorhersagePegel" type="modell:VorhersagePegelType" substitutionGroup="modell:AbstractPegel">
         <annotation>
             <documentation xml:lang="de">
@@ -137,16 +138,6 @@
                 <label>Vorhersage-Pegel</label>
                 <tooltip>Vorhersage-Pegel</tooltip>
                 <description>Vorhersage-Pegel</description>
-            </documentation>
-        </annotation>
-    </element>
-    <element name="zuflussPegelMember" type="modell:ZuflussPegelPropertyType">
-        <annotation>
-            <documentation xml:lang="de">
-                <name>Zufluss-Pegel</name>
-                <label>Zufluss-Pegel</label>
-                <tooltip>Zufluss-Pegel</tooltip>
-                <description>Zufluss-Pegel</description>
             </documentation>
         </annotation>
     </element>
@@ -160,6 +151,7 @@
             </documentation>
         </annotation>
     </element>
+    <!--könnte wohl auch abstract sein-->
     <element name="pegelMember" type="modell:AbstractPegelPropertyType">
         <annotation>
             <documentation xml:lang="de">
@@ -170,13 +162,25 @@
             </documentation>
         </annotation>
     </element>
-    <element name="Pegel" type="modell:AbstractPegelType" substitutionGroup="modell:AbstractPegel">
+    <!-- BAUWERKE -->
+    <element name="Polder" type="modell:PolderType" substitutionGroup="modell:AbstractPolder">
         <annotation>
             <documentation xml:lang="de">
-                <name>Pegel</name>
-                <label>Pegel</label>
-                <tooltip>Pegel</tooltip>
-                <description>Pegel</description>
+                <name>Polder</name>
+                <label>Polder</label>
+                <tooltip>Polder</tooltip>
+                <description>Polder</description>
+            </documentation>
+        </annotation>
+    </element>
+    <!--könnte wohl auch abstract sein-->
+    <element name="bauwerkMember" type="modell:AbstractBauwerkPropertyType">
+        <annotation>
+            <documentation xml:lang="de">
+                <name>Bauwerk</name>
+                <label>Bauwerk</label>
+                <tooltip>Bauwerk</tooltip>
+                <description>Bauwerk</description>
             </documentation>
         </annotation>
     </element>
@@ -210,6 +214,26 @@
                             </documentation>
                         </annotation>
                     </element>
+                    <element name="lageAmGewaesser" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Lage am Fluss [km]</name>
+                                <label>Lage am Fluss [km]</label>
+                                <tooltip>Lage am Fluss [km]</tooltip>
+                                <description>Lage am Fluss [km]</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="pegelNullPunkt" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Pegelnullpunkt über HNH [m]</name>
+                                <label>Pegelnullpunkt über HNH [m]</label>
+                                <tooltip>Pegelnullpunkt über HNH [m]</tooltip>
+                                <description>Pegelnullpunkt über HNH [m]</description>
+                            </documentation>
+                        </annotation>
+                    </element>
                     <element name="name" type="string">
                         <annotation>
                             <documentation xml:lang="de">
@@ -223,10 +247,10 @@
                     <element name="description" type="string" nillable="true">
                         <annotation>
                             <documentation xml:lang="de">
-                                <name>Beschreibung des Pegels</name>
-                                <label>Beschreibung des Pegels</label>
-                                <tooltip>Beschreibung des Pegels</tooltip>
-                                <description>Beschreibung des Pegels</description>
+                                <name>Beschreibung</name>
+                                <label>Beschreibung</label>
+                                <tooltip>Beschreibung</tooltip>
+                                <description>Beschreibung</description>
                             </documentation>
                         </annotation>
                     </element>
@@ -240,13 +264,142 @@
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="nr" type="string">
+                    <element name="kenn" type="string">
+                        <annotation>
+                            <documentation xml:lang="de"> z.B. SCHO für Schöna, wird beim Schreiben des nativen Datenformates benötigt
+                                <name>interne Kennzeichnung</name>
+                                <label>interne Kennzeichnung</label>
+                                <tooltip>interne Kennzeichnung</tooltip>
+                                <description>interne Kennzeichnung</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="lfdNum" type="int">
                         <annotation>
                             <documentation xml:lang="de">
-                                <name>interne Pegel-Kennzeichnung</name>
-                                <label>interne Pegel-Kennzeichnung</label>
-                                <tooltip>interne Pegel-Kennzeichnung</tooltip>
-                                <description>interne Pegel-Kennzeichnung</description>
+                                <name>interne laufende Nummer</name>
+                                <label>interne laufende Nummer</label>
+                                <tooltip>interne laufende Nummer</tooltip>
+                                <description>interne laufende Nummer</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="river" type="commons:riverType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Gewässer</name>
+                                <label>Gewässer</label>
+                                <tooltip>Gewässer</tooltip>
+                                <description>Gewässer</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="datenUebergabe" type="commons:dataDeliveryType" default="Q" nillable="false">
+                        <annotation>
+                            <documentation xml:lang="de"> Typ, in dem Zeitreihendaten an den Rechenkern übergeben werden (W/Q) 
+                                <name>Typ der Datenübergabe</name>
+                                <label>Typ der Datenübergabet</label>
+                                <tooltip>Typ der Datenübergabe</tooltip>
+                                <description>Typ der Datenübergabe</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="projektionErlaubt" type="boolean" default="false" nillable="false">
+                        <annotation>
+                            <documentation xml:lang="de"> ja, wenn Eintrag/Zeile in Datei fluss.pro vorhanden  
+                                <name>Projektion erlaubt</name>
+                                <label>Projektion erlaubt</label>
+                                <tooltip>Projektion erlaubt</tooltip>
+                                <description>Projektion erlaubt</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="projektionEmpfohlen" type="commons:projektionType" default="0" nillable="false">
+                        <annotation>
+                            <documentation xml:lang="de"> 
+                                <name>Projektion empfohlen</name>
+                                <label>Projektion empfohlen</label>
+                                <tooltip>Projektion empfohlen</tooltip>
+                                <description>Projektion empfohlen</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="projektionEingschaltet" type="commons:projektionType" default="0" nillable="false">
+                        <annotation>
+                            <documentation xml:lang="de"> 
+                                <name>Projektion</name>
+                                <label>Projektion</label>
+                                <tooltip>Projektion</tooltip> 
+                                <description>Projektion</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!--  Nicht abstrakt, weils sonst vom alten Kalypso Gml-Parser ignoriert wird.  -->
+    <complexType name="AbstractBauwerkPropertyType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="modell:AbstractBauwerk"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <!--  Nicht abstrakt, weils sonst vom alten Kalypso Gml-Parser ignoriert wird.  -->
+    <complexType name="AbstractBauwerkType">
+        <complexContent>
+            <extension base="commons:EmptyFeatureBaseType">
+                <sequence>
+                    <element name="lage" type="gml:PointPropertyType">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Lage</name>
+                                <label>Lage</label>
+                                <tooltip>Lage</tooltip>
+                                <description>Lage</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="name" type="string">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Pegelname</name>
+                                <label>Pegelname</label>
+                                <tooltip>Pegelname</tooltip>
+                                <description>Pegelname</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="description" type="string" nillable="true">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Beschreibung</name>
+                                <label>Beschreibung</label>
+                                <tooltip>Beschreibung</tooltip>
+                                <description>Beschreibung</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="kenn" type="string">
+                        <annotation>
+                            <documentation xml:lang="de"> z.B. SCHO für Schöna, wird beim Schreiben des nativen Datenformates benötigt
+                                <name>interne Kennzeichnung</name>
+                                <label>interne Kennzeichnung</label>
+                                <tooltip>interne Kennzeichnung</tooltip>
+                                <description>interne Kennzeichnung</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="lfdNum" type="int">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>interne laufende Nummer</name>
+                                <label>interne laufende Nummer</label>
+                                <tooltip>interne laufende Nummer</tooltip>
+                                <description>interne laufende Nummer</description>
                             </documentation>
                         </annotation>
                     </element>
@@ -264,11 +417,30 @@
             </extension>
         </complexContent>
     </complexType>
+    <!--  Nicht abstrakt, weils sonst vom alten Kalypso Gml-Parser ignoriert wird.  -->
+    <complexType name="AbstractPolderPropertyType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="modell:AbstractPolder"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <!--  Nicht abstrakt, weils sonst vom alten Kalypso Gml-Parser ignoriert wird.  -->
+    <complexType name="AbstractPolderType">
+        <complexContent>
+            <extension base="modell:AbstractBauwerkType">
+                <sequence> </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
     <!-- 
         _______________________________________________________________________________________
         TYPES
         _________________________________________________________________________________________	
     -->
+    <!-- PEGEL -->
     <complexType name="VorhersagePegelPropertyType">
         <complexContent>
             <restriction base="gml:FeatureAssociationType">
@@ -282,63 +454,23 @@
         <complexContent>
             <extension base="modell:AbstractPegelType">
                 <sequence>
-                    <element name="ganglinie_messwerte" type="obslink:TimeseriesLinkFeatureProperty">
+                    <element name="ganglinie_gesamt" type="obslink:TimeseriesLinkFeatureProperty">
                         <annotation>
                             <documentation xml:lang="de">
-                                <name>Messwerte</name>
-                                <label>Messwerte</label>
-                                <tooltip>Messwerte</tooltip>
-                                <description>Messwerte</description>
+                                <name>Mess- und Vorgabewerte</name>
+                                <label>Mess- und Vorgabewerte</label>
+                                <tooltip>Mess- und Vorgabewerte</tooltip>
+                                <description>Mess- und Vorgabewerte</description>
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="ganglinie_modellwerte" type="obslink:TimeseriesLinkFeatureProperty">
+                    <element name="ganglinie_information" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
                         <annotation>
                             <documentation xml:lang="de">
-                                    <name>Modellwerte</name>
-                                    <label>Modellwerte</label>
-                                    <tooltip>Modellwerte</tooltip>
-                                    <description>Modellwerte</description>
-                                </documentation>
-                        </annotation>
-                    </element>
-                    <element name="ganglinie_modellwerte_unten" type="obslink:TimeseriesLinkFeatureProperty">
-                        <annotation>
-                            <documentation xml:lang="de">
-                                    <name>Modellwerte (Untere Umhüllende)</name>
-                                    <label>Modellwerte (Untere Umhüllende)</label>
-                                    <tooltip>Modellwerte (Untere Umhüllende)</tooltip>
-                                    <description>Modellwerte (Untere Umhüllende)</description>
-                                </documentation>
-                        </annotation>
-                    </element>
-                    <element name="ganglinie_modellwerte_oben" type="obslink:TimeseriesLinkFeatureProperty">
-                        <annotation>
-                            <documentation xml:lang="de">
-                                    <name>Modellwerte (Obere Umhüllende)</name>
-                                    <label>Modellwerte (Obere Umhüllende)</label>
-                                    <tooltip>Modellwerte (Obere Umhüllende)</tooltip>
-                                    <description>Modellwerte (Obere Umhüllende)</description>
-                                </documentation>
-                        </annotation>
-                    </element>
-                    <element name="ganglinie_messwerte_w" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
-                        <annotation>
-                            <documentation xml:lang="de">
-                                    <name>W-Messwerte (zur Information)</name>
-                                    <label>W-Messwerte (zur Information)</label>
-                                    <tooltip>W-Messwerte (zur Information)</tooltip>
-                                    <description>W-Messwerte (zur Information)</description>
-                                </documentation>
-                        </annotation>
-                    </element>
-                    <element name="ganglinie_vorhersage_cz" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
-                        <annotation>
-                            <documentation xml:lang="de">
-                                    <name>(tschechische) Vorhersagewerte</name>
-                                    <label>(tschechische) Vorhersagewerte</label>
-                                    <tooltip>(tschechische) Vorhersagewerte</tooltip>
-                                    <description>(tschechische) Vorhersagewerte</description>
+                                <name>Ganglinie (zur Information)</name>
+                                <label>Ganglinie (zur Information)</label>
+                                <tooltip>Ganglinie (zur Information)</tooltip>
+                                <description>Ganglinie (zur Information)</description>
                                 </documentation>
                         </annotation>
                     </element>
@@ -380,6 +512,34 @@
                                 <label>Abfluss-Ganglinie</label>
                                 <tooltip>Abfluss-Ganglinie</tooltip>
                                 <description>Abfluss-Ganglinie</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <!-- BAUWERKE -->
+    <complexType name="PolderPropertyType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="modell:Polder"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <complexType name="PolderType">
+        <complexContent>
+            <extension base="modell:AbstractPolderType">
+                <sequence>
+                    <element name="ganglinie_zustand" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Polderöffnung</name>
+                                <label>Polderöffnung</label>
+                                <tooltip>Polderöffnung</tooltip>
+                                <description>Polderöffnung</description>
                             </documentation>
                         </annotation>
                     </element>
