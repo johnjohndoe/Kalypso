@@ -88,7 +88,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     m_polygons = polygons;
 
     m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-    m_max = new BigDecimal( Double.MIN_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 
   /**
@@ -223,7 +223,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
     final List<IFloodPolygon> list = m_polygons.query( pos );
     final List<IFloodPolygon> polygonList = new LinkedList<IFloodPolygon>();
-    
+
     if( list == null || list.size() == 0 )
       return polygonList;
     else
@@ -246,6 +246,27 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   public BigDecimal getMax( )
   {
     return m_max;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
+   */
+  @Override
+  public void setMax( BigDecimal maxValue )
+  {
+    if( maxValue != null )
+      m_max = maxValue;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
+   */
+  @Override
+  public void setMin( BigDecimal minValue )
+  {
+    if( minValue != null )
+      m_min = minValue;
+
   }
 
 }
