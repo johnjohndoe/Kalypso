@@ -35,11 +35,9 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -126,7 +124,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     // Coordinate system combo box
     new Label( container, SWT.NONE ).setText( Messages.getString( "ImportLanduseWizardPage.13" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
+    cmb_CoordinateSystem.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
     final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
     cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
     final GridData gd2 = new GridData();
@@ -149,7 +147,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     groupGridData.grabExcessVerticalSpace = true;
     group.setLayout( groupGridLayout );
     group.setLayoutData( groupGridData );
-    group.setText( Messages.getString("ImportLanduseWizardPage.14") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "ImportLanduseWizardPage.14" ) ); //$NON-NLS-1$
 
     final GridData radioLayoutData = new GridData();
     radioLayoutData.horizontalSpan = 3;
@@ -161,14 +159,14 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     m_radioButtons = new Button[3];
     m_radioButtons[0] = new Button( group, SWT.RADIO );
     m_radioButtons[0].setSelection( true );
-    m_radioButtons[0].setText( Messages.getString("ImportLanduseWizardPage.15") ); //$NON-NLS-1$
+    m_radioButtons[0].setText( Messages.getString( "ImportLanduseWizardPage.15" ) ); //$NON-NLS-1$
     m_radioButtons[0].setLayoutData( radioLayoutData );
 
     m_radioButtons[1] = new Button( group, SWT.RADIO );
-    m_radioButtons[1].setText( Messages.getString("ImportLanduseWizardPage.16") ); //$NON-NLS-1$
+    m_radioButtons[1].setText( Messages.getString( "ImportLanduseWizardPage.16" ) ); //$NON-NLS-1$
     m_radioButtons[1].setLayoutData( radioLayoutData );
     m_lblRadioSelection_1 = new Label( group, SWT.NONE );
-    m_lblRadioSelection_1.setText( Messages.getString("ImportLanduseWizardPage.17") ); //$NON-NLS-1$
+    m_lblRadioSelection_1.setText( Messages.getString( "ImportLanduseWizardPage.17" ) ); //$NON-NLS-1$
     m_lblRadioSelection_1.setEnabled( false );
     m_txtExternalProjectPath = new Text( group, SWT.BORDER );
     m_txtExternalProjectPath.setEnabled( false );
@@ -179,17 +177,17 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     btn_existingDatabaseBrowse.setEnabled( false );
 
     m_radioButtons[2] = new Button( group, SWT.RADIO );
-    m_radioButtons[2].setText( Messages.getString("ImportLanduseWizardPage.18") ); //$NON-NLS-1$
+    m_radioButtons[2].setText( Messages.getString( "ImportLanduseWizardPage.18" ) ); //$NON-NLS-1$
     m_radioButtons[2].setLayoutData( radioLayoutData );
     m_lblRadioSelection_21 = new Label( group, SWT.NONE );
-    m_lblRadioSelection_21.setText( Messages.getString("ImportLanduseWizardPage.19") ); //$NON-NLS-1$
+    m_lblRadioSelection_21.setText( Messages.getString( "ImportLanduseWizardPage.19" ) ); //$NON-NLS-1$
     m_lblRadioSelection_21.setEnabled( false );
     m_cmbDamageFunctionsSources = new Combo( group, SWT.BORDER | SWT.READ_ONLY );
     m_cmbDamageFunctionsSources.setEnabled( false );
     m_cmbDamageFunctionsSources.setLayoutData( comboLayoutData );
 
     m_lblRadioSelection_22 = new Label( group, SWT.NONE );
-    m_lblRadioSelection_22.setText( Messages.getString("ImportLanduseWizardPage.20") ); //$NON-NLS-1$
+    m_lblRadioSelection_22.setText( Messages.getString( "ImportLanduseWizardPage.20" ) ); //$NON-NLS-1$
     m_lblRadioSelection_22.setEnabled( false );
     m_cmbAssetValuesSources = new Combo( group, SWT.BORDER | SWT.READ_ONLY );
     m_cmbAssetValuesSources.setEnabled( false );
@@ -461,9 +459,9 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     getWizard().getContainer().updateButtons();
   }
 
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
-    return ConvenienceCSFactory.getInstance().getOGCCSByName( cmb_CoordinateSystem.getText() );
+    return cmb_CoordinateSystem.getText();
   }
 
   public String getLanduseProperty( )
@@ -496,5 +494,4 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
   {
     return m_cmbAssetValuesSources.getText();
   }
-
 }

@@ -28,11 +28,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
-import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.ImageProvider;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -121,7 +119,7 @@ public class ImportWaterdepthPage extends WizardPage
     group.setLayout( groupLayout );
     group.setLayoutData( infoCompositeGridData );
     group.layout();
-    group.setText( Messages.getString("ImportWaterdepthPage.12") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "ImportWaterdepthPage.12" ) ); //$NON-NLS-1$
 
     createControlInfoPart( group );
 
@@ -138,15 +136,15 @@ public class ImportWaterdepthPage extends WizardPage
     m_tableViewer.setLayoutData( gridData );
 
     final TableColumn fileColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    fileColumn.setText( Messages.getString("ImportWaterdepthPage.13") ); //$NON-NLS-1$
+    fileColumn.setText( Messages.getString( "ImportWaterdepthPage.13" ) ); //$NON-NLS-1$
     fileColumn.setWidth( 200 );
 
     final TableColumn annualityColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    annualityColumn.setText( Messages.getString("ImportWaterdepthPage.14") ); //$NON-NLS-1$
+    annualityColumn.setText( Messages.getString( "ImportWaterdepthPage.14" ) ); //$NON-NLS-1$
     annualityColumn.setWidth( 50 );
 
     final TableColumn csColumn = new TableColumn( m_tableViewer, SWT.LEFT );
-    csColumn.setText( Messages.getString("ImportWaterdepthPage.15") ); //$NON-NLS-1$
+    csColumn.setText( Messages.getString( "ImportWaterdepthPage.15" ) ); //$NON-NLS-1$
     csColumn.setWidth( 80 );
 
     m_tableViewer.setSize( 300, 250 );
@@ -173,7 +171,7 @@ public class ImportWaterdepthPage extends WizardPage
   {
     final ImageDescriptor addBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_add.gif" );
     final ImageDescriptor removeBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" );
-    
+
     m_btnAddNew = new Button( parent, SWT.PUSH );
     m_btnAddNew.setImage( new Image( parent.getDisplay(), addBtnID.getImageData() ) );
     m_btnAddNew.setToolTipText( Messages.getString( "ImportWaterdepthPage.11" ) ); //$NON-NLS-1$
@@ -209,7 +207,7 @@ public class ImportWaterdepthPage extends WizardPage
     } );
     m_btnDeleteSelected = new Button( parent, SWT.PUSH );
     m_btnDeleteSelected.setImage( new Image( parent.getDisplay(), removeBtnID.getImageData() ) );
-    m_btnDeleteSelected.setToolTipText( Messages.getString("ImportWaterdepthPage.16") ); //$NON-NLS-1$
+    m_btnDeleteSelected.setToolTipText( Messages.getString( "ImportWaterdepthPage.16" ) ); //$NON-NLS-1$
     m_btnDeleteSelected.setEnabled( false );
     m_btnDeleteSelected.addSelectionListener( new SelectionListener()
     {
@@ -231,35 +229,35 @@ public class ImportWaterdepthPage extends WizardPage
   private void createControlInfoPart( final Composite parent )
   {
     final Label lbl1 = new Label( parent, SWT.NONE );
-    lbl1.setText( Messages.getString("ImportWaterdepthPage.17") ); //$NON-NLS-1$
+    lbl1.setText( Messages.getString( "ImportWaterdepthPage.17" ) ); //$NON-NLS-1$
     m_fldRasterSize = new Text( parent, SWT.BORDER );
     m_fldRasterSize.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fldRasterSize.setEditable( false );
     m_fldRasterSize.setText( "" ); //$NON-NLS-1$
 
     final Label lbl2 = new Label( parent, SWT.NONE );
-    lbl2.setText( Messages.getString("ImportWaterdepthPage.19") ); //$NON-NLS-1$
+    lbl2.setText( Messages.getString( "ImportWaterdepthPage.19" ) ); //$NON-NLS-1$
     m_fldOffset = new Text( parent, SWT.BORDER );
     m_fldOffset.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fldOffset.setEditable( false );
     m_fldOffset.setText( "" ); //$NON-NLS-1$
 
     final Label lbl3 = new Label( parent, SWT.NONE );
-    lbl3.setText( Messages.getString("ImportWaterdepthPage.21") ); //$NON-NLS-1$
+    lbl3.setText( Messages.getString( "ImportWaterdepthPage.21" ) ); //$NON-NLS-1$
     m_fldCellSize = new Text( parent, SWT.BORDER );
     m_fldCellSize.setEditable( false );
     m_fldCellSize.setText( "" ); //$NON-NLS-1$
 
     final Label lbl4 = new Label( parent, SWT.NONE );
-    lbl4.setText( Messages.getString("ImportWaterdepthPage.23") ); //$NON-NLS-1$
+    lbl4.setText( Messages.getString( "ImportWaterdepthPage.23" ) ); //$NON-NLS-1$
     m_cmbCoordinateSystem = new Combo( parent, SWT.NONE );
-    final String[] allCoordinateSystems = (new ConvenienceCSFactoryFull()).getKnownCS();
+    final String[] allCoordinateSystems = CRSHelper.getAllNames().toArray( new String[] {} );
     m_cmbCoordinateSystem.setItems( allCoordinateSystems );
     m_cmbCoordinateSystem.select( m_cmbCoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS ) );
     m_cmbCoordinateSystem.setEnabled( false );
     m_cmbCoordinateSystem.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       public void widgetSelected( SelectionEvent e )
       {
@@ -270,19 +268,19 @@ public class ImportWaterdepthPage extends WizardPage
         }
         else
         {
-          MessageDialog.openError( parent.getShell(), Messages.getString("ImportWaterdepthPage.25"), Messages.getString("ImportWaterdepthPage.26") ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openError( parent.getShell(), Messages.getString( "ImportWaterdepthPage.25" ), Messages.getString( "ImportWaterdepthPage.26" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );
 
     final Label lbl5 = new Label( parent, SWT.NONE );
-    lbl5.setText( Messages.getString("ImportWaterdepthPage.27") ); //$NON-NLS-1$
+    lbl5.setText( Messages.getString( "ImportWaterdepthPage.27" ) ); //$NON-NLS-1$
     m_fldReturnPeriod = new Spinner( parent, SWT.BORDER );
     m_fldReturnPeriod.setValues( 1, 1, 1000, 0, 1, 50 );
     m_fldReturnPeriod.setEnabled( false );
     m_fldReturnPeriod.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       public void widgetSelected( SelectionEvent e )
       {

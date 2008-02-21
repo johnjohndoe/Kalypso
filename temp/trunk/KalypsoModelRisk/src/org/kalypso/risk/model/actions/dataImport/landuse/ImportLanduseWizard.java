@@ -95,7 +95,6 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -226,7 +225,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     final String assetValuesCollectionName = m_wizardPage.getAssetValuesCollectionName();
     final String landuseProperty = m_wizardPage.getLanduseProperty();
     final String sourceShapeFilePath = m_wizardPage.getSourceLocation().removeFileExtension().toPortableString();
-    final CS_CoordinateSystem coordinateSystem = m_wizardPage.getCoordinateSystem();
+    final String coordinateSystem = m_wizardPage.getCoordinateSystem();
     try
     {
       getContainer().run( true, true, new IRunnableWithProgress()
@@ -244,13 +243,11 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
             final IVectorDataModel vectorDataModel = szenarioDataProvider.getModel( IVectorDataModel.class );
 
-
             final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
 
             final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
             final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER ); //$NON-NLS-1$ //$NON-NLS-2$
 
-            
             // create entries for landuse database
             for( int i = 0; i < shapeFeatureList.size(); i++ )
             {
@@ -484,7 +481,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
               final Feature shpFeature = (Feature) shapeFeatureList.get( i );
               final QName shpPropQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
               final String shpPropertyValue = shpFeature.getProperty( shpPropQName ).toString();
-//              final String shpPropertyValue = shpPropQName.toString();
+              // final String shpPropertyValue = shpPropQName.toString();
               final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
               final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
 
@@ -582,8 +579,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        if( MessageDialog.openQuestion( display.getActiveShell(), "Question", Messages.getString("ImportLanduseWizard.60") + shapeLandusePropertyName //$NON-NLS-1$ //$NON-NLS-2$
-            + Messages.getString("ImportLanduseWizard.61") ) ) //$NON-NLS-1$
+        if( MessageDialog.openQuestion( display.getActiveShell(), "Question", Messages.getString( "ImportLanduseWizard.60" ) + shapeLandusePropertyName //$NON-NLS-1$ //$NON-NLS-2$
+            + Messages.getString( "ImportLanduseWizard.61" ) ) ) //$NON-NLS-1$
           m_status = Status.OK_STATUS;
         else
           m_status = Status.CANCEL_STATUS;

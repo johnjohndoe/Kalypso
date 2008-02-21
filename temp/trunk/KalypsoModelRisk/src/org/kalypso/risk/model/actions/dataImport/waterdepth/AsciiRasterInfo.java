@@ -1,22 +1,18 @@
 package org.kalypso.risk.model.actions.dataImport.waterdepth;
 
 import java.io.File;
-import java.rmi.RemoteException;
 
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.grid.AscciiGridReader;
 import org.kalypso.grid.ConvertAscii2Coverage;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
 
 public class AsciiRasterInfo
 {
   private int m_returnPeriod = 0;
 
-  private CS_CoordinateSystem m_coordinateSystem;
+  private String m_coordinateSystem;
 
   private double m_offsetX;
 
@@ -83,15 +79,8 @@ public class AsciiRasterInfo
 
   public String[] getDisplayDetails( )
   {
-    try
-    {
-      final String csName = m_coordinateSystem.getName();
-      return new String[] { m_rasterFile.getName(), getReturnPeriod() > 0 ? Integer.toString( getReturnPeriod() ) : "", csName }; //$NON-NLS-1$
-    }
-    catch( RemoteException e )
-    {
-      return new String[] { m_rasterFile.getName(), getReturnPeriod() > 0 ? Integer.toString( getReturnPeriod() ) : "", "" }; //$NON-NLS-1$ //$NON-NLS-2$
-    }
+    final String csName = m_coordinateSystem;
+    return new String[] { m_rasterFile.getName(), getReturnPeriod() > 0 ? Integer.toString( getReturnPeriod() ) : "", csName }; //$NON-NLS-1$
   }
 
   public void setReturnPeriod( final int returnPeriod )
@@ -108,9 +97,8 @@ public class AsciiRasterInfo
    */
   public boolean setCoordinateSystem( final String cs )
   {
-    final CS_CoordinateSystem oldCoordinateSystem = m_coordinateSystem;
-    final Adapters adapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-    m_coordinateSystem = adapter.export( (new ConvenienceCSFactoryFull()).getCSByName( cs ) );
+    final String oldCoordinateSystem = m_coordinateSystem;
+    m_coordinateSystem = cs;
     try
     {
       init();
@@ -138,15 +126,7 @@ public class AsciiRasterInfo
 
   public String getCoordinateSystem( )
   {
-    try
-    {
-      return m_coordinateSystem.getName();
-    }
-    catch( RemoteException e )
-    {
-      e.printStackTrace();
-      return "null"; //$NON-NLS-1$
-    }
+    return m_coordinateSystem;
   }
 
   public File getSourceFile( )
