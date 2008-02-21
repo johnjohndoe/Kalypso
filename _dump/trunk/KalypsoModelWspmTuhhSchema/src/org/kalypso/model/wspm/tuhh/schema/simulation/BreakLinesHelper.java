@@ -87,7 +87,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Monika Thül
@@ -106,7 +105,7 @@ public class BreakLinesHelper implements IWspmConstants
     if( reachProfileSegments.length > 0 )
     {
       final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), tinFile.toURL(), null );
-      final CS_CoordinateSystem defaultCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String defaultCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
       final Feature triangleFeature = triangleWorkspace.getRootFeature();
       triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "triangulatedSurfaceMember" ), surface );
@@ -295,7 +294,7 @@ public class BreakLinesHelper implements IWspmConstants
       {
         final GM_Point firstLeftPoint = leftPoints.getFirst();
         /* We assume here that all points have the same crs */
-        final CS_CoordinateSystem crs = firstLeftPoint.getCoordinateSystem();
+        final String crs = firstLeftPoint.getCoordinateSystem();
         // add first point to close the ring
         posList.add( firstLeftPoint.getPosition() );
 

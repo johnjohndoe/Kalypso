@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.util;
 
-import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +47,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -59,7 +57,6 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kimwerner
@@ -291,10 +288,10 @@ public class ProfilUtil
     final ArrayList<IRecord> found = new ArrayList<IRecord>();
     for( final IRecord p : points )
     {
-     
-      final Point2D p2D = new Point2D.Double((Double)p.getValue( cBreite ),(Double)p.getValue( property )); 
-      if( p2D.distance( point )<= radius )
-        found.add( p);
+
+      final Point2D p2D = new Point2D.Double( (Double) p.getValue( cBreite ), (Double) p.getValue( property ) );
+      if( p2D.distance( point ) <= radius )
+        found.add( p );
     }
 
     return found.toArray( new IRecord[] {} );
@@ -657,7 +654,7 @@ public class ProfilUtil
     return geoReferencedPoints;
   }
 
-  public static GM_Curve getLine( final IProfil profile, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Curve getLine( final IProfil profile, final String crs ) throws GM_Exception
   {
     final LinkedList<IRecord> georeferencedPoints = getGeoreferencedPoints( profile );
     final GM_Position[] pos = new GM_Position[georeferencedPoints.size()];

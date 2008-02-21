@@ -42,11 +42,10 @@ package org.kalypso.model.wspm.core.util;
 
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
@@ -59,7 +58,7 @@ public class WspmGeometryUtilities
   {
     try
     {
-      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       GEO_TRANSFORMER = new GeoTransformer( targetCRS );
     }
     catch( final Exception e )
@@ -94,9 +93,7 @@ public class WspmGeometryUtilities
     if( crsName == null )
       crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
 
-    final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
-
-    final GM_Point point = GeometryFactory.createGM_Point( position, crs );
+    final GM_Point point = GeometryFactory.createGM_Point( position, crsName );
     return (GM_Point) GEO_TRANSFORMER.transform( point );
   }
 

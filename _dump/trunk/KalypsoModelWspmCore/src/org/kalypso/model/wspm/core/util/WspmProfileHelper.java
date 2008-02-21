@@ -56,10 +56,9 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -125,8 +124,7 @@ public class WspmProfileHelper
     if( srsName == null )
       srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( (Double) geoReferencedPoints.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( geoReferencedPoints.get( 0 ), IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) ) );
 
-    final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
-    final CS_CoordinateSystem kalypsoCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String kalypsoCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     /* Transform geo point into the coord-system of the line. */
     final GeoTransformer transformer = new GeoTransformer( kalypsoCrs );
@@ -151,8 +149,8 @@ public class WspmProfileHelper
       final double hochWertTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
 
       /* Geo-Projection */
-      final GM_Point geoPointOne = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, crs );
-      final GM_Point geoPointTwo = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, crs );
+      final GM_Point geoPointOne = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, srsName );
+      final GM_Point geoPointTwo = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, srsName );
 
       /* Build the line segment. */
       final Coordinate geoCoordOne = JTSAdapter.export( transformer.transform( geoPointOne ).getCentroid().getPosition() );
@@ -204,7 +202,7 @@ public class WspmProfileHelper
     final LinkedList<IRecord> geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
 
     final String srsName = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
-    final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
+
     /* If no or only one geo referenced points are found, return. */
     if( geoReferencedPoints.size() <= 1 )
       return null;
@@ -237,13 +235,13 @@ public class WspmProfileHelper
         final double y = deltaOne * (hochWertTwo - hochWertOne) / delta + hochWertOne;
         final double z = deltaOne * (heigthValueTwo - heigthValueOne) / delta + heigthValueOne;
 
-        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( x, y, z, crs );
+        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( x, y, z, srsName );
       }
       /* if the point is lying on the start point of the segment */
       else if( widthValueOne == width )
-        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, heigthValueOne, crs );
+        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, heigthValueOne, srsName );
       else if( widthValueTwo == width )
-        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, heigthValueTwo, crs );
+        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, heigthValueTwo, srsName );
     }
     return null;
   }
@@ -343,8 +341,7 @@ public class WspmProfileHelper
       if( srsName == null )
         srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
 
-      final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
-      final GM_Point point = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rw, hw, wspHoehe, crs );
+      final GM_Point point = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rw, hw, wspHoehe, srsName );
 
       poses[count++] = point;
     }
@@ -427,7 +424,7 @@ public class WspmProfileHelper
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
     /* set the coordinate system */
-    final CS_CoordinateSystem crs = (CS_CoordinateSystem) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+    final String crs = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
     tmpProfil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
 
     final IComponent cBreite = createPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );

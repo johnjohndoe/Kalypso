@@ -58,7 +58,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
@@ -149,10 +148,8 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
       if( positions.size() < 2 )
         return null;
 
-      final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
-
       final GM_Position[] poses = positions.toArray( new GM_Position[positions.size()] );
-      final GM_Curve curve = GeometryFactory.createGM_Curve( poses, crs );
+      final GM_Curve curve = GeometryFactory.createGM_Curve( poses, srsName );
 
       return WspmGeometryUtilities.GEO_TRANSFORMER.transform( curve );
     }
