@@ -43,23 +43,23 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypso.ogc.gml.IKalypsoUserStyleListener;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
-import org.kalypsodeegree.graphics.Encoders;
 import org.kalypsodeegree.graphics.legend.LegendElement;
 import org.kalypsodeegree.graphics.legend.LegendElementCollection;
 import org.kalypsodeegree.graphics.sld.Rule;
@@ -128,7 +128,6 @@ public class LegendLabel implements DisposeListener, IKalypsoUserStyleListener
     final LegendFactory factory = new LegendFactory();
     try
     {
-      final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       LegendElement le = null;
 
       if( ruleIndex != -1 && ruleIndex < m_userStyle.getFeatureTypeStyles()[0].getRules().length )
@@ -158,17 +157,17 @@ public class LegendLabel implements DisposeListener, IKalypsoUserStyleListener
 
       if( le == null )
         return;
+
       final BufferedImage bi = le.exportAsImage();
       final BufferedImage outbi = new BufferedImage( 40, 20, BufferedImage.TYPE_INT_ARGB );
       final Graphics g = outbi.getGraphics();
       g.drawImage( bi, 0, 0, Color.WHITE, null );
-      Encoders.encodeGif( outputStream, outbi );
-      final ByteArrayInputStream inputStream = new ByteArrayInputStream( outputStream.toByteArray() );
-      final Image img = new Image( null, inputStream );
-      inputStream.read();
-      inputStream.close();
-      outputStream.close();
-      m_label.setImage( img );
+
+      // TODO Is the swt image disposed somewhere?
+      ImageData img = ImageConverter.convertToSWT( outbi );
+      Image swtImage = ImageDescriptor.createFromImageData( img ).createImage();
+
+      m_label.setImage( swtImage );
     }
     catch( final Exception e1 )
     {

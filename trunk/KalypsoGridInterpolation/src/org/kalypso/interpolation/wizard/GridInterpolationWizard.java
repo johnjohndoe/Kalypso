@@ -34,10 +34,8 @@ import java.io.File;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.interpolation.mesh.Mesh;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author kuepfer
@@ -46,11 +44,12 @@ public class GridInterpolationWizard extends Wizard
 {
 
   private GridImportWizardPage m_page;
+
   /**
    *  
    */
 
-  public GridInterpolationWizard()
+  public GridInterpolationWizard( )
   {
     super();
   }
@@ -58,37 +57,41 @@ public class GridInterpolationWizard extends Wizard
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
    */
-  public boolean performFinish()
+  public boolean performFinish( )
   {
     return false;
   }
 
-  public void addPages()
+  public void addPages( )
   {
 
     m_page = new GridImportWizardPage( "gridInterpolationWizardPage" );
     addPage( m_page );
   }
-  public Mesh getMesh(){
-    
+
+  public Mesh getMesh( )
+  {
+
     return m_page.getMesh();
   }
-  public CS_CoordinateSystem getCoordinateSystem(){
-    
+
+  public String getCoordinateSystem( )
+  {
+
     return m_page.getCoordinateSystem();
   }
 
-  public double getSize()
+  public double getSize( )
   {
     return m_page.getCellSize();
   }
 
-  public File getTarget()
+  public File getTarget( )
   {
     return m_page.getTargetFile();
   }
 
-  public GM_Surface getBorderLine()
+  public GM_Surface getBorderLine( )
   {
     return m_page.getMesh().getBorderLine();
   }

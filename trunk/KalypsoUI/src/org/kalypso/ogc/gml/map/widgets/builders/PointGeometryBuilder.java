@@ -43,12 +43,11 @@ package org.kalypso.ogc.gml.map.widgets.builders;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This class is a geometry builder for a single point.
@@ -57,7 +56,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class PointGeometryBuilder implements IGeometryBuilder
 {
-  private final CS_CoordinateSystem m_crs;
+  private final String m_crs;
 
   private GM_Point m_point;
 
@@ -67,7 +66,7 @@ public class PointGeometryBuilder implements IGeometryBuilder
    * @param targetCrs
    *            The target coordinate system.
    */
-  public PointGeometryBuilder( final CS_CoordinateSystem targetCrs )
+  public PointGeometryBuilder( final String targetCrs )
   {
     m_crs = targetCrs;
   }

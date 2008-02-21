@@ -70,8 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.tools.FilterUtilites;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
-import org.kalypsodeegree_impl.model.ct.TransformException;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Kuepferle, doemming
@@ -146,12 +144,6 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
           //            
           // }
         }
-      }
-      catch( final TransformException e )
-      {
-        e.printStackTrace();
-        m_filterWFSPage.setErrorMessage( e.getMessage() );
-        return false;
       }
       catch( final OperationNotSupportedException e )
       {
@@ -245,7 +237,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     m_catalog = catalog;
   }
 
-  private String transformToRemoteCRS( final ComplexFilter filter, final CS_CoordinateSystem remoteCrs )
+  private String transformToRemoteCRS( final ComplexFilter filter, final String remoteCrs )
   {
     String xml = null;
     final TransformSRSVisitor visitor = new TransformSRSVisitor( remoteCrs );

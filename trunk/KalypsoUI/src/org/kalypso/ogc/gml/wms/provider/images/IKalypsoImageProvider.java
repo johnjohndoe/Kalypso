@@ -45,7 +45,6 @@ import java.awt.Image;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This interface provides functions for image provider.
@@ -88,7 +87,7 @@ public interface IKalypsoImageProvider
    * @param localSRS
    *            The client coordinate system.
    */
-  public void init( String themeName, String layers, String styles, String service, CS_CoordinateSystem localSRS );
+  public void init( String themeName, String layers, String styles, String service, String localSRS );
 
   /**
    * This function will create the image and return it.

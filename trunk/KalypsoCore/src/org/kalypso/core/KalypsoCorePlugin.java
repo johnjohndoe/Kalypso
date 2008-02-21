@@ -52,9 +52,7 @@ import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
+import org.kalypso.transformation.CRSHelper;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -75,7 +73,7 @@ public class KalypsoCorePlugin extends Plugin
 
   private CatalogSLD m_sldCatalog = null;
 
-  private CS_CoordinateSystem m_coordinateSystem = null;
+  private String m_coordinateSystem = null;
 
   public static String getID( )
   {
@@ -151,21 +149,23 @@ public class KalypsoCorePlugin extends Plugin
     return m_selectionManager;
   }
 
-  public CS_CoordinateSystem getCoordinatesSystem( )
+  public String getCoordinatesSystem( )
   {
     if( m_coordinateSystem == null )
     {
       String crsName = getPluginPreferences().getString( IKalypsoCorePreferences.GLOBAL_CRS );
+      boolean knownCRS = CRSHelper.isKnownCRS( crsName );
 
-      final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      if( crsName == null || !csFac.isKnownCS( crsName ) )
+      if( crsName == null || !knownCRS )
       {
         getPluginPreferences().setValue( IKalypsoCorePreferences.GLOBAL_CRS, IKalypsoCorePreferences.DEFAULT_CRS );
         System.out.println( "CRS \"" + crsName + "\" in preferences is unknown. setting preferences to CRS \"" + IKalypsoCorePreferences.DEFAULT_CRS + "\"" );
         crsName = IKalypsoCorePreferences.DEFAULT_CRS;
       }
-      m_coordinateSystem = Adapters.getDefault().export( csFac.getCSByName( crsName ) );
+
+      m_coordinateSystem = crsName;
     }
+
     return m_coordinateSystem;
   }
 

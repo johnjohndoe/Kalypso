@@ -76,7 +76,6 @@ import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
@@ -91,7 +90,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   private boolean m_isLoaded = true;
 
-  public GisTemplateMapModell( final URL context, final CS_CoordinateSystem crs, final IProject project, final IFeatureSelectionManager selectionManager )
+  public GisTemplateMapModell( final URL context, final String crs, final IProject project, final IFeatureSelectionManager selectionManager )
   {
     m_context = context;
     m_selectionManager = selectionManager;
@@ -343,7 +342,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     return m_modell.getAllThemes();
   }
 
-  public CS_CoordinateSystem getCoordinatesSystem( )
+  public String getCoordinatesSystem( )
   {
     return m_modell.getCoordinatesSystem();
   }

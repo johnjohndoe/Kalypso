@@ -52,7 +52,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.algorithm.RobustCGAlgorithms;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -86,7 +85,7 @@ public class MeshElement
 
   private final double[] m_values;
 
-  public MeshElement( final String id, final GM_Position[] positions, final double[] values, final CS_CoordinateSystem crs ) throws GM_Exception
+  public MeshElement( final String id, final GM_Position[] positions, final double[] values, final String crs ) throws GM_Exception
   {
     final GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
     final Feature f = FeatureFactory.createFeature( null, null, id, m_featureType, false );
@@ -374,7 +373,7 @@ public class MeshElement
 
   }
 
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     return getGeometry().getCoordinateSystem();
   }

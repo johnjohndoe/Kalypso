@@ -162,7 +162,9 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
 
     /* Create the text. */
     m_text = new Text( m_composite, SWT.BORDER );
-    m_text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, true ) );
+    GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, true );
+    gridData.widthHint = 75;
+    m_text.setLayoutData( gridData );
     m_text.setText( "" );
 
     /* Add the selection listener. */

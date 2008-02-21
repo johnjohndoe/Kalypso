@@ -57,7 +57,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuch
@@ -65,7 +64,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 {
 
-  public KalypsoPictureThemeWorldFile( final StyledLayerType layerType, final URL context, final IMapModell modell, final CS_CoordinateSystem system, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
+  public KalypsoPictureThemeWorldFile( final StyledLayerType layerType, final URL context, final IMapModell modell, final String system, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
   {
     super( layerType, context, modell, legendGraphic, shouldShowChildren );
 

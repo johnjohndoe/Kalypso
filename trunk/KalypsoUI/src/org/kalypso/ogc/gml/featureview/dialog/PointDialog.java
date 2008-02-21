@@ -40,17 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
-import java.rmi.RemoteException;
-import java.util.Locale;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -65,27 +56,25 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.i18n.Messages;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
-import org.opengis.cs.CS_CoordinateSystem;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**
  * This class builds the dialog for the data input for the GM_Point.
  * 
- * @author albert
+ * @author Holger Albert
  */
 public class PointDialog extends Dialog
 {
   private double m_values[];
 
-  private CS_CoordinateSystem m_cs;
+  private String m_cs;
 
   private Label m_label[];
 
   private Text m_text[];
 
-  public PointDialog( Shell parent, double[] values, CS_CoordinateSystem cs )
+  public PointDialog( Shell parent, double[] values, String cs )
   {
     super( parent );
 
@@ -97,63 +86,45 @@ public class PointDialog extends Dialog
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( final Composite parent )
+  protected Control createDialogArea( Composite parent )
   {
     /* Create a own composite for placing controls. */
-    final Composite panel = (Composite) super.createDialogArea( parent );
+    Composite panel = (Composite) super.createDialogArea( parent );
 
     /* Configuring the composite. */
-    final Shell shell = panel.getShell();
-    shell.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.data") ); //$NON-NLS-1$
+    Shell shell = panel.getShell();
+    shell.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.data" ) ); //$NON-NLS-1$
 
     /* The label for the input data. */
     Label label = new Label( panel, SWT.NONE );
     label.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillin") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillin" ) ); //$NON-NLS-1$
     label.setAlignment( SWT.LEFT );
 
     /* A new group for the labels and texts. */
-    final Group group = new Group( panel, SWT.NONE );
+    Group group = new Group( panel, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Configuring the group. */
     group.setLayout( new GridLayout( 2, true ) );
 
-    final Display display = shell.getDisplay();
-    final Color badColor = display.getSystemColor( SWT.COLOR_RED );
-    final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
+    Display display = shell.getDisplay();
+    Color badColor = display.getSystemColor( SWT.COLOR_RED );
+    Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
 
-    final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
+    DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
     m_label = new Label[m_values.length];
     m_text = new Text[m_values.length];
 
-    final CS_CoordinateSystem coordinateSystem = getCS_CoordinateSystem();
-    // TODO: Holger: handle case where crs is null
-    
     for( int i = 0; i < m_values.length; i++ )
     {
       /* The label for the input data. */
       m_label[i] = new Label( group, SWT.NONE );
       m_label[i].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      try
-      {
-        if( i < coordinateSystem.getDimension() )
-        {
-          m_label[i].setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis") + coordinateSystem.getAxis( i ).name + " [" + coordinateSystem.getUnits( i ).getName() + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          m_label[i].setToolTipText( "" ); //$NON-NLS-1$
-        }
-        else
-        {
-          m_label[i].setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.supportedlabel") ); //$NON-NLS-1$
-          m_label[i].setToolTipText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.supportedtooltip") ); //$NON-NLS-1$
-        }
-      }
-      catch( RemoteException e )
-      {
-        e.printStackTrace();
-      }
+      m_label[i].setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) + String.valueOf( i ) );
+      m_label[i].setToolTipText( "" );
 
       m_label[i].setAlignment( SWT.LEFT );
 
@@ -169,74 +140,45 @@ public class PointDialog extends Dialog
     /* The label for the input data. */
     Label label1 = new Label( panel, SWT.NONE );
     label1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label1.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillincs") ); //$NON-NLS-1$
+    label1.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillincs" ) ); //$NON-NLS-1$
     label1.setAlignment( SWT.LEFT );
 
-    /* A new group for the labels and texts. */
-    final Group combo_group = new Group( panel, SWT.NONE );
-    combo_group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    /* A new composite for the coordinate system panel. */
+    Composite combo_composite = new Composite( panel, SWT.NONE );
+    combo_composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Configuring the group. */
-    combo_group.setLayout( new GridLayout( 2, true ) );
+    GridLayout gridLayout = new GridLayout( 1, false );
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    combo_composite.setLayout( gridLayout );
 
-    /* The label for the coordinate system. */
-    Label label2 = new Label( combo_group, SWT.NONE );
-    label2.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    label2.setText( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointDialog.cs") ); //$NON-NLS-1$
-    label2.setAlignment( SWT.LEFT );
+    /* The coordinate system panel. */
+    CRSSelectionPanel crsPanel = new CRSSelectionPanel();
+    Control crsControl = crsPanel.createControl( combo_composite );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    final ComboViewer combo = new ComboViewer( combo_group );
-    ArrayContentProvider contentProvider = new ArrayContentProvider();
-    LabelProvider labelProvider = new LabelProvider()
+    if( getCS_CoordinateSystem() != null )
+      crsPanel.setSelectedCRS( getCS_CoordinateSystem() );
+
+    crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       * @see org.kalypso.transformation.ui.CRSSelectionListener#selectionChanged(java.lang.String)
        */
       @Override
-      public String getText( Object element )
+      protected void selectionChanged( String selectedCRS )
       {
-        CoordinateSystem crs = (CoordinateSystem) element;
-
-        String name = ""; //$NON-NLS-1$
-
-        name = crs.getName( Locale.getDefault() );
-
-        return name;
+        setCS( selectedCRS );
       }
-    };
-
-    ConvenienceCSFactoryFull factory = new ConvenienceCSFactoryFull();
-    CoordinateSystem[] crs = factory.getKnownCoordinateSystems();
-
-    combo.setContentProvider( contentProvider );
-    combo.setInput( crs );
-    combo.setLabelProvider( labelProvider );
-
-    try
-    {
-      combo.setSelection( new StructuredSelection( factory.getCSByName( coordinateSystem.getName() ) ) );
-    }
-    catch( RemoteException e )
-    {
-      e.printStackTrace();
-    }
-
-    combo.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-
-      public void selectionChanged( SelectionChangedEvent event )
-      {
-        final Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-        CS_CoordinateSystem cs_crs = m_csAdapter.export( (CoordinateSystem) combo.getElementAt( combo.getCombo().getSelectionIndex() ) );
-        setCS( cs_crs );
-      }
-
     } );
 
     return panel;
   }
 
-  /* Diese Funktion setzt den Status des OK-Buttons, nach dem Status der Text-Felder. */
+  /**
+   * Diese Funktion setzt den Status des OK-Buttons, nach dem Status der Text-Felder.
+   */
   public void checkModified( )
   {
     this.getButton( IDialogConstants.OK_ID ).setEnabled( true );
@@ -244,28 +186,48 @@ public class PointDialog extends Dialog
     for( int i = 0; i < m_text.length; i++ )
     {
       if( !NumberUtils.isDouble( m_text[i].getText() ) )
-      {
         this.getButton( IDialogConstants.OK_ID ).setEnabled( false );
-      }
     }
   }
 
+  /**
+   * This function returns the values.
+   * 
+   * @return The values.
+   */
   public double[] getValues( )
   {
     return m_values;
   }
 
+  /**
+   * This function sets the values.
+   * 
+   * @param values
+   *            The values.
+   */
   public void setValues( double[] values )
   {
     m_values = values;
   }
 
-  public CS_CoordinateSystem getCS_CoordinateSystem( )
+  /**
+   * This function returns the cs.
+   * 
+   * @return The cs.
+   */
+  public String getCS_CoordinateSystem( )
   {
     return m_cs;
   }
 
-  public void setCS( CS_CoordinateSystem cs )
+  /**
+   * This function sets the cs.
+   * 
+   * @param cs
+   *            The cs.
+   */
+  public void setCS( String cs )
   {
     m_cs = cs;
   }

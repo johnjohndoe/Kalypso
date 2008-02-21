@@ -18,11 +18,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer
@@ -48,7 +46,7 @@ public class Point
 
   private Feature feature = null;
 
-  public Point( final String pointID, final Double val, final double x, final double y, final CS_CoordinateSystem crs )
+  public Point( final String pointID, final Double val, final double x, final double y, final String crs )
   {
     final GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
     final Feature f = FeatureFactory.createFeature( null, null, pointID, m_featureType, false );
@@ -58,13 +56,13 @@ public class Point
 
   }// constructor}
 
-  public Point( final String pointID, final double x, final double y, CS_CoordinateSystem crs )
+  public Point( final String pointID, final double x, final double y, String crs )
   {
     if( crs == null )
     {
-      final CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
-      crs = cs;
+      crs = "EPSG:31467";
     }
+
     final GM_Point point = GeometryFactory.createGM_Point( x, y, crs );
     final Feature f = FeatureFactory.createFeature( null, null, pointID, m_featureType, false );
     f.setProperty( "GEOM", point );
@@ -72,14 +70,14 @@ public class Point
 
   }// constructor}
 
-  public Point( final String pointID, final GM_Position pos, CS_CoordinateSystem crs )
+  public Point( final String pointID, final GM_Position pos, String crs )
   {
     if( crs == null )
     {
       // default coordinate system is Gauß-Krüger
-      final CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
-      crs = cs;
+      crs = "EPSG:31467";
     }
+
     final GM_Point point = GeometryFactory.createGM_Point( pos.getX(), pos.getY(), crs );
     final Feature f = FeatureFactory.createFeature( null, null, pointID, m_featureType, false );
     f.setProperty( "GEOM", point );

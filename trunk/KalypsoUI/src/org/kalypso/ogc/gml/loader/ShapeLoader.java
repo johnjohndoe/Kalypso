@@ -60,9 +60,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Belger
@@ -159,10 +157,9 @@ public class ShapeLoader extends AbstractLoader
         throw new LoaderException( "Could not load shape at source: " + shpSource );
 
       // Workspace laden
-      final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      final CS_CoordinateSystem sourceCrs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( sourceSrs ) );
+      final String sourceCrs = sourceSrs;
+      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
-      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs );
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 

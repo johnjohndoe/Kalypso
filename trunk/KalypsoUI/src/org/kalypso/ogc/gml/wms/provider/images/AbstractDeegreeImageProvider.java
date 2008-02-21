@@ -55,10 +55,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * The base implementation of the deegree WMS client.
@@ -90,7 +89,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   /**
    * This variable stores the client coordinate system.
    */
-  private CS_CoordinateSystem m_localSRS;
+  private String m_localSRS;
 
   /**
    * This variable stores the loader for the capabilities.
@@ -105,7 +104,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   /**
    * The negotiated coordinate system.
    */
-  private CS_CoordinateSystem m_negotiatedSRS;
+  private String m_negotiatedSRS;
 
   /**
    * The constructor.
@@ -127,10 +126,10 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   }
 
   /**
-   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider#init(java.lang.String, java.lang.String,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider#init(java.lang.String, java.lang.String,
+   *      java.lang.String, java.lang.String, java.lang.String)
    */
-  public void init( String themeName, String layers, String styles, String service, CS_CoordinateSystem localSRS )
+  public void init( String themeName, String layers, String styles, String service, String localSRS )
   {
     m_themeName = themeName;
     m_layers = layers;
@@ -237,12 +236,12 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    *            The layers that have to be matched to the local srs.
    * @return An array of possible coordiante systems.
    */
-  private CS_CoordinateSystem negotiateCRS( CS_CoordinateSystem localSRS, WMSCapabilities wmsCapabilities, String[] layers ) throws CoreException
+  private String negotiateCRS( String localSRS, WMSCapabilities wmsCapabilities, String[] layers ) throws CoreException
   {
     /* Match the local with the remote coordinate system. */
     try
     {
-      CS_CoordinateSystem[] crs = DeegreeWMSUtilities.negotiateCRS( localSRS, wmsCapabilities, layers );
+      String[] crs = DeegreeWMSUtilities.negotiateCRS( localSRS, wmsCapabilities, layers );
       if( crs.length > 0 )
         return crs[0];
     }
@@ -329,7 +328,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return m_service;
   }
 
-  protected CS_CoordinateSystem getLocalSRS( )
+  protected String getLocalSRS( )
   {
     return m_localSRS;
   }
@@ -347,7 +346,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return m_wms;
   }
 
-  protected CS_CoordinateSystem getNegotiatedSRS( )
+  protected String getNegotiatedSRS( )
   {
     return m_negotiatedSRS;
   }

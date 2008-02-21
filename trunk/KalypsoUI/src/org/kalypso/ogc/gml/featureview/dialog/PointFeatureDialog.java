@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This class opens a point editing dialog.
@@ -95,7 +94,7 @@ public class PointFeatureDialog implements IFeatureDialog
 
       GM_Position pos = GeometryFactory.createGM_Position( values );
 
-      CS_CoordinateSystem crs = dialog.getCS_CoordinateSystem();
+      String crs = dialog.getCS_CoordinateSystem();
 
       point = GeometryFactory.createGM_Point( pos, crs );
 
@@ -119,7 +118,6 @@ public class PointFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.PointFeatureDialog.values"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointFeatureDialog.values" ); //$NON-NLS-1$
   }
-
 }

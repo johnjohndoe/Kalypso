@@ -8,11 +8,11 @@ import java.util.Locale;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import com.google.earth.kml.BoundaryType;

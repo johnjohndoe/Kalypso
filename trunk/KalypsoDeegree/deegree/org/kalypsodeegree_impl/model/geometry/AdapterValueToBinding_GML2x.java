@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -77,7 +76,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -96,17 +94,11 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
 
   private String getCSName( final GM_Object geometry, final String csNameDefault )
   {
-    final CS_CoordinateSystem coordinateSystem = geometry.getCoordinateSystem();
+    final String coordinateSystem = geometry.getCoordinateSystem();
     if( coordinateSystem == null )
       return csNameDefault;
-    try
-    {
-      return coordinateSystem.getName();
-    }
-    catch( final RemoteException e )
-    {
-      return csNameDefault;
-    }
+
+    return coordinateSystem;
   }
 
   /**

@@ -52,13 +52,9 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerDouble;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -81,7 +77,7 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
 
   private List<GM_Triangle> m_triangles = null;
 
-  private CS_CoordinateSystem m_crs;
+  private String m_crs;
 
   private Locator m_locator;
 
@@ -89,7 +85,7 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
 
   private GM_Position[] m_triangle;
 
-  private CS_CoordinateSystem m_currentCrs;
+  private String m_currentCrs;
 
   private final UnmarshallResultEater m_resultEater;
 
@@ -112,7 +108,7 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
     m_resultEater = resultEater;
   }
 
-  private static CS_CoordinateSystem parseCrsFromAttributes( final Attributes attributes, final CS_CoordinateSystem parentCS )
+  private static String parseCrsFromAttributes( final Attributes attributes, final String parentCS )
   {
     final String srsName = AttributesUtilities.getAttributeValue( attributes, "", "srsName", null );
 
@@ -120,10 +116,7 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
     if( srsName == null )
       return parentCS;
 
-    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    final Adapters csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-    final CoordinateSystem csByName = csFac.getCSByName( srsName );
-    return csAdapter.export( csByName );
+    return srsName;
   }
 
   /**

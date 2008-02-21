@@ -47,14 +47,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This class is a geometry builder for a rectangle.
@@ -67,7 +66,7 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
 
   private GM_Point m_endPoint = null;
 
-  private final CS_CoordinateSystem m_crs;
+  private final String m_crs;
 
   private GM_Object m_result;
 
@@ -85,7 +84,7 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
    * @param targetCrs
    *            The target coordinate system.
    */
-  public RectangleGeometryBuilder( final CS_CoordinateSystem targetCrs, final IGeometryBuilderExtensionProvider extender )
+  public RectangleGeometryBuilder( final String targetCrs, final IGeometryBuilderExtensionProvider extender )
   {
     m_extender = extender;
 
@@ -97,7 +96,7 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
       m_extender.setCursor( CROSSHAIR_CURSOR );
   }
 
-  public RectangleGeometryBuilder( final CS_CoordinateSystem targetCrs )
+  public RectangleGeometryBuilder( final String targetCrs )
   {
     this( targetCrs, null );
   }

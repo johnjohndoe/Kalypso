@@ -61,7 +61,6 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Stefan Kurzbach extended by Dirk Kuch
@@ -271,10 +270,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * @return
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getCoordinatesSystem()
    */
-  public CS_CoordinateSystem getCoordinatesSystem( )
+  public String getCoordinatesSystem( )
   {
     throw new NotImplementedException();
   }

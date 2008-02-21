@@ -63,6 +63,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_GenericSurface;
@@ -71,10 +72,10 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * TODO: this implementation does not implement GM_SurfacePath with is a BUG.<br>TODO: implement it, but check, taht everything works still fine...
+ * 
  * default implementation of the GM_SurfacePatch interface from package jago.model. the class is abstract because it
  * should be specialized by derived classes <code>GM_Polygon</code> for example
  * ------------------------------------------------------------
@@ -82,12 +83,12 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @version 11.6.2001
  * @author Andreas Poth
  */
-class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
+abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 7641735268892225180L;
 
-  protected CS_CoordinateSystem m_crs = null;
+  protected String m_crs = null;
 
   protected GM_Envelope m_envelope = null;
 
@@ -112,7 +113,7 @@ class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
    * @param crs
    * @throws GM_Exception
    */
-  protected GM_SurfacePatch_Impl( final GM_SurfaceInterpolation interpolation, final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final CS_CoordinateSystem crs ) throws GM_Exception
+  protected GM_SurfacePatch_Impl( final GM_SurfaceInterpolation interpolation, final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
   {
     m_crs = crs;
 
@@ -245,7 +246,7 @@ class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   /**
    * returns the coordinate system of the surface patch
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     return m_crs;
   }
@@ -474,9 +475,7 @@ class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     ret += "exteriorRing = \n";
 
     for( final GM_Position element : m_exteriorRing )
-    {
-      ret += (m_exteriorRing + "\n");
-    }
+      ret += (element + "\n");
 
     ret += ("interiorRings = " + m_interiorRings + "\n");
     ret += ("envelope = " + m_envelope + "\n");
@@ -494,54 +493,8 @@ class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   @Override
   public Object clone( ) throws CloneNotSupportedException
   {
-    final CS_CoordinateSystem system = getCoordinateSystem();
-
-    final GM_Position[] clonedExteriorRing = GeometryFactory.cloneGM_Position( getExteriorRing() );
-
-    final GM_Position[][] interiorRings = getInteriorRings();
-    final GM_Position[][] clonedInteriorRings = new GM_Position[interiorRings.length][];
-    for( int i = 0; i < interiorRings.length; i++ )
-    {
-      clonedInteriorRings[i] = GeometryFactory.cloneGM_Position( interiorRings[i] );
-    }
-
-    final GM_SurfaceInterpolation interpolation = (GM_SurfaceInterpolation) getInterpolation().clone();
-
-    try
-    {
-      return new GM_SurfacePatch_Impl( interpolation, clonedExteriorRing, clonedInteriorRings, system );
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    throw (new IllegalStateException());
+    throw new CloneNotSupportedException();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
-   */
-  public GM_SurfacePatch transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
-  {
-    /* exterior ring */
-    final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
-    final GM_Ring transExRing = (GM_Ring) exRing.transform( trans, targetOGCCS );
-
-    /* interior rings */
-    final GM_Position[][] interiors = getInteriorRings();
-    if( interiors == null )
-      return GeometryFactory.createGM_SurfacePatch( transExRing, null, targetOGCCS );
-    final GM_Ring[] transInRings = new GM_Ring[interiors.length];
-
-    for( int j = 0; j < interiors.length; j++ )
-    {
-      final GM_Ring inRing = GeometryFactory.createGM_Ring( interiors[j], getCoordinateSystem() );
-      transInRings[j] = (GM_Ring) inRing.transform( trans, targetOGCCS );
-    }
-
-    return GeometryFactory.createGM_SurfacePatch( transExRing, transInRings, targetOGCCS );
-  }
-
+ 
 }

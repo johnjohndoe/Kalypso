@@ -91,16 +91,14 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.transformation.CRSHelper;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -299,8 +297,8 @@ public class GisTemplateHelper
     if( orgSRSName != null )
       try
       {
-        final CS_CoordinateSystem targetSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-        if( (orgSRSName != null) && !orgSRSName.equals( targetSRS.getName() ) )
+        final String targetSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+        if( (orgSRSName != null) && !orgSRSName.equals( targetSRS ) )
         {
           // if srs attribute exists and it is not the target srs we have to convert it
           final GeoTransformer transformer = new GeoTransformer( targetSRS );
@@ -339,23 +337,24 @@ public class GisTemplateHelper
     return gismapview;
   }
 
-  public static GM_Surface< ? > getBoxAsSurface( final Gismapview mapview, final CoordinateSystem targetCS ) throws Exception
+  public static GM_Surface< ? > getBoxAsSurface( final Gismapview mapview, final String targetCS ) throws Exception
   {
     final ExtentType extent = mapview.getExtent();
-    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     final String crsName = extent.getSrs();
-    if( csFac.isKnownCS( crsName ) )
+
+    if( CRSHelper.isKnownCRS( crsName ) )
     {
       final GM_Envelope envelope = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
-      final CS_CoordinateSystem crs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( crsName ) );
-      final GM_Surface< ? > bboxAsSurface = GeometryFactory.createGM_Surface( envelope, crs );
+      final GM_Surface< ? > bboxAsSurface = GeometryFactory.createGM_Surface( envelope, crsName );
       if( targetCS != null )
       {
         final GeoTransformer transformer = new GeoTransformer( targetCS );
         return (GM_Surface< ? >) transformer.transform( bboxAsSurface );
       }
+
       return bboxAsSurface;
     }
+
     return null;
   }
 

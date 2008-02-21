@@ -81,7 +81,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Lädt einen GMLWorkspace aus einem GML
@@ -145,7 +144,7 @@ public class GmlLoader extends AbstractLoader
         perfLogger = new TimeLogger( "Start transforming gml workspace" );
       }
 
-      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       monitor.subTask( "in das Zielkoordinatensystem transformieren." );
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 

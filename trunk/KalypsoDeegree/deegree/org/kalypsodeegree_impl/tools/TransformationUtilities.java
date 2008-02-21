@@ -49,6 +49,7 @@ import java.awt.image.BufferedImage;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.TiledImage;
 
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -58,10 +59,8 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This class provides functions for transformation purposes.
@@ -96,7 +95,7 @@ public class TransformationUtilities
    * @throws Exception
    */
 
-  public static void transformImage( TiledImage remoteImage, GM_Envelope env, CS_CoordinateSystem localCSR, CS_CoordinateSystem remoteCSR, GeoTransform worldToScreenTransformation, Graphics g ) throws Exception
+  public static void transformImage( TiledImage remoteImage, GM_Envelope env, String localCSR, String remoteCSR, GeoTransform worldToScreenTransformation, Graphics g ) throws Exception
   {
     int height = remoteImage.getHeight();
     int width = remoteImage.getWidth();
@@ -127,7 +126,7 @@ public class TransformationUtilities
    * @param targetCS
    *            Target coordinate system (local CS from client).
    */
-  private static void internalTransformation( Graphics2D g2d, GeoTransform projection, TiledImage rasterImage, RectifiedGridDomain gridDomain, CS_CoordinateSystem targetCS ) throws Exception
+  private static void internalTransformation( Graphics2D g2d, GeoTransform projection, TiledImage rasterImage, RectifiedGridDomain gridDomain, String targetCS ) throws Exception
   {
     /* Get the Screen extent in real world coordiantes. */
     GM_Envelope sourceScreenRect = projection.getSourceRect();
@@ -182,6 +181,10 @@ public class TransformationUtilities
     double destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY();
     double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
 
+    /* If one of the values is <=0, there could nothing displayed. */
+    if( destImageHeight <= 0 || destImageWidth <= 0 )
+      return;
+
     /* Calculate the scaling factors for the transformation. */
     double scaleX = destImageWidth / image.getWidth();
     double scaleY = destImageHeight / image.getHeight();
@@ -215,12 +218,19 @@ public class TransformationUtilities
     GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
     GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
     GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max );
-    BufferedImage buffer = new BufferedImage( (int) buffImageEnv.getWidth(), (int) buffImageEnv.getHeight(), BufferedImage.TYPE_INT_ARGB );
+
+    /* We cannot draw, if the image would have one or both side with 0 pixels. */
+    int width2 = (int) buffImageEnv.getWidth();
+    int height2 = (int) buffImageEnv.getHeight();
+    if( width2 <= 0 || height2 <= 0 )
+      return;
+
+    BufferedImage buffer = new BufferedImage( width2, height2, BufferedImage.TYPE_INT_ARGB );
     Graphics2D bufferGraphics = (Graphics2D) buffer.getGraphics();
 
     /* Draw a transparent backround on the bufferedImage. */
     bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-    bufferGraphics.fillRect( 0, 0, (int) buffImageEnv.getWidth(), (int) buffImageEnv.getHeight() );
+    bufferGraphics.fillRect( 0, 0, width2, height2 );
 
     /* Draw the image with the given transformation. */
     bufferGraphics.drawRenderedImage( image, trafo );

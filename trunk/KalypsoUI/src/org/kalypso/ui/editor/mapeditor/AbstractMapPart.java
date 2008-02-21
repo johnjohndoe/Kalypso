@@ -465,7 +465,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
       final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
-      final String srsName = KalypsoCorePlugin.getDefault().getCoordinatesSystem().getName();
+      final String srsName = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final String customName = getCustomName();
       m_mapModell.createGismapTemplate( boundingBox, srsName, customName, monitor, file );
     }

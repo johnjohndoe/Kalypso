@@ -62,11 +62,11 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.deegree.crs.exceptions.TransformationException;
+import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
-import org.kalypsodeegree_impl.model.ct.TransformException;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is
@@ -164,7 +164,10 @@ class GM_Position_Impl implements GM_Position, Serializable
    */
   public double getZ( )
   {
-    return m_point[2];
+    if( m_point.length > 2 )
+      return m_point[2];
+
+    return Double.NaN;
   }
 
   /**
@@ -249,42 +252,15 @@ class GM_Position_Impl implements GM_Position, Serializable
     final double dx = m_point[0] - otherPoint[0];
     final double dy = m_point[1] - otherPoint[1];
     final double d = dx * dx + dy * dy;
-    return Math.sqrt( d );
 
+    return Math.sqrt( d );
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Position#transform(org.kalypsodeegree_impl.model.ct.MathTransform)
+   * @see org.kalypsodeegree.model.geometry.GM_Position#transform(org.deegree.crs.transformations.CRSTransformation)
    */
-  public GM_Position transform( final MathTransform trans ) throws TransformException
+  public GM_Position transform( final CRSTransformation trans ) throws TransformationException
   {
-    Debug.debugMethodBegin( this, "transformPosition" );
-
-    final double[] din = getAsArray();
-    final double[] dout = transform( din, trans );
-
-    Debug.debugMethodEnd();
-    return GeometryFactory.createGM_Position( dout );
-  }
-
-  public static double[] transform( final double[] din, final MathTransform trans ) throws TransformException
-  {
-    final double[] dout = new double[din.length];
-
-    if( din.length < 3 )
-      trans.transform( din, 0, dout, 0, din.length - 1 );
-    else
-    {
-      final double[] din2d = new double[2];
-      final double[] dout2d = new double[2];
-      din2d[0] = din[0];
-      din2d[1] = din[1];
-      trans.transform( din2d, 0, dout2d, 0, din2d.length - 1 );
-      dout[0] = dout2d[0];
-      dout[1] = dout2d[1];
-      dout[2] = din[2];
-    }
-
-    return dout;
+    return TransformUtilities.transform( this, trans );
   }
 }

@@ -64,9 +64,9 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
 
   /**
    * @param workspace
-   *          set to null, if not used (if feature is not set, this param has no effect!).
+   *            set to null, if not used (if feature is not set, this param has no effect!).
    * @param feature
-   *          set to null, if not used (if used, the workspace has to be set!).
+   *            set to null, if not used (if used, the workspace has to be set!).
    */
   public EditFeatureGeometryWidget( final String name, final String toolTip, final CommandableWorkspace workspace, final Feature feature, final Class geometryClass )
   {

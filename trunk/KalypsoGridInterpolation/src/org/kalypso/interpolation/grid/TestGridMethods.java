@@ -16,9 +16,7 @@ import org.kalypso.interpolation.mesh.Point;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
@@ -26,8 +24,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class TestGridMethods extends TestCase
 {
-
-  public static CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
+  public static String cs = "EPSG:31467";
 
   static String testFile = "d://temp//testNeu.asc";
 
@@ -183,5 +180,4 @@ public class TestGridMethods extends TestCase
     GM_Position test3 = grid.getPosition( testr, testc );
     System.out.println( test3 );
   }// testPositionGrid
-
 }

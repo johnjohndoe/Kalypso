@@ -30,7 +30,6 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.wfs.WFService;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Kuepferle, v.Doemming
@@ -75,7 +74,7 @@ public class WfsLoader extends AbstractLoader
       final String filter = sourceProps.getProperty( KEY_FILTER );
       final String maxFeature = sourceProps.getProperty( KEY_MAXFEATURE );
 
-      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final QName qNameFT;
       if( featureTypeNS != null && featureTypeNS.length() > 0 )
         qNameFT = new QName( featureTypeNS, featureType );

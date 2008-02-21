@@ -45,7 +45,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -68,13 +67,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This class provides functions for dealing with the WMS client from degree.
@@ -189,7 +185,7 @@ public class DeegreeWMSUtilities
    *            The local coordinate system.
    * @return The get map request.
    */
-  public static GetMap createGetMapRequest( WMSCapabilities capabilities, CS_CoordinateSystem negotiatedSRS, String themeName, String layers, String styles, int width, int height, GM_Envelope requestedEnvLocalSRS, CS_CoordinateSystem localSRS ) throws CoreException
+  public static GetMap createGetMapRequest( WMSCapabilities capabilities, String negotiatedSRS, String themeName, String layers, String styles, int width, int height, GM_Envelope requestedEnvLocalSRS, String localSRS ) throws CoreException
   {
     try
     {
@@ -206,7 +202,7 @@ public class DeegreeWMSUtilities
       wmsParameter.put( "TRANSPARENT", "TRUE" );
       wmsParameter.put( "WIDTH", "" + width );
       wmsParameter.put( "HEIGHT", "" + height );
-      wmsParameter.put( "SRS", negotiatedSRS.getName() );
+      wmsParameter.put( "SRS", negotiatedSRS );
 
       GeoTransformer gt = new GeoTransformer( negotiatedSRS );
       GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( requestedEnvLocalSRS, localSRS );
@@ -331,24 +327,17 @@ public class DeegreeWMSUtilities
    *            The layers that have to be matched to the local srs.
    * @return An array of possible coordiante systems.
    */
-  public static CS_CoordinateSystem[] negotiateCRS( CS_CoordinateSystem localCRS, WMSCapabilities capabilities, String[] layerNames ) throws RemoteException
+  public static String[] negotiateCRS( String localCRS, WMSCapabilities capabilities, String[] layerNames ) throws RemoteException
   {
     Layer topLayer = capabilities.getLayer();
-    CS_CoordinateSystem crs = matchCrs( topLayer, layerNames, localCRS );
+    String crs = matchCrs( topLayer, layerNames, localCRS );
     if( crs != null )
-      return new CS_CoordinateSystem[] { localCRS };
+      return new String[] { localCRS };
 
     /* Get crs from top layer. */
     String[] topLayerSRS = topLayer.getSrs();
-    List<CS_CoordinateSystem> result = new ArrayList<CS_CoordinateSystem>();
-    for( String srsName : topLayerSRS )
-    {
-      CS_CoordinateSystem srsByName = ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
-      if( srsByName != null )
-        result.add( srsByName );
-    }
 
-    return result.toArray( new CS_CoordinateSystem[result.size()] );
+    return topLayerSRS;
   }
 
   /**
@@ -363,7 +352,7 @@ public class DeegreeWMSUtilities
    * @return Null, if one element of the layers to be matched is not available in the local coordinate system, otherwise
    *         it returns the local crs.
    */
-  private static CS_CoordinateSystem matchCrs( Layer topLayer, String[] layerSelection, CS_CoordinateSystem localCRS ) throws RemoteException
+  private static String matchCrs( Layer topLayer, String[] layerSelection, String localCRS ) throws RemoteException
   {
     HashSet<Layer> collector = new HashSet<Layer>();
 
@@ -372,7 +361,7 @@ public class DeegreeWMSUtilities
     for( Layer layer : collector )
     {
       String[] layerSRS = layer.getSrs();
-      if( contains( layerSRS, localCRS.getName() ) )
+      if( contains( layerSRS, localCRS ) )
         continue;
 
       return null;
@@ -434,7 +423,7 @@ public class DeegreeWMSUtilities
    *            The layers in the map in an array.
    * @return The max bounding box of a wms layer.
    */
-  public static GM_Envelope getMaxExtent( String[] layers, WMSCapabilities capabilites, CS_CoordinateSystem srs ) throws Exception
+  public static GM_Envelope getMaxExtent( String[] layers, WMSCapabilities capabilites, String srs ) throws Exception
   {
     GeoTransformer geoTransformer = new GeoTransformer( srs );
 
@@ -452,7 +441,7 @@ public class DeegreeWMSUtilities
         GM_Envelope kalypsoEnv = GeometryFactory.createGM_Envelope( env.getMin().getX(), env.getMin().getY(), env.getMax().getX(), env.getMax().getY() );
         GM_Envelope kalypsoEnvTransformed = null;
 
-        boolean transformNeeded = !env.getSRS().equals( srs.getName() );
+        boolean transformNeeded = !env.getSRS().equals( srs );
         if( transformNeeded )
           kalypsoEnvTransformed = geoTransformer.transformEnvelope( kalypsoEnv, env.getSRS() );
         else
@@ -472,8 +461,7 @@ public class DeegreeWMSUtilities
 
     /* Convert top layer env to request srs. */
     GM_Envelope envLatLon = GeometryFactory.createGM_Envelope( topLayer.getLatLonBoundingBox().getMin().getX(), topLayer.getLatLonBoundingBox().getMin().getY(), topLayer.getLatLonBoundingBox().getMax().getX(), topLayer.getLatLonBoundingBox().getMax().getY() );
-    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem latlonSRS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
+    String latlonSRS = "EPSG:4326";
 
     return geoTransformer.transformEnvelope( envLatLon, latlonSRS );
   }
@@ -510,7 +498,7 @@ public class DeegreeWMSUtilities
    *            The local coordinate system.
    * @return The transformed envelope.
    */
-  public static GM_Envelope getTransformedEnvelope( GM_Envelope serverEnv, CS_CoordinateSystem serverCRS, CS_CoordinateSystem local )
+  public static GM_Envelope getTransformedEnvelope( GM_Envelope serverEnv, String serverCRS, String local )
   {
     try
     {

@@ -41,10 +41,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
@@ -947,14 +945,13 @@ public class FeatureHelper
       else
         crsString = format;
 
-      final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( crsString );
       if( (rwString == null) || (rwString.length() == 0) || (hwString == null) || (hwString.length() == 0) )
-        return GeometryFactory.createGM_Point( 0, 0, crs );
+        return GeometryFactory.createGM_Point( 0, 0, crsString );
 
       final double rw = Double.parseDouble( rwString );
       final double hw = Double.parseDouble( hwString );
 
-      return GeometryFactory.createGM_Point( rw, hw, crs );
+      return GeometryFactory.createGM_Point( rw, hw, crsString );
     }
 
     if( typeHandler != null )

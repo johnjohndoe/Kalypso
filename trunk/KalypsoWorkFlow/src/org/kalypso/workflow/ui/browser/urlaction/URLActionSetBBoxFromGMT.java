@@ -54,11 +54,11 @@ import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.types.ExtentType;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.xml.sax.InputSource;
 
 /**
@@ -130,7 +130,6 @@ public class URLActionSetBBoxFromGMT extends AbstractURLAction
   {
     final ExtentType bboxFrom = mapviewfrom.getExtent();
     final String sourceSrsAsString = bboxFrom.getSrs();
-    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
     final ExtentType bboxTo = mapviewto.getExtent();
     final String targetSrs = bboxTo.getSrs();
     if( targetSrs.equals( sourceSrsAsString ) )
@@ -140,9 +139,9 @@ public class URLActionSetBBoxFromGMT extends AbstractURLAction
       bboxTo.setLeft( bboxFrom.getLeft() );
       bboxTo.setRight( bboxFrom.getRight() );
     }
-    else if( csFac.isKnownCS( sourceSrsAsString ) && csFac.isKnownCS( targetSrs ) )
+    else if( CRSHelper.isKnownCRS( sourceSrsAsString ) && CRSHelper.isKnownCRS( targetSrs ) )
     {
-      final GM_Surface boxAsSurface = GisTemplateHelper.getBoxAsSurface( mapviewfrom, csFac.getCSByName( targetSrs ) );
+      final GM_Surface boxAsSurface = GisTemplateHelper.getBoxAsSurface( mapviewfrom, targetSrs );
       // since the helper returns the bbox as a surface we know that the getEnvelope() method returns the real bbox
       final GM_Envelope envelope = boxAsSurface.getEnvelope();
       bboxTo.setBottom( envelope.getMin().getY() );

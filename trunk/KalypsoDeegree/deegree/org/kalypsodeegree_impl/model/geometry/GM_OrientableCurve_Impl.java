@@ -64,12 +64,10 @@ import java.io.Serializable;
 
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_OrientableCurve;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementierung of the GM_OrientableSurface interface from package jago.model. the implementation is abstract
  * because only initialization of the spatial reference system is unique to all orientated curves
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -87,10 +85,9 @@ abstract class GM_OrientableCurve_Impl extends GM_OrientablePrimitive_Impl imple
    * Creates a new GM_OrientableCurve_Impl object.
    * 
    * @param crs
-   * 
    * @throws GM_Exception
    */
-  protected GM_OrientableCurve_Impl( CS_CoordinateSystem crs ) throws GM_Exception
+  protected GM_OrientableCurve_Impl( String crs ) throws GM_Exception
   {
     super( crs, '+' );
   }
@@ -100,10 +97,9 @@ abstract class GM_OrientableCurve_Impl extends GM_OrientablePrimitive_Impl imple
    * 
    * @param crs
    * @param orientation
-   * 
    * @throws GM_Exception
    */
-  protected GM_OrientableCurve_Impl( CS_CoordinateSystem crs, char orientation ) throws GM_Exception
+  protected GM_OrientableCurve_Impl( String crs, char orientation ) throws GM_Exception
   {
     super( crs, orientation );
   }

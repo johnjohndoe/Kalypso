@@ -63,7 +63,6 @@ import org.kalypso.ogc.gml.mapmodel.visitor.ThemeVisiblePredicate;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Andreas von Dömming
@@ -74,7 +73,7 @@ public class MapModell implements IMapModell
 
   private final Collection<IMapModellListener> m_listeners = new HashSet<IMapModellListener>();
 
-  private final CS_CoordinateSystem m_coordinatesSystem;
+  private final String m_coordinatesSystem;
 
   // TODO: this is problematik now, as we are using cascaded themes
   // Probably it would be much better to put the active theme int the MapPanel! this would probably solve all problems
@@ -112,7 +111,7 @@ public class MapModell implements IMapModell
     }
   };
 
-  public MapModell( final CS_CoordinateSystem crs, final IProject project )
+  public MapModell( final String crs, final IProject project )
   {
     m_coordinatesSystem = crs;
     m_project = project;
@@ -245,7 +244,7 @@ public class MapModell implements IMapModell
     return m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
   }
 
-  public CS_CoordinateSystem getCoordinatesSystem( )
+  public String getCoordinatesSystem( )
   {
     return m_coordinatesSystem;
   }

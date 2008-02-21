@@ -31,7 +31,6 @@ package org.kalypso.interpolation.wizard;
 
 import java.io.File;
 import java.io.FileReader;
-import java.rmi.RemoteException;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -55,11 +54,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.interpolation.mesh.Mesh;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
+import org.kalypso.transformation.CRSHelper;
 
 /**
  * @author kuepfer
@@ -148,15 +146,9 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
     m_checkCRS = new Combo( m_group, SWT.NONE );
 
     availableCoordinateSystems( m_checkCRS );
-    try
-    {
-      String defaultCS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-      m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
-    }
-    catch( RemoteException e1 )
-    {
-      e1.printStackTrace();
-    }
+
+    String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
 
     m_checkCRS.setToolTipText( "Koordinatensystem der ESRI(tm) Shape Datei" );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
@@ -170,8 +162,7 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
 
   private void availableCoordinateSystems( Combo checkCRS )
   {
-    ConvenienceCSFactoryFull factory = new ConvenienceCSFactoryFull();
-    checkCRS.setItems( factory.getKnownCS() );
+    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
   }
 
   /**
@@ -179,7 +170,7 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
    */
   public void modifyText( ModifyEvent e )
   {
-  // TODO Auto-generated method stub
+    // TODO Auto-generated method stub
   }
 
   /**
@@ -198,7 +189,7 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
         if( open != null )
         {
           FileReader reader = new FileReader( open );
-          //         m_root = FilterReader.collectFiltersFromSLD( reader );
+          // m_root = FilterReader.collectFiltersFromSLD( reader );
         }
       }
       catch( Exception e1 )
@@ -213,7 +204,7 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
    */
   public void widgetDefaultSelected( SelectionEvent e )
   {
-  // TODO Auto-generated method stub
+    // TODO Auto-generated method stub
   }
 
   /**
@@ -221,7 +212,7 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
    */
   public void keyPressed( KeyEvent e )
   {
-  // TODO Auto-generated method stub
+    // TODO Auto-generated method stub
   }
 
   /**
@@ -229,26 +220,25 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
    */
   public void keyReleased( KeyEvent e )
   {
-  // TODO Auto-generated method stub
+    // TODO Auto-generated method stub
   }
 
-  public Mesh getMesh()
+  public Mesh getMesh( )
   {
     return m_mesh;
   }
 
-  public CS_CoordinateSystem getCoordinateSystem()
+  public String getCoordinateSystem( )
   {
-
     return null;
   }
 
-  public double getCellSize()
+  public double getCellSize( )
   {
     return m_size;
   }
 
-  public File getTargetFile()
+  public File getTargetFile( )
   {
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     root.getFile( m_path );

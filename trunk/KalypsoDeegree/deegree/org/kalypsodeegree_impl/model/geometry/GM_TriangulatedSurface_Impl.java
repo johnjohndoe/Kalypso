@@ -47,8 +47,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.model.crs.UnknownCRSException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -63,9 +66,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.ItemVisitor;
@@ -81,12 +82,12 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
 
   private final List<GM_Triangle> m_items;
 
-  public GM_TriangulatedSurface_Impl( final CS_CoordinateSystem crs ) throws GM_Exception
+  public GM_TriangulatedSurface_Impl( final String crs ) throws GM_Exception
   {
     this( new ArrayList<GM_Triangle>(), crs );
   }
 
-  public GM_TriangulatedSurface_Impl( final List<GM_Triangle> items, final CS_CoordinateSystem crs ) throws GM_Exception
+  public GM_TriangulatedSurface_Impl( final List<GM_Triangle> items, final String crs ) throws GM_Exception
   {
     super( crs );
 
@@ -400,7 +401,16 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
    */
   public int getCoordinateDimension( )
   {
-    return getCoordinateSystem().getDimension();
+    try
+    {
+      return CRSHelper.getDimension( getCoordinateSystem() );
+    }
+    catch( UnknownCRSException e )
+    {
+      // TODO How to deal with this error? What to return?
+      e.printStackTrace();
+      return 0;
+    }
   }
 
   /**
@@ -591,11 +601,16 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
    */
-  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
   {
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
+
     Debug.debugMethodBegin( this, "transformTriangulatedSurface" );
 
     final int cnt = size();

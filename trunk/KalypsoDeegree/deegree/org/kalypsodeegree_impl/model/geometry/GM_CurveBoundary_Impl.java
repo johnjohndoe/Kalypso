@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
@@ -69,8 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_CurveBoundary interface from package jago.model.
@@ -93,7 +92,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   /**
    * constructor of curve_boundary with CS_CoordinateSystem and startpoint and endpoint
    */
-  public GM_CurveBoundary_Impl( final CS_CoordinateSystem crs, final GM_Position sp, final GM_Position ep )
+  public GM_CurveBoundary_Impl( final String crs, final GM_Position sp, final GM_Position ep )
   {
     super( crs );
 
@@ -130,7 +129,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   public Object clone( )
   {
     // kuch
-    final CS_CoordinateSystem system = getCoordinateSystem();
+    final String system = getCoordinateSystem();
 
     final GM_Position[] sp = GeometryFactory.cloneGM_Position( new GM_Position[] { m_sp } );
     final GM_Position[] ep = GeometryFactory.cloneGM_Position( new GM_Position[] { m_ep } );
@@ -288,11 +287,16 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
    */
-  public GM_Object transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
+
     final GM_Position transStartPos = getStartPoint().transform( trans );
     final GM_Position transEndPos = getEndPoint().transform( trans );
 

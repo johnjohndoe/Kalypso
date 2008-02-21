@@ -48,7 +48,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * TODO: getScale etc, hier rausschmeissen! die Umrechnung zwischen Bildschirm und Geokoordinaten ist Aufgabe des
@@ -85,7 +84,12 @@ public interface IMapModell extends IWorkbenchAdapter
    */
   public IKalypsoTheme[] getAllThemes( );
 
-  public CS_CoordinateSystem getCoordinatesSystem( );
+  /**
+   * This function returns the name of the coordinate system used.
+   * 
+   * @return The name of the coordinate system.
+   */
+  public String getCoordinatesSystem( );
 
   /**
    * renders the map to the passed graphic context
@@ -150,5 +154,4 @@ public interface IMapModell extends IWorkbenchAdapter
    *         added in the near future...)
    */
   public boolean isLoaded( );
-
 }

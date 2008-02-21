@@ -62,13 +62,12 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_MultiPrimitive interface of package jago.model.
@@ -90,7 +89,7 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
    * 
    * @param crs
    */
-  public GM_MultiPrimitive_Impl( final CS_CoordinateSystem crs )
+  public GM_MultiPrimitive_Impl( final String crs )
   {
     super( crs );
   }
@@ -146,12 +145,11 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
    */
-  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
   {
     throw new UnsupportedOperationException();
   }
-
 }

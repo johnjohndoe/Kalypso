@@ -64,13 +64,12 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementierung of the GM_MultiPoint interface of package jago.model.
@@ -92,7 +91,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * 
    * @param crs
    */
-  public GM_MultiPoint_Impl( final CS_CoordinateSystem crs )
+  public GM_MultiPoint_Impl( final String crs )
   {
     super( crs );
   }
@@ -118,7 +117,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    * @param gmp
    * @param crs
    */
-  public GM_MultiPoint_Impl( final GM_Point[] gmp, final CS_CoordinateSystem crs )
+  public GM_MultiPoint_Impl( final GM_Point[] gmp, final String crs )
   {
     super( crs );
 
@@ -322,11 +321,17 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree_impl.model.geometry.GM_MultiPrimitive_Impl#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
    */
-  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  @Override
+  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
   {
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
+
     Debug.debugMethodBegin( this, "transformMultiPoint" );
 
     final GM_Point[] points = new GM_Point[getSize()];

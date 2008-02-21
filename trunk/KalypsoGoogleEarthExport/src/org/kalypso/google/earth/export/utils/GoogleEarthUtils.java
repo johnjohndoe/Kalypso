@@ -1,14 +1,10 @@
-/**
- *
- */
 package org.kalypso.google.earth.export.utils;
 
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.google.earth.kml.DocumentType;
 import com.google.earth.kml.LatLonAltBoxType;
@@ -17,11 +13,10 @@ import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.RegionType;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class GoogleEarthUtils
 {
-
   /**
    * target coordinate system of google earth
    */
@@ -34,7 +29,7 @@ public class GoogleEarthUtils
    * @param documentType
    * @throws Exception
    */
-  public static void setLookAt( final GM_Envelope boundingBox, final CS_CoordinateSystem coordinatesSystem, final ObjectFactory factory, final DocumentType documentType ) throws Exception
+  public static void setLookAt( final GM_Envelope boundingBox, final String coordinatesSystem, final ObjectFactory factory, final DocumentType documentType ) throws Exception
   {
     // set look at to the middle of bounding box
     final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
@@ -60,7 +55,7 @@ public class GoogleEarthUtils
    * @param documentType
    * @throws Exception
    */
-  public static void setMapBoundary( final GM_Envelope boundingBox, final CS_CoordinateSystem srcCRS, final ObjectFactory factory, final DocumentType documentType ) throws Exception
+  public static void setMapBoundary( final GM_Envelope boundingBox, final String srcCRS, final ObjectFactory factory, final DocumentType documentType ) throws Exception
   {
 
     final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );

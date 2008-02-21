@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -73,7 +74,7 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
-import org.opengis.cs.CS_CoordinateSystem;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * default implementierung of the GM_Polygon interface from package jago.model.
@@ -98,7 +99,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    * @param crs
    * @throws GM_Exception
    */
-  public GM_Polygon_Impl( final GM_SurfaceInterpolation interpolation, final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final CS_CoordinateSystem crs ) throws GM_Exception
+  public GM_Polygon_Impl( final GM_SurfaceInterpolation interpolation, final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
   {
     super( interpolation, exteriorRing, interiorRings, crs );
 
@@ -317,5 +318,32 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     boundary.invalidate();
 
     super.invalidate();
+  }
+  
+  public GM_SurfacePatch transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
+  {
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
+
+    /* exterior ring */
+    final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
+    final GM_Ring transExRing = (GM_Ring) exRing.transform( trans, targetOGCCS );
+
+    /* interior rings */
+    final GM_Position[][] interiors = getInteriorRings();
+    if( interiors == null )
+      return new GM_Polygon_Impl( m_interpolation, transExRing.getPositions(), null, targetOGCCS );
+    
+    final GM_Position[][] transInRings = new GM_Position[interiors.length][];
+
+    for( int j = 0; j < interiors.length; j++ )
+    {
+      final GM_Ring inRing = GeometryFactory.createGM_Ring( interiors[j], getCoordinateSystem() );
+      transInRings[j] = ((GM_Ring) inRing.transform( trans, targetOGCCS )).getPositions();
+    }
+
+    return new GM_Polygon_Impl( m_interpolation, transExRing.getPositions(), transInRings, targetOGCCS );
   }
 }

@@ -78,7 +78,6 @@ import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -528,7 +527,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    * @deprecated Use {@link KalypsoCorePlugin#getCoordinatesSystem()}} instead.
    */
   @Deprecated
-  public CS_CoordinateSystem getCoordinatesSystem( )
+  public String getCoordinatesSystem( )
   {
     return KalypsoCorePlugin.getDefault().getCoordinatesSystem();
   }

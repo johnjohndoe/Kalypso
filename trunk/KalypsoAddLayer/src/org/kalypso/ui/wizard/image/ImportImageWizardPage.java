@@ -41,7 +41,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -66,8 +65,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.transformation.CRSHelper;
 
 /**
  * ImportImageWizardPage
@@ -160,15 +159,9 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     m_CS = new Combo( m_group, SWT.NONE );
 
     availableCoordinateSystems( m_CS );
-    try
-    {
-      String defaultCS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-      m_CS.select( m_CS.indexOf( defaultCS ) );
-    }
-    catch( RemoteException e1 )
-    {
-      e1.printStackTrace();
-    }
+
+    String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_CS.select( m_CS.indexOf( defaultCS ) );
 
     m_CS.setToolTipText( "Koordinatensystem der World Datei" );
     createWorldFilePanel( m_topComposite );
@@ -179,8 +172,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   private void availableCoordinateSystems( Combo checkCRS )
   {
-    ConvenienceCSFactoryFull factory = new ConvenienceCSFactoryFull();
-    checkCRS.setItems( factory.getKnownCS() );
+    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
   }
 
   private void createWorldFilePanel( Composite composite )

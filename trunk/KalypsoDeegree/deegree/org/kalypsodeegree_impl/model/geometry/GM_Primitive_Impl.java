@@ -65,7 +65,6 @@ import java.lang.reflect.Array;
 
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Primitive interface from package jago.model.
@@ -84,7 +83,7 @@ abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive,
    * 
    * @param crs
    */
-  protected GM_Primitive_Impl( final CS_CoordinateSystem crs )
+  protected GM_Primitive_Impl( final String crs )
   {
     super( crs );
   }

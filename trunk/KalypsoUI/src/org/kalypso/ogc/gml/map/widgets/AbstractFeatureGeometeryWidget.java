@@ -35,11 +35,10 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.opengis.cs.CS_CoordinateSystem;
 
 public abstract class AbstractFeatureGeometeryWidget extends AbstractCreateGeometeryWidget
 {
-  protected CS_CoordinateSystem m_coordinatesSystem = null;
+  protected String m_coordinatesSystem = null;
 
   protected GeoTransform m_projection = null;
 
@@ -97,10 +96,10 @@ public abstract class AbstractFeatureGeometeryWidget extends AbstractCreateGeome
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractCreateGeometeryWidget2#getCoordinatesSystem()
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractCreateGeometeryWidget#getCoordinatesSystem()
    */
   @Override
-  protected CS_CoordinateSystem getCoordinatesSystem( )
+  protected String getCoordinatesSystem( )
   {
     return m_coordinatesSystem;
   }

@@ -49,9 +49,7 @@ import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
@@ -129,9 +127,8 @@ public class URLActionShowInMap extends AbstractURLAction
       x = Double.parseDouble( commandURL.getParameter( URLActionShowInMap.PARAM_X ) );
       y = Double.parseDouble( commandURL.getParameter( URLActionShowInMap.PARAM_Y ) );
       crsName = commandURL.getParameter( URLActionShowInMap.PARAM_CRS );
-      final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      final CS_CoordinateSystem coordinateSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( crsName ) );
-      final GM_Point point = GeometryFactory.createGM_Point( x, y, coordinateSystem );
+
+      final GM_Point point = GeometryFactory.createGM_Point( x, y, crsName );
       // final long timeInMillis = Calendar.getInstance().getTimeInMillis();
       // long validEnd = timeInMillis + 100;//duration;
 

@@ -49,7 +49,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * {@link IGridMetaReader} implementation for ESRI Ascii Grids.
@@ -58,7 +57,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class GridMetaReaderAscii implements IGridMetaReader
 {
-  private final CS_CoordinateSystem m_cs;
+  private final String m_cs;
 
   private RectifiedGridDomain m_domain;
 
@@ -66,7 +65,7 @@ public class GridMetaReaderAscii implements IGridMetaReader
 
   private String m_noDataValue;
 
-  public GridMetaReaderAscii( final URL urlImage, final CS_CoordinateSystem cs )
+  public GridMetaReaderAscii( final URL urlImage, final String cs )
   {
     m_urlImage = urlImage;
     m_cs = cs;
@@ -165,11 +164,11 @@ public class GridMetaReaderAscii implements IGridMetaReader
   }
 
   /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getCoverage(org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector,
-   *      org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector, java.lang.Double[],
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypso.grid.IGridMetaReader#getCoverage(org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector,
+   *      org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector, java.lang.Double[],
+   *      java.lang.String)
    */
-  public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final CS_CoordinateSystem crs ) throws Exception
+  public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
   {
     if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
       throw (new IllegalStateException());

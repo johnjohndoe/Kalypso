@@ -72,7 +72,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_LineString interface of package jago.model.
@@ -93,7 +92,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
    * @param cs
    * @throws GM_Exception
    */
-  public GM_LineString_Impl( final GM_Position[] gmps, final CS_CoordinateSystem cs ) throws GM_Exception
+  public GM_LineString_Impl( final GM_Position[] gmps, final String cs ) throws GM_Exception
   {
     super( gmps, cs );
   }
@@ -105,7 +104,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   public Object clone( )
   {
     // kuch
-    final CS_CoordinateSystem system = getCoordinateSystem();
+    final String system = getCoordinateSystem();
     final GM_Position[] clonedPositions = GeometryFactory.cloneGM_Position( getPositions() );
 
     try

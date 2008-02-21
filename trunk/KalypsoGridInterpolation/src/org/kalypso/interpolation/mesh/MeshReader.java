@@ -59,7 +59,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -86,7 +85,7 @@ public class MeshReader
 
   // private boolean m_initialise = false;
 
-  protected Mesh importMesh( Mesh mesh, File[] files, CS_CoordinateSystem cs, GM_Surface wishbox, String shapeBase )
+  protected Mesh importMesh( Mesh mesh, File[] files, String cs, GM_Surface wishbox, String shapeBase )
   {
     File nodefile = null;
     File elementfile = null;
@@ -179,7 +178,7 @@ public class MeshReader
     return mesh;
   }
 
-  private PointTable createNodes( File nodefile, File attributefile, CS_CoordinateSystem crs )
+  private PointTable createNodes( File nodefile, File attributefile, String crs )
   {
     PointTable pt = new PointTable();
     System.out.println( "Reading Nodes.." );
@@ -249,7 +248,7 @@ public class MeshReader
 
   }// createNodes
 
-  private void createElements( File elementfile, CS_CoordinateSystem crs, Mesh mesh, GM_Surface wishbox ) throws Exception
+  private void createElements( File elementfile, String crs, Mesh mesh, GM_Surface wishbox ) throws Exception
   {
     System.out.println( "Reading Elements.." );
     // reads file into streamtokenizer
@@ -342,7 +341,7 @@ public class MeshReader
 
   }// createElements
 
-  private void readGmlFile( File gmlfile, CS_CoordinateSystem cs, Mesh mesh ) throws Exception
+  private void readGmlFile( File gmlfile, String cs, Mesh mesh ) throws Exception
   {
     HashMap points = new HashMap();
     DocumentBuilder db;
@@ -564,7 +563,7 @@ public class MeshReader
     mesh.setBoundingBox( m_meshEnv );
   }// readGmlFile
 
-  private void readShapeFiles( Mesh mesh, Vector shapefile, String property, CS_CoordinateSystem crs, GM_Surface wishbox )
+  private void readShapeFiles( Mesh mesh, Vector shapefile, String property, String crs, GM_Surface wishbox )
   {
     for( int i = 0; i < shapefile.size(); i++ )
     {
@@ -608,7 +607,7 @@ public class MeshReader
 
   private void createElements( Mesh mesh, Feature[] meshElements, String geometryProperteyElement, GM_Surface wishbox ) throws GM_Exception
   {
-    CS_CoordinateSystem cs = null;
+    String cs = null;
     for( int i = 0; i < meshElements.length; i++ )
     {
 
@@ -695,7 +694,7 @@ public class MeshReader
     createElements( mesh, elements, geometryPropertyElements, wishbox );
   }
 
-  private GM_Object readBorder( String shapefile, CS_CoordinateSystem cs ) throws GmlSerializeException
+  private GM_Object readBorder( String shapefile, String cs ) throws GmlSerializeException
   {
     GMLWorkspace ws = ShapeSerializer.deserialize( shapefile, cs );
     Feature root = ws.getRootFeature();

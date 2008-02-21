@@ -14,18 +14,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypso.interpolation.mesh.Mesh;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author kuepfer
- * 
- * TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code
- * Templates
+ * @author kuepfer TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
+ *         Style - Code Templates
  */
 public class GridFactory
 {
@@ -35,25 +32,24 @@ public class GridFactory
 
   private static final String GRID_NAMESPACE = "http://www.tu-harburg.de/Grid";
 
-  private GridFactory()
+  private GridFactory( )
   {
     gridTable = new HashMap<String, Grid>();
   }
 
-  public static GridFactory getInstance()
+  public static GridFactory getInstance( )
   {
     return myInstance;
   }
 
-  public IGrid createGrid( GM_Position llc, CS_CoordinateSystem crs, int r, int c, double cellsize,
-      GM_Surface borderline ) throws Exception
+  public IGrid createGrid( GM_Position llc, String crs, int r, int c, double cellsize, GM_Surface borderline ) throws Exception
   {
     final String key = getKey();
     gridTable.put( key, new Grid( key, null, llc, crs, r, c, cellsize, null, borderline ) );
     return gridTable.get( key );
-  }//getMesh
+  }// getMesh
 
-  public IGrid createGrid( GM_Envelope wishbox, CS_CoordinateSystem crs, double cellsize, Mesh mesh ) throws Exception
+  public IGrid createGrid( GM_Envelope wishbox, String crs, double cellsize, Mesh mesh ) throws Exception
   {
     String key = getKey();
     Grid grid = null;
@@ -65,40 +61,39 @@ public class GridFactory
       borderline = mesh.getBorderLine();
     }
     if( meshEnv == null && wishbox != null )
-      grid = (Grid)getGrid( wishbox, wishbox, crs, cellsize, borderline );
+      grid = (Grid) getGrid( wishbox, wishbox, crs, cellsize, borderline );
     else if( wishbox.contains( meshEnv ) )
-      grid = (Grid)getGrid( meshEnv, meshEnv, crs, cellsize, borderline );
+      grid = (Grid) getGrid( meshEnv, meshEnv, crs, cellsize, borderline );
     else
     {
-      grid = (Grid)getGrid( wishbox, meshEnv, crs, cellsize, borderline );
+      grid = (Grid) getGrid( wishbox, meshEnv, crs, cellsize, borderline );
     }
     gridTable.put( key, grid );
     return gridTable.get( key );
-  }//getMesh
+  }// getMesh
 
-  public Set keySet()
+  public Set keySet( )
   {
     return myInstance.gridTable.keySet();
   }
 
-  private String getKey()
+  private String getKey( )
   {
     int i = 1 + gridTable.size();
     String key = GRID_NAMESPACE + i;
     return key;
   }
 
-  public IGrid[] getAllGrids()
+  public IGrid[] getAllGrids( )
   {
 
     Object[] a = new Object[gridTable.size()];
     gridTable.values().toArray( a );
-    return (IGrid[])a;
+    return (IGrid[]) a;
 
   }
 
-  private IGrid getGrid( GM_Envelope wishbox, GM_Envelope meshbox, CS_CoordinateSystem crs, double cellsize,
-      GM_Surface borderline ) throws Exception
+  private IGrid getGrid( GM_Envelope wishbox, GM_Envelope meshbox, String crs, double cellsize, GM_Surface borderline ) throws Exception
   {
     String key = getKey();
     GM_Position llc = null;
@@ -107,36 +102,31 @@ public class GridFactory
      * wishbox
      */
     GM_Envelope merge = meshbox.getMerged( wishbox );
-    //find lower left corner
-    double minDeltaX = ( wishbox.getMin().getX() - merge.getMin().getX() ) / cellsize;
-    double minDeltaY = ( wishbox.getMin().getY() - merge.getMin().getY() ) / cellsize;
-    int minDeltaCol = (int)Math.abs( minDeltaX ) + 2;
-    int minDeltaRow = (int)Math.abs( minDeltaY ) + 2;
-    //merge lays left of wishbox (x and y)
+    // find lower left corner
+    double minDeltaX = (wishbox.getMin().getX() - merge.getMin().getX()) / cellsize;
+    double minDeltaY = (wishbox.getMin().getY() - merge.getMin().getY()) / cellsize;
+    int minDeltaCol = (int) Math.abs( minDeltaX ) + 2;
+    int minDeltaRow = (int) Math.abs( minDeltaY ) + 2;
+    // merge lays left of wishbox (x and y)
     if( minDeltaX >= 0 && minDeltaY >= 0 )
-      llc = GeometryFactory.createGM_Position( wishbox.getMin().getX() - minDeltaCol * cellsize, wishbox.getMin()
-          .getY()
-          - minDeltaRow * cellsize );
-    //merge lays left of wishbox (x) and above wishbox (y)
+      llc = GeometryFactory.createGM_Position( wishbox.getMin().getX() - minDeltaCol * cellsize, wishbox.getMin().getY() - minDeltaRow * cellsize );
+    // merge lays left of wishbox (x) and above wishbox (y)
     else if( minDeltaX >= 0 && minDeltaY <= 0 )
-      llc = GeometryFactory.createGM_Position( wishbox.getMin().getX() - minDeltaCol * cellsize, wishbox.getMin()
-          .getY()
-          + minDeltaRow * cellsize );
-    //merge lays right of wishbox (x) and above wishbox (y)
+      llc = GeometryFactory.createGM_Position( wishbox.getMin().getX() - minDeltaCol * cellsize, wishbox.getMin().getY() + minDeltaRow * cellsize );
+    // merge lays right of wishbox (x) and above wishbox (y)
     else if( minDeltaX <= 0 && minDeltaY <= 0 )
       llc = GeometryFactory.createGM_Position( wishbox.getMin().getX(), wishbox.getMin().getY() );
-    //merge lays right of wishbox (x) and below wishbox (y)
+    // merge lays right of wishbox (x) and below wishbox (y)
     else if( minDeltaX <= 0 && minDeltaY >= 0 )
-      llc = GeometryFactory.createGM_Position( wishbox.getMin().getX(), wishbox.getMin().getY() - minDeltaRow
-          * cellsize );
+      llc = GeometryFactory.createGM_Position( wishbox.getMin().getX(), wishbox.getMin().getY() - minDeltaRow * cellsize );
     double width = merge.getMax().getX() - llc.getX();
     double height = merge.getMax().getY() - llc.getY();
-    int cols = (int)( width / cellsize ) + 2;
-    int rows = (int)( height / cellsize ) + 2;
+    int cols = (int) (width / cellsize) + 2;
+    int rows = (int) (height / cellsize) + 2;
     return new Grid( key, null, llc, crs, rows, cols, cellsize, wishbox, borderline );
   }
 
-  public IGrid importESRIasc( File file, CS_CoordinateSystem crs ) throws IOException, Exception
+  public IGrid importESRIasc( File file, String crs ) throws IOException, Exception
   {
     System.out.println( "Starting ESRI ASCII raster import ...." );
     long startTime = System.currentTimeMillis();
@@ -147,10 +137,10 @@ public class GridFactory
     st.wordChars( '_', '_' );
     st.nextToken();
     st.nextToken();
-    int cols = (int)st.nval;
+    int cols = (int) st.nval;
     st.nextToken();
     st.nextToken();
-    int rows = (int)st.nval;
+    int rows = (int) st.nval;
     st.nextToken();
     st.nextToken();
     double llcx = st.nval;
@@ -163,8 +153,8 @@ public class GridFactory
     st.nextToken();
     st.nextToken();
 
-    String nodata = String.valueOf( (int)st.nval );
-    Grid grid = (Grid)createGrid( GeometryFactory.createGM_Position( llcx, llcy ), crs, rows, cols, cellsize, null );
+    String nodata = String.valueOf( (int) st.nval );
+    Grid grid = (Grid) createGrid( GeometryFactory.createGM_Position( llcx, llcy ), crs, rows, cols, cellsize, null );
     grid.setNodata( nodata );
     for( int r = 0; r < rows; r++ )
     {
@@ -175,11 +165,11 @@ public class GridFactory
         grid.writeGridValue( r, c, value );
       }
     }
-    System.out.print( " ...finished in " + (( System.currentTimeMillis() - startTime )/1000 )+ " seconds \n" );
+    System.out.print( " ...finished in " + ((System.currentTimeMillis() - startTime) / 1000) + " seconds \n" );
     return grid;
   }
 
-  public void clearFactory()
+  public void clearFactory( )
   {
     Iterator it = gridTable.keySet().iterator();
     while( it.hasNext() )

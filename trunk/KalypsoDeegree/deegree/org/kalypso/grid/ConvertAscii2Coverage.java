@@ -46,7 +46,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Class for reading and writing ascii-Grid files
@@ -68,7 +67,7 @@ public abstract class ConvertAscii2Coverage
    *            the coordinate system for the geometric data of the ascii-grid
    * @return RectifiedGridCoverage
    */
-  public static RectifiedGridDomain importGridArc( final AscciiGridReader reader, final CS_CoordinateSystem cs ) throws Exception
+  public static RectifiedGridDomain importGridArc( final AscciiGridReader reader, final String cs ) throws Exception
   {
     final int nCols = new Integer( reader.getCols() ).intValue();
     final int nRows = new Integer( reader.getRows() ).intValue();

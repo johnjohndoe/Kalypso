@@ -62,14 +62,13 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeLoadStatusVisitor;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Utility class for {@link IMapModell} associated functions.
@@ -181,12 +180,12 @@ public class MapModellHelper
 
   private static GM_Envelope getWgs84BBox( final IMapModell model, final GM_Envelope bbox ) throws RemoteException, Exception
   {
-    final CS_CoordinateSystem crs = model.getCoordinatesSystem();
-    if( crs.getName().equalsIgnoreCase( "EPSG:4326" ) )
+    final String crs = model.getCoordinatesSystem();
+    if( crs.equalsIgnoreCase( "EPSG:4326" ) )
       return bbox;
 
     // transform the bounding box of the request to EPSG:4326
-    final GeoTransformer transformer = new GeoTransformer( "EPSG:4326", true );
+    final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" );
     return transformer.transformEnvelope( bbox, crs );
   }
 

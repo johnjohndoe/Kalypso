@@ -70,7 +70,6 @@ import org.kalypsodeegree_impl.io.shpapi.dataprovider.StandardShapeDataProvider;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLUtilities;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Helper-Klasse zum lesen und schreiben von GML TODO: Problem: reading/writing a shape will change the precision/size
@@ -339,7 +338,7 @@ public class ShapeSerializer
     return FeatureFactory.createFeature( null, null, "root", collectionFT, true );
   }
 
-  public final static GMLWorkspace deserialize( final String fileBase, final CS_CoordinateSystem sourceCrs ) throws GmlSerializeException
+  public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs ) throws GmlSerializeException
   {
     ShapeFile sf = null;
 

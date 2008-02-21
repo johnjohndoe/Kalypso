@@ -62,16 +62,15 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
-import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Point interface.
@@ -96,7 +95,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * @param crs
    *            spatial reference system of the point
    */
-  public GM_Point_Impl( final CS_CoordinateSystem crs )
+  public GM_Point_Impl( final String crs )
   {
     this( new GM_Position_Impl(), crs );
   }
@@ -111,7 +110,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * @param crs
    *            spatial reference system of the point
    */
-  public GM_Point_Impl( final double x, final double y, final CS_CoordinateSystem crs )
+  public GM_Point_Impl( final double x, final double y, final String crs )
   {
     this( new GM_Position_Impl( x, y ), crs );
   }
@@ -128,7 +127,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * @param crs
    *            spatial reference system of the point
    */
-  public GM_Point_Impl( final double x, final double y, final double z, final CS_CoordinateSystem crs )
+  public GM_Point_Impl( final double x, final double y, final double z, final String crs )
   {
     this( new GM_Position_Impl( x, y, z ), crs );
   }
@@ -152,7 +151,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
    * @param crs
    *            spatial reference system of the point
    */
-  public GM_Point_Impl( final GM_Position gmo, final CS_CoordinateSystem crs )
+  public GM_Point_Impl( final GM_Position gmo, final String crs )
   {
     super( crs );
 
@@ -209,7 +208,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   @Override
   public Object clone( )
   {
-    final CS_CoordinateSystem system = getCoordinateSystem();
+    final String system = getCoordinateSystem();
 
     if( getDimension() == 3 )
       return new GM_Point_Impl( getX(), getY(), getZ(), system );
@@ -363,37 +362,16 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
    */
-  public GM_Object transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
-    Debug.debugMethodBegin( this, "transformPoint" );
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
 
-    final double[] din = getAsArray();
-    // TODO macht der folgende if Sinn ? Eigentlich nein: denn dann ist der Punkt eh schon nicht gültig...
-    if( getCoordinateSystem().getName().equalsIgnoreCase( "EPSG:4326" ) )
-    {
-      if( din[0] <= -180 )
-        din[0] = -179.999;
-      else if( din[0] >= 180 )
-        din[0] = 179.999;
-      if( din[1] <= -90 )
-        din[1] = -89.999;
-      else if( din[1] >= 90 )
-        din[1] = 89.999;
-    }
-
-    final double[] dout = GM_Position_Impl.transform( din, trans );
-    if( dout.length > 2 )
-    {
-      Debug.debugMethodEnd();
-      return GeometryFactory.createGM_Point( dout[0], dout[1], dout[2], targetOGCCS );
-    }
-    else
-    {
-      Debug.debugMethodEnd();
-      return GeometryFactory.createGM_Point( dout[0], dout[1], targetOGCCS );
-    }
-
+    return TransformUtilities.transform( this, trans );
   }
 }

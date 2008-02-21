@@ -4,14 +4,13 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.GM_Object_Impl;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author vdoemming
  */
 public class GMLUtilities
 {
-  public static void setCrs( Feature fe, CS_CoordinateSystem srcCS )
+  public static void setCrs( Feature fe, String srcCS )
   {
     final IPropertyType ftp[] = fe.getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
@@ -30,7 +29,7 @@ public class GMLUtilities
    * ueperprueft die koordinatensysteme der geometrien, fall null, dann wird das defaultCoordinatessystem angenommen
    * (gesetzt).
    */
-  public static void checkCrs( Feature fe, CS_CoordinateSystem defaultCS )
+  public static void checkCrs( Feature fe, String defaultCS )
   {
     final IPropertyType ftp[] = fe.getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
@@ -47,5 +46,4 @@ public class GMLUtilities
     }
   }
 
-  
 }

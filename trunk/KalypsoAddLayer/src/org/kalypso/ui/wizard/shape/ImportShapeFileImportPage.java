@@ -51,7 +51,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
@@ -80,15 +79,13 @@ import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer
@@ -214,15 +211,9 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     m_checkCRS = new Combo( m_group, SWT.NONE );
 
     availableCoordinateSystems( m_checkCRS );
-    try
-    {
-      String defaultCS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-      m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
-    }
-    catch( RemoteException e1 )
-    {
-      e1.printStackTrace();
-    }
+
+    String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
 
     m_checkCRS.setToolTipText( "Koordinatensystem der ESRI(tm) Shape Datei" );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
@@ -293,8 +284,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
   private void availableCoordinateSystems( Combo checkCRS )
   {
-    ConvenienceCSFactoryFull factory = new ConvenienceCSFactoryFull();
-    checkCRS.setItems( factory.getKnownCS() );
+    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
   }
 
   void validate( )
@@ -533,9 +523,9 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     return new KalypsoResourceSelectionDialog( getShell(), m_project, "Select resource", fileResourceExtensions, m_project, new ResourceSelectionValidator() );
   }
 
-  public CS_CoordinateSystem getCRS( )
+  public String getCRS( )
   {
-    return ConvenienceCSFactory.getInstance().getOGCCSByName( m_checkCRS.getText() );
+    return m_checkCRS.getText();
   }
 
   protected void setProjectSelection( IProject project )
@@ -545,13 +535,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
   private boolean checkCRS( String customCRS )
   {
-    boolean result = false;
-    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( customCRS );
-    if( cs != null )
-    {
-      result = true;
-    }
-    return result;
+    return CRSHelper.isKnownCRS( customCRS );
   }
 
   public boolean checkDefaultStyle( )
