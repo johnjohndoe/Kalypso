@@ -79,6 +79,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties.TripleMode;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.ExeVersion;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
@@ -108,11 +109,11 @@ public class PolynomeHelper
 {
   // TODO: Deciding which approach to take, energy level or water stage
 
-//   private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
+// private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
   private static final String WEIR_FILE_NAME = "EOW_QWehr_EUW.txt";
 
-//   private static final String BRIDGE_FILE_NAME = "HOW_QBruecke_HUW.txt";
-   private static final String BRIDGE_FILE_NAME = "EOW_QBruecke_EUW.txt";
+// private static final String BRIDGE_FILE_NAME = "HOW_QBruecke_HUW.txt";
+  private static final String BRIDGE_FILE_NAME = "EOW_QBruecke_EUW.txt";
 
   private static final String QLANG_FILE_NAME = "Q_LangSchnitt.txt";
 
@@ -212,7 +213,12 @@ public class PolynomeHelper
       errStream = new BufferedOutputStream( new FileOutputStream( errFile ) );
 
       /* Start the polynome1d process */
-      final File exeFile = new File( tmpDir, "Polynome1d.exe" );
+      final ExeVersion version = calculation.getVersion();
+      if( version == null )
+        throw new SimulationException( "Version des Rechenkerns nicht angegeben. Die Version muss in den Steuerparametern gesetzt werden.", null );
+
+      // start calculation; the out-stream gets copied into the simulation.log and the system.out
+      final File exeFile = new File( tmpDir, "Polynome1d" + version.name() + ".exe" );
       final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\"";
       ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, timeout, logStream, errStream, null );
 

@@ -72,7 +72,8 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
 {
   public static enum ExeVersion
   {
-    _2_0_6_6
+    _2_0_6_6,
+    _2_1_0_0
   }
 
   public static final QName QNAME_TUHH_CALC = new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" );
