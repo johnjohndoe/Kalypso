@@ -160,13 +160,13 @@ public class MapModellHelper
       // assume quadratic pixels of 0.28 mm size.
 
       final double dLon = box.getMax().getX() - box.getMin().getX(); // Map-x-Distance in deegrees
-// final double dLat = box.getMax().getY() - box.getMin().getY(); // Map-y-Distance in deegrees
+      // final double dLat = box.getMax().getY() - box.getMin().getY(); // Map-y-Distance in deegrees
 
       final double mx = Math.toRadians( dLon ) * EARTH_RADIUS_M; // Map-x-Distance in Meters
-// final double my = Math.toRadians( dLat ) * EARTH_RADIUS_M; // Map-y-Distance in Meters
+      // final double my = Math.toRadians( dLat ) * EARTH_RADIUS_M; // Map-y-Distance in Meters
 
       final double scalex = mx / mapWidth / 0.00028;
-// final double scaley = my / mapHeight / 0.00028;
+      // final double scaley = my / mapHeight / 0.00028;
 
       return scalex;
     }

@@ -41,10 +41,14 @@
 package org.kalypso.transformation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.deegree.model.crs.CoordinateSystem;
 import org.deegree.model.crs.UnknownCRSException;
+import org.eclipse.core.runtime.Preferences;
+import org.kalypso.preferences.IKalypsoDeegreePreferences;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * This class is a helper for dealing with coordinate systems.
@@ -93,17 +97,12 @@ public class CRSHelper
    */
   public static List<String> getAllNames( )
   {
-    /* Memory for the names of the coordinate systems. */
-    ArrayList<String> names = new ArrayList<String>();
+    Preferences preferences = KalypsoDeegreePlugin.getDefault().getPluginPreferences();
+    String preferenceNames = preferences.getString( IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING );
 
-    // TODO Get from preference store.
+    String[] availableNames = preferenceNames.split( ";" );
 
-    names.add( "EPSG:31466" );
-    names.add( "EPSG:31467" );
-    names.add( "EPSG:32632" );
-    names.add( "EPSG:32633" );
-
-    return names;
+    return Arrays.asList( availableNames );
   }
 
   /**
