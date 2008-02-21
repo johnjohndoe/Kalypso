@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<obstableview xmlns="obstableview.template.kalypso.org">
+    <features>Alarmstufen;Vorhersage</features>
+    
+    <observation linktype="zml" ns1:href="Zeitreihen/Zufluesse/UstiDresden.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Q" editable="true" id="c1" name="Usti / Dresden [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns1:href="Zeitreihen/Zufluesse/DresdenTorgau.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Q" editable="true" id="c1" name="Dresden / Torgau [%axisunit%]" width="50"/>
+    </observation>
+    <observation linktype="zml" ns1:href="Zeitreihen/Zufluesse/Löben.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="Q" editable="true" id="c1" name="Löben [%axisunit%]" width="50"/>
+    </observation>
+    <alphaSort>false</alphaSort>
+</obstableview>

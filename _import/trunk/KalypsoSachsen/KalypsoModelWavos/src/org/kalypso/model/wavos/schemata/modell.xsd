@@ -83,7 +83,7 @@
                             </documentation>
                         </annotation>
                     </element>
-                </sequence>
+                 </sequence>
             </extension>
         </complexContent>
     </complexType>
@@ -173,14 +173,39 @@
             </documentation>
         </annotation>
     </element>
-    <!--könnte wohl auch abstract sein-->
-    <element name="bauwerkMember" type="modell:AbstractBauwerkPropertyType">
+    <element name="Bauwerk" type="modell:BauwerkType" substitutionGroup="modell:AbstractBauwerk">
         <annotation>
             <documentation xml:lang="de">
                 <name>Bauwerk</name>
                 <label>Bauwerk</label>
                 <tooltip>Bauwerk</tooltip>
                 <description>Bauwerk</description>
+            </documentation>
+        </annotation>
+    </element>
+    <!--könnte wohl auch abstract sein-->
+    <!-- 
+    ACHTUNG! Der alte Schema-Parser kann Ableitungen nicht über zwei Stufen auflösen, deshalb ist hier der Typ "falsch" gesetzt 
+    <element name="bauwerkMember" type="modell:AbstractBauwerkPropertyType">
+    -->
+    <element name="bauwerkMember" type="modell:AbstractPolderPropertyType">
+        <annotation>
+            <documentation xml:lang="de">
+                <name>Bauwerk</name>
+                <label>Bauwerk</label>
+                <tooltip>Bauwerk</tooltip>
+                <description>Bauwerk</description>
+            </documentation>
+        </annotation>
+    </element>
+    <!--könnte wohl auch abstract sein-->
+    <element name="PolderMember" type="modell:AbstractPolderPropertyType">
+        <annotation>
+            <documentation xml:lang="de">
+                <name>Polder</name>
+                <label>Polder</label>
+                <tooltip>Polder</tooltip>
+                <description>Polder</description>
             </documentation>
         </annotation>
     </element>
@@ -214,26 +239,6 @@
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="lageAmGewaesser" type="double">
-                        <annotation>
-                            <documentation xml:lang="de">
-                                <name>Lage am Fluss [km]</name>
-                                <label>Lage am Fluss [km]</label>
-                                <tooltip>Lage am Fluss [km]</tooltip>
-                                <description>Lage am Fluss [km]</description>
-                            </documentation>
-                        </annotation>
-                    </element>
-                    <element name="pegelNullPunkt" type="double">
-                        <annotation>
-                            <documentation xml:lang="de">
-                                <name>Pegelnullpunkt über HNH [m]</name>
-                                <label>Pegelnullpunkt über HNH [m]</label>
-                                <tooltip>Pegelnullpunkt über HNH [m]</tooltip>
-                                <description>Pegelnullpunkt über HNH [m]</description>
-                            </documentation>
-                        </annotation>
-                    </element>
                     <element name="name" type="string">
                         <annotation>
                             <documentation xml:lang="de">
@@ -261,6 +266,26 @@
                                 <label>Pegel-ID</label>
                                 <tooltip>Pegel-ID (Messstellen-ID)</tooltip>
                                 <description>Pegel-ID (Messstellen-ID)</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="lageAmGewaesser" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Lage am Fluss [km]</name>
+                                <label>Lage am Fluss [km]</label>
+                                <tooltip>Lage am Fluss [km]</tooltip>
+                                <description>Lage am Fluss [km]</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="pegelNullPunkt" type="double">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Pegelnullpunkt [m ü. NHN]</name>
+                                <label>Pegelnullpunkt [m ü. NHN]</label>
+                                <tooltip>Pegelnullpunkt [m ü. NHN]</tooltip>
+                                <description>Pegelnullpunkt [m ü. NHN]</description>
                             </documentation>
                         </annotation>
                     </element>
@@ -352,7 +377,7 @@
     <complexType name="AbstractBauwerkType">
         <complexContent>
             <extension base="commons:EmptyFeatureBaseType">
-                <sequence>
+                <sequence> 
                     <element name="lage" type="gml:PointPropertyType">
                         <annotation>
                             <documentation xml:lang="de">
@@ -366,10 +391,10 @@
                     <element name="name" type="string">
                         <annotation>
                             <documentation xml:lang="de">
-                                <name>Pegelname</name>
-                                <label>Pegelname</label>
-                                <tooltip>Pegelname</tooltip>
-                                <description>Pegelname</description>
+                                <name>Poldername</name>
+                                <label>Poldername</label>
+                                <tooltip>Poldername</tooltip>
+                                <description>Poldername</description>
                             </documentation>
                         </annotation>
                     </element>
@@ -474,6 +499,36 @@
                                 </documentation>
                         </annotation>
                     </element>
+                    <element name="ganglinie_vorhersage" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Vorhersagewerte</name>
+                                <label>Vorhersagewerte</label>
+                                <tooltip>Vorhersagewerte</tooltip>
+                                <description>Vorhersagewerte</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="ganglinie_vorhersage_unten" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>untere Umhüllende</name>
+                                <label>untere Umhüllende</label>
+                                <tooltip>untere Umhüllende</tooltip>
+                                <description>untere Umhüllende</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="ganglinie_vorhersage_oben" type="obslink:TimeseriesLinkFeatureProperty">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>obere Umhüllende</name>
+                                <label>obere Umhüllende</label>
+                                <tooltip>obere Umhüllende</tooltip>
+                                <description>obere Umhüllende</description>
+                            </documentation>
+                        </annotation>
+                    </element>
                     <element name="accuracyPrediction" type="double" minOccurs="0">
                         <annotation>
                             <documentation xml:lang="de">
@@ -543,6 +598,25 @@
                             </documentation>
                         </annotation>
                     </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="BauwerkPropertyType">
+        <complexContent>
+            <restriction base="gml:FeatureAssociationType">
+                <sequence>
+                    <element ref="modell:Bauwerk"/>
+                </sequence>
+            </restriction>
+        </complexContent>
+    </complexType>
+    <complexType name="BauwerkType">
+        <complexContent>
+            <extension base="modell:AbstractBauwerkType">
+                <sequence>
+                    
                 </sequence>
             </extension>
         </complexContent>
