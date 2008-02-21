@@ -168,7 +168,7 @@ public class CRSSelectionPanel
             /* Get the identifier. */
             String identifier = identifiers[i];
 
-            tooltip = tooltip + identifier+"\n";
+            tooltip = tooltip + identifier + "\n";
           }
 
           imageLabel.setToolTipText( tooltip );
