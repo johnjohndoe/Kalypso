@@ -32,54 +32,43 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	-->
 
 	<dirname property="commonbinding.basedir" file="${ant.file.commonbinding}" />
-	<property file="${commonbinding.basedir}/../common.properties" />
 
-	<property name="gen.srcbind" value="${project}/srcbind" />
-	<property name="gen.bin" value="${project}/bin" />
-			
 	<path id="binding.classpath">
-			<fileset dir="${kalypsocommons}">
-				<include name="lib/xmlbeans-2.3/*.jar" />
-			</fileset>
+		<fileset dir="${workspace}/KalypsoCommons">
+			<include name="lib/xmlbeans-2.3/*.jar" />
+		</fileset>
 	</path>
 
-	<taskdef 
-		name="xmlbean" 
-		classname="org.apache.xmlbeans.impl.tool.XMLBean" 
-		classpathref="binding.classpath"
-	>
+	<taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean" classpathref="binding.classpath">
 	</taskdef>
 
 	<target name="init" description="erzeugt die Build-Verzeichnisse">
-		<echo message="Making srcbind directory for ${project}" />	
+		<echo message="Making srcbind directory for ${project}" />
 		<mkdir dir="${gen.srcbind}" />
 	</target>
 
 	<target name="clean" depends="init" description="cleans it up - totally">
-		<echo message="Deleting old sources for ${project}" />	
+		<echo message="Deleting old sources for ${project}" />
 		<delete includeemptydirs="true">
 			<fileset dir="${gen.srcbind}" includes="**/*" />
 		</delete>
 	</target>
 
 	<target name="generate" depends="clean" description="erzeugt die sourcen">
-		<echo message="Generating binding sources for ${project}" />	
-		<xmlbean 
-			srcgendir="${gen.srcbind}" 
-			classgendir="${gen.srcbind}" 
-			memoryMaximumSize="128M"
-			classpath="binding.classpath"
-			srconly="true"
-		   >
+		<echo message="Generating binding sources for ${project}" />
+
+		<xmlbean srcgendir="${gen.srcbind}" classgendir="${gen.srcbind}" memoryMaximumSize="128M" classpath="binding.classpath" srconly="true">
 			<fileset dir="${project}">
 				<patternset refid="binding.schemata" />
 			</fileset>
 		</xmlbean>
 	</target>
-	
-	
-	<target name="compile" depends="generate">
-		<echo message="Compiling binding sources for ${project-name}" />
-		<javac srcdir="${gen.srcbind}" destdir="${project.bin}" classpathref="binding.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
+
+	<!-- REMARK: This is a speciality of xml-beans: xml-beans generates a lot of non-class files, that are needed for the binding stuff to run. Among them are files with extension '.class'., that are NOT automatically copied by eclipse into the binary folder while compilation. So we need to copy them ourselfes.-->
+	<target name="copyClassStuff">
+		<copy todir="${gen.bin}">
+			<fileset dir="${gen.srcbind}" includes="**/*.class">
+			</fileset>
+		</copy>
 	</target>
 </project>
