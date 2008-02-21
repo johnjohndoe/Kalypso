@@ -54,14 +54,12 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.FindSomeNearestVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * DWDRasterGeoLayer
@@ -84,7 +82,7 @@ public class DWDRasterGeoLayer
 
   private static final String POS_PROP = "pos";
 
-  final CS_CoordinateSystem m_srcCS;
+  final String m_srcCS;
 
   GMLWorkspace m_workspace;
 
@@ -97,9 +95,8 @@ public class DWDRasterGeoLayer
    */
   public DWDRasterGeoLayer( String epsgTarget, DWDRaster xRaster, DWDRaster yRaster ) throws Exception
   {
-    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    m_srcCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
-    CS_CoordinateSystem targetCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( epsgTarget ) );
+    m_srcCS = "EPSG:4326";
+    String targetCS = epsgTarget;
     m_xRaster = xRaster;
     m_yRaster = yRaster;
     init( targetCS );
@@ -128,7 +125,7 @@ public class DWDRasterGeoLayer
     }
   }
 
-  private void init( CS_CoordinateSystem targetCS ) throws Exception
+  private void init( String targetCS ) throws Exception
   {
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final GMLSchema schema = schemaCatalog.getSchema( "org.kalypso.dwd.geolayer", (String) null );

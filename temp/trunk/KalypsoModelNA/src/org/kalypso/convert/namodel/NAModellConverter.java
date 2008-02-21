@@ -69,9 +69,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * import and export of kalypso rainfall runoff models converts between custom ascii format and gml format. importing
@@ -159,8 +157,7 @@ public class NAModellConverter
   private static void insertSHPGeometries( Feature modelFeature, String shapeDir ) throws GmlSerializeException
   {
     // load ShapeFile
-    ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:31467" ) );
+    String cSystem = "EPSG:31467";
 
     final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\rantzau_gebiete", cSystem );
     final List catchmentFeatures = (List) catchmentWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );

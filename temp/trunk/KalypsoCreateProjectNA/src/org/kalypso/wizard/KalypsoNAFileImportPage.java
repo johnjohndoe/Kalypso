@@ -68,35 +68,32 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer
- *  
  */
 public class KalypsoNAFileImportPage extends WizardPage
 {
 
-  //constants
-//  private static final String NULL_KEY = "-NULL-";
+  // constants
+// private static final String NULL_KEY = "-NULL-";
 
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
-//  private static final String SOURCE_KEY = "source";
+// private static final String SOURCE_KEY = "source";
 
-//  private static final String TARGET_KEY = "target";
+// private static final String TARGET_KEY = "target";
 
-  //widgets
+  // widgets
   private Group fileGroup;
 
   private Label fileLabel;
 
-//  private Group sourceGroup;
+// private Group sourceGroup;
 
   protected Group buttonGroup;
 
-//  private Group targetGroup;
+// private Group targetGroup;
 
   private Text textField;
 
@@ -104,26 +101,25 @@ public class KalypsoNAFileImportPage extends WizardPage
 
   protected ScrolledComposite topSCLMappingComposite;
 
-//  private Composite topMappingComposite;
+// private Composite topMappingComposite;
 
   private Button skipRadioButton;
 
   private Button browseButton;
 
-//  private Button okButton;
+// private Button okButton;
 
-  //Geodata
-  private CS_CoordinateSystem customCS = null;
+  // Geodata
+  private String customCS = null;
 
-  private CS_CoordinateSystem defaultCS = ConvenienceCSFactory.getInstance().getOGCCSByName(
-      "EPSG:31467" ); //$NON-NLS-1$
+  private String defaultCS = "EPSG:31467"; //$NON-NLS-1$
 
   private GMLWorkspace sourceWorkspace;
 
   private URL fileURL;
 
-  //mapping
-//  private HashMap mapping;
+  // mapping
+// private HashMap mapping;
 
   /**
    * @param pageName
@@ -131,7 +127,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   public KalypsoNAFileImportPage( String pageName )
   {
     super( pageName );
-    setDescription( WizardMessages.getString("KalypsoNAFileImportPage.PageDescription") ); //$NON-NLS-1$
+    setDescription( WizardMessages.getString( "KalypsoNAFileImportPage.PageDescription" ) ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -143,7 +139,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   public KalypsoNAFileImportPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( WizardMessages.getString("KalypsoNAFileImportPage.PageDescription2") ); //$NON-NLS-1$
+    setDescription( WizardMessages.getString( "KalypsoNAFileImportPage.PageDescription2" ) ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -175,8 +171,8 @@ public class KalypsoNAFileImportPage extends WizardPage
 
     initializeDialogUnits( parent );
 
-    //		WorkbenchHelp.setHelp(topComposite,
-    //				IHelpContextIds.NEW_PROJECT_WIZARD_PAGE);
+    // WorkbenchHelp.setHelp(topComposite,
+    // IHelpContextIds.NEW_PROJECT_WIZARD_PAGE);
 
     topComposite.setLayout( new GridLayout() );
     topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -196,10 +192,10 @@ public class KalypsoNAFileImportPage extends WizardPage
     topGroupData.horizontalAlignment = GridData.FILL;
     fileGroup.setLayout( topGroupLayout );
     fileGroup.setLayoutData( topGroupData );
-    fileGroup.setText( WizardMessages.getString("KalypsoNAFileImportPage.FileGroupText") ); //$NON-NLS-1$
+    fileGroup.setText( WizardMessages.getString( "KalypsoNAFileImportPage.FileGroupText" ) ); //$NON-NLS-1$
 
     fileLabel = new Label( fileGroup, SWT.NONE );
-    fileLabel.setText( WizardMessages.getString("KalypsoNAFileImportPage.FileLabelText") ); //$NON-NLS-1$
+    fileLabel.setText( WizardMessages.getString( "KalypsoNAFileImportPage.FileLabelText" ) ); //$NON-NLS-1$
 
     // Set width of Text fields
     GridData dataCatchment = new GridData( GridData.FILL_HORIZONTAL );
@@ -216,34 +212,34 @@ public class KalypsoNAFileImportPage extends WizardPage
     } );
 
     browseButton = new Button( fileGroup, SWT.PUSH );
-    browseButton.setText( WizardMessages.getString("KalypsoNAFileImportPage.BrowseButtonText") ); //$NON-NLS-1$
+    browseButton.setText( WizardMessages.getString( "KalypsoNAFileImportPage.BrowseButtonText" ) ); //$NON-NLS-1$
     browseButton.setLayoutData( new GridData( GridData.END ) );
     browseButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        //if (validateFileField())
+        // if (validateFileField())
         handleFileBrowse();
         validateFileField();
       }
     } );
     skipRadioButton = new Button( fileGroup, SWT.CHECK );
-    skipRadioButton.setText( WizardMessages.getString("KalypsoNAFileImportPage.SkipRadioButtonText") ); //$NON-NLS-1$
+    skipRadioButton.setText( WizardMessages.getString( "KalypsoNAFileImportPage.SkipRadioButtonText" ) ); //$NON-NLS-1$
     skipRadioButton.setSelection( true );
     skipRadioButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        Button w = (Button)e.widget;
+        Button w = (Button) e.widget;
         if( !w.getSelection() )
         {
           setPageComplete( true );
           topSCLMappingComposite.setVisible( false );
           buttonGroup.setVisible( false );
-          //remove mapping
-//          mapping = null;
+          // remove mapping
+// mapping = null;
         }
         else
         {
@@ -257,25 +253,18 @@ public class KalypsoNAFileImportPage extends WizardPage
     fileGroup.pack();
   }
 
-
   /**
-   * Uses the standard container selection dialog to choose the new value for
-   * the container field.
+   * Uses the standard container selection dialog to choose the new value for the container field.
    */
 
-  protected void handleFileBrowse()
+  protected void handleFileBrowse( )
   {
     FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
-    fdialog.setFilterExtensions( new String[]
-    { "shp" } ); //$NON-NLS-1$
-    fdialog.setText( WizardMessages.getString("KalypsoNAFileImportPage.FileDialogText") ); //$NON-NLS-1$
-    fdialog.setFilterNames( new String[]
-    {
-        "Shape Files", //$NON-NLS-1$
+    fdialog.setFilterExtensions( new String[] { "shp" } ); //$NON-NLS-1$
+    fdialog.setText( WizardMessages.getString( "KalypsoNAFileImportPage.FileDialogText" ) ); //$NON-NLS-1$
+    fdialog.setFilterNames( new String[] { "Shape Files", //$NON-NLS-1$
         "All Files (*.*)" } ); //$NON-NLS-1$
-    fdialog.setFilterExtensions( new String[]
-    {
-        "*.shp", //$NON-NLS-1$
+    fdialog.setFilterExtensions( new String[] { "*.shp", //$NON-NLS-1$
         "*.*" } ); //$NON-NLS-1$
     fdialog.setFileName( "*.shp" ); //$NON-NLS-1$
     if( fdialog.open() != null )
@@ -284,11 +273,10 @@ public class KalypsoNAFileImportPage extends WizardPage
       try
       {
 
-        fileURL = ( new File( fdialog.getFilterPath() + File.separator + fdialog.getFileName() ) )
-            .toURL();
+        fileURL = (new File( fdialog.getFilterPath() + File.separator + fdialog.getFileName() )).toURL();
         textStr = fileURL.toExternalForm();
         textField.setText( textStr );
-        //copyShapeFile(fileURL);
+        // copyShapeFile(fileURL);
 
       }
       catch( MalformedURLException e )
@@ -296,8 +284,8 @@ public class KalypsoNAFileImportPage extends WizardPage
         e.printStackTrace();
       }
 
-    }//if fdialog
-  }//handleFileBrowse
+    }// if fdialog
+  }// handleFileBrowse
 
   public boolean validateFile( URL url )
   {
@@ -314,24 +302,24 @@ public class KalypsoNAFileImportPage extends WizardPage
     return true;
   }
 
-  protected boolean validateFileField()
+  protected boolean validateFileField( )
   {
-    //	 checks catchment field entry and file suffix
+    // checks catchment field entry and file suffix
     if( textField.getText().length() == 0 )
     {
-      setErrorMessage( WizardMessages.getString("KalypsoNAFileImportPage.ErrorMessageNoFile") ); //$NON-NLS-1$
+      setErrorMessage( WizardMessages.getString( "KalypsoNAFileImportPage.ErrorMessageNoFile" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return false;
     }
     else if( checkSuffix( textField ) == false )
     {
-      setErrorMessage( WizardMessages.getString("KalypsoNAFileImportPage.ErrorMessageWrongSuffix") ); //$NON-NLS-1$
+      setErrorMessage( WizardMessages.getString( "KalypsoNAFileImportPage.ErrorMessageWrongSuffix" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return false;
     }
     else if( validateFile( fileURL ) == false )
     {
-      setErrorMessage( WizardMessages.getString("KalypsoNAFileImportPage.ErrorMessageFileNotValid") ); //$NON-NLS-1$
+      setErrorMessage( WizardMessages.getString( "KalypsoNAFileImportPage.ErrorMessageFileNotValid" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return false;
     }
@@ -341,17 +329,17 @@ public class KalypsoNAFileImportPage extends WizardPage
     return true;
   }
 
-  public GMLWorkspace getSourceWorkspace()
+  public GMLWorkspace getSourceWorkspace( )
   {
     return sourceWorkspace;
   }
 
-  public URL getFileURL()
+  public URL getFileURL( )
   {
     return fileURL;
   }
 
-  public CS_CoordinateSystem getCoordinateSystem()
+  public String getCoordinateSystem( )
   {
     if( customCS != null )
       return customCS;

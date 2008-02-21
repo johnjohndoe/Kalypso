@@ -50,7 +50,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -79,6 +78,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -88,13 +88,10 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer
@@ -143,7 +140,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   private Button okButton;
 
   // Geodata
-  private CS_CoordinateSystem customCS = null;
+  private String customCS = null;
 
   // aus Preferences
   private String defaultCRS = null;
@@ -194,8 +191,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private void availableCoordinateSystems( Combo checkCRS )
   {
-    ConvenienceCSFactoryFull factory = new ConvenienceCSFactoryFull();
-    checkCRS.setItems( factory.getKnownCS() );
+    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
   }
 
   void validate( )
@@ -219,13 +215,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private boolean checkCRS( String customCRS )
   {
-    boolean result = false;
-    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( customCRS );
-    if( cs != null )
-    {
-      result = true;
-    }
-    return result;
+    return CRSHelper.isKnownCRS( customCRS );
   }
 
   private boolean checkSuffix( Text path )
@@ -303,16 +293,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     m_checkCRS = new Combo( fileGroup, SWT.NONE );
 
     availableCoordinateSystems( m_checkCRS );
-    try
-    {
-      // String defaultCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-      defaultCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
-      m_checkCRS.select( m_checkCRS.indexOf( defaultCRS ) );
-    }
-    catch( RemoteException e1 )
-    {
-      e1.printStackTrace();
-    }
+
+    // String defaultCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem().getName();
+    defaultCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_checkCRS.select( m_checkCRS.indexOf( defaultCRS ) );
 
     m_checkCRS.setToolTipText( WizardMessages.getString( "KalypsoNAProjectWizardPage.CRSTooltip" ) ); //$NON-NLS-1$
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
@@ -560,10 +544,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private void readShapeFile( URL url )
   {
-    CS_CoordinateSystem cs;
-    cs = null;
+    String cs = null;
+
     if( customCS == null )
-      cs = ConvenienceCSFactory.getInstance().getOGCCSByName( getDefaultCRS() );
+      cs = getDefaultCRS();
     else
       cs = customCS;
 
@@ -758,7 +742,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
         c = (Combo) e.widget;
         if( c == m_checkCRS )
         {
-          customCS = ConvenienceCSFactory.getInstance().getOGCCSByName( c.getText() );
+          customCS = c.getText();
           readShapeFile( fileURL );
           setPageComplete( true );
         }
