@@ -58,6 +58,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -153,13 +154,13 @@ public class TimeserieUtils
     {
       m_config = new Properties();
 
-      InputStream ins = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
+      final InputStream ins = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
 
       try
       {
         m_config.load( ins );
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }
@@ -213,7 +214,7 @@ public class TimeserieUtils
 
           return new DateRange( from, to );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -393,7 +394,7 @@ public class TimeserieUtils
     }
   }
 
-  public static IAxis[] createDefaultAxes( final String[] axisTypes, boolean firstWithKey )
+  public static IAxis[] createDefaultAxes( final String[] axisTypes, final boolean firstWithKey )
   {
     final List<IAxis> axisList = new ArrayList<IAxis>();
     if( axisTypes != null && axisTypes.length > 0 )
@@ -418,9 +419,9 @@ public class TimeserieUtils
    * randomly generated.
    * 
    * @param axisTypes
-   *          as seen in TimeserieConstants.TYPE_*
+   *            as seen in TimeserieConstants.TYPE_*
    * @param amountRows
-   *          amount of rows of the TuppleModel that is randomly created
+   *            amount of rows of the TuppleModel that is randomly created
    * @throws SensorException
    */
   public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues ) throws SensorException
@@ -459,12 +460,16 @@ public class TimeserieUtils
 
   /**
    * @param gkr
-   *          the Gausskrüger Rechtswert as string
+   *            the Gausskrüger Rechtswert as string
    * @return the corresponding Gausskrüger Coordinate System Name
    */
   public static String getCoordinateSystemNameForGkr( final String gkr )
   {
-    return getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), "<konnte nicht ermittelt werden>" );
+    final String crsName = getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), null );
+    if( crsName == null )
+      KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+
+    return crsName;
   }
 
   /**
@@ -472,7 +477,7 @@ public class TimeserieUtils
    * W-axis. If you want the value according to the Q-axis you should call this function with axisType = Q
    * 
    * @param axisType
-   *          the type of the axis for which to convert the alarm-level
+   *            the type of the axis for which to convert the alarm-level
    * @throws WQException
    */
   public static Double convertAlarmLevel( final IObservation obs, final String axisType, final Double alarmLevel, final Date date ) throws SensorException, WQException
