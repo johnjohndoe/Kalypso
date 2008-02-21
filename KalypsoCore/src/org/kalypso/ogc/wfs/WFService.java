@@ -43,7 +43,6 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.SAXException;
 
 /**
@@ -440,7 +439,7 @@ public class WFService
    * @param filter
    * @param maxFeatureAsString
    */
-  public GMLWorkspace createGMLWorkspaceFromGetFeature( QName featureTypeToLoad, CS_CoordinateSystem targetCRS, String filter, String maxFeatureAsString ) throws Exception
+  public GMLWorkspace createGMLWorkspaceFromGetFeature( QName featureTypeToLoad, String targetCRS, String filter, String maxFeatureAsString ) throws Exception
   {
     BufferedInputStream inputStream = null;
     PrintStream postWriter = null;

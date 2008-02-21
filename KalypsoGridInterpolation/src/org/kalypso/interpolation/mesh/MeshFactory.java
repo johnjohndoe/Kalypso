@@ -10,7 +10,6 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer
@@ -47,7 +46,7 @@ public class MeshFactory
     return key;
   }
 
-  public Mesh getMesh( CS_CoordinateSystem cs )
+  public Mesh getNewMesh( String cs )
   {
     String key = generateKey();
     meshTable.put( key, new Mesh( key, cs ) );
@@ -65,10 +64,10 @@ public class MeshFactory
     return (Mesh)meshTable.get( key );
   }
 
-  public Mesh readMesh( File[] files, CS_CoordinateSystem cs,
+  public Mesh readMesh( File[] files, String cs,
       GM_Surface wishbox, String shapeBase )
   {
     
-    return m_reader.importMesh( getMesh(cs), files, cs, wishbox, shapeBase ); 
+    return m_reader.importMesh( getNewMesh(cs), files, cs, wishbox, shapeBase ); 
   }
 }//class MeshFactory

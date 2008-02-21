@@ -60,9 +60,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.geometry;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.IAdaptable;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * The basic interface for all geometries. it declares the methods that are common to all geometries. this doesn't means
@@ -105,7 +104,7 @@ public interface GM_Object extends IAdaptable
   /**
    * returns the spatial reference system of a geometry
    */
-  CS_CoordinateSystem getCoordinateSystem( );
+  String getCoordinateSystem( );
 
   /**
    * returns true if no geometry values resp. points stored within the geometry.
@@ -196,7 +195,7 @@ public interface GM_Object extends IAdaptable
    */
   boolean isWithinDistance( GM_Object gmo, double distance );
 
-  void setCoordinateSystem( CS_CoordinateSystem crs );
+  void setCoordinateSystem( String crs );
 
   /**
    * Invalidates the transient parameters of this geometry (like envelope and centroid), so they get recalculated the
@@ -212,6 +211,6 @@ public interface GM_Object extends IAdaptable
   /**
    * handles the geo-coordinate-transformation for a {@link GM_Object}
    */
-  public GM_Object transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception;
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception;
 
 }

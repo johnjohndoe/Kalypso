@@ -82,11 +82,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -97,10 +93,6 @@ import org.w3c.dom.Node;
  */
 public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 {
-  final static ConvenienceCSFactoryFull m_csFac = new ConvenienceCSFactoryFull();
-
-  final static Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-
   final static JAXBContext GML3_JAXCONTEXT = KalypsoOGC31JAXBcontext.getContext();
 
   public AdapterBindingToValue_GML31( )
@@ -189,7 +181,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       return GeometryFactory.createGM_Envelope( positions[0], positions[1] );
     }
     // TODO coordinates
-    
+
     final DirectPositionType lowerCorner = bindingEnvelope.getLowerCorner();
     final DirectPositionType upperCorner = bindingEnvelope.getUpperCorner();
     if( lowerCorner != null && upperCorner != null )
@@ -213,9 +205,9 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     throw new UnsupportedOperationException();
   }
 
-  private GM_MultiPoint createGM_MultiPoint( MultiPointType type, CS_CoordinateSystem cs )
+  private GM_MultiPoint createGM_MultiPoint( MultiPointType type, String cs )
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
+    final String co = getCS_CoordinateSystem( cs, type );
     int i = 0;
     int size = 0;
 
@@ -260,9 +252,9 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiPoint( resultPoints, co );
   }
 
-  private GM_MultiCurve createGM_MultiLineString( MultiLineStringType type, CS_CoordinateSystem cs ) throws GM_Exception
+  private GM_MultiCurve createGM_MultiLineString( MultiLineStringType type, String cs ) throws GM_Exception
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
+    final String co = getCS_CoordinateSystem( cs, type );
     final List<LineStringPropertyType> lineStringMember = type.getLineStringMember();
     final GM_Curve[] curves = new GM_Curve[lineStringMember.size()];
     final Iterator<LineStringPropertyType> iterator = lineStringMember.iterator();
@@ -277,9 +269,9 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiCurve( curves );
   }
 
-  private GM_MultiSurface createGM_MultiSurface( MultiPolygonType type, CS_CoordinateSystem cs ) throws GM_Exception
+  private GM_MultiSurface createGM_MultiSurface( MultiPolygonType type, String cs ) throws GM_Exception
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
+    final String co = getCS_CoordinateSystem( cs, type );
     final List<PolygonPropertyType> polygonMember = type.getPolygonMember();
     final GM_Surface[] surfaces = new GM_Surface[polygonMember.size()];
     final Iterator<PolygonPropertyType> iterator = polygonMember.iterator();
@@ -294,9 +286,9 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
 
-  private GM_Surface createGM_Surface( PolygonType type, CS_CoordinateSystem cs ) throws GM_Exception
+  private GM_Surface createGM_Surface( PolygonType type, String cs ) throws GM_Exception
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
+    final String co = getCS_CoordinateSystem( cs, type );
     final AbstractRingPropertyType ringType = type.getExterior().getValue();
 
     final JAXBElement< ? extends AbstractRingType> ring = ringType.getRing();
@@ -330,17 +322,17 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       throw new UnsupportedOperationException();
   }
 
-  private GM_Curve createGM_LineString( LineStringType type, CS_CoordinateSystem cs ) throws GM_Exception
+  private GM_Curve createGM_LineString( LineStringType type, String cs ) throws GM_Exception
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
+    final String co = getCS_CoordinateSystem( cs, type );
     final CoordinatesType coordinates = type.getCoordinates();
     final GM_Position[] positions = createGM_Positions( coordinates );
     return GeometryFactory.createGM_Curve( positions, co );
   }
 
-  private GM_Point createGM_Point( PointType type, CS_CoordinateSystem cs )
+  private GM_Point createGM_Point( PointType type, String cs )
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
+    final String co = getCS_CoordinateSystem( cs, type );
     final CoordType coord = type.getCoord();
     if( coord != null )
     {
@@ -415,13 +407,13 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return result.toArray( new GM_Position[result.size()] );
   }
 
-  private CS_CoordinateSystem getCS_CoordinateSystem( CS_CoordinateSystem defaultCS, AbstractGeometryType geom )
+  private String getCS_CoordinateSystem( String defaultCS, AbstractGeometryType geom )
   {
     final String srsName = geom.getSrsName();
     if( srsName == null )
       return defaultCS;
-    final CoordinateSystem csByName = m_csFac.getCSByName( srsName );
-    return m_csAdapter.export( csByName );
+
+    return srsName;
   }
 
   /**
@@ -438,7 +430,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     if( bindingGeometry instanceof AbstractGeometryType )
     {
       final AbstractGeometryType bindingTypeObject = (AbstractGeometryType) bindingGeometry;
-      final CS_CoordinateSystem cs = getCS_CoordinateSystem( null, bindingTypeObject );
+      final String cs = getCS_CoordinateSystem( null, bindingTypeObject );
       if( bindingTypeObject instanceof PointType )
         return createGM_Point( (PointType) bindingTypeObject, cs );
       if( bindingTypeObject instanceof PolygonType )

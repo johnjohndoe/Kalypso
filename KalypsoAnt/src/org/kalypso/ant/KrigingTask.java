@@ -69,19 +69,14 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Ein Ant Task, der Zeitreihen-Links in GMLs kopiert. Die generelle Idee ist es, alle Features eines GML durchzugehen,
  * und für jedes Feature eine Zeitreihe (definiert über einen Link) zu lesen und an eine andere Stelle (definiert durch
- * eine andere Property des Features) zu schreiben.
- * 
- * <code>
+ * eine andere Property des Features) zu schreiben. <code>
  * TODO
  * </code>
  * 
@@ -177,7 +172,7 @@ public class KrigingTask extends Task
     {
       // to avoid yellow thingies; is it used?
     }
-//    m_timeStepMinutes = timeStepMinutes;
+// m_timeStepMinutes = timeStepMinutes;
   }
 
   public final void setModellGMLTargetObservationlinkPropname( String modellGMLTargetObservationlinkPropname )
@@ -206,7 +201,7 @@ public class KrigingTask extends Task
   }
 
   @Override
-  public void execute() throws BuildException
+  public void execute( ) throws BuildException
   {
     try
     {
@@ -215,38 +210,39 @@ public class KrigingTask extends Task
 
       final GMLWorkspace resultWorkspace = CopyObservationMappingHelper.createMappingWorkspace( m_context );
       logger.info( "check coordinatessystem" );
+
       // crs stuff
-      final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       final String targetCRSName = m_epsg;
       if( targetCRSName == null )
         throw new Exception( "coordinatesystem not set" );
-      final CoordinateSystem cs = csFac.getCSByName( targetCRSName );
-      if( cs == null )
-        throw new Exception( "unknown coordinatesystem" );
-      final CS_CoordinateSystem targetCRS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( cs );
+
       logger.info( "use coordinatessystem " + m_epsg + " OK" );
 
       final UrlResolver urlResolver = new UrlResolver();
 
       if( m_hrefKrigingTXT == null )
         throw new Exception( "kriging raster not set" );
+
       final URL krigingMapURL = urlResolver.resolveURL( m_context, m_hrefKrigingTXT );
       if( krigingMapURL == null )
         throw new Exception( "kriging raster not found" );
+
       logger.info( "use kriging ratser (mapping) " + krigingMapURL.toExternalForm() );
 
       logger.info( "load modell..." );
       // load catchment model
       if( m_modellGML == null )
         throw new Exception( "modell not set" );
+
       final URL modellURL = urlResolver.resolveURL( m_context, m_modellGML );
       if( modellURL == null )
         throw new Exception( "modell not sound" );
+
       final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL, null );
       if( modellWorkspace == null )
         throw new Exception( "could not load modell" );
-      modellWorkspace.accept( new TransformVisitor( targetCRS ), modellWorkspace.getRootFeature(),
-          FeatureVisitor.DEPTH_INFINITE );
+
+      modellWorkspace.accept( new TransformVisitor( targetCRSName ), modellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       modellWorkspace.accept( new ResortVisitor(), modellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       if( m_modellGMLFeaturePath == null )
@@ -262,22 +258,19 @@ public class KrigingTask extends Task
       final GMLWorkspace srcModellWorkspace = GmlSerializer.createGMLWorkspace( srcModellURL, null );
       if( srcModellWorkspace == null )
         throw new Exception( "could not load source modell" );
-      srcModellWorkspace.accept( new TransformVisitor( targetCRS ), srcModellWorkspace.getRootFeature(),
-          FeatureVisitor.DEPTH_INFINITE );
-      srcModellWorkspace.accept( new ResortVisitor(), srcModellWorkspace.getRootFeature(),
-          FeatureVisitor.DEPTH_INFINITE );
+      srcModellWorkspace.accept( new TransformVisitor( targetCRSName ), srcModellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      srcModellWorkspace.accept( new ResortVisitor(), srcModellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       final Object srcFeatureFromPath = srcModellWorkspace.getFeatureFromPath( m_sourceGMLFeaturePath );
       final Feature[] srcFeatures = FeatureHelper.getFeaturess( srcFeatureFromPath );
-      final SourceObservationProvider provider = new SourceObservationProvider( srcFeatures, m_sourceGMLIDLinkProperty,
-          m_sourceGMLObservationLinkProperty );
+      final SourceObservationProvider provider = new SourceObservationProvider( srcFeatures, m_sourceGMLIDLinkProperty, m_sourceGMLObservationLinkProperty );
 
       logger.info( "calculate mapping ..." );
       final Reader inputStreamReader = new InputStreamReader( krigingMapURL.openStream() );
 
-      final KrigingReader kReader = new KrigingReader( Logger.global, inputStreamReader, provider, targetCRS );
+      final KrigingReader kReader = new KrigingReader( Logger.global, inputStreamReader, provider, targetCRSName );
 
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       for( int i = 0; i < modelFeatures.length; i++ )
       {
@@ -289,7 +282,7 @@ public class KrigingTask extends Task
         final String string = XMLUtilities.removeXMLHeader( writer.toString() );
         final String filterInline = XMLUtilities.prepareInLine( string ) + "#useascontext";
 
-        final TimeseriesLinkType copyLink = (TimeseriesLinkType)feature.getProperty( m_modellGMLTargetObservationlinkPropname );
+        final TimeseriesLinkType copyLink = (TimeseriesLinkType) feature.getProperty( m_modellGMLTargetObservationlinkPropname );
         CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, copyLink.getHref() );
       }
       final File result = new File( m_hrefGeneratesGml );

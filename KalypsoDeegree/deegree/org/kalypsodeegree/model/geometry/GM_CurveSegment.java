@@ -61,7 +61,6 @@
 
 package org.kalypsodeegree.model.geometry;
 
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
@@ -100,7 +99,7 @@ public interface GM_CurveSegment extends GM_GenericCurve
   /**
    * returns the coordinate system of the curve segment
    */
-  CS_CoordinateSystem getCoordinateSystem();
+  String getCoordinateSystem();
 
   /**
    * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within

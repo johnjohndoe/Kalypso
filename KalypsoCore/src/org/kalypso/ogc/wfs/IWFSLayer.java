@@ -43,8 +43,6 @@ package org.kalypso.ogc.wfs;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypsodeegree_impl.model.ct.TransformException;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
@@ -78,7 +76,5 @@ public interface IWFSLayer
    * 
    * @return crs
    */
-
-  public CS_CoordinateSystem getSRS( ) throws TransformException;
-
+  public String getSRS( );
 }

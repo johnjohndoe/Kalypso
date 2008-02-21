@@ -49,7 +49,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.geotiff.image.jai.GeoTIFFDirectory;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.libtiff.jai.codec.XTIFFField;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.sun.media.jai.codec.SeekableStream;
 
@@ -99,7 +98,7 @@ public class GridFileVerifier
     return true;
   }
 
-  public IGridMetaReader getRasterMetaReader( final URL urlImage, final CS_CoordinateSystem cs )
+  public IGridMetaReader getRasterMetaReader( final URL urlImage, final String cs )
   {
     final RASTER_TYPE raster_type = determineType( urlImage );
     if( raster_type == null )

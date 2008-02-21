@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -80,9 +79,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -93,10 +89,6 @@ import org.w3c.dom.Element;
  */
 public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
 {
-  final static ConvenienceCSFactoryFull m_csFac = new ConvenienceCSFactoryFull();
-
-  final static Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-
   public final static JAXBContext GML3_JAXCONTEXT = KalypsoOGC31JAXBcontext.getContext();
 
   private static final String COORDINATES_SEPARATOR = " ";
@@ -275,17 +267,11 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
 
   private String getCSName( final GM_Object geometry, final String csNameDefault )
   {
-    final CS_CoordinateSystem coordinateSystem = geometry.getCoordinateSystem();
+    final String coordinateSystem = geometry.getCoordinateSystem();
     if( coordinateSystem == null )
       return csNameDefault;
-    try
-    {
-      return coordinateSystem.getName();
-    }
-    catch( final RemoteException e )
-    {
-      return csNameDefault;
-    }
+
+    return coordinateSystem;
   }
 
   /**

@@ -82,7 +82,6 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * <p>
@@ -139,7 +138,7 @@ final public class GeometryFactory
   /**
    * creates a GM_Point from two coordinates.
    */
-  public static GM_Point createGM_Point( final double x, final double y, final CS_CoordinateSystem crs )
+  public static GM_Point createGM_Point( final double x, final double y, final String crs )
   {
     return new GM_Point_Impl( x, y, crs );
   }
@@ -147,7 +146,7 @@ final public class GeometryFactory
   /**
    * creates a GM_Point from three coordinates.
    */
-  public static GM_Point createGM_Point( final double x, final double y, final double z, final CS_CoordinateSystem crs )
+  public static GM_Point createGM_Point( final double x, final double y, final double z, final String crs )
   {
     return new GM_Point_Impl( x, y, z, crs );
   }
@@ -155,7 +154,7 @@ final public class GeometryFactory
   /**
    * creates a GM_Point from a position.
    */
-  public static GM_Point createGM_Point( final GM_Position position, final CS_CoordinateSystem crs )
+  public static GM_Point createGM_Point( final GM_Position position, final String crs )
   {
     return new GM_Point_Impl( position, crs );
   }
@@ -163,7 +162,7 @@ final public class GeometryFactory
   /**
    * creates a GM_Point from a wkb.
    */
-  public static GM_Point createGM_Point( final byte[] wkb, final CS_CoordinateSystem srs ) throws GM_Exception
+  public static GM_Point createGM_Point( final byte[] wkb, final String srs ) throws GM_Exception
   {
     int wkbType = -1;
     double x = 0;
@@ -207,7 +206,7 @@ final public class GeometryFactory
    * @param crs
    *            spatial reference system of the curve
    */
-  public static GM_CurveSegment createGM_CurveSegment( final GM_Position[] points, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_CurveSegment createGM_CurveSegment( final GM_Position[] points, final String crs ) throws GM_Exception
   {
     return new GM_LineString_Impl( points, crs );
   }
@@ -220,7 +219,7 @@ final public class GeometryFactory
    * @param crs
    *            geometries coordinate reference system
    */
-  public static GM_Curve createGM_Curve( final GM_Position[] positions, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Curve createGM_Curve( final GM_Position[] positions, final String crs ) throws GM_Exception
   {
     final GM_CurveSegment[] cs = new GM_CurveSegment[1];
     cs[0] = GeometryFactory.createGM_CurveSegment( positions, crs );
@@ -252,7 +251,7 @@ final public class GeometryFactory
   /**
    * creates a GM_Curve from an array of ordinates
    */
-  public static GM_Curve createGM_Curve( final double[] ord, final int dim, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Curve createGM_Curve( final double[] ord, final int dim, final String crs ) throws GM_Exception
   {
     final GM_Position[] pos = new GM_Position[ord.length / dim];
     int i = 0;
@@ -281,12 +280,12 @@ final public class GeometryFactory
    * @param crs
    *            spatial reference system of the surface patch
    */
-  public static GM_SurfacePatch createGM_SurfacePatch( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final GM_SurfaceInterpolation si, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_SurfacePatch createGM_SurfacePatch( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final GM_SurfaceInterpolation si, final String crs ) throws GM_Exception
   {
     return new GM_Polygon_Impl( si, exteriorRing, interiorRings, crs );
   }
 
-  public static GM_SurfacePatch createGM_SurfacePatch( final double[] exterior, final double[][] interior, final int dim, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_SurfacePatch createGM_SurfacePatch( final double[] exterior, final double[][] interior, final int dim, final String crs ) throws GM_Exception
   {
     final GM_Position[] ext = positionsFromDoubles( exterior, dim );
     final GM_Position[][] in;
@@ -302,7 +301,7 @@ final public class GeometryFactory
     return createGM_SurfacePatch( ext, in, new GM_SurfaceInterpolation_Impl(), crs );
   }
 
-  public static GM_SurfacePatch createGM_SurfacePatch( final GM_Ring exterior, final GM_Ring[] interior, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_SurfacePatch createGM_SurfacePatch( final GM_Ring exterior, final GM_Ring[] interior, final String crs ) throws GM_Exception
   {
     final GM_Position[] ext = exterior.getPositions();
     final GM_Position[][] in;
@@ -326,7 +325,7 @@ final public class GeometryFactory
    * @param crs
    *            spatial reference system of the curve
    */
-  public static GM_Curve createGM_Curve( final byte[] wkb, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Curve createGM_Curve( final byte[] wkb, final String crs ) throws GM_Exception
   {
     int wkbType = -1;
     int numPoints = -1;
@@ -408,7 +407,7 @@ final public class GeometryFactory
    * @param crs
    *            spatial reference system of the surface patch
    */
-  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final GM_SurfaceInterpolation si, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final GM_SurfaceInterpolation si, final String crs ) throws GM_Exception
   {
     final GM_SurfacePatch sp = new GM_Polygon_Impl( si, exteriorRing, interiorRings, crs );
     return GeometryFactory.createGM_Surface( sp );
@@ -435,7 +434,7 @@ final public class GeometryFactory
    * @param si
    *            GM_SurfaceInterpolation
    */
-  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final byte[] wkb, final CS_CoordinateSystem crs, final GM_SurfaceInterpolation si ) throws GM_Exception
+  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final byte[] wkb, final String crs, final GM_SurfaceInterpolation si ) throws GM_Exception
   {
     int wkbtype = -1;
     int numRings = 0;
@@ -590,7 +589,7 @@ final public class GeometryFactory
    * @return corresponding surface
    * @throws GM_Exception
    */
-  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_Envelope bbox, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_Envelope bbox, final String crs ) throws GM_Exception
   {
 
     final GM_Position min = bbox.getMin();
@@ -610,7 +609,7 @@ final public class GeometryFactory
    * @return corresponding surface
    * @throws GM_Exception
    */
-  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final double[] exterior, final double[][] interior, final int dim, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final double[] exterior, final double[][] interior, final int dim, final String crs ) throws GM_Exception
   {
     // get exterior ring
     final GM_Position[] ext = positionsFromDoubles( exterior, dim );
@@ -657,7 +656,7 @@ final public class GeometryFactory
     return new GM_MultiPoint_Impl( points );
   }
 
-  public static GM_MultiPoint createGM_MultiPoint( final GM_Point[] points, final CS_CoordinateSystem crs )
+  public static GM_MultiPoint createGM_MultiPoint( final GM_Point[] points, final String crs )
   {
     return new GM_MultiPoint_Impl( points, crs );
   }
@@ -670,7 +669,7 @@ final public class GeometryFactory
    * @param crs
    *            spatial reference system of the curve
    */
-  public static GM_MultiPoint createGM_MultiPoint( final byte[] wkb, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_MultiPoint createGM_MultiPoint( final byte[] wkb, final String crs ) throws GM_Exception
   {
     GM_Point[] points = null;
     int wkbType = -1;
@@ -773,7 +772,7 @@ final public class GeometryFactory
    * @param crs
    *            spatial reference system of the curve
    */
-  public static GM_MultiCurve createGM_MultiCurve( final byte[] wkb, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_MultiCurve createGM_MultiCurve( final byte[] wkb, final String crs ) throws GM_Exception
   {
     int wkbType = -1;
     int numPoints = -1;
@@ -893,7 +892,7 @@ final public class GeometryFactory
   /**
    * creates a GM_MultiSurface
    */
-  public static GM_MultiSurface createGM_MultiSurface( final GM_Surface<GM_SurfacePatch>[] surfaces, final CS_CoordinateSystem crs )
+  public static GM_MultiSurface createGM_MultiSurface( final GM_Surface<GM_SurfacePatch>[] surfaces, final String crs )
   {
     return new GM_MultiSurface_Impl( surfaces, crs );
   }
@@ -901,7 +900,7 @@ final public class GeometryFactory
   /**
    * creates a GM_MultiSurface from a wkb
    */
-  public static GM_MultiSurface createGM_MultiSurface( final byte[] wkb, final CS_CoordinateSystem crs, final GM_SurfaceInterpolation si ) throws GM_Exception
+  public static GM_MultiSurface createGM_MultiSurface( final byte[] wkb, final String crs, final GM_SurfaceInterpolation si ) throws GM_Exception
   {
     int wkbtype = -1;
     int numPoly = 0;
@@ -1086,7 +1085,7 @@ final public class GeometryFactory
     return multisurface;
   }
 
-  public static GM_Point createGM_Point( final Point p, final GeoTransform transform, final CS_CoordinateSystem coordinatesSystem )
+  public static GM_Point createGM_Point( final Point p, final GeoTransform transform, final String coordinatesSystem )
   {
     final double g1x = transform.getSourceX( p.getX() );
     final double g1y = transform.getSourceY( p.getY() );
@@ -1105,7 +1104,7 @@ final public class GeometryFactory
     return myList.toArray( new GM_Position[] {} );
   }
 
-  public static GM_Triangle_Impl createGM_Triangle( final GM_Position[] pos, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Triangle_Impl createGM_Triangle( final GM_Position[] pos, final String crs ) throws GM_Exception
   {
     if( pos.length != 3 )
       return null;
@@ -1113,12 +1112,12 @@ final public class GeometryFactory
     return new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
   }
 
-  public static GM_Triangle_Impl createGM_Triangle( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Triangle_Impl createGM_Triangle( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs ) throws GM_Exception
   {
     return new GM_Triangle_Impl( pos1, pos2, pos3, crs );
   }
 
-  public static GM_TriangulatedSurface createGM_TriangulatedSurface( final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_TriangulatedSurface createGM_TriangulatedSurface( final String crs ) throws GM_Exception
   {
     return new GM_TriangulatedSurface_Impl( crs );
   }
@@ -1131,7 +1130,7 @@ final public class GeometryFactory
    * @param crs
    *            geometries coordinate reference system
    */
-  public static GM_Curve[] createGM_Curve( final GM_Position[][] rings, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Curve[] createGM_Curve( final GM_Position[][] rings, final String crs ) throws GM_Exception
   {
     final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
 
@@ -1145,7 +1144,7 @@ final public class GeometryFactory
     return curveList.toArray( new GM_Curve[curveList.size()] );
   }
 
-  public static GM_Ring[] createGM_Rings( final GM_Position[][] rings, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Ring[] createGM_Rings( final GM_Position[][] rings, final String crs ) throws GM_Exception
   {
     final List<GM_Ring> ringList = new LinkedList<GM_Ring>();
 
@@ -1155,19 +1154,18 @@ final public class GeometryFactory
     return ringList.toArray( new GM_Ring[ringList.size()] );
   }
 
-  public static GM_Ring_Impl createGM_Ring( final GM_Position[] positions, final CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Ring_Impl createGM_Ring( final GM_Position[] positions, final String crs ) throws GM_Exception
   {
     return new GM_Ring_Impl( positions, crs );
   }
 
-  public static GM_TriangulatedSurface createGM_TriangulatedSurface( GM_Triangle[] triangles, CS_CoordinateSystem targetOGCCS ) throws GM_Exception
+  public static GM_TriangulatedSurface createGM_TriangulatedSurface( GM_Triangle[] triangles, String crs ) throws GM_Exception
   {
-    GM_TriangulatedSurface triangulatedSurface = createGM_TriangulatedSurface( targetOGCCS );
+    GM_TriangulatedSurface triangulatedSurface = createGM_TriangulatedSurface( crs );
 
     for( GM_Triangle triangle : triangles )
-    {
       triangulatedSurface.add( triangle );
-    }
+
     return triangulatedSurface;
   }
 }

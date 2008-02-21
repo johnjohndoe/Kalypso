@@ -76,7 +76,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.StringExtend;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Adapter class for exporting deegree geometries to WKT and to wrap WKT code geometries to deegree geometries.
@@ -87,22 +86,20 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class WKTAdapter
 {
 
-  //    private static DecimalFormatSymbols dfs = new DecimalFormatSymbols();
-  //    private static DecimalFormat frm = null;
-  //    static {
-  //        dfs.setDecimalSeparator( '.' );
-  //        frm = new DecimalFormat( "#.#########", dfs );
-  //    }
+  // private static DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+  // private static DecimalFormat frm = null;
+  // static {
+  // dfs.setDecimalSeparator( '.' );
+  // frm = new DecimalFormat( "#.#########", dfs );
+  // }
 
   /**
-   * 
-   * 
    * @param wkt
    * @return the corresponding <tt>GM_Object</tt>
    * @throws GM_Exception
-   *           if type unsupported or conversion failed
+   *             if type unsupported or conversion failed
    */
-  public static GM_Object wrap( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Object wrap( String wkt, String crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrap(String)" );
 
@@ -111,7 +108,7 @@ public class WKTAdapter
     if( wkt == null )
     {
       return null;
-      //throw new GM_Exception( "can't create a geometry from a null-string" );
+      // throw new GM_Exception( "can't create a geometry from a null-string" );
     }
     else if( wkt.startsWith( "POINT" ) )
     {
@@ -150,27 +147,27 @@ public class WKTAdapter
     StringBuffer sb = null;
     if( geom instanceof GM_Point )
     {
-      sb = export( (GM_Point)geom );
+      sb = export( (GM_Point) geom );
     }
     else if( geom instanceof GM_Curve )
     {
-      sb = export( (GM_Curve)geom );
+      sb = export( (GM_Curve) geom );
     }
     else if( geom instanceof GM_Surface )
     {
-      sb = export( (GM_Surface)geom );
+      sb = export( (GM_Surface) geom );
     }
     else if( geom instanceof GM_MultiPoint )
     {
-      sb = export( (GM_MultiPoint)geom );
+      sb = export( (GM_MultiPoint) geom );
     }
     else if( geom instanceof GM_MultiCurve )
     {
-      sb = export( (GM_MultiCurve)geom );
+      sb = export( (GM_MultiCurve) geom );
     }
     else if( geom instanceof GM_MultiSurface )
     {
-      sb = export( (GM_MultiSurface)geom );
+      sb = export( (GM_MultiSurface) geom );
     }
 
     Debug.debugMethodEnd();
@@ -260,7 +257,7 @@ public class WKTAdapter
       sb.append( positions[j] + " " );
     }
     sb.append( positions[positions.length - 1] + ")" );
-    //interior rings
+    // interior rings
     if( inter != null )
     {
       for( int j = 0; j < inter.length; j++ )
@@ -346,7 +343,7 @@ public class WKTAdapter
     return sb;
   }
 
-  private static StringBuffer export( GM_MultiSurface ms ) 
+  private static StringBuffer export( GM_MultiSurface ms )
   {
     Debug.debugMethodBegin( "WKTAdapter", "export(GM_MultiSurface)" );
 
@@ -372,9 +369,9 @@ public class WKTAdapter
    * creates a GM_Point from a WKT.
    * 
    * @param wkt
-   *          a Point WKT
+   *            a Point WKT
    */
-  public static GM_Point wrapPoint( String wkt, CS_CoordinateSystem crs ) 
+  public static GM_Point wrapPoint( String wkt, String crs )
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapPoint" );
 
@@ -391,9 +388,9 @@ public class WKTAdapter
    * creates a GM_Curve from a WKT.
    * 
    * @param wkt
-   *          linestring a WKT
+   *            linestring a WKT
    */
-  public static GM_Curve wrapCurve( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Curve wrapCurve( String wkt, String crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapCurve" );
 
@@ -416,9 +413,9 @@ public class WKTAdapter
    * creates a GM_Surface
    * 
    * @param wkt
-   *          polygon WKT
+   *            polygon WKT
    */
-  public static GM_Surface wrapSurface( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_Surface wrapSurface( String wkt, String crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapSurface" );
 
@@ -431,7 +428,7 @@ public class WKTAdapter
       wkt = wkt.substring( 9, wkt.length() - 1 );
       int pos = wkt.indexOf( ")" );
       String tmp = wkt.substring( 0, pos );
-      //external ring
+      // external ring
       String[] points = StringExtend.toArray( tmp, ",", false );
       ext = new GM_Position[points.length];
       for( int i = 0; i < points.length; i++ )
@@ -446,7 +443,7 @@ public class WKTAdapter
         {
           pos = wkt.indexOf( ")" );
           tmp = wkt.substring( 0, pos );
-          //internal ring(s)
+          // internal ring(s)
           points = StringExtend.toArray( tmp, ",", false );
           GM_Position[] intern = new GM_Position[points.length];
           for( int i = 0; i < points.length; i++ )
@@ -481,9 +478,9 @@ public class WKTAdapter
    * creates a GM_MultiPoint from a WKT
    * 
    * @param wkt
-   *          multipoint WKT
+   *            multipoint WKT
    */
-  public static GM_MultiPoint wrapMultiPoint( String wkt, CS_CoordinateSystem crs ) 
+  public static GM_MultiPoint wrapMultiPoint( String wkt, String crs )
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiPoint" );
 
@@ -512,9 +509,9 @@ public class WKTAdapter
    * creates a GM_MultiCurve from a WKT
    * 
    * @param wkt
-   *          a WKT
+   *            a WKT
    */
-  public static GM_MultiCurve wrapMultiCurve( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_MultiCurve wrapMultiCurve( String wkt, String crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiCurve" );
 
@@ -565,9 +562,9 @@ public class WKTAdapter
    * creates a GM_MultiSurface from a WKT
    * 
    * @param wkt
-   *          a WKT
+   *            a WKT
    */
-  public static GM_MultiSurface wrapMultiSurface( String wkt, CS_CoordinateSystem crs ) throws GM_Exception
+  public static GM_MultiSurface wrapMultiSurface( String wkt, String crs ) throws GM_Exception
   {
     Debug.debugMethodBegin( "WKTAdapter", "wrapMultiSurface" );
 
@@ -581,7 +578,7 @@ public class WKTAdapter
       ArrayList<GM_Position[]> inn = new ArrayList<GM_Position[]>();
       int pos1 = wkt.indexOf( "))" );
       String tmp = wkt.substring( 2, pos1 + 1 );
-      //  exterior ring
+      // exterior ring
       int pos = tmp.indexOf( ")" );
       String tmp2 = tmp.substring( 0, pos );
       String[] points = StringExtend.toArray( tmp2, ",", false );
@@ -627,7 +624,7 @@ public class WKTAdapter
       wkt = wkt.substring( pos1 + 3 );
     }
     GM_Surface[] surfaces = srfcs.toArray( new GM_Surface[srfcs.size()] );
-    GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( surfaces,crs );
+    GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( surfaces, crs );
     Debug.debugMethodEnd();
     return ms;
   }

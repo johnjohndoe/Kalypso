@@ -66,7 +66,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @version $Revision$
@@ -201,8 +200,8 @@ class LinearIntersects
   public static boolean intersects( final GM_SurfacePatch surface1, final GM_SurfacePatch surface2 ) throws Exception
   {
     boolean inter = false;
-    final CS_CoordinateSystem crs1 = surface1.getCoordinateSystem();
-    final CS_CoordinateSystem crs2 = surface2.getCoordinateSystem();
+    final String crs1 = surface1.getCoordinateSystem();
+    final String crs2 = surface2.getCoordinateSystem();
 
     if( LinearContains.contains( surface1, surface2 ) || LinearContains.contains( surface2, surface1 ) )
     {

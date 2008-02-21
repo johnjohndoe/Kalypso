@@ -55,7 +55,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Finds features in the map
@@ -89,7 +88,7 @@ public class JMSelector
         final GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
         if( defaultGeometryProperty != null )
         {
-          final CS_CoordinateSystem coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
+          final String coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
 
           final GM_Surface<GM_SurfacePatch> bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
 

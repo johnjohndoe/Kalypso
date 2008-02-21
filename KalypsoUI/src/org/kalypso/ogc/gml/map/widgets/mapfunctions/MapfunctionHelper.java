@@ -61,7 +61,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This class consists of functions which are helpfull when handling with features and the map view.
@@ -93,7 +92,7 @@ public class MapfunctionHelper
       return new EasyFeatureWrapper[] {};
 
     final GeoTransform transform = mapPanel.getProjection();
-    final CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
+    final String coordinatesSystem = mapModell.getCoordinatesSystem();
 
     final SplitSort geoIndex = new SplitSort( null, null, new EasyFeatureWrapperEnvelopeProvider() );
     for( final EasyFeatureWrapper wrapper : featureToSelectFrom )
@@ -147,7 +146,7 @@ public class MapfunctionHelper
       return new Feature[] {};
 
     final GeoTransform transform = mapPanel.getProjection();
-    final CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
+    final String coordinatesSystem = mapModell.getCoordinatesSystem();
 
     if( features.length <= 0 )
       return new Feature[] {};

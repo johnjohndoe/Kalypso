@@ -70,7 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.algorithm.PointInRing;
 import com.vividsolutions.jts.algorithm.SIRtreePointInRing;
@@ -102,7 +101,7 @@ public class SHP2WKS
    * transforms a SHPPoint to a WKSGeometry <BR>
    * gets a point that should be transformed <BR>
    */
-  public GM_Point transformPoint( CS_CoordinateSystem crs, SHPPoint shppoint )
+  public GM_Point transformPoint( String crs, SHPPoint shppoint )
   {
     return GeometryFactory.createGM_Point( shppoint.getX(), shppoint.getY(), crs );
   }
@@ -113,7 +112,7 @@ public class SHP2WKS
    * transforms a SHPPointz to a WKSGeometry <BR>
    * gets a pointz that should be transformed <BR>
    */
-  public GM_Point transformPointz( CS_CoordinateSystem crs, SHPPointz shppointz )
+  public GM_Point transformPointz( String crs, SHPPointz shppointz )
   {
     // return GeometryFactory.createGM_Point( shppointz.x, shppointz.y, shppointz.z, crs );
     return GeometryFactory.createGM_Point( shppointz.getX(), shppointz.getY(), shppointz.getZ(), crs );
@@ -125,7 +124,7 @@ public class SHP2WKS
    * transforms a SHPMultiPoint to a WKSGeometry <BR>
    * gets a multipoint that should be transformed <BR>
    */
-  public GM_Point[] transformMultiPoint( CS_CoordinateSystem srs, SHPMultiPoint shpmultipoint )
+  public GM_Point[] transformMultiPoint( String srs, SHPMultiPoint shpmultipoint )
   {
     GM_Point[] gm_points = new GM_Point[shpmultipoint.numPoints];
 
@@ -141,7 +140,7 @@ public class SHP2WKS
    * transforms a SHPMultiPointz to a WKSGeometry <BR>
    * gets a multipointz that should be transformed <BR>
    */
-  public GM_Point[] transformMultiPointz( CS_CoordinateSystem srs, SHPMultiPointz shpmultipointz )
+  public GM_Point[] transformMultiPointz( String srs, SHPMultiPointz shpmultipointz )
   {
     GM_Point[] gm_points = new GM_Point[shpmultipointz.numPoints];
 
@@ -157,7 +156,7 @@ public class SHP2WKS
    * transforms a SHPPolyLine to a WKSGeometry <BR>
    * gets a polyline that should be transformed <BR>
    */
-  public GM_Curve[] transformPolyLine( CS_CoordinateSystem crs, SHPPolyLine shppolyline )
+  public GM_Curve[] transformPolyLine( String crs, SHPPolyLine shppolyline )
   {
     GM_Curve[] curve = new GM_Curve[shppolyline.numParts];
 
@@ -190,7 +189,7 @@ public class SHP2WKS
    * transforms a SHPPolyLinez to a WKSGeometry <BR>
    * gets a polylinez that should be transformed <BR>
    */
-  public GM_Curve[] transformPolyLinez( CS_CoordinateSystem crs, SHPPolyLinez shpPolyLineZ )
+  public GM_Curve[] transformPolyLinez( String crs, SHPPolyLinez shpPolyLineZ )
   {
     GM_Curve[] curve = new GM_Curve[shpPolyLineZ.getNumParts()];
 
@@ -304,7 +303,7 @@ public class SHP2WKS
    * transforms the SHPPolygon to a WKSGeometry <BR>
    * gets the polygon that should be transformed <BR>
    */
-  public GM_Surface[] transformPolygon( CS_CoordinateSystem crs, SHPPolygon shppolygon )
+  public GM_Surface[] transformPolygon( String crs, SHPPolygon shppolygon )
   {
     // final Map<LinearRing, PointInRing> pirs = new HashMap<LinearRing, PointInRing>();
     final ArrayList<LinearRing> outer_rings = new ArrayList<LinearRing>( shppolygon.numRings );
@@ -374,7 +373,7 @@ public class SHP2WKS
    * transforms the SHPPolygon to a WKSGeometry <BR>
    * gets the polygon that should be transformed <BR>
    */
-  public GM_Surface[] transformPolygonz( CS_CoordinateSystem crs, SHPPolygonz shppolygonz )
+  public GM_Surface[] transformPolygonz( String crs, SHPPolygonz shppolygonz )
   {
     // final Map<LinearRing, PointInRing> pirs = new HashMap<LinearRing, PointInRing>();
     final ArrayList<LinearRing> outer_rings = new ArrayList<LinearRing>( shppolygonz.getNumRings() );

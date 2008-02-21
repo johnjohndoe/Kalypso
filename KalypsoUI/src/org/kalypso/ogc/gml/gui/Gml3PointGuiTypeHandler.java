@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -68,12 +67,8 @@ import org.kalypso.template.featureview.Text;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Gui type handler for gml:envelopes's.
@@ -90,7 +85,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
-  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
+  public IFeatureDialog createFeatureDialog( Feature feature, IPropertyType ftp )
   {
     return new PointFeatureDialog( feature, (IValuePropertyType) ftp );
   }
@@ -99,21 +94,21 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
+  public JAXBElement< ? extends ControlType> createFeatureviewControl( IPropertyType property, ObjectFactory factory )
   {
     // // if we get a ClassCastException here, something is very wrong
-    // final IValuePropertyType vpt = (IValuePropertyType) property;
+    // IValuePropertyType vpt = (IValuePropertyType) property;
     //
     // // Enumeration will get a Combo-Box
-    // final Map<String, String> comboEntries = PropertyUtils.createComboEntries( vpt );
+    // Map<String, String> comboEntries = PropertyUtils.createComboEntries( vpt );
     // if( comboEntries.size() > 0 )
     // return super.createFeatureviewControl( property, factory );
 
-    final QName qname = property.getQName();
+    QName qname = property.getQName();
 
-    final CompositeType composite = factory.createCompositeType();
+    CompositeType composite = factory.createCompositeType();
 
-    final GridLayout layout = factory.createGridLayout();
+    GridLayout layout = factory.createGridLayout();
     layout.setNumColumns( 2 );
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 1 );
@@ -121,27 +116,27 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     composite.setStyle( "SWT.NONE" );
 
     // Text
-    final Text text = factory.createText();
+    Text text = factory.createText();
     text.setStyle( "SWT.BORDER" );
     text.setEditable( true );
     text.setProperty( qname );
 
-    final GridDataType textData = factory.createGridDataType();
+    GridDataType textData = factory.createGridDataType();
     textData.setHorizontalAlignment( "GridData.FILL" );
     textData.setGrabExcessHorizontalSpace( true );
     textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
     text.setLayoutData( factory.createGridData( textData ) );
 
     // Knopf
-    final Button button = factory.createButton();
-    final GridDataType buttonData = factory.createGridDataType();
+    Button button = factory.createButton();
+    GridDataType buttonData = factory.createGridDataType();
     button.setStyle( "SWT.PUSH" );
     button.setProperty( qname );
 
     buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
     button.setLayoutData( factory.createGridData( buttonData ) );
 
-    final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
+    List<JAXBElement< ? extends ControlType>> control = composite.getControl();
     control.add( factory.createText( text ) );
     control.add( factory.createButton( button ) );
 
@@ -153,12 +148,12 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
    *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
    */
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  public IFeatureModifier createFeatureModifier( IPropertyType ftp, IFeatureSelectionManager selectionManager, IFeatureChangeListener fcl, String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
-    final IValuePropertyType vpt = (IValuePropertyType) ftp;
+    IValuePropertyType vpt = (IValuePropertyType) ftp;
 
-    final Class< ? > valueClass = getValueClass();
+    Class< ? > valueClass = getValueClass();
 
     if( Boolean.class == valueClass )
       return new BooleanModifier( vpt );
@@ -195,32 +190,20 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
     if( element == null )
       return "";
 
-    final GM_Point point = (GM_Point) element;
-    final GM_Position pos = point.getPosition();
+    GM_Point point = (GM_Point) element;
+    GM_Position pos = point.getPosition();
 
-    final double[] dbl_values = pos.getAsArray();
+    double[] dbl_values = pos.getAsArray();
 
-    String result = "";
+    String result = point.getCoordinateSystem();
 
-    try
-    {
-      final CS_CoordinateSystem coordinateSystem = point.getCoordinateSystem();
-      result = coordinateSystem == null ? "" : coordinateSystem.getName();
-    }
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-    }
-
-    for( final double element2 : dbl_values )
-    {
+    for( double element2 : dbl_values )
       result = result + ";" + new Double( element2 ).toString();
-    }
 
     return result;
   }
@@ -228,16 +211,14 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   /**
    * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object parseText( final String text, final String formatHint )
+  public Object parseText( String text, String formatHint )
   {
-    final Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-
     /* Erstellen des Points. */
     GM_Position pos = null;
-    CS_CoordinateSystem crs = null;
+    String crs = null;
 
     /* Werte anhand von ; trennen. */
-    final String[] str_values = text.split( ";" );
+    String[] str_values = text.split( ";" );
 
     double[] dbl_values = null;
 
@@ -245,20 +226,18 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     if( str_values.length > 1 )
     {
       /* Der erste Eintrag wird als das CS angenommen. */
-      final CoordinateSystem cs = new ConvenienceCSFactoryFull().getCSByName( str_values[0] );
+      String cs = str_values[0];
 
       /* Sollte es das CS nicht geben, stelle das Default CS ein. */
-      if( cs != null )
+      if( cs != null && cs.length() > 0 )
       {
-        crs = m_csAdapter.export( cs );
+        crs = cs;
 
         /* Der erste Eintrag war ein CS. */
         dbl_values = new double[str_values.length - 1];
 
         for( int i = 1; i < str_values.length; i++ )
-        {
           dbl_values[i - 1] = new Double( str_values[i] );
-        }
       }
       else
       {
@@ -268,9 +247,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
         dbl_values = new double[str_values.length];
 
         for( int i = 0; i < str_values.length; i++ )
-        {
           dbl_values[i] = new Double( str_values[i] );
-        }
       }
 
       pos = GeometryFactory.createGM_Position( dbl_values );
@@ -278,12 +255,12 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     else
     {
       /* Falls es nur einen Wert gibt, wird er als CS angenommen. */
-      final CoordinateSystem cs = new ConvenienceCSFactoryFull().getCSByName( str_values[0] );
+      String cs = str_values[0];
 
       /* Sollte es das CS nicht geben, stelle das Default CS ein. */
-      if( cs != null )
+      if( cs != null && cs.length() > 0 )
       {
-        crs = m_csAdapter.export( cs );
+        crs = cs;
         pos = GeometryFactory.createGM_Position( new double[] { 0.0 } );
       }
       else
@@ -291,10 +268,9 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
         crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
         pos = GeometryFactory.createGM_Position( new double[] { new Double( str_values[0] ) } );
       }
-
     }
 
-    final GM_Point point = GeometryFactory.createGM_Point( pos, crs );
+    GM_Point point = GeometryFactory.createGM_Point( pos, crs );
 
     return point;
   }

@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
@@ -74,10 +75,8 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Curve interface from package jago.model.
@@ -814,11 +813,16 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
    */
-  public GM_Object transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
+
     Debug.debugMethodBegin( this, "transformCurve" );
 
     final GM_CurveSegment[] newcus = new GM_CurveSegment[getNumberOfCurveSegments()];

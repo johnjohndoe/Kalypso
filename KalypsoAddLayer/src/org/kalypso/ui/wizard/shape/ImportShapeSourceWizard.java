@@ -1,7 +1,5 @@
 package org.kalypso.ui.wizard.shape;
 
-import java.rmi.RemoteException;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -77,25 +75,18 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
   @Override
   public boolean performFinish( )
   {
-    try
-    {
-      // Add Layer to mapModell
-      final IKalypsoLayerModell mapModell = m_modell;
-      final String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
-      final String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS().getName();
+    // Add Layer to mapModell
+    final IKalypsoLayerModell mapModell = m_modell;
+    final String themeName = FileUtilities.nameWithoutExtension( m_page.getShapePath().lastSegment() );
+    final String fileName = m_page.getShapeBaseRelativePath() + "#" + m_page.getCRS();
 
-      final IPath stylePath = m_page.getStylePath();
-      final String styleLocation = stylePath == null ? null : stylePath.toString();
-      final String styleName = m_page.getStyleName();
+    final IPath stylePath = m_page.getStylePath();
+    final String styleLocation = stylePath == null ? null : stylePath.toString();
+    final String styleName = m_page.getStyleName();
 
-      final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName, "sld", styleName, styleLocation, "simple" );
-      m_outlineviewer.postCommand( command, null );
-    }
+    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName, "sld", styleName, styleLocation, "simple" );
+    m_outlineviewer.postCommand( command, null );
 
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-    }
     m_page.removeListeners();
     return true;
   }

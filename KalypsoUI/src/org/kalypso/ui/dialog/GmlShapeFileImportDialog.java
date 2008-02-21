@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -89,6 +88,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
@@ -100,10 +100,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer
@@ -249,15 +246,9 @@ public class GmlShapeFileImportDialog extends Dialog
     m_checkCRS = new Combo( m_crsGroup, SWT.NONE );
 
     availableCoordinateSystems( m_checkCRS );
-    try
-    {
-      final String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem().getName();
-      m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
-    }
-    catch( final RemoteException e1 )
-    {
-      e1.printStackTrace();
-    }
+
+    final String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
 
     m_checkCRS.setToolTipText( "Koordinatensystem der ESRI(tm) Shape Datei" );
     final GridData data = new GridData( GridData.FILL_HORIZONTAL );
@@ -498,8 +489,7 @@ public class GmlShapeFileImportDialog extends Dialog
 
   private void availableCoordinateSystems( final Combo checkCRS )
   {
-    final ConvenienceCSFactoryFull factory = new ConvenienceCSFactoryFull();
-    checkCRS.setItems( factory.getKnownCS() );
+    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
   }
 
   protected KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )
@@ -840,10 +830,9 @@ public class GmlShapeFileImportDialog extends Dialog
 
   }
 
-  public CS_CoordinateSystem getCRS( )
+  public String getCRS( )
   {
-
-    return ConvenienceCSFactory.getInstance().getOGCCSByName( m_checkCRS.getText() );
+    return m_checkCRS.getText();
   }
 
   public boolean isDefaultStyle( )

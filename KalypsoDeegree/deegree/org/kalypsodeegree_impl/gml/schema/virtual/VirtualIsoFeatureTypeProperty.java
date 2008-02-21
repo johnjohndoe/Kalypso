@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
@@ -85,7 +84,7 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
       final GM_Position[] positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
       if( positions[0].getAsArray().length < 2 )
         return null;
-      final CS_CoordinateSystem cs = surface.getCoordinateSystem();
+      final String cs = surface.getCoordinateSystem();
       switch( positions.length )
       {
         case 4: // 3 edges
@@ -105,7 +104,7 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
     return GeometryFactory.createGM_MultiCurve( (GM_Curve[]) result.toArray( new GM_Curve[result.size()] ) );
   }
 
-  private void createIsoFrom4( final GM_Position pos0, final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final CS_CoordinateSystem cs, final List result, int level )
+  private void createIsoFrom4( final GM_Position pos0, final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String cs, final List result, int level )
   {
     level--;
     // points
@@ -140,7 +139,7 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
     }
   }
 
-  private List createISOFrom3( final GM_Position p1, final GM_Position p2, final GM_Position p3, final List result, final CS_CoordinateSystem cs )
+  private List createISOFrom3( final GM_Position p1, final GM_Position p2, final GM_Position p3, final List result, final String cs )
   {
 
     // check isos ?

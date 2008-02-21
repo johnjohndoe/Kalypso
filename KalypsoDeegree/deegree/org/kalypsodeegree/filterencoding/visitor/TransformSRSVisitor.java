@@ -43,11 +43,10 @@ package org.kalypsodeegree.filterencoding.visitor;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.filterencoding.SpatialOperation;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer
@@ -59,7 +58,7 @@ public class TransformSRSVisitor implements FilterVisitor
 
   private GeoTransformer m_transformer;
 
-  public TransformSRSVisitor( final CS_CoordinateSystem targetCRS )
+  public TransformSRSVisitor( final String targetCRS )
   {
     try
     {
@@ -98,5 +97,4 @@ public class TransformSRSVisitor implements FilterVisitor
 
     return true;
   }
-
 }

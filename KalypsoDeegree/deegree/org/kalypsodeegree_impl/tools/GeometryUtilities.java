@@ -68,7 +68,6 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -736,7 +735,7 @@ public class GeometryUtilities
   public static GM_Curve setValueZ( final GM_LineString newLine, final double value ) throws GM_Exception
   {
     final GM_Position[] positions = newLine.getPositions();
-    final CS_CoordinateSystem crs = newLine.getCoordinateSystem();
+    final String crs = newLine.getCoordinateSystem();
     final GM_Position[] newPositions = new GM_Position[positions.length];
     for( int i = 0; i < positions.length; i++ )
     {
@@ -951,7 +950,7 @@ public class GeometryUtilities
   /**
    * Convert the given bounding box into a {@link GM_Curve}
    */
-  public static final GM_Curve toGM_Curve( final GM_Envelope bBox, final CS_CoordinateSystem crs )
+  public static final GM_Curve toGM_Curve( final GM_Envelope bBox, final String crs )
   {
     try
     {

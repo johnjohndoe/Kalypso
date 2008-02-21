@@ -63,11 +63,9 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 
 import org.kalypsodeegree.model.geometry.GM_PrimitiveBoundary;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_PrimitiveBoundary interface.
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -86,7 +84,7 @@ abstract class GM_PrimitiveBoundary_Impl extends GM_Boundary_Impl implements GM_
    * 
    * @param srs
    */
-  public GM_PrimitiveBoundary_Impl( CS_CoordinateSystem srs )
+  public GM_PrimitiveBoundary_Impl( String srs )
   {
     super( srs );
   }

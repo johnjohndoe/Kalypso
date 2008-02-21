@@ -1,15 +1,14 @@
 package org.kalypsodeegree_impl.gml.binding.commons;
 
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Class which holds the GridDomainData of a RectifiedGridCoverage
@@ -89,12 +88,12 @@ public class RectifiedGridDomain
     m_rasterBoundaryAsSurface = getGM_Surface( origin.getCoordinateSystem() );
   }
 
-  public GM_Surface<GM_SurfacePatch> getGM_Surface( final CS_CoordinateSystem crs ) throws Exception
+  public GM_Surface<GM_SurfacePatch> getGM_Surface( final String crs ) throws Exception
   {
     return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, 0, 0, getNumColumns(), getNumRows(), crs );
   }
 
-  private static GM_Surface<GM_SurfacePatch> calculateSurface( final GM_Point origin, final OffsetVector offsetX, final OffsetVector offsetY, final int minX, final int minY, final int maxX, final int maxY, final CS_CoordinateSystem cs ) throws Exception
+  private static GM_Surface<GM_SurfacePatch> calculateSurface( final GM_Point origin, final OffsetVector offsetX, final OffsetVector offsetY, final int minX, final int minY, final int maxX, final int maxY, final String cs ) throws Exception
   {
     final GM_Position originPos = origin.getPosition();
 
@@ -103,7 +102,7 @@ public class RectifiedGridDomain
     final GM_Position pos2 = offsetY.move( pos1, maxY - minY );
     final GM_Position pos3 = offsetY.move( pos0, maxY - minY );
     final GM_Position[] ring = new GM_Position[] { pos0, pos1, pos2, pos3, pos0 };
-    final CS_CoordinateSystem originCrs = origin.getCoordinateSystem();
+    final String originCrs = origin.getCoordinateSystem();
     final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( ring, null, new GM_SurfaceInterpolation_Impl(), originCrs );
 
     if( originCrs == null || cs == null || originCrs.equals( cs ) )
@@ -113,12 +112,12 @@ public class RectifiedGridDomain
     return (GM_Surface<GM_SurfacePatch>) geoTrans.transform( surface );
   }
 
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     return m_origin.getCoordinateSystem();
   }
 
-  public GM_Point getOrigin( final CS_CoordinateSystem cs ) throws Exception
+  public GM_Point getOrigin( final String cs ) throws Exception
   {
     if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_origin;
@@ -161,7 +160,7 @@ public class RectifiedGridDomain
    * @return Returns the offset of a gridCell for the x-Axis
    * @throws Exception
    */
-  public double getOffsetX( final CS_CoordinateSystem cs ) throws Exception
+  public double getOffsetX( final String cs ) throws Exception
   {
     if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offsetX.getGeoX();
@@ -174,7 +173,7 @@ public class RectifiedGridDomain
   /**
    * @return Returns the offset of a gridCell for the y-Axis
    */
-  public double getOffsetY( final CS_CoordinateSystem cs ) throws Exception
+  public double getOffsetY( final String cs ) throws Exception
   {
     if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offsetY.getGeoY();
@@ -188,9 +187,9 @@ public class RectifiedGridDomain
    * @return Returns the GM_Envelope of the RectifiedGridDomain
    * @throws Exception
    */
-  public GM_Envelope getGM_Envelope( final CS_CoordinateSystem cs ) throws Exception
+  public GM_Envelope getGM_Envelope( final String cs ) throws Exception
   {
-    final CS_CoordinateSystem originCrs = m_origin.getCoordinateSystem();
+    final String originCrs = m_origin.getCoordinateSystem();
     if( originCrs == null || cs == null || originCrs.equals( cs ) )
       return m_rasterBoundaryAsSurface.getEnvelope();
 
@@ -198,7 +197,7 @@ public class RectifiedGridDomain
     return geoTrans.transform( m_rasterBoundaryAsSurface ).getEnvelope();
   }
 
-  public GM_Surface<GM_SurfacePatch> getGM_Surface( final int lowX, final int lowY, final int highX, final int highY, final CS_CoordinateSystem cs ) throws Exception
+  public GM_Surface<GM_SurfacePatch> getGM_Surface( final int lowX, final int lowY, final int highX, final int highY, final String cs ) throws Exception
   {
     return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, lowX, lowY, highX, highY, cs );
   }
@@ -206,7 +205,7 @@ public class RectifiedGridDomain
   /**
    * get low and high (GridRange) of the RectifiedGridCoverage for the given envelope
    */
-  public int[] getGridExtent( final GM_Envelope env, final CS_CoordinateSystem cs ) throws Exception
+  public int[] getGridExtent( final GM_Envelope env, final String cs ) throws Exception
   {
     /* Check precionditions: only cartesian offset vectors supported */
     // TODO: support arbitrary offset vectors

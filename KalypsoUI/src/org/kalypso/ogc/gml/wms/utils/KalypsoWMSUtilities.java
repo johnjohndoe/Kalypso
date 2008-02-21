@@ -53,7 +53,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This is a helper class, providing functions for dealing with a WMS.
@@ -90,7 +89,7 @@ public class KalypsoWMSUtilities
    */
   public static IKalypsoImageProvider getImageProvider( final String themeName, final String layers, final String styles, final String service, final String providerID )
   {
-    final CS_CoordinateSystem localSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String localSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     /* If it is missing or null, return the default provider. */
     if( providerID == null )
@@ -152,7 +151,7 @@ public class KalypsoWMSUtilities
    *            The client coordinate system.
    * @return The default wms image provider.
    */
-  public static IKalypsoImageProvider getDefaultImageProvider( final String themeName, final String layers, final String styles, final String service, final CS_CoordinateSystem localSRS )
+  public static IKalypsoImageProvider getDefaultImageProvider( final String themeName, final String layers, final String styles, final String service, final String localSRS )
   {
     final WMSImageProvider provider = new WMSImageProvider();
     provider.init( themeName, layers, styles, service, localSRS );

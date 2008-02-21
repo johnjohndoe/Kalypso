@@ -9,26 +9,23 @@ import java.io.File;
 
 import org.kalypso.interpolation.grid.GridFactory;
 import org.kalypso.interpolation.grid.IGrid;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author kuepfer
- * 
- * TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code
- * Templates
+ * @author kuepfer TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
+ *         Style - Code Templates
  */
 public class MainInterpolate
 {
 
-  //	static String logPath = "//home//export//kuepfer//tmp//log.dat";
+  // static String logPath = "//home//export//kuepfer//tmp//log.dat";
   public static final String LOG_PATH = "d://temp//";
 
   public static final String LOG_NAME = "kalypsoInterpolateFEM.log";
 
-  //static String outputPath = "//home//export//kuepfer//tmp//grid.asc";
+  // static String outputPath = "//home//export//kuepfer//tmp//grid.asc";
   public static final String OUTPUT_PATH = "d://temp//res_Interpolation//";
 
   public static final String INPUT_PATH = "d://Daten//DataForCK//";
@@ -47,17 +44,17 @@ public class MainInterpolate
 
   private static final String SHP_TYPE = "shp";
 
-  //-grid name_of_grid.asc
+  // -grid name_of_grid.asc
   private static final String GRID = "-grid";
 
   private static final String SIZE = "-size";
 
-  //-border d:/temp/shapebase
+  // -border d:/temp/shapebase
   private static final String BORDER = "-border";
 
   public static void main( String[] args )
   {
-    CS_CoordinateSystem cs = null;
+    String cs = null;
     GM_Envelope bbox = null;
     File[] inputFiles = null;
     File gridFile = null;
@@ -71,8 +68,7 @@ public class MainInterpolate
       if( args[i].equalsIgnoreCase( CS ) )
       {
         String str = args[++i];
-        cs = ConvenienceCSFactory.getInstance().getOGCCSByName( str );
-        if( cs == null )
+        if( CRSHelper.isKnownCRS( str ) == false )
         {
           System.out.println( "Das Koordinatensystem: " + args[i] + " wird nicht unterstützt" );
           System.exit( 0 );
@@ -83,8 +79,7 @@ public class MainInterpolate
       {
         try
         {
-          bbox = GeometryFactory.createGM_Envelope( Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ),
-              Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ) );
+          bbox = GeometryFactory.createGM_Envelope( Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ) );
         }
         catch( NumberFormatException e )
         {
@@ -105,8 +100,7 @@ public class MainInterpolate
           File file = new File( args[++i] );
 
           if( file.exists() )
-            inputFiles = new File[]
-            { file };
+            inputFiles = new File[] { file };
           else
           {
             System.out.println( "Die Datei: " + file.toString() + " existiert nicht" );
@@ -185,16 +179,16 @@ public class MainInterpolate
     try
     {
       KalypsoGridTools tools = new KalypsoGridTools();
-      //      File file = new File( "D://TEMP//res_Kellinghusen//grid_khHQ5_4.asc" );
-      //      File newGridFile = new File( "d://temp//grid_subtract.asc" );
-      //      IGrid girdHQ5 = tools.importGrid( file, cs );
-      //      girdHQ5.export( newGridFile );
+      // File file = new File( "D://TEMP//res_Kellinghusen//grid_khHQ5_4.asc" );
+      // File newGridFile = new File( "d://temp//grid_subtract.asc" );
+      // IGrid girdHQ5 = tools.importGrid( file, cs );
+      // girdHQ5.export( newGridFile );
 
       IGrid gridHQ10 = tools.interpolateGrid( inputFiles, cs, bbox, borderPath, size );
       gridHQ10.export( gridFile );
 
-      //      IGrid grid = tools.subtract( gridHQ10, girdHQ5 );
-      //      grid.export( newGridFile );
+      // IGrid grid = tools.subtract( gridHQ10, girdHQ5 );
+      // grid.export( newGridFile );
 
     }
     catch( Exception e )
@@ -206,5 +200,5 @@ public class MainInterpolate
       GridFactory.getInstance().clearFactory();
       System.exit( 0 );
     }
-  }//main
-}//class MainInterpolate
+  }// main
+}// class MainInterpolate

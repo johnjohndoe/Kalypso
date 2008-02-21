@@ -20,36 +20,30 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author kuepfer
- * 
- * TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code
- * Templates
+ * @author kuepfer TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
+ *         Style - Code Templates
  */
 public class KalypsoGridTools implements IKalyposGridTools
 {
   private static final MeshReader reader = new MeshReader();
 
-  public KalypsoGridTools()
-  {}
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.interpolation.IKalyposGridTools#interpolateGrid(org.deegree.model.feature.Feature[],
-   *      org.deegree.model.feature.Feature[], java.lang.String, java.lang.String, java.lang.String, double,
-   *      org.deegree.model.geometry.GM_Envelope, java.lang.String)
-   */
-  public void interpolateGrid( Feature[] meshElements, Feature[] nodes, String geometryPropertyElement,
-      String geometryPropertyPoint, String valueProperty, double cellsize, GM_Envelope gridsize, GM_Surface wishbox,
-      GM_Surface polyline, CS_CoordinateSystem crs, File out ) throws Exception
+  public KalypsoGridTools( )
   {
-    Mesh mesh = MeshFactory.getInstance().getMesh( crs );
-    //read mesh
-    reader.importMesh( mesh, nodes, geometryPropertyPoint, valueProperty, meshElements, geometryPropertyElement,
-        wishbox );
+  }
+
+  /**
+   * @see org.kalypso.interpolation.IKalyposGridTools#interpolateGrid(org.kalypsodeegree.model.feature.Feature[],
+   *      org.kalypsodeegree.model.feature.Feature[], java.lang.String, java.lang.String, java.lang.String, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Surface,
+   *      org.kalypsodeegree.model.geometry.GM_Surface, java.lang.String, java.io.File)
+   */
+  public void interpolateGrid( Feature[] meshElements, Feature[] nodes, String geometryPropertyElement, String geometryPropertyPoint, String valueProperty, double cellsize, GM_Envelope gridsize, GM_Surface wishbox, GM_Surface polyline, String crs, File out ) throws Exception
+  {
+    Mesh mesh = MeshFactory.getInstance().getNewMesh( crs );
+    // read mesh
+    reader.importMesh( mesh, nodes, geometryPropertyPoint, valueProperty, meshElements, geometryPropertyElement, wishbox );
     IGrid grid = GridFactory.getInstance().createGrid( wishbox.getEnvelope(), crs, cellsize, mesh );
     long st = System.currentTimeMillis();
     mesh.interpolateGrid( grid );
@@ -59,13 +53,12 @@ public class KalypsoGridTools implements IKalyposGridTools
 
   }
 
-  public IGrid interpolateGrid( File[] inputFiles, CS_CoordinateSystem cs, GM_Envelope bbox, String borderPath,
-      double size )
+  public IGrid interpolateGrid( File[] inputFiles, String cs, GM_Envelope bbox, String borderPath, double size )
   {
 
     System.out.println( "\n" + "Importing input files..started" );
     long startTime = System.currentTimeMillis();
-    //creates mesh out of input files and set name
+    // creates mesh out of input files and set name
     IGrid grid = null;
     try
     {
@@ -77,16 +70,15 @@ public class KalypsoGridTools implements IKalyposGridTools
       Mesh mesh = mf.readMesh( inputFiles, cs, surfaceBBox, borderPath );
 
       long currentTime1 = System.currentTimeMillis();
-      System.out.println( "\n" + "total importing duration (in seconds) : " + ( currentTime1 - startTime ) / 1000 );
-      //create grid
+      System.out.println( "\n" + "total importing duration (in seconds) : " + (currentTime1 - startTime) / 1000 );
+      // create grid
       grid = GridFactory.getInstance().createGrid( bbox, cs, size, mesh );
       System.out.println( "\n" + "Interpolate Mesh: " + mesh.getMeshName() + " into Grid: " + grid.getGridID() );
-      //interpolate grid
+      // interpolate grid
       mesh.interpolateGrid( grid );
       long currentTime2 = System.currentTimeMillis();
-      System.out.println( "\n" + "total interpolation duration (in seconds) : " + ( currentTime2 - currentTime1 )
-          / 1000 );
-      System.out.println( "\n" + "total duration (in seconds) : " + ( currentTime2 - startTime ) / 1000 );
+      System.out.println( "\n" + "total interpolation duration (in seconds) : " + (currentTime2 - currentTime1) / 1000 );
+      System.out.println( "\n" + "total duration (in seconds) : " + (currentTime2 - startTime) / 1000 );
     }
     catch( Exception e )
     {
@@ -97,10 +89,6 @@ public class KalypsoGridTools implements IKalyposGridTools
   }
 
   /**
-   * @param grid1
-   * 
-   * @param grid2
-   * 
    * @see org.kalypso.interpolation.IKalyposGridTools#subtract(org.kalypso.interpolation.grid.IGrid,
    *      org.kalypso.interpolation.grid.IGrid)
    */
@@ -124,12 +112,12 @@ public class KalypsoGridTools implements IKalyposGridTools
     GM_Envelope env1 = grid1.getExtend().getEnvelope();
     GM_Envelope env2 = grid2.getExtend().getEnvelope();
     GM_Position check = GeometryFactory.createGM_Position( llc2.getX() + cell2 / 2, llc2.getY() + cell2 / 2 );
-    CS_CoordinateSystem cs1 = grid1.getCoordinateSystem();
-    CS_CoordinateSystem cs2 = grid2.getCoordinateSystem();
+    String cs1 = grid1.getCoordinateSystem();
+    String cs2 = grid2.getCoordinateSystem();
     boolean coincides = grid1.isPointOnGrid( check, false );
     int row = 0;
     int col = 0;
-    if( cs1.equals( cs2 ) && cell1 == cell2 && ( llc1.equals( llc2 ) || coincides ) )
+    if( cs1.equals( cs2 ) && cell1 == cell2 && (llc1.equals( llc2 ) || coincides) )
     {
       GM_Envelope mergedEnv = env1.getMerged( env2 );
       IGrid grid = null;
@@ -144,24 +132,24 @@ public class KalypsoGridTools implements IKalyposGridTools
           {
             if( row == 19 && col == 20 )
               System.out.print( "rowAndCols" );
-            //            {
-            //              ( (Grid)grid1 ).writeGridValue( row, col, 50000d );
+            // {
+            // ( (Grid)grid1 ).writeGridValue( row, col, 50000d );
             //
-            //              System.out.println( ( (Grid)grid1 ).readGridValue( row, col ) );
-            //              System.out.println( ( (Grid)grid1 ).getPosition( row, col ) );
+            // System.out.println( ( (Grid)grid1 ).readGridValue( row, col ) );
+            // System.out.println( ( (Grid)grid1 ).getPosition( row, col ) );
             //
-            //            }
+            // }
             if( row > maxRows1 || row > maxRows2 || col > maxCols1 || col > maxCols2 )
-              ( (Grid)grid ).writeGridValue( row, col, nodata );
+              ((Grid) grid).writeGridValue( row, col, nodata );
             else
             {
-              double value1 = ( (Grid)grid1 ).readGridValue( row, col );
-              double value2 = ( (Grid)grid2 ).readGridValue( row, col );
+              double value1 = ((Grid) grid1).readGridValue( row, col );
+              double value2 = ((Grid) grid2).readGridValue( row, col );
               double value = value1 - value2;
               if( value1 != nodata && value2 != nodata )
-                ( (Grid)grid ).writeGridValue( row, col, value );
+                ((Grid) grid).writeGridValue( row, col, value );
               else
-                ( (Grid)grid ).writeGridValue( row, col, nodata );
+                ((Grid) grid).writeGridValue( row, col, nodata );
             }
           }
         }
@@ -198,9 +186,9 @@ public class KalypsoGridTools implements IKalyposGridTools
   }
 
   /**
-   * @see org.kalypso.interpolation.IKalyposGridTools#importGrid(File, CS_CoordinateSystem)
+   * @see org.kalypso.interpolation.IKalyposGridTools#importGrid(java.io.File, java.lang.String)
    */
-  public IGrid importGrid( File file, CS_CoordinateSystem cs ) throws Exception
+  public IGrid importGrid( File file, String cs ) throws Exception
   {
     return GridFactory.getInstance().importESRIasc( file, cs );
   }

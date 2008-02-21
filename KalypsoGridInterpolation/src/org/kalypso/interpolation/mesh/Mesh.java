@@ -14,68 +14,64 @@ import org.kalypso.interpolation.grid.IGrid;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author kuepfer
- * 
- * TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code
- * Templates
+ * @author kuepfer TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
+ *         Style - Code Templates
  */
 public class Mesh
 {
-  private String name = null;
+  private String m_name = null;
 
   private GM_Surface m_env = null;
 
-  //  private ElementTable et = null;
+  // private ElementTable et = null;
 
   private final HashMap m_meshElements = new HashMap();
 
-  private final CS_CoordinateSystem m_crs;
+  private final String m_crs;
 
   private Grid m_grid = null;
 
-//  private boolean m_gridInitialise = false;
+// private boolean m_gridInitialise = false;
 
   private GM_Surface m_border = null;
 
   protected Mesh( String name )
   {
-    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
-    this.name = name;
+    String cs = "EPSG:31467";
+    this.m_name = name;
     this.m_crs = cs;
-  }//constructor
+  }// constructor
 
-  protected Mesh( String name, CS_CoordinateSystem cs )
+  protected Mesh( String name, String cs )
   {
-    this.name = name;
+    this.m_name = name;
     this.m_crs = cs;
-  }//constructor
+  }// constructor
 
-  public String getMeshName()
+  public String getMeshName( )
   {
-    return name;
+    return m_name;
   }
 
-  //  public PointTable getPoints()
-  //  {
-  //    return pt;
-  //  }
+  // public PointTable getPoints()
+  // {
+  // return pt;
+  // }
 
   public void setMeshName( String name )
   {
-    this.name = name;
+    this.m_name = name;
   }
 
-  public HashMap getMeshElements()
+  public HashMap getMeshElements( )
   {
     return m_meshElements;
   }
 
-  public GM_Envelope getEnvelope()
+  public GM_Envelope getEnvelope( )
   {
 
     try
@@ -87,13 +83,13 @@ public class Mesh
         int counter = 0;
         while( itTable.hasNext() )
         {
-          MeshElement me = (MeshElement)m_meshElements.get( itTable.next() );
+          MeshElement me = (MeshElement) m_meshElements.get( itTable.next() );
           if( counter == 0 )
             env = me.getEnvelope();
           else
             env = env.getMerged( me.getEnvelope() );
           counter++;
-        }//while
+        }// while
         m_env = GeometryFactory.createGM_Surface( env, m_crs );
       }
     }
@@ -103,9 +99,9 @@ public class Mesh
       return null;
     }
     return m_env.getEnvelope();
-  }//getBBox
+  }// getBBox
 
-  public Grid getGrid()
+  public Grid getGrid( )
   {
     return m_grid;
   }
@@ -122,19 +118,19 @@ public class Mesh
     if( m_meshElements.size() == 0 )
       return;
     int progress = 1;
-//    int noElements = m_meshElements.size();
+// int noElements = m_meshElements.size();
     try
     {
       Iterator it = m_meshElements.keySet().iterator();
       while( it.hasNext() )
       {
-        MeshElement me = (MeshElement)m_meshElements.get( it.next() );
-        Vector cells = ( (Grid)grid ).getCellsFromGrid( me.getEnvelope(), me.getCoordinateSystem() );
-        //System.out.println( progress + " of " + noElements );
-        me.interpolateMeshElement( (GM_Position[])cells.toArray( new GM_Position[cells.size()] ), (Grid)grid );
+        MeshElement me = (MeshElement) m_meshElements.get( it.next() );
+        Vector cells = ((Grid) grid).getCellsFromGrid( me.getEnvelope(), me.getCoordinateSystem() );
+        // System.out.println( progress + " of " + noElements );
+        me.interpolateMeshElement( (GM_Position[]) cells.toArray( new GM_Position[cells.size()] ), (Grid) grid );
         progress++;
       }
-      //      ( (Grid)grid ).exportESRIasc( polyline, file );
+      // ( (Grid)grid ).exportESRIasc( polyline, file );
     }
     catch( Exception e )
     {
@@ -148,7 +144,7 @@ public class Mesh
     m_env = env;
   }
 
-  public int size()
+  public int size( )
   {
     return m_meshElements.size();
   }
@@ -158,29 +154,29 @@ public class Mesh
     m_meshElements.remove( me.getMeshElementID() );
   }
 
-//  protected boolean isGridInitialised()
-//  {
-//    return m_gridInitialise;
+// protected boolean isGridInitialised()
+// {
+// return m_gridInitialise;
 //
-//  }
+// }
 //
-//  public void setGridInitialize( boolean initialise )
-//  {
-//    m_gridInitialise = initialise;
-//  }
+// public void setGridInitialize( boolean initialise )
+// {
+// m_gridInitialise = initialise;
+// }
 
   public void setBorderLine( GM_Surface surface )
   {
     m_border = surface;
   }
 
-  public GM_Surface getBorderLine()
+  public GM_Surface getBorderLine( )
   {
     return m_border;
   }
 
   public void setGrid( IGrid grid )
   {
-    m_grid = (Grid)grid;
+    m_grid = (Grid) grid;
   }
-}//class
+}// class

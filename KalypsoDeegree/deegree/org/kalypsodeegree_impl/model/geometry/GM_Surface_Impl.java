@@ -61,13 +61,13 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -82,10 +82,8 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Surface interface from package jago.model.
@@ -443,22 +441,16 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
   /**
    *
-   *
    */
   @Override
   public String toString( )
   {
     String ret = getClass().getName() + ":\n";
+
     ret += ("envelope = " + getEnvelope() + "\n");
-    try
-    {
-      ret += " CRS: " + getCoordinateSystem().getName() + "\n";
-    }
-    catch( final RemoteException e )
-    {
-      e.printStackTrace();
-    }
+    ret += " CRS: " + getCoordinateSystem() + "\n";
     ret += ("patch = " + m_patch + "\n");
+
     return ret;
   }
 
@@ -760,11 +752,16 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
    */
-  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
   {
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
+
     Debug.debugMethodBegin( this, "transformSurface" );
 
     final int cnt = size();

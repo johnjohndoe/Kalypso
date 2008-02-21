@@ -26,12 +26,10 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kuepfer TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
@@ -61,15 +59,14 @@ public class Element
 
   private Feature feature = null;
 
-  public Element( final String eleNo, final String verticies, final GM_Position[] positions, CS_CoordinateSystem crs ) throws GM_Exception
+  public Element( final String eleNo, final String verticies, final GM_Position[] positions, String crs ) throws GM_Exception
   {
     if( crs == null )
     {
       // default coordinate system is Gauß-Krüger
-
-      final CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
-      crs = cs;
+      crs = "EPSG:31467";
     }
+
     final GM_Surface surface = GeometryFactory.createGM_Surface( positions, null, null, crs );
     final Feature f = FeatureFactory.createFeature( null, null, eleNo, m_featureType, false );
 
@@ -78,7 +75,7 @@ public class Element
     this.feature = f;
   }
 
-  public Element( final String eleNo, final GM_Object geom, final CS_CoordinateSystem crs ) throws GM_Exception
+  public Element( final String eleNo, final GM_Object geom, final String crs ) throws GM_Exception
   {
     if( crs == null )
       throw new GM_Exception( "No coordinate system defined! Element can not be created" );

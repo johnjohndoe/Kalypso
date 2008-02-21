@@ -70,7 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_CurveSegment interface from package jago.model. the class is abstract because it
@@ -87,7 +86,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -8102075931849374162L;
 
-  protected CS_CoordinateSystem m_crs = null;
+  protected String m_crs = null;
 
   protected GM_Position[] points = new GM_Position[0];
 
@@ -98,7 +97,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * @param crs
    * @throws GM_Exception
    */
-  protected GM_CurveSegment_Impl( final GM_Position[] gmps, final CS_CoordinateSystem crs ) throws GM_Exception
+  protected GM_CurveSegment_Impl( final GM_Position[] gmps, final String crs ) throws GM_Exception
   {
     if( gmps == null )
     {
@@ -171,7 +170,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * returns the coordinate system of the curve segment
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     return m_crs;
   }
@@ -247,7 +246,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   public Object clone( )
   {
     // kuch
-    final CS_CoordinateSystem system = getCoordinateSystem();
+    final String system = getCoordinateSystem();
     final GM_Position[] clonedPositions = GeometryFactory.cloneGM_Position( getPositions() );
 
     try

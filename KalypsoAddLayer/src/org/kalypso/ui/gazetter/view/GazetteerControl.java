@@ -65,7 +65,6 @@ import org.kalypso.ogc.wfs.WFService;
 import org.kalypso.view.gazetter.GazetterLocationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author doemming
@@ -101,7 +100,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       return;
     }
     final QName featureTypeToLoad = m_gazetteerLocation.getFeatureType();
-    final CS_CoordinateSystem targetCRS = null;
+    final String targetCRS = null;
     final String filter;
     final String maxFeatureAsString = "100";
     // no parent and nothing seleced
@@ -153,7 +152,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       {
         try
         {
-          WFService service = new WFService(m_baseURL.toExternalForm());
+          WFService service = new WFService( m_baseURL.toExternalForm() );
           GMLWorkspace workspace = service.createGMLWorkspaceFromGetFeature( featureTypeToLoad, targetCRS, filter, maxFeatureAsString );
           setContent( workspace );
           setEnable( true );

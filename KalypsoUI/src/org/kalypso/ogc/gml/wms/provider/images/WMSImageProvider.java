@@ -62,7 +62,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This provider loads an image from a WMS. It caches the capabilities, so that this request is only done once.
@@ -85,11 +84,11 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
   }
 
   /**
-   * @see org.kalypso.ogc.gml.wms.provider.AbstractDeegreeImageProvider#init(java.lang.String, java.lang.String,
-   *      java.lang.String, java.lang.String, org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider#init(java.lang.String, java.lang.String,
+   *      java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void init( String themeName, String layers, String styles, String service, CS_CoordinateSystem localSRS )
+  public void init( String themeName, String layers, String styles, String service, String localSRS )
   {
     super.init( themeName, layers, styles, service, localSRS );
   }

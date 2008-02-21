@@ -44,7 +44,6 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.tools.TransformationUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * KalypsoPictureTheme
@@ -61,7 +60,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
   public static IKalypsoTheme getPictureTheme( final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
   {
     final String[] arrWorldTypes = new String[] { "tif", "jpg", "png", "gif" };
-    final CS_CoordinateSystem system = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String system = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     if( ArrayUtils.contains( arrWorldTypes, layerType.getLinktype().toLowerCase() ) )
       return new KalypsoPictureThemeWorldFile( layerType, context, modell, system, legendGraphic, shouldShowChildren );
     else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) )
@@ -168,7 +167,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     try
     {
       final GM_Envelope envelope = m_domain.getGM_Envelope( m_domain.getCoordinateSystem() );
-      final CS_CoordinateSystem crs = m_domain.getCoordinateSystem();
+      final String crs = m_domain.getCoordinateSystem();
       // transform from crs to crs? optimisation possible?
       TransformationUtilities.transformImage( m_image, envelope, crs, crs, p, g );
     }

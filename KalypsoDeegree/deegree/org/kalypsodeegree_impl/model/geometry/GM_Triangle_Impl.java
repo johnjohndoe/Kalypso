@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -48,9 +49,7 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -74,13 +73,16 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     }
   }
 
-  public GM_Triangle_Impl( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final CS_CoordinateSystem crs ) throws GM_Exception
+  public GM_Triangle_Impl( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs ) throws GM_Exception
   {
     super( PLANAR_INTERPOLATION, new GM_Position[] { pos1, pos2, pos3, pos1 }, null, crs );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#getCoordinateSystem()
+   */
   @Override
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     return m_crs;
   }
@@ -181,12 +183,17 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   }
 
   /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
    */
   @Override
-  public GM_SurfacePatch transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_SurfacePatch transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
+
     final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
     final GM_Ring transExRing = (GM_Ring) exRing.transform( trans, targetOGCCS );
     final GM_Position[] positions = transExRing.getPositions();

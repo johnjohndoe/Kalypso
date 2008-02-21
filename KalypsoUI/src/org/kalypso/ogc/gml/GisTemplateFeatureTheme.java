@@ -82,6 +82,7 @@ import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -334,7 +335,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
           if( m_gisTemplateUserStyles.isEmpty() )
           {
-            final DefaultStyleFactory defaultStyleFactory = KalypsoGisPlugin.getDefaultStyleFactory();
+            final DefaultStyleFactory defaultStyleFactory = KalypsoDeegreePlugin.getDefaultStyleFactory();
             final IFeatureType featureType = getFeatureType();
             if( featureType != null )
             {

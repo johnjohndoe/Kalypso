@@ -10,8 +10,6 @@ import org.kalypso.gml.util.ShpSourceType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author belger
@@ -38,21 +36,17 @@ public class ShpSourceHandler implements ISourceHandler
    * @throws GmlConvertException
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
-  public GMLWorkspace getWorkspace() throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException
   {
     try
     {
       final URL shpURL = m_resolver.resolveURL( m_context, m_href );
-      
+
       final IFile file = ResourceUtilities.findFileFromURL( shpURL );
       final String absolutePath = file.getLocation().toFile().getAbsolutePath();
       final String shapeBase = FileUtilities.nameWithoutExtension( absolutePath );
-      
-      final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      final CS_CoordinateSystem sourceCrs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
-          csFac.getCSByName( m_crs ) );
-      
-      return ShapeSerializer.deserialize( shapeBase, sourceCrs );
+
+      return ShapeSerializer.deserialize( shapeBase, m_crs );
     }
     catch( final Exception e )
     {

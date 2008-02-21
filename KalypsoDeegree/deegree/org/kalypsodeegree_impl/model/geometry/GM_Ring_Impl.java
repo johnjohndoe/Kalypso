@@ -63,6 +63,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
@@ -75,9 +76,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Ring interface of the
@@ -100,7 +99,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * Constructor, with Array and CS_CoordinateSystem
    */
-  public GM_Ring_Impl( final GM_Position[] points, final CS_CoordinateSystem crs ) throws GM_Exception
+  public GM_Ring_Impl( final GM_Position[] points, final String crs ) throws GM_Exception
   {
     super( crs );
 
@@ -110,7 +109,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   /**
    * Constructor, with Array, CS_CoordinateSystem and Orientation
    */
-  public GM_Ring_Impl( final GM_Position[] points, final CS_CoordinateSystem crs, final char orientation ) throws GM_Exception
+  public GM_Ring_Impl( final GM_Position[] points, final String crs, final char orientation ) throws GM_Exception
   {
     super( crs, orientation );
     setPositions( points );
@@ -275,7 +274,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   public Object clone( )
   {
     // kuch
-    final CS_CoordinateSystem system = getCoordinateSystem();
+    final String system = getCoordinateSystem();
     final GM_Position[] myPositions = GeometryFactory.cloneGM_Position( getPositions() );
     final char orientation = getOrientation();
 
@@ -443,8 +442,13 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
    *      org.opengis.cs.CS_CoordinateSystem)
    */
-  public GM_Object transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
+
     Debug.debugMethodBegin( this, "transformRing" );
 
     final GM_Position[] pos = getPositions();

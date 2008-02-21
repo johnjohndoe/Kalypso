@@ -64,12 +64,10 @@ import java.io.Serializable;
 
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_OrientablePrimitive;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_OrientablePrimitive interface from package jago.model. the implementation is
  * abstract because it doesn't make sense to instantiate it.
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -89,14 +87,13 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
    * the constructor sets the curves orientation
    * 
    * @param crs
-   *          spatial reference system of the geometry
+   *            spatial reference system of the geometry
    * @param orientation
-   *          orientation of the curve ('+'|'-')
-   * 
+   *            orientation of the curve ('+'|'-')
    * @exception GM_Exception
-   *              will be thrown if orientation is invalid
+   *                will be thrown if orientation is invalid
    */
-  protected GM_OrientablePrimitive_Impl( CS_CoordinateSystem crs, char orientation ) throws GM_Exception
+  protected GM_OrientablePrimitive_Impl( String crs, char orientation ) throws GM_Exception
   {
     super( crs );
     setOrientation( orientation );
@@ -107,7 +104,7 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
    * 
    * @return curve orientation ('+'|'-')
    */
-  public char getOrientation()
+  public char getOrientation( )
   {
     return m_orientation;
   }
@@ -116,14 +113,13 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
    * sets the curves orientation
    * 
    * @param orientation
-   *          orientation of the curve ('+'|'-')
-   * 
+   *            orientation of the curve ('+'|'-')
    * @exception GM_Exception
-   *              will be thrown if orientation is invalid
+   *                will be thrown if orientation is invalid
    */
   public void setOrientation( char orientation ) throws GM_Exception
   {
-    if( ( orientation != '+' ) && ( orientation != '-' ) )
+    if( (orientation != '+') && (orientation != '-') )
     {
       throw new GM_Exception( orientation + " isn't a valid direction" );
     }

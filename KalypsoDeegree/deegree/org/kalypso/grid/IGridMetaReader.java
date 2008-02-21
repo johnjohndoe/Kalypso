@@ -41,7 +41,6 @@
 package org.kalypso.grid;
 
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Implementors of this interface are used to read the meta-data (bounding box and such) of grid-files.
@@ -65,5 +64,5 @@ public interface IGridMetaReader
   /**
    * params can be modified by user editing
    */
-  public RectifiedGridDomain getCoverage( RectifiedGridDomain.OffsetVector offsetX, RectifiedGridDomain.OffsetVector offsetY, Double[] upperLeftCorner, CS_CoordinateSystem crs ) throws Exception;
+  public RectifiedGridDomain getCoverage( RectifiedGridDomain.OffsetVector offsetX, RectifiedGridDomain.OffsetVector offsetY, Double[] upperLeftCorner, String crs ) throws Exception;
 }

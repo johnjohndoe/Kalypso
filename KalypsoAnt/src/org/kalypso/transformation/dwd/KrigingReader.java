@@ -66,7 +66,6 @@ import org.kalypso.zml.repository.virtual.VirtualRepositoryType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
 public class KrigingReader
@@ -92,9 +91,9 @@ public class KrigingReader
 
   private final SourceObservationProvider m_srcObservationProvider;
 
-  private final CS_CoordinateSystem m_crs;
+  private final String m_crs;
 
-  public KrigingReader( Logger logger, Reader reader, SourceObservationProvider srcObservationProvider, CS_CoordinateSystem crs ) throws IOException
+  public KrigingReader( Logger logger, Reader reader, SourceObservationProvider srcObservationProvider, String crs ) throws IOException
   {
     m_logger = logger;
     m_srcObservationProvider = srcObservationProvider;

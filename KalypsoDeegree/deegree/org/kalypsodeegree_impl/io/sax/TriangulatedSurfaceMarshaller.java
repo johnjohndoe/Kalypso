@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax;
 
-import java.rmi.RemoteException;
-
+import org.deegree.model.crs.UnknownCRSException;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -105,7 +104,7 @@ public class TriangulatedSurfaceMarshaller
     {
       final ContentHandler contentHandler = m_reader.getContentHandler();
 
-      final CS_CoordinateSystem crs = m_surface.getCoordinateSystem();
+      final String crs = m_surface.getCoordinateSystem();
       final Attributes atts;
       if( crs != null )
         atts = createCrsAttributes( crs );
@@ -121,18 +120,18 @@ public class TriangulatedSurfaceMarshaller
       contentHandler.endElement( NS.GML3, TAG_TRIANGLE_PATCHES, QNAME_TRIANGLE_PATCHES );
       contentHandler.endElement( NS.GML3, TAG_TRIANGULATED_SURFACE, QNAME_TRIANGULATED_SURFACE );
     }
-    catch( final RemoteException e )
+    catch( final UnknownCRSException e )
     {
       throw new SAXException( e );
     }
   }
 
-  private void marshalTriangle( final GM_Triangle triangle ) throws SAXException, RemoteException
+  private void marshalTriangle( final GM_Triangle triangle ) throws SAXException, UnknownCRSException
   {
     final ContentHandler contentHandler = m_reader.getContentHandler();
 
-    final CS_CoordinateSystem crs = m_surface.getCoordinateSystem();
-    final CS_CoordinateSystem crsTri = triangle.getCoordinateSystem();
+    final String crs = m_surface.getCoordinateSystem();
+    final String crsTri = triangle.getCoordinateSystem();
 
     final AttributesImpl atts;
     if( crsTri != null && !crsTri.equals( crs ) )
@@ -182,11 +181,11 @@ public class TriangulatedSurfaceMarshaller
     contentHandler.endElement( NS.GML3, TAG_POS, QNAME_POS );
   }
 
-  private AttributesImpl createCrsAttributes( final CS_CoordinateSystem crs ) throws RemoteException
+  private AttributesImpl createCrsAttributes( final String crs ) throws UnknownCRSException
   {
     final AttributesImpl atts = new AttributesImpl();
-    atts.addAttribute( "", "srsName", "srsName", "CDATA", crs.getName() );
-    atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + crs.getDimension() );
+    atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
+    atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( crs ) );
     return atts;
   }
 

@@ -60,7 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.geometry;
 
-import org.kalypsodeegree_impl.model.ct.MathTransform;
+import org.deegree.crs.transformations.CRSTransformation;
 
 /**
  * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is
@@ -107,5 +107,5 @@ public interface GM_Position
   /**
    * handles the geo-coordinate-transformation for a {@link GM_Object}
    */
-  public GM_Position transform( final MathTransform trans ) throws Exception;
+  public GM_Position transform( final CRSTransformation trans ) throws Exception;
 }

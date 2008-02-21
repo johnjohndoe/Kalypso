@@ -16,7 +16,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVec
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML31;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -99,9 +98,9 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     final Element e_point = ownerDocument.createElementNS( NS.GML3, "gml:Point" );
     try
     {
-      final CS_CoordinateSystem coordinateSystem = origin.getCoordinateSystem();
+      final String coordinateSystem = origin.getCoordinateSystem();
       if( coordinateSystem != null )
-        e_point.setAttribute( "srsName", coordinateSystem.getName() );
+        e_point.setAttribute( "srsName", coordinateSystem );
     }
     catch( final Exception e )
     {

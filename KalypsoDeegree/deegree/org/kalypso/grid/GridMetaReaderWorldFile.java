@@ -53,7 +53,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * {@link IGridMetaReader} implementation for World-Files.
@@ -147,7 +146,7 @@ public class GridMetaReaderWorldFile implements IGridMetaReader
    *      org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector, java.lang.Double[],
    *      org.opengis.cs.CS_CoordinateSystem)
    */
-  public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final CS_CoordinateSystem crs ) throws Exception
+  public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
   {
     if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
     {
@@ -167,5 +166,4 @@ public class GridMetaReaderWorldFile implements IGridMetaReader
 
     return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
   }
-
 }

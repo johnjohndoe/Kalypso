@@ -71,7 +71,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
@@ -157,7 +156,7 @@ public class MapUtilities
     if( mapModell == null )
       return null;
 
-    CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
+    String coordinatesSystem = mapModell.getCoordinatesSystem();
 
     double x = p.getX();
     double y = p.getY();

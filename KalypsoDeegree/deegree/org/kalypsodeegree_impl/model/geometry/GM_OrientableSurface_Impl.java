@@ -64,12 +64,10 @@ import java.io.Serializable;
 
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_OrientableSurface;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_OrientableSurface interface from package jago.model. the implementation is abstract
  * because only initialization of the spatial reference system is unique to all orientated surfaces
- * 
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -77,8 +75,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @version 05.04.2002
  * @author Andreas Poth
  */
-abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl implements GM_OrientableSurface,
-    Serializable
+abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl implements GM_OrientableSurface, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4169996004405925850L;
@@ -87,10 +84,9 @@ abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl imp
    * Creates a new GM_OrientableSurface_Impl object.
    * 
    * @param crs
-   * 
    * @throws GM_Exception
    */
-  protected GM_OrientableSurface_Impl( CS_CoordinateSystem crs ) throws GM_Exception
+  protected GM_OrientableSurface_Impl( String crs ) throws GM_Exception
   {
     super( crs, '+' );
   }
@@ -100,10 +96,9 @@ abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl imp
    * 
    * @param crs
    * @param orientation
-   * 
    * @throws GM_Exception
    */
-  protected GM_OrientableSurface_Impl( CS_CoordinateSystem crs, char orientation ) throws GM_Exception
+  protected GM_OrientableSurface_Impl( String crs, char orientation ) throws GM_Exception
   {
     super( crs, orientation );
   }

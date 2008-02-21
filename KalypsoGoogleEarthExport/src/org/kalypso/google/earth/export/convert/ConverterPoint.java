@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Locale;
 
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 
 import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.PointType;

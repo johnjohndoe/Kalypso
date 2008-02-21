@@ -73,7 +73,6 @@ import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Class representig a two dimensional ESRI Polygon <BR>
@@ -128,7 +127,7 @@ public class SHPPolygon implements ISHPGeometry
     try
     {
       final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
-      CS_CoordinateSystem crs = surfacePatch[0].getCoordinateSystem();
+      String crs = surfacePatch[0].getCoordinateSystem();
 
       for( int i = 0; i < surfacePatch.length; i++ )
       {

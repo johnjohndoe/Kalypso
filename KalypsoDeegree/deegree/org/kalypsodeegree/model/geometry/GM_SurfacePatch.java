@@ -61,8 +61,7 @@
 
 package org.kalypsodeegree.model.geometry;
 
-import org.kalypsodeegree_impl.model.ct.MathTransform;
-import org.opengis.cs.CS_CoordinateSystem;
+import org.deegree.crs.transformations.CRSTransformation;
 
 /**
  * Defining the iso geometry <code>GM_SurfacePatch</code> which is used for building surfaces. A surface patch is made
@@ -95,7 +94,7 @@ public interface GM_SurfacePatch extends GM_GenericSurface
   /**
    * returns the coordinate system of the surface patch
    */
-  CS_CoordinateSystem getCoordinateSystem( );
+  String getCoordinateSystem( );
 
   /**
    * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
@@ -132,6 +131,5 @@ public interface GM_SurfacePatch extends GM_GenericSurface
   /**
    * handles the geo-coordinate-transformation for a {@link GM_Object}
    */
-  public GM_GenericSurface transform( final MathTransform trans, final CS_CoordinateSystem targetOGCCS ) throws Exception;
-
+  public GM_GenericSurface transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception;
 }

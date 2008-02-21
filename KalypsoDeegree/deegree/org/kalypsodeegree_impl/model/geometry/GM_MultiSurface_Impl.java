@@ -64,6 +64,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -75,9 +76,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_MultiSurface interface from package jago.model.
@@ -101,7 +100,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * 
    * @param crs
    */
-  public GM_MultiSurface_Impl( final CS_CoordinateSystem crs )
+  public GM_MultiSurface_Impl( final String crs )
   {
     super( crs );
   }
@@ -129,7 +128,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * @param surface
    * @param crs
    */
-  public GM_MultiSurface_Impl( final GM_Surface< ? >[] surface, final CS_CoordinateSystem crs )
+  public GM_MultiSurface_Impl( final GM_Surface< ? >[] surface, final String crs )
   {
     super( crs );
 
@@ -420,8 +419,13 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    *      org.opengis.cs.CS_CoordinateSystem)
    */
   @Override
-  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
   {
+    /* If the target is the same coordinate system, do not transform. */
+    String coordinateSystem = getCoordinateSystem();
+    if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
+      return this;
+
     Debug.debugMethodBegin( this, "transformMultiSurface" );
 
     final GM_Surface[] surfaces = new GM_Surface[getSize()];
@@ -433,5 +437,4 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     Debug.debugMethodEnd();
     return GeometryFactory.createGM_MultiSurface( surfaces, targetOGCCS );
   }
-
 }

@@ -68,15 +68,10 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Default implementation of the GM_Object interface from package deegree.model. The implementation is abstract because
@@ -94,7 +89,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
 
   protected static final double MUTE = 0.000000001;
 
-  private CS_CoordinateSystem m_crs = null;
+  private String m_crs = null;
 
   private GM_Boundary m_boundary = null;
 
@@ -112,7 +107,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * @param crs
    *            new spatial reference system
    */
-  protected GM_Object_Impl( final CS_CoordinateSystem crs )
+  protected GM_Object_Impl( final String crs )
   {
     setCoordinateSystem( crs );
   }
@@ -120,7 +115,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * returns the spatial reference system of a geometry
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     return m_crs;
   }
@@ -131,7 +126,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * @param crs
    *            new spatial reference system
    */
-  public void setCoordinateSystem( final CS_CoordinateSystem crs )
+  public void setCoordinateSystem( final String crs )
   {
     this.m_crs = crs;
   }

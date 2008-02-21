@@ -63,12 +63,10 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 
 import org.kalypsodeegree.model.geometry.GM_Boundary;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementation of the GM_Boundary interface. The class is abstract because there isn't a boundary without a
  * geometry type. Concrete implementations are <tt>GM_CurveBoundary</tt> or <tt>GM_SurfaceBoundary</tt> for example.
- * 
  * <p>
  * ------------------------------------------------------------
  * </p>
@@ -85,7 +83,7 @@ abstract class GM_Boundary_Impl extends GM_Object_Impl implements GM_Boundary, S
   /**
    * the reference system
    */
-  public GM_Boundary_Impl( CS_CoordinateSystem srs )
+  public GM_Boundary_Impl( String srs )
   {
     super( srs );
   }
@@ -93,7 +91,7 @@ abstract class GM_Boundary_Impl extends GM_Object_Impl implements GM_Boundary, S
   /**
    * A geometric object, which has no boundary is a cycle.
    */
-  public boolean isCycle()
+  public boolean isCycle( )
   {
     return true;
   }

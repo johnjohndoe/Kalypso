@@ -70,7 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * default implementierung of the GM_Aggregate interface ------------------------------------------------------------
@@ -90,7 +89,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    * 
    * @param crs
    */
-  public GM_Aggregate_Impl( final CS_CoordinateSystem crs )
+  public GM_Aggregate_Impl( final String crs )
   {
     super( crs );
   }
@@ -302,7 +301,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    *            new spatial reference system
    */
   @Override
-  public void setCoordinateSystem( final CS_CoordinateSystem crs )
+  public void setCoordinateSystem( final String crs )
   {
     super.setCoordinateSystem( crs );
 

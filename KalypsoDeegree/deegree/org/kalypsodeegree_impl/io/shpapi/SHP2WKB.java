@@ -63,10 +63,6 @@ package org.kalypsodeegree_impl.io.shpapi;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @version $Revision$
@@ -148,9 +144,7 @@ public class SHP2WKB
     final byte[] wkbLineString = null;
 
     final SHP2WKS shp2wks = new SHP2WKS();
-    final CoordinateSystem cs = ConvenienceCSFactory.getInstance().getCSByName( "EPSG:4326" );
-    final CS_CoordinateSystem srs = Adapters.getDefault().export( cs );
-    shp2wks.transformPolyLine( srs, shppolyline );
+    shp2wks.transformPolyLine( "EPSG:4326", shppolyline );
 
     /*
      * // it's a single LineString if (points.length == 1) { wkbLineString = new byte[points[0].length*21 + 9]; // big
@@ -188,9 +182,7 @@ public class SHP2WKB
     int N = 0;
 
     final SHP2WKS shp2wks = new SHP2WKS();
-    final CoordinateSystem cs = ConvenienceCSFactory.getInstance().getCSByName( "EPSG:4326" );
-    final CS_CoordinateSystem srs = Adapters.getDefault().export( cs );
-    final GM_Surface< ? >[] wkslp = shp2wks.transformPolygon( srs, shppolygon_ );
+    final GM_Surface< ? >[] wkslp = shp2wks.transformPolygon( "EPSG:4326", shppolygon_ );
 
     byte[] buffer = null;
 

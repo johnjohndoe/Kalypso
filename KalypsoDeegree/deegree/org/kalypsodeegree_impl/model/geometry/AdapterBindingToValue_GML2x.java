@@ -48,6 +48,7 @@ import java.util.StringTokenizer;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.crypto.dsig.TransformException;
 
 import ogc2.www.opengis.net.gml.AbstractGeometryType;
 import ogc2.www.opengis.net.gml.BoxType;
@@ -73,12 +74,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.cs.CoordinateSystem;
-import org.kalypsodeegree_impl.model.ct.TransformException;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Node;
 
 /**
@@ -86,17 +82,18 @@ import org.w3c.dom.Node;
  */
 public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 {
-  final static ConvenienceCSFactoryFull m_csFac = new ConvenienceCSFactoryFull();
-
-  final static Adapters m_csAdapter = org.kalypsodeegree_impl.model.cs.Adapters.getDefault();
-
   final static ObjectFactory gml2Fac = new ObjectFactory();
 
   final static JAXBContext GML2_JAXCONTEXT = KalypsoOGC2xJAXBcontext.getContext();
 
-  private GM_MultiPoint createGM_MultiPoint( final MultiPointType type, final CS_CoordinateSystem cs ) throws TransformException
+  /**
+   * @param type
+   * @param cs
+   *            The default cs.
+   */
+  private GM_MultiPoint createGM_MultiPoint( final MultiPointType type, final String cs ) throws TransformException
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
+    final String co = getCS_CoordinateSystem( cs, type );
     int i = 0;
 
     // pointMember
@@ -114,9 +111,9 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiPoint( resultPoints, co );
   }
 
-  private GM_MultiCurve createGM_MultiLineString( final MultiLineStringType multiLineStringType, final CS_CoordinateSystem cs ) throws GM_Exception, TransformException
+  private GM_MultiCurve createGM_MultiLineString( final MultiLineStringType multiLineStringType, final String cs ) throws GM_Exception, TransformException
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, multiLineStringType );
+    final String co = getCS_CoordinateSystem( cs, multiLineStringType );
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiLineStringType.getGeometryMember();
     final GM_Curve[] curves = new GM_Curve[geometryMember.size()];
     int i = 0;
@@ -131,9 +128,9 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiCurve( curves );
   }
 
-  private GM_MultiSurface createGM_MultiSurface( final MultiPolygonType multiPolygonType, final CS_CoordinateSystem cs ) throws GM_Exception, TransformException
+  private GM_MultiSurface createGM_MultiSurface( final MultiPolygonType multiPolygonType, final String cs ) throws GM_Exception, TransformException
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, multiPolygonType );
+    final String co = getCS_CoordinateSystem( cs, multiPolygonType );
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiPolygonType.getGeometryMember();
     final GM_Surface[] surfaces = new GM_Surface[geometryMember.size()];
 
@@ -149,9 +146,9 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
 
-  private GM_Surface createGM_Surface( final PolygonType polygonType, final CS_CoordinateSystem cs ) throws GM_Exception, TransformException
+  private GM_Surface createGM_Surface( final PolygonType polygonType, final String cs ) throws GM_Exception, TransformException
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, polygonType );
+    final String co = getCS_CoordinateSystem( cs, polygonType );
     // outer...
     final JAXBElement< ? extends AbstractGeometryType> outerBoundary = polygonType.getOuterBoundaryIs().getGeometry();
     final AbstractGeometryType outerAbstractGeometryType = outerBoundary.getValue();
@@ -195,17 +192,17 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return positions;
   }
 
-  private GM_Curve createGM_LineString( final LineStringType type, final CS_CoordinateSystem cs ) throws GM_Exception, TransformException
+  private GM_Curve createGM_LineString( final LineStringType type, final String cs ) throws GM_Exception, TransformException
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
+    final String co = getCS_CoordinateSystem( cs, type );
     final CoordinatesType coordinates = type.getCoordinates();
     final GM_Position[] positions = createGM_Positions( coordinates );
     return GeometryFactory.createGM_Curve( positions, co );
   }
 
-  private GM_Point createGM_Point( final PointType type, final CS_CoordinateSystem cs ) throws TransformException
+  private GM_Point createGM_Point( final PointType type, final String cs ) throws TransformException
   {
-    final CS_CoordinateSystem co = getCS_CoordinateSystem( cs, type );
+    final String co = getCS_CoordinateSystem( cs, type );
     final CoordType coord = type.getCoord();
     if( coord != null )
     {
@@ -267,22 +264,19 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return result.toArray( new GM_Position[result.size()] );
   }
 
-  private CS_CoordinateSystem getCS_CoordinateSystem( final CS_CoordinateSystem defaultCS, final AbstractGeometryType geom ) throws TransformException
+  private String getCS_CoordinateSystem( final String defaultCS, final AbstractGeometryType geom )
   {
     final String srsName = geom.getSrsName();
     if( srsName == null )
       return defaultCS;
-    final CoordinateSystem csByName;
+
     if( srsName.startsWith( "http://www.opengis.net/gml/srs/epsg.xml#" ) )
     {
       final String[] split = srsName.split( "#" );
-      csByName = m_csFac.getCSByName( "EPSG:" + split[1] );
+      return "EPSG:" + split[1];
     }
     else
-      csByName = m_csFac.getCSByName( srsName );
-    if( csByName == null )
-      throw new TransformException( "The coordinate system: " + srsName + " is not known" );
-    return m_csAdapter.export( csByName );
+      return srsName;
   }
 
   /**
@@ -305,7 +299,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
       try
       {
         final AbstractGeometryType bindingTypeObject = (AbstractGeometryType) bindingGeometry;
-        final CS_CoordinateSystem cs = getCS_CoordinateSystem( null, bindingTypeObject );
+        final String cs = getCS_CoordinateSystem( null, bindingTypeObject );
         if( bindingTypeObject instanceof PointType )
           return createGM_Point( (PointType) bindingTypeObject, cs );
         if( bindingTypeObject instanceof PolygonType )

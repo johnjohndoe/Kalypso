@@ -218,7 +218,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     try
     {
       final PrintWriter pw = new PrintWriter( stringWriter );
-      pw.print( "Lokales Koordinaten-System:\n" + getMapPanel().getMapModell().getCoordinatesSystem().getName() + "\n" );
+      pw.print( "Lokales Koordinaten-System:\n" + getMapPanel().getMapModell().getCoordinatesSystem() + "\n" );
       pw.print( "p1:" );
       if( m_p1 == null )
         pw.print( "\n  nicht gewählt" );

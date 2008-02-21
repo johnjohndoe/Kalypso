@@ -48,7 +48,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -385,7 +384,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
 
   protected abstract void update( final MapPanel mapPanel );
 
-  protected abstract CS_CoordinateSystem getCoordinatesSystem( );
+  protected abstract String getCoordinatesSystem( );
 
   protected abstract GeoTransform getProjection( );
 
