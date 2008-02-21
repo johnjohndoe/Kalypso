@@ -63,13 +63,14 @@ public class RauheitRule extends AbstractValidatorRule
   {
     if( profil == null )
       return;
-
-    final IProfileObject[] buildings = profil.getProfileObjects();
-    if( buildings != null && buildings.length > 0 )
-    {
-      if( !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( buildings[0].getId() ) && !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( buildings[0].getId() ) )
-        return;
-    }
+//TODO überprüfen ob der Rechenkern bei Durchlässen und Brücken/Wehren auf fehlende Rauheiten reagiert
+// final IProfileObject[] buildings = profil.getProfileObjects();
+// if( buildings != null && buildings.length > 0 )
+// {
+// if( !IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( buildings[0].getId() ) &&
+// !IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( buildings[0].getId() ) )
+// return;
+// }
     IComponent pointProp = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
     if( pointProp == null )
       pointProp = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );

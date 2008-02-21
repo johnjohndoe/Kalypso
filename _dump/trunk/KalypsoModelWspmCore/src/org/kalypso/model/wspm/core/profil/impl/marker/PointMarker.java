@@ -90,7 +90,9 @@ public class PointMarker implements IProfilPointMarker
    */
   public Object getValue( )
   {
-    return m_point.getValue( getId() );
+    final TupleResult owner = m_point.getOwner();
+    final int index = owner.indexOfComponent( m_type );
+    return m_point.getValue( index );
   }
 
   /* Interpreted ui values to obtain backward compability */
@@ -112,16 +114,19 @@ public class PointMarker implements IProfilPointMarker
   public IRecord setPoint( final IRecord newPosition )
   {
     final IRecord oldPoint = m_point;
-    if( m_point != null )
+    if( (newPosition != null) && (newPosition.getOwner() == m_point.getOwner()) )
     {
+
+      final TupleResult owner = m_point.getOwner();
+      final int index = owner.indexOfComponent( m_type );
       /*
        * get old value of point, change point mapping and set old value to new point and null old point value
        */
-      final Object old = m_point.getValue( getId() );
-      m_point.setValue( getId(), null );
+      final Object old = m_point.getValue( index );
+      m_point.setValue( index, m_type.getDefaultValue() );
 
       m_point = newPosition;
-      m_point.setValue( getId(), old );
+      m_point.setValue( index, old );
     }
 
     return oldPoint;
@@ -132,6 +137,8 @@ public class PointMarker implements IProfilPointMarker
    */
   public void setValue( final Object value )
   {
-    m_point.setValue( getId(), value );
+    final TupleResult owner = m_point.getOwner();
+    final int index = owner.indexOfComponent( m_type );
+    m_point.setValue( index, value );
   }
 }

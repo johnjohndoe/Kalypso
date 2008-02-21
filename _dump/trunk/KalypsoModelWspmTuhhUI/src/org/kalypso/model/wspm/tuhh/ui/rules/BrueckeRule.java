@@ -68,7 +68,6 @@ public class BrueckeRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    // TODO IProfileObjects now returned as list from IProfile
     final IProfileObject[] profileObjects = profil.getProfileObjects();
     IProfileObject building = null;
     if( profileObjects.length > 0 )
@@ -82,24 +81,28 @@ public class BrueckeRule extends AbstractValidatorRule
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
       final IRecord[] points = profil.getPoints();
       final double delta = ProfilObsHelper.getPrecision( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+      final int iOK = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+      final int iUK = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+      final int iAX = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+
       IRecord ok_h_l = null;
       IRecord uk_h_l = null;
       IRecord uk_h_r = null;
       IRecord ok_h_r = null;
       IRecord lastPoint = null;
 
-      // Brï¿½ckengeometrie
+      // Brückengeometrie
       for( final IRecord point : points )
       {
-        final Object h = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-        final Object uk = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) );
-        final Object ok = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
-        final Object bewuchs = point.getOwner().hasComponent( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) ? (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-            : 0.0;
-        if( h == null || uk == null || ok == null || bewuchs == null )
+        final Object h = point.getValue( iHoehe );
+        final Object uk = point.getValue( iUK );
+        final Object ok = point.getValue( iOK );
+
+        if( h == null || uk == null || ok == null )
           return;
         if( (Double) uk - (Double) ok > delta )
-          collector.createProfilMarker( true, "Brï¿½ckenkanten schneiden sich", "", ArrayUtils.indexOf( profil.getPoints(), point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+          collector.createProfilMarker( true, "Brückenkanten schneiden sich", "", profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
         if( ok_h_l == null && (Double) ok - (Double) h > delta )
           ok_h_l = lastPoint;
         if( ok_h_l != null && uk_h_l == null && (Double) uk - (Double) h > delta )
@@ -109,14 +112,16 @@ public class BrueckeRule extends AbstractValidatorRule
         if( ok_h_l != null && uk_h_l != null && uk_h_r != null && ok_h_r == null && Math.abs( (Double) ok - (Double) h ) < delta )
           ok_h_r = point;
         if( (Double) h - (Double) ok > delta || (Double) h - (Double) uk > delta )
-          collector.createProfilMarker( true, "Brï¿½ckenkanten unter Gelï¿½ndehï¿½he", "", ArrayUtils.indexOf( profil.getPoints(), point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
-        // Bewuchs ï¿½nter der Brï¿½cke
-        if( ok_h_l != null && ok_h_r == null && (Double) bewuchs != 0.0 )
-          collector.createProfilMarker( true, "Bewuchsparameter im Brï¿½ckenbereich", "", ArrayUtils.indexOf( profil.getPoints(), point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
-
+          collector.createProfilMarker( true, "Brückenkanten unter Geländehöhe", "", profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
         lastPoint = point;
+        // Bewuchs unter der Brücke
+        if( iAX < 0 )
+          continue;
+        final Object bewuchs = point.getValue( iAX );
+        if( ok_h_l != null && ok_h_r == null && bewuchs != null && (Double) bewuchs != 0.0 )
+          collector.createProfilMarker( true, "Bewuchsparameter im Brückenbereich", "", profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
       }
-
+      // Brückenparameter
       for( final IComponent property : building.getObjectProperties() )
         if( ((Double) building.getValue( property )).isNaN() )
         {
@@ -124,36 +129,37 @@ public class BrueckeRule extends AbstractValidatorRule
           break;
         }
       if( ok_h_l == null || uk_h_l == null || ok_h_r == null || uk_h_r == null )
-        collector.createProfilMarker( true, "Brï¿½cke unvollstï¿½ndig", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+        collector.createProfilMarker( true, "Brücke unvollständig", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
       else
       {
-        // Durchstrï¿½mte Bereiche
-        final IProfilPointMarker[] marker = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+        // Durchströmte Bereiche
+        final IComponent cDurchS = profil.hasPointProperty(  IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+        final IProfilPointMarker[] marker = profil.getPointMarkerFor( cDurchS);
         if( marker.length > 1 )
         {
-          if( marker[0].getPoint() != points[0] )
-            collector.createProfilMarker( true, "Der durchstrï¿½mte Bereich muï¿½ das gesamte Profil einschlieï¿½en", "", 0, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 0 ) } );
-          if( marker[marker.length - 1].getPoint() != points[points.length - 1] )
-            collector.createProfilMarker( true, "Der durchstrï¿½mte Bereich muï¿½ das gesamte Profil einschlieï¿½en", "", points.length - 1, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( marker.length - 1, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), points.length - 1 ) } );
+          if( profil.indexOfPoint( marker[0].getPoint())>0)
+            collector.createProfilMarker( true, "Der durchströmte Bereich muß das gesamte Profil einschließen", "", 0, IWspmConstants.POINT_PROPERTY_BREITE, pluginId,null);// new IMarkerResolution2[] { new MoveDeviderResolution( 0, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 0 ) } );
+          if( profil.indexOfPoint( marker[marker.length - 1].getPoint()) < points.length - 1 )
+            collector.createProfilMarker( true, "Der durchströmte Bereich muß das gesamte Profil einschließen", "", points.length - 1, IWspmConstants.POINT_PROPERTY_BREITE, pluginId,null);// new IMarkerResolution2[] { new MoveDeviderResolution( marker.length - 1, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), points.length - 1 ) } );
         }
 
-        // Trennflï¿½chen
-        final IProfilPointMarker[] trenner = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+        // Trennflächen
+        final IProfilPointMarker[] trenner = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
         if( trenner.length > 1 )
         {
           if( trenner[0].getPoint() != uk_h_l )
 
-            collector.createProfilMarker( true, "Trennflï¿½che nicht auf Schnittpunkt Gelï¿½nde-UK-Brï¿½cke", "", ArrayUtils.indexOf( profil.getPoints(), trenner[0].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( 0, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), ArrayUtils.indexOf( points, uk_h_l ) ) } );
+            collector.createProfilMarker( true, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "",  profil.indexOfPoint( trenner[0].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId,null);// new IMarkerResolution2[] { new MoveDeviderResolution( 0, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), ArrayUtils.indexOf( points, uk_h_l ) ) } );
           if( trenner[trenner.length - 1].getPoint() != uk_h_r )
 
-            collector.createProfilMarker( true, "Trennflï¿½che nicht auf Schnittpunkt Gelï¿½nde-UK-Brï¿½cke", "", ArrayUtils.indexOf( profil.getPoints(), trenner[trenner.length - 1].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new IMarkerResolution2[] { new MoveDeviderResolution( trenner.length - 1, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), ArrayUtils.indexOf( points, uk_h_r ) ) } );
+            collector.createProfilMarker( true, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "",  profil.indexOfPoint(  trenner[trenner.length - 1].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId,null);// new IMarkerResolution2[] { new MoveDeviderResolution( trenner.length - 1, ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), ArrayUtils.indexOf( points, uk_h_r ) ) } );
         }
 
-        // Brï¿½ckenlager
-        if( ArrayUtils.indexOf( points, ok_h_l ) >= ArrayUtils.indexOf( points, uk_h_l ) )
-          collector.createProfilMarker( true, "Schnittpunkt Oberkante-Gelï¿½nde falsch", "", ArrayUtils.indexOf( points, uk_h_l ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
-        if( ArrayUtils.indexOf( points, ok_h_r ) <= ArrayUtils.indexOf( points, uk_h_r ) )
-          collector.createProfilMarker( true, "Schnittpunkt Oberkante-Gelï¿½nde falsch", "", ArrayUtils.indexOf( points, uk_h_r ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+        // Brückenlager TODO siehe Liste Kim
+//        if( ArrayUtils.indexOf( points, ok_h_l ) >= ArrayUtils.indexOf( points, uk_h_l ) )
+//          collector.createProfilMarker( true, "Schnittpunkt Oberkante-Gelände falsch", "", ArrayUtils.indexOf( points, uk_h_l ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+//        if( ArrayUtils.indexOf( points, ok_h_r ) <= ArrayUtils.indexOf( points, uk_h_r ) )
+//          collector.createProfilMarker( true, "Schnittpunkt Oberkante-Gelände falsch", "", ArrayUtils.indexOf( points, uk_h_r ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
       }
     }
     catch( final Exception e )

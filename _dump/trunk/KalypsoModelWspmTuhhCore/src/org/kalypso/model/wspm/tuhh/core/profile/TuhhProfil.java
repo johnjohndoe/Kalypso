@@ -149,7 +149,10 @@ public class TuhhProfil extends AbstractProfil
 
   private IProfilPointMarker getMarker( final IComponent component, final IRecord record )
   {
-    final Object value = record.getValue( component );
+    final int index = indexOfProperty( component );
+    if( index < 0 )
+      return null;
+    final Object value = record.getValue( index );
 
     if( value == null )
       return null;

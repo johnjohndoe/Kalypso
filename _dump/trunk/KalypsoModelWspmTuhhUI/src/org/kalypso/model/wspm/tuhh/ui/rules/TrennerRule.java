@@ -85,7 +85,7 @@ public class TrennerRule extends AbstractValidatorRule
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
     if( db.length == 0 )
-      collector.createProfilMarker( true, "keine durchstrï¿½mten Bereiche vorhanden", "", 0, null, pluginId,null);// new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) } );
+      collector.createProfilMarker( true, "keine durchströmten Bereiche vorhanden", "", 0, null, pluginId,null);// new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) } );
 
     final IProfileObject[] profileObjects = profil.getProfileObjects();
     IProfileObject building = null;
@@ -94,7 +94,7 @@ public class TrennerRule extends AbstractValidatorRule
     // Regel fï¿½r fehlende Trennflï¿½chen bei Durchlï¿½ssen erlauben
     // TUHH-Hack
     if( tf.length == 0 && !isDurchlass( building ) )
-      collector.createProfilMarker( true, "keine Trennflï¿½chen vorhanden", "", 0, null, pluginId,null);// new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) } );
+      collector.createProfilMarker( true, "keine Trennflächen vorhanden", "", 0, null, pluginId,null);// new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) } );
 
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
@@ -121,9 +121,9 @@ public class TrennerRule extends AbstractValidatorRule
       final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
       if( xleft < left || xleft > right )
-        collector.createProfilMarker( true, toValidate[0].getId().getName() + ": auï¿½erhalb des durchstrï¿½mten Bereichs", "", ArrayUtils.indexOf( profil.getPoints(), toValidate[0].getPoint() ), null, pluginId,null);// new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp, ArrayUtils.indexOf( profil.getPoints(), leftP ) ) } );
+        collector.createProfilMarker( true, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "", ArrayUtils.indexOf( profil.getPoints(), toValidate[0].getPoint() ), null, pluginId,null);// new IMarkerResolution2[] { new MoveDeviderResolution( 0, deviderTyp, ArrayUtils.indexOf( profil.getPoints(), leftP ) ) } );
       if( xright < left || xright > right )
-        collector.createProfilMarker( true, toValidate[0].getId().getName() + ": auï¿½erhalb des durchstrï¿½mten Bereichs", "", ArrayUtils.indexOf( profil.getPoints(), toValidate[toValidate.length - 1].getPoint() ), null, pluginId,null);// new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) } );
+        collector.createProfilMarker( true, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "", ArrayUtils.indexOf( profil.getPoints(), toValidate[toValidate.length - 1].getPoint() ), null, pluginId,null);// new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, deviderTyp, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) } );
     }
     catch( final Exception e )
     {

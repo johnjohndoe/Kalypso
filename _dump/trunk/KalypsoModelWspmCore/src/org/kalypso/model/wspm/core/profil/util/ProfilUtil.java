@@ -269,11 +269,16 @@ public class ProfilUtil
   public static IRecord findNearestPoint( final IProfil profil, final double breite )
   {
     final IRecord[] points = profil.getPoints();
+    final int index = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     IRecord pkt = points[0];
-    for( final IRecord point : points )
-      if( Math.abs( (Double) pkt.getValue( ProfilObsHelper.getPropertyFromId( pkt, IWspmConstants.POINT_PROPERTY_BREITE ) ) - breite ) > Math.abs( (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) )
-          - breite ) )
-        pkt = point;
+    if( index < 0 )
+      return pkt;
+    for(int i = 1; i < points.length; i++ )
+    {
+      final Double b = (Double) points[i].getValue( index );
+      if( Math.abs( b - breite ) < Math.abs( (Double) pkt.getValue( index) - breite ) )
+        pkt = points[i];
+    }
     return pkt;
   }
 

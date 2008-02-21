@@ -68,12 +68,32 @@ public class DurchlassRule extends AbstractValidatorRule
     if( profileObjects.length > 0 )
       building = profileObjects[0];
 
-    if( (profil == null) || (building == null) || IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals(building.getId())|| IWspmTuhhConstants.BUILDING_TYP_WEHR.equals(building.getId()))
+    if( (profil == null) || (building == null)) 
       return;
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+    if(IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals(building.getId()))
+        return;
+    else if (IWspmTuhhConstants.BUILDING_TYP_WEHR.equals(building.getId()))
+      return;
+    
+    else if (IWspmTuhhConstants.BUILDING_TYP_EI.equals( building.getId() ))
+    {
+      final Double b = (Double)building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ));
+      final Double h = (Double)building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE));
+      if (h<=b)
+        collector.createProfilMarker( true, "Eiprofil muss per Definition höher sein als breit", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+    }
+    else if (IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( building.getId() ))
+    {
+      final Double b = (Double)building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ));
+      final Double h = (Double)building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE));
+      if (b<=h)
+        collector.createProfilMarker( true, "Maulprofil muss per Definition breiter sein als hoch", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
 
+    }
+    
     try
     {
-      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
       for( final IComponent property : building.getObjectProperties() )
       {
         final Object oValue =  building.getValue( property );

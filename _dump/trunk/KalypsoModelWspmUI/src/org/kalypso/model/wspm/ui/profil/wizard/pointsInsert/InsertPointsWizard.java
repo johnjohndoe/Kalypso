@@ -68,7 +68,7 @@ public class InsertPointsWizard extends Wizard
     final IDialogSettings wizardSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), "InsertPointsWizardSettings" ); //$NON-NLS-1$
     setDialogSettings( wizardSettings );
 
-    setWindowTitle( "Profilpunkte einfï¿½gen" );
+    setWindowTitle( "Profilpunkte einfügen" );
     setNeedsProgressMonitor( true );
   }
 

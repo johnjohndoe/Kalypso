@@ -311,6 +311,8 @@ public abstract class AbstractProfil implements IProfil
   public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {
 
+    if( markerColumn == null )
+      return new IProfilPointMarker[] {};
     final int index = getResult().indexOfComponent( markerColumn );
     if( index < 0 )
       return new IProfilPointMarker[] {};

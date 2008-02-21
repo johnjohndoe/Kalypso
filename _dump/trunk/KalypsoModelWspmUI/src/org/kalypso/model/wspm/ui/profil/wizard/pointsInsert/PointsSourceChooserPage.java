@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
-
 /**
  * @author Belger
  */
@@ -140,6 +139,7 @@ public class PointsSourceChooserPage extends WizardPage
 
     m_sourceStack.setText( m_selectedSource == null ? "" : m_selectedSource.getDescription() );
     m_stackLayout.topControl = m_selectedSource == null ? null : m_selectedSource.getControl( getDialogSettings() );
+    m_sourceStack.layout();
   }
 
   public IPointsSource getChoosenSource( )

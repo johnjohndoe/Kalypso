@@ -167,7 +167,17 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   @Override
   public IRecord[] getPoints( )
   {
-    return ProfilUtil.getInnerPoints( getProfil(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ).toArray( new IRecord[] {} );
+    final IProfil profil = getProfil();
+    final IComponent cWehr = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    if( cWehr == null )
+      return new IRecord[] {};
+    final IProfilPointMarker[] markers = profil.getPointMarkerFor( cWehr );
+    final int size = markers.length;
+    if( size < 2 )
+      return new IRecord[] {};
+    final int left = profil.indexOfPoint( markers[0].getPoint() );
+    final int right = profil.indexOfPoint( markers[size - 1].getPoint() );
+    return profil.getPoints( left, right);
   }
 
   /**
@@ -286,7 +296,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 
   public void removeYourself( )
   {
-   
+
     final IProfil profile = getProfil();
     final IProfilPointMarker[] deviders = profile.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
     final IProfilChange[] changes = new IProfilChange[deviders.length + 2];
