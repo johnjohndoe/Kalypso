@@ -85,7 +85,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
    */
   public void setValue( final IRecord record, final Object value )
   {
-    if( value == null )
+    if( value == null || value.toString().trim().length() == 0 )
       record.setValue( getComponent(), null );
     else
       record.setValue( getComponent(), new Double( value.toString().replace( ",", "." ) ) );
