@@ -50,6 +50,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.ide.ResourceUtil;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -109,10 +111,20 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
   private ValidationProfilListener m_profilValidator;
 
-  public FeatureSelectionProfileProvider( final ISelectionProvider provider, final String editorID )
+  public FeatureSelectionProfileProvider( final ISelectionProvider provider, final IEditorPart editorPart )
   {
     m_provider = provider;
-    m_editorID = editorID;
+
+    if( editorPart == null )
+    {
+      m_file = null;
+      m_editorID = null;
+    }
+    else
+    {
+      m_file = ResourceUtil.getFile( editorPart.getEditorInput() );
+      m_editorID = editorPart.getEditorSite().getId();
+    }
 
     m_provider.addSelectionChangedListener( this );
     selectionChanged( new SelectionChangedEvent( m_provider, m_provider.getSelection() ) );
@@ -137,7 +149,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final List<IStationResult> results = new ArrayList<IStationResult>();
 
     /* Waterlevel fixations */
-    final List wspFixations = water.getWspFixations();
+    final List< ? > wspFixations = water.getWspFixations();
     for( final Object wspFix : wspFixations )
     {
       final Feature feature = FeatureHelper.getFeature( workspace, wspFix );
@@ -312,7 +324,9 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final Feature feature = profileMember == null ? null : profileMember.getFeature();
     final CommandableWorkspace workspace = fs.getWorkspace( feature );
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
-    m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
+    // Fallback, if we do not have an editor, try the gml file itself
+    if( m_file == null )
+      m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
     final Feature profileFeature = profileMember == null ? null : profileMember.getFeature();
     setProfile( profile, results, profileFeature, workspace );

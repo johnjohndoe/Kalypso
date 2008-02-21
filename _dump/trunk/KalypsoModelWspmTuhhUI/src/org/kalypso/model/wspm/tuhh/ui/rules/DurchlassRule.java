@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -60,46 +61,43 @@ public class DurchlassRule extends AbstractValidatorRule
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
 
-    
-    
-    
     final IProfileObject[] profileObjects = profil.getProfileObjects();
     IProfileObject building = null;
     if( profileObjects.length > 0 )
       building = profileObjects[0];
 
-    if( (profil == null) || (building == null)) 
+    if( (profil == null) || (building == null) )
       return;
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-    if(IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals(building.getId()))
-        return;
-    else if (IWspmTuhhConstants.BUILDING_TYP_WEHR.equals(building.getId()))
+    if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( building.getId() ) )
       return;
-    
-    else if (IWspmTuhhConstants.BUILDING_TYP_EI.equals( building.getId() ))
+    else if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( building.getId() ) )
+      return;
+
+    else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( building.getId() ) )
     {
-      final Double b = (Double)building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ));
-      final Double h = (Double)building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE));
-      if (h<=b)
-        collector.createProfilMarker( true, "Eiprofil muss per Definition höher sein als breit", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+      final Double b = (Double) building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+      final Double h = (Double) building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
+      if( h <= b )
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Eiprofil muss per Definition höher sein als breit", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
     }
-    else if (IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( building.getId() ))
+    else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( building.getId() ) )
     {
-      final Double b = (Double)building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ));
-      final Double h = (Double)building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE));
-      if (b<=h)
-        collector.createProfilMarker( true, "Maulprofil muss per Definition breiter sein als hoch", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+      final Double b = (Double) building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+      final Double h = (Double) building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
+      if( b <= h )
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Maulprofil muss per Definition breiter sein als hoch", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
 
     }
-    
+
     try
     {
       for( final IComponent property : building.getObjectProperties() )
       {
-        final Object oValue =  building.getValue( property );
-        if( oValue==null||((Double)oValue).isNaN() )
+        final Object oValue = building.getValue( property );
+        if( oValue == null || ((Double) oValue).isNaN() )
         {
-          collector.createProfilMarker( true, "Parameter <" + property.getName() + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
           break;
         }
       }

@@ -48,6 +48,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
@@ -57,18 +58,21 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
 
   private final static String[] USED_ATTRIBUTES = new String[] { IMarker.MESSAGE, IMarker.LOCATION, IMarker.SEVERITY, IMarker.TRANSIENT, IDE.EDITOR_ID_ATTR,
       IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS, IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPROPERTY, IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID,
-      IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS };
+      IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID, IValidatorMarkerCollector.MARKER_ATTRIBUTE_STATION };
 
   private final String m_editorID;
 
   private final List<IMarker> m_markers = new ArrayList<IMarker>();
 
+  private final IProfil m_profile;
+
 // private final XStream m_xstream;
 
-  public ResourceValidatorMarkerCollector( final IResource resource, final String editorID )
+  public ResourceValidatorMarkerCollector( final IResource resource, final String editorID, final IProfil profile )
   {
     m_resource = resource;
     m_editorID = editorID;
+    m_profile = profile;
 
 // m_xstream = new XStream( new DomDriver() );
 
@@ -80,11 +84,11 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
    * 
    * @throws CoreException
    */
-  public void createProfilMarker( final boolean isSevere, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] resolutionMarkers ) throws CoreException
+  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] resolutionMarkers ) throws CoreException
   {
     if( "true".equals( Platform.getDebugOption( KalypsoModelWspmUIPlugin.ID + "/debug/validationMarkers" ) ) )
     {
-      final String debugMsg = String.format( "Creating resource marker: isSever=%b, message=%s, location=%s, pointPos=%d", isSevere, message, location, pointPos );
+      final String debugMsg = String.format( "Creating resource marker: severity=%d, message=%s, location=%s, pointPos=%d", severity, message, location, pointPos );
       System.out.println( debugMsg );
     }
 
@@ -95,8 +99,10 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
 
     final IMarker marker = m_resource.createMarker( KalypsoModelWspmUIPlugin.MARKER_ID );
 
-    final Object[] values = new Object[] { message, location, isSevere ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING, true, m_editorID, pointPos, pointProperty, resolutionPluginId,
-        resSerialised };
+    final String profileID = "unknown";
+    final String station = String.format( "%.4f", m_profile.getStation() );
+
+    final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId, resSerialised, profileID, station };
 
     marker.setAttributes( USED_ATTRIBUTES, values );
 

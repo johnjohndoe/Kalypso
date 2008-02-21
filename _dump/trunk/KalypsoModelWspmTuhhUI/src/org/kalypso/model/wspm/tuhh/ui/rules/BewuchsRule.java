@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,7 +48,6 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -113,7 +113,7 @@ public class BewuchsRule extends AbstractValidatorRule
           final double ay = (Double) point.getValue( profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) );
           final double dp = (Double) point.getValue( profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) );
           if( ax + ay + dp != 0 )
-            collector.createProfilMarker( false, "Bewuchsparameter im Flußschlauch werden ignoriert", "", i, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new DelBewuchsResolution() } );
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter im Flußschlauch werden ignoriert", "", i, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new DelBewuchsResolution() } );
           i++;
         }
         final int lastIndex = leftIndex > 0 ? leftIndex - 1 : leftIndex;
@@ -121,9 +121,9 @@ public class BewuchsRule extends AbstractValidatorRule
         if( profil.getProfileObjects().length == 0 )
         {
           if( VorlandLhasValues && (Double) points[lastIndex].getValue( iAX ) == 0.0 )
-            collector.createProfilMarker( false, "Bewuchsparameter an Trennflächen überprüfen", "", lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0 ) } );
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter an Trennflächen überprüfen", "", lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0 ) } );
           if( VorlandRhasValues && (Double) rightP.getValue( iAX ) == 0.0 )
-            collector.createProfilMarker( false, "Bewuchsparameter an Trennflächen überprüfen", "", rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( devider.length - 1 ) } );
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter an Trennflächen überprüfen", "", rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( devider.length - 1 ) } );
         }
       }
     }
@@ -158,7 +158,7 @@ public class BewuchsRule extends AbstractValidatorRule
           if( dp == 0.0 )
             stringBuffer.append( "dP" );
           stringBuffer.append( ") fehlt" );
-          collector.createProfilMarker( true, stringBuffer.toString(), "", profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, stringBuffer.toString(), "", profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, null );
         }
         else
           hasValues = true;

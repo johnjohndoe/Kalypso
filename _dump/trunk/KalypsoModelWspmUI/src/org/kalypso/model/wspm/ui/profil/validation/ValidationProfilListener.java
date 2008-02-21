@@ -71,7 +71,7 @@ public class ValidationProfilListener implements IProfilListener
 
   public ValidationProfilListener( final IProfil profile, final IFile file, final String editorID )
   {
-    final String profiletype = profile == null ? null : profile.getType();
+    final String profiletype = profile.getType();
 
     final ValidatorRuleSet rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
@@ -84,7 +84,7 @@ public class ValidationProfilListener implements IProfilListener
         final boolean validate = preferenceStore.getBoolean( PreferenceConstants.P_VALIDATE_PROFILE );
         final String excludes = preferenceStore.getString( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
 
-        final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( file, editorID );
+        final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( file, editorID, profile );
 
         try
         {

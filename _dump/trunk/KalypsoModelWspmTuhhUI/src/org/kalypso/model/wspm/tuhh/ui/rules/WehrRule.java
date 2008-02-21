@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -99,7 +100,7 @@ public class WehrRule extends AbstractValidatorRule
     final int index3 = profil.indexOfPoint( deviders[0].getPoint() );
     final int index4 = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
     if( index1 < index3 )
-      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );// new
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Wehrfeldtrenner: ungültige Position", "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );// new
     // IMarkerResolution2[]
     // {
     // new
@@ -113,7 +114,7 @@ public class WehrRule extends AbstractValidatorRule
     // ) }
     // );
     if( index2 > index4 )
-      collector.createProfilMarker( true, "Wehrfeldtrenner: ungültige Position", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );// new
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Wehrfeldtrenner: ungültige Position", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );// new
     // IMarkerResolution2[]
     // {
     // new
@@ -151,7 +152,7 @@ public class WehrRule extends AbstractValidatorRule
       final Double vDP = (Double) point.getValue( iDP );
       if( vAX + vAY + vDP > 0 )
       {
-        collector.createProfilMarker( true, "Bewuchs im Wehrbereich", "", i, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchs im Wehrbereich", "", i, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
         // new
         // IMarkerResolution2[]
         // {
@@ -197,12 +198,12 @@ public class WehrRule extends AbstractValidatorRule
       final Object prop = building.getValue( property );
       if( prop instanceof Double && ((Double) prop).isNaN() )
       {
-        collector.createProfilMarker( true, "Parameter <" + property.getName() + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
         break;
       }
     }
     if( point != null )
-      collector.createProfilMarker( true, "ungültiger Kronenparameter: 0.0", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiger Kronenparameter: 0.0", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
   }
 
   private void validateProfilLines( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
@@ -225,7 +226,7 @@ public class WehrRule extends AbstractValidatorRule
       final Object h = point.getValue( profil.indexOfProperty( cHoehe ) );
       final Object wk = point.getValue( profil.indexOfProperty( cOKWehr ) );
       if( (h instanceof Double) && (wk instanceof Double) && (Double) wk < (Double) h )
-        collector.createProfilMarker( true, "Wehrkante[" + String.format( FMT_BREITE, point.getValue( profil.indexOfProperty( cHoehe ) ) ) + "] unterhalb Geländeniveau", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Wehrkante[" + String.format( FMT_BREITE, point.getValue( profil.indexOfProperty( cHoehe ) ) ) + "] unterhalb Geländeniveau", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
     }
   }
 
@@ -256,7 +257,7 @@ public class WehrRule extends AbstractValidatorRule
       point = lastPoint;
     if( point != null )
     {
-      collector.createProfilMarker( true, "ungültige Randbedingung [" + String.format( FMT_BREITE, point.getValue( iBreite ) ) + "]", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );// new
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültige Randbedingung [" + String.format( FMT_BREITE, point.getValue( iBreite ) ) + "]", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );// new
       // IMarkerResolution2[]
       // {
       // new

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -81,8 +82,8 @@ public class DoppelterPunktRule extends AbstractValidatorRule
           {
             final String msg = "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValue( iB ) );
             final String location = "";
-  
-            collector.createProfilMarker( false, msg, location,profil.indexOfPoint( point ), cB.getId(), pluginId, null );
+
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, location, profil.indexOfPoint( point ), cB.getId(), pluginId, null );
           }
         prevPoint = point;
       }

@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -63,7 +63,7 @@ public class RauheitRule extends AbstractValidatorRule
   {
     if( profil == null )
       return;
-//TODO überprüfen ob der Rechenkern bei Durchlässen und Brücken/Wehren auf fehlende Rauheiten reagiert
+// TODO überprüfen ob der Rechenkern bei Durchlässen und Brücken/Wehren auf fehlende Rauheiten reagiert
 // final IProfileObject[] buildings = profil.getProfileObjects();
 // if( buildings != null && buildings.length > 0 )
 // {
@@ -97,7 +97,7 @@ public class RauheitRule extends AbstractValidatorRule
         final double rh = (Double) point.getValue( index );
         if( rh <= 0.0 )
         {
-          collector.createProfilMarker( true, "unzulässiger Rauheitswert [" + rh + "]", "", profil.indexOfPoint( point ), pointProp.getId(), pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Rauheitswert [" + rh + "]", "", profil.indexOfPoint( point ), pointProp.getId(), pluginId, null );
           break;
         }
       }

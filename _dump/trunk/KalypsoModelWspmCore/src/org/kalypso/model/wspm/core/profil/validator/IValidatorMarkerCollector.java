@@ -53,9 +53,13 @@ public interface IValidatorMarkerCollector
 
   public static final String MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS = "profile.marker.attribute.quickFix.resolutions";
 
+  public static final String MARKER_ATTRIBUTE_PROFILE_ID = "profile.marker.attribute.profileId";
+
+  public static final String MARKER_ATTRIBUTE_STATION = "profile.marker.attribute.station";
+
   /**
    * Creates a (profile-)marker on the given resource. All validation rules should use this method, so changes in the
-   * implementation (e.g. the type of the marker) are reflekted on all rules.
+   * implementation (e.g. the type of the marker) are reflected on all rules.
    * 
    * @param resoultionPluginId
    *            the plugin-id from which to instantiate the resolutionClasses
@@ -65,7 +69,7 @@ public interface IValidatorMarkerCollector
    *            these classes must not contain references to Objects, only simple Datatypes are allowed
    * @throws CoreException
    */
-  public void createProfilMarker( final boolean isSevere, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] markerResolutions ) throws CoreException;
+  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] markerResolutions ) throws CoreException;
 
   /**
    * Clear all markers which may apply to this collector
